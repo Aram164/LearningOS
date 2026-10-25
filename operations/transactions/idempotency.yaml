@@ -366,6 +366,28 @@ entries:
       module-hu-m2-statistik-analysis: 49
     snapshot_before: sha256:3376c281d1acca9ff3a61839fe502eb4faec1be0887b825660920c25e1a25400
     snapshot_after: sha256:2376c0d08e79264b05d1396996788ebf2ddbdfc7c450c11c1d9ac895eb585488
+  bs-exercise-bank-20261023:
+    request_id: request-bs-exercise-bank-20261023-df2d5ea1
+    capability: note.create
+    channel: operator
+    intent_sha256: sha256:d68eb45f1a1a9b2f77b3a81a467ca337d80696a9e379214c0eff66f2d8a6b339
+    transaction_id: transaction-20261023-014606-001
+    receipt_path: operations/transactions/transaction-20261023-014606-001.yaml
+    revisions:
+      note-bs-os-basics-exercise-bank: 1
+    snapshot_before: sha256:b7595091f3ff178d4a3bdc8d501df4b9b7a266bdc21ba739a39ee7426e50ded2
+    snapshot_after: sha256:b472f603ec327bd1bbe23c4d3491efa927b10400453789c95981ac2d07b7b997
+  bs-self-test-20261023:
+    request_id: request-bs-self-test-20261023-2a3446a3
+    capability: note.create
+    channel: operator
+    intent_sha256: sha256:5a17c058b731e6bd4261fe68ef6e012ea86afc3978a6d71ed7b0093687e8aeb0
+    transaction_id: transaction-20261023-014632-001
+    receipt_path: operations/transactions/transaction-20261023-014632-001.yaml
+    revisions:
+      note-bs-os-basics-self-test: 1
+    snapshot_before: sha256:b472f603ec327bd1bbe23c4d3491efa927b10400453789c95981ac2d07b7b997
+    snapshot_after: sha256:8b5d9f73b2824116f5f148bec5e6265b0f8f66dde530391f9d7f4b55871d3f26
   c12c112b-f1c6-4c6b-932a-b7c311fd53d1:
     request_id: 4b152687-66b3-4834-8bd2-adaac7168174
     capability: module.plan.import
@@ -930,6 +952,41 @@ entries:
       source-grinstead-snell: 2
     snapshot_before: sha256:3d6a644a67c5646e3827123419a1a29526c55e0bd6a5ae6827191f2a5f5d5450
     snapshot_after: sha256:45efbd27746376ca8ca28f0f2a53324b8d8057577d0e9268770e4b4351d98f2f
+  icop-l01-companions-20261022:
+    request_id: request-icop-l01-companions-20261022-eba1aa98
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:5e87dbe475e54b16abb97b14d3e858660175bed9c63d4181ee4c2995d50a5e51
+    transaction_id: transaction-20261022-200406-001
+    receipt_path: operations/transactions/transaction-20261022-200406-001.yaml
+    revisions:
+      source-cornell-topaloglu-lp: 1
+      source-mit-18200-2024: 1
+      source-stanford-cs261-2016: 1
+    snapshot_before: sha256:40f018cc9bf1eeaade1fc08449826d1f8b18b754c02a61ec1f18ae38336656a7
+    snapshot_after: sha256:5471420a2a9a5df485c08e568cfc82fe9c6017ba5730b78bdd54e5d637211f55
+  icop-l01-exercise-bank-20261022:
+    request_id: request-icop-l01-exercise-bank-20261022-36e0fb59
+    capability: note.create
+    channel: operator
+    intent_sha256: sha256:f82066010c43b6bf2e48000d251e0187f1c874701c9b1a5305d14730d447c1dd
+    transaction_id: transaction-20261022-202136-001
+    receipt_path: operations/transactions/transaction-20261022-202136-001.yaml
+    revisions:
+      note-icop-l01-exercise-bank: 1
+    snapshot_before: sha256:4148cd2155e61d2eaa83ce8163b1a9040fac646e780170f1e9dbc88eb6a3a576
+    snapshot_after: sha256:d4de36205d6ef3f979009a69b3b7418ea42b8d62e694b1a8140d83db2e50d8fe
+  icop-l01-mock-exam-20261022:
+    request_id: request-icop-l01-mock-exam-20261022-3b6bdc23
+    capability: note.create
+    channel: operator
+    intent_sha256: sha256:bc37a39f4a6278d3464e8a28975e59c4eb28102db2b4e12221027c54e4e5bdd3
+    transaction_id: transaction-20261023-013033-001
+    receipt_path: operations/transactions/transaction-20261023-013033-001.yaml
+    revisions:
+      note-icop-l01-mock-exam: 1
+    snapshot_before: sha256:d4de36205d6ef3f979009a69b3b7418ea42b8d62e694b1a8140d83db2e50d8fe
+    snapshot_after: sha256:5f54941d2889ee220a458309dfedb9aa1b260a27d01e497fffb6d0f64b0ab525
   idem-import-sad-v5:
     request_id: req-import-sad-v5
     capability: module.plan.import
@@ -2742,6 +2799,19 @@ entries:
       unit-m2-sad-l14: 16
     snapshot_before: sha256:931dd3a45e434dbc099e7741749b89b0ff9e5eb2176528fc60ee7f00d0e69149
     snapshot_after: sha256:3abde9c332d8c12aadf61247513bbac2a93cbba46af0bcfcacf858a801ba5bc5
+  reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414:
+    request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:6eba4e0f30f7941fd1860883dc686435871251da95dc1ee098148b7d0c917944
+    transaction_id: transaction-20261023-014811-001
+    receipt_path: operations/transactions/transaction-20261023-014811-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 3
+      module-hu-betriebssysteme: 1
+      unit-bs-os-structure: 1
+    snapshot_before: sha256:b0b80d029ae16dca22f4c252f80a36d96c545da45a949e6ed1272d63e2d26e18
+    snapshot_after: sha256:9d818d21ab15f8c7ed06914944cc7b0ff2c311f4b9fe6e8aa5f47889e849b167
   reviewed-72380ee982194f85b506461eb6e69ee6:
     request_id: request-reviewed-869db140e1064dbca9e4f1f2d8aeca21
     capability: module.plan.import
@@ -2966,6 +3036,30 @@ entries:
       unit-job-polars-order-text-time: 2
     snapshot_before: sha256:714f227bf041099ff11f0c816c01b816a854acc034a4163d0ab61bbc65d18650
     snapshot_after: sha256:b0a43c85b5a0ba24a479b67abf250a8eb9f0a17621081c36b3ee5d5499e43196
+  reviewed-d6f6ad9b7a5c4c428fffe9a62b2e88d5:
+    request_id: request-reviewed-294dc40a3ff44c829719691d31df3011
+    capability: note.analysis.save_batch
+    channel: operator
+    intent_sha256: sha256:02230d69e60763d727f7c09ecc7d0478d201476dfc7b83e88059ce85366229a2
+    transaction_id: transaction-20261022-201126-001
+    receipt_path: operations/transactions/transaction-20261022-201126-001.yaml
+    revisions:
+      note-icop-l01-reference: 1
+    snapshot_before: sha256:983ba7100a7634c4a680f2af9a0e69a712f5a0b9b052fad10209884458955540
+    snapshot_after: sha256:4148cd2155e61d2eaa83ce8163b1a9040fac646e780170f1e9dbc88eb6a3a576
+  reviewed-ddcd56deffcc423fb5276f3d2a49412a:
+    request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:452a13375f7d5d62dbad083dbce9eff38866d63a0cb1ad52b90c8703c57b81b0
+    transaction_id: transaction-20261023-013226-001
+    receipt_path: operations/transactions/transaction-20261023-013226-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 2
+      module-hu-icop: 1
+      unit-icop-l01-linear-programming: 1
+    snapshot_before: sha256:ad3b9a4691309a91112c172f89439680b55e9ec4fcbf4c06869171d224e5c808
+    snapshot_after: sha256:9c554627c03c9e4c429f5adf3a6242f17d231c2f057cc2bfc3963476291a149d
   reviewed-e0c5a87aee6347b98d6f0073e43333ed:
     request_id: request-reviewed-705eec0d428347ffa232a3a74e47a599
     capability: unit.plan.revise
@@ -3000,6 +3094,17 @@ entries:
       file:operations/transactions/lineage.yaml: 1
     snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
     snapshot_after: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+  reviewed-fc33f73b034444d792f33cee9db2dd12:
+    request_id: request-reviewed-88f66dc6e77745dca50024b4265f2a4d
+    capability: note.analysis.save_batch
+    channel: operator
+    intent_sha256: sha256:924db4aa508aeb0ecaf1d23821692f3485420be916acd532d6d9ed213dee1473
+    transaction_id: transaction-20261023-014539-001
+    receipt_path: operations/transactions/transaction-20261023-014539-001.yaml
+    revisions:
+      note-bs-os-basics-reference: 1
+    snapshot_before: sha256:969347251f408e4e01655b2831745a757e3395007a81db35e687d2661393b217
+    snapshot_after: sha256:b7595091f3ff178d4a3bdc8d501df4b9b7a266bdc21ba739a39ee7426e50ded2
   route-patch-leuphana-locator-2026-09-16:
     request_id: request-leuphana-locator-2026-09-16
     capability: route.patch
@@ -3715,6 +3820,96 @@ entries:
       unit-m2-sad-l04: 22
     snapshot_before: sha256:0098b6b0191943ce2604780a66a5ac714f73394c0aa02987baa11f563d3665c8
     snapshot_after: sha256:5b17d866385b2b6eac96db04407f061509af8ae0ab5393342b5f8773a5d6b3ff
+  thesis-mle-20261023-guide-ready:
+    request_id: request-thesis-mle-20261023-guide-ready
+    capability: note.create
+    channel: operator
+    intent_sha256: sha256:254be031ba3a5e8696037d3572d9e70967b07d90c04ab025b890d164c91f0c49
+    transaction_id: transaction-20261023-015630-001
+    receipt_path: operations/transactions/transaction-20261023-015630-001.yaml
+    revisions:
+      note-bachelor-thesis-medical-mle-exploration: 1
+    snapshot_before: sha256:494a233a07425068a87272be63bac0711f4363a14517fed517ea136da238be69
+    snapshot_after: sha256:38a2c4ebcdb9b836d263ef25b8696a9711aa6e850f7c1fad7b1eab59ba41687c
+  thesis-mle-20261023-next-action:
+    request_id: request-thesis-mle-20261023-next-action
+    capability: workspace.next-action.update
+    channel: operator
+    intent_sha256: sha256:c9e5a935608f34ec6ffb71f828d1a4b63985eae8bedf79e323d074519215831c
+    transaction_id: transaction-20261023-015705-001
+    receipt_path: operations/transactions/transaction-20261023-015705-001.yaml
+    revisions:
+      workspace-thesis-mle-medical: 2
+    snapshot_before: sha256:23bdbceda2c2d36658e92ea455c16f3dcabcbd858433d181838054de417a3a96
+    snapshot_after: sha256:6e85d25beaa05575d14c78cfdc82d01edd5b975c6308ba147d3085f0b5dabf6a
+  thesis-mle-20261023-project-guide:
+    request_id: request-thesis-mle-20261023-project-guide
+    capability: project.update
+    channel: operator
+    intent_sha256: sha256:960096115e618662236a6e3af0e3418072cc11c483a1619b6cb85978ff3c86fd
+    transaction_id: transaction-20261023-015647-001
+    receipt_path: operations/transactions/transaction-20261023-015647-001.yaml
+    revisions:
+      project-bachelor-thesis: 2
+    snapshot_before: sha256:38a2c4ebcdb9b836d263ef25b8696a9711aa6e850f7c1fad7b1eab59ba41687c
+    snapshot_after: sha256:23bdbceda2c2d36658e92ea455c16f3dcabcbd858433d181838054de417a3a96
+  thesis-mle-20261023-pytorch-retry-ready:
+    request_id: request-thesis-mle-20261023-pytorch-retry-ready
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:e6c638860dca3a71b8330b322f34cabcc7cf26ddf9d1508277b6f57cd1cdab34
+    transaction_id: transaction-20261023-015612-001
+    receipt_path: operations/transactions/transaction-20261023-015612-001.yaml
+    revisions:
+      source-pytorch-tutorials: 1
+    snapshot_before: sha256:0a3375734eabc9db24a5d87b284d3d29c62cf0be878111261dcda24f5ced447d
+    snapshot_after: sha256:494a233a07425068a87272be63bac0711f4363a14517fed517ea136da238be69
+  thesis-mle-20261023-source-kaggle-winning-solutions:
+    request_id: request-thesis-mle-20261023-source-kaggle-winning-solutions
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:51ed0cc1802de9243266835e9b804dee4b3ef99133dc2a714d3fedd4e6348bd9
+    transaction_id: transaction-20261023-015356-001
+    receipt_path: operations/transactions/transaction-20261023-015356-001.yaml
+    revisions:
+      source-kaggle-winning-solutions: 2
+    snapshot_before: sha256:1fe630907d97437e43064dbacc3b06f1ca4ac0bdd39a357ea94122fbf157452f
+    snapshot_after: sha256:a1249a06a514ca07ed13188b7496b7f4915868fb5360f3105a95912389b89fa0
+  thesis-mle-20261023-source-sklearn-user-guide:
+    request_id: request-thesis-mle-20261023-source-sklearn-user-guide
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:51ab8980a824e1cd9d7f274421614af0d4d39bb2716db8b85287d84c462e4128
+    transaction_id: transaction-20261023-015414-001
+    receipt_path: operations/transactions/transaction-20261023-015414-001.yaml
+    revisions:
+      source-sklearn-user-guide: 2
+    snapshot_before: sha256:a1249a06a514ca07ed13188b7496b7f4915868fb5360f3105a95912389b89fa0
+    snapshot_after: sha256:93f10323beaf4039913e1356af2e05d3148e56e7b2b6ff6b0f55ffe6bc030e7f
+  thesis-mle-20261023-sources:
+    request_id: request-thesis-mle-20261023-sources
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:a37e0f7bc2965482803a053d5448809ac5ba5da7028589a82a0498e0548cba32
+    transaction_id: transaction-20261023-015335-001
+    receipt_path: operations/transactions/transaction-20261023-015335-001.yaml
+    revisions:
+      source-aide-paper: 1
+      source-aide-reference: 1
+      source-aira-paper: 1
+      source-aptos-winning-solution: 1
+      source-medmnist: 1
+      source-mimic-iv: 1
+      source-mle-bench-paper: 1
+      source-mle-bench-repository: 1
+      source-piml-paper: 1
+      source-ptb-xl: 1
+      source-rd-agent-paper: 1
+      source-rex-mle-paper: 1
+      source-siim-isic-winning-solution: 1
+      source-tripod-ai: 1
+    snapshot_before: sha256:9d818d21ab15f8c7ed06914944cc7b0ff2c311f4b9fe6e8aa5f47889e849b167
+    snapshot_after: sha256:1fe630907d97437e43064dbacc3b06f1ca4ac0bdd39a357ea94122fbf157452f
   ue3-angle-correction-001:
     request_id: op-20260918-ue3-angle-001
     capability: route.patch

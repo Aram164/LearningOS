@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261023-015356-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-23T01:53:56+02:00'
+snapshot_before: sha256:1fe630907d97437e43064dbacc3b06f1ca4ac0bdd39a357ea94122fbf157452f
+snapshot_after: sha256:a1249a06a514ca07ed13188b7496b7f4915868fb5360f3105a95912389b89fa0
+expected_revisions:
+  source-kaggle-winning-solutions: 1
+artifact_revisions:
+  source-kaggle-winning-solutions:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: 9fcc922f0e8a2e5189397ffd32d50381a68577fb8f89708641d78c6905928973
+  sha256_after: 8db6e3fa99afd07c9fcf4cb93db68b46685dc77d598639cc64efda9ec08ad1dd
+  created: false
+metadata:
+  data_roots_sha256: sha256:f5ff0b4c99c447c51dd36ff5e702cb496ebb01844697a33b0e5087965ebf6e28
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-source-kaggle-winning-solutions
+  idempotency_key: thesis-mle-20261023-source-kaggle-winning-solutions
+  intent_sha256: sha256:51ed0cc1802de9243266835e9b804dee4b3ef99133dc2a714d3fedd4e6348bd9
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:51ed0cc1802de9243266835e9b804dee4b3ef99133dc2a714d3fedd4e6348bd9

@@ -46,6 +46,9 @@ Exactly four canonical families:
 
 No additional canonical *knowledge* entity type without demonstrated recurring need.
 
+The four families classify durable knowledge, not the operational records and
+derived proposals described below.
+
 ### 2.2 Durable factual records
 
 **Partitioned module records**
@@ -69,6 +72,11 @@ remains under `knowledge/`.
   workspaces reference units explicitly and may coordinate several of them.
 
 Operationally canonical means: authoritative while active, but not part of the permanent knowledge model.
+
+Explicit candidate-goal attention decisions in `operations/goal-ledger.yaml`
+are operational records under [SEMANTIC-CONTRACT, Candidate goals](SEMANTIC-CONTRACT.md#candidate-goals-phase-3)
+and [WORKFLOWS §30](WORKFLOWS.md#30-review-exact-goal-decisions-together).
+They do not introduce an independent knowledge entity for goals.
 
 ### 2.4 Preserved historical context
 
@@ -97,6 +105,14 @@ Generated artifacts must never become canonical inputs.
 ### 2.6 Agent-computed and disposable artifacts
 
 Produced by the operator through reasoning, never canonical: study plans, source menus, contextual summaries, review suggestions, next-action recommendations, priority orderings, neglect warnings, temporary comparison tables.
+
+### 2.7 Enforced operation boundary
+
+[ADR-018](adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md)
+records the operation boundary and enforcement decisions. The shared pipeline
+is `tools/learning_os/app/pipeline.py`; `pyproject.toml` declares the enforced
+package layers, and `tests/architecture/` holds the enforcement inventories and
+ratchets. These references complement the artifact ownership model here.
 
 ---
 
@@ -226,7 +242,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Module record | `curriculum/modules/<module-id>/module.yaml` | one partition per module |
 | Module source map | `curriculum/modules/<module-id>/source-map.yaml` | fixed inside module |
 | Unit | `curriculum/modules/<module-id>/units/<unit-id>/unit.yaml` | one owning module |
-| Optional current study map | beside its unit as `study-map.yaml` | at most one current map per unit; absent until an ordered path is wanted |
+| Current study map (structurally optional) | beside its unit as `study-map.yaml` | at most one current map per unit; [OPERATOR hard boundary 6](OPERATOR.md#hard-boundaries) determines when a unit owes one |
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
 | Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
 
@@ -560,9 +576,11 @@ durable artifacts. The state vocabulary is
 `complete`. A clustered unit is valid; the model must not invent individual
 lectures when the preserved plan intentionally spans several.
 
-A unit does not require a study map. Its knowledge map and complete material
-menu remain useful before any study order is chosen. When the learner wants an
-ordered, progress-tracked path, the unit may have at most one current study
+A unit can be represented before a study map exists: its knowledge map and
+complete material menu remain useful before any study order is chosen.
+Structural optionality does not discharge the operational obligation in
+[OPERATOR hard boundary 6](OPERATOR.md#hard-boundaries); the producer derives
+`needs_study_map` under that rule. A unit may have at most one current study
 map. Git preserves prior forms rather than a pile of competing active scripts.
 The optional map owns ordered stages, its
 current stage, source-plan provenance, explicit prerequisite detours with a
@@ -570,6 +588,12 @@ return stage, and shelving proposal state. A stage owns its objective, state,
 done-when evidence, exact source actions/locators, scope triage, working note,
 attachments, source-use feedback, and completion date. There is deliberately no
 canonical session entity.
+
+The `runtime.session` query is a deterministic, read-only, snapshot-bound
+proposal, as declared in `system/contracts/capabilities.yaml` and
+`system/schema/runtime-session.schema.json`. Its session packet is not a
+stored canonical session entity; learner evidence and stage state retain their
+existing owners.
 
 Source relationships have four distinct owners:
 
@@ -651,9 +675,10 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 19. The repository defines what the system is; operator-specific behavior lives only in the operator contract (`CLAUDE.md` for Claude).
 20. Every unit belongs to exactly one module; an optional component belongs to
     that same module.
-21. A unit's knowledge map and complete material menu do not require a study
-    map. If a unit has a current study map, it has at most one, and that map's
-    current stage is one of its own ordered stages.
+21. A unit's knowledge map and complete material menu remain usable without a
+    study map; [OPERATOR hard boundary 6](OPERATOR.md#hard-boundaries) determines
+    whether the unit owes one. If a unit has a current study map, it has at most
+    one, and that map's current stage is one of its own ordered stages.
 22. The resume pointer is optional convenience state and never filters the
     curriculum. It reports the last stage left open — *where you stopped* — and
     is never, on its own, an answer to *what to do next*. An interface that
@@ -715,6 +740,10 @@ Learning OS v3 will not implement:
 - mandatory `updated` timestamps;
 - a database or server;
 - dependence on Obsidian or another proprietary interface.
+
+The goals/sessions non-goal concerns independent entities. It does not exclude
+the operational attention decisions (§2.3), derived runtime proposals (§14A),
+or action-ledger session protocol in ADR-018.
 
 ## Gate B — transactional canonical writes
 

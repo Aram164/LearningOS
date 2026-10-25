@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-015705-001
+type: transaction-receipt
+status: committed
+capability: workspace.next-action.update
+committed_at: '2026-10-23T01:57:05+02:00'
+snapshot_before: sha256:23bdbceda2c2d36658e92ea455c16f3dcabcbd858433d181838054de417a3a96
+snapshot_after: sha256:6e85d25beaa05575d14c78cfdc82d01edd5b975c6308ba147d3085f0b5dabf6a
+expected_revisions:
+  workspace-thesis-mle-medical: 1
+artifact_revisions:
+  workspace-thesis-mle-medical:
+    before: 1
+    after: 2
+writes:
+- path: work/active/workspace-thesis-mle-medical/CONTEXT.md
+  sha256_before: 8cd3cabaaddf28c2238aa583c5c914f7ae5f96dd7aaea598bc8ac76be1029285
+  sha256_after: 050720a096daa399bcbb8ee5e1f06c86d6f05393b8e5968b53033ad4905c86dc
+  created: false
+metadata:
+  data_roots_sha256: sha256:f7e284dbf8e6fc964b33c1229266bed0b61da392ac78525d2564a25c1d19cf1d
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: workspace.next-action.update
+    declared_writes:
+    - work/active/**
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-next-action
+  idempotency_key: thesis-mle-20261023-next-action
+  intent_sha256: sha256:c9e5a935608f34ec6ffb71f828d1a4b63985eae8bedf79e323d074519215831c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c9e5a935608f34ec6ffb71f828d1a4b63985eae8bedf79e323d074519215831c

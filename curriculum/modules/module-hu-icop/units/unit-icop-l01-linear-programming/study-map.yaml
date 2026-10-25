@@ -1,0 +1,1148 @@
+id: study-map-icop-l01-linear-programming
+type: study-map
+plan_template_version: 1
+unit_id: unit-icop-l01-linear-programming
+status: ready
+current_stage: stage-icop-l01-forms
+source_plan:
+  path: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/icop-l01-2026-10-22/module-plan.yaml
+  provenance: ai-proposed
+detours: []
+stages:
+- id: stage-icop-l01-forms
+  number: 1
+  title: Session 1 — Model an LP and translate its forms
+  status: pending
+  objective: Formulate variables, objective and constraints; convert LP forms without changing the represented
+    problem. Read the deck framing on pages 1-5; work pages 6-23. Kratsch canonical means min c^T x with
+    Ax<=b and x>=0; standard means Ax=b and x>=0. Do not carry names across textbooks without checking
+    the equations.
+  done_when:
+  - Formulate the shortest-path LP on slide 23 for a small directed graph, and explain each variable and
+    constraint.
+  - Convert it to both Kratsch canonical and standard form; reconstruct an original feasible solution
+    and its objective from the transformed variables.
+  - Explain unrestricted-variable splitting, slack variables, and max/min sign changes without notes.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-forms-mit12
+    route_id: route-icop-l01-mit12
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-mit12
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-forms-deck-forms
+    route_id: route-icop-l01-deck-forms
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-forms
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-forms-blum-forms
+    route_id: route-icop-l01-blum-forms
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-forms
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-forms-cornell-8
+    route_id: route-icop-l01-cornell-8
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-forms-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-forms/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-forms
+  runtime_target:
+    concept: knowledge-icop-l01-forms
+    capability:
+      kind: explain
+      operands:
+      - Formulate variables, objective and constraints; convert LP forms without changing the represented
+        problem.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Formulate the shortest-path LP on slide 23 for a small directed graph, and explain each variable
+      and constraint.
+    - Convert it to both Kratsch canonical and standard form; reconstruct an original feasible solution
+      and its objective from the transformed variables.
+    - Explain unrestricted-variable splitting, slack variables, and max/min sign changes without notes.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:3c86e675ab171b099fafc1818c55e28d5951276736b2cf79233cea5bb179f2e7
+- id: stage-icop-l01-geometry
+  number: 2
+  title: Session 2 — See constraints and objectives geometrically
+  status: pending
+  objective: Connect linear inequalities, convex feasible sets and supporting hyperplanes to global optimality.
+    Recall the existing convexity idea through note-aml-l06-gradient-descent §7; add the LP-specific proof
+    and polyhedral structure here. Convexity does not imply a unique optimizer; do not assume uniqueness
+    when an objective is constant along a face.
+  done_when:
+  - Draw a two-variable feasible region and objective level lines; distinguish infeasibility, an unbounded
+    objective and a finite optimum.
+  - Prove halfspaces and their intersections are convex, then prove that an LP local optimum is global.
+  - Explain supporting hyperplanes, faces, vertices, edges and facets; state when the no-interior-optimum
+    argument needs a nonzero objective.
+  exam_critical: true
+  concepts:
+  - concept-convexity
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-geometry-deck-geometry
+    route_id: route-icop-l01-deck-geometry
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-geometry
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-geometry-cornell-2
+    route_id: route-icop-l01-cornell-2
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-geometry-cornell-notes-2
+    route_id: route-icop-l01-cornell-notes-2
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-geometry-blum-geometry
+    route_id: route-icop-l01-blum-geometry
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-geometry
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-geometry-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-geometry/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-geometry
+  runtime_target:
+    concept: knowledge-icop-l01-geometry
+    capability:
+      kind: explain
+      operands:
+      - Connect linear inequalities, convex feasible sets and supporting hyperplanes to global optimality.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Draw a two-variable feasible region and objective level lines; distinguish infeasibility, an unbounded
+      objective and a finite optimum.
+    - Prove halfspaces and their intersections are convex, then prove that an LP local optimum is global.
+    - Explain supporting hyperplanes, faces, vertices, edges and facets; state when the no-interior-optimum
+      argument needs a nonzero objective.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:439329ae4a02ea89945db2ef8c6121ee71661d4b1c594b294cd6d03efbe1d397
+- id: stage-icop-l01-bases
+  number: 3
+  title: Session 3 — Connect vertices, extreme points and feasible bases
+  status: pending
+  objective: 'Turn the geometric vertex condition into independent columns and computable basic feasible
+    solutions. Distinguish independent support columns from a full m-column basis; a degenerate BFS may
+    have fewer than m positive coordinates. Answer the question on slide 55: standard-form nonempty feasible
+    polyhedra have vertices; arbitrary LP polyhedra need not.'
+  done_when:
+  - For a small standard-form system, solve all candidate bases A_B x_B=b and reject singular or infeasible
+    candidates.
+  - Explain all directions of the vertex/extreme-point/basic-feasible-solution equivalence using the deck
+    proof.
+  - Reconstruct the support-reduction argument for an optimal vertex and explain why exhaustive basis
+    enumeration is exponential.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-bases-deck-bases
+    route_id: route-icop-l01-deck-bases
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-bases
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-bases-cornell-3
+    route_id: route-icop-l01-cornell-3
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-bases-cornell-notes-3
+    route_id: route-icop-l01-cornell-notes-3
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-bases-cornell-4
+    route_id: route-icop-l01-cornell-4
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-bases-cornell-notes-4
+    route_id: route-icop-l01-cornell-notes-4
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-bases-blum-bases
+    route_id: route-icop-l01-blum-bases
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-bases
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-bases-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-bases/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-bases
+  runtime_target:
+    concept: knowledge-icop-l01-bases
+    capability:
+      kind: explain
+      operands:
+      - Turn the geometric vertex condition into independent columns and computable basic feasible solutions.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - For a small standard-form system, solve all candidate bases A_B x_B=b and reject singular or infeasible
+      candidates.
+    - Explain all directions of the vertex/extreme-point/basic-feasible-solution equivalence using the
+      deck proof.
+    - Reconstruct the support-reduction argument for an optimal vertex and explain why exhaustive basis
+      enumeration is exponential.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:56cda235bc9ee2dd31030dc9528993b6eed8a0c39bf8b6413405407549f7850a
+- id: stage-icop-l01-pivots
+  number: 4
+  title: Session 4 — Derive and carry out a simplex pivot
+  status: pending
+  objective: Derive reduced costs, an entering direction and the ratio test from the current basis. Use
+    the matrix derivation first; Blum §8.2 PDF pages 244-245 is optional tableau support. Carry one small
+    LP forward into the duality sessions instead of starting a new numerical example every time.
+  done_when:
+  - Derive x_B=A_B^-1(b-A_N x_N) and the reduced-cost expression; explain the optimality test.
+  - Perform one feasible pivot on a small LP, identify the entering/leaving variables, and explain the
+    geometric edge and objective improvement.
+  - Construct or recognize an improving unbounded ray; state the nondegeneracy assumption behind strict
+    improvement and no repeated vertex.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-pivots-deck-pivots
+    route_id: route-icop-l01-deck-pivots
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-pivots
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-pivots-cornell-4
+    route_id: route-icop-l01-cornell-4
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-pivots-cornell-notes-4
+    route_id: route-icop-l01-cornell-notes-4
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-pivots-cornell-5
+    route_id: route-icop-l01-cornell-5
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-pivots-cornell-notes-5
+    route_id: route-icop-l01-cornell-notes-5
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-pivots-blum-pivots
+    route_id: route-icop-l01-blum-pivots
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-pivots
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-pivots-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-pivots/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-pivots
+  runtime_target:
+    concept: knowledge-icop-l01-pivots
+    capability:
+      kind: apply
+      operands:
+      - Derive reduced costs, an entering direction and the ratio test from the current basis.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Derive x_B=A_B^-1(b-A_N x_N) and the reduced-cost expression; explain the optimality test.
+    - Perform one feasible pivot on a small LP, identify the entering/leaving variables, and explain the
+      geometric edge and objective improvement.
+    - Construct or recognize an improving unbounded ray; state the nondegeneracy assumption behind strict
+      improvement and no repeated vertex.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:033382344de0536c49735068b6891c67dcb836484f33194573520f73ae178cc0
+- id: stage-icop-l01-phase-one
+  number: 5
+  title: Session 5 — Find a starting basis and handle failure cases
+  status: pending
+  objective: Construct Phase I and distinguish infeasibility, degeneracy, cycling and running-time claims.
+    Revisit slide 67 before applying nondegeneracy claims; explain the zero artificial-variable cleanup
+    or redundant-row case. Klee-Minty and the Hirsch discussion are context on slides 90-91. Detailed
+    smoothed analysis and interior-point papers remain deferred.
+  done_when:
+  - Build min sum h with Ax+h=b and x,h>=0 after adjusting row signs; prove optimum zero iff the original
+    LP is feasible.
+  - Answer the questions on slide 87, including why Phase I cannot be unbounded below and how a feasible
+    original basis is recovered.
+  - Explain the determinant/Cramer-rule bit-size argument on slide 89 and distinguish pivot cost from
+    potentially exponential pivot count.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-phase-one-deck-phase-one
+    route_id: route-icop-l01-deck-phase-one
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-phase-one
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-6
+    route_id: route-icop-l01-cornell-6
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-notes-6
+    route_id: route-icop-l01-cornell-notes-6
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-7
+    route_id: route-icop-l01-cornell-7
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-notes-7
+    route_id: route-icop-l01-cornell-notes-7
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-9
+    route_id: route-icop-l01-cornell-9
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-cornell-notes-9
+    route_id: route-icop-l01-cornell-notes-9
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-blum-phase-one
+    route_id: route-icop-l01-blum-phase-one
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-phase-one
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-phase-one-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-phase-one/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-phase-one
+  runtime_target:
+    concept: knowledge-icop-l01-phase-one
+    capability:
+      kind: explain
+      operands:
+      - Construct Phase I and distinguish infeasibility, degeneracy, cycling and running-time claims.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Build min sum h with Ax+h=b and x,h>=0 after adjusting row signs; prove optimum zero iff the original
+      LP is feasible.
+    - Answer the questions on slide 87, including why Phase I cannot be unbounded below and how a feasible
+      original basis is recovered.
+    - Explain the determinant/Cramer-rule bit-size argument on slide 89 and distinguish pivot cost from
+      potentially exponential pivot count.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:733edf0bb7f058fa51839ca9cb52a4cfc8d05b7176234e86dc24696c0be015e2
+- id: stage-icop-l01-standard-duality
+  number: 6
+  title: Session 6 — Prove bounds and standard-form duality
+  status: pending
+  objective: Construct the standard-form dual, prove weak duality and obtain a strong-duality certificate
+    from an optimal basis. Use Cornell L14 then L15 for examples and L16 for the simplex-to-duality connection.
+    Keep the optimal-basis/nonnegative-reduced-cost qualification when discussing degenerate solutions.
+  done_when:
+  - Derive max y^T b subject to y^T A<=c^T for the standard-form minimization primal, explaining why y
+    is unrestricted.
+  - Prove weak duality and verify a feasible primal/dual pair with equal objectives; explain exactly what
+    the equality certifies.
+  - Explain the strong-duality proof using y^T=c_B^T A_B^-1 and nonnegative reduced costs at an optimal
+    basis.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-standard-duality-deck-standard-duality
+    route_id: route-icop-l01-deck-standard-duality
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-standard-duality
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-14
+    route_id: route-icop-l01-cornell-14
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-14
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-notes-14
+    route_id: route-icop-l01-cornell-notes-14
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-14
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-15
+    route_id: route-icop-l01-cornell-15
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-15
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-notes-15
+    route_id: route-icop-l01-cornell-notes-15
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-15
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-16
+    route_id: route-icop-l01-cornell-16
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-cornell-notes-16
+    route_id: route-icop-l01-cornell-notes-16
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-blum-standard-duality
+    route_id: route-icop-l01-blum-standard-duality
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-standard-duality
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-standard-duality-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-standard-duality/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-standard-duality
+  runtime_target:
+    concept: knowledge-icop-l01-standard-duality
+    capability:
+      kind: explain
+      operands:
+      - Construct the standard-form dual, prove weak duality and obtain a strong-duality certificate from
+        an optimal basis.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Derive max y^T b subject to y^T A<=c^T for the standard-form minimization primal, explaining why
+      y is unrestricted.
+    - Prove weak duality and verify a feasible primal/dual pair with equal objectives; explain exactly
+      what the equality certifies.
+    - Explain the strong-duality proof using y^T=c_B^T A_B^-1 and nonnegative reduced costs at an optimal
+      basis.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:26343d6990a6b5e0d3c4bf30088dda6a47786e6976c17d4bc2d1a821239257a4
+- id: stage-icop-l01-general-duality
+  number: 7
+  title: Session 7 — Derive dual signs and diagnose primal-dual status
+  status: pending
+  objective: Derive general dual rules from transformations and classify the possible primal/dual outcomes.
+    Cornell L8 supports transformations; MIT Shor L13 is an optional second perspective. Explain why an
+    unbounded primal forces dual infeasibility, while primal infeasibility alone does not force dual unboundedness.
+  done_when:
+  - Dualize a mixed-constraint LP by deriving the sign/equality rules from standard form rather than quoting
+    a memorized table.
+  - Complete the dual-of-the-dual argument on slide 112 and explain the both-infeasible example on slide
+    114.
+  - 'Return to the shortest-path model on slide 115: derive its dual and interpret the variables and constraints.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-general-duality-deck-general-duality
+    route_id: route-icop-l01-deck-general-duality
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-general-duality
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-general-duality-cornell-8
+    route_id: route-icop-l01-cornell-8
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-general-duality-cornell-notes-8
+    route_id: route-icop-l01-cornell-notes-8
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-general-duality-blum-general-duality
+    route_id: route-icop-l01-blum-general-duality
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-general-duality
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-general-duality-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-general-duality/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-general-duality
+  runtime_target:
+    concept: knowledge-icop-l01-general-duality
+    capability:
+      kind: explain
+      operands:
+      - Derive general dual rules from transformations and classify the possible primal/dual outcomes.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Dualize a mixed-constraint LP by deriving the sign/equality rules from standard form rather than
+      quoting a memorized table.
+    - Complete the dual-of-the-dual argument on slide 112 and explain the both-infeasible example on slide
+      114.
+    - 'Return to the shortest-path model on slide 115: derive its dual and interpret the variables and
+      constraints.'
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:ce04bc7b0f911b02465da537da23ee7b043c64b1b1326ff315bd118a0a7c3f0a
+- id: stage-icop-l01-slackness
+  number: 8
+  title: Session 8 — Use complementary slackness as an optimality certificate
+  status: pending
+  objective: Derive complementary slackness from the primal-dual gap and use it to construct/check an
+    optimal partner. Cornell L17 supplies examples; its packet does not prove the converse explicitly,
+    so complete the proof from Kratsch/Blum. Read the chapter summary on slide 125 and identify how modeling,
+    geometry, bases, simplex and dual certificates connect.
+  done_when:
+  - State complementary slackness with both primal and dual feasibility, and prove both directions using
+    the nonnegative gap decomposition.
+  - Solve an original small LP, recover a dual candidate from the active/slack constraints, then verify
+    all dual constraints and equal objective values.
+  - Explain how positive variables and loose inequalities restrict an optimal partner; distinguish necessary
+    equalities from a full feasibility check.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-slackness-deck-slackness
+    route_id: route-icop-l01-deck-slackness
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-slackness
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-slackness-cornell-17
+    route_id: route-icop-l01-cornell-17
+    kind: watch
+    material_ref:
+      route_id: route-icop-l01-cornell-17
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: helpful-now
+    affordance: intervention
+  - id: resource-icop-l01-slackness-cornell-notes-17
+    route_id: route-icop-l01-cornell-notes-17
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-cornell-notes-17
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-slackness-blum-slackness
+    route_id: route-icop-l01-blum-slackness
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-slackness
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-slackness-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-slackness/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-slackness
+  runtime_target:
+    concept: knowledge-icop-l01-slackness
+    capability:
+      kind: explain
+      operands:
+      - Derive complementary slackness from the primal-dual gap and use it to construct/check an optimal
+        partner.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - State complementary slackness with both primal and dual feasibility, and prove both directions using
+      the nonnegative gap decomposition.
+    - Solve an original small LP, recover a dual candidate from the active/slack constraints, then verify
+      all dual constraints and equal objective values.
+    - Explain how positive variables and loose inequalities restrict an optimal partner; distinguish necessary
+      equalities from a full feasibility check.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:a858474012704e5f3f0a33f72c77fa6af15f7950d1dc0425c9f6c6e12efe1bef
+- id: stage-icop-l01-oral-review
+  number: 9
+  title: Session 9 — Integrate the chapter and rehearse the oral exam
+  status: pending
+  objective: Give concise spoken definitions, algorithm explanations and proof ideas, then test transfer
+    on a fresh LP. Read organization slides 15-16 for the oral expectations; use your own blackboard notes
+    where available (organization slide 12 says the PDFs omit sketches). Slide 126 is an outlook only.
+    The further exercises on slides 128-129 provide practice; organization slide 16 does not make their
+    solutions exam content.
+  done_when:
+  - Attempt the attached 30-minute oral self-test before opening its answer guide; record specific gaps
+    to revisit, without declaring mastery.
+  - Solve at least one simplex LP on slide 129 and connect its basis path to a verified primal-dual certificate.
+  - Attempt the largest-inscribed-ball model on slide 128 and outline the fractional-components and infeasibility-certificate
+    arguments as further transfer practice.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-icop-l01-oral-review-deck-oral-review
+    route_id: route-icop-l01-deck-oral-review
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-deck-oral-review
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-oral-review-blum-oral-review
+    route_id: route-icop-l01-blum-oral-review
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-blum-oral-review
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-oral-review-organization
+    route_id: route-icop-l01-organization
+    kind: read
+    material_ref:
+      route_id: route-icop-l01-organization
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: required-now
+    affordance: intervention
+  - id: resource-icop-l01-oral-review-kv-review
+    route_id: route-icop-l01-kv-review
+    kind: reference
+    material_ref:
+      route_id: route-icop-l01-kv-review
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    scope_triage: reference-only
+    affordance: intervention
+  - id: resource-icop-l01-oral-review-exercise-bank
+    kind: reference
+    label: Original ICOP LP drill bank and separated answer guide
+    vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+    locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
+    angle: Extra original tasks provide another attempt when the course task reveals a gap.
+    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
+      and not evidence of learner performance. Answers appear in a separate section.
+    scope_triage: reference-only
+  - id: resource-icop-l01-oral-mock
+    kind: reference
+    label: 30-minute ICOP LP oral self-test
+    vault_path: knowledge/notes/algorithms/note-icop-l01-mock-exam.md
+    locator: 'note-icop-l01-mock-exam: Exam first; answer guide afterwards'
+    angle: A timed spoken rehearsal tests definitions, proof ideas and algorithm explanations together.
+    angle_detail: Operator-authored rehearsal designed against organization slide 16; actual exam difficulty
+      is unknown. Use the answers after the attempt and record assistance honestly.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-oral-review/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-icop-l01-oral-review
+  runtime_target:
+    concept: knowledge-icop-l01-oral-review
+    capability:
+      kind: explain
+      operands:
+      - Give concise spoken definitions, algorithm explanations and proof ideas, then test transfer on
+        a fresh LP.
+    conditions:
+    - without-notes
+    evidence_spec:
+    - Attempt the attached 30-minute oral self-test before opening its answer guide; record specific gaps
+      to revisit, without declaring mastery.
+    - Solve at least one simplex LP on slide 129 and connect its basis path to a verified primal-dual
+      certificate.
+    - Attempt the largest-inscribed-ball model on slide 128 and outline the fractional-components and
+      infeasibility-certificate arguments as further transfer practice.
+  runtime_review:
+    reviewed_by: Codex
+    reviewed_on: '2026-10-22'
+    fingerprint: sha256:aff7e76b55431cf80cffce81b0b24959fd056e48a62b9df9408e39bb46528896
+shelving:
+  state: none

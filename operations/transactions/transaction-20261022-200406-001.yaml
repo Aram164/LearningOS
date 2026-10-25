@@ -1,0 +1,46 @@
+schema_version: 2
+id: transaction-20261022-200406-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-10-22T20:04:06+02:00'
+snapshot_before: sha256:40f018cc9bf1eeaade1fc08449826d1f8b18b754c02a61ec1f18ae38336656a7
+snapshot_after: sha256:5471420a2a9a5df485c08e568cfc82fe9c6017ba5730b78bdd54e5d637211f55
+expected_revisions:
+  source-cornell-topaloglu-lp: 0
+  source-mit-18200-2024: 0
+  source-stanford-cs261-2016: 0
+artifact_revisions:
+  source-cornell-topaloglu-lp:
+    before: 0
+    after: 1
+  source-mit-18200-2024:
+    before: 0
+    after: 1
+  source-stanford-cs261-2016:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/optimization.yaml
+  sha256_before: 260858a16a21486e3c7941a244ef9b539e33fd8e6e213ec855423870c21b8d50
+  sha256_after: b8f899d4b79af754608a3bbf4c2fc19984325e770cfe9219ba2840cd46ec414f
+  created: false
+metadata:
+  data_roots_sha256: sha256:7e1d379c3cfe341b2749c17a32e2990c2c50e7a9001f5119c4459312cd8eb980
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-icop-l01-companions-20261022-eba1aa98
+  idempotency_key: icop-l01-companions-20261022
+  intent_sha256: sha256:5e87dbe475e54b16abb97b14d3e858660175bed9c63d4181ee4c2995d50a5e51
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:5e87dbe475e54b16abb97b14d3e858660175bed9c63d4181ee4c2995d50a5e51

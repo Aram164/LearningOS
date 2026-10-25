@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-015647-001
+type: transaction-receipt
+status: committed
+capability: project.update
+committed_at: '2026-10-23T01:56:47+02:00'
+snapshot_before: sha256:38a2c4ebcdb9b836d263ef25b8696a9711aa6e850f7c1fad7b1eab59ba41687c
+snapshot_after: sha256:23bdbceda2c2d36658e92ea455c16f3dcabcbd858433d181838054de417a3a96
+expected_revisions:
+  project-bachelor-thesis: 1
+artifact_revisions:
+  project-bachelor-thesis:
+    before: 1
+    after: 2
+writes:
+- path: projects/registry/project-bachelor-thesis.yaml
+  sha256_before: 0570a2ecee09d3499a94fc1b685747c71b4d1b688458d40f6833e10a0db204dd
+  sha256_after: 3944a149b6e111b21c58834d916e86cadf4b1d1c50d934a88fa6b561099c477f
+  created: false
+metadata:
+  data_roots_sha256: sha256:b82b1f9055a922312f37b1af816ac5fd0d3e863417a17a68ff87f7df5eafe49d
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: project.update
+    declared_writes:
+    - projects/registry/*
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-project-guide
+  idempotency_key: thesis-mle-20261023-project-guide
+  intent_sha256: sha256:960096115e618662236a6e3af0e3418072cc11c483a1619b6cb85978ff3c86fd
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:960096115e618662236a6e3af0e3418072cc11c483a1619b6cb85978ff3c86fd

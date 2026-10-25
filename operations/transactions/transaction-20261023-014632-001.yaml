@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-014632-001
+type: transaction-receipt
+status: committed
+capability: note.create
+committed_at: '2026-10-23T01:46:32+02:00'
+snapshot_before: sha256:b472f603ec327bd1bbe23c4d3491efa927b10400453789c95981ac2d07b7b997
+snapshot_after: sha256:8b5d9f73b2824116f5f148bec5e6265b0f8f66dde530391f9d7f4b55871d3f26
+expected_revisions:
+  note-bs-os-basics-self-test: 0
+artifact_revisions:
+  note-bs-os-basics-self-test:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/systems/note-bs-os-basics-self-test.md
+  sha256_before: null
+  sha256_after: d3847b0c120b8a31818288460f52852cfb566bdb6d42dc618a1a14262c4dc6e7
+  created: true
+metadata:
+  data_roots_sha256: sha256:8740a432c0115c68fcd55ddf95680e20687e5d221e5711512bc2dcee5ebc40cb
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.create
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-bs-self-test-20261023-2a3446a3
+  idempotency_key: bs-self-test-20261023
+  intent_sha256: sha256:5a17c058b731e6bd4261fe68ef6e012ea86afc3978a6d71ed7b0093687e8aeb0
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:5a17c058b731e6bd4261fe68ef6e012ea86afc3978a6d71ed7b0093687e8aeb0

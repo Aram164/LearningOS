@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-015630-001
+type: transaction-receipt
+status: committed
+capability: note.create
+committed_at: '2026-10-23T01:56:30+02:00'
+snapshot_before: sha256:494a233a07425068a87272be63bac0711f4363a14517fed517ea136da238be69
+snapshot_after: sha256:38a2c4ebcdb9b836d263ef25b8696a9711aa6e850f7c1fad7b1eab59ba41687c
+expected_revisions:
+  note-bachelor-thesis-medical-mle-exploration: 0
+artifact_revisions:
+  note-bachelor-thesis-medical-mle-exploration:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/machine-learning/note-bachelor-thesis-medical-mle-exploration.md
+  sha256_before: null
+  sha256_after: d5a30a14c1284c69a5de05395748f8d978e911a4f47fe9f0d15f7a6eefcdc9d1
+  created: true
+metadata:
+  data_roots_sha256: sha256:369f4b0d4c655761006b55e0df8c62da0cf560eff115ddf7adb2e666b63c692e
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.create
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-guide-ready
+  idempotency_key: thesis-mle-20261023-guide-ready
+  intent_sha256: sha256:254be031ba3a5e8696037d3572d9e70967b07d90c04ab025b890d164c91f0c49
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:254be031ba3a5e8696037d3572d9e70967b07d90c04ab025b890d164c91f0c49

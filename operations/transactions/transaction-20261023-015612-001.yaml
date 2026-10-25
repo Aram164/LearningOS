@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261023-015612-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-23T01:56:12+02:00'
+snapshot_before: sha256:0a3375734eabc9db24a5d87b284d3d29c62cf0be878111261dcda24f5ced447d
+snapshot_after: sha256:494a233a07425068a87272be63bac0711f4363a14517fed517ea136da238be69
+expected_revisions:
+  source-pytorch-tutorials: 0
+artifact_revisions:
+  source-pytorch-tutorials:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: 20c5b805f539c1b10a379e80ab66ec98a2d260c295954c4fffd5d71a88bd6945
+  sha256_after: d188e05e32723f1235cd6d62035200e01529f1a8f969fe675b1bdea06476b80b
+  created: false
+metadata:
+  data_roots_sha256: sha256:f14814356b9e9b01a210ae69f2bd36d384ab1cda0f53ad92aeae841cc149ad2b
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-pytorch-retry-ready
+  idempotency_key: thesis-mle-20261023-pytorch-retry-ready
+  intent_sha256: sha256:e6c638860dca3a71b8330b322f34cabcc7cf26ddf9d1508277b6f57cd1cdab34
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:e6c638860dca3a71b8330b322f34cabcc7cf26ddf9d1508277b6f57cd1cdab34

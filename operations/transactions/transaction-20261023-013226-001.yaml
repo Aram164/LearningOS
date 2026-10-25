@@ -1,0 +1,103 @@
+schema_version: 2
+id: transaction-20261023-013226-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-10-23T01:32:26+02:00'
+snapshot_before: sha256:ad3b9a4691309a91112c172f89439680b55e9ec4fcbf4c06869171d224e5c808
+snapshot_after: sha256:9c554627c03c9e4c429f5adf3a6242f17d231c2f057cc2bfc3963476291a149d
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 1
+  module-hu-icop: 0
+  unit-icop-l01-linear-programming: 0
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 1
+    after: 2
+  module-hu-icop:
+    before: 0
+    after: 1
+  unit-icop-l01-linear-programming:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-icop/module.yaml
+  sha256_before: c2910a1f779159cda42d5d25c082bcbe7a75b0a40830673a4f51798222c3d117
+  sha256_after: 2e6c5ca00198978db347d73fd1d4eeec6804a3e21cc67be49c59d3b1ef123bbb
+  created: false
+- path: curriculum/modules/module-hu-icop/source-map.yaml
+  sha256_before: 6e846e6e9ef04f7a98357d677810fe2e2c2268d70b03331e4849e825f2753aee
+  sha256_after: d60c598154fd259f6608a977c7d952d50ccc49dabf79a66500554ab0ad7c83a8
+  created: false
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-bases/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-forms/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-general-duality/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-geometry/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-oral-review/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-phase-one/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-pivots/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-slackness/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-standard-duality/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/study-map.yaml
+  sha256_before: null
+  sha256_after: 321c47abf4eaf15f6aa12487dc33ebfae47c5d21bec3a9dc943a403bcdbc4a90
+  created: true
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/unit.yaml
+  sha256_before: null
+  sha256_after: 441c4aa69a89befaa9fa99fecc45c51d6e395d59a588895ea6b0c96037822744
+  created: true
+- path: operations/transactions/lineage.yaml
+  sha256_before: 66157cca00ad7d1ab3e9034577695d65099439e2aff75cfe9b1b0c7aadbed69f
+  sha256_after: 3c3a91f7e521a6edcdcd535b4bb9e95588d87bc8afdf07842439dc96891e8e8b
+  created: false
+metadata:
+  data_roots_sha256: sha256:ee0d43427f89944ed365e3378386c579707333f459288a170354ceeaaad475cf
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+  idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+  intent_sha256: sha256:452a13375f7d5d62dbad083dbce9eff38866d63a0cb1ad52b90c8703c57b81b0
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:452a13375f7d5d62dbad083dbce9eff38866d63a0cb1ad52b90c8703c57b81b0

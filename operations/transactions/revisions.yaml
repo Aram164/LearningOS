@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 1
+  file:operations/transactions/lineage.yaml: 3
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -48,6 +48,8 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 14
+  module-hu-betriebssysteme: 1
+  module-hu-icop: 1
   module-hu-m2-statistik-analysis: 61
   module-job-engineering-tools: 1
   module-job-git: 1
@@ -68,6 +70,13 @@ revisions:
   note-11-datascience-intro-pp033-038: 1
   note-11-datascience-intro-pp039-046: 1
   note-11-datascience-intro-pp047-049: 1
+  note-bachelor-thesis-medical-mle-exploration: 1
+  note-bs-os-basics-exercise-bank: 1
+  note-bs-os-basics-reference: 1
+  note-bs-os-basics-self-test: 1
+  note-icop-l01-exercise-bank: 1
+  note-icop-l01-mock-exam: 1
+  note-icop-l01-reference: 1
   note-pandas-groupby-signatures: 1
   note-pandas-polars-aggregation-contentions: 3
   note-sad-l05-counting-probability-pp028-030: 1
@@ -104,12 +113,16 @@ revisions:
   program-job: 1
   program-job-boundary: 1
   program-thesis-projects: 1
-  project-bachelor-thesis: 1
+  project-bachelor-thesis: 2
   source-3b1b-neural-networks: 1
+  source-aide-paper: 1
+  source-aide-reference: 1
+  source-aira-paper: 1
   source-algo2-frankfurt-klausuren: 1
   source-algoexpert-catalogue: 1
   source-amls-prior-archives: 1
   source-analysis-klausuren-extern: 1
+  source-aptos-winning-solution: 1
   source-arora-barak: 1
   source-bermbach-csb: 1
   source-blitzstein-hwang: 1
@@ -122,6 +135,7 @@ revisions:
   source-cmu-15445: 1
   source-cmu-15451-splay-notes: 1
   source-codedex-catalogue: 1
+  source-cornell-topaloglu-lp: 1
   source-cs229-2018-videos: 1
   source-cs229-notes: 1
   source-cs229-project-archive: 1
@@ -143,7 +157,7 @@ revisions:
   source-icop-hu-ws2627: 2
   source-interviewcake-catalogue: 1
   source-islp: 1
-  source-kaggle-winning-solutions: 1
+  source-kaggle-winning-solutions: 2
   source-karpathy-micrograd: 1
   source-kit-algorithmen2: 1
   source-korte-vygen: 2
@@ -152,13 +166,18 @@ revisions:
   source-map-job-polars: 1
   source-map-job-python-engineering: 1
   source-map-job-rust-engineering: 1
+  source-medmnist: 1
+  source-mimic-iv: 1
   source-mit-18100a: 1
+  source-mit-18200-2024: 1
   source-mit-6034-quizzes: 1
   source-mit-6036: 1
   source-mit-6172: 1
   source-mit-6s191: 1
   source-mit-missing-semester: 1
   source-mlc-book: 1
+  source-mle-bench-paper: 1
+  source-mle-bench-repository: 1
   source-mlsysbook-vol1: 1
   source-mmds-book: 1
   source-mml: 1
@@ -167,20 +186,28 @@ revisions:
   source-ng-coursera: 1
   source-nielsen-nndl: 1
   source-nyu-dl: 1
+  source-piml-paper: 1
   source-polars-definitive-guide: 1
+  source-ptb-xl: 1
   source-pydata-handbook: 1
+  source-pytorch-tutorials: 1
+  source-rd-agent-paper: 1
+  source-rex-mle-paper: 1
   source-rohrer-e2eml: 1
   source-sad-klausuren-extern: 1
   source-scalable-dataframe-systems-paper: 1
   source-scrimba-catalogue: 1
-  source-sklearn-user-guide: 1
+  source-siim-isic-winning-solution: 1
+  source-sklearn-user-guide: 2
   source-skrub: 1
   source-spielman-teng-smoothed-simplex-2004: 1
+  source-stanford-cs261-2016: 1
   source-stat110: 1
   source-stratum-paper: 1
   source-sutton-barto-rl: 1
   source-symfonycasts-catalogue: 1
   source-toussaint-optimization-script: 1
+  source-tripod-ai: 1
   source-tu-python-ml-course: 1
   source-visual-studio-dev-essentials: 1
   stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
@@ -331,6 +358,8 @@ revisions:
   unit-aml-l09: 6
   unit-aml-l10: 8
   unit-aml-l11: 7
+  unit-bs-os-structure: 1
+  unit-icop-l01-linear-programming: 1
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 1
   unit-job-polars-aggregation-windows: 2
@@ -371,4 +400,4 @@ revisions:
   unit-m2-sad-l13: 12
   unit-m2-sad-l14: 16
   unit-m2-sad-l15: 17
-  workspace-thesis-mle-medical: 1
+  workspace-thesis-mle-medical: 2

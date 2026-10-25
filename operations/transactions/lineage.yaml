@@ -1438,6 +1438,174 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-bs-interrupts:
+    claim_id: covers:route-bs-interrupts
+    claim_kind: route-covers
+    statement: route-bs-interrupts covers knowledge-bs-interrupts
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-interrupts: sha256:7ee6fa16fb5fdc32a3628393d235159ee66a43535950eee6412a1ae40e5a9e91
+        route-content:route-bs-interrupts: sha256:d77ae1fd05cbb3b1f0f832b1a691540d56b9d661f2b81f5b2f92911207ff1c69
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p9 sha256:95493e500ad5dc81fb928e40307da5bced9719440d41a9e682bf6ac3b3906cdc
+        -- trail: Alle PDF-Seiten 8-12 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-linux-example:
+    claim_id: covers:route-bs-linux-example
+    claim_kind: route-covers
+    statement: route-bs-linux-example covers knowledge-bs-linux-example
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-linux-example: sha256:4c2fc651e501ea6e3f3d8872be9145df606fa116b86c19c581f0a51fa5cbc269
+        route-content:route-bs-linux-example: sha256:b0bcda06d1b90bfb0dbb54e587008ad4633b447bfeeaa4f939167ca08b32825a
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p33 sha256:4e21701d408159a89736bb96a350e65caa42de17ed2960880e5fe3a0f1aad87d
+        -- trail: Alle PDF-Seiten 28-34 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-memory:
+    claim_id: covers:route-bs-memory
+    claim_kind: route-covers
+    statement: route-bs-memory covers knowledge-bs-memory
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-memory: sha256:f4c2410b45ca4e9a686ae2f0b6bea38ef6f59d29a30bddcc22bfd435cdaf6713
+        route-content:route-bs-memory: sha256:8b7481bbdc3b0819e4620d2cf3c8be3fc8a2e92fa2d28f0cd271a181b159722a
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p16 sha256:0ab74e02a490208a6c243596dfaadc512c4761890d27eec868d2fb1450f8fdcc
+        -- trail: Alle PDF-Seiten 13-18 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-os-hardware:
+    claim_id: covers:route-bs-os-hardware
+    claim_kind: route-covers
+    statement: route-bs-os-hardware covers knowledge-bs-os-hardware
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-os-hardware: sha256:5affb73085efe1ebbb8dbe6f42d959097b91b1387ff7ba768189846541db759f
+        route-content:route-bs-os-hardware: sha256:4a3d629f8c69058731c358044a16bff05a3b07a4dab995738e2ab60e47878c55
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p7 sha256:e65bd8fe946b0e0641b207a7c37909f74df22010e628c0623f8c65979e2566c0
+        -- trail: Alle PDF-Seiten 1-7 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-os-structures:
+    claim_id: covers:route-bs-os-structures
+    claim_kind: route-covers
+    statement: route-bs-os-structures covers knowledge-bs-os-structures
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-os-structures: sha256:86b4c30cc4b0a2229ce2fcefd3bbb8bd661e7ce1f5351506ef04ce46e54c91fe
+        route-content:route-bs-os-structures: sha256:8a507485567a0915d6048146a0cbb46f32cec8aa67c1b3da655e817a1e0819f3
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p37 sha256:8b4fbbe7fd36b0e0d2cbffbbd8c94d809b2dea73cba639634a6cf0c570499710
+        -- trail: Alle PDF-Seiten 35-44 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-privileges:
+    claim_id: covers:route-bs-privileges
+    claim_kind: route-covers
+    statement: route-bs-privileges covers knowledge-bs-privileges
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-privileges: sha256:2ecb6f4b9dcab4d4c648eac01d9925e0c8af1423fc4b0e0c8e9a0a66584de040
+        route-content:route-bs-privileges: sha256:21687a1856e9c98dec98850dccd4bcc1ef97d62baee582a6bce1bf30b3656855
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p20 sha256:c4eb5e70e05478efc411ee35635560645ac4d528f339f1fa2be1cbf089f28925
+        -- trail: Alle PDF-Seiten 19-22 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
+  covers:route-bs-syscall-boundary:
+    claim_id: covers:route-bs-syscall-boundary
+    claim_kind: route-covers
+    statement: route-bs-syscall-boundary covers knowledge-bs-syscall-boundary
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+        node-content:knowledge-bs-syscall-boundary: sha256:2a8406079cb0df0693ced45aab29be24be30825f284a1e8cdb1a80e1401d6af4
+        route-content:route-bs-syscall-boundary: sha256:6d26564b6caa59035b12bfd706e4d2a48c62f776d8a8e6acdfab4749df98b23b
+        source-material:source-bs-hu-prior-slides: sha256:f04066b1232f289960e3caa4be9e034928cf1f2764f145e70bcc880890a2c226
+      evidence:
+      - 'quote:material://source-bs-hu-prior-slides/02_structure.pdf#p24 sha256:5757222b30cd3acf5f4aeb0f687a62755569f576cb3333b21cac2076ccd9edf6
+        -- trail: Alle PDF-Seiten 23-27 und ihre Diagramme geprüft; Auszug verankert
+        die direkte Zuordnung.'
+      - manifest:data-systems/architecture/bs-hu-prior-slides/02_structure.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+      idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+    reviewed_by: ''
+    status: supported
   covers:route-c53fea2ffaf7c83506f57ba8:
     claim_id: covers:route-c53fea2ffaf7c83506f57ba8
     claim_kind: route-covers
@@ -1915,6 +2083,1338 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-icop-l01-blum-bases:
+    claim_id: covers:route-icop-l01-blum-bases
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-bases covers knowledge-icop-l01-bases
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        route-content:route-icop-l01-blum-bases: sha256:38fc864df1e39eb187b6562c5e30827e8f745a32853c3837cfcc84535245073b
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.1, pdf pp. 234-238: Connect vertices, extreme
+        points and feasible bases'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p234
+        sha256:f741733d2d5ca881f2e36d4e1e1a5af3ed3709ff65f748ca5cbd7cf6674ca50e --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-forms:
+    claim_id: covers:route-icop-l01-blum-forms
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-forms covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-blum-forms: sha256:9ce8a196bb48385be81e8f769df777e823a5f71c88c9e7b4e32f18a30ad5b5f4
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.1, pdf pp. 229-232: Model an LP and translate
+        its forms'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p229
+        sha256:e952c93ba930f1beb34789bd29ead3ee982fa7d701937df576f5173ad67ea14a --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-general-duality:
+    claim_id: covers:route-icop-l01-blum-general-duality
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-general-duality covers knowledge-icop-l01-general-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        route-content:route-icop-l01-blum-general-duality: sha256:0a2d77d08dd930e04efef10fa88c381d6caaf38c8e0a6662663f6ae1476891e8
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.3, pdf pp. 251-254: Derive dual signs and diagnose
+        primal-dual status'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p251
+        sha256:8e2389f9d8d377580204147d27e233eac99d1a91a04c112280501b6784767a37 --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-geometry:
+    claim_id: covers:route-icop-l01-blum-geometry
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-geometry covers knowledge-icop-l01-geometry
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        route-content:route-icop-l01-blum-geometry: sha256:5d32ec409d99cf55c4d2bc163d5a555c1bfbe0cdc452b93a7dbd47ff430109c6
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.1, pdf pp. 232-234: See constraints and objectives
+        geometrically'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p232
+        sha256:80dfe474ea0a2642c503f58ac32be28902c2549440a8c7fe51dd4515b054abff --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-oral-review:
+    claim_id: covers:route-icop-l01-blum-oral-review
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-oral-review covers knowledge-icop-l01-oral-review
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-oral-review: sha256:b76931c5f00195ded5191160805043b1fb6055b825f20ca1b9f6641497cabfae
+        route-content:route-icop-l01-blum-oral-review: sha256:896f25c575a540d2b749fe9791b287c93dc8abb1ff3f8b22aca2620933e8a873
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.5, exercises 8.15-8.16, pdf pp. 266-266: Integrate
+        the chapter and rehearse the oral exam'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p266
+        sha256:346e0520413d701bdf404d16328e6ffa774787ccd09ad4f3eab25e0da09bd5c6 --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-phase-one:
+    claim_id: covers:route-icop-l01-blum-phase-one
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-phase-one covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-blum-phase-one: sha256:1929c0e435e1f113095946c74435b23ea9d295d64e423a2ad99cf783593885a6
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.2, pdf pp. 245-249: Find a starting basis and
+        handle failure cases'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p245
+        sha256:c7361ebc78ad1af11c956aa56551ec0c73bc2712e803fb1da7bcceb1b5013f3e --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-pivots:
+    claim_id: covers:route-icop-l01-blum-pivots
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-pivots covers knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-blum-pivots: sha256:b64a3c890303f27448a4545b073643d8cba5da2988c0b15e461c4349d0fdfe81
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.2, pdf pp. 238-245: Derive and carry out a simplex
+        pivot'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p238
+        sha256:54bfedf84e3b42587e7f8d8a3c90aaf26c59fc183651b4f56f8840531389b873 --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-slackness:
+    claim_id: covers:route-icop-l01-blum-slackness
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-slackness covers knowledge-icop-l01-slackness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        route-content:route-icop-l01-blum-slackness: sha256:05abe911f633686de026d9d1b931df353ad32a8ca3df6fddb0e7c45b7e6c2215
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.3, pdf pp. 254-255: Use complementary slackness
+        as an optimality certificate'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p254
+        sha256:9c9c26fb92f7a87d59b41b0ec2b92cba09f8982f03cc2cf75888d2d9fbe6f785 --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-blum-standard-duality:
+    claim_id: covers:route-icop-l01-blum-standard-duality
+    claim_kind: route-covers
+    statement: route-icop-l01-blum-standard-duality covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-blum-standard-duality: sha256:d25bc64a6a33cccf579fa3c1ee7778c7589dbc2e7ce18831a9f7285a39ae7302
+        source-material:source-blum-algorithmen-datenstrukturen: sha256:2b1ca1f6f3fa2596b1357084729721c3b006e505849208e8b9c6b202ecf0715d
+      evidence:
+      - 'route-locator:Chapter 8 §8.3, pdf pp. 249-251: Prove bounds and standard-form
+        duality'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf#p249
+        sha256:d7fa986eb937679fd9e2bd48dc9c70f07b121a5c5288202aedb70f29795afd6b --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-1:
+    claim_id: covers:route-icop-l01-cornell-1
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-1 covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-cornell-1: sha256:1aaf5e9c8f0ab1178b71b598a54365f5efb893a72f3389eaf8a56ec73b30f974
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 1: Formulating
+        a Linear Program and Excel''s Solver'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-14:
+    claim_id: covers:route-icop-l01-cornell-14
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-14 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-14: sha256:3dfe40d837a7c8aa785e202c151edcf36db0f27c3b15e58c33bbe69a98d60115
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 14: Introduction
+        to Duality'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-15:
+    claim_id: covers:route-icop-l01-cornell-15
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-15 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-15: sha256:f474abfe65a72f50282384aa6e768498f3f8769d339ab5d4c4aadf97d0b4ad71
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 15: Weak
+        Duality'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-16:
+    claim_id: covers:route-icop-l01-cornell-16
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-16 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-16: sha256:c39954e85458aa064fda19d7d2a391fa2153ee79b1a616fddd296e9f7f82d6a4
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 16: Strong
+        Duality'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-17:
+    claim_id: covers:route-icop-l01-cornell-17
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-17 covers knowledge-icop-l01-slackness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        route-content:route-icop-l01-cornell-17: sha256:18c0df255b5cf08083c27b2ad6e67006e5bc1b8f19bb6d0f952cfab91fc68285
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 17: Complementary
+        Slackness'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-2:
+    claim_id: covers:route-icop-l01-cornell-2
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-2 covers knowledge-icop-l01-geometry
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        route-content:route-icop-l01-cornell-2: sha256:212333bcacb6b47b3156da8d3beb9c976f7faacd712854edfd4abcf2bd821483
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 2: Geometry
+        of Linear Programming'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-3:
+    claim_id: covers:route-icop-l01-cornell-3
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-3 covers knowledge-icop-l01-bases
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        route-content:route-icop-l01-cornell-3: sha256:ca8e9078d8177fc9a98d45790b1ef9c07158045a2324fbcd537aa64406850a2a
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 3: Useful
+        Linear Algebra Concepts'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-4:
+    claim_id: covers:route-icop-l01-cornell-4
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-4 covers knowledge-icop-l01-bases, knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-cornell-4: sha256:951da57dccc50b7d601a22232fde029a99598252086eee35912eb8cd1e2a801d
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 4: Introduction
+        to the Simplex Method'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-5:
+    claim_id: covers:route-icop-l01-cornell-5
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-5 covers knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-cornell-5: sha256:52711c7fb3f10cfa0e3b40d18c60a91f2ddcdaefa361fb4a097e1618e1425ee0
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 5: A Second
+        Example on the Simplex Method'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-6:
+    claim_id: covers:route-icop-l01-cornell-6
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-6 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-6: sha256:54e8e2cfe42704c5033feb457eea592c28a1585d997287af35d56fc16fa1f935
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 6: Phase-1
+        Linear Program to Construct a Feasible Solution to a Linear Program'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-7:
+    claim_id: covers:route-icop-l01-cornell-7
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-7 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-7: sha256:a3c9b603e44c8ed4ce755fe72b1b32e9f224860532bf9e0a6e275dfee782280c
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 7: Solving
+        a Linear Program Starting with the Feasible Solution from the Phase-1 Linear
+        Program'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-8:
+    claim_id: covers:route-icop-l01-cornell-8
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-8 covers knowledge-icop-l01-forms, knowledge-icop-l01-general-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        route-content:route-icop-l01-cornell-8: sha256:684a1fa23afadb03ec11654b88a6511bc8c909dd9940c83fe8e7f39951ba912d
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 8: Linear
+        Programs in General Form'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-9:
+    claim_id: covers:route-icop-l01-cornell-9
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-9 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-9: sha256:2a94894a30aafcc59d8b10b636a2a64425d289259a3770b993186bbfa65c2404
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Cornell Fundamentals of Linear Programming, Lecture 9: Unbounded
+        Linear Programs, Multiple Optima and Degeneracy'
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-1:
+    claim_id: covers:route-icop-l01-cornell-notes-1
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-1 covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-cornell-notes-1: sha256:c4562e8ca0f164161ace6e670fb737430b654af21e480f25942a39e0a36d9ab3
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 1 handwritten notes, pdf pp. 1-7
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_1.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-14:
+    claim_id: covers:route-icop-l01-cornell-notes-14
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-14 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-notes-14: sha256:1310ff14b31c30c6270e412c0ed5a86e54ffc17fc998c3ff62a0312336d138bf
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 14 handwritten notes, pdf pp. 1-9
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_14.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-15:
+    claim_id: covers:route-icop-l01-cornell-notes-15
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-15 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-notes-15: sha256:95cbb3f50d0a1156b7a578c403ff63c47db3a49ce3e2e973c5750af0db6bb9f6
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 15 handwritten notes, pdf pp. 1-9
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_15.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-16:
+    claim_id: covers:route-icop-l01-cornell-notes-16
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-16 covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-cornell-notes-16: sha256:ab8f98205a73c9f2b7aa1ae6f80fcf41ae38e85591e2eee1462bcfaa6171aef1
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 16 handwritten notes, pdf pp. 1-9
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_16.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-17:
+    claim_id: covers:route-icop-l01-cornell-notes-17
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-17 covers knowledge-icop-l01-slackness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        route-content:route-icop-l01-cornell-notes-17: sha256:20568c2cd18b19ec2ff9f5d3fb784c226425662b44f5f17875dc2c9ceedb6c4e
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 17 handwritten notes, pdf pp. 1-6
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_17.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-2:
+    claim_id: covers:route-icop-l01-cornell-notes-2
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-2 covers knowledge-icop-l01-geometry
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        route-content:route-icop-l01-cornell-notes-2: sha256:9b9b24d4d84eb00272b56b443d261f9d4121d290d3dfe4dfd2a02f27281a1b17
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 2 handwritten notes, pdf pp. 1-5
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_2.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-3:
+    claim_id: covers:route-icop-l01-cornell-notes-3
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-3 covers knowledge-icop-l01-bases
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        route-content:route-icop-l01-cornell-notes-3: sha256:e70750b34a827c3b5bc2812c548c01aa970841fc22a812dbf990e2c18047fdd4
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 3 handwritten notes, pdf pp. 1-6
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_3.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-4:
+    claim_id: covers:route-icop-l01-cornell-notes-4
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-4 covers knowledge-icop-l01-bases, knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-cornell-notes-4: sha256:b6be8f71ebe4f37320959dce8ff5a4d410dfac8a8edf3ea50aabd395896bb283
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 4 handwritten notes, pdf pp. 1-6
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_4.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-5:
+    claim_id: covers:route-icop-l01-cornell-notes-5
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-5 covers knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-cornell-notes-5: sha256:5d616def36761ee20556fe57fb8f6f24c455cd347378ebf894a4cbc588b6f5f2
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 5 handwritten notes, pdf pp. 1-7
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_5.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-6:
+    claim_id: covers:route-icop-l01-cornell-notes-6
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-6 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-notes-6: sha256:20b458bae0fa4e5391ad3b22acb9070aa466eb95e0939213c78c7da62adc0cde
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 6 handwritten notes, pdf pp. 1-7
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_6.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-7:
+    claim_id: covers:route-icop-l01-cornell-notes-7
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-7 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-notes-7: sha256:f8ee4e1023696ad9c718007823e298afe95076966ce5226abc0cd222906b4590
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 7 handwritten notes, pdf pp. 1-10
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_7.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-8:
+    claim_id: covers:route-icop-l01-cornell-notes-8
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-8 covers knowledge-icop-l01-forms, knowledge-icop-l01-general-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        route-content:route-icop-l01-cornell-notes-8: sha256:6230f1cb130f08954b9d63dab3aafd885849dcb9d62ded53a5af837d3d89f852
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 8 handwritten notes, pdf pp. 1-3
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_8.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-cornell-notes-9:
+    claim_id: covers:route-icop-l01-cornell-notes-9
+    claim_kind: route-covers
+    statement: route-icop-l01-cornell-notes-9 covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-cornell-notes-9: sha256:969cd1022ff68b308daa5d70f68a5c53f41b9524029fbd2f0b8a8ef3f73e37bb
+        source-material:source-cornell-topaloglu-lp: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cornell Lecture 9 handwritten notes, pdf pp. 1-9
+      - 'external:https://people.orie.cornell.edu/huseyin/lp_course/lecture_9.pdf
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-bases:
+    claim_id: covers:route-icop-l01-deck-bases
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-bases covers knowledge-icop-l01-bases
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-bases: sha256:a7a24dc4c719ae78aa160e10b21737be86328dc071fb48badbda1d8cf35043d6
+        route-content:route-icop-l01-deck-bases: sha256:bf1193cc1f2ab178882c1158124fe7d53e1b9eee937242ad7ba243b90e1e5bc3
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 41-62
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p44 sha256:625c9c884ce2ba8aa4654ff450da6f985dbfd47c894f7705e51aef882b73e865
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-forms:
+    claim_id: covers:route-icop-l01-deck-forms
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-forms covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-deck-forms: sha256:62e9575dce81f75211c599686a509bb10ac25c97821ed488ef0fee5e65312c2e
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 1-23
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p6 sha256:21d090d8500b120900ec653c8df41d1101db7eb3bf4b2d55ee1f10917c5f67b9
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-general-duality:
+    claim_id: covers:route-icop-l01-deck-general-duality
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-general-duality covers knowledge-icop-l01-general-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        route-content:route-icop-l01-deck-general-duality: sha256:14e560fcb53860b11063a6b2efc29c5c6c9a75074f237888d6f1ba81e7b17376
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 103-115
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p103 sha256:d811748d3ce6a447d82c25e5bae54e228dcec1ddd39314b20e077c424b3a9857
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-geometry:
+    claim_id: covers:route-icop-l01-deck-geometry
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-geometry covers knowledge-icop-l01-geometry
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        route-content:route-icop-l01-deck-geometry: sha256:4147d15db3bb095a383ce824924b296e526625bc6fac890c7c793b840e09a326
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 24-40
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p29 sha256:2e2b51235c4e9aa45fbefae1179be3c6f022332ee078ec1031c6a82c2d4dde31
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-oral-review:
+    claim_id: covers:route-icop-l01-deck-oral-review
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-oral-review covers knowledge-icop-l01-oral-review
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-oral-review: sha256:b76931c5f00195ded5191160805043b1fb6055b825f20ca1b9f6641497cabfae
+        route-content:route-icop-l01-deck-oral-review: sha256:9f4f1436769862bf4f5f64309bb1f9d0e253119593f90fe191a6184ff6c1fcfc
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 126-129
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p128 sha256:6cd4c8c33cd7edfcb36533c6682642014be2fa0b6c6aebe6e4e3c0f895905248
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-phase-one:
+    claim_id: covers:route-icop-l01-deck-phase-one
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-phase-one covers knowledge-icop-l01-phase-one
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-phase-one: sha256:ade73efaf6e520be970cd877fe92e47516d0f707afb364e06ebae58cf3d1d5ad
+        route-content:route-icop-l01-deck-phase-one: sha256:331b11a256da2036773a1e2613c1c925304f7e41f7800760dd4dedac9244c27e
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 82-91
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p83 sha256:338ec58a97d6675109c58468c5f6e51e6517f55d0c50088eca632d929bae0e0a
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-pivots:
+    claim_id: covers:route-icop-l01-deck-pivots
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-pivots covers knowledge-icop-l01-pivots
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        route-content:route-icop-l01-deck-pivots: sha256:a8f57f826e4838bc3f139121eac0c5d2f8efe29920f4840137e9045a90749518
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 63-81
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p74 sha256:a28de1cf9d2287616d06f59c0d941da91260e80236bcfc8cf1207c134996b389
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-slackness:
+    claim_id: covers:route-icop-l01-deck-slackness
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-slackness covers knowledge-icop-l01-slackness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        route-content:route-icop-l01-deck-slackness: sha256:438a812f6f92a92cc33ec4d4bebb9228854d85846cf057581e7448bdb10c0cef
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 116-125
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p117 sha256:6681821c51db03fc6c5f03f41f2f0dd7cb1f0448f4a20d50b71f6e9adc2c251b
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-deck-standard-duality:
+    claim_id: covers:route-icop-l01-deck-standard-duality
+    claim_kind: route-covers
+    statement: route-icop-l01-deck-standard-duality covers knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-deck-standard-duality: sha256:313a50fb1d6a0637f2b87ceb72035c80b5a513525c8d8284070d2c67d0c33e2e
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_linearprogramming.pdf, pdf pp. 92-102
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_linearprogramming.pdf#p94 sha256:76759a54d8bd3f66351e17e9b2dc1b6b830e2ad3e4b6a4e9962875350ded1805
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-kv-review:
+    claim_id: covers:route-icop-l01-kv-review
+    claim_kind: route-covers
+    statement: route-icop-l01-kv-review covers knowledge-icop-l01-geometry, knowledge-icop-l01-oral-review,
+      knowledge-icop-l01-pivots, knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:optimization/korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf: 529e982feea67c18fd8c2869191f42ec37932e7665aad9f2aca6abe18f9f5cbe
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        node-content:knowledge-icop-l01-oral-review: sha256:b76931c5f00195ded5191160805043b1fb6055b825f20ca1b9f6641497cabfae
+        node-content:knowledge-icop-l01-pivots: sha256:fc56b4892e64a2a75cfe5f47f2a9362e35087b345d9b508dcf14c35b0600fed6
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-kv-review: sha256:40f9660cf736409643be85284d3abdf831d29aee1847492b8150669ad99b8a6c
+        source-material:source-korte-vygen: sha256:0803d8811a7babd4b974b6005e3d93817350951f569d1a5813c355f7b8d01a21
+      evidence:
+      - 'route-locator:Chapter 3: Linear Programming, pdf pp. 70-90'
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf#p70
+        sha256:a1b0e094dfc857c5bdb1324a491ed28678604bd2ace1f2bfed2de61adf6cc415 --
+        trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-mit12:
+    claim_id: covers:route-icop-l01-mit12
+    claim_kind: route-covers
+    statement: route-icop-l01-mit12 covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-mit12: sha256:c62c662a67171f5d49bceb89f62095ec72e28a376d4f6be6add252395147d801
+        source-material:source-mit-18200-2024: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:MIT 18.200 Lecture 12: Introduction to Linear Programming'
+      - 'external:https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-12-version-2_mp4/
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-mit13:
+    claim_id: covers:route-icop-l01-mit13
+    claim_kind: route-covers
+    statement: route-icop-l01-mit13 covers knowledge-icop-l01-general-duality, knowledge-icop-l01-slackness,
+      knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-mit13: sha256:317ee8e05fcfc057854d63237b370a09ceda736c023d63ad0dbd17582a78a69f
+        source-material:source-mit-18200-2024: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:MIT 18.200 Lecture 13: Duality in Linear Programming'
+      - 'external:https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-13-version-2_mp4/
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-mit6046:
+    claim_id: covers:route-icop-l01-mit6046
+    claim_kind: route-covers
+    statement: route-icop-l01-mit6046 covers knowledge-icop-l01-forms
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        route-content:route-icop-l01-mit6046: sha256:362bc6bb14adcef365996409e8f67c15382ac03ca59849247b7f2296ec5a9b21
+        source-material:source-mit-6046j: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:MIT 6.046J Lecture 15: Linear Programming: LP, Reductions,
+        Simplex'
+      - 'external:https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-15-linear-programming-lp-reductions-simplex/
+        -- trail: Official page or linked notes checked 2026-10-22; verification boundaries
+        recorded in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-organization:
+    claim_id: covers:route-icop-l01-organization
+    claim_kind: route-covers
+    statement: route-icop-l01-organization covers knowledge-icop-l01-oral-review
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md: sha256:3651335c9a77bd2fbbefd83afa9a7f275564c0095d6009961c38e65913f53ac9
+        manifest:algorithms/structures/icop-hu-ws2627/ico_organization.pdf: 685c99b1156dcce6601b815c451253dc9024092526ce70d42ba0da3c1cbf3c0d
+        node-content:knowledge-icop-l01-oral-review: sha256:b76931c5f00195ded5191160805043b1fb6055b825f20ca1b9f6641497cabfae
+        route-content:route-icop-l01-organization: sha256:dfbfd0d9bd33951dfbce7e412f3e36c5fe8c2ccac99573fa144d278de652c036
+        source-material:source-icop-hu-ws2627: sha256:7573cb7feac1ff9b6556c8e7ea5d0446df15a0eaccc8767d79c204ee1b81ad4a
+      evidence:
+      - route-locator:ico_organization.pdf, pdf pp. 12-16
+      - repo-file:work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
+      - 'quote:material://source-icop-hu-ws2627/ico_organization.pdf#p16 sha256:2e3af3b52670086b1fef8bd6549e30617ffb7197c14dbce18f2015ee3ec55069
+        -- trail: Verified against the local text layer; the full topic judgment and
+        locator review are recorded in the coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-stanford-10:
+    claim_id: covers:route-icop-l01-stanford-10
+    claim_kind: route-covers
+    statement: route-icop-l01-stanford-10 covers knowledge-icop-l01-oral-review
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-oral-review: sha256:b76931c5f00195ded5191160805043b1fb6055b825f20ca1b9f6641497cabfae
+        route-content:route-icop-l01-stanford-10: sha256:72cc1f38b08f13301e967a2bf2dc49651aa1fd5849154bec1e292b2bc4c0baee
+        source-material:source-stanford-cs261-2016: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Stanford CS261 (Winter 2016), Lecture 10: The Minimax Theorem
+        & Algorithms for Linear Programming'
+      - 'external:https://theory.stanford.edu/~tim/w16/w16.html -- trail: Official
+        page or linked notes checked 2026-10-22; verification boundaries recorded
+        in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-stanford-7:
+    claim_id: covers:route-icop-l01-stanford-7
+    claim_kind: route-covers
+    statement: route-icop-l01-stanford-7 covers knowledge-icop-l01-forms, knowledge-icop-l01-geometry
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-forms: sha256:1d65682e7b7fbe4177d89c3f7aeb15bbaa5e3b7d9f10ecdf4c21edcf863e2030
+        node-content:knowledge-icop-l01-geometry: sha256:ff601d0ac4db65fd5400834fe455ef633834b82615151aca39d2a184d3c10baa
+        route-content:route-icop-l01-stanford-7: sha256:ffe7e7ca0bcc35e90df4a7a9482850154174c9f73448ab8394be7df14a6f8eda
+        source-material:source-stanford-cs261-2016: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Stanford CS261 (Winter 2016), Lecture 7: Linear Programming:
+        Introduction and Applications'
+      - 'external:https://theory.stanford.edu/~tim/w16/w16.html -- trail: Official
+        page or linked notes checked 2026-10-22; verification boundaries recorded
+        in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-stanford-8:
+    claim_id: covers:route-icop-l01-stanford-8
+    claim_kind: route-covers
+    statement: route-icop-l01-stanford-8 covers knowledge-icop-l01-general-duality,
+      knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-general-duality: sha256:33f639091661c6b89dc6a98d92b59fbb75c0b122975836b5efe6c015068709fa
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-stanford-8: sha256:fce6c4a4bbd370aaaa41ef97a9371e8a9b4501536f1a9aec2cacf5b9d9868225
+        source-material:source-stanford-cs261-2016: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Stanford CS261 (Winter 2016), Lecture 8: Linear Programming
+        Duality (Part 1)'
+      - 'external:https://theory.stanford.edu/~tim/w16/w16.html -- trail: Official
+        page or linked notes checked 2026-10-22; verification boundaries recorded
+        in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
+  covers:route-icop-l01-stanford-9:
+    claim_id: covers:route-icop-l01-stanford-9
+    claim_kind: route-covers
+    statement: route-icop-l01-stanford-9 covers knowledge-icop-l01-slackness, knowledge-icop-l01-standard-duality
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-icop-l01-slackness: sha256:951f00475692fc461fa4e1a95201c2bea2975dc7ce5b1c42ebcdc8019d1ac632
+        node-content:knowledge-icop-l01-standard-duality: sha256:ab83f8a7006e74cb1aed0ed45af8c4b2853c227bb88d7a3c1505ec289dbee9bd
+        route-content:route-icop-l01-stanford-9: sha256:cebfb3c0ae88552f8dae807f616b4f48dca62ecf6946c2050ab8ad4e440aa619
+        source-material:source-stanford-cs261-2016: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'route-locator:Stanford CS261 (Winter 2016), Lecture 9: Linear Programming
+        Duality (Part 2)'
+      - 'external:https://theory.stanford.edu/~tim/w16/w16.html -- trail: Official
+        page or linked notes checked 2026-10-22; verification boundaries recorded
+        in coverage audit.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-fb12c186f8654d54a831774d1fb04126
+      idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l01-3b1b-53e6cce1:
     claim_id: covers:route-sad-l01-3b1b-53e6cce1
     claim_kind: route-covers

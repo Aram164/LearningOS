@@ -2,10 +2,119 @@ type: module-source-map
 module_id: module-hu-betriebssysteme
 sources:
 - source_id: source-bs-hu-prior-slides
-  role: reference
-  why: Aram is retaking BS and requested reuse of his old slides; the three located
-    PDFs were copied with matching hashes.
-  when: Prior-year reference only. Slides carry May 2006 dates; alignment to WS 2026/27
-    has not been checked.
-  priority: 1
-  unit_routes: []
+  role: first-exposure
+  why: Aram hat die älteren Folien ausdrücklich als Startmaterial gewählt; nur 02_structure.pdf erhält
+    jetzt einen Lernplan. Die drei vorhandenen PDFs bleiben erhalten.
+  when: Arbeitsgrundlage aus älteren Folien (Mai 2006), kein Nachweis für aktuellen Lehr- oder Prüfungsumfang.
+    03_processes.pdf und 04_cpu_scheduling copy.pdf sind für spätere Arbeit zurückgestellt.
+  priority: 0
+  unit_routes:
+  - id: route-bs-os-hardware
+    unit_id: unit-bs-os-structure
+    title: Betriebssystem und Hardware zusammendenken - ältere BS-Folien
+    format: course-material
+    angle: Gerätecontroller, CPU und Speicher als kooperierende Komponenten erklären; Bus/Switch und überlappende
+      CPU-/I/O-Arbeit im Modell der Folien unterscheiden.
+    angle_detail: Gerätecontroller, CPU und Speicher als kooperierende Komponenten erklären; Bus/Switch
+      und überlappende CPU-/I/O-Arbeit im Modell der Folien unterscheiden. Älterer Foliensatz (Mai 2006);
+      von Aram als Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht abgeglichen.
+    covers:
+    - knowledge-bs-os-hardware
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 1-7
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-interrupts
+    unit_id: unit-bs-os-structure
+    title: Interrupt, Trap und Rückkehr auseinanderhalten - ältere BS-Folien
+    format: course-material
+    angle: Die Ablaufgrafik trennt Interrupt-Dispatcher und Gerätehandler; das IRQL-Beispiel liefert eine
+      konkrete Prioritäts- und Maskierungsfrage.
+    angle_detail: Die Ablaufgrafik trennt Interrupt-Dispatcher und Gerätehandler; das IRQL-Beispiel liefert
+      eine konkrete Prioritäts- und Maskierungsfrage. Älterer Foliensatz (Mai 2006); von Aram als Arbeitsgrundlage
+      gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht abgeglichen.
+    covers:
+    - knowledge-bs-interrupts
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 8-12
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-memory
+    unit_id: unit-bs-os-structure
+    title: Speicher schützen und Adressen übersetzen - ältere BS-Folien
+    format: course-material
+    angle: Die drei aufeinanderfolgenden Bilder zeigen Bereichsprüfung, zusätzliche Adressindirektion
+      und die Abbildung von Seitennummer p auf Rahmen f bei unverändertem Offset d.
+    angle_detail: Die drei aufeinanderfolgenden Bilder zeigen Bereichsprüfung, zusätzliche Adressindirektion
+      und die Abbildung von Seitennummer p auf Rahmen f bei unverändertem Offset d. Älterer Foliensatz
+      (Mai 2006); von Aram als Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht
+      abgeglichen.
+    covers:
+    - knowledge-bs-memory
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 13-18
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-privileges
+    unit_id: unit-bs-os-structure
+    title: Privileggrenzen mit Schutzbedarf begründen - ältere BS-Folien
+    format: course-material
+    angle: Das Zustandsdiagramm macht die Schutzgrenze sichtbar; Ring 0/3 ist ein zusätzliches historisches
+      x86-Beispiel und IRQL eine andere Achse.
+    angle_detail: Das Zustandsdiagramm macht die Schutzgrenze sichtbar; Ring 0/3 ist ein zusätzliches
+      historisches x86-Beispiel und IRQL eine andere Achse. Älterer Foliensatz (Mai 2006); von Aram als
+      Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht abgeglichen.
+    covers:
+    - knowledge-bs-privileges
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 19-22
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-syscall-boundary
+    unit_id: unit-bs-os-structure
+    title: Einen Systemaufruf über die Vertrauensgrenze verfolgen - ältere BS-Folien
+    format: course-material
+    angle: Der read-Stub und der Kerneintritt zeigen Aufrufnummer, Argumentregister, getrennte Stacks
+      und Ergebnisübergabe im historischen INT-Modell.
+    angle_detail: Der read-Stub und der Kerneintritt zeigen Aufrufnummer, Argumentregister, getrennte
+      Stacks und Ergebnisübergabe im historischen INT-Modell. Älterer Foliensatz (Mai 2006); von Aram
+      als Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht abgeglichen.
+    covers:
+    - knowledge-bs-syscall-boundary
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 23-27
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-linux-example
+    unit_id: unit-bs-os-structure
+    title: Das historische Linux-Beispiel rekonstruieren - ältere BS-Folien
+    format: course-material
+    angle: Der durchgehende alte IA-32/Linux-Code verbindet int 0x80, sys_alarm, Fehlerumsetzung und die
+      Grenzen registerbasierter Parameterübergabe. Keine Anleitung für heutige Kernel.
+    angle_detail: Der durchgehende alte IA-32/Linux-Code verbindet int 0x80, sys_alarm, Fehlerumsetzung
+      und die Grenzen registerbasierter Parameterübergabe. Keine Anleitung für heutige Kernel. Älterer
+      Foliensatz (Mai 2006); von Aram als Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung
+      ist nicht abgeglichen.
+    covers:
+    - knowledge-bs-linux-example
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 28-34
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-os-structures
+    unit_id: unit-bs-os-structure
+    title: Betriebssystemstrukturen vergleichen und anwenden - ältere BS-Folien
+    format: course-material
+    angle: Unix-/MS-DOS-/BSD- und NT-Bilder konkretisieren die Entwurfsentscheidung. S.44 korrigiert ausdrücklich
+      die vorschnelle Einordnung von Windows NT als reinem Mikrokernel.
+    angle_detail: Unix-/MS-DOS-/BSD- und NT-Bilder konkretisieren die Entwurfsentscheidung. S.44 korrigiert
+      ausdrücklich die vorschnelle Einordnung von Windows NT als reinem Mikrokernel. Älterer Foliensatz
+      (Mai 2006); von Aram als Arbeitsgrundlage gewählt. Aktuelle Lehr- und Prüfungsabdeckung ist nicht
+      abgeglichen. PDF-S.45 ist eine Schlusskarikatur; S.46 dient der Vokabelkontrolle und ist kein vollständiger
+      Themenbeleg.
+    covers:
+    - knowledge-bs-os-structures
+    depth: course-aligned
+    scope: prior-year
+    locator: 02_structure.pdf, pdf pp. 35-44
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf

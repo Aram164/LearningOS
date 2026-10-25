@@ -1,0 +1,90 @@
+schema_version: 2
+id: transaction-20261023-015335-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-10-23T01:53:35+02:00'
+snapshot_before: sha256:9d818d21ab15f8c7ed06914944cc7b0ff2c311f4b9fe6e8aa5f47889e849b167
+snapshot_after: sha256:1fe630907d97437e43064dbacc3b06f1ca4ac0bdd39a357ea94122fbf157452f
+expected_revisions:
+  source-aide-paper: 0
+  source-aide-reference: 0
+  source-aira-paper: 0
+  source-aptos-winning-solution: 0
+  source-medmnist: 0
+  source-mimic-iv: 0
+  source-mle-bench-paper: 0
+  source-mle-bench-repository: 0
+  source-piml-paper: 0
+  source-ptb-xl: 0
+  source-rd-agent-paper: 0
+  source-rex-mle-paper: 0
+  source-siim-isic-winning-solution: 0
+  source-tripod-ai: 0
+artifact_revisions:
+  source-aide-paper:
+    before: 0
+    after: 1
+  source-aide-reference:
+    before: 0
+    after: 1
+  source-aira-paper:
+    before: 0
+    after: 1
+  source-aptos-winning-solution:
+    before: 0
+    after: 1
+  source-medmnist:
+    before: 0
+    after: 1
+  source-mimic-iv:
+    before: 0
+    after: 1
+  source-mle-bench-paper:
+    before: 0
+    after: 1
+  source-mle-bench-repository:
+    before: 0
+    after: 1
+  source-piml-paper:
+    before: 0
+    after: 1
+  source-ptb-xl:
+    before: 0
+    after: 1
+  source-rd-agent-paper:
+    before: 0
+    after: 1
+  source-rex-mle-paper:
+    before: 0
+    after: 1
+  source-siim-isic-winning-solution:
+    before: 0
+    after: 1
+  source-tripod-ai:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: b93cad7cd8a94d548ce3bd3a3e9347e8e0c879ac7f9d58c075c34d43e5c9fbae
+  sha256_after: 9fcc922f0e8a2e5189397ffd32d50381a68577fb8f89708641d78c6905928973
+  created: false
+metadata:
+  data_roots_sha256: sha256:b3351f89c9362a748d6e8f4960c3d5206ed2c142a5bf8b20b91dc461cd181fa6
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-sources
+  idempotency_key: thesis-mle-20261023-sources
+  intent_sha256: sha256:a37e0f7bc2965482803a053d5448809ac5ba5da7028589a82a0498e0548cba32
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a37e0f7bc2965482803a053d5448809ac5ba5da7028589a82a0498e0548cba32

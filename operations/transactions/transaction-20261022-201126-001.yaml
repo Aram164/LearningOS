@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261022-201126-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save_batch
+committed_at: '2026-10-22T20:11:26+02:00'
+snapshot_before: sha256:983ba7100a7634c4a680f2af9a0e69a712f5a0b9b052fad10209884458955540
+snapshot_after: sha256:4148cd2155e61d2eaa83ce8163b1a9040fac646e780170f1e9dbc88eb6a3a576
+expected_revisions:
+  note-icop-l01-reference: 0
+artifact_revisions:
+  note-icop-l01-reference:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/algorithms/note-icop-l01-reference.md
+  sha256_before: null
+  sha256_after: a943312a377cb77a1614f386de8ebaab9bc697450b5c9246311da6ba9cd1167f
+  created: true
+metadata:
+  data_roots_sha256: sha256:909a90cbd9c69ebf103b036d7840bb250966b94b058bde9e58b5b4fa86714d0c
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save_batch
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-reviewed-294dc40a3ff44c829719691d31df3011
+  idempotency_key: reviewed-d6f6ad9b7a5c4c428fffe9a62b2e88d5
+  intent_sha256: sha256:02230d69e60763d727f7c09ecc7d0478d201476dfc7b83e88059ce85366229a2
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:02230d69e60763d727f7c09ecc7d0478d201476dfc7b83e88059ce85366229a2

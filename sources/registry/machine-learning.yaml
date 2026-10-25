@@ -857,6 +857,14 @@ sources:
     - implementation
     strengths:
     - Grad-CAM via hooks; general training loops
+  - concepts:
+    - concept-classification-metrics
+    roles:
+    - implementation
+    strengths:
+    - The computer-vision transfer-learning tutorial demonstrates training and evaluating an image classifier.
+    useful_sections:
+    - Transfer Learning for Computer Vision Tutorial: https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
 - id: source-setosa-ols
   thematic_group_ids:
   - thematic-group-machine-learning
@@ -1180,6 +1188,14 @@ sources:
     possible_use: 'Named in the supervisor''s thesis brief: study winning-solution write-ups.'
   thematic_group_ids:
   - thematic-group-machine-learning
+  evaluations:
+  - concepts:
+    - concept-classification-metrics
+    roles:
+    - reference
+    strengths:
+    - Named in the supervisor brief as an index for locating original competition solution discussions;
+      strategy claims require reading the linked original writeups.
 - id: source-esl
   thematic_group_ids:
   - thematic-group-machine-learning
@@ -1815,6 +1831,16 @@ sources:
         pipeline
     - Choosing the right estimator (cheat-sheet flowchart): quick model-selection reference for mlprov
         + AML
+  - concepts:
+    - concept-classification-metrics
+    - concept-bias-variance-tradeoff
+    roles:
+    - implementation
+    - review
+    strengths:
+    - The common-pitfalls guide explains preprocessing leakage and separation of training from evaluation.
+    useful_sections:
+    - Common pitfalls — data leakage: https://scikit-learn.org/stable/common_pitfalls.html
 - id: source-sutton-barto-rl
   thematic_group_ids:
   - thematic-group-machine-learning
@@ -1828,3 +1854,187 @@ sources:
   material: material://source-sutton-barto-rl
   identifiers:
     sutton-barto-reinforcement-learning: http://incompleteideas.net/book/RLbook2018trimmed.pdf
+- id: source-aide-paper
+  title: 'AIDE: AI-Driven Exploration in the Space of Code'
+  type: paper
+  year: 2025
+  url: https://arxiv.org/abs/2502.13138
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://arxiv.org/abs/2502.13138
+    observed: '2026-10-23'
+    possible_use: Understand the baseline Draft, Debug and Improve search operations.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-aide-reference
+  title: AIDE ML — research reference implementation
+  type: software
+  url: https://github.com/WecoAI/aideml
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/WecoAI/aideml
+    observed: '2026-10-23'
+    possible_use: Starting implementation and installation instructions for the AIDE pilot.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-aira-paper
+  title: 'AI Research Agents for Machine Learning: Search, Exploration, and Generalization in MLE-bench'
+  type: paper
+  year: 2025
+  url: https://arxiv.org/abs/2507.02554
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://arxiv.org/abs/2507.02554
+    observed: '2026-10-23'
+    possible_use: Search/operator ablations, validation overfitting and repeated-run evaluation.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-aptos-winning-solution
+  title: APTOS 2019 Blindness Detection — 1st place solution summary (Guanshuo Xu)
+  type: website
+  year: 2019
+  url: https://www.kaggle.com/competitions/aptos2019-blindness-detection/writeups/guanshuo-xu-1st-place-solution-summary
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.kaggle.com/competitions/aptos2019-blindness-detection/writeups/guanshuo-xu-1st-place-solution-summary
+    observed: '2026-10-23'
+    possible_use: Study human modeling and validation decisions; critique leaderboard-driven selection.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-medmnist
+  title: MedMNIST — standardized biomedical image classification datasets
+  type: website
+  url: https://medmnist.com/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://medmnist.com/
+    observed: '2026-10-23'
+    possible_use: Reference-only candidate for a small model-training and agent-setup exercise.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-mimic-iv
+  title: MIMIC-IV v3.1 — credentialed clinical records
+  type: website
+  year: 2024
+  url: https://physionet.org/content/mimiciv/3.1/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://physionet.org/content/mimiciv/3.1/
+    observed: '2026-10-23'
+    possible_use: Deferred clinical-records direction requiring access and processing preparation.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-mle-bench-paper
+  title: 'MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering'
+  type: paper
+  year: 2024
+  url: https://arxiv.org/abs/2410.07095
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://arxiv.org/abs/2410.07095
+    observed: '2026-10-23'
+    possible_use: Core MLE-agent evaluation methodology and limitations.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-mle-bench-repository
+  title: MLE-bench — official benchmark code and agent setup
+  type: software
+  url: https://github.com/openai/mle-bench
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/openai/mle-bench
+    observed: '2026-10-23'
+    possible_use: Single-task preparation, agent runner, competition definitions and known issues.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-piml-paper
+  title: 'PiML: Automated Machine Learning Workflow Optimization using LLM Agents'
+  type: paper
+  year: 2025
+  url: https://proceedings.mlr.press/v293/chopde25a.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://proceedings.mlr.press/v293/chopde25a.html
+    observed: '2026-10-23'
+    possible_use: Reference-only example of a smaller evaluation subset, MLE-Pi.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-ptb-xl
+  title: PTB-XL — publicly available electrocardiography dataset v1.0.3
+  type: website
+  year: 2022
+  url: https://physionet.org/content/ptb-xl/1.0.3/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://physionet.org/content/ptb-xl/1.0.3/
+    observed: '2026-10-23'
+    possible_use: Reference-only alternative for a physiological-signal thesis direction.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-rd-agent-paper
+  title: 'R&D-Agent: An LLM-Agent Framework Towards Autonomous Data Science'
+  type: paper
+  year: 2025
+  url: https://arxiv.org/abs/2505.14738
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://arxiv.org/abs/2505.14738
+    observed: '2026-10-23'
+    possible_use: Reference-only architectural comparison after establishing the AIDE baseline.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-rex-mle-paper
+  title: 'ReX-MLE: The Autonomous Agent Benchmark for Medical Imaging Challenges'
+  type: paper
+  year: 2026
+  url: https://proceedings.mlr.press/v315/kenia26a.html
+  identifiers:
+    arxiv: https://arxiv.org/abs/2512.17838
+    code: https://github.com/rajpurkarlab/ReX-MLE
+    project: https://rexrank.ai/ReX-MLE/index.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://proceedings.mlr.press/v315/kenia26a.html
+    observed: '2026-10-23'
+    possible_use: Closest medical-agent related work; compare existing interventions and task scope.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-siim-isic-winning-solution
+  title: SIIM-ISIC Melanoma Classification — 1st place solution
+  type: website
+  year: 2020
+  url: https://www.kaggle.com/competitions/siim-isic-melanoma-classification/discussion/175412
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.kaggle.com/competitions/siim-isic-melanoma-classification/discussion/175412
+    observed: '2026-10-23'
+    possible_use: Study validation under class imbalance, external data, metadata and ensembles.
+  thematic_group_ids:
+  - thematic-group-machine-learning
+- id: source-tripod-ai
+  title: 'TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression
+    or machine learning methods'
+  type: paper
+  year: 2024
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC11019967/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pmc.ncbi.nlm.nih.gov/articles/PMC11019967/
+    observed: '2026-10-23'
+    possible_use: Medical prediction reporting, uncertainty, evaluation and limitations.
+  thematic_group_ids:
+  - thematic-group-machine-learning
