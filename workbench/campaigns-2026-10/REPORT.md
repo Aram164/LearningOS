@@ -203,3 +203,26 @@ The attempted local full gate is explicitly not claimed successful. Publication
 uses the connected GitHub Git-data API to create a review branch with a tree
 verified identical to the committed local candidate; local pre-push hooks do not
 run on API-created commits. Main stays unchanged until hosted acceptance.
+
+### Cleanup contract's dependent recordings
+
+A prior failed GitHub cleanup candidate (`c7b0534c`, run 40171675519) revealed
+eight recordings whose fixture-derived identities follow the perimeter bytes.
+The same eight were reproduced on this candidate, refreshed individually, and
+replayed: **8 passed**. The reviewed structured delta changes only request byte
+hashes, the perimeter backup entry's hash/size, backup aggregate, fixture commit
+provenance, lineage judgment commit and generated source fingerprint/revision.
+Exit codes, data shapes, write destinations and business outcomes are identical.
+The 30 changed recording lines retain the genuine new observations; no
+normalization or assertion was weakened. Review: `evidence/recording-delta-review.json`.
+
+The first published candidate's two runs were cancelled as superseded before
+release acceptance. The final exact candidate and full hosted verdict belong in
+the external acceptance record; a cancelled run is not claimed successful.
+The GitHub connector's write API returned 403, so Git-data publication uses the
+repository's existing authenticated `gh` connection, preserving identical-tree
+verification and keeping main unchanged until the complete gate passes.
+
+The complete affected-operation scenario selection also passes: **49 passed**,
+1,104 unrelated cases deselected. This scoped selection is additional evidence,
+not the final full-suite gate.

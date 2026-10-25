@@ -1,0 +1,283 @@
+[
+  {
+    "file": "tests/scenarios/recorded/ai-action.delivery.apply/apply-garden-shelve.json",
+    "structured_changes": [
+      {
+        "path": [
+          "steps",
+          2,
+          "receipts",
+          0,
+          "writes",
+          3,
+          "sha256_after"
+        ],
+        "before": "255d71c49d7401553ebab0ff91f27f56781fa736bcf036abc964ee71c28e934a",
+        "after": "b3ffb8fca01c1c0a80f4e6eb988aa3832fd7a3ab15596db7616987f32989c770"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "receipts",
+          0,
+          "writes",
+          3,
+          "sha256_before"
+        ],
+        "before": "c09aa6dc6f900ce6240921696026eb0fdf384d4e518392e800bf8180d292be02",
+        "after": "c84aad5997b7399b73ed4f6033e685bb263b9357bffbd3556a2e106ea06c0c02"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "stdout_json",
+          "result",
+          "receipt",
+          "writes",
+          3,
+          "sha256_after"
+        ],
+        "before": "255d71c49d7401553ebab0ff91f27f56781fa736bcf036abc964ee71c28e934a",
+        "after": "b3ffb8fca01c1c0a80f4e6eb988aa3832fd7a3ab15596db7616987f32989c770"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "stdout_json",
+          "result",
+          "receipt",
+          "writes",
+          3,
+          "sha256_before"
+        ],
+        "before": "c09aa6dc6f900ce6240921696026eb0fdf384d4e518392e800bf8180d292be02",
+        "after": "c84aad5997b7399b73ed4f6033e685bb263b9357bffbd3556a2e106ea06c0c02"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/ai-action.delivery.apply/exact-replay.json",
+    "structured_changes": [
+      {
+        "path": [
+          "steps",
+          2,
+          "receipts",
+          0,
+          "writes",
+          3,
+          "sha256_after"
+        ],
+        "before": "255d71c49d7401553ebab0ff91f27f56781fa736bcf036abc964ee71c28e934a",
+        "after": "b3ffb8fca01c1c0a80f4e6eb988aa3832fd7a3ab15596db7616987f32989c770"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "receipts",
+          0,
+          "writes",
+          3,
+          "sha256_before"
+        ],
+        "before": "c09aa6dc6f900ce6240921696026eb0fdf384d4e518392e800bf8180d292be02",
+        "after": "c84aad5997b7399b73ed4f6033e685bb263b9357bffbd3556a2e106ea06c0c02"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "stdout_json",
+          "result",
+          "receipt",
+          "writes",
+          3,
+          "sha256_after"
+        ],
+        "before": "255d71c49d7401553ebab0ff91f27f56781fa736bcf036abc964ee71c28e934a",
+        "after": "b3ffb8fca01c1c0a80f4e6eb988aa3832fd7a3ab15596db7616987f32989c770"
+      },
+      {
+        "path": [
+          "steps",
+          2,
+          "stdout_json",
+          "result",
+          "receipt",
+          "writes",
+          3,
+          "sha256_before"
+        ],
+        "before": "c09aa6dc6f900ce6240921696026eb0fdf384d4e518392e800bf8180d292be02",
+        "after": "c84aad5997b7399b73ed4f6033e685bb263b9357bffbd3556a2e106ea06c0c02"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/backup.manifest/cli-manifest-stdout.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "aggregate_sha256"
+        ],
+        "before": "sha256:106cc45f234d3dac41a07ce25d18993ca60776390d3d0a10bd3d867bfad25328",
+        "after": "sha256:9b9374ef15870759464ac86e59edfde4f05a6a9baa0ecbac5c40301b26b8d7a9"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "entries",
+          38,
+          "sha256"
+        ],
+        "before": "sha256:a23dc395bf650b46b7813af07664c1498ce594c444dddfe11f34e59748f350d2",
+        "after": "sha256:1cebe28ced51f556d6d33d372a7b383744a83b3668675a9f59ec26f479d4fb1b"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "entries",
+          38,
+          "size"
+        ],
+        "before": 10786,
+        "after": 10603
+      },
+      {
+        "path": [
+          "stdout_json",
+          "provenance",
+          "core",
+          "commit"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/backup.manifest/manifest-stdout.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "aggregate_sha256"
+        ],
+        "before": "sha256:106cc45f234d3dac41a07ce25d18993ca60776390d3d0a10bd3d867bfad25328",
+        "after": "sha256:9b9374ef15870759464ac86e59edfde4f05a6a9baa0ecbac5c40301b26b8d7a9"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "entries",
+          38,
+          "sha256"
+        ],
+        "before": "sha256:a23dc395bf650b46b7813af07664c1498ce594c444dddfe11f34e59748f350d2",
+        "after": "sha256:1cebe28ced51f556d6d33d372a7b383744a83b3668675a9f59ec26f479d4fb1b"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "entries",
+          38,
+          "size"
+        ],
+        "before": 10786,
+        "after": 10603
+      },
+      {
+        "path": [
+          "stdout_json",
+          "provenance",
+          "core",
+          "commit"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/lineage.restamp/check-all-cli.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "claims",
+          "covers:route-b2f1f80014860a929a3af0bc",
+          "judgment_commit"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/lineage.restamp/check-all.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "result",
+          "claims",
+          "covers:route-b2f1f80014860a929a3af0bc",
+          "judgment_commit"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/operator.bootstrap/cli-full.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "snapshot",
+          "source_fingerprint"
+        ],
+        "before": "0f943e71689c840e6f7c764d56bff44b902a7fd57989adf38834ad588bfbeacf",
+        "after": "14c3dd445b098959bc45e7aefc31bdb4deeaab07fe3f6163f3338f259f42a21c"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "snapshot",
+          "source_revision"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  },
+  {
+    "file": "tests/scenarios/recorded/operator.bootstrap/full.json",
+    "structured_changes": [
+      {
+        "path": [
+          "stdout_json",
+          "snapshot",
+          "source_fingerprint"
+        ],
+        "before": "0f943e71689c840e6f7c764d56bff44b902a7fd57989adf38834ad588bfbeacf",
+        "after": "14c3dd445b098959bc45e7aefc31bdb4deeaab07fe3f6163f3338f259f42a21c"
+      },
+      {
+        "path": [
+          "stdout_json",
+          "snapshot",
+          "source_revision"
+        ],
+        "before": "49671701cd7209f8b49c0f753612bd6b8e17fb4a",
+        "after": "60b8c0812ae7929640795c1fac761a7df5f19c87"
+      }
+    ]
+  }
+]

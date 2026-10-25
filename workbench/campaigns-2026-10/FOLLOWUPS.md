@@ -42,3 +42,10 @@ manifest is now shrink-only reconciled and the local owning test passes. A
 search of the retrieved Core issue inventory found no duplicate; no issue was
 filed for this completed metadata repair. Acceptance: archived bytes preserved,
 no stale pending entries, the local perimeter suite and validator pass.
+
+The previous cleanup candidate had also left eight fixture-identity recordings
+stale. Those same failures were reproduced, reviewed as metadata-only deltas,
+refreshed and replayed successfully here. The earlier candidate's failed CI is
+retained as evidence in the external acceptance folder. The connector also
+rejected Git-tree writes with 403; the existing repository-authenticated API
+was the working publication route. No connector permission was expanded.
