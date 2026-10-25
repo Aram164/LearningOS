@@ -1,0 +1,50 @@
+
+===== ATTACK 6.0: fresh fixture copy, intact control (case C) =====
+0 error(s), 16 warning(s) — OK
+control manifest taken
+exit=0
+ok: True
+  checksums True 
+  restore-provenance True 
+  materials-alias-layer True 
+  canonical-validation True 
+  projection-regeneration True 
+  ui-contract-lock True 
+  ui-asset-declaration True 
+  ui-install-preflight True 
+  ui-bundle-smoke True 
+
+===== ATTACK 6.A: referenced material file already absent when the backup is taken =====
+deleted materials/source-demo-book/book.pdf (referenced by sources/sources.yaml)
+backup-manifest exit=0 (does the backup refuse a damaged materials tree?)
+ok: True entries: 491
+exit=1
+ok: False
+  checksums True 
+  restore-provenance True 
+  materials-alias-layer True 
+  canonical-validation False {"errors": ["E MATERIAL-MISSING: 'material://source-demo-book/book.pdf' does not resolve to a file in the materials tree (a missing file, or a stale .flat/ symlink \u2014 rebuild with `.venv/bin/python tools/build_materials_tree.py --apply`) [records/materials
+  projection-regeneration False {"reason": "canonical validation failed"}
+  ui-contract-lock False {"ui_version": 15, "core_version": null, "ui_schema_sha256": "sha256:c487c6ed2e05c05425c6b41bd291e566b16a7e1ee3af667ae00763608d7e121f", "core_schema_sha256": null}
+  ui-asset-declaration True 
+  ui-install-preflight True 
+  ui-bundle-smoke True 
+
+===== ATTACK 6.B: recorded alias whose target folder is not in the restore =====
+alias layer built: source-demo-book (real) + source-empty (only .DS_Store inside)
+materials_aliases: {'source-demo-book': 'source-demo-book', 'source-empty': 'source-empty'}
+materials entries: ['source-demo-book/book.pdf', 'source-demo-book/lecture-01.pdf', 'source-scenario-bare/attached.pdf']
+deleted source-empty/ from the restore (alias target lost)
+exit=1
+ok: False
+  checksums True 
+  restore-provenance True 
+  materials-alias-layer False {"recorded": 2, "rebuilt": 1, "absent_from_restore": ["source-empty"], "absent_count": 1}
+  canonical-validation True 
+  projection-regeneration True 
+  ui-contract-lock True 
+  ui-asset-declaration True 
+  ui-install-preflight True 
+  ui-bundle-smoke True 
+
+===== ATTACK 6.DONE attack 6 =====

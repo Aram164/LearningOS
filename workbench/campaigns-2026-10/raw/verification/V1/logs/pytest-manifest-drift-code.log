@@ -1,0 +1,49 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_manifest_drift_message_carries_the_documented_code ____________
+
+mini_repo = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1108/test_manifest_drift_message_ca0/LearningOS/repository')
+
+    def test_manifest_drift_message_carries_the_documented_code(mini_repo):
+        ok, message = check(_tampered_manifest(mini_repo), mini_repo)
+        assert not ok, "the tampered manifest must fail the declared contract"
+>       assert "MANIFEST-CONTRACT-DRIFT" in message, (
+            "changing-contracts.md:60 documents the manifest drift failure as "
+            "MANIFEST-CONTRACT-DRIFT, but the gate's actual message is: "
+            f"{message[:300]}")
+E       AssertionError: changing-contracts.md:60 documents the manifest drift failure as MANIFEST-CONTRACT-DRIFT, but the gate's actual message is: the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).
+E           top_level_keys: added ['experimental_widgets'], missing none
+E           schema at <root> (RFC6901 ''): Additional properties are not allowed ('experimental_widgets' was unexpected)
+E         A change to the published sha
+E       assert 'MANIFEST-CONTRACT-DRIFT' in 'the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).\n  top_level_keys: a...ge — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json'
+
+tests/test_v1_manifest_drift_code.py:32: AssertionError
+__________ test_manifest_drift_exception_carries_the_documented_code ___________
+
+mini_repo = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1108/test_manifest_drift_exception_0/LearningOS/repository')
+
+    def test_manifest_drift_exception_carries_the_documented_code(mini_repo):
+        import pytest
+    
+        from learning_os.store.contracts.manifest_contract import (
+            ManifestContractError,
+        )
+    
+        with pytest.raises(ManifestContractError) as excinfo:
+            enforce(_tampered_manifest(mini_repo), mini_repo)
+>       assert "MANIFEST-CONTRACT-DRIFT" in str(excinfo.value), (
+            "the raised manifest-contract failure never names "
+            f"MANIFEST-CONTRACT-DRIFT: {str(excinfo.value)[:300]}")
+E       AssertionError: the raised manifest-contract failure never names MANIFEST-CONTRACT-DRIFT: the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).
+E           top_level_keys: added ['experimental_widgets'], missing none
+E           schema at <root> (RFC6901 ''): Additional properties are not allowed ('experimental_widgets' was unexpected)
+E         A change to the published sha
+E       assert 'MANIFEST-CONTRACT-DRIFT' in 'the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).\n  top_level_keys: a...ge — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json'
+E        +  where 'the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).\n  top_level_keys: a...ge — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json' = str(ManifestContractError('the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15)...e — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json'))
+E        +    where ManifestContractError('the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15)...e — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json') = <ExceptionInfo ManifestContractError('the published manifest no longer matches system/contracts/manifest-contract.yaml...acts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json') tblen=2>.value
+
+tests/test_v1_manifest_drift_code.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_v1_manifest_drift_code.py::test_manifest_drift_message_carries_the_documented_code
+FAILED tests/test_v1_manifest_drift_code.py::test_manifest_drift_exception_carries_the_documented_code
+2 failed in 0.17s

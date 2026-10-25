@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K4-2026-10/repository/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K4-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 4 items
+
+tests/test_k4_3_operation_budget.py::test_fifty_operations_commit_in_one_transaction PASSED [ 25%]
+tests/test_k4_3_operation_budget.py::test_fifty_one_operations_refuse_and_commit_nothing PASSED [ 50%]
+tests/test_k4_3_operation_budget.py::test_late_duplicate_inside_one_batch_commits_nothing PASSED [ 75%]
+tests/test_k4_3_operation_budget.py::test_empty_operations_refuse PASSED [100%]
+
+============================== 4 passed in 1.87s ===============================

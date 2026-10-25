@@ -1,0 +1,32 @@
+
+probe 1 · every registered leaf mounts and renders content
+  ok   home: renders content
+  ok   nav: renders content
+  ok   program: renders content
+  ok   module_list: renders content
+  ok   module_list: shows expected fixture content "Fixture"
+  ok   module_detail: renders content
+  ok   module_detail: shows expected fixture content "Fixture Statistics & Analysis"
+  ok   project_list: renders content
+  ok   project_detail: renders content
+  ok   project_detail: shows expected fixture content "Thesis"
+  ok   unit: renders content
+  ok   unit: shows expected fixture content "Conditional probability and Bayes"
+  ok   library: renders content
+  ok   library_detail: renders content
+  ok   atlas: renders content
+  ok   atlas: shows expected fixture content "Bayes"
+  ok   atlas_domains: renders content
+  ok   atlas_domains: shows expected fixture content "Notes"
+  ok   abilities: renders content
+  ok   abilities: shows expected fixture content "ability"
+  ok   shelving: renders content
+  ok   boundary: renders content
+  ok   review: renders content
+  ok   garden: renders content
+  ok   diagnostics: renders content
+
+probe 1 · summary
+mounted: 18, failed: 0
+
+probe 1 (mount all views): all checks passed

@@ -1,0 +1,6 @@
+npm-exit=1
+npm error Missing script: "stage-plugin"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/aramaljanadi/.npm/_logs/2026-10-25T07_35_46_489Z-debug-0.log

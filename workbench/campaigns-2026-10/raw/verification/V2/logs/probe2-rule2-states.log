@@ -1,0 +1,90 @@
+
+probe 2A · every view renders with the CLI unavailable
+  ok   offline · home: renders instead of throwing
+  ok   offline · nav: renders instead of throwing
+  ok   offline · program: renders instead of throwing
+  ok   offline · module-list: renders instead of throwing
+  ok   offline · module-detail: renders instead of throwing
+  ok   offline · project-detail: renders instead of throwing
+  ok   offline · unit: renders instead of throwing
+  ok   offline · library: renders instead of throwing
+  ok   offline · atlas-concept: renders instead of throwing
+  ok   offline · atlas-domains: renders instead of throwing
+  ok   offline · abilities: renders instead of throwing
+  ok   offline · shelving: renders instead of throwing
+  ok   offline · boundary: renders instead of throwing
+  ok   offline · review: renders instead of throwing
+  ok   offline · garden: renders instead of throwing
+  ok   offline · diagnostics: renders instead of throwing
+  ok   offline · home still shows fixture module content
+
+probe 2B · every view re-renders with a stale manifest after a good load
+  ok   stale · store reports stale and still ready
+  ok   stale · home: renders without throwing
+  ok   stale · home: shows the stale banner
+  ok   stale · nav: renders without throwing
+  ok   stale · nav: shows the stale banner
+  ok   stale · program: renders without throwing
+  ok   stale · program: shows the stale banner
+  ok   stale · module-list: renders without throwing
+  ok   stale · module-list: shows the stale banner
+  ok   stale · module-detail: renders without throwing
+  ok   stale · module-detail: shows the stale banner
+  ok   stale · project-detail: renders without throwing
+  ok   stale · project-detail: shows the stale banner
+  ok   stale · unit: renders without throwing
+  ok   stale · unit: shows the stale banner
+  ok   stale · library: renders without throwing
+  ok   stale · library: shows the stale banner
+  ok   stale · atlas-concept: renders without throwing
+  ok   stale · atlas-concept: shows the stale banner
+  ok   stale · atlas-domains: renders without throwing
+  ok   stale · atlas-domains: shows the stale banner
+  ok   stale · abilities: renders without throwing
+  ok   stale · abilities: shows the stale banner
+  ok   stale · shelving: renders without throwing
+  ok   stale · shelving: shows the stale banner
+  ok   stale · boundary: renders without throwing
+  ok   stale · boundary: shows the stale banner
+  ok   stale · review: renders without throwing
+  ok   stale · review: shows the stale banner
+  ok   stale · garden: renders without throwing
+  ok   stale · garden: shows the stale banner
+  ok   stale · diagnostics: renders without throwing
+  ok   stale · diagnostics: shows the stale banner
+
+probe 2C · every view shows an empty state when the manifest is missing from the start
+  ok   missing · store is not ready and reports the error
+  ok   missing · home: renders without throwing
+  ok   missing · home: shows an empty state
+  ok   missing · nav: renders its destinations (chrome, no data empty state by design)
+  ok   missing · program: renders without throwing
+  ok   missing · program: shows an empty state
+  ok   missing · module-list: renders without throwing
+  ok   missing · module-list: shows an empty state
+  ok   missing · module-detail: renders without throwing
+  ok   missing · module-detail: shows an empty state
+  ok   missing · project-detail: renders without throwing
+  ok   missing · project-detail: shows an empty state
+  ok   missing · unit: renders without throwing
+  ok   missing · unit: shows an empty state
+  ok   missing · library: renders without throwing
+  ok   missing · library: shows an empty state
+  ok   missing · atlas-concept: renders without throwing
+  ok   missing · atlas-concept: shows an empty state
+  ok   missing · atlas-domains: renders without throwing
+  ok   missing · atlas-domains: shows an empty state
+  ok   missing · abilities: renders without throwing
+  ok   missing · abilities: shows an empty state
+  ok   missing · shelving: renders without throwing
+  ok   missing · shelving: shows an empty state
+  ok   missing · boundary: renders without throwing
+  ok   missing · boundary: shows an empty state
+  ok   missing · review: renders without throwing
+  ok   missing · review: shows an empty state
+  ok   missing · garden: renders without throwing
+  ok   missing · garden: shows an empty state
+  ok   missing · diagnostics: renders without throwing
+  ok   missing · diagnostics: shows an empty state
+
+probe 2 (rule 2 offline / stale / missing manifest): all checks passed

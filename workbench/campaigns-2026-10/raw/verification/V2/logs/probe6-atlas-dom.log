@@ -1,0 +1,27 @@
+
+probe 6 · atlas entry: the orphaned question row
+  ok   an orphaned question renders a row reading "— no longer authored"
+  ok   the orphaned question names what it was recorded on
+  ok   the orphaned question is a div, not a button (non-clickable)
+  ok   no orphaned question row is clickable
+
+probe 6 · focused graph: the depth remainder is counted on screen
+  ok   a depth-remainder card is rendered
+  ok   the remainder is counted ("+ N more …")
+  ok   the remainder names the depth it lies beyond
+  ok   expanding the remainder names the concepts it counted
+  ok   the open remainder states "counted, never dropped"
+
+probe 6 · inspector: both sentences of one strict row
+  ok   the inspector opens the selected strict connection
+  ok   the strict row shows the canonical sentence
+  ok   the strict row also shows the study-order sentence
+  ok   both sentences appear in one row
+
+probe 6 · the Domains lens renders
+  ok   the Domains lens renders its rail and search
+  ok   the Domains lens lists domains with counts
+  ok   the Domains lens opens a domain detail with notes
+  ok   the variant switch marks Notes & shelves as active
+
+probe 6 (atlas DOM): all checks passed

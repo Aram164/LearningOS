@@ -1,0 +1,51 @@
+.venv/bin/python tools/validate.py --compact
+0 error(s), 964 warning(s) — OK (3.9s); warning list: generated/reports/validation-report.md
+.venv/bin/python tools/warning_baseline.py --check
+warning-baseline: 964 warning(s) across 32 signature(s); baseline 964 across 32 (recorded 2026-10-25)
+warning-baseline: OK — zero errors, no new warning signature.
+.venv/bin/python -m pytest -q tests/test_curriculum_v2.py tests/test_unit_plan_revision.py tests/test_module_plan_warning_gate.py tests/test_vnext_boundaries.py
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+......................                                                   [100%]
+238 passed in 140.30s (0:02:20)
+.venv/bin/python tools/generate.py
+wrote generated/backlinks.json
+wrote generated/collections/algorithms-bookshelf.md
+wrote generated/collections/algorithms-lecture-series.md
+wrote generated/collections/exam-practice-banks.md
+wrote generated/collections/github-student-developer-pack.md
+wrote generated/collections/icop-reading.md
+wrote generated/collections/math-bookshelf.md
+wrote generated/collections/math-lecture-series.md
+wrote generated/collections/ml-bookshelf.md
+wrote generated/collections/ml-broaden-later.md
+wrote generated/collections/ml-explainers.md
+wrote generated/collections/ml-lecture-series.md
+wrote generated/collections/ml-systems-bookshelf.md
+wrote generated/collections/ml-systems-lecture-series.md
+wrote generated/collections/papers-shelf.md
+wrote generated/collections/programming-bookshelf.md
+wrote generated/collections/programming-video-courses.md
+wrote generated/collections/project-toolbox.md
+wrote generated/collections/python-internals-shelf.md
+wrote generated/concept-canvas.canvas
+wrote generated/concept-index.md
+wrote generated/concept-map.md
+wrote generated/coordination-view.md
+wrote generated/dependency-report.md
+wrote generated/domain-atlas.md
+wrote generated/learner-interpretations.json
+wrote generated/learner-interpretations.md
+wrote generated/learning-requirements.json
+wrote generated/learning-requirements.md
+wrote generated/library.md
+wrote generated/manifest.identity.json
+wrote generated/manifest.json
+wrote generated/module-view.md
+wrote generated/nebula.md
+wrote generated/reading-room.md
+wrote generated/reports/health.md
+wrote generated/source-index.md
+wrote generated/study-plans.md
+git diff --check

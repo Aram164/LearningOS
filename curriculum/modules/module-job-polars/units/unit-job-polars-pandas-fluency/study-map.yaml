@@ -134,7 +134,7 @@ stages:
     label: Local material — 03.01-Introducing-Pandas-Objects.ipynb
     id: resource-polars-01-03-local-material-03-01-introducing-panda
     source_id: source-pydata-handbook
-    locator: §'The Pandas Index Object' and §'Data Selection in Series' (notebook 03.01)
+    locator: §'The Pandas Index Object' (notebook 03.01)
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
     scope_triage: reference-only
     angle: A pandas-native explanation of the index as a first-class object, which is the premise Polars

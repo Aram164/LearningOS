@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20261025-152527-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-10-25T15:25:27+01:00'
+snapshot_before: sha256:cfee71f8822322ce2442238b17eb68411de4965b0bcb68d81e671111265c64f9
+snapshot_after: sha256:eb8fe4c0221be09551783a982466477a42e03c8c1e52599dadc0c653fd729da3
+expected_revisions:
+  unit-job-polars-pandas-fluency: 12
+artifact_revisions:
+  unit-job-polars-pandas-fluency:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  sha256_before: d3e6c56019ca5882f77fb50fe74f28635569cf84b33c14c890ba193dd8d23579
+  sha256_after: cf3dc595a50b0a1f05bf5c5e519a21a3cdebf2df68d75446b0924f30137091f7
+  created: false
+metadata:
+  data_roots_sha256: sha256:087c094b8b72d85e7a069bb7a6bebb9bba633b69042a11f380c2bf8c512f7d10
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-86b5100ce851437bada0e446d88a7ce6
+  idempotency_key: reviewed-8f78c734969a40b9964ef309e7796be7
+  intent_sha256: sha256:66bcc96cb5323e01d4c2b4581994d8229b8c9ad11f5fe6f9a483ca4513451453
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:66bcc96cb5323e01d4c2b4581994d8229b8c9ad11f5fe6f9a483ca4513451453

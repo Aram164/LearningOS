@@ -1,0 +1,40 @@
+
+===== ATTACK 5.1: the five pinned paths in this clone =====
+ABSENT  knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf
+ABSENT  knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part2.pdf
+ABSENT  knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf
+ABSENT  knowledge/attachments/note-sad-distributions-handwritten/teil-02-part2.pdf
+ABSENT  knowledge/attachments/note-sad-hypothesis-testing-handwritten/teil-03.pdf
+ATTACH-LOCAL warnings in the clone's validate (see phase2 log):
+5
+
+===== ATTACK 5.2: fabricated attachments present-and-different -> error? =====
+validate exit=1
+1:E ATTACH-LOCAL-CHANGED: bytes differ from the pin (59528073 bytes, sha256:488c4ea4b04e9a2378671e9ff3d8eff1d8598c9379c4e66a42cb960cf4bb3a7c); this is the only copy outside backups — restore it, or re-pin deliberately [knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf]
+2:W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part2.pdf]
+3:E ATTACH-LOCAL-CHANGED: bytes differ from the pin (52512247 bytes, sha256:250db4993fb56abc24b042740f6b778137d194d40e04286ecda7b2792a87c7ea); this is the only copy outside backups — restore it, or re-pin deliberately [knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf]
+4:W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-distributions-handwritten/teil-02-part2.pdf]
+5:W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-hypothesis-testing-handwritten/teil-03.pdf]
+2 error(s), 1468 warning(s) — FAIL
+
+===== ATTACK 5.3: backup walks disk, not the index -> fabricated files enter the manifest =====
+backup exit=0
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_doc.py 15099
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_tables.py 4732
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/check_all.py 2247
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/gen_tables.py 2689
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/probe.py 2596
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics.py 5938
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics2.py 5667
+manifest entry: core knowledge/attachments/note-pandas-polars-aggregation-contentions/verify.py 27998
+manifest entry: core knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf 35
+manifest entry: core knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf 22
+attachment entries: 10
+
+===== ATTACK 5.4: restore, then delete one fabricated attachment -> verify? =====
+deleted the fabricated teil-02-part1.pdf from the restore
+exit=1
+{"ok":false,"checked":2530,"issues":[{"root":"core","path":"knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf","issue":"missing"}]}
+
+
+===== ATTACK 5.DONE attack 5 =====

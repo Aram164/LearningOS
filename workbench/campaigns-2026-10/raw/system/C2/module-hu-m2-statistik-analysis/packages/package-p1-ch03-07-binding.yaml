@@ -1,0 +1,6018 @@
+module_id: module-hu-m2-statistik-analysis
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-m2-l2-16-packages-2026-10-25/outputs/audit-p1-binding-2026-10-25.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+  intentional_reorders: []
+units:
+- unit:
+    id: unit-m2-analysis-ch03
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: topic
+    title: Analysis Kapitel 3 — Folgen und Konvergenz
+    order: 103
+    scope: 'Script Chapter 3 ''Folgen und Konvergenz'', printed pp. 41-79 (PDF pp. 51-89). The largest
+      exam-bearing chapter and the one with the most current HU practice: Serien 05, 06 and 07 and Hausaufgabe
+      WV1.1 are all Chapter 3. §3.2 (Landau-Notation) and §3.4 are Exkurse; §3.3 (lineare Rekursionsgleichungen)
+      and §3.8 (Berechnung der Quadratwurzel) are Ausflüge that the HU sheets nevertheless examine.'
+    status: ready
+    knowledge_map:
+      summary: 'Chapter 3 is the spine: it defines convergence, supplies every criterion for deciding
+        it, and is the chapter the rest of the script reduces to. Series are sequences of partial sums,
+        function limits are defined through sequences, and continuity and the derivative are function
+        limits — so a gap here reappears four times. The chapter also carries the two Informatik excursions
+        the module is named for: Landau notation and linear recurrences.'
+      nodes:
+      - id: knowledge-m2-analysis-ch03-folgen
+        title: Folgen (§3.1)
+        summary: Sequences as functions on N, explicit and recursive definition, boundedness and monotonicity.
+          The vocabulary every later criterion is stated in.
+      - id: knowledge-m2-analysis-ch03-rekursionen
+        title: Ausflug – Lineare Rekursionsgleichungen (§§3.3-3.4)
+        summary: Setting up a recurrence from a process and solving the linear homogeneous case. §3.3
+          is an Ausflug and §3.4 an Exkurs, but Serie 05's Türme-von-Hanoi task is exactly this, so the
+          modelling half is examined even though the solution theory is not.
+        builds_on:
+        - knowledge-m2-analysis-ch03-folgen
+      - id: knowledge-m2-analysis-ch03-konvergenzkriterien
+        title: Konvergenzkriterien für Folgen (§3.5)
+        summary: 'The epsilon-N definition of convergence and the criteria that avoid it: monotone and
+          bounded, Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing the criterion
+          is the graded skill, not knowing the list.'
+        builds_on:
+        - knowledge-m2-analysis-ch03-folgen
+      - id: knowledge-m2-analysis-ch03-rechenregeln
+        title: Rechnen mit konvergenten Folgen (§3.6)
+        summary: The limit laws for sums, products and quotients, the sandwich argument, and the standard
+          manipulations — dividing by the dominant power, rationalising a difference of roots — that turn
+          a limit into a computation.
+        builds_on:
+        - knowledge-m2-analysis-ch03-konvergenzkriterien
+      - id: knowledge-m2-analysis-ch03-bestimmte-divergenz
+        title: Bestimmt divergente Folgen (§3.7)
+        summary: Divergence to plus or minus infinity as a positive statement rather than the mere absence
+          of a limit, and the arithmetic that survives it.
+        builds_on:
+        - knowledge-m2-analysis-ch03-rechenregeln
+      - id: knowledge-m2-analysis-ch03-quadratwurzel
+        title: Ausflug – Berechnung der Quadratwurzel (§3.8)
+        summary: 'The Heron iteration as a monotone bounded recursive sequence whose limit is the root:
+          the chapter''s own worked example of convergence proving something the field axioms cannot construct.
+          Serie 07''s Aufgabe 7.1.'
+        builds_on:
+        - knowledge-m2-analysis-ch03-konvergenzkriterien
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: unser skript.pdf Kapitel 3, printed pp. 41-79 (PDF pp. 51-89); Stand 04.02.2025
+    source_selections: []
+    artifacts: {}
+    workspace_ids:
+    - workspace-m2-exam-prep
+    current_study_map: study-map-m2-analysis-ch03
+  study_map:
+    id: study-map-m2-analysis-ch03
+    type: study-map
+    plan_template_version: 1
+    unit_id: unit-m2-analysis-ch03
+    status: not-started
+    current_stage: stage-m2-analysis-ch03-folgen
+    source_plan:
+      path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-ch03-folgen
+      number: 1
+      title: Folgen (§3.1)
+      status: pending
+      objective: Sequences as functions on N, explicit and recursive definition, boundedness and monotonicity.
+        The vocabulary every later criterion is stated in.
+      done_when:
+      - 'Reproduce without notes: Sequences as functions on N, explicit and recursive definition, boundedness
+        and monotonicity. The vocabulary every later criterion is stated in.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+        6, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-4
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-5
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-folgen/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch03-rekursionen
+      number: 2
+      title: Ausflug – Lineare Rekursionsgleichungen (§§3.3-3.4)
+      status: pending
+      objective: Setting up a recurrence from a process and solving the linear homogeneous case. §3.3
+        is an Ausflug and §3.4 an Exkurs, but Serie 05's Türme-von-Hanoi task is exactly this, so the
+        modelling half is examined even though the solution theory is not.
+      done_when:
+      - 'Reproduce without notes: Setting up a recurrence from a process and solving the linear homogeneous
+        case. §3.3 is an Ausflug and §3.4 an Exkurs, but Serie 05''s Türme-von-Hanoi task is exactly this,
+        so the modelling half is examined even though the solution theory is not.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, and record
+        every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-proof-technique
+      - concept-sequences-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rekursionen/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch03-konvergenzkriterien
+      number: 3
+      title: Konvergenzkriterien für Folgen (§3.5)
+      status: pending
+      objective: 'The epsilon-N definition of convergence and the criteria that avoid it: monotone and
+        bounded, Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing the criterion
+        is the graded skill, not knowing the list.'
+      done_when:
+      - 'Reproduce without notes: The epsilon-N definition of convergence and the criteria that avoid
+        it: monotone and bounded, Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing
+        the criterion is the graded skill, not knowing the list.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+        9, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-4
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-5
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-6
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-konvergenzkriterien/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch03-rechenregeln
+      number: 4
+      title: Rechnen mit konvergenten Folgen (§3.6)
+      status: pending
+      objective: The limit laws for sums, products and quotients, the sandwich argument, and the standard
+        manipulations — dividing by the dominant power, rationalising a difference of roots — that turn
+        a limit into a computation.
+      done_when:
+      - 'Reproduce without notes: The limit laws for sums, products and quotients, the sandwich argument,
+        and the standard manipulations — dividing by the dominant power, rationalising a difference of
+        roots — that turn a limit into a computation.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+        6, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-5
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-6
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rechenregeln/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch03-bestimmte-divergenz
+      number: 5
+      title: Bestimmt divergente Folgen (§3.7)
+      status: pending
+      objective: Divergence to plus or minus infinity as a positive statement rather than the mere absence
+        of a limit, and the arithmetic that survives it.
+      done_when:
+      - 'Reproduce without notes: Divergence to plus or minus infinity as a positive statement rather
+        than the mere absence of a limit, and the arithmetic that survives it.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+        5, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-5
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisdrillblaetterext-6
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-bestimmte-divergenz/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch03-quadratwurzel
+      number: 6
+      title: Ausflug – Berechnung der Quadratwurzel (§3.8)
+      status: pending
+      objective: 'The Heron iteration as a monotone bounded recursive sequence whose limit is the root:
+        the chapter''s own worked example of convergence proving something the field axioms cannot construct.
+        Serie 07''s Aufgabe 7.1.'
+      done_when:
+      - 'Reproduce without notes: The Heron iteration as a monotone bounded recursive sequence whose limit
+        is the root: the chapter''s own worked example of convergence proving something the field axioms
+        cannot construct. Serie 07''s Aufgabe 7.1.'
+      - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+        1, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-real-numbers
+      - concept-sequences-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch03-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch03-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch03-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-quadratwurzel/notes.md
+      attachments: []
+      source_feedback: []
+- unit:
+    id: unit-m2-analysis-ch04
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: topic
+    title: Analysis Kapitel 4 — Reihen
+    order: 104
+    scope: Script Chapter 4 'Reihen', printed pp. 80-97 (PDF pp. 90-107). Current HU practice is Serie
+      08 (Aufgaben 8.1-8.3) and Hausaufgabe WV1.3, which asks one single series to be settled four different
+      ways. §4.4 (Umordnungen) is an Ausflug; §4.5 (Produktreihen) is an Exkurs and outside the exam.
+    status: ready
+    knowledge_map:
+      summary: A series is the sequence of its partial sums, so Chapter 4 adds no new notion of convergence
+        — it adds a decision procedure. The examinable skill is picking the right criterion and stating
+        its hypotheses correctly, which is exactly what WV1.3 drills by demanding the same series be handled
+        with the ratio, root, comparison and Leibniz criteria in turn.
+      nodes:
+      - id: knowledge-m2-analysis-ch04-reihen
+        title: Reihen (§4.1)
+        summary: 'Series as sequences of partial sums, the necessary null-sequence condition, and the
+          two series whose sums can actually be computed: geometric and telescoping.'
+      - id: knowledge-m2-analysis-ch04-konvergenzkriterien
+        title: Konvergenzkriterien für Reihen (§4.2)
+        summary: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria, each with its hypotheses
+          and its inconclusive case. The exam failure mode is method choice, not missing knowledge of
+          the list.
+        builds_on:
+        - knowledge-m2-analysis-ch04-reihen
+      - id: knowledge-m2-analysis-ch04-absolute-konvergenz
+        title: Absolute Konvergenz (§4.3)
+        summary: 'Absolute versus conditional convergence, and why the distinction is not pedantry: it
+          is the hypothesis the rearrangement result turns on.'
+        builds_on:
+        - knowledge-m2-analysis-ch04-konvergenzkriterien
+      - id: knowledge-m2-analysis-ch04-umordnungen
+        title: Ausflug – Umordnungen (§4.4)
+        summary: 'The Riemann rearrangement phenomenon: a conditionally convergent series can be reordered
+          to any value. Ausflug depth — know the statement and what it costs.'
+        builds_on:
+        - knowledge-m2-analysis-ch04-absolute-konvergenz
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: unser skript.pdf Kapitel 4, printed pp. 80-97 (PDF pp. 90-107); Stand 04.02.2025
+    source_selections: []
+    artifacts: {}
+    workspace_ids:
+    - workspace-m2-exam-prep
+    current_study_map: study-map-m2-analysis-ch04
+  study_map:
+    id: study-map-m2-analysis-ch04
+    type: study-map
+    plan_template_version: 1
+    unit_id: unit-m2-analysis-ch04
+    status: not-started
+    current_stage: stage-m2-analysis-ch04-reihen
+    source_plan:
+      path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-ch04-reihen
+      number: 1
+      title: Reihen (§4.1)
+      status: pending
+      objective: 'Series as sequences of partial sums, the necessary null-sequence condition, and the
+        two series whose sums can actually be computed: geometric and telescoping.'
+      done_when:
+      - 'Reproduce without notes: Series as sequences of partial sums, the necessary null-sequence condition,
+        and the two series whose sums can actually be computed: geometric and telescoping.'
+      - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+        6, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch04-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-4
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-reihen/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch04-konvergenzkriterien
+      number: 2
+      title: Konvergenzkriterien für Reihen (§4.2)
+      status: pending
+      objective: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria, each with its hypotheses
+        and its inconclusive case. The exam failure mode is method choice, not missing knowledge of the
+        list.
+      done_when:
+      - 'Reproduce without notes: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria,
+        each with its hypotheses and its inconclusive case. The exam failure mode is method choice, not
+        missing knowledge of the list.'
+      - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+        7, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch04-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-4
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-konvergenzkriterien/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch04-absolute-konvergenz
+      number: 3
+      title: Absolute Konvergenz (§4.3)
+      status: pending
+      objective: 'Absolute versus conditional convergence, and why the distinction is not pedantry: it
+        is the hypothesis the rearrangement result turns on.'
+      done_when:
+      - 'Reproduce without notes: Absolute versus conditional convergence, and why the distinction is
+        not pedantry: it is the hypothesis the rearrangement result turns on.'
+      - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+        7, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch04-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-4
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-absolute-konvergenz/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch04-umordnungen
+      number: 4
+      title: Ausflug – Umordnungen (§4.4)
+      status: pending
+      objective: 'The Riemann rearrangement phenomenon: a conditionally convergent series can be reordered
+        to any value. Ausflug depth — know the statement and what it costs.'
+      done_when:
+      - 'Reproduce without notes: The Riemann rearrangement phenomenon: a conditionally convergent series
+        can be reordered to any value. Ausflug depth — know the statement and what it costs.'
+      - Work AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke, and
+        record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch04-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch04-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch04-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-umordnungen/notes.md
+      attachments: []
+      source_feedback: []
+- unit:
+    id: unit-m2-analysis-ch05
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: topic
+    title: Analysis Kapitel 5 — Differentialrechnung I
+    order: 105
+    scope: 'Script Chapter 5 ''Differentialrechnung I'', printed pp. 98-136 (PDF pp. 108-146). Despite
+      the title the chapter contains no derivatives: it is function limits, continuity, the theorems on
+      compact intervals, the exponential and logarithm, and uniform convergence. Current HU practice reaches
+      §5.5 and stops there — Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4. §5.8 (Potenzreihen)
+      is an Exkurs.'
+    status: ready
+    knowledge_map:
+      summary: 'Chapter 5 carries the definition of a limit of a function through sequences, which is
+        why Chapter 3 had to come first, and then spends itself on continuity and its three consequences
+        on a closed bounded interval: the intermediate value theorem, the extreme value theorem, and the
+        existence of a continuous inverse. It is the last chapter with current HU exercises, and the theorems
+        here are the ones the external Klausuren ask to be stated with complete hypotheses.'
+      nodes:
+      - id: knowledge-m2-analysis-ch05-funktionsgrenzwerte
+        title: Grenzwerte bei Funktionen (§5.1)
+        summary: The limit of a function at an accumulation point, defined both directly and through the
+          sequence criterion. Serie 08.4 asks for one limit proved both ways, which is the clearest signal
+          of what the course wants here.
+      - id: knowledge-m2-analysis-ch05-einseitige-grenzwerte
+        title: Uneigentliche und einseitige Grenzwerte (§5.2)
+        summary: One-sided limits, limits at infinity and infinite limits, and the discipline of falling
+          back to one-sided limits when the two-sided one fails to exist.
+        builds_on:
+        - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+      - id: knowledge-m2-analysis-ch05-stetigkeit
+        title: Stetige Funktionen (§5.3)
+        summary: Continuity at a point and on a set, the epsilon-delta and sequence formulations, and
+          the rules for sums, products, quotients and compositions. Proving continuity at exactly one
+          point is a recurring exam shape.
+        builds_on:
+        - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+      - id: knowledge-m2-analysis-ch05-zwischenwertsatz
+        title: Zwischenwertsatz, Umkehrfunktion und Extrempunkte (§5.4)
+        summary: The intermediate value theorem with its hypotheses stated exactly, the existence and
+          continuity of inverse functions on intervals, and extreme points. WV1.4 asks for the statement
+          first and the application second, in that order.
+        builds_on:
+        - knowledge-m2-analysis-ch05-stetigkeit
+      - id: knowledge-m2-analysis-ch05-kompakte-intervalle
+        title: Besonderheiten stetiger Funktionen auf abgeschlossenen, beschränkten Intervallen (§5.5)
+        summary: Boundedness, attained maximum and minimum, and uniform continuity on a compact interval.
+          Short in the script and heavily used afterwards — several external Klausur tasks are this theorem
+          in disguise.
+        builds_on:
+        - knowledge-m2-analysis-ch05-zwischenwertsatz
+      - id: knowledge-m2-analysis-ch05-exponentialfunktion
+        title: Exponentialfunktion und Logarithmen (§5.6)
+        summary: 'The exponential series, the functional equation, the logarithm as its inverse and the
+          general power. Kept computational: the laws must be usable, the construction need not be reproduced.'
+        builds_on:
+        - knowledge-m2-analysis-ch05-stetigkeit
+      - id: knowledge-m2-analysis-ch05-gleichmaessige-konvergenz
+        title: Gleichmäßige Konvergenz von Funktionenfolgen (§5.7)
+        summary: Pointwise versus uniform convergence of a sequence of functions, and what uniform convergence
+          preserves that pointwise does not. Two script pages and no HU sheet, which is exactly why it
+          is easy to arrive at the exam never having practised it.
+        builds_on:
+        - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: unser skript.pdf Kapitel 5, printed pp. 98-136 (PDF pp. 108-146); Stand 04.02.2025
+    source_selections: []
+    artifacts: {}
+    workspace_ids:
+    - workspace-m2-exam-prep
+    current_study_map: study-map-m2-analysis-ch05
+  study_map:
+    id: study-map-m2-analysis-ch05
+    type: study-map
+    plan_template_version: 1
+    unit_id: unit-m2-analysis-ch05
+    status: not-started
+    current_stage: stage-m2-analysis-ch05-funktionsgrenzwerte
+    source_plan:
+      path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-ch05-funktionsgrenzwerte
+      number: 1
+      title: Grenzwerte bei Funktionen (§5.1)
+      status: pending
+      objective: The limit of a function at an accumulation point, defined both directly and through the
+        sequence criterion. Serie 08.4 asks for one limit proved both ways, which is the clearest signal
+        of what the course wants here.
+      done_when:
+      - 'Reproduce without notes: The limit of a function at an accumulation point, defined both directly
+        and through the sequence criterion. Serie 08.4 asks for one limit proved both ways, which is the
+        clearest signal of what the course wants here.'
+      - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice,
+        then the remaining 4, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-funktionsgrenzwerte/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-einseitige-grenzwerte
+      number: 2
+      title: Uneigentliche und einseitige Grenzwerte (§5.2)
+      status: pending
+      objective: One-sided limits, limits at infinity and infinite limits, and the discipline of falling
+        back to one-sided limits when the two-sided one fails to exist.
+      done_when:
+      - 'Reproduce without notes: One-sided limits, limits at infinity and infinite limits, and the discipline
+        of falling back to one-sided limits when the two-sided one fails to exist.'
+      - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice,
+        then the remaining 4, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-einseitige-grenzwerte/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-stetigkeit
+      number: 3
+      title: Stetige Funktionen (§5.3)
+      status: pending
+      objective: Continuity at a point and on a set, the epsilon-delta and sequence formulations, and
+        the rules for sums, products, quotients and compositions. Proving continuity at exactly one point
+        is a recurring exam shape.
+      done_when:
+      - 'Reproduce without notes: Continuity at a point and on a set, the epsilon-delta and sequence formulations,
+        and the rules for sums, products, quotients and compositions. Proving continuity at exactly one
+        point is a recurring exam shape.'
+      - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice,
+        then the remaining 5, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-stetigkeit/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-zwischenwertsatz
+      number: 4
+      title: Zwischenwertsatz, Umkehrfunktion und Extrempunkte (§5.4)
+      status: pending
+      objective: The intermediate value theorem with its hypotheses stated exactly, the existence and
+        continuity of inverse functions on intervals, and extreme points. WV1.4 asks for the statement
+        first and the application second, in that order.
+      done_when:
+      - 'Reproduce without notes: The intermediate value theorem with its hypotheses stated exactly, the
+        existence and continuity of inverse functions on intervals, and extreme points. WV1.4 asks for
+        the statement first and the application second, in that order.'
+      - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice,
+        then the remaining 4, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-zwischenwertsatz/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-kompakte-intervalle
+      number: 5
+      title: Besonderheiten stetiger Funktionen auf abgeschlossenen, beschränkten Intervallen (§5.5)
+      status: pending
+      objective: Boundedness, attained maximum and minimum, and uniform continuity on a compact interval.
+        Short in the script and heavily used afterwards — several external Klausur tasks are this theorem
+        in disguise.
+      done_when:
+      - 'Reproduce without notes: Boundedness, attained maximum and minimum, and uniform continuity on
+        a compact interval. Short in the script and heavily used afterwards — several external Klausur
+        tasks are this theorem in disguise.'
+      - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice,
+        then the remaining 4, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisskripthu
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-kompakte-intervalle/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-exponentialfunktion
+      number: 6
+      title: Exponentialfunktion und Logarithmen (§5.6)
+      status: pending
+      objective: 'The exponential series, the functional equation, the logarithm as its inverse and the
+        general power. Kept computational: the laws must be usable, the construction need not be reproduced.'
+      done_when:
+      - 'Reproduce without notes: The exponential series, the functional equation, the logarithm as its
+        inverse and the general power. Kept computational: the laws must be usable, the construction need
+        not be reproduced.'
+      - Work IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus, then the remaining
+        3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-exponentialfunktion/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch05-gleichmaessige-konvergenz
+      number: 7
+      title: Gleichmäßige Konvergenz von Funktionenfolgen (§5.7)
+      status: pending
+      objective: Pointwise versus uniform convergence of a sequence of functions, and what uniform convergence
+        preserves that pointwise does not. Two script pages and no HU sheet, which is exactly why it is
+        easy to arrive at the exam never having practised it.
+      done_when:
+      - 'Reproduce without notes: Pointwise versus uniform convergence of a sequence of functions, and
+        what uniform convergence preserves that pointwise does not. Two script pages and no HU sheet,
+        which is exactly why it is easy to arrive at the exam never having practised it.'
+      - Work IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus, then the remaining
+        3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      - concept-uniform-convergence
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch05-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisdrillblaetterext-3
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch05-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-gleichmaessige-konvergenz/notes.md
+      attachments: []
+      source_feedback: []
+- unit:
+    id: unit-m2-analysis-ch06
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: topic
+    title: Analysis Kapitel 6 — Differentialrechnung II
+    order: 106
+    scope: Script Chapter 6 'Differentialrechnung II', printed pp. 137-190 (PDF pp. 147-200). The longest
+      chapter, and the first with no current HU exercise sheet at all — the local HU set stops at §5.5,
+      so every drill on this session is a substitute, recorded as such since the 2026-08-03 audit. §§6.2,
+      6.6 and 6.9 are Exkurse; §6.4 and §6.10 are Ausflüge.
+    status: ready
+    knowledge_map:
+      summary: 'Chapter 6 builds the derivative from the function limit of Chapter 5 and then spends itself
+        on one theorem — the mean value theorem — and its consequences: monotonicity, extrema, l''Hospital,
+        and finally Taylor approximation with an error bound. The chapter is where the module stops being
+        about existence and starts being about computation, and it is also where the practice evidence
+        gets thinnest.'
+      nodes:
+      - id: knowledge-m2-analysis-ch06-differenzierbarkeit
+        title: Differenzierbarkeit und Ableitungen (§6.1)
+        summary: The derivative as a limit of difference quotients, differentiability implying continuity,
+          and the calculation rules including chain rule and the derivative of an inverse function.
+      - id: knowledge-m2-analysis-ch06-mittelwertsatz
+        title: Mittelwertsatz der Differentialrechnung (§6.3)
+        summary: 'Rolle''s theorem and the mean value theorem, and the corollaries that do the actual
+          work: zero derivative means constant, and the sign of the derivative controls monotonicity.'
+        builds_on:
+        - knowledge-m2-analysis-ch06-differenzierbarkeit
+      - id: knowledge-m2-analysis-ch06-trigonometrie
+        title: Ausflug – Sinus-, Kosinus- und Tangensfunktion (§6.4)
+        summary: The trigonometric functions and their derivatives. Ausflug depth in the script, but they
+          appear as raw material in almost every external limit, derivative and integral task, so they
+          are kept usable rather than skipped.
+        builds_on:
+        - knowledge-m2-analysis-ch06-differenzierbarkeit
+      - id: knowledge-m2-analysis-ch06-hospital
+        title: Regel von l'Hospital (§6.5)
+        summary: L'Hospital's rule, its indeterminate forms, and the hypothesis check that has to precede
+          every application. The commonest way to lose points here is applying it to a form that is not
+          indeterminate.
+        builds_on:
+        - knowledge-m2-analysis-ch06-mittelwertsatz
+      - id: knowledge-m2-analysis-ch06-hoehere-ableitungen
+        title: Höhere Ableitungen (§6.7)
+        summary: Higher derivatives, the C^k classes, and convexity — the vocabulary Taylor's theorem
+          is stated in.
+        builds_on:
+        - knowledge-m2-analysis-ch06-mittelwertsatz
+      - id: knowledge-m2-analysis-ch06-taylor
+        title: Taylorpolynome und Taylorreihen (§6.8)
+        summary: The Taylor polynomial, the Lagrange remainder and the error bound that makes the approximation
+          usable. No HU sheet reaches this section, so the whole practice load is assembled from four
+          named external sets.
+        builds_on:
+        - knowledge-m2-analysis-ch06-hoehere-ableitungen
+      - id: knowledge-m2-analysis-ch06-interpolation
+        title: Ausflug – Einblick in die numerische Interpolation (§6.10)
+        summary: Polynomial interpolation and its error term, the chapter's second Informatik excursion.
+          Ausflug depth — the idea and the error statement, not the algorithms.
+        builds_on:
+        - knowledge-m2-analysis-ch06-taylor
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: unser skript.pdf Kapitel 6, printed pp. 137-190 (PDF pp. 147-200); Stand 04.02.2025
+    source_selections: []
+    artifacts: {}
+    workspace_ids:
+    - workspace-m2-exam-prep
+    current_study_map: study-map-m2-analysis-ch06
+  study_map:
+    id: study-map-m2-analysis-ch06
+    type: study-map
+    plan_template_version: 1
+    unit_id: unit-m2-analysis-ch06
+    status: not-started
+    current_stage: stage-m2-analysis-ch06-differenzierbarkeit
+    source_plan:
+      path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-ch06-differenzierbarkeit
+      number: 1
+      title: Differenzierbarkeit und Ableitungen (§6.1)
+      status: pending
+      objective: The derivative as a limit of difference quotients, differentiability implying continuity,
+        and the calculation rules including chain rule and the derivative of an inverse function.
+      done_when:
+      - 'Reproduce without notes: The derivative as a limit of difference quotients, differentiability
+        implying continuity, and the calculation rules including chain rule and the derivative of an inverse
+        function.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-chain-rule
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-differenzierbarkeit/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-mittelwertsatz
+      number: 2
+      title: Mittelwertsatz der Differentialrechnung (§6.3)
+      status: pending
+      objective: 'Rolle''s theorem and the mean value theorem, and the corollaries that do the actual
+        work: zero derivative means constant, and the sign of the derivative controls monotonicity.'
+      done_when:
+      - 'Reproduce without notes: Rolle''s theorem and the mean value theorem, and the corollaries that
+        do the actual work: zero derivative means constant, and the sign of the derivative controls monotonicity.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-mittelwertsatz/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-trigonometrie
+      number: 3
+      title: Ausflug – Sinus-, Kosinus- und Tangensfunktion (§6.4)
+      status: pending
+      objective: The trigonometric functions and their derivatives. Ausflug depth in the script, but they
+        appear as raw material in almost every external limit, derivative and integral task, so they are
+        kept usable rather than skipped.
+      done_when:
+      - 'Reproduce without notes: The trigonometric functions and their derivatives. Ausflug depth in
+        the script, but they appear as raw material in almost every external limit, derivative and integral
+        task, so they are kept usable rather than skipped.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 2, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-trigonometrie/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-hospital
+      number: 4
+      title: Regel von l'Hospital (§6.5)
+      status: pending
+      objective: L'Hospital's rule, its indeterminate forms, and the hypothesis check that has to precede
+        every application. The commonest way to lose points here is applying it to a form that is not
+        indeterminate.
+      done_when:
+      - 'Reproduce without notes: L''Hospital''s rule, its indeterminate forms, and the hypothesis check
+        that has to precede every application. The commonest way to lose points here is applying it to
+        a form that is not indeterminate.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hospital/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-hoehere-ableitungen
+      number: 5
+      title: Höhere Ableitungen (§6.7)
+      status: pending
+      objective: Higher derivatives, the C^k classes, and convexity — the vocabulary Taylor's theorem
+        is stated in.
+      done_when:
+      - 'Reproduce without notes: Higher derivatives, the C^k classes, and convexity — the vocabulary
+        Taylor''s theorem is stated in.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hoehere-ableitungen/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-taylor
+      number: 6
+      title: Taylorpolynome und Taylorreihen (§6.8)
+      status: pending
+      objective: The Taylor polynomial, the Lagrange remainder and the error bound that makes the approximation
+        usable. No HU sheet reaches this section, so the whole practice load is assembled from four named
+        external sets.
+      done_when:
+      - 'Reproduce without notes: The Taylor polynomial, the Lagrange remainder and the error bound that
+        makes the approximation usable. No HU sheet reaches this section, so the whole practice load is
+        assembled from four named external sets.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 2, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-taylor-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-taylor/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch06-interpolation
+      number: 7
+      title: Ausflug – Einblick in die numerische Interpolation (§6.10)
+      status: pending
+      objective: Polynomial interpolation and its error term, the chapter's second Informatik excursion.
+        Ausflug depth — the idea and the error statement, not the algorithms.
+      done_when:
+      - 'Reproduce without notes: Polynomial interpolation and its error term, the chapter''s second Informatik
+        excursion. Ausflug depth — the idea and the error statement, not the algorithms.'
+      - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+        the remaining 2, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-complex-roots-of-unity
+      - concept-taylor-series
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch06-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch06-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch06-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-interpolation/notes.md
+      attachments: []
+      source_feedback: []
+- unit:
+    id: unit-m2-analysis-ch07
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: topic
+    title: Analysis Kapitel 7 — Integralrechnung
+    order: 107
+    scope: Script Chapter 7 'Integralrechnung', printed pp. 191-225 (PDF pp. 201-235). Like Chapter 6
+      it has no current HU sheet. §7.4 (numerische Integration) is an Exkurs. This is the chapter the
+      external Klausur bank covers best — Regensburg asks the Hauptsatz and partielle Integration to be
+      stated and proved, Paderborn and Ulm both set substitution/parts integrals — so the substitute practice
+      here is stronger than for Chapter 6.
+    status: ready
+    knowledge_map:
+      summary: Chapter 7 defines the Riemann integral through upper and lower sums, proves that continuous
+        functions on a compact interval are integrable — which is Chapter 5's theorem doing its work —
+        and then hands over the fundamental theorem, which turns integration into antidifferentiation.
+        Substitution and integration by parts are the two techniques, and improper integrals are where
+        convergence returns.
+      nodes:
+      - id: knowledge-m2-analysis-ch07-riemann-integral
+        title: Das Riemann-Integral (§7.1)
+        summary: Partitions, upper and lower sums, the integrability criterion, and the classes of function
+          it covers — continuous and monotone. The definition is asked for in words at least as often
+          as it is computed.
+      - id: knowledge-m2-analysis-ch07-hauptsatz
+        title: Hauptsatz und Integrationsregeln (§7.2)
+        summary: 'Both parts of the fundamental theorem, then substitution and integration by parts as
+          its corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz, state
+          partielle Integration, then derive the second from the first.'
+        builds_on:
+        - knowledge-m2-analysis-ch07-riemann-integral
+      - id: knowledge-m2-analysis-ch07-uneigentliche-integrale
+        title: Uneigentliche Integrale (§7.3)
+        summary: Integrals over unbounded intervals and of unbounded integrands, defined as limits — so
+          convergence criteria return in an integral costume.
+        builds_on:
+        - knowledge-m2-analysis-ch07-hauptsatz
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: unser skript.pdf Kapitel 7, printed pp. 191-225 (PDF pp. 201-235); Stand 04.02.2025
+    source_selections: []
+    artifacts: {}
+    workspace_ids:
+    - workspace-m2-exam-prep
+    current_study_map: study-map-m2-analysis-ch07
+  study_map:
+    id: study-map-m2-analysis-ch07
+    type: study-map
+    plan_template_version: 1
+    unit_id: unit-m2-analysis-ch07
+    status: not-started
+    current_stage: stage-m2-analysis-ch07-riemann-integral
+    source_plan:
+      path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-ch07-riemann-integral
+      number: 1
+      title: Das Riemann-Integral (§7.1)
+      status: pending
+      objective: Partitions, upper and lower sums, the integrability criterion, and the classes of function
+        it covers — continuous and monotone. The definition is asked for in words at least as often as
+        it is computed.
+      done_when:
+      - 'Reproduce without notes: Partitions, upper and lower sums, the integrability criterion, and the
+        classes of function it covers — continuous and monotone. The definition is asked for in words
+        at least as often as it is computed.'
+      - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+        then the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-riemann-integral
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch07-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch07-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-riemann-integral/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch07-hauptsatz
+      number: 2
+      title: Hauptsatz und Integrationsregeln (§7.2)
+      status: pending
+      objective: 'Both parts of the fundamental theorem, then substitution and integration by parts as
+        its corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz, state partielle
+        Integration, then derive the second from the first.'
+      done_when:
+      - 'Reproduce without notes: Both parts of the fundamental theorem, then substitution and integration
+        by parts as its corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz,
+        state partielle Integration, then derive the second from the first.'
+      - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+        then the remaining 4, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-riemann-integral
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch07-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch07-analysisskriptbeweise
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch07-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisdrillblaetterext-2
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-hauptsatz/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ch07-uneigentliche-integrale
+      number: 3
+      title: Uneigentliche Integrale (§7.3)
+      status: pending
+      objective: Integrals over unbounded intervals and of unbounded integrands, defined as limits — so
+        convergence criteria return in an integral costume.
+      done_when:
+      - 'Reproduce without notes: Integrals over unbounded intervals and of unbounded integrands, defined
+        as limits — so convergence criteria return in an integral costume.'
+      - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+        then the remaining 3, and record every miss with the step it failed at.
+      exam_critical: true
+      concepts:
+      - concept-riemann-integral
+      scope_triage: required-now
+      resources:
+      - material_ref:
+          route_id: route-an-ch07-analysisskript
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: required-now
+      - material_ref:
+          route_id: route-an-ch07-professorleonard
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-3b1bessenceofcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: watch
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-fritzschetrainingsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisdrillblaetterext
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurenextern
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-analysisklausurentum
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-strangcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mit18100a
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-forsterwessoly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-deitmaruebungsbuch
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: practise
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-ableitingermusterloesung
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-abbottunderstandinganaly
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-grieseranalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-leblbasicanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-labsschreyermatheinforma
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-mfnfanalysis1
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-rosselementaryanalysis
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-thomascalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      - material_ref:
+          route_id: route-an-ch07-stewartcalculus
+          inherit:
+          - label
+          - source_id
+          - locator
+          - angle
+          - angle_detail
+          - vault_path
+        kind: read
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-uneigentliche-integrale/notes.md
+      attachments: []
+      source_feedback: []

@@ -1,0 +1,33 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_every_pending_disposition_entry_is_still_on_disk _____________
+
+    @pytest.mark.full_repo
+    # Reads the wrapper root above repository/, which exists only in the live
+    # installation; a CI checkout has no semestercontext/ around it.
+    @pytest.mark.live_install
+    def test_every_pending_disposition_entry_is_still_on_disk():
+        """The list is shrink-only.
+    
+        A path that has been disposed of must be removed from the contract, or this
+        fails. Without it, `pending_disposition` becomes an attic of paths that no
+        longer exist and the contract stops describing the tree.
+        """
+        perimeter = pm.load(ROOT)
+        wrapper = pm.wrapper_root(ROOT)
+        stale = [
+            str(entry["path"])
+            for entry in perimeter.pending
+            if not (wrapper / str(entry["path"])).exists()
+        ]
+>       assert not stale, (
+            "disposed of, but still listed in pending_disposition: "
+            + ", ".join(sorted(stale))
+        )
+E       AssertionError: disposed of, but still listed in pending_disposition: HANDOFF.md, original_research.txt
+E       assert not ['original_research.txt', 'HANDOFF.md']
+
+tests/test_perimeter.py:303: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_perimeter.py::test_every_pending_disposition_entry_is_still_on_disk
+1 failed in 0.10s

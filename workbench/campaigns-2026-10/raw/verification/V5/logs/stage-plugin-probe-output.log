@@ -1,0 +1,14 @@
+UI pin: f7dbc1f7607157d5c1c2edb84a14e6a26ab89f94
+
+$ cd obsidian-ui && npm run stage-plugin
+npm error Missing script: "stage-plugin"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/aramaljanadi/.npm/_logs/2026-10-25T13_24_12_155Z-debug-0.log
+exit=1
+
+$ cd obsidian-ui && npm run build
+exit=0
+plugin/build-info.json exists afterwards: yes
+git status --porcelain (empty = rebuilt outputs byte-identical, build-info gitignored):

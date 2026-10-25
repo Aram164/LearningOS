@@ -1,0 +1,4 @@
+total .py modules under tools/learning_os: 223
+CODEMAP never mentions: 223
+component pages: 24
+pages no test names: 8: ['ai-action-store', 'cli-adapter', 'derived-store', 'learner-derivations', 'operation-handlers', 'operation-pipeline', 'package-root', 'plan-gate']

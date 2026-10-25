@@ -1,0 +1,991 @@
+{
+ "rows": [
+  {
+   "from": "concept-adam-optimizer",
+   "type": "builds-on",
+   "to": "concept-gradient-descent",
+   "seen_via": [
+    "concept-adam-optimizer",
+    "concept-gradient-descent"
+   ]
+  },
+  {
+   "from": "concept-amortized-analysis",
+   "type": "requires",
+   "to": "concept-asymptotic-analysis",
+   "seen_via": [
+    "concept-amortized-analysis",
+    "concept-asymptotic-analysis"
+   ]
+  },
+  {
+   "from": "concept-attention",
+   "type": "derives",
+   "to": "concept-contextual-embedding",
+   "seen_via": [
+    "concept-attention",
+    "concept-contextual-embedding"
+   ]
+  },
+  {
+   "from": "concept-attention",
+   "type": "requires",
+   "to": "concept-softmax",
+   "seen_via": [
+    "concept-attention",
+    "concept-softmax"
+   ]
+  },
+  {
+   "from": "concept-b-trees",
+   "type": "requires",
+   "to": "concept-adt-dictionary",
+   "seen_via": [
+    "concept-adt-dictionary",
+    "concept-b-trees"
+   ]
+  },
+  {
+   "from": "concept-b-trees",
+   "type": "requires",
+   "to": "concept-binary-search-trees",
+   "seen_via": [
+    "concept-b-trees",
+    "concept-binary-search-trees"
+   ]
+  },
+  {
+   "from": "concept-backpropagation",
+   "type": "applies-in",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-backpropagation",
+    "concept-neural-network"
+   ]
+  },
+  {
+   "from": "concept-backpropagation",
+   "type": "requires",
+   "to": "concept-chain-rule",
+   "seen_via": [
+    "concept-backpropagation",
+    "concept-chain-rule"
+   ]
+  },
+  {
+   "from": "concept-bayes-theorem",
+   "type": "builds-on",
+   "to": "concept-conditional-probability",
+   "seen_via": [
+    "concept-bayes-theorem",
+    "concept-conditional-probability"
+   ]
+  },
+  {
+   "from": "concept-bias-variance-tradeoff",
+   "type": "motivates",
+   "to": "concept-dropout",
+   "seen_via": [
+    "concept-bias-variance-tradeoff",
+    "concept-dropout"
+   ]
+  },
+  {
+   "from": "concept-bias-variance-tradeoff",
+   "type": "motivates",
+   "to": "concept-early-stopping",
+   "seen_via": [
+    "concept-bias-variance-tradeoff",
+    "concept-early-stopping"
+   ]
+  },
+  {
+   "from": "concept-bipartite-matching",
+   "type": "builds-on",
+   "to": "concept-max-flow",
+   "seen_via": [
+    "concept-bipartite-matching",
+    "concept-max-flow"
+   ]
+  },
+  {
+   "from": "concept-central-limit-theorem",
+   "type": "requires",
+   "to": "concept-normal-distribution",
+   "seen_via": [
+    "concept-central-limit-theorem",
+    "concept-normal-distribution"
+   ]
+  },
+  {
+   "from": "concept-combinatorics",
+   "type": "applies-in",
+   "to": "concept-probability",
+   "seen_via": [
+    "concept-combinatorics",
+    "concept-probability"
+   ]
+  },
+  {
+   "from": "concept-computational-geometry",
+   "type": "requires",
+   "to": "concept-determinant-orientation",
+   "seen_via": [
+    "concept-computational-geometry",
+    "concept-determinant-orientation"
+   ]
+  },
+  {
+   "from": "concept-contextual-embedding",
+   "type": "builds-on",
+   "to": "concept-embedding",
+   "seen_via": [
+    "concept-contextual-embedding",
+    "concept-embedding"
+   ]
+  },
+  {
+   "from": "concept-convexity",
+   "type": "applies-in",
+   "to": "concept-gradient-descent",
+   "seen_via": [
+    "concept-convexity",
+    "concept-gradient-descent"
+   ]
+  },
+  {
+   "from": "concept-convolutional-networks",
+   "type": "builds-on",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-convolutional-networks",
+    "concept-neural-network"
+   ]
+  },
+  {
+   "from": "concept-cross-entropy",
+   "type": "applies-in",
+   "to": "concept-logistic-regression",
+   "seen_via": [
+    "concept-cross-entropy",
+    "concept-logistic-regression"
+   ]
+  },
+  {
+   "from": "concept-cross-entropy",
+   "type": "builds-on",
+   "to": "concept-entropy",
+   "seen_via": [
+    "concept-cross-entropy",
+    "concept-entropy"
+   ]
+  },
+  {
+   "from": "concept-cuckoo-hashing",
+   "type": "requires",
+   "to": "concept-expected-value",
+   "seen_via": [
+    "concept-cuckoo-hashing",
+    "concept-expected-value"
+   ]
+  },
+  {
+   "from": "concept-cuckoo-hashing",
+   "type": "requires",
+   "to": "concept-hashing-chaining",
+   "seen_via": [
+    "concept-cuckoo-hashing",
+    "concept-hashing-chaining"
+   ]
+  },
+  {
+   "from": "concept-data-parallelism",
+   "type": "requires",
+   "to": "concept-gradient-descent",
+   "seen_via": [
+    "concept-data-parallelism",
+    "concept-gradient-descent"
+   ]
+  },
+  {
+   "from": "concept-data-provenance",
+   "type": "applies-in",
+   "to": "concept-ml-lifecycle",
+   "seen_via": [
+    "concept-data-provenance",
+    "concept-ml-lifecycle"
+   ]
+  },
+  {
+   "from": "concept-decision-trees",
+   "type": "requires",
+   "to": "concept-information-gain",
+   "seen_via": [
+    "concept-decision-trees",
+    "concept-information-gain"
+   ]
+  },
+  {
+   "from": "concept-descriptive-statistics",
+   "type": "contrasts-with",
+   "to": "concept-expected-value",
+   "seen_via": [
+    "concept-descriptive-statistics",
+    "concept-expected-value"
+   ]
+  },
+  {
+   "from": "concept-differentiation",
+   "type": "builds-on",
+   "to": "concept-limits-continuity",
+   "seen_via": [
+    "concept-differentiation",
+    "concept-limits-continuity"
+   ]
+  },
+  {
+   "from": "concept-discrete-distributions",
+   "type": "builds-on",
+   "to": "concept-random-variable",
+   "seen_via": [
+    "concept-discrete-distributions",
+    "concept-random-variable"
+   ]
+  },
+  {
+   "from": "concept-dropout",
+   "type": "applies-in",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-dropout",
+    "concept-neural-network"
+   ]
+  },
+  {
+   "from": "concept-early-stopping",
+   "type": "applies-in",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-early-stopping",
+    "concept-neural-network"
+   ]
+  },
+  {
+   "from": "concept-embedding",
+   "type": "requires",
+   "to": "concept-tokenization",
+   "seen_via": [
+    "concept-embedding",
+    "concept-tokenization"
+   ]
+  },
+  {
+   "from": "concept-expected-value",
+   "type": "requires",
+   "to": "concept-random-variable",
+   "seen_via": [
+    "concept-expected-value",
+    "concept-random-variable"
+   ]
+  },
+  {
+   "from": "concept-fast-multiplication",
+   "type": "requires",
+   "to": "concept-recurrences-master-theorem",
+   "seen_via": [
+    "concept-fast-multiplication",
+    "concept-recurrences-master-theorem"
+   ]
+  },
+  {
+   "from": "concept-feature-scaling",
+   "type": "applies-in",
+   "to": "concept-gradient-descent",
+   "seen_via": [
+    "concept-feature-scaling",
+    "concept-gradient-descent"
+   ]
+  },
+  {
+   "from": "concept-feature-scaling",
+   "type": "applies-in",
+   "to": "concept-k-nearest-neighbors",
+   "seen_via": [
+    "concept-feature-scaling",
+    "concept-k-nearest-neighbors"
+   ]
+  },
+  {
+   "from": "concept-fft",
+   "type": "applies-in",
+   "to": "concept-fast-multiplication",
+   "seen_via": [
+    "concept-fast-multiplication",
+    "concept-fft"
+   ]
+  },
+  {
+   "from": "concept-fft",
+   "type": "requires",
+   "to": "concept-complex-roots-of-unity",
+   "seen_via": [
+    "concept-complex-roots-of-unity",
+    "concept-fft"
+   ]
+  },
+  {
+   "from": "concept-fibonacci-heaps",
+   "type": "requires",
+   "to": "concept-adt-priority-queue",
+   "seen_via": [
+    "concept-adt-priority-queue",
+    "concept-fibonacci-heaps"
+   ]
+  },
+  {
+   "from": "concept-fibonacci-heaps",
+   "type": "requires",
+   "to": "concept-amortized-analysis",
+   "seen_via": [
+    "concept-amortized-analysis",
+    "concept-fibonacci-heaps"
+   ]
+  },
+  {
+   "from": "concept-gaussian-naive-bayes",
+   "type": "builds-on",
+   "to": "concept-naive-bayes",
+   "seen_via": [
+    "concept-gaussian-naive-bayes",
+    "concept-naive-bayes"
+   ]
+  },
+  {
+   "from": "concept-gaussian-naive-bayes",
+   "type": "requires",
+   "to": "concept-normal-distribution",
+   "seen_via": [
+    "concept-gaussian-naive-bayes",
+    "concept-normal-distribution"
+   ]
+  },
+  {
+   "from": "concept-hypothesis-testing",
+   "type": "builds-on",
+   "to": "concept-statistical-estimation",
+   "seen_via": [
+    "concept-hypothesis-testing",
+    "concept-statistical-estimation"
+   ]
+  },
+  {
+   "from": "concept-hypothesis-testing",
+   "type": "contrasts-with",
+   "to": "concept-classification-metrics",
+   "seen_via": [
+    "concept-classification-metrics",
+    "concept-hypothesis-testing"
+   ]
+  },
+  {
+   "from": "concept-information-gain",
+   "type": "requires",
+   "to": "concept-entropy",
+   "seen_via": [
+    "concept-entropy",
+    "concept-information-gain"
+   ]
+  },
+  {
+   "from": "concept-kernel-trick",
+   "type": "builds-on",
+   "to": "concept-perceptron",
+   "seen_via": [
+    "concept-kernel-trick",
+    "concept-perceptron"
+   ]
+  },
+  {
+   "from": "concept-language-modelling",
+   "type": "applies-in",
+   "to": "concept-transformer",
+   "seen_via": [
+    "concept-language-modelling",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-language-modelling",
+   "type": "requires",
+   "to": "concept-cross-entropy",
+   "seen_via": [
+    "concept-cross-entropy",
+    "concept-language-modelling"
+   ]
+  },
+  {
+   "from": "concept-laplace-smoothing",
+   "type": "applies-in",
+   "to": "concept-naive-bayes",
+   "seen_via": [
+    "concept-laplace-smoothing",
+    "concept-naive-bayes"
+   ]
+  },
+  {
+   "from": "concept-limits-continuity",
+   "type": "builds-on",
+   "to": "concept-sequences-convergence",
+   "seen_via": [
+    "concept-limits-continuity",
+    "concept-sequences-convergence"
+   ]
+  },
+  {
+   "from": "concept-llm-systems",
+   "type": "builds-on",
+   "to": "concept-data-parallelism",
+   "seen_via": [
+    "concept-data-parallelism",
+    "concept-llm-systems"
+   ]
+  },
+  {
+   "from": "concept-llm-systems",
+   "type": "requires",
+   "to": "concept-hardware-accelerators",
+   "seen_via": [
+    "concept-hardware-accelerators",
+    "concept-llm-systems"
+   ]
+  },
+  {
+   "from": "concept-logistic-regression",
+   "type": "builds-on",
+   "to": "concept-linear-regression",
+   "seen_via": [
+    "concept-linear-regression",
+    "concept-logistic-regression"
+   ]
+  },
+  {
+   "from": "concept-logistic-regression",
+   "type": "motivates",
+   "to": "concept-gradient-descent",
+   "seen_via": [
+    "concept-gradient-descent",
+    "concept-logistic-regression"
+   ]
+  },
+  {
+   "from": "concept-logistic-regression",
+   "type": "requires",
+   "to": "concept-conditional-probability",
+   "seen_via": [
+    "concept-conditional-probability",
+    "concept-logistic-regression"
+   ]
+  },
+  {
+   "from": "concept-logistic-regression",
+   "type": "requires",
+   "to": "concept-sigmoid",
+   "seen_via": [
+    "concept-logistic-regression",
+    "concept-sigmoid"
+   ]
+  },
+  {
+   "from": "concept-max-flow",
+   "type": "requires",
+   "to": "concept-graph-basics",
+   "seen_via": [
+    "concept-graph-basics",
+    "concept-max-flow"
+   ]
+  },
+  {
+   "from": "concept-maximum-likelihood",
+   "type": "applies-in",
+   "to": "concept-statistical-estimation",
+   "seen_via": [
+    "concept-maximum-likelihood",
+    "concept-statistical-estimation"
+   ]
+  },
+  {
+   "from": "concept-maximum-likelihood",
+   "type": "derives",
+   "to": "concept-cross-entropy",
+   "seen_via": [
+    "concept-cross-entropy",
+    "concept-maximum-likelihood"
+   ]
+  },
+  {
+   "from": "concept-maximum-likelihood",
+   "type": "derives",
+   "to": "concept-mean-squared-error",
+   "seen_via": [
+    "concept-maximum-likelihood",
+    "concept-mean-squared-error"
+   ]
+  },
+  {
+   "from": "concept-maximum-likelihood",
+   "type": "requires",
+   "to": "concept-random-variable",
+   "seen_via": [
+    "concept-maximum-likelihood",
+    "concept-random-variable"
+   ]
+  },
+  {
+   "from": "concept-mean-squared-error",
+   "type": "applies-in",
+   "to": "concept-linear-regression",
+   "seen_via": [
+    "concept-linear-regression",
+    "concept-mean-squared-error"
+   ]
+  },
+  {
+   "from": "concept-naive-bayes",
+   "type": "contrasts-with",
+   "to": "concept-logistic-regression",
+   "seen_via": [
+    "concept-logistic-regression",
+    "concept-naive-bayes"
+   ]
+  },
+  {
+   "from": "concept-naive-bayes",
+   "type": "requires",
+   "to": "concept-bayes-theorem",
+   "seen_via": [
+    "concept-bayes-theorem",
+    "concept-naive-bayes"
+   ]
+  },
+  {
+   "from": "concept-neural-network",
+   "type": "builds-on",
+   "to": "concept-linear-regression",
+   "seen_via": [
+    "concept-linear-regression",
+    "concept-neural-network"
+   ]
+  },
+  {
+   "from": "concept-neural-network",
+   "type": "builds-on",
+   "to": "concept-perceptron",
+   "seen_via": [
+    "concept-neural-network",
+    "concept-perceptron"
+   ]
+  },
+  {
+   "from": "concept-normal-distribution",
+   "type": "builds-on",
+   "to": "concept-random-variable",
+   "seen_via": [
+    "concept-normal-distribution",
+    "concept-random-variable"
+   ]
+  },
+  {
+   "from": "concept-normal-equation",
+   "type": "applies-in",
+   "to": "concept-linear-regression",
+   "seen_via": [
+    "concept-linear-regression",
+    "concept-normal-equation"
+   ]
+  },
+  {
+   "from": "concept-operator-fusion",
+   "type": "builds-on",
+   "to": "concept-program-rewrites",
+   "seen_via": [
+    "concept-operator-fusion",
+    "concept-program-rewrites"
+   ]
+  },
+  {
+   "from": "concept-parameter-servers",
+   "type": "builds-on",
+   "to": "concept-data-parallelism",
+   "seen_via": [
+    "concept-data-parallelism",
+    "concept-parameter-servers"
+   ]
+  },
+  {
+   "from": "concept-program-rewrites",
+   "type": "builds-on",
+   "to": "concept-backpropagation",
+   "seen_via": [
+    "concept-backpropagation",
+    "concept-program-rewrites"
+   ]
+  },
+  {
+   "from": "concept-program-rewrites",
+   "type": "requires",
+   "to": "concept-normal-equation",
+   "seen_via": [
+    "concept-normal-equation",
+    "concept-program-rewrites"
+   ]
+  },
+  {
+   "from": "concept-random-forest",
+   "type": "builds-on",
+   "to": "concept-decision-trees",
+   "seen_via": [
+    "concept-decision-trees",
+    "concept-random-forest"
+   ]
+  },
+  {
+   "from": "concept-random-forest",
+   "type": "requires",
+   "to": "concept-bootstrap",
+   "seen_via": [
+    "concept-bootstrap",
+    "concept-random-forest"
+   ]
+  },
+  {
+   "from": "concept-random-variable",
+   "type": "builds-on",
+   "to": "concept-probability",
+   "seen_via": [
+    "concept-probability",
+    "concept-random-variable"
+   ]
+  },
+  {
+   "from": "concept-recurrent-networks",
+   "type": "builds-on",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-neural-network",
+    "concept-recurrent-networks"
+   ]
+  },
+  {
+   "from": "concept-regularization",
+   "type": "applies-in",
+   "to": "concept-linear-regression",
+   "seen_via": [
+    "concept-linear-regression",
+    "concept-regularization"
+   ]
+  },
+  {
+   "from": "concept-residual-connection",
+   "type": "applies-in",
+   "to": "concept-convolutional-networks",
+   "seen_via": [
+    "concept-convolutional-networks",
+    "concept-residual-connection"
+   ]
+  },
+  {
+   "from": "concept-riemann-integral",
+   "type": "builds-on",
+   "to": "concept-limits-continuity",
+   "seen_via": [
+    "concept-limits-continuity",
+    "concept-riemann-integral"
+   ]
+  },
+  {
+   "from": "concept-sequences-convergence",
+   "type": "requires",
+   "to": "concept-real-numbers",
+   "seen_via": [
+    "concept-real-numbers",
+    "concept-sequences-convergence"
+   ]
+  },
+  {
+   "from": "concept-series",
+   "type": "builds-on",
+   "to": "concept-sequences-convergence",
+   "seen_via": [
+    "concept-sequences-convergence",
+    "concept-series"
+   ]
+  },
+  {
+   "from": "concept-shortest-paths",
+   "type": "requires",
+   "to": "concept-graph-basics",
+   "seen_via": [
+    "concept-graph-basics",
+    "concept-shortest-paths"
+   ]
+  },
+  {
+   "from": "concept-softmax",
+   "type": "generalizes",
+   "to": "concept-sigmoid",
+   "seen_via": [
+    "concept-sigmoid",
+    "concept-softmax"
+   ]
+  },
+  {
+   "from": "concept-splay-trees",
+   "type": "requires",
+   "to": "concept-amortized-analysis",
+   "seen_via": [
+    "concept-amortized-analysis",
+    "concept-splay-trees"
+   ]
+  },
+  {
+   "from": "concept-splay-trees",
+   "type": "requires",
+   "to": "concept-binary-search-trees",
+   "seen_via": [
+    "concept-binary-search-trees",
+    "concept-splay-trees"
+   ]
+  },
+  {
+   "from": "concept-stable-matching",
+   "type": "contrasts-with",
+   "to": "concept-bipartite-matching",
+   "seen_via": [
+    "concept-bipartite-matching",
+    "concept-stable-matching"
+   ]
+  },
+  {
+   "from": "concept-statistical-estimation",
+   "type": "builds-on",
+   "to": "concept-central-limit-theorem",
+   "seen_via": [
+    "concept-central-limit-theorem",
+    "concept-statistical-estimation"
+   ]
+  },
+  {
+   "from": "concept-taylor-series",
+   "type": "builds-on",
+   "to": "concept-differentiation",
+   "seen_via": [
+    "concept-differentiation",
+    "concept-taylor-series"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "builds-on",
+   "to": "concept-attention",
+   "seen_via": [
+    "concept-attention",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "contrasts-with",
+   "to": "concept-recurrent-networks",
+   "seen_via": [
+    "concept-recurrent-networks",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "requires",
+   "to": "concept-layer-normalization",
+   "seen_via": [
+    "concept-layer-normalization",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "requires",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-neural-network",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "requires",
+   "to": "concept-positional-encoding",
+   "seen_via": [
+    "concept-positional-encoding",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-transformer",
+   "type": "requires",
+   "to": "concept-residual-connection",
+   "seen_via": [
+    "concept-residual-connection",
+    "concept-transformer"
+   ]
+  },
+  {
+   "from": "concept-uniform-convergence",
+   "type": "builds-on",
+   "to": "concept-sequences-convergence",
+   "seen_via": [
+    "concept-sequences-convergence",
+    "concept-uniform-convergence"
+   ]
+  },
+  {
+   "from": "concept-variance",
+   "type": "builds-on",
+   "to": "concept-expected-value",
+   "seen_via": [
+    "concept-expected-value",
+    "concept-variance"
+   ]
+  },
+  {
+   "from": "concept-weight-decay",
+   "type": "applies-in",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-neural-network",
+    "concept-weight-decay"
+   ]
+  },
+  {
+   "from": "concept-weight-decay",
+   "type": "builds-on",
+   "to": "concept-regularization",
+   "seen_via": [
+    "concept-regularization",
+    "concept-weight-decay"
+   ]
+  },
+  {
+   "from": "concept-xor-problem",
+   "type": "motivates",
+   "to": "concept-kernel-trick",
+   "seen_via": [
+    "concept-kernel-trick",
+    "concept-xor-problem"
+   ]
+  },
+  {
+   "from": "concept-xor-problem",
+   "type": "motivates",
+   "to": "concept-neural-network",
+   "seen_via": [
+    "concept-neural-network",
+    "concept-xor-problem"
+   ]
+  }
+ ],
+ "concepts_in_relation": [
+  "concept-adam-optimizer",
+  "concept-adt-dictionary",
+  "concept-adt-priority-queue",
+  "concept-amortized-analysis",
+  "concept-asymptotic-analysis",
+  "concept-attention",
+  "concept-b-trees",
+  "concept-backpropagation",
+  "concept-bayes-theorem",
+  "concept-bias-variance-tradeoff",
+  "concept-binary-search-trees",
+  "concept-bipartite-matching",
+  "concept-bootstrap",
+  "concept-central-limit-theorem",
+  "concept-chain-rule",
+  "concept-classification-metrics",
+  "concept-combinatorics",
+  "concept-complex-roots-of-unity",
+  "concept-computational-geometry",
+  "concept-conditional-probability",
+  "concept-contextual-embedding",
+  "concept-convexity",
+  "concept-convolutional-networks",
+  "concept-cross-entropy",
+  "concept-cuckoo-hashing",
+  "concept-data-parallelism",
+  "concept-data-provenance",
+  "concept-decision-trees",
+  "concept-descriptive-statistics",
+  "concept-determinant-orientation",
+  "concept-differentiation",
+  "concept-discrete-distributions",
+  "concept-dropout",
+  "concept-early-stopping",
+  "concept-embedding",
+  "concept-entropy",
+  "concept-expected-value",
+  "concept-fast-multiplication",
+  "concept-feature-scaling",
+  "concept-fft",
+  "concept-fibonacci-heaps",
+  "concept-gaussian-naive-bayes",
+  "concept-gradient-descent",
+  "concept-graph-basics",
+  "concept-hardware-accelerators",
+  "concept-hashing-chaining",
+  "concept-hypothesis-testing",
+  "concept-information-gain",
+  "concept-k-nearest-neighbors",
+  "concept-kernel-trick",
+  "concept-language-modelling",
+  "concept-laplace-smoothing",
+  "concept-layer-normalization",
+  "concept-limits-continuity",
+  "concept-linear-regression",
+  "concept-llm-systems",
+  "concept-logistic-regression",
+  "concept-max-flow",
+  "concept-maximum-likelihood",
+  "concept-mean-squared-error",
+  "concept-ml-lifecycle",
+  "concept-naive-bayes",
+  "concept-neural-network",
+  "concept-normal-distribution",
+  "concept-normal-equation",
+  "concept-operator-fusion",
+  "concept-parameter-servers",
+  "concept-perceptron",
+  "concept-positional-encoding",
+  "concept-probability",
+  "concept-program-rewrites",
+  "concept-random-forest",
+  "concept-random-variable",
+  "concept-real-numbers",
+  "concept-recurrences-master-theorem",
+  "concept-recurrent-networks",
+  "concept-regularization",
+  "concept-residual-connection",
+  "concept-riemann-integral",
+  "concept-sequences-convergence",
+  "concept-series",
+  "concept-shortest-paths",
+  "concept-sigmoid",
+  "concept-softmax",
+  "concept-splay-trees",
+  "concept-stable-matching",
+  "concept-statistical-estimation",
+  "concept-taylor-series",
+  "concept-tokenization",
+  "concept-transformer",
+  "concept-uniform-convergence",
+  "concept-variance",
+  "concept-weight-decay",
+  "concept-xor-problem"
+ ]
+}

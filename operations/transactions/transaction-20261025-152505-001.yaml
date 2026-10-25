@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20261025-152505-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-10-25T15:25:05+01:00'
+snapshot_before: sha256:4425e6de06d082de5da002faf1e446d19014d5176a5d38b1a02b4ceb09c74f2f
+snapshot_after: sha256:cfee71f8822322ce2442238b17eb68411de4965b0bcb68d81e671111265c64f9
+expected_revisions:
+  unit-aml-exam-prep: 8
+artifact_revisions:
+  unit-aml-exam-prep:
+    before: 8
+    after: 9
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  sha256_before: e23179d05d1dce9b7f2f6d559654427ac504d3be476e51b50648618dc86e478c
+  sha256_after: 86fbe7122749ea458413c7707525257926c1dfd11d9cab0327bdb20541af7cce
+  created: false
+metadata:
+  data_roots_sha256: sha256:2d03025aea113644d834ff1b98a4578877832c860c07a49d185e0dc55fea7faa
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-35f149184b194cb3bd6619024cedb29b
+  idempotency_key: reviewed-0e008b0cb12c47c8a8f2323ebcb56d1e
+  intent_sha256: sha256:9b0468fe98272f9f4442bc90ddf6baca15bdd860411fe0d43bc49c161ebc608c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:9b0468fe98272f9f4442bc90ddf6baca15bdd860411fe0d43bc49c161ebc608c

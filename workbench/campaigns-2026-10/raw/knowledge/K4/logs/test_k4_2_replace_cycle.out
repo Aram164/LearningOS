@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K4-2026-10/repository/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K4-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 4 items
+
+tests/test_k4_2_replace_cycle.py::test_replace_that_closes_a_strict_cycle_refuses_and_rolls_back PASSED [ 25%]
+tests/test_k4_2_replace_cycle.py::test_cycle_refusal_names_the_cycle_deterministically PASSED [ 50%]
+tests/test_k4_2_replace_cycle.py::test_semantic_replacement_that_would_cycle_still_commits PASSED [ 75%]
+tests/test_k4_2_replace_cycle.py::test_add_that_closes_the_same_cycle_refuses_too PASSED [100%]
+
+============================== 4 passed in 3.07s ===============================

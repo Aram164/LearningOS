@@ -1,0 +1,89 @@
+== provenance: live vs original module-plan ==
+  source_map (sans routes) equal: True
+  live stages: 9, original stages: 9
+== A: material:// / vault_path resolution ==
+  OK   route-icop-l01-blum-bases: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-forms: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-general-duality: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-geometry: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-oral-review: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-phase-one: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-pivots: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-slackness: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-blum-standard-duality: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf -> algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  OK   route-icop-l01-deck-bases: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-forms: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-general-duality: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-geometry: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-oral-review: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-phase-one: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-pivots: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-slackness: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-deck-standard-duality: material://source-icop-hu-ws2627/ico_linearprogramming.pdf -> algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf
+  OK   route-icop-l01-kv-review: material://source-korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf -> optimization/korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf
+  OK   route-icop-l01-organization: material://source-icop-hu-ws2627/ico_organization.pdf -> algorithms/structures/icop-hu-ws2627/ico_organization.pdf
+  direct resources (no route_id): 10
+  OK   resource-icop-l01-forms-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-geometry-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-bases-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-pivots-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-phase-one-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-standard-duality-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-general-duality-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-slackness-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-oral-review-exercise-bank: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md exists=True locator-id-match=True
+  OK   resource-icop-l01-oral-mock: knowledge/notes/algorithms/note-icop-l01-mock-exam.md exists=True locator-id-match=True
+  OK   artifact ultimate_reference note-icop-l01-reference: ['knowledge/notes/algorithms/note-icop-l01-reference.md']
+  OK   artifact exercise_bank note-icop-l01-exercise-bank: ['knowledge/notes/algorithms/note-icop-l01-exercise-bank.md']
+  OK   artifact mock_exam note-icop-l01-mock-exam: ['knowledge/notes/algorithms/note-icop-l01-mock-exam.md']
+  material_ref inherit failures: 48
+== B: page ranges vs real page counts ==
+  ico_linearprogramming.pdf: 129 pages
+  ico_organization.pdf: 17 pages
+  korte-vygen: 664 pages
+  blum: 279 pages
+  page-range rows checked: 20, violations: 0
+== C: angle_detail claims vs extracted text ==
+  FAIL lp-p23-shortest-path: exercises exercise: let a digraph g be given along with vertices s, t ∈ v (g ) and positive edge weights w : e (g ) → r>0. write a linear program whos
+  OK   lp-p55-vertex-question: some comments theorem: for every feasible and bounded linear program in standard form with corresponding polyhedron p there is a vertex where the targ
+  OK   lp-p67-nondegeneracy: formal description fix a linear program in standard form with a ∈ rm×n, b ∈ rm, and c ∈ rn. min c t x s.t. ax = b x ≥ 0 some assumptions ▶ rows of a a
+  OK   lp-p87-phase1-questions: solving the first-stage lp min x hi : (a, im) x h  = b, x h  ≥ 0  solving the first-stage lp ▶ we can run the second-stage local search starting
+  OK   lp-p89-bitsize: running time per pivot operation theorem: the pivot operations can be implemented to run in time polynomial in the size of the input linear program. c
+  OK   lp-p90-kleeminty: number of pivot operations theorem (klee and minty [1972]): for every n ∈ n there is a linear program in standard form with 3n variables and 2n constr
+  OK   lp-p91-hirsch: simplex algorithm - wrap-up simplex algorithm ▶ greedy/local search algorithm for optimizing lps in standard form ▶ fairly intuitive scheme of travers
+  OK   lp-p112-dual-of-dual: dual of the dual theorem: the dual of the dual lp is again the primal lp. exercise: prove the theorem for the form of primal lp that we just used. pro
+  OK   lp-p114-both-infeasible: how could both primal and dual lp be infeasible? note: a pair of primal and dual lp that are both infeasible. primal dual min x1 max y1 + y2 s.t. x1 +
+  OK   lp-p115-shortest-path-dual: exercise exercise: recall the linear program for determining the distance from s to t in an edge-weighted digraph. use the transformation rules to cre
+  OK   lp-p125-summary: summary summary ▶ introduced linear programming basics and notation ▶ transformations of lps and special forms ▶ geometrical and algebraical interpret
+  OK   lp-p126-outlook: outlook outlook ▶ other algorithmic approaches for optimizing lps: ▶ ellipsoid method ▶ interior points methods ▶ linear programs for integral problem
+  OK   lp-p128-inscribed-ball: further exercises exercise: show that the problem to compute a largest ball that is a subset of a given polyhedron can be formulated as a linear progr
+  OK   lp-p129-simplex-exercises: further exercises exercise: use the simplex algorithm to solve the following linear programs: max x1 − 3x2 + x3 min 6 x1 − 9x2 s.t. 3x1 + 2x2 = 6 s.t.
+  OK   lp-p1-5-framing: introduction to combinatorial optimization linear programming stefan kratsch humboldt-universit ̈ at zu berlin institut f ̈ ur informatik stefan.krats
+  OK   org-p12-sketches: lectures lectures ▶ about 75% of the time slots will be used for lectures ▶ presentation uses a mix of pdf slides and the board ▶ the pdf slides are s
+  OK   org-p15-oral-30min: oral exam and exam admission exam admission ▶ no requirements, everyone can take the exam oral exam ▶ length is 30 minutes ▶ in person at the institut
+  OK   org-p16-expectations: what is important in the exam? content ▶ everything that we covered in the lecture (slides and notes from black board) ▶ solutions to exercises that a
+  OK   kv-p70-ch3-heading: 3 linear programming in this chapter we review the most important facts about linear programming. although this chapter is self-contained, it cannot b
+  OK   kv-p87-89-exercises: 68 3 linear programming corollary 3.32. a polytope is the convex hull of its vertices. proof: letp be a polytope. by theorem 3.31, the convex hull of 
+  OK   kv-p89-90-references: 70 3 linear programming 11. use fourier-motzkin elimination (exercise 10) to prove theorem 3.24 directly. (kuhn [1956]) 12. show that theorem 3.24 imp
+  OK   kv-ch3-max-form: 3 linear programming in this chapter we review the most important facts about linear programming. although this chapter is self-contained, it cannot b
+  FAIL blum-p229-8.1: 8 lineare programmierung in anwendungen müssen des öfteren optimierungsprobleme ge löst werden. einige haben wir in den kapiteln 3, 4 und 5 kennengele
+  OK   blum-p238-8.2: 226 8 lineare programmierung zielfunktion z gegen −∞ konvergiert, existiert. nehmen wir an, dass das gegebene lineare programm minimiere z(x) = ctx ax
+  OK   blum-p245-start-basis: 8.2 die simplexmethode 233 tabelle 8.3: tafel vom typ 2. alle v ariablen −xj · · · − xbi · · · xb0 y00 y0j 0... ... ... ... xbi yi0 yij 1 basisvariabl
+  OK   blum-p249-8.3: 8.3 dualität 237 v ektors mit einem anderen v ektor die lineare unabhängigkeit einer menge von linear unabhängigen v ektoren nicht stört, sind ˆvi, 1 
+  FAIL blum-p255-stop-before-dual-simplex: 8.3 dualität 243 dual paar von linearen programmen optimal ist, ist im nachfo lgenden satz formuliert. diese bedingung wird komplementäre schlupfbedin
+  OK   blum-p266-ex-8.15-16: 254 8 lineare programmierung übung 8.15: lösen sie folgende lineare programme mit hilfe des simplexa lgorith- mus: a) maximiere z(x) = x1 − 3x2 +x3 3x
+  FAIL blum-printed-offset-+12: [{"physical": 229, "printed_expected": 217, "found_candidates": [], "hit": false}, {"physical": 238, "printed_expected": 226, "found_candidates": [226
+  OK   aml-l06-s7-exists: heading match: True
+  FAIL exercise-bank-questions-answers: sections found
+  OK   mock-exam-then-answers: sections found
+== D: duplicates and dangling references ==
+  duplicate locators (exact, any source): 0
+  sibling angle_detail duplicates (exact, within one source+unit): 3
+    8 routes: ['route-icop-l01-blum-forms', 'route-icop-l01-blum-geometry', 'route-icop-l01-blum-bases', 'route-icop-l01-blum-pivots', 'route-icop-l01-blum-phase-one', 'route-icop-l01-blum-standard-duality', 'route-icop-l01-blum-general-duality', 'route-icop-l01-blum-oral-review'] — ('source-blum-algorithmen-datenstrukturen', 'unit-icop-l01-linear-programming')::Read only the stated subsection span as
+    2 routes: ['route-icop-l01-cornell-3', 'route-icop-l01-cornell-4'] — ('source-cornell-topaloglu-lp', 'unit-icop-l01-linear-programming')::Official course title, linked handwritten notes and
+    4 routes: ['route-icop-l01-stanford-7', 'route-icop-l01-stanford-8', 'route-icop-l01-stanford-9', 'route-icop-l01-stanford-10'] — ('source-stanford-cs261-2016', 'unit-icop-l01-linear-programming')::Official 2016 course schedule verifies the numbered 
+  dangling references: 0
+  covers outside knowledge_map: []
+  knowledge nodes never covered: []
+
+wrote /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/scripts/audit-abcd-results.json

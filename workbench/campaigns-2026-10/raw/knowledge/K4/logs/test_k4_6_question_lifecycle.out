@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K4-2026-10/repository/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K4-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 5 items
+
+tests/test_k4_6_question_lifecycle.py::test_question_on_a_relation_lists_from_both_endpoints PASSED [ 20%]
+tests/test_k4_6_question_lifecycle.py::test_removing_the_target_relation_keeps_the_question_and_the_wording PASSED [ 40%]
+tests/test_k4_6_question_lifecycle.py::test_same_wording_saved_twice_is_one_note_under_replay_and_update PASSED [ 60%]
+tests/test_k4_6_question_lifecycle.py::test_same_wording_under_two_ids_creates_two_question_notes PASSED [ 80%]
+tests/test_k4_6_question_lifecycle.py::test_mixed_and_alias_targets_are_schema_refused PASSED [100%]
+
+============================== 5 passed in 6.25s ===============================

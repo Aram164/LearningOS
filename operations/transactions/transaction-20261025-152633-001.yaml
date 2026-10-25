@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261025-152633-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-10-25T15:26:33+01:00'
+snapshot_before: sha256:eb8fe4c0221be09551783a982466477a42e03c8c1e52599dadc0c653fd729da3
+snapshot_after: sha256:4621aeb6749fe440ba90127fa8e1472533f8ba27873615ac4b47439e2194b23e
+expected_revisions:
+  study-map-job-git-fluency: 1
+  unit-job-git-fluency: 1
+artifact_revisions:
+  study-map-job-git-fluency:
+    before: 1
+    after: 2
+  unit-job-git-fluency:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
+  sha256_before: 913d08baee467403cd734cd7a22a11fd034a7e53e7b9bc7317cf3e70c521d5a7
+  sha256_after: 0b1b171562f678d473a88552760979080347d222329f626829bc1ca77b19d586
+  created: false
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/unit.yaml
+  sha256_before: c04591921ca33bd6b6c10801ef0869444e77c4b12803401b3f2c494ac12123c0
+  sha256_after: c04591921ca33bd6b6c10801ef0869444e77c4b12803401b3f2c494ac12123c0
+  created: false
+metadata:
+  data_roots_sha256: sha256:edd58bcc8351d1e4fddfb344cf5ef2f52d59f2ac919f9a3af539ab39f8c329b6
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: codex
+  request_id: request-campaign-20261025-git-locator-f5221074
+  idempotency_key: campaign-20261025-git-locator
+  intent_sha256: sha256:1556f6baf8637ce05b442dc2913afeaea7f336dbea2e5d725bbb30660a0e31a1
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:1556f6baf8637ce05b442dc2913afeaea7f336dbea2e5d725bbb30660a0e31a1

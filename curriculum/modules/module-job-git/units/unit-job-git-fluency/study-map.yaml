@@ -1451,7 +1451,7 @@ stages:
     label: Required core — ProGit_2ed.pdf
     id: resource-git-15-01-required-core-progit-2ed-pdf
     source_id: source-progit
-    locator: Pro Git worktrees and submodules Chs. 7.11, 7.13
+    locator: Pro Git submodules and replace Chs. 7.11, 7.13
     vault_path: material://source-progit/ProGit_2ed.pdf
     scope_triage: required-now
   - kind: reference

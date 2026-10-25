@@ -1,0 +1,58 @@
+
+===== ATTACK 1: one tampered byte in the backed-up core tree =====
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-glm-V5-2026-10/scratch/attack1-restore/repository/curriculum/resume.yaml'
+exit=0
+ok: True checked: 2528
+  total issues: 0
+
+===== ATTACK 1b: one tampered byte in the manifest itself =====
+manifest copy with one tampered entry size written
+exit=1
+ok: False
+  issue: {'root': 'manifest', 'path': '<aggregate>', 'issue': 'aggregate-mismatch'}
+  issue: {'root': 'core', 'path': 'archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md', 'issue': 'checksum-mismatch'}
+
+===== ATTACK 2: a deleted file in the restored core =====
+    2052 /Users/aramaljanadi/los-glm-V5-2026-10/scratch/attack2-restore/repository/curriculum/thematic-groups.yaml
+deleted curriculum/thematic-groups.yaml
+exit=1
+ok: False checked: 2528
+  issue: {'root': 'core', 'path': 'curriculum/thematic-groups.yaml', 'issue': 'missing'}
+  total issues: 1
+
+===== ATTACK 2b: deleted file, full verify form =====
+exit=1
+ok: False
+  check: checksums False
+  issue: {'root': 'core', 'path': 'curriculum/thematic-groups.yaml', 'issue': 'missing'}
+
+===== ATTACK 3: restore into a NON-EMPTY folder — extra canonical file =====
+planted knowledge/notes/note-sneaky.md
+exit=1
+ok: False checked: 2528
+  issue: {'root': 'core', 'path': 'knowledge/notes/note-sneaky.md', 'issue': 'unaccounted'}
+  total issues: 1
+
+===== ATTACK 3b: extra file OUTSIDE the allowlist at core root (not admitted anywhere) =====
+planted stray-root-file.txt at core root
+exit=1
+ok: False checked: 2528
+  issue: {'root': 'core', 'path': 'knowledge/notes/note-sneaky.md', 'issue': 'unaccounted'}
+  total issues: 1
+
+===== ATTACK 3c: extra file under an EXCLUDED name (generated/) =====
+planted generated/stale-report.md
+exit=1
+ok: False checked: 2528
+  issue: {'root': 'core', 'path': 'knowledge/notes/note-sneaky.md', 'issue': 'unaccounted'}
+  total issues: 1
+
+===== ATTACK DONE attacks 1-3 =====

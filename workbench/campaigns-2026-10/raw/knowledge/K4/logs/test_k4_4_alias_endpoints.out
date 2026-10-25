@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K4-2026-10/repository/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K4-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 3 items
+
+tests/test_k4_4_alias_endpoints.py::test_free_form_alias_refused_by_the_row_schema PASSED [ 33%]
+tests/test_k4_4_alias_endpoints.py::test_id_shaped_alias_refused_as_unresolvable_endpoint PASSED [ 66%]
+tests/test_k4_4_alias_endpoints.py::test_id_shaped_alias_refused_for_replace_too PASSED [100%]
+
+============================== 3 passed in 1.58s ===============================

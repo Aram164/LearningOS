@@ -1,0 +1,8 @@
+[stale remove after replace] (2, 'INVALID_REQUEST', 'the exact previous relation no longer exists uniquely; reload and review')
+[free-form alias] (2, 'INVALID_REQUEST', "concept-relations: 'Erwartungswert' does not match '^concept-[a-z0-9]+(?:-[a-z0-9]+)*$'")
+[id-shaped alias] (2, 'VALIDATION_FAILED', "transaction failed canonical validation: E REL-ENDPOINT: relation[1] 'from' does not resolve: 'concept-ew' [knowledge/concept-relations.yaml]")
+[question on removed relation]
+Traceback (most recent call last):
+  File "<stdin>", line 37, in <module>
+  File "<stdin>", line 18, in err
+TypeError: 'NoneType' object is not subscriptable

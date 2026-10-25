@@ -1,0 +1,404 @@
+{
+ "n_resources": 796,
+ "dangling_route": [],
+ "own_vp_unresolvable": [],
+ "own_vp_mismatch": [],
+ "own_vp_no_loc_file": [],
+ "unbound": [
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-calibration",
+   "idx": 0,
+   "text": "exercise-slides/Übung 10.pdf, slides 2–3",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-calibration",
+   "idx": 1,
+   "text": "note-aml-l02-mock-exam through note-aml-l11-mock-exam; unopened questions only",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-calibration",
+   "idx": 2,
+   "text": "exercise-slides/Übung 02–11.pdf and Bonusblatt 01–04; no Transformer Übung exists",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-calibration",
+   "idx": 3,
+   "text": "Primer_Linear_Algebra.pdf (36 pp.); if it comes back red the unit-aml-l01 menu now carries solved LA Übungen and Klausur",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-calibration",
+   "idx": 4,
+   "text": "lecture-slides/VL 01–11; open the exact slide, not the deck",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 0,
+   "text": "lecture-slides/VL 02-nearest-neighbor.pdf; VL 03-linear-regression.pdf; VL 04-non-linear-regression.pdf",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 1,
+   "text": "note-aml-l02-knn-bias-variance; note-aml-l02-exercise-bank; note-aml-l02-mock-exam",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 2,
+   "text": "note-aml-l03-linear-regression / exercise-bank / mock-exam; note-aml-l04-nonlinear-regression / exercise-bank / mock-exa",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 3,
+   "text": "exercise-slides/Übung 02–07.pdf and the matching Bonusblätter",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 4,
+   "text": "§11.2.2 p. 372 (the objective introduced as the NLL); §11.2.4 goodness of fit p. 380; solution manual §11.3 works the pa",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 5,
+   "text": "geron-copy2.pdf (3rd ed.) Ch 4 'Training Models'; the L02–L04 lecture menus carry the section-exact routes",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-foundations-repair",
+   "idx": 6,
+   "text": "lecture-slides/VL 01–11; open the exact slide, not the deck",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 0,
+   "text": "lecture-slides/VL 05-logistic-regression.pdf through VL 07-linear-classifiers.pdf",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 1,
+   "text": "note-aml-l05-*; note-aml-l06-*; note-aml-l07-* (references, exercise banks and mock exams only)",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 2,
+   "text": "exercise-slides/Übung 08.pdf (48 pp.; dual-perceptron pages worked in full)",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 3,
+   "text": "§8.1.3 pp. 277–281 (convexity, Hessian test); §8.3 pp. 289–291 (Newton, BFGS); §8.4.6 pp. 298–301 (AdaGrad, RMSProp, Ada",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 4,
+   "text": "geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum 486, Nesterov 487, AdaGrad 489, RMSProp 49",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-linear-optimization-repair",
+   "idx": 5,
+   "text": "lecture-slides/VL 01–11; open the exact slide, not the deck",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 0,
+   "text": "lecture-slides/VL 08-feedforward-neural-network.pdf through VL 11-transformers.pdf",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 1,
+   "text": "note-aml-l08-* through note-aml-l11-* (references, exercise banks and mock exams only)",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 2,
+   "text": "exercise-slides/Übung 09.pdf (feedforward), Übung 10.pdf (computation graphs and autodiff), Übung 11.pdf (CNN calculatio",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 3,
+   "text": "11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention; 11.6 Self-Attention and Pos",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 4,
+   "text": "geron-copy2.pdf (3rd ed.) Ch 14 visual cortex pdf p. 620 and exercises p. 694; Ch 16 attention pdf p. 772, original Tran",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 5,
+   "text": "§15.4 pp. 518–525 (soft dictionary lookup p. 519, parametric attention p. 521); §15.5 pp. 526–532 (self-attention p. 526",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 6,
+   "text": "Chapter 8 — Transformers",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-neural-transformer-loop",
+   "idx": 7,
+   "text": "lecture-slides/VL 11-transformers.pdf slides 73–81 (scaled matrix attention and causal masking); labelled Bonus by the l",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-integration-sheet",
+   "idx": 0,
+   "text": "note-aml-sad-master-wiring; note-aml-book-crosswalk",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-integration-sheet",
+   "idx": 1,
+   "text": "note-aml-l02-* through note-aml-l11-* references; take formulas, shape rules and failure modes, not explanations",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-integration-sheet",
+   "idx": 2,
+   "text": "lecture-slides/VL 01–11; the exact slide, only after a failed retrieval",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one",
+   "idx": 0,
+   "text": "per-lecture mocks plus Übung/Bonusblatt tasks not used in calibration; keep answer keys closed",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one",
+   "idx": 1,
+   "text": "exercise-slides/Übung 10.pdf slide 2",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one",
+   "idx": 2,
+   "text": "lecture-slides/VL 01–11",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one-repair",
+   "idx": 0,
+   "text": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md",
+   "vault_path": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md"
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one-repair",
+   "idx": 1,
+   "text": "unused Übung/Bonusblatt tasks matched to the exact failed node",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one-repair",
+   "idx": 2,
+   "text": "11.1, 11.3, 11.5, 11.6 or 11.7 Exercises, matched to the failed node",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-one-repair",
+   "idx": 3,
+   "text": "Chapter 8 — Transformers",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-two",
+   "idx": 0,
+   "text": "unused per-lecture mock and course-exercise items; no question repeated from mock 1",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-two",
+   "idx": 1,
+   "text": "exercise-slides/Übung 10.pdf slide 2, plus any later current second-sitting notice",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-mock-two",
+   "idx": 2,
+   "text": "stage-aml-mock-one-repair outputs",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-final-repair",
+   "idx": 0,
+   "text": "stage-aml-mock-one and stage-aml-mock-two working notes",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-final-repair",
+   "idx": 1,
+   "text": "owning module record plus exercise-slides/Übung 10.pdf slide 2 baseline and any later current second-sitting notice; do ",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-final-repair",
+   "idx": 2,
+   "text": "unused Übung/Bonusblatt and per-lecture mock items",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-final-repair",
+   "idx": 3,
+   "text": "11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention; 11.6 Self-Attention and Pos",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-final-repair",
+   "idx": 4,
+   "text": "Chapter 8 — Transformers",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-taper",
+   "idx": 0,
+   "text": "stage-aml-final-repair outputs",
+   "vault_path": null
+  },
+  {
+   "unit": "unit-aml-exam-prep",
+   "stage": "stage-aml-taper",
+   "idx": 1,
+   "text": "the owning module record plus Übung 10 slide 2; no new source is opened at this stage",
+   "vault_path": null
+  }
+ ],
+ "carriage": [
+  {
+   "unit": "unit-aml-l02",
+   "route_id": "route-f9b5997cc6cbea9906b40de7",
+   "title": "Current L02 lecture deck",
+   "carried_by_all": 6,
+   "of_stages": 6
+  },
+  {
+   "unit": "unit-aml-l04",
+   "route_id": "route-1c4baf7d25512832c30efc2c",
+   "title": "Current L04 lecture deck",
+   "carried_by_all": 6,
+   "of_stages": 6
+  },
+  {
+   "unit": "unit-aml-l05",
+   "route_id": "route-24446ef673e9b912e6cd5177",
+   "title": "Current L05 lecture deck",
+   "carried_by_all": 6,
+   "of_stages": 6
+  },
+  {
+   "unit": "unit-aml-l06",
+   "route_id": "route-2859463c0a0acd4759eb3acb",
+   "title": "Murphy optimization chapter",
+   "carried_by_all": 7,
+   "of_stages": 7
+  },
+  {
+   "unit": "unit-aml-l06",
+   "route_id": "route-446c1d8cfb60bd43f0315cdd",
+   "title": "Current L06 lecture deck",
+   "carried_by_all": 7,
+   "of_stages": 7
+  },
+  {
+   "unit": "unit-aml-l07",
+   "route_id": "route-b6a4e4277ae6fd34a0802141",
+   "title": "Current L07 lecture deck",
+   "carried_by_all": 7,
+   "of_stages": 7
+  },
+  {
+   "unit": "unit-aml-l08",
+   "route_id": "route-f0ca5b873f040ee18e78a4ff",
+   "title": "Current L08 lecture deck",
+   "carried_by_all": 6,
+   "of_stages": 6
+  },
+  {
+   "unit": "unit-aml-l09",
+   "route_id": "route-4af0fc22b73c45810f0f66cf",
+   "title": "Current L09 lecture deck",
+   "carried_by_all": 7,
+   "of_stages": 7
+  },
+  {
+   "unit": "unit-aml-l10",
+   "route_id": "route-31fd0969b1aa551394d33f29",
+   "title": "Current L10 lecture deck",
+   "carried_by_all": 6,
+   "of_stages": 6
+  },
+  {
+   "unit": "unit-aml-l11",
+   "route_id": "route-23db0f203fdcdc8b9ba51c41",
+   "title": "Current L11 Transformers lecture deck",
+   "carried_by_all": 9,
+   "of_stages": 9
+  }
+ ],
+ "d_res_dup": []
+}

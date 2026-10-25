@@ -1,0 +1,15 @@
+# command: .venv/bin/pytest tests/test_k1_5_canvas_direction.py -v   (cwd: /Users/aramaljanadi/los-glm-K1-2026-10/repository; Core pin fb73b0f9)
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K1-2026-10/repository/.venv/bin/python3.14
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K1-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 4 items
+
+tests/test_k1_5_canvas_direction.py::test_strict_canvas_edge_points_prerequisite_to_dependent PASSED [ 25%]
+tests/test_k1_5_canvas_direction.py::test_semantic_canvas_edge_keeps_canonical_direction PASSED [ 50%]
+tests/test_k1_5_canvas_direction.py::test_prerequisite_sits_left_of_its_dependent PASSED [ 75%]
+tests/test_k1_5_canvas_direction.py::test_mermaid_concept_map_agrees_with_the_canvas PASSED [100%]
+
+============================== 4 passed in 0.40s ===============================

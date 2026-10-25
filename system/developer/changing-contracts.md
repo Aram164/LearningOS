@@ -4,8 +4,10 @@ Audience: developer. Existing schema and manifest change obligations live here.
 
 ## Changing a schema (the data contract)
 
-Every record schema is `additionalProperties: false`, and canonical records carry
-no per-record version. That is strict by design, but it means editing a schema
+Schemas that validate a stored record root reject unknown top-level fields with
+`additionalProperties: false`. The fingerprinted schema set also includes
+definition-only `$defs` libraries, which do not validate record roots themselves.
+Canonical records carry no per-record version. That is strict by design, but it means editing a schema
 silently redefines what "valid" means for data already on disk — and years later
 there is no way to ask "what format was this note written under, and what brings
 it forward?"
@@ -57,7 +59,8 @@ point: until 2026-08-08 only the consumer declared the version (in the Obsidian
 UI's lock file), so Core could add a top-level key, pass its own tests, push —
 and break the other repository. It happened, with `topics`.
 
-When `MANIFEST-CONTRACT-DRIFT` fires:
+When the manifest gate raises `ManifestContractError` because the published
+manifest no longer matches `system/contracts/manifest-contract.yaml`:
 
 1. **Bump:** `.venv/bin/python tools/manifest_contract.py --bump --note "…"` — it rebuilds
    with enforcement off, adopts the shape actually produced, and records the

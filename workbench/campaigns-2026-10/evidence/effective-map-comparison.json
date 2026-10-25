@@ -1,0 +1,6416 @@
+{
+  "maps_before": 73,
+  "maps_after": 73,
+  "changed_leaf_counts": {
+    "angle": 17,
+    "angle_detail": 17,
+    "locator": 27,
+    "source_id": 472
+  },
+  "allowed_leaf_fields": [
+    "angle",
+    "angle_detail",
+    "locator",
+    "route_id",
+    "source_id"
+  ],
+  "all_other_effective_map_fields_identical": true,
+  "changes": [
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'Current AML exercises and bonus sheets' over 'CS189 official solved-exam bank' when you need this contribution; the neighboring route instead contributes: Provides the missing external written-exam calibration bank, with many years of official midterms and finals rather than community keys. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "angle"
+      ],
+      "before": null,
+      "after": "Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and derivation depth used by the HU course. Discriminator: choose 'Current AML L01–L11 scope spine' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "angle"
+      ],
+      "before": null,
+      "after": "Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'Current AML exercises and bonus sheets' over 'CS189 official solved-exam bank' when you need this contribution; the neighboring route instead contributes: Provides the missing external written-exam calibration bank, with many years of official midterms and finals rather than community keys. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "§11.2.2 p. 372 (the objective introduced as the NLL); §11.2.4 goodness of fit p. 380; solution manual §11.3 works the partial derivative of the RSS",
+      "after": "§11.2.2 p. 372 (pdf p. 402; the objective introduced as the NLL); §11.2.4 goodness of fit p. 380 (pdf p. 410); solution manual §11.3 works the partial derivative of the RSS"
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "angle"
+      ],
+      "before": null,
+      "after": "Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and derivation depth used by the HU course. Discriminator: choose 'Current AML L01–L11 scope spine' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'Current AML exercises and bonus sheets' over 'CS189 official solved-exam bank' when you need this contribution; the neighboring route instead contributes: Provides the missing external written-exam calibration bank, with many years of official midterms and finals rather than community keys. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "locator"
+      ],
+      "before": "§8.1.3 pp. 277–281 (convexity, Hessian test); §8.3 pp. 289–291 (Newton, BFGS); §8.4.6 pp. 298–301 (AdaGrad, RMSProp, Adam); solution manual §10.1 works the gradient and Hessian in full",
+      "after": "§8.1.3 pp. 277–281 (pdf pp. 307–310; convexity, Hessian test); §8.3 pp. 289–291 (pdf pp. 319–321; Newton, BFGS); §8.4.6 pp. 298–301 (pdf pp. 328–331; AdaGrad, RMSProp, Adam); solution manual §10.1 works the gradient and Hessian in full"
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "angle"
+      ],
+      "before": null,
+      "after": "Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN motivation, attention. The 3rd-edition file is the complete one."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN motivation, attention. The 3rd-edition file is the complete one. Depth and prerequisites: It assumes the mathematical object is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose 'Géron 3rd ed. — the executable half of both repair clusters' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: It complements the current deck but cannot override the deck's notation, topic boundary, or examination emphasis."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "angle"
+      ],
+      "before": null,
+      "after": "Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and derivation depth used by the HU course. Discriminator: choose 'Current AML L01–L11 scope spine' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'Current AML exercises and bonus sheets' over 'CS189 official solved-exam bank' when you need this contribution; the neighboring route instead contributes: Provides the missing external written-exam calibration bank, with many years of official midterms and finals rather than community keys. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "angle"
+      ],
+      "before": null,
+      "after": "Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'D2L Chapter 11 exercises — the L11 practice the course never issued' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: It is optional depth: open it for the named gap, then return to the current deck rather than importing the source's wider syllabus."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "angle"
+      ],
+      "before": null,
+      "after": "Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN motivation, attention. The 3rd-edition file is the complete one."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN motivation, attention. The 3rd-edition file is the complete one. Depth and prerequisites: It assumes the mathematical object is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose 'Géron 3rd ed. — the executable half of both repair clusters' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: It complements the current deck but cannot override the deck's notation, topic boundary, or examination emphasis."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "§15.4 pp. 518–525 (soft dictionary lookup p. 519, parametric attention p. 521); §15.5 pp. 526–532 (self-attention p. 526, multi-head p. 527, positional encoding p. 528, assembled block p. 529); solution manual §13.1 backpropagates a 1-layer MLP",
+      "after": "§15.4 pp. 518–525 (pdf pp. 548–555; soft dictionary lookup p. 519 = pdf p. 549, parametric attention p. 521 = pdf p. 551); §15.5 pp. 526–532 (pdf pp. 556–562; self-attention p. 526 = pdf p. 556, multi-head p. 527 = pdf p. 557, positional encoding p. 528 = pdf p. 558, assembled block p. 529 = pdf p. 559); solution manual §13.1 backpropagates a 1-layer MLP"
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and derivation depth used by the HU course. Discriminator: choose 'Current AML L01–L11 scope spine' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "angle"
+      ],
+      "before": null,
+      "after": "The course's explicit scope and logistics evidence: eleven topics ending in Transformers, plus the first-sitting rules used as the rehearsal baseline until a second-sitting notice appears."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: The course's explicit scope and logistics evidence: eleven topics ending in Transformers, plus the first-sitting rules used as the rehearsal baseline until a second-sitting notice appears. Depth and prerequisites: It assumes no derivation beyond the current unit's vocabulary and is for framing the problem before calculation. Discriminator: choose 'Übung 10 — exam notice and Themen list' over 'Current AML L01–L11 scope spine' when you need this contribution; the neighboring route instead contributes: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and derivation depth used by the HU course. Discriminator: choose 'Current AML L01–L11 scope spine' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        1,
+        "angle"
+      ],
+      "before": null,
+      "after": "Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        1,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'Current AML exercises and bonus sheets' over 'CS189 official solved-exam bank' when you need this contribution; the neighboring route instead contributes: Provides the missing external written-exam calibration bank, with many years of official midterms and finals rather than community keys. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        2,
+        "angle"
+      ],
+      "before": null,
+      "after": "Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        2,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'D2L Chapter 11 exercises — the L11 practice the course never issued' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: It is optional depth: open it for the named gap, then return to the current deck rather than importing the source's wider syllabus."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        7,
+        "resources",
+        1,
+        "angle"
+      ],
+      "before": null,
+      "after": "The course's explicit scope and logistics evidence: eleven topics ending in Transformers, plus the first-sitting rules used as the rehearsal baseline until a second-sitting notice appears."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        7,
+        "resources",
+        1,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: The course's explicit scope and logistics evidence: eleven topics ending in Transformers, plus the first-sitting rules used as the rehearsal baseline until a second-sitting notice appears. Depth and prerequisites: It assumes no derivation beyond the current unit's vocabulary and is for framing the problem before calculation. Discriminator: choose 'Übung 10 — exam notice and Themen list' over 'Current AML L01–L11 scope spine' when you need this contribution; the neighboring route instead contributes: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration, repair and mixed-exam transfer. Course boundary: This is current course evidence and may calibrate examined notation, but the route's stated locator—not the rest of the source—defines its scope."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        8,
+        "resources",
+        3,
+        "angle"
+      ],
+      "before": null,
+      "after": "Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence."
+    },
+    {
+      "map": "study-map-aml-exam-prep",
+      "path": [
+        "stages",
+        8,
+        "resources",
+        3,
+        "angle_detail"
+      ],
+      "before": null,
+      "after": "Contribution: Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises to convert the operator-drafted L11 bank into worked evidence. Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator: choose 'D2L Chapter 11 exercises — the L11 practice the course never issued' over 'Current AML exercises and bonus sheets' when you need this contribution; the neighboring route instead contributes: Course-native calculations and lecturer-worked solution language for the full syllabus; used before external repair sources and paired with the existing per-lecture banks and mocks. Course boundary: It is optional depth: open it for the named gap, then return to the current deck rather than importing the source's wider syllabus."
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        21,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        22,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch03",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        21,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        22,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch04",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        21,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        21,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        3,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        1,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch05",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch06",
+      "path": [
+        "stages",
+        6,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225, §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234, §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 16 Das bestimmte Riemannsche Integral PDF p. 222 (printed p. 219) (§16.1 Definition PDF p. 222 (printed p. 219), §16.2 Integrierbarkeitskriterien PDF p. 224 (printed p. 221), §16.3 Klassen integrierbarer Funktionen PDF p. 228 (printed p. 225), §16.4 Rechenregeln PDF p. 230 (printed p. 227)), Kap. 17 Das unbestimmte Integral PDF p. 237 (printed p. 234) (§17.1 Fundamentalsatz PDF p. 237 (printed p. 234), §17.2 Partielle Integration PDF p. 241 (printed p. 238), §17.3 Substitutionsregel PDF p. 248 (printed p. 245), §17.4 Partialbruchzerlegung PDF p. 249 (printed p. 246)), Kap. 18 Uneigentliche Integrale PDF p. 255 (printed p. 252) (§18.1 unbeschränkte Intervalle PDF p. 255 (printed p. 252), §18.2 unbeschränkte Integranden PDF p. 268 (printed p. 265)). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        5,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225, §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234, §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 16 Das bestimmte Riemannsche Integral PDF p. 222 (printed p. 219) (§16.1 Definition PDF p. 222 (printed p. 219), §16.2 Integrierbarkeitskriterien PDF p. 224 (printed p. 221), §16.3 Klassen integrierbarer Funktionen PDF p. 228 (printed p. 225), §16.4 Rechenregeln PDF p. 230 (printed p. 227)), Kap. 17 Das unbestimmte Integral PDF p. 237 (printed p. 234) (§17.1 Fundamentalsatz PDF p. 237 (printed p. 234), §17.2 Partielle Integration PDF p. 241 (printed p. 238), §17.3 Substitutionsregel PDF p. 248 (printed p. 245), §17.4 Partialbruchzerlegung PDF p. 249 (printed p. 246)), Kap. 18 Uneigentliche Integrale PDF p. 255 (printed p. 252) (§18.1 unbeschränkte Intervalle PDF p. 255 (printed p. 252), §18.2 unbeschränkte Integranden PDF p. 268 (printed p. 265)). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        20,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        21,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        0,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-skript"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        1,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-professor-leonard"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        2,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-3b1b-essence-of-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        3,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-fritzsche-trainingsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-drill-blaetter-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        4,
+        "locator"
+      ],
+      "before": "IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225, §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234, §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped.",
+      "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 16 Das bestimmte Riemannsche Integral PDF p. 222 (printed p. 219) (§16.1 Definition PDF p. 222 (printed p. 219), §16.2 Integrierbarkeitskriterien PDF p. 224 (printed p. 221), §16.3 Klassen integrierbarer Funktionen PDF p. 228 (printed p. 225), §16.4 Rechenregeln PDF p. 230 (printed p. 227)), Kap. 17 Das unbestimmte Integral PDF p. 237 (printed p. 234) (§17.1 Fundamentalsatz PDF p. 237 (printed p. 234), §17.2 Partielle Integration PDF p. 241 (printed p. 238), §17.3 Substitutionsregel PDF p. 248 (printed p. 245), §17.4 Partialbruchzerlegung PDF p. 249 (printed p. 246)), Kap. 18 Uneigentliche Integrale PDF p. 255 (printed p. 252) (§18.1 unbeschränkte Intervalle PDF p. 255 (printed p. 252), §18.2 unbeschränkte Integranden PDF p. 268 (printed p. 265)). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped."
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        5,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        6,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-analysis-klausuren-extern"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        7,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-strang-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mit-18100a"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        9,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-forster-wessoly"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        10,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-deitmar-uebungsbuch"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        11,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ableitinger-musterloesungen"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        12,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-abbott-understanding-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        13,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-grieser-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        14,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-lebl-basic-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        15,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-labs-schreyer-mathe-informatiker"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        16,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-mfnf-analysis1"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        17,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-ross-elementary-analysis"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        18,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-thomas-calculus"
+    },
+    {
+      "map": "study-map-m2-analysis-ch07",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        19,
+        "source_id"
+      ],
+      "before": null,
+      "after": "source-stewart-calculus"
+    },
+    {
+      "map": "study-map-m2-sad-l15",
+      "path": [
+        "stages",
+        1,
+        "resources",
+        10,
+        "locator"
+      ],
+      "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+      "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+    },
+    {
+      "map": "study-map-m2-sad-l15",
+      "path": [
+        "stages",
+        2,
+        "resources",
+        8,
+        "locator"
+      ],
+      "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+      "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+    },
+    {
+      "map": "study-map-m2-sad-l15",
+      "path": [
+        "stages",
+        3,
+        "resources",
+        19,
+        "locator"
+      ],
+      "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+      "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+    },
+    {
+      "map": "study-map-m2-sad-l15",
+      "path": [
+        "stages",
+        4,
+        "resources",
+        15,
+        "locator"
+      ],
+      "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+      "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+    },
+    {
+      "map": "study-map-m2-sad-l15",
+      "path": [
+        "stages",
+        5,
+        "resources",
+        13,
+        "locator"
+      ],
+      "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+      "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+    },
+    {
+      "map": "study-map-job-git-fluency",
+      "path": [
+        "stages",
+        14,
+        "resources",
+        0,
+        "locator"
+      ],
+      "before": "Pro Git worktrees and submodules Chs. 7.11, 7.13",
+      "after": "Pro Git submodules and replace Chs. 7.11, 7.13"
+    },
+    {
+      "map": "study-map-job-polars-pandas-fluency",
+      "path": [
+        "stages",
+        0,
+        "resources",
+        8,
+        "locator"
+      ],
+      "before": "§'The Pandas Index Object' and §'Data Selection in Series' (notebook 03.01)",
+      "after": "§'The Pandas Index Object' (notebook 03.01)"
+    }
+  ]
+}

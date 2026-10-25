@@ -1,0 +1,27 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_every_record_schema_rejects_an_unknown_root_key _____________
+
+    def test_every_record_schema_rejects_an_unknown_root_key():
+        """The documented claim: a record schema is closed (additionalProperties:
+        false), so an object with an unknown top-level key cannot validate."""
+        registry = schema_registry(SCHEMA_DIR)
+        accepted = {}
+        for path in record_schemas(SCHEMA_DIR):
+            schema = json.loads(path.read_text(encoding="utf-8"))
+            validator = Draft202012Validator(schema, registry=registry)
+            errors = list(validator.iter_errors({"x-unknown-probe-key": {"probe": True}}))
+            if not errors:
+                accepted[path.name] = "accepted an object with an unknown top-level key"
+>       assert not accepted, (
+            "changing-contracts.md:7 claims every record schema is "
+            "additionalProperties: false, but these record schemas accept unknown "
+            f"top-level keys: {accepted}"
+        )
+E       AssertionError: changing-contracts.md:7 claims every record schema is additionalProperties: false, but these record schemas accept unknown top-level keys: {'learning-plan.schema.json': 'accepted an object with an unknown top-level key', 'material-comparison-defs.schema.json': 'accepted an object with an unknown top-level key'}
+E       assert not {'learning-plan.schema.json': 'accepted an object with an unknown top-level key', 'material-comparison-defs.schema.json': 'accepted an object with an unknown top-level key'}
+
+tests/test_v1_record_schema_closure.py:38: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_v1_record_schema_closure.py::test_every_record_schema_rejects_an_unknown_root_key
+1 failed in 0.43s

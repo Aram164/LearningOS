@@ -1,0 +1,4 @@
+los: INVALID_REQUEST: module plan routing preflight failed; no canonical files were written
+- unit-job-git-fluency uses source-git-handbook-archive, but its source-map unit_routes omit the unit
+- unit-job-git-fluency uses source-hu-git-intro, but its source-map unit_routes omit the unit
+- unit-job-git-fluency uses source-progit, but its source-map unit_routes omit the unit

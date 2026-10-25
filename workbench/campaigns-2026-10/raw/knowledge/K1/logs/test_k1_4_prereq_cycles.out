@@ -1,0 +1,17 @@
+# command: .venv/bin/pytest tests/test_k1_4_prereq_cycles.py -v   (cwd: /Users/aramaljanadi/los-glm-K1-2026-10/repository; Core pin fb73b0f9)
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K1-2026-10/repository/.venv/bin/python3.14
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K1-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 6 items
+
+tests/test_k1_4_prereq_cycles.py::test_strict_cycle_fails_with_one_deterministic_path PASSED [ 16%]
+tests/test_k1_4_prereq_cycles.py::test_strict_cycle_path_is_independent_of_relation_file_order PASSED [ 33%]
+tests/test_k1_4_prereq_cycles.py::test_three_concept_strict_cycle_names_the_whole_walk PASSED [ 50%]
+tests/test_k1_4_prereq_cycles.py::test_self_loop_is_a_cycle PASSED       [ 66%]
+tests/test_k1_4_prereq_cycles.py::test_semantic_cycle_passes_validation PASSED [ 83%]
+tests/test_k1_4_prereq_cycles.py::test_mixed_graph_catches_only_the_strict_subgraph PASSED [100%]
+
+============================== 6 passed in 1.40s ===============================

@@ -1,0 +1,23 @@
+
+probe 5 · Home: one resumable focus, short lists, typed references
+  ok   home shows exactly one Continue card (one resumable focus)
+  ok   the Continue card names the resume pointer stage
+  ok   the Continue card names its module and unit
+  ok   exactly one filled (cta) action on Home, on the Continue card
+  ok   home has a Today section and a Continue elsewhere section
+  ok   Today list is short (at most 4 rows)
+  ok   Continue elsewhere list is short (at most 5 rows)
+  ok   every record reference on Home is a labelled action or typed chip
+  ok   every chip anywhere on Home carries its record type class
+
+probe 5 · rule 13: no primary view is a bare list of links
+  ok   home: carries static copy beyond its clickable elements (not a bare link list)
+  ok   modules: carries static copy beyond its clickable elements (not a bare link list)
+  ok   learn: carries static copy beyond its clickable elements (not a bare link list)
+  ok   projects: carries static copy beyond its clickable elements (not a bare link list)
+  ok   library: carries static copy beyond its clickable elements (not a bare link list)
+  ok   atlas: carries static copy beyond its clickable elements (not a bare link list)
+  ok   garden: carries static copy beyond its clickable elements (not a bare link list)
+  ok   review: carries static copy beyond its clickable elements (not a bare link list)
+
+probe 5 (home shape + rule 13): all checks passed

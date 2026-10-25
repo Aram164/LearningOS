@@ -22,15 +22,15 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-10-20'
-note: 'F-01: a stage resource must resolve to material its module''s source map declares
-  (RESOURCE-SCOPE-UNBOUND); measured content debt, warning not error'
-total: 1462
-distinct_signatures: 38
+recorded: '2026-10-25'
+note: Verified campaign corrections bind existing Math2 and AML resource placements;
+  498 RESOURCE-SCOPE-UNBOUND warnings repaired
+total: 964
+distinct_signatures: 32
 signatures:
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
-  count: 31
+  count: 14
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-amls/units/unit-amls-l01/study-map.yaml
   count: 5
@@ -73,24 +73,6 @@ signatures:
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-amls/units/unit-amls-theory/study-map.yaml
   count: 7
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/study-map.yaml
-  count: 86
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/study-map.yaml
-  count: 69
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/study-map.yaml
-  count: 129
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/study-map.yaml
-  count: 127
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/study-map.yaml
-  count: 61
-- code: RESOURCE-SCOPE-UNBOUND
-  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
-  count: 9
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
   count: 183

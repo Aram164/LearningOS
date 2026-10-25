@@ -1,0 +1,8 @@
+.venv/bin/python -m ruff check tools tests
+All checks passed!
+/Library/Developer/CommandLineTools/usr/bin/make code-check
+.venv/bin/python tools/code_reachability.py
+code reachability: 278/278 modules statically classified; 11 historical allowlisted
+code architecture: PASS (static imports and declared CLI handler edges; no runtime coverage claim)
+.venv/bin/python -m mypy
+Success: no issues found in 11 source files

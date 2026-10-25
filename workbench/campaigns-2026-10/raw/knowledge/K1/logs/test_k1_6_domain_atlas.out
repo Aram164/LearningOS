@@ -1,0 +1,14 @@
+# command: .venv/bin/pytest tests/test_k1_6_domain_atlas.py -v   (cwd: /Users/aramaljanadi/los-glm-K1-2026-10/repository; Core pin fb73b0f9)
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K1-2026-10/repository/.venv/bin/python3.14
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K1-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 3 items
+
+tests/test_k1_6_domain_atlas.py::test_no_shelf_is_dropped_and_the_unmapped_one_lands_in_cross_domain PASSED [ 33%]
+tests/test_k1_6_domain_atlas.py::test_descriptions_are_harvested_from_the_canonical_field PASSED [ 66%]
+tests/test_k1_6_domain_atlas.py::test_domains_without_shelves_say_so_and_future_buckets_appear PASSED [100%]
+
+============================== 3 passed in 0.37s ===============================

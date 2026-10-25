@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "request_id": "request-reviewed-2cc1baa77fac4d8daf1e5cf72743d9d4",
+  "idempotency_key": "reviewed-a9db45f5735c45bd82ca228e23ef56ca",
+  "capability": "module.plan.import",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261025-152439-001",
+  "receipt_path": "operations/transactions/transaction-20261025-152439-001.yaml",
+  "snapshot_after": "sha256:4425e6de06d082de5da002faf1e446d19014d5176a5d38b1a02b4ceb09c74f2f",
+  "result": {
+    "ok": true,
+    "mode": "apply",
+    "module_id": "module-hu-m2-statistik-analysis",
+    "units_written": [
+      "unit-m2-analysis-ch03",
+      "unit-m2-analysis-ch04",
+      "unit-m2-analysis-ch05",
+      "unit-m2-analysis-ch06",
+      "unit-m2-analysis-ch07",
+      "unit-m2-combined-exam-rehearsal"
+    ],
+    "files_written": 15,
+    "transaction_id": "transaction-20261025-152439-001",
+    "receipt_path": "operations/transactions/transaction-20261025-152439-001.yaml",
+    "artifact_revisions": {
+      "file:operations/transactions/lineage.yaml": 4,
+      "module-hu-m2-statistik-analysis": 62,
+      "unit-m2-analysis-ch03": 9,
+      "unit-m2-analysis-ch04": 7,
+      "unit-m2-analysis-ch05": 9,
+      "unit-m2-analysis-ch06": 8,
+      "unit-m2-analysis-ch07": 7,
+      "unit-m2-combined-exam-rehearsal": 6
+    },
+    "snapshot_after": "sha256:4425e6de06d082de5da002faf1e446d19014d5176a5d38b1a02b4ceb09c74f2f",
+    "replayed": false
+  },
+  "error": null
+}

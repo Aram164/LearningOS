@@ -1,0 +1,1769 @@
+{
+  "note": "Immutable source copies. Historical status and absolute paths are preserved; see REPORT.md for current reconciliation. Not active test discovery.",
+  "files": [
+    {
+      "path": "raw/system/C1-A/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/CLAUDE-VERDICT.md",
+      "sha256": "254f9bfbb1d17f644749ca3424b36a537c9e305218171ccb946c174208fefe17",
+      "bytes": 2937
+    },
+    {
+      "path": "raw/system/C1-A/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/REPORT.md",
+      "sha256": "db5dda3cd1b11a97e93c9867b693673baaa5e44d8d7eeeecddc3a1f015c65292",
+      "bytes": 7940
+    },
+    {
+      "path": "raw/system/C1-A/module.attempt.record/graded-attempt-dead-end/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/module.attempt.record/graded-attempt-dead-end/finding.md",
+      "sha256": "06a86e883796cdfd6a39ff9acdd3162e61c3058862424f164f97a8f67be46b2a",
+      "bytes": 4084
+    },
+    {
+      "path": "raw/system/C1-A/module.attempt.record/graded-attempt-dead-end/test_graded_attempt_dead_end.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/module.attempt.record/graded-attempt-dead-end/test_graded_attempt_dead_end.py",
+      "sha256": "ec86d565fc58e91e569472fb5d3ba1c3f4fb88208d90c9bdfc3fb3c8acde0949",
+      "bytes": 3514
+    },
+    {
+      "path": "raw/system/C1-A/module.create/legacy-identity-clash/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/module.create/legacy-identity-clash/finding.md",
+      "sha256": "d76f3982951f029635489e5ac0f45e303a20fc0a415cde3c42b886e7a3b0d608",
+      "bytes": 4503
+    },
+    {
+      "path": "raw/system/C1-A/module.create/legacy-identity-clash/test_legacy_identity_clash.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-A/module.create/legacy-identity-clash/test_legacy_identity_clash.py",
+      "sha256": "c3ae8518cc295dd2af39c362a7d1f404621dd313c44b386a3f68db43382e6484",
+      "bytes": 3694
+    },
+    {
+      "path": "raw/system/C1-B/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-B/CLAUDE-VERDICT.md",
+      "sha256": "e0fe1bca6bd57ef6182357eeac971d6e05e2a588e0be1d5d32403e88923e2361",
+      "bytes": 3082
+    },
+    {
+      "path": "raw/system/C1-B/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-B/REPORT.md",
+      "sha256": "8e8582e11cf2cc834f3f7455baa94b0c63975e6a3be85187d441c8987a3ce484",
+      "bytes": 9673
+    },
+    {
+      "path": "raw/system/C1-B/probes_attacked_and_held.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-B/probes_attacked_and_held.py",
+      "sha256": "771c370ba4b9ab02caeb64ffde1748ee66c665a74c2640a0628ea53f7dbb11a7",
+      "bytes": 8628
+    },
+    {
+      "path": "raw/system/C1-B/review.apply/partial-apply-hides-remainder/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-B/review.apply/partial-apply-hides-remainder/finding.md",
+      "sha256": "cadc77f22afbe9455dbdd1728c4c9b6116de24c890de995ae404fc09f12ca574",
+      "bytes": 4674
+    },
+    {
+      "path": "raw/system/C1-B/review.apply/partial-apply-hides-remainder/test_partial_shelving_apply.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-B/review.apply/partial-apply-hides-remainder/test_partial_shelving_apply.py",
+      "sha256": "9f85d9e54b3b61f715d0004bac48ee8d5335db67969ed37175a4567d3be47b83",
+      "bytes": 5201
+    },
+    {
+      "path": "raw/system/C1-C/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/CLAUDE-VERDICT.md",
+      "sha256": "6432aec68130881b623c27483d0cfbf6230025a4133f691dc300bdccd30a9851",
+      "bytes": 3992
+    },
+    {
+      "path": "raw/system/C1-C/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/REPORT.md",
+      "sha256": "985ba1eb11f9a539b296b0e4fb409310d1b184f97b3b264b7a1c9659ea2d3ea8",
+      "bytes": 10378
+    },
+    {
+      "path": "raw/system/C1-C/garden.seed.create/invisible-reserved-slug/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/garden.seed.create/invisible-reserved-slug/finding.md",
+      "sha256": "b4aa1f0a771c65eb1a0f0b8f6f7945f019e5af46114186a854a669f6830e4749",
+      "bytes": 4266
+    },
+    {
+      "path": "raw/system/C1-C/garden.seed.create/invisible-reserved-slug/test_garden_invisible_reserved_slug.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/garden.seed.create/invisible-reserved-slug/test_garden_invisible_reserved_slug.py",
+      "sha256": "a93b569d15288ee29aca20e4b27da5c8f4d07ba8e27336eb7ebb050509dc2e61",
+      "bytes": 2577
+    },
+    {
+      "path": "raw/system/C1-C/note.revise/revise-voids-dedicated-guarantees/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/note.revise/revise-voids-dedicated-guarantees/finding.md",
+      "sha256": "e1296c1c29c231d4c27b85cf9edde3df146d762e5f4ba401058d735bcb64e8fb",
+      "bytes": 6488
+    },
+    {
+      "path": "raw/system/C1-C/note.revise/revise-voids-dedicated-guarantees/test_revise_voids_dedicated_guarantees.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-C/note.revise/revise-voids-dedicated-guarantees/test_revise_voids_dedicated_guarantees.py",
+      "sha256": "7225189227c8aabf803d031e861cc7b0f743aa611f021cb4ee78bbcfc954639c",
+      "bytes": 6686
+    },
+    {
+      "path": "raw/system/C1-D/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/CLAUDE-VERDICT.md",
+      "sha256": "cd7734118fcb2a89353b1c77276be1c284bda4aeaa5c062e59a0d80f2300dee7",
+      "bytes": 3023
+    },
+    {
+      "path": "raw/system/C1-D/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/REPORT.md",
+      "sha256": "4fa5cfb1bd6d843589e22374785ca085ceba95d5ca3fb482a7bbb60e373a0ef1",
+      "bytes": 8138
+    },
+    {
+      "path": "raw/system/C1-D/capture.create/same-second-file-capture-overwrite/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/capture.create/same-second-file-capture-overwrite/finding.md",
+      "sha256": "ec2d64e39dc6ced98a8123fce02327c9a6e01b55761758eb3473df438f720cfb",
+      "bytes": 4047
+    },
+    {
+      "path": "raw/system/C1-D/capture.create/same-second-file-capture-overwrite/test_same_second_file_capture_overwrite.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/capture.create/same-second-file-capture-overwrite/test_same_second_file_capture_overwrite.py",
+      "sha256": "6b9643b6a6ff554da6d4272a4a446c66e6ed283582065e55a9d4e8c3b544a54b",
+      "bytes": 3295
+    },
+    {
+      "path": "raw/system/C1-D/material.context/zero-limit-widened/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/material.context/zero-limit-widened/finding.md",
+      "sha256": "9114f804ed1643baa72859585fbba36386898c8a63d7d2a96a8a737e3d3e9f92",
+      "bytes": 2749
+    },
+    {
+      "path": "raw/system/C1-D/material.context/zero-limit-widened/test_zero_limit_widened.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-D/material.context/zero-limit-widened/test_zero_limit_widened.py",
+      "sha256": "5a8cc2630969e5f02043eebfa206e0f67bdaec7fb26d3a36564128b22bd9555c",
+      "bytes": 3113
+    },
+    {
+      "path": "raw/system/C1-E/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/CLAUDE-VERDICT.md",
+      "sha256": "4addb6139b0897e353accf30a34bd4797b2c46158c27f879d49a3eba5cde9759",
+      "bytes": 3262
+    },
+    {
+      "path": "raw/system/C1-E/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/REPORT.md",
+      "sha256": "419d64171ee5d5822003c1d4d4e5079e5a5fd8f11ff03d6b71b9270d325c64c6",
+      "bytes": 9505
+    },
+    {
+      "path": "raw/system/C1-E/backup.manifest/symlinked-subtree-silent-omit/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/backup.manifest/symlinked-subtree-silent-omit/finding.md",
+      "sha256": "0c035bee284cb06401a0f87830ad3536ad14d5015baf3519846d1e00d43f900b",
+      "bytes": 3714
+    },
+    {
+      "path": "raw/system/C1-E/backup.manifest/symlinked-subtree-silent-omit/test_symlinked_subtree_silent_omit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/backup.manifest/symlinked-subtree-silent-omit/test_symlinked_subtree_silent_omit.py",
+      "sha256": "ed7ad04de8f0e6ca8221d9dd5fa2d927268719d9e4650f76582d169ad7a2155c",
+      "bytes": 3049
+    },
+    {
+      "path": "raw/system/C1-E/coordination.section.revise/whole-document-reflow/finding.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/coordination.section.revise/whole-document-reflow/finding.md",
+      "sha256": "ac0b6edb64da935a24d465333c08e3e3e00de9be5f7791afa6663e1b244bab25",
+      "bytes": 3058
+    },
+    {
+      "path": "raw/system/C1-E/coordination.section.revise/whole-document-reflow/test_whole_document_reflow.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-E/coordination.section.revise/whole-document-reflow/test_whole_document_reflow.py",
+      "sha256": "6a10755b6f92a1bc9b2f602bac471704ed3af02f02ca72630fdae430ae2ea2ca",
+      "bytes": 2260
+    },
+    {
+      "path": "raw/system/C1-VERIFY.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C1-VERIFY.md",
+      "sha256": "d3676803c8299c7803f0abb62db50bc3017d4f442478dd03e30e6c8fdd3b09cc",
+      "bytes": 17708
+    },
+    {
+      "path": "raw/system/C2/RECHECK.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/RECHECK.md",
+      "sha256": "2cc4020ec321fa638ce79d0e06e6c7a493c6c75c2dcf0349bebafebfcabe964c",
+      "bytes": 9427
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/CLAUDE-VERDICT.md",
+      "sha256": "1f148b0dd8c5401525d4691f170b486bf0788b46b950ca231fedbb127a5b26a9",
+      "bytes": 2603
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/PACKAGES.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/PACKAGES.md",
+      "sha256": "65b848e096e6ac971aa6bfd202b7f9d66d9d7d5cb47f9b24aedbb9f819fe4dcf",
+      "bytes": 10595
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/REPORTS-INDEX.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/REPORTS-INDEX.md",
+      "sha256": "a92ad5d619ee1136e4ac3acb0c369b92948ae6f272675dd79b67a54fb6ec4333",
+      "bytes": 3134
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/VERIFICATION-LOG.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/VERIFICATION-LOG.md",
+      "sha256": "30d41251e8a5cd14d7a53fd3e9929f133f62e7f5da3dcc77e320c367d4eb9b52",
+      "bytes": 19222
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/collected.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/collected.json",
+      "sha256": "841e8f302c8fb3e81ed514ffd80a9110fe2667e956e2494f66036ebd4b73bb6c",
+      "bytes": 552589
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/check-git-f1-full-study-map.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/check-git-f1-full-study-map.json",
+      "sha256": "919bc2f2f8e89c475deaf06185988a5ccf3b7d362be33c920791cb0bfe0d1638",
+      "bytes": 10057
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/check-git-f1-progit-locator.err",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/check-git-f1-progit-locator.err",
+      "sha256": "85b7ae8209932b0365ed155315ae03b59a49f0f1040a7bdcf16905fd90652a7b",
+      "bytes": 376
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/check-polars-f1-notebook-attribution.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/check-polars-f1-notebook-attribution.json",
+      "sha256": "e4a61f85a5565fb9fa27a6a7e710370d07c0f41f83e85a5c99ec7ad76879107c",
+      "bytes": 4227
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/coverage-audit-l2-17.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/coverage-audit-l2-17.md",
+      "sha256": "9128a69d20d8f1bd47395035541cbeaf8f824a2d90df71e9acebd9582b1cb6ef",
+      "bytes": 9683
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/package-git-f1-full-study-map.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/package-git-f1-full-study-map.yaml",
+      "sha256": "8b9ccc2562e9948a9f409e2d3ff59e67512cf7ded6f035d740e916f17325d818",
+      "bytes": 77271
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/package-git-f1-progit-locator.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/package-git-f1-progit-locator.yaml",
+      "sha256": "1cf3708da573511ec64c97e49f7c1522a23e1d5ceea7da24153425d56cd6ade8",
+      "bytes": 4109
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/packages/package-polars-f1-notebook-attribution.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/packages/package-polars-f1-notebook-attribution.yaml",
+      "sha256": "00e015e4391831aeafe653d4301fad45b4b24ba06415b45a50aec0920cad4fcb",
+      "bytes": 14179
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/per-module-stats.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/per-module-stats.json",
+      "sha256": "b430ec0ceb7baa62efa8ee9856e4a6dc6bb38e19950f9a6b3365770bf151da55",
+      "bytes": 1203
+    },
+    {
+      "path": "raw/system/C2/_job-modules-evidence/scripts/audit_checks.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/_job-modules-evidence/scripts/audit_checks.py",
+      "sha256": "b7ae488138fa1b6a46e051d49c4a08e19065e4f1b0137d48a626b91d7f66172b",
+      "bytes": 3728
+    },
+    {
+      "path": "raw/system/C2/module-foundation-ml-math-bridges/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-foundation-ml-math-bridges/CLAUDE-VERDICT.md",
+      "sha256": "0faa2988f2a9e356cdb8ddcc078c091f4d4b30610cd766a3d59f8e5d52c84852",
+      "bytes": 744
+    },
+    {
+      "path": "raw/system/C2/module-foundation-ml-math-bridges/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-foundation-ml-math-bridges/REPORT.md",
+      "sha256": "0e43ebc8991b9f6cdbc4156266587bf9700fed758a25733f68c3ce839308decb",
+      "bytes": 6290
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/CLAUDE-VERDICT.md",
+      "sha256": "d2d75edab4922c278ead29839cdaead6275b5a627df1a6d72a2b85d89561a1e3",
+      "bytes": 4059
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/PACKAGES.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/PACKAGES.md",
+      "sha256": "64629647c4f84985315f3c1c106569fba8dea8d7bf77986531538b83700f4670",
+      "bytes": 8738
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/REPORT.md",
+      "sha256": "a00fd9340c51a9e1eb53d43eee7b4c3a9fcb5b976e4e53e56128b6bce933ee2c",
+      "bytes": 13168
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/check-f1-printed-page-anchors.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/check-f1-printed-page-anchors.json",
+      "sha256": "953aba4a5fe62f6fcd4a159e9be028b5648320117dfd52573fc6427c8e1a132c",
+      "bytes": 5425
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/check-f1f2-combined.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/check-f1f2-combined.json",
+      "sha256": "6a3c31584429d5f938fe0272dc1e50fc3b498b1b6239ffd761780d142d4474e9",
+      "bytes": 5415
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/check-f2-bind-exam-prep-rows.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/check-f2-bind-exam-prep-rows.json",
+      "sha256": "5649de6e7573655d3251ee47da2fc2d7a9f732af8955795dfbf93c6f47e89b5e",
+      "bytes": 5424
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/coverage-audit-l2-15.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/coverage-audit-l2-15.md",
+      "sha256": "4d299bfbe28be589e383bc6fef80487b787daf6627af5ed25b3996521feb8876",
+      "bytes": 5223
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/package-f1-printed-page-anchors.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/package-f1-printed-page-anchors.yaml",
+      "sha256": "985053c6ffe95013462251dd622f17d22f226e89c276730f52540cd4278bd573",
+      "bytes": 8026
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/package-f1f2-combined.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/package-f1f2-combined.yaml",
+      "sha256": "9f082c3f06626d44359e61f7ff56eab6fe9e2c6ef5b4bd73069e97e9ddbc51af",
+      "bytes": 17136
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/packages/package-f2-bind-exam-prep-rows.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/packages/package-f2-bind-exam-prep-rows.yaml",
+      "sha256": "80d8302593553e08372c6c0a1f645fdff5aecd9f5e9178cd50269f8a5cd8586a",
+      "bytes": 16928
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/c2_resources_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/c2_resources_audit.py",
+      "sha256": "2017fbcc06f1cf81d399478e14852d7ee4ea041ba4bddb4b7469df72ade31241",
+      "bytes": 6793
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/c2_route_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/c2_route_audit.py",
+      "sha256": "72201c5f296504488dcd8e1cee6a9acc3810412700b14547a6e081f9b2602666",
+      "bytes": 7945
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/c2_sections_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/c2_sections_audit.py",
+      "sha256": "f35eb95e92c03480b97804fc66f9a0bab64fe8b5f8dae1b38f98e0653f4bf6b1",
+      "bytes": 6890
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/resources_findings.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/resources_findings.json",
+      "sha256": "e393c664978aa77bfbb08edb8de9e12fa0e0414215da5771af25be0b1fbe06db",
+      "bytes": 11883
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/route_findings.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/route_findings.json",
+      "sha256": "382094053c01e10c0e77cf695d4f2c77d22066812430473d92400e99c82fe31c",
+      "bytes": 581
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/scripts/sections_results.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/scripts/sections_results.json",
+      "sha256": "758355d2be251e73a6cc9109ea3d8cacc83e2db19426479c11f57f2dc32de939",
+      "bytes": 103202
+    },
+    {
+      "path": "raw/system/C2/module-hu-aml/validator-warnings-hu-aml.txt",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-aml/validator-warnings-hu-aml.txt",
+      "sha256": "1500265ee301628905f1c227dfb32f47b66dc92372ebe6608264f1778db24965",
+      "bytes": 13329
+    },
+    {
+      "path": "raw/system/C2/module-hu-betriebssysteme/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-betriebssysteme/CLAUDE-VERDICT.md",
+      "sha256": "e8d9240c76ffb961636994beef66c6ceaaf45cfd8802089524b86df44476dca8",
+      "bytes": 1340
+    },
+    {
+      "path": "raw/system/C2/module-hu-betriebssysteme/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-betriebssysteme/REPORT.md",
+      "sha256": "2e925e918cdb93a232844d0a071c1d001e177ecedfc880e27e7a9ffaab518f52",
+      "bytes": 11183
+    },
+    {
+      "path": "raw/system/C2/module-hu-betriebssysteme/scripts/02_structure-page-text.txt",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-betriebssysteme/scripts/02_structure-page-text.txt",
+      "sha256": "72a7abd7f2f999ea377340cbe89d0477ff4d247aa19df56cb7d70c27c0265efc",
+      "bytes": 22277
+    },
+    {
+      "path": "raw/system/C2/module-hu-betriebssysteme/scripts/audit-abcd-results.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-betriebssysteme/scripts/audit-abcd-results.json",
+      "sha256": "15c38eeb88d50cf7341d6d960ce3143573a4148569c3620789a0a040b021f6a5",
+      "bytes": 6242
+    },
+    {
+      "path": "raw/system/C2/module-hu-betriebssysteme/scripts/audit_abcd.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-betriebssysteme/scripts/audit_abcd.py",
+      "sha256": "20c8b81d10721c5df81594b1b3fdb26b4c0224bd50de0cae191dcd5a14c39006",
+      "bytes": 8342
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/CLAUDE-VERDICT.md",
+      "sha256": "7a90fd3d9b6693d5801a79bd73e9b0d0e0f2134f569dc7fa5074776ed51dbebe",
+      "bytes": 1233
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/REPORT.md",
+      "sha256": "e74ecd22cd9841f9bafb654cefd1e13c95fa14ca373be564fcdbd3369b668c12",
+      "bytes": 11276
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/scripts/audit-abcd-results.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/scripts/audit-abcd-results.json",
+      "sha256": "f3936c1fc1ea8727e2cf913481bd49b504858d3aaea1125a79f4094ef3cfa0ed",
+      "bytes": 44730
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/scripts/audit-stderr.txt",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/scripts/audit-stderr.txt",
+      "sha256": "f24a054c3c17cf3f9a8eca6736c89998e852d0218942facb5f4b7eaba89f2e46",
+      "bytes": 450293
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/scripts/audit-stdout.txt",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/scripts/audit-stdout.txt",
+      "sha256": "41d5c6411696a170a0b00bee3f5d85d25096175b87650bfec29b10b0f7896ea8",
+      "bytes": 12852
+    },
+    {
+      "path": "raw/system/C2/module-hu-icop/scripts/audit_abcd.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-icop/scripts/audit_abcd.py",
+      "sha256": "dd1dd2fd7463efc44c846125c834b0fc0ec51836cb4f09953b1490b220f93b85",
+      "bytes": 18588
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/CLAUDE-VERDICT.md",
+      "sha256": "f38d22ba14b80938a12856766f84797dc44c4324277bd576b9754c1488c8f4e9",
+      "bytes": 3857
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/PACKAGES.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/PACKAGES.md",
+      "sha256": "51fc22b933085c55531993aabca13276870f8277641f628f0ea9e1928f8de635",
+      "bytes": 11083
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/RECHECK-80.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/RECHECK-80.md",
+      "sha256": "5dc0ee03ce97b3aae4d865a48cd191e90e831f4cf34b76d1ef7e33704413f929",
+      "bytes": 13851
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/REPORT.md",
+      "sha256": "91feed47c37592726be88f4f27fd7780c6d421dbf71c87a5037d1c33e01a481d",
+      "bytes": 12818
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p1-binding-2026-10-25.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p1-binding-2026-10-25.md",
+      "sha256": "4ea60a4140be5079d67d4bbd9a9352fd8add5ccdfaaa59525095e244d5edb7d3",
+      "bytes": 3612
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p2-aml-l09-2026-10-25.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p2-aml-l09-2026-10-25.md",
+      "sha256": "edd242e7b1faed3739adc5c550b8afb6cc57dad3aad45754e589ec864d49e8dc",
+      "bytes": 2919
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p3-ingmath2-2026-10-25.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p3-ingmath2-2026-10-25.md",
+      "sha256": "f21aa8acb5f100bbb3a1cd18d2a856b1e4c41868956ac6d793e836fdcd6301e2",
+      "bytes": 3245
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p4-rehearsal-2026-10-25.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/audits/audit-p4-rehearsal-2026-10-25.md",
+      "sha256": "5fdc2119daa893c03426f9e4a224c7be2cbba9192fd54dda169b197e23708e73",
+      "bytes": 2620
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/audits/build_packages.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/audits/build_packages.py",
+      "sha256": "fd2b456c5f56320bc69afc48de02450ea522e9eaca10df8aef4d020a892f5c3d",
+      "bytes": 27362
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/p1-check-report.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/p1-check-report.json",
+      "sha256": "1d4733b6c6f7c69d0e6e8d4f7d3b148e21c9b14c19c2611725d5678b604818a1",
+      "bytes": 30592
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/p2-check-report.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/p2-check-report.json",
+      "sha256": "988d2c2a520b0261d314968284c1b6ad560867a8c219fd8acee5f7c3b3b6dd55",
+      "bytes": 3548
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/p3-check-report.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/p3-check-report.json",
+      "sha256": "8b9aeab907cc4cb91b491ee3adc66ee160a4e69de2364b1d63611251b252a945",
+      "bytes": 5127
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/p4-check-report.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/p4-check-report.json",
+      "sha256": "e51422a948c0cadbe2e2d43c3aa4abd2839de3f70996e28bf2d2048625280f3c",
+      "bytes": 5412
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/package-p1-ch03-07-binding.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/package-p1-ch03-07-binding.yaml",
+      "sha256": "c1ef82d6daaf0f394741ffd1113d0932fa2da493d159e75a5d14381be6dc9170",
+      "bytes": 177821
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/package-p2-aml-l09-locator.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/package-p2-aml-l09-locator.yaml",
+      "sha256": "aeedc7e0fed28b079a5d5cbbcf6cb49f4079ecccd49e23aa3df5c24c8de74aa3",
+      "bytes": 744250
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/package-p3-ingmath2-pages.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/package-p3-ingmath2-pages.yaml",
+      "sha256": "2cfc4b25d384e9d3b2628e428d785fa9530fbacfd4239f0a0f1bd51a43d6160f",
+      "bytes": 745792
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/packages/package-p4-rehearsal-binding.yaml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/packages/package-p4-rehearsal-binding.yaml",
+      "sha256": "a9732cba4b2f3f08a17050cc2b460da3f0229d426b18995391fe5d1f8270e5e1",
+      "bytes": 14219
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/c2_claims_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/c2_claims_audit.py",
+      "sha256": "90ca40cdc0be25cccddfbb655a72f01f8430329bbd99a5438fcaa4dc5ca4d057",
+      "bytes": 9361
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/c2_pages_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/c2_pages_audit.py",
+      "sha256": "d6f51923de69b0344f019340d3318c969f6486710dae07fdba7ff527c9dd5c30",
+      "bytes": 8839
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/c2_recheck80_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/c2_recheck80_audit.py",
+      "sha256": "e190a7cb97b4de88888564f79ae0948908ab934683f9d9485f84c46ae8197f8c",
+      "bytes": 19413
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/c2_route_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/c2_route_audit.py",
+      "sha256": "0af93942fd03e25ca61ed55ef93a76eda82aedd746d3564282767695597a8020",
+      "bytes": 6726
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/c2_sections_audit.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/c2_sections_audit.py",
+      "sha256": "432a90fb4d0f793ec0c1a9584a9198573fff20dea165083d3d3a8dd75e8ad538",
+      "bytes": 6953
+    },
+    {
+      "path": "raw/system/C2/module-hu-m2-statistik-analysis/scripts/recheck80-results.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-hu-m2-statistik-analysis/scripts/recheck80-results.json",
+      "sha256": "cb6744e54f463220b941c510029474a7121e7f97f11e53a7dd21ec63d2220ede",
+      "bytes": 216251
+    },
+    {
+      "path": "raw/system/C2/module-job-engineering-tools/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-job-engineering-tools/REPORT.md",
+      "sha256": "5a1e6d3ea1e0e19c810e5c654f1e7e6faedbd81cea6208de25b0e175409a1162",
+      "bytes": 3852
+    },
+    {
+      "path": "raw/system/C2/module-job-git/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-job-git/REPORT.md",
+      "sha256": "aca8398c763bf365840655ccb0da702a3d90f4cd905de2895312af41ca410949",
+      "bytes": 4791
+    },
+    {
+      "path": "raw/system/C2/module-job-polars/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-job-polars/REPORT.md",
+      "sha256": "86bd4917bc7bee46a190162178b161749726e4b89434912d7d5a78af9273aebd",
+      "bytes": 8188
+    },
+    {
+      "path": "raw/system/C2/module-job-python-engineering/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-job-python-engineering/REPORT.md",
+      "sha256": "f583e82866f788995254f35b150e4563b1248fd47dbceaedb883467b24e9a51b",
+      "bytes": 4329
+    },
+    {
+      "path": "raw/system/C2/module-job-rust-engineering/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-job-rust-engineering/REPORT.md",
+      "sha256": "f863eaedfcdf2d060f1c9921168439ee66f1edd63570be0de1c5103213c59b08",
+      "bytes": 3907
+    },
+    {
+      "path": "raw/system/C2/module-project-bachelor-thesis/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-project-bachelor-thesis/CLAUDE-VERDICT.md",
+      "sha256": "6bde4504222ffbd3b0947cd5974d48ff5bf5b02fbbc61e727e5f2ea2ae10c0a1",
+      "bytes": 1147
+    },
+    {
+      "path": "raw/system/C2/module-project-bachelor-thesis/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-project-bachelor-thesis/REPORT.md",
+      "sha256": "332a0ad3000a10dc1222e521c030ac38f3532aac8edd0bab13b4cfd620f51a74",
+      "bytes": 7210
+    },
+    {
+      "path": "raw/system/C2/module-skill-python/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-skill-python/CLAUDE-VERDICT.md",
+      "sha256": "7a5406d18075971133875d6d58ece04bb24de0699b3c255fd072c74495c0dae7",
+      "bytes": 958
+    },
+    {
+      "path": "raw/system/C2/module-skill-python/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C2/module-skill-python/REPORT.md",
+      "sha256": "a879cc6d3692252bb4b5d1ed97ec75de34cbd0d227e714ca1ed91bb36aba11c0",
+      "bytes": 6285
+    },
+    {
+      "path": "raw/system/C3/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/CLAUDE-VERDICT.md",
+      "sha256": "65f7e5927c860396947b9aee42c3b1a36fe5bb5d8fb015ef7492ce4f6a649cae",
+      "bytes": 7811
+    },
+    {
+      "path": "raw/system/C3/FOLLOWUP.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/FOLLOWUP.md",
+      "sha256": "abf48ce06d08c86c94328432f59ecc294e123333c2f68b9fb70907e2fd8f7cb9",
+      "bytes": 14906
+    },
+    {
+      "path": "raw/system/C3/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/REPORT.md",
+      "sha256": "960aa7e48c4f91de56aa4911bb0cfb0b3f414fe4353bfda1eb74714f7695a0c9",
+      "bytes": 18978
+    },
+    {
+      "path": "raw/system/C3/make_shard_manifest.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/make_shard_manifest.py",
+      "sha256": "313b9d11799918b80688a1d6b1bb91eb9d64a7a3439687199103413cf5e0bd03",
+      "bytes": 5544
+    },
+    {
+      "path": "raw/system/C3/shard-manifest.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/shard-manifest.json",
+      "sha256": "fed5fecc34c6108a79f05e376299433e188ab03c084c875dab89e19c2f22eee7",
+      "bytes": 8028
+    },
+    {
+      "path": "raw/system/C3/unsharded-durations-40d8bb5.junit.xml",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C3/unsharded-durations-40d8bb5.junit.xml",
+      "sha256": "d8fd2442ddeb25b706bc6be0a7f2f57dba43e3c364d830aa8370cfd642db86f4",
+      "bytes": 1163700
+    },
+    {
+      "path": "raw/system/C5/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C5/CLAUDE-VERDICT.md",
+      "sha256": "1e5dde9c9731d04096239da20ad15200c34aeaa5ef7f58ed65ed46c0bf605049",
+      "bytes": 2280
+    },
+    {
+      "path": "raw/system/C5/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/C5/REPORT.md",
+      "sha256": "2c0a4334fbc5b8a70a3dd58ef33845fa7490ab89177de41f26605a02da4f9c5f",
+      "bytes": 17611
+    },
+    {
+      "path": "raw/system/CAMPAIGNS.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/CAMPAIGNS.md",
+      "sha256": "8a1a3fd95e417b3cd97453338f3619d4e9a896f141dabbf92bbdb1eccaa2a51b",
+      "bytes": 18409
+    },
+    {
+      "path": "raw/system/CONDUCTOR-HANDOFF.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/CONDUCTOR-HANDOFF.md",
+      "sha256": "ad56b99e9864e2fa5730f860f90901cbfadb4ae325b2a6d059fa2109d5bba275",
+      "bytes": 7037
+    },
+    {
+      "path": "raw/system/ISSUES-DRAFT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/ISSUES-DRAFT.md",
+      "sha256": "7e95322eb97665da418188a07ea87d8cea1643b856eea08c9e786114fff937fd",
+      "bytes": 8880
+    },
+    {
+      "path": "raw/system/L1-234-CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/L1-234-CLAUDE-VERDICT.md",
+      "sha256": "eba9852b9a496bde3d069817ae0a0b784bbb4ded4e303af476ce2777a9bf0ec0",
+      "bytes": 6563
+    },
+    {
+      "path": "raw/system/LANE-QUEUE.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/LANE-QUEUE.md",
+      "sha256": "0c59de280d97790c7b9f888be4eb40607231bc061da6e903e177b1a382bb0075",
+      "bytes": 3111
+    },
+    {
+      "path": "raw/system/LG-1/CLAUDE-VERDICT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/LG-1/CLAUDE-VERDICT.md",
+      "sha256": "8f9ea676453b82239f8dcf72b9ddbd85737d2bd1d2a5bed3fedc1eb101c132ef",
+      "bytes": 2648
+    },
+    {
+      "path": "raw/system/MORNING.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/MORNING.md",
+      "sha256": "833c9452972768262fc4426b2a94ab60263a3045263a3bab6758dfb7840b45fd",
+      "bytes": 8310
+    },
+    {
+      "path": "raw/system/ORCHESTRATOR-STATE.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/ORCHESTRATOR-STATE.md",
+      "sha256": "0051e3698d9afd7b7ec1480178691700fef65dc643edf2b28b2c89a3c2b36b64",
+      "bytes": 35492
+    },
+    {
+      "path": "raw/system/ORCHESTRATOR.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/ORCHESTRATOR.md",
+      "sha256": "498b4b311d71980ce0602d8877b2de065020866d2318d3da94adbf07005377e5",
+      "bytes": 8206
+    },
+    {
+      "path": "raw/system/PROMPTS.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/PROMPTS.md",
+      "sha256": "d0d38afba9dc09eda88078bc3082022c01aaac2c78f03b0720a17e79c8f96964",
+      "bytes": 9851
+    },
+    {
+      "path": "raw/system/signals/L1-9.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/L1-9.done",
+      "sha256": "539747bf25a999e7bdd16fc760096442a7ef37a7c54dedf933b8364c5daf9f3e",
+      "bytes": 13
+    },
+    {
+      "path": "raw/system/signals/processed/L1-234-1654.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L1-234-1654.done",
+      "sha256": "31e1efbc4d0b2f40aeba6093a2799d17192bc4fa31ddc3091258fb682928cb62",
+      "bytes": 13
+    },
+    {
+      "path": "raw/system/signals/processed/L1-8-2315.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L1-8-2315.done",
+      "sha256": "be57192107b7dda65f7e4a6236f4a83adc242a448d57e39d1024a4d40f54e20e",
+      "bytes": 15
+    },
+    {
+      "path": "raw/system/signals/processed/L2-10-1423.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-10-1423.done",
+      "sha256": "a57a56019ebb894728248797f9cca0848cc4449c8b95c68436406a6a02e985eb",
+      "bytes": 44
+    },
+    {
+      "path": "raw/system/signals/processed/L2-11-1440.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-11-1440.done",
+      "sha256": "93b20f34c2dda62e66f03cbb1aec53126257bf0fe08a58747e9870d544457539",
+      "bytes": 47
+    },
+    {
+      "path": "raw/system/signals/processed/L2-12-1559.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-12-1559.done",
+      "sha256": "79d9f06e90d01362f03d1a6223b533a95fcfcf9a82157a46d3de6cec19b66976",
+      "bytes": 42
+    },
+    {
+      "path": "raw/system/signals/processed/L2-13-1608.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-13-1608.done",
+      "sha256": "d49dbbae2b518e6f990aa9d7034c201dfec72eaa507033d11aebd4bc6c58a628",
+      "bytes": 33
+    },
+    {
+      "path": "raw/system/signals/processed/L2-14-2059.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-14-2059.done",
+      "sha256": "b91058ef03fc703b621d9529351c47651b2e3c043f2bff6adcdf56202e094472",
+      "bytes": 49
+    },
+    {
+      "path": "raw/system/signals/processed/L2-15-2234.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-15-2234.done",
+      "sha256": "bbe264647f8ffb09494fde0f8a1bc0790e0094273ec375b8633492d74a6b144f",
+      "bytes": 29
+    },
+    {
+      "path": "raw/system/signals/processed/L2-16-0042.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-16-0042.done",
+      "sha256": "ef01d289ead00f4abcdfa88fc61a838ad1b7c70b8953332a655a950e1caaae65",
+      "bytes": 47
+    },
+    {
+      "path": "raw/system/signals/processed/L2-17-2324.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-17-2324.done",
+      "sha256": "2c965b85aac8baf93032a2fb9454da6776d089b9356d9849f72e630ed9b7bdfe",
+      "bytes": 37
+    },
+    {
+      "path": "raw/system/signals/processed/L2-3-0444.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-3-0444.done",
+      "sha256": "83df5857ea12069adc660933869e8972938d9de5dd6ce9c2673b39a51be5d3e7",
+      "bytes": 15
+    },
+    {
+      "path": "raw/system/signals/processed/L2-4-0525.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-4-0525.done",
+      "sha256": "1f016c148ccfa392811fab199ea06535b2a4c3b9b044611510ee905de48bd14f",
+      "bytes": 15
+    },
+    {
+      "path": "raw/system/signals/processed/L2-5-0735.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-5-0735.done",
+      "sha256": "53987d5cb381ead3c430bea1adf0b0274665e08c3db349bb93aad65ee6a9d7e9",
+      "bytes": 15
+    },
+    {
+      "path": "raw/system/signals/processed/L2-6-0758.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-6-0758.done",
+      "sha256": "d7db324c0136f4791b34aa978fb353850b4f4e4195e1ae1025ecb5f90408897f",
+      "bytes": 15
+    },
+    {
+      "path": "raw/system/signals/processed/L2-7-0829.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-7-0829.done",
+      "sha256": "250d51c4176b5b977a73dffcc4cddd5ce30a700441202d7a097ebefb20c8c7e9",
+      "bytes": 27
+    },
+    {
+      "path": "raw/system/signals/processed/L2-8-1330.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-8-1330.done",
+      "sha256": "9aaa9a5b9ddc266e2cbbb8bfbb246156e710aa4e30cca3f705a0c59e1c900c68",
+      "bytes": 39
+    },
+    {
+      "path": "raw/system/signals/processed/L2-9-1406.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/signals/processed/L2-9-1406.done",
+      "sha256": "625a370322fa2868dac1373b7c9246d2d5112616296b14e4310800a93f6f4ea7",
+      "bytes": 28
+    },
+    {
+      "path": "raw/system/wait-for-signal-or-unlock.sh",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/wait-for-signal-or-unlock.sh",
+      "sha256": "037cff9436b3b5d46eb2b0eabda0eb602f4f73f3e1b1ea40a8e317921832cf98",
+      "bytes": 802
+    },
+    {
+      "path": "raw/system/wait-for-signal.sh",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-campaigns-2026-10-24/wait-for-signal.sh",
+      "sha256": "5f1626f5a83db3d498b728d4a2aded1ee47a1a8bfa2e59c6a298008f77f2adf1",
+      "bytes": 682
+    },
+    {
+      "path": "raw/knowledge/CAMPAIGNS.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/CAMPAIGNS.md",
+      "sha256": "23d6bed431e1cce1a9f11de125daa68daed2cba3cfb1a551c600be3d5d631d34",
+      "bytes": 13233
+    },
+    {
+      "path": "raw/knowledge/K1/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/REPORT.md",
+      "sha256": "10f0f5fd5db48af2deb0fe4a2c59417f205ac1677a495ac12e70a598d9f67ed2",
+      "bytes": 11683
+    },
+    {
+      "path": "raw/knowledge/K1/logs/original-focused-tests-after-probes.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/original-focused-tests-after-probes.out",
+      "sha256": "d859a1e1c0d99ecb92b2f87c5a56e9cccf97446f0ad530c5f6bca4c2f4b34e7a",
+      "bytes": 550
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_1_edge_evidence.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_1_edge_evidence.out",
+      "sha256": "586702c7f6bef3250cbe42b04cb39d2f85133187b57503393f6c35d2ccefc9ec",
+      "bytes": 955
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_2_no_inferred_edges.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_2_no_inferred_edges.out",
+      "sha256": "0e09e9a1fc4550b0c49d7d49f6cd7a62bf30cc04e527d0495d8af46a478b0f4a",
+      "bytes": 917
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_3_index_pivots.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_3_index_pivots.out",
+      "sha256": "6b8b648243938f53e5a89749c846a59f7f15795aa5d6f3294396a3f0cfeb6102",
+      "bytes": 821
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_4_prereq_cycles.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_4_prereq_cycles.out",
+      "sha256": "d8ef28cdfa2f683455b32277404dbdc8ef41ad91cb96c29051bc67ac1404576d",
+      "bytes": 1179
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_5_canvas_direction.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_5_canvas_direction.out",
+      "sha256": "4bf28d9b1f1117da71370e2bb84a9220d2362bf89901a40924d35d130e097da7",
+      "bytes": 1014
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_6_domain_atlas.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_6_domain_atlas.out",
+      "sha256": "87b736dd85d48a63a3e740d1e4ddb04e8e53ed6686cda81e3a5edb6f4df5b1f2",
+      "bytes": 932
+    },
+    {
+      "path": "raw/knowledge/K1/logs/test_k1_7_alias_resolution.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/logs/test_k1_7_alias_resolution.out",
+      "sha256": "29dfb602bd291f7b08cef534fd8fc7e1eaf4bce8f246f7951e46cb63e61a923a",
+      "bytes": 1028
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_1_edge_evidence.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_1_edge_evidence.py",
+      "sha256": "4ff5a614e935a686a0de5c27ff0b2d1dc59590e957508a9e73ac34f568fda433",
+      "bytes": 4785
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_2_no_inferred_edges.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_2_no_inferred_edges.py",
+      "sha256": "76fc6cd62a3caa13a300879368fa25f448e41bbceadbfc1d3145e8d4880c6382",
+      "bytes": 5830
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_3_index_pivots.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_3_index_pivots.py",
+      "sha256": "79034eeea1f4d6f9d8587f2b9d7becda26cb5e9534ddfe5bcc0d22eeab1b60a0",
+      "bytes": 4892
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_4_prereq_cycles.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_4_prereq_cycles.py",
+      "sha256": "fdbf2d732afa10c7c09f9118a9675b5c95a3eadde05790cbbbaf638571627123",
+      "bytes": 3996
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_5_canvas_direction.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_5_canvas_direction.py",
+      "sha256": "2982dcc48f7caf397d6fb8d76170e265ad6de4e3d70fce5f2f17931d53983b12",
+      "bytes": 3419
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_6_domain_atlas.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_6_domain_atlas.py",
+      "sha256": "6defe92cf17a162e6e3e5fa5a57bf0b7582d2fb9f6ae9c7bf08191cc296dff91",
+      "bytes": 4504
+    },
+    {
+      "path": "raw/knowledge/K1/probes/test_k1_7_alias_resolution.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K1/probes/test_k1_7_alias_resolution.py",
+      "sha256": "11eb7e7bf0612f5025616490265a5bb00e43ab79b86d8bbdc8dbbd42374f952b",
+      "bytes": 6711
+    },
+    {
+      "path": "raw/knowledge/K2/COLDSTART.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/COLDSTART.md",
+      "sha256": "a03120e39040a1140340a58e4fefa557856437ebfc8d4131b02f0da54dc26493",
+      "bytes": 15376
+    },
+    {
+      "path": "raw/knowledge/K2/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/REPORT.md",
+      "sha256": "cbb1fda21ade1112366602c7398457b66c5f043cfa9b0a07ff0a1b786739cf6c",
+      "bytes": 11662
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-atlas-sweep.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-atlas-sweep.json",
+      "sha256": "13c020211448cb54f73aea48b72d9d9663b325e84d6a92b2ca63fec72bb00e96",
+      "bytes": 58078
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-mockexam-targets.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-mockexam-targets.json",
+      "sha256": "c2de23f048cedac08074899cb9a45a22e9bde1bdb1682620b87a6c4addd0017e",
+      "bytes": 200
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-note-coverage.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-note-coverage.json",
+      "sha256": "81effdd745accec3b8d3639d68e152771984659bd9f54ae6d56ec5449f9817c4",
+      "bytes": 8360
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-related-sweep.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-related-sweep.json",
+      "sha256": "19793e27f84a11ef2e890de330aafdf119aadf84f2860ab83080867f75473f0a",
+      "bytes": 39122
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-relations-dedup.json",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-relations-dedup.json",
+      "sha256": "a54022752d4accabc30d9e523c299681365137c7df1ceb7e8f5f64f1ad9a3666",
+      "bytes": 21626
+    },
+    {
+      "path": "raw/knowledge/K2/logs/k2-unit-inspect.txt",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2/logs/k2-unit-inspect.txt",
+      "sha256": "c2c6dc4481620eb8f3dd87cb7e9b3c2fbda6ec6eb997be179267315c08acfe9b",
+      "bytes": 18769
+    },
+    {
+      "path": "raw/knowledge/K2-COLDSTART.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K2-COLDSTART.md",
+      "sha256": "fc063951e76ccf8cf39346e8c094871bb32ffc52de4e0647726cf266f5e49a3b",
+      "bytes": 2461
+    },
+    {
+      "path": "raw/knowledge/K3/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/REPORT.md",
+      "sha256": "bcc4b189a094413c0a968eaad2256927ce40cb936e0a73287cc22036ce794a44",
+      "bytes": 17531
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-authoring.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-authoring.out",
+      "sha256": "e38cf5748b1bdccfabf384a96ea993a3d50fa842d8abceaa40d7cf62a5e48761",
+      "bytes": 105
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-direction-inspector.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-direction-inspector.out",
+      "sha256": "290edff8d294a07854ac5c2cf0b038a2c2976f3895e5d693a2bc4017d4bc5e9e",
+      "bytes": 120
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-focused-graph.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-focused-graph.out",
+      "sha256": "9a37fa4bfdb868e796bea4d4b3c7c7db06c546896044e654f50022aea26d7543",
+      "bytes": 112
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-module-lenses.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-module-lenses.out",
+      "sha256": "3a846954002bc011c1c928bb2db56279abf51afe7c08d7493c596b9a982e2491",
+      "bytes": 112
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-questions.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-questions.out",
+      "sha256": "1b9fd1c464035184ddac2c992068d19b1941f3a03cc82a747e0316cf40b32ff6",
+      "bytes": 111
+    },
+    {
+      "path": "raw/knowledge/K3/logs/k3-route-state.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/k3-route-state.out",
+      "sha256": "ab7e2f29f045754fc3f8fdc54eebba1037415b33b07a8012ca81101b25d493c2",
+      "bytes": 120
+    },
+    {
+      "path": "raw/knowledge/K3/logs/test-atlas-graph.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K3/logs/test-atlas-graph.out",
+      "sha256": "3d9b9e28a8b2c3fb1225dd0099618a546e3a8f91225e107f399beaefdb046d3c",
+      "bytes": 84
+    },
+    {
+      "path": "raw/knowledge/K4/REPORT.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/REPORT.md",
+      "sha256": "9c506d7fd18c88890384319ca804fb9e8d4fc4a29f5d5a6b888112e51450f9df",
+      "bytes": 16697
+    },
+    {
+      "path": "raw/knowledge/K4/logs/original-focused-tests-after-probes.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/original-focused-tests-after-probes.out",
+      "sha256": "2f084cd025574ba45dce01820cbfd5be155dca87e3c51a3c14b75476d47b6823",
+      "bytes": 377
+    },
+    {
+      "path": "raw/knowledge/K4/logs/refusal-bodies-scratch.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/refusal-bodies-scratch.out",
+      "sha256": "29a8380e16787e522667b58eeed77059b8d6835453e90f56a17591a4791df60b",
+      "bytes": 637
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_1_stale_old_row.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_1_stale_old_row.out",
+      "sha256": "4fa65eb98833f377b3cf076168d6d5214b45e8148b83a90311814ee5ac8edc5c",
+      "bytes": 777
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_2_replace_cycle.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_2_replace_cycle.out",
+      "sha256": "6d8ecfa514209246471f321fef6144c1128642c56189151ce6079dd81917e792",
+      "bytes": 872
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_3_operation_budget.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_3_operation_budget.out",
+      "sha256": "b8529cc839f00ad282d52a7026b00daa83d5a1c4371c55bbc2bf32288fd961fc",
+      "bytes": 845
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_4_alias_endpoints.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_4_alias_endpoints.out",
+      "sha256": "ed7b67e27c0219a872ea35b618891a96ed92ba040e8c2b19b11d3a961baba285",
+      "bytes": 755
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_5_two_sessions.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_5_two_sessions.out",
+      "sha256": "70629865da0f455ad1aa7e3b03f6ddcee1b6d33dbca4fe38fa440d432788ffd3",
+      "bytes": 771
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_6_question_lifecycle.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_6_question_lifecycle.out",
+      "sha256": "6207adf6d4544f150f33027a0b86a387db4433b380e4175b176adfe6d973bac0",
+      "bytes": 1020
+    },
+    {
+      "path": "raw/knowledge/K4/logs/test_k4_7_note_concept_link.out",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/logs/test_k4_7_note_concept_link.out",
+      "sha256": "d97b60d9f426b66de4c395df91ab00ab04ec07bb9df1350c16b754720dc71dc5",
+      "bytes": 787
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_1_stale_old_row.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_1_stale_old_row.py",
+      "sha256": "6b60dea20faa4c66bcad4b81988e6b70a7ad9593bc44fd0e650c4f95dd56166b",
+      "bytes": 2719
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_2_replace_cycle.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_2_replace_cycle.py",
+      "sha256": "987553edf396360f4e7bfb1816d04fe029c022507e6096d90d39be355475ba4a",
+      "bytes": 4800
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_3_operation_budget.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_3_operation_budget.py",
+      "sha256": "ab331570f3284c8081aa3c55cbadee163b7578b166b3ae76dc1ac432d83152ab",
+      "bytes": 4540
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_4_alias_endpoints.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_4_alias_endpoints.py",
+      "sha256": "c3ba6f1c02dd9515ccfdd700a5452f6aaa08ec2c20f8d325ae0c1289c4696565",
+      "bytes": 3481
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_5_two_sessions.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_5_two_sessions.py",
+      "sha256": "e8aaee3d265c07fb5167b4fdc8b4b9c3c5597ba841e7a3fd7550bbad157380dd",
+      "bytes": 5255
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_6_question_lifecycle.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_6_question_lifecycle.py",
+      "sha256": "ed1aa2ccc43f66228a4acec674e20d6c1cc00de3a3accabf7b34d60f6b57e55b",
+      "bytes": 6936
+    },
+    {
+      "path": "raw/knowledge/K4/probes/test_k4_7_note_concept_link.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/K4/probes/test_k4_7_note_concept_link.py",
+      "sha256": "6cff9a800ef9a03ebb525ed2619cdafa616a7ad5495ad21b0da701fe8942456a",
+      "bytes": 4058
+    },
+    {
+      "path": "raw/knowledge/PROMPTS.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/PROMPTS.md",
+      "sha256": "9180ee033a5e4b9f558a240e30691fe4c36afb1a4d7d8532887f662f5027b68d",
+      "bytes": 3698
+    },
+    {
+      "path": "raw/knowledge/STATUS.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/STATUS.md",
+      "sha256": "3c2f06eabd7aba0ea2a8044a0ca086b3b79941a7fd087e05fc27bf6da6f092c9",
+      "bytes": 2531
+    },
+    {
+      "path": "raw/knowledge/VERIFY/VERIFY.md",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/VERIFY/VERIFY.md",
+      "sha256": "7f14b87dfda005b30426420348f8ed7c7c63b65bf4509fe7941a387174ddfbf7",
+      "bytes": 7037
+    },
+    {
+      "path": "raw/knowledge/VERIFY/mutate.py",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/VERIFY/mutate.py",
+      "sha256": "72c6e2c238aaec82b4ee1d7fb062822e4875dfbbaf821b53e92d3f7b90d2a03e",
+      "bytes": 4101
+    },
+    {
+      "path": "raw/knowledge/signals/K1.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/signals/K1.done",
+      "sha256": "a8ee25c7928b3d59be3e041ac7c3f0fec6b77e102884620155fc15fef379c5c9",
+      "bytes": 13
+    },
+    {
+      "path": "raw/knowledge/signals/K2.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/signals/K2.done",
+      "sha256": "43ed4f0f7e29e8a902e12b6fa0c5c9832181d8f528a9b3b5f9a99135a1bc3a06",
+      "bytes": 13
+    },
+    {
+      "path": "raw/knowledge/signals/K3.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/signals/K3.done",
+      "sha256": "30ec55bf1ae74c61ad2f5a494030d42e43adf9b89e536b92ec6ec28ae50e29ef",
+      "bytes": 13
+    },
+    {
+      "path": "raw/knowledge/signals/K4.done",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/workbench/workbench/glm-knowledge-campaign/signals/K4.done",
+      "sha256": "6f402e408db352aaec2b90fb089bd49535c300f470ed3683391b1c8130a0c73c",
+      "bytes": 13
+    },
+    {
+      "path": "raw/verification/CAMPAIGN.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/CAMPAIGN.md",
+      "sha256": "03bab2e503f966eec8d7e07548defe4bb51c88ca7370893920efd2ef6c948d72",
+      "bytes": 10100
+    },
+    {
+      "path": "raw/verification/V1/REPORT.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/REPORT.md",
+      "sha256": "ada5f7d6f2a57ab0511de9e9f91b5e3d41a01330f6aed79d279ece4ef2c05205",
+      "bytes": 24692
+    },
+    {
+      "path": "raw/verification/V1/logs/counts.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/counts.log",
+      "sha256": "fd1c67b90560a6d0e7a55ce47bdcb75d0dd91085593b3bda22924ef8aa7dbe07",
+      "bytes": 267
+    },
+    {
+      "path": "raw/verification/V1/logs/nested-open.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/nested-open.log",
+      "sha256": "3328ff64b3ba64d3528fbab537e97857f7aa0da24e260435a7e0f31a9448d26b",
+      "bytes": 1985
+    },
+    {
+      "path": "raw/verification/V1/logs/paths.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/paths.log",
+      "sha256": "57ca92d42c4208095f870436ff6b741cb7a869c10244b8a79e255404cbc4b431",
+      "bytes": 1210
+    },
+    {
+      "path": "raw/verification/V1/logs/pytest-manifest-drift-code.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/pytest-manifest-drift-code.log",
+      "sha256": "c9d3a82e4687ca341e0309b8f3eff228aa5ea5b9277181abba82f0a832e2c909",
+      "bytes": 4602
+    },
+    {
+      "path": "raw/verification/V1/logs/pytest-record-schema-closure.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/pytest-record-schema-closure.log",
+      "sha256": "8f21d4d2865ad9af1c697bb9dd80df4b369ddd2235c559ff99adfe3c916dfa46",
+      "bytes": 1954
+    },
+    {
+      "path": "raw/verification/V1/logs/schema-strictness.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/logs/schema-strictness.log",
+      "sha256": "372a4b8300ac5b539f8dcbe671d6b55bd41a2a654e8bee98fe4351dcf94613f5",
+      "bytes": 54
+    },
+    {
+      "path": "raw/verification/V1/manifest-drift-code/finding.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/manifest-drift-code/finding.md",
+      "sha256": "e85a0483ccaf09bb3ae6c0c71ebb7cd3ce13513fcf63abb7a346c27fc87cbdc5",
+      "bytes": 2923
+    },
+    {
+      "path": "raw/verification/V1/manifest-drift-code/test_v1_manifest_drift_code.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/manifest-drift-code/test_v1_manifest_drift_code.py",
+      "sha256": "e8b025550446a70ec1cbe5ff24d7a8d124675b48a4d39a50d475bf0248931ba7",
+      "bytes": 2007
+    },
+    {
+      "path": "raw/verification/V1/probes/probe_counts.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/probes/probe_counts.py",
+      "sha256": "70f1a2922367a4f0e8c08eee41376c101ae1c9aa2a454872f1ca0a303e00402e",
+      "bytes": 1346
+    },
+    {
+      "path": "raw/verification/V1/probes/probe_nested_open.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/probes/probe_nested_open.py",
+      "sha256": "3c152a0592f2de564b87c2524d0fd7c70c9c316d700b4f896fe0d4367c9263ce",
+      "bytes": 2995
+    },
+    {
+      "path": "raw/verification/V1/probes/probe_paths.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/probes/probe_paths.py",
+      "sha256": "f3b8654fab0e2251068067a1c4206b3492e00bfd8312a7eac644c70c6abfea7e",
+      "bytes": 1670
+    },
+    {
+      "path": "raw/verification/V1/probes/probe_schema_strictness.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/probes/probe_schema_strictness.py",
+      "sha256": "c9c87e688bb431f466a041db8a905d947195eeb9d13fca96089fe4dd1112af97",
+      "bytes": 4376
+    },
+    {
+      "path": "raw/verification/V1/record-schema-closure-claim/finding.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/record-schema-closure-claim/finding.md",
+      "sha256": "eb8bb66eed518dca387dbde31dd5d65e25871b6d8f42ea6a2f43a6e4837908ca",
+      "bytes": 3330
+    },
+    {
+      "path": "raw/verification/V1/record-schema-closure-claim/test_v1_record_schema_closure.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V1/record-schema-closure-claim/test_v1_record_schema_closure.py",
+      "sha256": "5ecb5a2d934afd6084082d816e65c59c8275a211f4d6fa704d945f6bf5a8cdf3",
+      "bytes": 1820
+    },
+    {
+      "path": "raw/verification/V2/REPORT.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/REPORT.md",
+      "sha256": "3d0200bf962775a11e6593749e54fe087d6f55c233fe60f781c6d37cd33e7187",
+      "bytes": 9654
+    },
+    {
+      "path": "raw/verification/V2/logs/probe1-mount-all-views.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe1-mount-all-views.log",
+      "sha256": "54482d640bf8c5ab285027692e08efb2bc26de15f005aaa93a95b88264d09bf8",
+      "bytes": 1217
+    },
+    {
+      "path": "raw/verification/V2/logs/probe2-rule2-states.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe2-rule2-states.log",
+      "sha256": "a378813b015c88071ab568dcc8a6b79c2f4788dc2daf10214478b6a8856192f9",
+      "bytes": 4631
+    },
+    {
+      "path": "raw/verification/V2/logs/probe3-optional-fields.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe3-optional-fields.log",
+      "sha256": "89c639abb065f7c36bf7fc8800ee21382ae2b62c7ec7b88b0cd39ce6d002e27d",
+      "bytes": 918
+    },
+    {
+      "path": "raw/verification/V2/logs/probe4-accessibility.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe4-accessibility.log",
+      "sha256": "965bb2147e1992107cee74225957777ffc113ff70a41820cc882df5b27d944ba",
+      "bytes": 2268
+    },
+    {
+      "path": "raw/verification/V2/logs/probe5-home-rule13.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe5-home-rule13.log",
+      "sha256": "f2dab447b3964b0d366ea2bac9f51558998e66566e9c3d1f4ff7a4e07af73ae7",
+      "bytes": 1431
+    },
+    {
+      "path": "raw/verification/V2/logs/probe6-atlas-dom.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/logs/probe6-atlas-dom.log",
+      "sha256": "585dd6d2b3d68bbad73eb234bf6aa0d45772fdf89f82d898f22a50b4a6606789",
+      "bytes": 1185
+    },
+    {
+      "path": "raw/verification/V2/probes/common.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/common.js",
+      "sha256": "1e8fa250a722d5d071b678556253a22c3b5fdf1163209e49b0f261acab423767",
+      "bytes": 2507
+    },
+    {
+      "path": "raw/verification/V2/probes/probe1-mount-all-views.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe1-mount-all-views.js",
+      "sha256": "afa485f5c1f35b55338faf87f9ab215c9bfc9a05e7beab64c6e3b1f43de1cb0b",
+      "bytes": 4105
+    },
+    {
+      "path": "raw/verification/V2/probes/probe2-rule2-states.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe2-rule2-states.js",
+      "sha256": "acc2af18bd760057631ef8dd4571bd09e1aa7c48f2804a49cd8259a70964f564",
+      "bytes": 7638
+    },
+    {
+      "path": "raw/verification/V2/probes/probe3-optional-fields.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe3-optional-fields.js",
+      "sha256": "c7c985781db59ecd970ecf15eef779557a68445551c8f2fa6c3ab6c6c31dc9a6",
+      "bytes": 3798
+    },
+    {
+      "path": "raw/verification/V2/probes/probe4-accessibility.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe4-accessibility.js",
+      "sha256": "6f74fb90809636478c194948aecb1f861808c2c90d6287cf606d22a94eb9da65",
+      "bytes": 7421
+    },
+    {
+      "path": "raw/verification/V2/probes/probe5-home-rule13.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe5-home-rule13.js",
+      "sha256": "780db48043c958fce4383c0dfff74537120a67b9219a6d36741365a4cb431450",
+      "bytes": 5851
+    },
+    {
+      "path": "raw/verification/V2/probes/probe6-atlas-dom.js",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V2/probes/probe6-atlas-dom.js",
+      "sha256": "824d647f84928099d65445545bc5deeea24dae00773ba783b4e6b45b68a4c1bf",
+      "bytes": 5913
+    },
+    {
+      "path": "raw/verification/V3/REPORT.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/REPORT.md",
+      "sha256": "2d75abb27f259446f9d461e9ac0cb3225820153a54bb4b570ec17294033439d3",
+      "bytes": 10482
+    },
+    {
+      "path": "raw/verification/V3/logs/p1-pytest.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/logs/p1-pytest.log",
+      "sha256": "ed8e49fdbcb7f4d8639c92f312ca8f857495c1e6535285f90f3a3175ef2676d4",
+      "bytes": 98
+    },
+    {
+      "path": "raw/verification/V3/logs/p2-pytest.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/logs/p2-pytest.log",
+      "sha256": "4bd788fbcad8e8972da1ce949801dab03fbd19dd69d28195afc8dfbeda6d1f03",
+      "bytes": 98
+    },
+    {
+      "path": "raw/verification/V3/logs/p3-pytest.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/logs/p3-pytest.log",
+      "sha256": "51267f2b68aafe7c1d543ced8a0aeced151803a7bd0355cf1fe45f54a83e85e7",
+      "bytes": 98
+    },
+    {
+      "path": "raw/verification/V3/logs/p4-pytest.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/logs/p4-pytest.log",
+      "sha256": "4d5ca5958085b097f82c1a58a2c1ab5aea31a1944a5be67d9464b39eb01ccbfe",
+      "bytes": 98
+    },
+    {
+      "path": "raw/verification/V3/logs/p5-pytest.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/logs/p5-pytest.log",
+      "sha256": "3af68e453993c7a4f0ad8c931246fe8834e67d15262961e6b85d6dff699de512",
+      "bytes": 98
+    },
+    {
+      "path": "raw/verification/V3/probes/test_v3_probe_p1_pure.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/probes/test_v3_probe_p1_pure.py",
+      "sha256": "bee0c994d3e3675c7871f06b39f8ac6fec9b1c2a41fc828f22a979f2d81c9ec8",
+      "bytes": 4692
+    },
+    {
+      "path": "raw/verification/V3/probes/test_v3_probe_p2_readonly.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/probes/test_v3_probe_p2_readonly.py",
+      "sha256": "3fd0a49c4d906f4ca386050d9adad9ddea51046269e55960ebed452b70086c10",
+      "bytes": 4799
+    },
+    {
+      "path": "raw/verification/V3/probes/test_v3_probe_p3_faithful.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/probes/test_v3_probe_p3_faithful.py",
+      "sha256": "b508d11022b558bdbefb2ce9a5d93e5f244af50a74812c2aaef52dd9c7c235c9",
+      "bytes": 5469
+    },
+    {
+      "path": "raw/verification/V3/probes/test_v3_probe_p4_no_mastery.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/probes/test_v3_probe_p4_no_mastery.py",
+      "sha256": "72c173a56f52cf76c3918e05c4c50bc56f17fc78c9f2e0385c1aa4795d77ef1e",
+      "bytes": 4857
+    },
+    {
+      "path": "raw/verification/V3/probes/test_v3_probe_p5_session_order.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V3/probes/test_v3_probe_p5_session_order.py",
+      "sha256": "63f9a32f2818fe5f00f41d2cf50dcacb16959fd1293f83b7879c57db5749c342",
+      "bytes": 10678
+    },
+    {
+      "path": "raw/verification/V4/REPORT.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/REPORT.md",
+      "sha256": "2ef2997e33102fff74dc6af0c638b3a8ec8de64696d213a16ccc7c66e8d01d6c",
+      "bytes": 15136
+    },
+    {
+      "path": "raw/verification/V4/logs/probe-cases-final.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/logs/probe-cases-final.log",
+      "sha256": "804650d34db804176c22a19725e9dc815a46b6b25edd4f4b855e3ae75cf2eba1",
+      "bytes": 4251
+    },
+    {
+      "path": "raw/verification/V4/logs/probe-cases-full.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/logs/probe-cases-full.log",
+      "sha256": "db769ef2703610f41762836333aef936baeb50699079d5cc20f3ad540862cbba",
+      "bytes": 4251
+    },
+    {
+      "path": "raw/verification/V4/logs/pytest-v4-ai-gateway.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/logs/pytest-v4-ai-gateway.log",
+      "sha256": "42405c8a41807be517c0fe54e689d44c5deb38e588d6881b048778a1ce643598",
+      "bytes": 100
+    },
+    {
+      "path": "raw/verification/V4/probes/__pycache__/probe_cases.cpython-314.pyc",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/probes/__pycache__/probe_cases.cpython-314.pyc",
+      "sha256": "c1e14d1dc9c737f7b92b862a60f262fac2ce1ea63b5aa371f4f83d199eaa3381",
+      "bytes": 47986
+    },
+    {
+      "path": "raw/verification/V4/probes/__pycache__/probe_roundtrip.cpython-314.pyc",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/probes/__pycache__/probe_roundtrip.cpython-314.pyc",
+      "sha256": "db34d8b0b837789c6503f0bba6d4bbcfb2e66382ff3e7237fee78ee37865f18c",
+      "bytes": 15717
+    },
+    {
+      "path": "raw/verification/V4/probes/probe_cases.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/probes/probe_cases.py",
+      "sha256": "72e74f606978db38ac8e9c0595980ef3bc2d21c3dd116c1dc0ec7fd7f72bec74",
+      "bytes": 38292
+    },
+    {
+      "path": "raw/verification/V4/probes/probe_roundtrip.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/probes/probe_roundtrip.py",
+      "sha256": "1f4cc624499449c8f3f8479bd58b33e245b8252815c4d16b7d83035219dd2e2d",
+      "bytes": 9978
+    },
+    {
+      "path": "raw/verification/V4/probes/test_v4_ai_gateway.py",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V4/probes/test_v4_ai_gateway.py",
+      "sha256": "1ab65b3f9f2b6b42fc3e97ecd5e1fd034ad0127ae84b899eef7f05ee6362cd43",
+      "bytes": 39577
+    },
+    {
+      "path": "raw/verification/V5/REPORT.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/REPORT.md",
+      "sha256": "954ec171161935099c0611a5e3d080674c0b5319691bb2b3963fa35e40743de7",
+      "bytes": 18856
+    },
+    {
+      "path": "raw/verification/V5/findings/stage-plugin-not-a-script/finding.md",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/findings/stage-plugin-not-a-script/finding.md",
+      "sha256": "ad6b5eaf02a4e46e133d83f807043cb45eac250825d76b8292395fada079280a",
+      "bytes": 3167
+    },
+    {
+      "path": "raw/verification/V5/findings/stage-plugin-not-a-script/stage-plugin-probe.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/findings/stage-plugin-not-a-script/stage-plugin-probe.sh",
+      "sha256": "39704b9ab9dcafb7faf5c4aaa5e3dbaad78fadc20b64cc2b4607e1a13d25194c",
+      "bytes": 737
+    },
+    {
+      "path": "raw/verification/V5/logs/attach-verify.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attach-verify.json",
+      "sha256": "e2377fcfba3a51c33ccbc53dc4920916b7e1584f1f1b7004753820a00c00a9d6",
+      "bytes": 157
+    },
+    {
+      "path": "raw/verification/V5/logs/attack-5-attachments.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack-5-attachments.log",
+      "sha256": "8de5b114357a029cec331c8388c69783e70668f8e734aab4fc07f75f6dc069eb",
+      "bytes": 3477
+    },
+    {
+      "path": "raw/verification/V5/logs/attack-6-materials.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack-6-materials.log",
+      "sha256": "807b2053f73fc349dbbef0ef06e8948f261984956bb65684c4a41236cf5aaaa5",
+      "bytes": 2200
+    },
+    {
+      "path": "raw/verification/V5/logs/attack1-verify.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack1-verify.json",
+      "sha256": "a06b4b540ae0561c486f445260319b12e8032264c2cf3de0b06925a9c3c62265",
+      "bytes": 125
+    },
+    {
+      "path": "raw/verification/V5/logs/attack1b-verify.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack1b-verify.json",
+      "sha256": "fb355ce06bf563f6797d064e87e6cc2d676e0ac756cd01d787f1a7ceec7097d1",
+      "bytes": 231
+    },
+    {
+      "path": "raw/verification/V5/logs/attack2-verify-full.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack2-verify-full.json",
+      "sha256": "d02e32c7db479c6193de2746f211a98c49ee035c4e71a752b9dca0e870e13a96",
+      "bytes": 208
+    },
+    {
+      "path": "raw/verification/V5/logs/attack2-verify.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack2-verify.json",
+      "sha256": "058dfeab29aeddb364a4d79cdf6ea93fa3b96675d4d96d978af06dd7e01586d3",
+      "bytes": 114
+    },
+    {
+      "path": "raw/verification/V5/logs/attack3-verify.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack3-verify.json",
+      "sha256": "386e3f33e37d750bd9ba30fc4ebc5f51e91a7288ee11a7eabf30f48d24f64fb9",
+      "bytes": 117
+    },
+    {
+      "path": "raw/verification/V5/logs/attack4-checksums-only.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack4-checksums-only.json",
+      "sha256": "2b73a013ba16bca838b00a0ea27dd178eef1760c95d7796493c39c3b7c05a5a7",
+      "bytes": 39
+    },
+    {
+      "path": "raw/verification/V5/logs/attack4-full.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack4-full.json",
+      "sha256": "285823edbabbfb51a483ade8f6442ebe27b57e5d367433e1a991f66000c7d964",
+      "bytes": 6047
+    },
+    {
+      "path": "raw/verification/V5/logs/attack6-verify-a.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack6-verify-a.json",
+      "sha256": "c3b998bba1e84b06371eea7efac57fe51dfd18768cd016acd8e1d2ea47d1b6b4",
+      "bytes": 3376
+    },
+    {
+      "path": "raw/verification/V5/logs/attack6-verify-b.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack6-verify-b.json",
+      "sha256": "637d882c2af65212516422a40dd5aaa6b345831f0de740a74449c21ab59f26c1",
+      "bytes": 3184
+    },
+    {
+      "path": "raw/verification/V5/logs/attack6-verify-c.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attack6-verify-c.json",
+      "sha256": "d191a593237039ac976b1a2eeaf27aaab6ecfceae33f9e6f1328aff0955d2ac8",
+      "bytes": 3227
+    },
+    {
+      "path": "raw/verification/V5/logs/attacks-1-2-3.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/attacks-1-2-3.log",
+      "sha256": "11c5fbb3688a44bda029c53f4aeeb68f30c830f06bd330786ae1286e72f7ffca",
+      "bytes": 2584
+    },
+    {
+      "path": "raw/verification/V5/logs/phase1-fixture-drill.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/phase1-fixture-drill.log",
+      "sha256": "f60a292fa3d34c6a326486081e8dfc6fe3e6a7adabf262e3033f020cb1b61d85",
+      "bytes": 1868
+    },
+    {
+      "path": "raw/verification/V5/logs/phase2-clone-drill.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/phase2-clone-drill.log",
+      "sha256": "595db390717cb3caecba1bf905aecc7cd7a90729ac901e94522276a73935d3e5",
+      "bytes": 5555
+    },
+    {
+      "path": "raw/verification/V5/logs/scenario-refusals.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/scenario-refusals.log",
+      "sha256": "87361bc8a02e047231d32a50d8953e6855c44577abc11d6c578042207dcb7cf8",
+      "bytes": 1151
+    },
+    {
+      "path": "raw/verification/V5/logs/stage-plugin-missing-script.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/stage-plugin-missing-script.log",
+      "sha256": "302af0383c1ab9eb49b3498218e59be893ecdb5cd438966cb0e21f33ba5665c9",
+      "bytes": 245
+    },
+    {
+      "path": "raw/verification/V5/logs/stage-plugin-probe-output.log",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/stage-plugin-probe-output.log",
+      "sha256": "3f71b2728f9694dc4632db985b2c2764382aeb1b7200749b8d17090d5873d2d9",
+      "bytes": 508
+    },
+    {
+      "path": "raw/verification/V5/logs/verify-full-truly-unmounted.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/verify-full-truly-unmounted.json",
+      "sha256": "6dda16c812ae45cb9732ccf870cab6d4ed98189ad6b14b1a75337601ca377168",
+      "bytes": 3267
+    },
+    {
+      "path": "raw/verification/V5/logs/verify-full.json",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/logs/verify-full.json",
+      "sha256": "e94d1981a4669a6f436552008f28c74d36b17cb9d5175550102f9a68e09c10bf",
+      "bytes": 6091
+    },
+    {
+      "path": "raw/verification/V5/probes/attack5.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/probes/attack5.sh",
+      "sha256": "6906b8ab55692752b56f0effbab78a4d446647b3f5eafa6bf38ed477dd1471a6",
+      "bytes": 3821
+    },
+    {
+      "path": "raw/verification/V5/probes/attack6.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/probes/attack6.sh",
+      "sha256": "dc8b08c011b120c1a3b0f73a570a353d8d3ac075f29c4d7b4bdf3cca9f743b99",
+      "bytes": 4852
+    },
+    {
+      "path": "raw/verification/V5/probes/attacks123.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/probes/attacks123.sh",
+      "sha256": "a716925e492e2d537644921f9b805b72fbe667d72d632792746cfa1aea5d46bf",
+      "bytes": 4698
+    },
+    {
+      "path": "raw/verification/V5/probes/phase1.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/probes/phase1.sh",
+      "sha256": "8a517036af1f4fcad4d85c6cb9eb3f5f1328566863bc4b194ea0d086a7206818",
+      "bytes": 4921
+    },
+    {
+      "path": "raw/verification/V5/probes/phase2.sh",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/V5/probes/phase2.sh",
+      "sha256": "f9c2a087a0ccf5e4ef1c71ce3f4fe3274a10baea1aaf8a76a785d43864587a7a",
+      "bytes": 6727
+    },
+    {
+      "path": "raw/verification/signals/V1.done",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/signals/V1.done",
+      "sha256": "46214c6a729595b83040520327ef7de2ba99ff0f46c699b7830d1b89a0cceaf0",
+      "bytes": 12
+    },
+    {
+      "path": "raw/verification/signals/V2.done",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/signals/V2.done",
+      "sha256": "b92fd85f457e5cbb745afc7a125e0ca41592017e40a82fc3892abebcd8504674",
+      "bytes": 13
+    },
+    {
+      "path": "raw/verification/signals/V3.done",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/signals/V3.done",
+      "sha256": "7c0390d65cc0308ab0d91ee0ccadfb4ede8656ed167880c45ccf9a79b08a6084",
+      "bytes": 12
+    },
+    {
+      "path": "raw/verification/signals/V4.done",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/signals/V4.done",
+      "sha256": "e02f4217c2fdb177b95dfec47c2a3ed977ed59692e5d05104a5a0ded3d34e70a",
+      "bytes": 13
+    },
+    {
+      "path": "raw/verification/signals/V5.done",
+      "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/glm-v-2026-10-25/signals/V5.done",
+      "sha256": "4ea4c11f3ebd90aa117b95f6d851a54c92d8517e6a0799193f5c74f411b900ed",
+      "bytes": 12
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-authoring.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-authoring.js",
+      "sha256": "2906eda2939d32f940e8ac65b451dd18f0306c646479c100766a23fd6ab91298",
+      "bytes": 14903
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-direction-inspector.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-direction-inspector.js",
+      "sha256": "9c5257b36c3658e7c873d285eb90670d74b872d34e736fb13f489c9fe15b3f03",
+      "bytes": 8589
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-focused-graph.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-focused-graph.js",
+      "sha256": "fa7e923da95346231ef8d90f58099eb259b32a1271119dae5413a3b51c50859e",
+      "bytes": 14177
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-module-lenses.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-module-lenses.js",
+      "sha256": "094d41f9622934472e53fc32b5edcd37408f5f99b98042634860ae74695a0dd9",
+      "bytes": 7746
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-questions.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-questions.js",
+      "sha256": "fd04e9dfc5690589c69ff6b0d5ee3a4222d81fd32e1ebe8b8bb526642c644b36",
+      "bytes": 11925
+    },
+    {
+      "path": "raw/knowledge/K3/probes/k3-route-state.js",
+      "source": "/Users/aramaljanadi/LearningOS-archive-2026-10-25/home/los-glm-K3-2026-10/obsidian-ui/.checkout/untracked.tar!tests/k3-route-state.js",
+      "sha256": "9a297d477482c50110d77f4605c6c97c1cda5f603fe97750a1e4aa04616eff0b",
+      "bytes": 7561
+    }
+  ]
+}

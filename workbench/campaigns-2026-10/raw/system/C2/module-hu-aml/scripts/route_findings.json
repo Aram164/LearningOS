@@ -1,0 +1,26 @@
+{
+ "a_vault": [],
+ "b_pages": [],
+ "b_offset": [],
+ "d_dup": [],
+ "a_file_named": [
+  {
+   "route": "route-b3c9cda951cabf0f92743436",
+   "file": "02-11.pdf",
+   "source_id": "source-aml-ss26-lectures",
+   "has_vault_path": false
+  },
+  {
+   "route": "route-b3c9cda951cabf0f92743436",
+   "file": "bonus-exercises/zusatz-blatt01-04.pdf",
+   "source_id": "source-aml-ss26-lectures",
+   "has_vault_path": false
+  },
+  {
+   "route": "route-69c5b6e2f97ec6539c186fca",
+   "file": "MIT6_034F10_quiz3_2010.pdf",
+   "source_id": "source-mit-6034-quizzes",
+   "has_vault_path": false
+  }
+ ]
+}

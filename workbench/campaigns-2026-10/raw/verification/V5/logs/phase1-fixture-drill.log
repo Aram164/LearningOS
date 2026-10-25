@@ -1,0 +1,64 @@
+
+===== BLOCK: Build the fixture =====
+LOS_FX=/Users/aramaljanadi/los-glm-V5-2026-10/tmp/los-fx-jwfyl23x/LearningOS/repository
+
+===== BLOCK: Stage the drill UI from the pair checkout =====
+staged ui-src
+
+===== BLOCK: Manifest the three roots outside every root (out + summary) =====
+True
+['core', 'materials', 'ui']
+492
+sha256:adaae1624a9ce5eee80857d838350f5bc355e7d7f9a3296aeb8612548b501990
+
+===== BLOCK: The manifest binds data to Core's commit =====
+492
+sha256:adaae1624a9ce5eee80857d838350f5bc355e7d7f9a3296aeb8612548b501990
+61
+True None
+
+===== BLOCK: The full manifest stays behind the explicit flag =====
+492
+['core', 'materials', 'ui']
+sha256:adaae1624a9ce5eee80857d838350f5bc355e7d7f9a3296aeb8612548b501990
+
+===== BLOCK: Capture the pre-refusal state =====
+captured 1
+
+===== BLOCK: A manifest path inside a backed-up root is refused =====
+los: INVALID_REQUEST: refusing to write the manifest inside the backed-up core root: manifest.json
+refusal-exit=2
+
+===== BLOCK: The refusal added no receipt and moved no canonical byte =====
+unchanged
+
+===== BLOCK: Copy the three roots beside the manifest =====
+copied
+
+===== BLOCK: The copies match their authorities =====
+copies match
+
+===== BLOCK: Verify the restore without executing restored code =====
+{"ok":true,"checked":492,"issues":[]}
+
+===== BLOCK: Verify the restore in full =====
+True
+checksums True
+restore-provenance True
+materials-alias-layer True
+canonical-validation True
+projection-regeneration True
+ui-contract-lock True
+ui-asset-declaration True
+ui-install-preflight True
+ui-bundle-smoke True
+True
+
+===== BLOCK: A tampered restored byte fails the drill =====
+exit=1
+{"ok":false,"checked":492,"issues":[{"root":"materials","path":"source-demo-book/book.pdf","issue":"checksum-mismatch"}]}
+
+===== BLOCK: The fixture itself still validates =====
+0 error(s), 14 warning(s) — OK
+
+===== BLOCK: DONE =====

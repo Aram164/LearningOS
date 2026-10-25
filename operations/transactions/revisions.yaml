@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 3
+  file:operations/transactions/lineage.yaml: 4
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -50,7 +50,7 @@ revisions:
   module-hu-aml: 14
   module-hu-betriebssysteme: 1
   module-hu-icop: 1
-  module-hu-m2-statistik-analysis: 61
+  module-hu-m2-statistik-analysis: 62
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -315,7 +315,7 @@ revisions:
   study-map-aml-l10: 5
   study-map-aml-l11: 3
   study-map-job-engineering-tools-fluency: 2
-  study-map-job-git-fluency: 1
+  study-map-job-git-fluency: 2
   study-map-job-polars-backend-loop: 2
   study-map-job-polars-expressions: 14
   study-map-job-polars-joins-reshape: 7
@@ -346,7 +346,7 @@ revisions:
   study-map-m2-sad-l14: 6
   study-map-m2-sad-l15: 7
   unit-algo2-exam-prep: 2
-  unit-aml-exam-prep: 8
+  unit-aml-exam-prep: 9
   unit-aml-l01: 6
   unit-aml-l02: 6
   unit-aml-l03: 7
@@ -361,7 +361,7 @@ revisions:
   unit-bs-os-structure: 1
   unit-icop-l01-linear-programming: 1
   unit-job-engineering-tools-fluency: 2
-  unit-job-git-fluency: 1
+  unit-job-git-fluency: 2
   unit-job-polars-aggregation-windows: 2
   unit-job-polars-backend-loop: 4
   unit-job-polars-capstone-transition: 2
@@ -369,20 +369,20 @@ revisions:
   unit-job-polars-joins-reshape: 9
   unit-job-polars-lazy-udf-interop: 9
   unit-job-polars-order-text-time: 2
-  unit-job-polars-pandas-fluency: 12
+  unit-job-polars-pandas-fluency: 13
   unit-job-polars-schema-missing-types: 9
   unit-job-polars-selection-backend: 12
   unit-job-python-engineering-fluency: 2
   unit-job-rust-engineering-fluency: 1
   unit-m2-analysis-ch01: 6
   unit-m2-analysis-ch02: 9
-  unit-m2-analysis-ch03: 8
-  unit-m2-analysis-ch04: 6
-  unit-m2-analysis-ch05: 8
-  unit-m2-analysis-ch06: 7
-  unit-m2-analysis-ch07: 6
+  unit-m2-analysis-ch03: 9
+  unit-m2-analysis-ch04: 7
+  unit-m2-analysis-ch05: 9
+  unit-m2-analysis-ch06: 8
+  unit-m2-analysis-ch07: 7
   unit-m2-analysis-exam-prep: 12
-  unit-m2-combined-exam-rehearsal: 5
+  unit-m2-combined-exam-rehearsal: 6
   unit-m2-sad-clustering: 13
   unit-m2-sad-exam-prep: 12
   unit-m2-sad-l01: 10

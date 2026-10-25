@@ -1,0 +1,20 @@
+# scenario refusal cases exercised live on the clone backup (2026-10-25)
+$ repository/.venv/bin/python repository/tools/los.py backup-manifest --ui-root tmp/backup/ui-src
+los: INVALID_REQUEST: backup-manifest prints nothing by default: the manifest holds 2528 entries (~513 KB). Write it with --out PATH (outside every backed-up root) or print it with --stdout
+exit=2
+
+$ ... backup-manifest --ui-root no-such-ui --stdout
+los: INVALID_REQUEST: backup authority is unavailable: ui: /Users/aramaljanadi/los-glm-V5-2026-10/no-such-ui
+exit=2
+
+$ ... backup-verify --manifest scratch/clone-validate.txt --restored-core x --restored-ui x --restored-materials x --checksums-only
+los: INVALID_REQUEST: cannot parse ... (YAML parse refusal)
+exit=2
+
+$ ... backup-verify --restored-core repository --restored-ui obsidian-ui --restored-materials materials (live roots)
+los: INVALID_REQUEST: restore verification requires three new directories outside every live root
+exit=2
+
+$ ... backup-verify --restored-core R --restored-ui R --restored-materials M (overlapping restore roots)
+los: INVALID_REQUEST: restored Core, UI, and materials roots must be disjoint
+exit=2

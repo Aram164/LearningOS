@@ -1,0 +1,227 @@
+[
+  {
+    "name": "test_v3_probe_p1_pure",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/tests/test_v3_probe_p1_pure.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V3-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 1.36
+  },
+  {
+    "name": "test_v3_probe_p2_readonly",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/tests/test_v3_probe_p2_readonly.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V3-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 1.38
+  },
+  {
+    "name": "test_v3_probe_p3_faithful",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/tests/test_v3_probe_p3_faithful.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V3-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.45
+  },
+  {
+    "name": "test_v3_probe_p4_no_mastery",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/tests/test_v3_probe_p4_no_mastery.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V3-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.63
+  },
+  {
+    "name": "test_v3_probe_p5_session_order",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V3-2026-10/repository/tests/test_v3_probe_p5_session_order.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V3-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.79
+  },
+  {
+    "name": "test_v4_ai_gateway",
+    "command": [
+      "/Users/aramaljanadi/los-glm-V4-2026-10/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "/Users/aramaljanadi/los-glm-V4-2026-10/repository/tests/test_v4_ai_gateway.py",
+      "-q"
+    ],
+    "cwd": "/Users/aramaljanadi/los-glm-V4-2026-10/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 28.01
+  },
+  {
+    "name": "landed-system-regressions",
+    "command": [
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1a_graded_attempt_dead_end.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1b_shelving_partial_apply.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1c_garden_reserved_slug.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1c_revise_voids_dedicated_guarantees.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1d_same_second_file_capture.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1d_zero_limit_refused.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1e_backup_symlinked_subtree.py",
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/tests/test_c1e_coordination_no_reflow.py"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 11.94
+  },
+  {
+    "name": "documentation-and-contracts",
+    "command": [
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_system_map.py",
+      "tests/test_normative_corpus.py",
+      "tests/test_manifest_contract.py",
+      "tests/test_schema_contract.py",
+      "tests/test_arch_doc_commands.py"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository",
+    "exit_code": 4,
+    "expected_exit": 0,
+    "seconds": 0.19
+  },
+  {
+    "name": "ui-complete-check",
+    "command": [
+      "npm",
+      "run",
+      "check"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 12.99
+  },
+  {
+    "name": "probe1-mount-all-views",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe1-mount-all-views.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.1
+  },
+  {
+    "name": "probe2-rule2-states",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe2-rule2-states.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.11
+  },
+  {
+    "name": "probe3-optional-fields",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe3-optional-fields.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.07
+  },
+  {
+    "name": "probe4-accessibility",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe4-accessibility.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.11
+  },
+  {
+    "name": "probe5-home-rule13",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe5-home-rule13.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.09
+  },
+  {
+    "name": "probe6-atlas-dom",
+    "command": [
+      "node",
+      "/private/tmp/los-campaign-verification-20261025/v2/probe6-atlas-dom.js"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.16
+  },
+  {
+    "name": "stage-plugin-reproduction",
+    "command": [
+      "npm",
+      "run",
+      "stage-plugin"
+    ],
+    "cwd": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/obsidian-ui",
+    "exit_code": 1,
+    "expected_exit": 1,
+    "seconds": 0.08
+  }
+]

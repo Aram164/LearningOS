@@ -1,0 +1,1764 @@
+{
+ "concept-activation-function": {
+  "notes": [],
+  "other": [
+   "unit-aml-l08",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-adam-optimizer": {
+  "notes": [
+   "note-aml-l06-exercise-bank",
+   "note-aml-l06-gradient-descent",
+   "note-aml-l06-mock-exam",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-gradient-descent",
+   "unit-aml-l06"
+  ]
+ },
+ "concept-adt-dictionary": {
+  "notes": [
+   "note-algo2-b-trees",
+   "note-algo2-b-trees-exercise-bank",
+   "note-algo2-b-trees-viva-drill",
+   "note-algo2-cuckoo-hashing",
+   "note-algo2-phase0-prerequisites",
+   "note-algo2-splay-trees"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-b-trees"
+  ]
+ },
+ "concept-adt-priority-queue": {
+  "notes": [
+   "note-algo2-fibonacci-heaps",
+   "note-algo2-fibonacci-heaps-exercise-bank",
+   "note-algo2-fibonacci-heaps-viva-drill",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-fibonacci-heaps"
+  ]
+ },
+ "concept-aggregation": {
+  "notes": [
+   "note-pandas-groupby-signatures",
+   "note-pandas-polars-aggregation-contentions"
+  ],
+  "other": [
+   "unit-job-polars-aggregation-windows",
+   "unit-m2-sad-l02"
+  ]
+ },
+ "concept-aggregation-family": {
+  "notes": [
+   "note-stratum-op-aggregateop"
+  ],
+  "other": [
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-backend-loop"
+  ]
+ },
+ "concept-amortized-analysis": {
+  "notes": [
+   "note-algo2-amortized-analysis",
+   "note-algo2-amortized-analysis-exercise-bank",
+   "note-algo2-amortized-analysis-viva-drill",
+   "note-algo2-fibonacci-heaps",
+   "note-algo2-fibonacci-heaps-exercise-bank",
+   "note-algo2-fibonacci-heaps-viva-drill",
+   "note-algo2-splay-trees",
+   "note-algo2-splay-trees-exercise-bank",
+   "note-algo2-splay-trees-viva-drill"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-asymptotic-analysis",
+   "concept-fibonacci-heaps",
+   "concept-splay-trees"
+  ]
+ },
+ "concept-asymptotic-analysis": {
+  "notes": [
+   "note-algo2-amortized-analysis",
+   "note-algo2-amortized-analysis-exercise-bank",
+   "note-algo2-fast-multiplication",
+   "note-algo2-fast-multiplication-exercise-bank",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "concept-amortized-analysis",
+   "unit-algo2-exam-prep",
+   "unit-m2-analysis-exam-prep"
+  ]
+ },
+ "concept-attention": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "unit-aml-l11",
+   "unit-aml-exam-prep",
+   "concept-contextual-embedding",
+   "concept-softmax",
+   "concept-transformer"
+  ]
+ },
+ "concept-b-trees": {
+  "notes": [
+   "note-algo2-b-trees",
+   "note-algo2-b-trees-exercise-bank",
+   "note-algo2-b-trees-viva-drill"
+  ],
+  "other": [
+   "concept-adt-dictionary",
+   "concept-binary-search-trees",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-backpropagation": {
+  "notes": [
+   "note-aml-book-crosswalk",
+   "note-aml-l09-backpropagation",
+   "note-aml-l09-exercise-bank",
+   "note-aml-l09-mock-exam",
+   "note-aml-l10-cnn",
+   "note-aml-l10-exercise-bank",
+   "note-aml-l10-mock-exam",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "unit-aml-l09",
+   "concept-chain-rule",
+   "concept-neural-network",
+   "concept-program-rewrites",
+   "unit-aml-l01",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-basis-functions": {
+  "notes": [
+   "note-aml-book-crosswalk",
+   "note-aml-l04-exercise-bank",
+   "note-aml-l04-mock-exam",
+   "note-aml-l04-nonlinear-regression"
+  ],
+  "other": [
+   "unit-aml-l04",
+   "unit-aml-l05"
+  ]
+ },
+ "concept-bayes-theorem": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-l04-exercise-bank",
+   "note-sad-l04-probability-bayes"
+  ],
+  "other": [
+   "concept-conditional-probability",
+   "concept-naive-bayes",
+   "unit-m2-sad-l04"
+  ]
+ },
+ "concept-bayesian-network": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l14"
+  ]
+ },
+ "concept-bias-variance-tradeoff": {
+  "notes": [
+   "note-aml-bonusblatt01-solutions",
+   "note-aml-l02-exercise-bank",
+   "note-aml-l02-knn-bias-variance",
+   "note-aml-l02-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-bachelor-thesis-medical-mle-exploration",
+   "note-regression-sad-aml-islp-bridge"
+  ],
+  "other": [
+   "concept-dropout",
+   "concept-early-stopping",
+   "unit-aml-l01",
+   "unit-aml-l02",
+   "unit-aml-l04",
+   "unit-aml-l07",
+   "unit-m2-sad-l11",
+   "unit-m2-sad-l13",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-binary-search-trees": {
+  "notes": [
+   "note-algo2-b-trees",
+   "note-algo2-b-trees-exercise-bank",
+   "note-algo2-phase0-prerequisites",
+   "note-algo2-splay-trees",
+   "note-algo2-splay-trees-exercise-bank"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-b-trees",
+   "concept-splay-trees"
+  ]
+ },
+ "concept-bipartite-matching": {
+  "notes": [
+   "note-algo2-bipartite-matching",
+   "note-algo2-bipartite-matching-exercise-bank",
+   "note-algo2-bipartite-matching-viva-drill",
+   "note-algo2-stable-matching",
+   "note-algo2-stable-matching-exercise-bank"
+  ],
+  "other": [
+   "concept-max-flow",
+   "concept-stable-matching",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-bootstrap": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-random-forest",
+   "unit-m2-sad-l09",
+   "unit-m2-sad-l11"
+  ]
+ },
+ "concept-central-limit-theorem": {
+  "notes": [
+   "note-sad-probability-inference-deep-plan"
+  ],
+  "other": [
+   "unit-m2-sad-l08",
+   "concept-normal-distribution",
+   "concept-statistical-estimation",
+   "unit-m2-sad-exam-prep"
+  ]
+ },
+ "concept-chain-rule": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-l09",
+   "concept-backpropagation",
+   "unit-m2-analysis-ch06",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-chi-square-test": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l10"
+  ]
+ },
+ "concept-classification-metrics": {
+  "notes": [
+   "note-aml-l02-knn-bias-variance",
+   "note-aml-l08-exercise-bank",
+   "note-aml-l08-feedforward-networks",
+   "note-aml-l08-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-bachelor-thesis-medical-mle-exploration",
+   "note-sad-l01-exercise-bank",
+   "note-sad-l01-introduction",
+   "note-sad-l11-instance-based"
+  ],
+  "other": [
+   "concept-hypothesis-testing",
+   "unit-aml-l08",
+   "unit-m2-sad-l01",
+   "unit-m2-sad-l11"
+  ]
+ },
+ "concept-clustering": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-clustering"
+  ]
+ },
+ "concept-combinatorics": {
+  "notes": [
+   "note-sad-descriptive-probability-handwritten",
+   "note-sad-l05-combinatorics",
+   "note-sad-l05-exercise-bank",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l05",
+   "unit-m2-sad-exam-prep",
+   "concept-probability",
+   "unit-m2-sad-l01"
+  ]
+ },
+ "concept-complex-roots-of-unity": {
+  "notes": [
+   "note-algo2-fft",
+   "note-algo2-fft-exercise-bank",
+   "note-algo2-fft-viva-drill",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-fft",
+   "unit-m2-analysis-ch06"
+  ]
+ },
+ "concept-computational-geometry": {
+  "notes": [
+   "note-algo2-computational-geometry",
+   "note-algo2-computational-geometry-exercise-bank",
+   "note-algo2-computational-geometry-viva-drill"
+  ],
+  "other": [
+   "concept-determinant-orientation",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-conditional-independence": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l14",
+   "unit-m2-sad-l04"
+  ]
+ },
+ "concept-conditional-probability": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-descriptive-probability-handwritten",
+   "note-sad-l04-exercise-bank",
+   "note-sad-l04-probability-bayes"
+  ],
+  "other": [
+   "unit-m2-sad-l04",
+   "concept-bayes-theorem",
+   "concept-logistic-regression"
+  ]
+ },
+ "concept-contextual-embedding": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-attention",
+   "concept-embedding",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-convexity": {
+  "notes": [
+   "note-aml-l06-exercise-bank",
+   "note-aml-l06-gradient-descent",
+   "note-aml-l06-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-icop-l01-exercise-bank",
+   "note-icop-l01-mock-exam"
+  ],
+  "other": [
+   "unit-aml-l06",
+   "concept-gradient-descent",
+   "unit-icop-l01-linear-programming"
+  ]
+ },
+ "concept-convolutional-networks": {
+  "notes": [
+   "note-aml-book-crosswalk"
+  ],
+  "other": [
+   "unit-aml-l10",
+   "unit-aml-exam-prep",
+   "concept-neural-network",
+   "concept-residual-connection",
+   "unit-aml-l01"
+  ]
+ },
+ "concept-correlation": {
+  "notes": [
+   "note-sad-l03-correlation-regression",
+   "note-sad-l03-exercise-bank"
+  ],
+  "other": [
+   "unit-m2-sad-l03",
+   "unit-aml-l10",
+   "unit-m2-sad-l06"
+  ]
+ },
+ "concept-cross-entropy": {
+  "notes": [
+   "note-aml-bonusblatt03-solutions",
+   "note-aml-l05-exercise-bank",
+   "note-aml-l05-logistic-regression",
+   "note-aml-l05-mock-exam",
+   "note-aml-l09-backpropagation",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "concept-entropy",
+   "concept-language-modelling",
+   "concept-logistic-regression",
+   "concept-maximum-likelihood",
+   "unit-aml-l05",
+   "unit-aml-l08",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-cross-validation": {
+  "notes": [
+   "note-aml-l02-exercise-bank",
+   "note-aml-l02-knn-bias-variance",
+   "note-aml-l02-mock-exam"
+  ],
+  "other": [
+   "unit-aml-l02",
+   "unit-m2-sad-l11"
+  ]
+ },
+ "concept-cuckoo-hashing": {
+  "notes": [
+   "note-algo2-cuckoo-hashing",
+   "note-algo2-cuckoo-hashing-exercise-bank",
+   "note-algo2-cuckoo-hashing-viva-drill"
+  ],
+  "other": [
+   "concept-expected-value",
+   "concept-hashing-chaining",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-curse-of-dimensionality": {
+  "notes": [
+   "note-aml-l02-knn-bias-variance"
+  ],
+  "other": [
+   "unit-aml-l02"
+  ]
+ },
+ "concept-data-access-optimization": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l09",
+   "unit-m2-sad-clustering",
+   "unit-m2-sad-l13"
+  ]
+ },
+ "concept-data-parallelism": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l05",
+   "concept-gradient-descent",
+   "concept-llm-systems",
+   "concept-parameter-servers",
+   "unit-amls-l06",
+   "unit-amls-l07"
+  ]
+ },
+ "concept-data-provenance": {
+  "notes": [
+   "note-sklearn-mlprov-object-map"
+  ],
+  "other": [
+   "unit-amls-l10",
+   "concept-ml-lifecycle"
+  ]
+ },
+ "concept-dataframe-ops": {
+  "notes": [
+   "note-pandas-groupby-signatures",
+   "note-pandas-polars-aggregation-contentions",
+   "note-stratum-extract-dataframe-op",
+   "note-stratum-op-aggregateop",
+   "note-stratum-op-applyudfop",
+   "note-stratum-op-assignmapop",
+   "note-stratum-op-assignop",
+   "note-stratum-op-columnprojectionop",
+   "note-stratum-op-columnselectorop",
+   "note-stratum-op-datetimeconversionop",
+   "note-stratum-op-dropop",
+   "note-stratum-op-getattrprojectionop",
+   "note-stratum-op-joinop",
+   "note-stratum-op-metadataop",
+   "note-stratum-op-missingmaskop",
+   "note-stratum-op-selectionop",
+   "note-stratum-op-stringmethodop"
+  ],
+  "other": []
+ },
+ "concept-dataframe-semantics": {
+  "notes": [
+   "note-pandas-groupby-signatures",
+   "note-pandas-polars-aggregation-contentions"
+  ],
+  "other": [
+   "unit-job-polars-capstone-transition",
+   "unit-job-polars-schema-missing-types",
+   "unit-job-polars-selection-backend",
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-joins-reshape",
+   "unit-job-polars-order-text-time",
+   "unit-job-polars-pandas-fluency",
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-expressions",
+   "unit-job-polars-lazy-udf-interop"
+  ]
+ },
+ "concept-decision-boundary": {
+  "notes": [
+   "note-aml-l05-logistic-regression",
+   "note-aml-l07-linear-classifiers",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-l05",
+   "unit-aml-l07"
+  ]
+ },
+ "concept-decision-trees": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-exam-prep",
+   "unit-m2-sad-l12",
+   "concept-information-gain",
+   "concept-random-forest"
+  ]
+ },
+ "concept-descriptive-statistics": {
+  "notes": [
+   "note-regression-sad-aml-islp-bridge",
+   "note-sad-descriptive-probability-handwritten",
+   "note-sad-l01-exercise-bank",
+   "note-sad-l01-introduction",
+   "note-sad-l02-descriptive-basics",
+   "note-sad-l02-exercise-bank",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-combined-exam-rehearsal",
+   "unit-m2-sad-exam-prep",
+   "unit-m2-sad-l01",
+   "unit-m2-sad-l02",
+   "concept-expected-value"
+  ]
+ },
+ "concept-determinant-orientation": {
+  "notes": [
+   "note-algo2-computational-geometry",
+   "note-algo2-computational-geometry-exercise-bank",
+   "note-algo2-computational-geometry-viva-drill",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-computational-geometry"
+  ]
+ },
+ "concept-differentiation": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch06",
+   "concept-limits-continuity",
+   "concept-taylor-series",
+   "unit-aml-l09"
+  ]
+ },
+ "concept-discrete-distributions": {
+  "notes": [
+   "note-sad-distributions-handwritten",
+   "note-sad-probability-inference-deep-plan",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l07",
+   "concept-random-variable"
+  ]
+ },
+ "concept-dispatch": {
+  "notes": [
+   "note-stratum-extract-dataframe-op"
+  ],
+  "other": [
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-capstone-transition",
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-expressions",
+   "unit-job-polars-joins-reshape",
+   "unit-job-polars-lazy-udf-interop",
+   "unit-job-polars-pandas-fluency",
+   "unit-job-polars-selection-backend"
+  ]
+ },
+ "concept-distance-metrics": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l13",
+   "unit-aml-l02",
+   "unit-m2-analysis-ch01",
+   "unit-m2-analysis-ch02",
+   "unit-m2-sad-clustering"
+  ]
+ },
+ "concept-dropout": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-bias-variance-tradeoff",
+   "concept-neural-network"
+  ]
+ },
+ "concept-early-stopping": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-bias-variance-tradeoff",
+   "concept-neural-network",
+   "unit-aml-l09"
+  ]
+ },
+ "concept-embedding": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-contextual-embedding",
+   "concept-tokenization",
+   "unit-aml-l01",
+   "unit-aml-l02",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-ensemble-methods": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l12"
+  ]
+ },
+ "concept-entropy": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-cross-entropy",
+   "concept-information-gain"
+  ]
+ },
+ "concept-expected-value": {
+  "notes": [
+   "note-algo2-cuckoo-hashing",
+   "note-algo2-cuckoo-hashing-exercise-bank",
+   "note-algo2-cuckoo-hashing-viva-drill",
+   "note-algo2-phase0-prerequisites",
+   "note-sad-distributions-handwritten",
+   "note-sad-probability-inference-deep-plan"
+  ],
+  "other": [
+   "unit-m2-sad-l06",
+   "concept-cuckoo-hashing",
+   "concept-descriptive-statistics",
+   "concept-random-variable",
+   "concept-variance",
+   "unit-algo2-exam-prep",
+   "unit-m2-sad-l07"
+  ]
+ },
+ "concept-fast-multiplication": {
+  "notes": [
+   "note-algo2-fast-multiplication",
+   "note-algo2-fast-multiplication-exercise-bank",
+   "note-algo2-fast-multiplication-viva-drill",
+   "note-algo2-fft",
+   "note-algo2-fft-exercise-bank",
+   "note-algo2-fft-viva-drill"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-fft",
+   "concept-recurrences-master-theorem"
+  ]
+ },
+ "concept-feature-scaling": {
+  "notes": [
+   "note-aml-l06-exercise-bank",
+   "note-aml-l06-gradient-descent",
+   "note-aml-l06-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-sad-l11-instance-based"
+  ],
+  "other": [
+   "concept-gradient-descent",
+   "concept-k-nearest-neighbors",
+   "unit-aml-l02",
+   "unit-aml-l06",
+   "unit-m2-sad-l03",
+   "unit-m2-sad-l08",
+   "unit-m2-sad-l13"
+  ]
+ },
+ "concept-fft": {
+  "notes": [
+   "note-algo2-fft",
+   "note-algo2-fft-exercise-bank",
+   "note-algo2-fft-viva-drill"
+  ],
+  "other": [
+   "concept-complex-roots-of-unity",
+   "concept-fast-multiplication",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-fibonacci-heaps": {
+  "notes": [
+   "note-algo2-fibonacci-heaps",
+   "note-algo2-fibonacci-heaps-exercise-bank",
+   "note-algo2-fibonacci-heaps-viva-drill"
+  ],
+  "other": [
+   "concept-adt-priority-queue",
+   "concept-amortized-analysis",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-gaussian-naive-bayes": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-m2-sad-l14",
+   "concept-naive-bayes",
+   "concept-normal-distribution"
+  ]
+ },
+ "concept-git": {
+  "notes": [
+   "note-git-github-reference",
+   "note-programming-toolbox-bootcamp"
+  ],
+  "other": [
+   "unit-job-git-fluency"
+  ]
+ },
+ "concept-gradient-descent": {
+  "notes": [
+   "note-aml-book-crosswalk",
+   "note-aml-l06-exercise-bank",
+   "note-aml-l06-gradient-descent",
+   "note-aml-l06-mock-exam",
+   "note-aml-l07-linear-classifiers",
+   "note-aml-l09-backpropagation",
+   "note-aml-l09-exercise-bank",
+   "note-aml-l09-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-regression-sad-aml-islp-bridge"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "unit-aml-l06",
+   "concept-adam-optimizer",
+   "concept-convexity",
+   "concept-data-parallelism",
+   "concept-feature-scaling",
+   "concept-logistic-regression",
+   "unit-aml-l05",
+   "unit-m2-sad-l03"
+  ]
+ },
+ "concept-graph-basics": {
+  "notes": [
+   "note-algo2-bipartite-matching",
+   "note-algo2-bipartite-matching-exercise-bank",
+   "note-algo2-maximum-flow",
+   "note-algo2-maximum-flow-exercise-bank",
+   "note-algo2-maximum-flow-viva-drill",
+   "note-algo2-phase0-prerequisites",
+   "note-algo2-shortest-paths",
+   "note-algo2-shortest-paths-exercise-bank",
+   "note-algo2-shortest-paths-viva-drill"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-max-flow",
+   "concept-shortest-paths"
+  ]
+ },
+ "concept-hardware-accelerators": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l08",
+   "concept-llm-systems"
+  ]
+ },
+ "concept-hashing-chaining": {
+  "notes": [
+   "note-algo2-cuckoo-hashing",
+   "note-algo2-cuckoo-hashing-exercise-bank",
+   "note-algo2-cuckoo-hashing-viva-drill",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-cuckoo-hashing"
+  ]
+ },
+ "concept-hypothesis-testing": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-hypothesis-testing-handwritten",
+   "note-sad-probability-inference-deep-plan",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l10",
+   "unit-m2-sad-exam-prep",
+   "concept-classification-metrics",
+   "concept-statistical-estimation"
+  ]
+ },
+ "concept-information-gain": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-decision-trees",
+   "concept-entropy",
+   "unit-m2-sad-l12"
+  ]
+ },
+ "concept-join-family": {
+  "notes": [
+   "note-stratum-op-joinop"
+  ],
+  "other": [
+   "unit-job-polars-joins-reshape",
+   "unit-job-polars-backend-loop"
+  ]
+ },
+ "concept-k-means": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-clustering"
+  ]
+ },
+ "concept-k-nearest-neighbors": {
+  "notes": [
+   "note-aml-bonusblatt01-solutions",
+   "note-aml-book-crosswalk",
+   "note-aml-l02-exercise-bank",
+   "note-aml-l02-knn-bias-variance",
+   "note-aml-l02-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-sad-l11-instance-based",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-aml-l02",
+   "unit-m2-sad-l13",
+   "concept-feature-scaling",
+   "unit-m2-sad-exam-prep"
+  ]
+ },
+ "concept-kernel-trick": {
+  "notes": [
+   "note-aml-book-crosswalk",
+   "note-aml-l07-exercise-bank",
+   "note-aml-l07-linear-classifiers",
+   "note-aml-l07-mock-exam",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "unit-aml-l07",
+   "concept-perceptron",
+   "concept-xor-problem"
+  ]
+ },
+ "concept-language-modelling": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "unit-aml-l11",
+   "concept-cross-entropy",
+   "concept-transformer"
+  ]
+ },
+ "concept-laplace-smoothing": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-l04-exercise-bank",
+   "note-sad-l04-probability-bayes"
+  ],
+  "other": [
+   "concept-naive-bayes",
+   "unit-m2-sad-l14"
+  ]
+ },
+ "concept-law-of-large-numbers": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l06",
+   "unit-m2-sad-l08"
+  ]
+ },
+ "concept-layer-normalization": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-transformer",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-limits-continuity": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch05",
+   "concept-differentiation",
+   "concept-riemann-integral",
+   "concept-sequences-convergence"
+  ]
+ },
+ "concept-linear-algebra": {
+  "notes": [],
+  "other": [
+   "unit-aml-l01",
+   "unit-aml-l03",
+   "unit-aml-l08",
+   "unit-m2-sad-l03",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-linear-regression": {
+  "notes": [
+   "note-aml-bonusblatt02-solutions",
+   "note-aml-book-crosswalk",
+   "note-aml-l03-exercise-bank",
+   "note-aml-l03-linear-regression",
+   "note-aml-l03-mock-exam",
+   "note-aml-l04-exercise-bank",
+   "note-aml-l04-mock-exam",
+   "note-aml-l04-nonlinear-regression",
+   "note-aml-sad-master-wiring",
+   "note-regression-sad-aml-islp-bridge",
+   "note-sad-l03-correlation-regression",
+   "note-sad-l03-exercise-bank"
+  ],
+  "other": [
+   "unit-aml-l03",
+   "unit-m2-sad-l03",
+   "concept-logistic-regression",
+   "concept-mean-squared-error",
+   "concept-neural-network",
+   "concept-normal-equation",
+   "concept-regularization",
+   "unit-aml-l04",
+   "unit-aml-l05",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-llm-systems": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l07",
+   "concept-data-parallelism",
+   "concept-hardware-accelerators"
+  ]
+ },
+ "concept-logical-ir": {
+  "notes": [
+   "note-stratum-extract-dataframe-op",
+   "note-stratum-op-aggregateop",
+   "note-stratum-op-applyudfop",
+   "note-stratum-op-assignmapop",
+   "note-stratum-op-assignop",
+   "note-stratum-op-columnprojectionop",
+   "note-stratum-op-columnselectorop",
+   "note-stratum-op-datetimeconversionop",
+   "note-stratum-op-dropop",
+   "note-stratum-op-getattrprojectionop",
+   "note-stratum-op-joinop",
+   "note-stratum-op-metadataop",
+   "note-stratum-op-missingmaskop",
+   "note-stratum-op-selectionop",
+   "note-stratum-op-stringmethodop"
+  ],
+  "other": [
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-capstone-transition",
+   "unit-job-polars-lazy-udf-interop",
+   "unit-job-polars-pandas-fluency"
+  ]
+ },
+ "concept-logistic-regression": {
+  "notes": [
+   "note-aml-bonusblatt03-solutions",
+   "note-aml-book-crosswalk",
+   "note-aml-l05-exercise-bank",
+   "note-aml-l05-logistic-regression",
+   "note-aml-l05-mock-exam",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "concept-conditional-probability",
+   "concept-cross-entropy",
+   "concept-gradient-descent",
+   "concept-linear-regression",
+   "concept-naive-bayes",
+   "concept-sigmoid"
+  ]
+ },
+ "concept-map-family": {
+  "notes": [
+   "note-stratum-op-assignmapop",
+   "note-stratum-op-missingmaskop"
+  ],
+  "other": [
+   "unit-job-polars-expressions",
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-lazy-udf-interop",
+   "unit-job-polars-schema-missing-types",
+   "unit-job-polars-selection-backend"
+  ]
+ },
+ "concept-max-flow": {
+  "notes": [
+   "note-algo2-bipartite-matching",
+   "note-algo2-bipartite-matching-exercise-bank",
+   "note-algo2-bipartite-matching-viva-drill",
+   "note-algo2-maximum-flow",
+   "note-algo2-maximum-flow-exercise-bank",
+   "note-algo2-maximum-flow-viva-drill"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-bipartite-matching",
+   "concept-graph-basics"
+  ]
+ },
+ "concept-maximum-likelihood": {
+  "notes": [
+   "note-aml-bonusblatt03-solutions",
+   "note-aml-l05-exercise-bank",
+   "note-aml-l05-logistic-regression",
+   "note-aml-l05-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-sad-probability-inference-deep-plan"
+  ],
+  "other": [
+   "unit-m2-sad-l08",
+   "concept-cross-entropy",
+   "concept-mean-squared-error",
+   "concept-random-variable",
+   "concept-statistical-estimation",
+   "unit-aml-l03",
+   "unit-aml-l05",
+   "unit-m2-sad-exam-prep"
+  ]
+ },
+ "concept-mean-squared-error": {
+  "notes": [
+   "note-aml-bonusblatt02-solutions",
+   "note-aml-l03-exercise-bank",
+   "note-aml-l03-linear-regression",
+   "note-aml-l03-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-regression-sad-aml-islp-bridge"
+  ],
+  "other": [
+   "concept-linear-regression",
+   "concept-maximum-likelihood",
+   "unit-aml-l03",
+   "unit-m2-sad-l09"
+  ]
+ },
+ "concept-ml-fairness-explainability": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l12"
+  ]
+ },
+ "concept-ml-lifecycle": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l10",
+   "unit-amls-l11",
+   "concept-data-provenance",
+   "unit-amls-l01",
+   "unit-amls-l13",
+   "unit-m2-sad-l11"
+  ]
+ },
+ "concept-ml-systems": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l01",
+   "unit-amls-l02",
+   "unit-amls-theory"
+  ]
+ },
+ "concept-model-serving": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l13"
+  ]
+ },
+ "concept-multiple-testing": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l10"
+  ]
+ },
+ "concept-naive-bayes": {
+  "notes": [
+   "note-aml-sad-master-wiring",
+   "note-sad-l04-exercise-bank",
+   "note-sad-l04-probability-bayes",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l14",
+   "unit-m2-sad-exam-prep",
+   "concept-bayes-theorem",
+   "concept-gaussian-naive-bayes",
+   "concept-laplace-smoothing",
+   "concept-logistic-regression",
+   "unit-m2-sad-l04"
+  ]
+ },
+ "concept-neural-network": {
+  "notes": [
+   "note-aml-bonusblatt04-solutions",
+   "note-aml-book-crosswalk",
+   "note-aml-l08-exercise-bank",
+   "note-aml-l08-feedforward-networks",
+   "note-aml-l08-mock-exam",
+   "note-aml-l09-backpropagation",
+   "note-aml-l09-exercise-bank",
+   "note-aml-l09-mock-exam",
+   "note-aml-l10-cnn",
+   "note-aml-l10-exercise-bank",
+   "note-aml-l10-mock-exam",
+   "note-aml-sad-master-wiring",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "unit-aml-l08",
+   "unit-m2-sad-l15",
+   "unit-m2-sad-exam-prep",
+   "concept-backpropagation",
+   "concept-convolutional-networks",
+   "concept-dropout",
+   "concept-early-stopping",
+   "concept-linear-regression",
+   "concept-perceptron",
+   "concept-recurrent-networks",
+   "concept-transformer",
+   "concept-weight-decay",
+   "concept-xor-problem"
+  ]
+ },
+ "concept-newton-method": {
+  "notes": [],
+  "other": [
+   "unit-aml-l06"
+  ]
+ },
+ "concept-nonparametric-tests": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l10"
+  ]
+ },
+ "concept-normal-distribution": {
+  "notes": [
+   "note-sad-distributions-handwritten",
+   "note-sad-hypothesis-testing-handwritten",
+   "note-sad-probability-inference-deep-plan",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l08",
+   "unit-m2-sad-exam-prep",
+   "concept-central-limit-theorem",
+   "concept-gaussian-naive-bayes",
+   "concept-random-variable",
+   "unit-m2-sad-l10"
+  ]
+ },
+ "concept-normal-equation": {
+  "notes": [
+   "note-aml-bonusblatt02-solutions",
+   "note-aml-l03-exercise-bank",
+   "note-aml-l03-linear-regression",
+   "note-aml-l03-mock-exam",
+   "note-aml-l04-exercise-bank",
+   "note-aml-l04-mock-exam",
+   "note-aml-l04-nonlinear-regression",
+   "note-aml-sad-master-wiring",
+   "note-regression-sad-aml-islp-bridge",
+   "note-sad-l03-correlation-regression",
+   "note-sad-l03-exercise-bank"
+  ],
+  "other": [
+   "concept-linear-regression",
+   "concept-program-rewrites",
+   "unit-aml-l03",
+   "unit-aml-l04",
+   "unit-m2-sad-l03"
+  ]
+ },
+ "concept-op-rewriting": {
+  "notes": [
+   "note-stratum-extract-dataframe-op"
+  ],
+  "other": [
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-expressions",
+   "unit-job-polars-lazy-udf-interop"
+  ]
+ },
+ "concept-operator-fusion": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l04",
+   "concept-program-rewrites",
+   "unit-job-polars-lazy-udf-interop"
+  ]
+ },
+ "concept-parameter-servers": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l06",
+   "concept-data-parallelism"
+  ]
+ },
+ "concept-perceptron": {
+  "notes": [
+   "note-aml-bonusblatt04-solutions",
+   "note-aml-book-crosswalk",
+   "note-aml-l07-exercise-bank",
+   "note-aml-l07-linear-classifiers",
+   "note-aml-l07-mock-exam",
+   "note-aml-l08-feedforward-networks",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-l07",
+   "unit-aml-exam-prep",
+   "concept-kernel-trick",
+   "concept-neural-network",
+   "unit-aml-l01"
+  ]
+ },
+ "concept-positional-encoding": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-transformer",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-probability": {
+  "notes": [
+   "note-algo2-cuckoo-hashing",
+   "note-sad-descriptive-probability-handwritten",
+   "note-sad-l04-exercise-bank",
+   "note-sad-l04-probability-bayes",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-exam-prep",
+   "unit-m2-sad-l04",
+   "unit-m2-combined-exam-rehearsal",
+   "concept-combinatorics",
+   "concept-random-variable",
+   "unit-aml-l05",
+   "unit-m2-sad-l05",
+   "unit-m2-sad-l08"
+  ]
+ },
+ "concept-program-rewrites": {
+  "notes": [
+   "note-amls-source-crosswalk"
+  ],
+  "other": [
+   "unit-amls-l03",
+   "concept-backpropagation",
+   "concept-normal-equation",
+   "concept-operator-fusion",
+   "unit-amls-l04"
+  ]
+ },
+ "concept-projection-family": {
+  "notes": [
+   "note-stratum-op-applyudfop",
+   "note-stratum-op-assignop",
+   "note-stratum-op-columnprojectionop",
+   "note-stratum-op-columnselectorop",
+   "note-stratum-op-datetimeconversionop",
+   "note-stratum-op-dropop",
+   "note-stratum-op-getattrprojectionop",
+   "note-stratum-op-stringmethodop"
+  ],
+  "other": [
+   "unit-job-polars-expressions",
+   "unit-job-polars-joins-reshape",
+   "unit-job-polars-order-text-time",
+   "unit-job-polars-selection-backend"
+  ]
+ },
+ "concept-proof-technique": {
+  "notes": [
+   "note-algo2-phase0-prerequisites",
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-combined-exam-rehearsal",
+   "unit-m2-analysis-ch01",
+   "unit-m2-analysis-exam-prep",
+   "unit-algo2-exam-prep",
+   "unit-m2-analysis-ch03"
+  ]
+ },
+ "concept-python": {
+  "notes": [
+   "note-programming-toolbox-bootcamp",
+   "note-python-depth-drills",
+   "note-python-intermediate-roadmap",
+   "note-python-oop-scope-repair-plan"
+  ],
+  "other": [
+   "unit-python-intermediate-roadmap",
+   "unit-job-python-engineering-fluency",
+   "unit-python-depth-drills",
+   "unit-python-oop-scope",
+   "unit-job-polars-backend-loop",
+   "unit-job-polars-expressions",
+   "unit-job-polars-selection-backend",
+   "unit-job-polars-aggregation-windows",
+   "unit-job-polars-capstone-transition",
+   "unit-job-polars-joins-reshape",
+   "unit-job-polars-lazy-udf-interop",
+   "unit-job-polars-schema-missing-types",
+   "unit-job-polars-order-text-time",
+   "unit-job-polars-pandas-fluency",
+   "unit-aml-l01"
+  ]
+ },
+ "concept-random-forest": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-m2-sad-l12",
+   "concept-bootstrap",
+   "concept-decision-trees"
+  ]
+ },
+ "concept-random-variable": {
+  "notes": [
+   "note-sad-distributions-handwritten",
+   "note-sad-probability-inference-deep-plan",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l06",
+   "unit-m2-sad-exam-prep",
+   "concept-discrete-distributions",
+   "concept-expected-value",
+   "concept-maximum-likelihood",
+   "concept-normal-distribution",
+   "concept-probability"
+  ]
+ },
+ "concept-real-numbers": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch02",
+   "unit-m2-analysis-ch01",
+   "concept-sequences-convergence",
+   "unit-m2-analysis-ch03"
+  ]
+ },
+ "concept-recurrences-master-theorem": {
+  "notes": [
+   "note-algo2-computational-geometry",
+   "note-algo2-computational-geometry-exercise-bank",
+   "note-algo2-fast-multiplication",
+   "note-algo2-fast-multiplication-exercise-bank",
+   "note-algo2-fast-multiplication-viva-drill",
+   "note-algo2-fft",
+   "note-algo2-phase0-prerequisites"
+  ],
+  "other": [
+   "unit-algo2-exam-prep",
+   "concept-fast-multiplication"
+  ]
+ },
+ "concept-recurrent-networks": {
+  "notes": [
+   "note-aml-book-crosswalk"
+  ],
+  "other": [
+   "concept-neural-network",
+   "concept-transformer",
+   "unit-aml-l01",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-regularization": {
+  "notes": [
+   "note-aml-l04-exercise-bank",
+   "note-aml-l04-mock-exam",
+   "note-aml-l04-nonlinear-regression",
+   "note-aml-sad-master-wiring",
+   "note-regression-sad-aml-islp-bridge"
+  ],
+  "other": [
+   "unit-aml-l04",
+   "concept-linear-regression",
+   "concept-weight-decay",
+   "unit-m2-sad-l11"
+  ]
+ },
+ "concept-residual-connection": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-convolutional-networks",
+   "concept-transformer",
+   "unit-aml-exam-prep",
+   "unit-aml-l10"
+  ]
+ },
+ "concept-riemann-integral": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch07",
+   "concept-limits-continuity"
+  ]
+ },
+ "concept-sampling-bias": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l01",
+   "unit-m2-sad-l02",
+   "unit-m2-sad-l09"
+  ]
+ },
+ "concept-scikit-learn": {
+  "notes": [
+   "note-sklearn-mlprov-object-map"
+  ],
+  "other": []
+ },
+ "concept-selection-family": {
+  "notes": [
+   "note-stratum-op-selectionop"
+  ],
+  "other": [
+   "unit-job-polars-selection-backend",
+   "unit-job-polars-backend-loop"
+  ]
+ },
+ "concept-sequences-convergence": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch03",
+   "concept-limits-continuity",
+   "concept-real-numbers",
+   "concept-series",
+   "concept-uniform-convergence",
+   "unit-m2-analysis-ch04",
+   "unit-m2-analysis-ch05"
+  ]
+ },
+ "concept-series": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch04",
+   "concept-sequences-convergence",
+   "unit-m2-analysis-ch03",
+   "unit-m2-analysis-ch05"
+  ]
+ },
+ "concept-shortest-paths": {
+  "notes": [
+   "note-algo2-shortest-paths",
+   "note-algo2-shortest-paths-exercise-bank",
+   "note-algo2-shortest-paths-viva-drill"
+  ],
+  "other": [
+   "concept-graph-basics",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-sigmoid": {
+  "notes": [
+   "note-aml-l05-logistic-regression",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-l08",
+   "concept-logistic-regression",
+   "concept-softmax"
+  ]
+ },
+ "concept-similarity-search": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l13"
+  ]
+ },
+ "concept-simpsons-paradox": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l02"
+  ]
+ },
+ "concept-skrub": {
+  "notes": [
+   "note-skrub-dataop-dag",
+   "note-skrub-evaluation-engine"
+  ],
+  "other": []
+ },
+ "concept-softmax": {
+  "notes": [
+   "note-aml-l08-exercise-bank",
+   "note-aml-l08-feedforward-networks",
+   "note-aml-l08-mock-exam",
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "unit-aml-l08",
+   "concept-attention",
+   "concept-sigmoid",
+   "unit-aml-exam-prep",
+   "unit-aml-l11",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-splay-trees": {
+  "notes": [
+   "note-algo2-splay-trees",
+   "note-algo2-splay-trees-exercise-bank",
+   "note-algo2-splay-trees-viva-drill"
+  ],
+  "other": [
+   "concept-amortized-analysis",
+   "concept-binary-search-trees",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-stable-matching": {
+  "notes": [
+   "note-algo2-stable-matching",
+   "note-algo2-stable-matching-exercise-bank",
+   "note-algo2-stable-matching-viva-drill"
+  ],
+  "other": [
+   "concept-bipartite-matching",
+   "unit-algo2-exam-prep"
+  ]
+ },
+ "concept-statistical-estimation": {
+  "notes": [
+   "note-regression-sad-aml-islp-bridge",
+   "note-sad-probability-inference-deep-plan",
+   "note-sad-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-sad-l09",
+   "unit-m2-sad-exam-prep",
+   "concept-central-limit-theorem",
+   "concept-hypothesis-testing",
+   "concept-maximum-likelihood",
+   "unit-m2-sad-l10"
+  ]
+ },
+ "concept-supervised-learning": {
+  "notes": [],
+  "other": [
+   "unit-m2-sad-l11",
+   "unit-aml-l01",
+   "unit-m2-sad-clustering"
+  ]
+ },
+ "concept-taylor-series": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "unit-m2-analysis-ch06",
+   "concept-differentiation"
+  ]
+ },
+ "concept-tokenization": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "concept-embedding",
+   "unit-aml-l11"
+  ]
+ },
+ "concept-transformer": {
+  "notes": [
+   "note-aml-l11-exercise-bank",
+   "note-aml-l11-mock-exam",
+   "note-aml-l11-transformers"
+  ],
+  "other": [
+   "unit-aml-exam-prep",
+   "concept-attention",
+   "concept-language-modelling",
+   "concept-layer-normalization",
+   "concept-neural-network",
+   "concept-positional-encoding",
+   "concept-recurrent-networks",
+   "concept-residual-connection",
+   "unit-aml-l01",
+   "unit-aml-l11",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-uniform-convergence": {
+  "notes": [
+   "note-an-source-crosswalk"
+  ],
+  "other": [
+   "concept-sequences-convergence",
+   "unit-m2-analysis-ch05"
+  ]
+ },
+ "concept-universal-approximation": {
+  "notes": [],
+  "other": [
+   "unit-aml-l08",
+   "unit-m2-sad-l15"
+  ]
+ },
+ "concept-vanishing-gradients": {
+  "notes": [],
+  "other": [
+   "unit-aml-l09"
+  ]
+ },
+ "concept-variance": {
+  "notes": [
+   "note-regression-sad-aml-islp-bridge",
+   "note-sad-l02-descriptive-basics",
+   "note-sad-l02-exercise-bank",
+   "note-sad-probability-inference-deep-plan"
+  ],
+  "other": [
+   "unit-m2-sad-l06",
+   "concept-expected-value",
+   "unit-aml-l02",
+   "unit-m2-sad-l02",
+   "unit-m2-sad-l07",
+   "unit-m2-sad-l08",
+   "unit-m2-sad-l09",
+   "unit-m2-sad-l11",
+   "unit-m2-sad-l12"
+  ]
+ },
+ "concept-weight-decay": {
+  "notes": [
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-neural-network",
+   "concept-regularization",
+   "unit-aml-l09"
+  ]
+ },
+ "concept-xor-problem": {
+  "notes": [
+   "note-aml-bonusblatt04-solutions",
+   "note-aml-l07-exercise-bank",
+   "note-aml-l07-linear-classifiers",
+   "note-aml-l07-mock-exam",
+   "note-aml-l08-exercise-bank",
+   "note-aml-l08-feedforward-networks",
+   "note-aml-l08-mock-exam",
+   "note-aml-sad-master-wiring"
+  ],
+  "other": [
+   "concept-kernel-trick",
+   "concept-neural-network",
+   "unit-aml-l01",
+   "unit-aml-l07",
+   "unit-aml-l08",
+   "unit-m2-sad-l15"
+  ]
+ }
+}

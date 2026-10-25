@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "request_id": "request-reviewed-86b5100ce851437bada0e446d88a7ce6",
+  "idempotency_key": "reviewed-8f78c734969a40b9964ef309e7796be7",
+  "capability": "module.plan.import",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261025-152527-001",
+  "receipt_path": "operations/transactions/transaction-20261025-152527-001.yaml",
+  "snapshot_after": "sha256:eb8fe4c0221be09551783a982466477a42e03c8c1e52599dadc0c653fd729da3",
+  "result": {
+    "ok": true,
+    "mode": "apply",
+    "module_id": "module-job-polars",
+    "units_written": [
+      "unit-job-polars-pandas-fluency"
+    ],
+    "files_written": 1,
+    "transaction_id": "transaction-20261025-152527-001",
+    "receipt_path": "operations/transactions/transaction-20261025-152527-001.yaml",
+    "artifact_revisions": {
+      "unit-job-polars-pandas-fluency": 13
+    },
+    "snapshot_after": "sha256:eb8fe4c0221be09551783a982466477a42e03c8c1e52599dadc0c653fd729da3",
+    "replayed": false
+  },
+  "error": null
+}

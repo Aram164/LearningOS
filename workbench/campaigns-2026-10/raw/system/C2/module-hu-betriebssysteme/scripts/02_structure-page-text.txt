@@ -1,0 +1,142 @@
+02_structure.pdf (46 pages), extracted with the system extractor
+(learning_os.store.materials.pdf_text), whitespace-collapsed, verbatim incl.
+the SAR-logo glyph noise (/g54 ...) on every page header.
+
+--- p1 ---
+/g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Operating System Basics - Computing System Architecture - Interrupt Handling - Resource Protection - OS Structure - System Calls - Monolithic, Layered, Microkernel OS Structure
+
+--- p2 ---
+2 May 2006 - 2 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de What does an Operating System do? Next: How does it do it?
+
+--- p3 ---
+3 May 2006 - 3 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de OS = Software between applications and hardware  Responsible for: - Providing Abstractions ( = virtual resources) - Management of Resources (physical and virtual) - Protection (& Sharing)  Usually multi-program, time-sharing, multi-user Operating System vi gcc Browser DVDPlayer
+
+--- p4 ---
+4 May 2006 - 4 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de How? Which HW-Resources can we use?
+
+--- p5 ---
+5 May 2006 - 5 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Computing System Architecture Controller Controller Controller Controller … Controller BUS CPU von Neumann Architecture •C P U ( s ) •B u s • Memory • I/O devices (connected to bus via a controller)
+
+--- p6 ---
+6 May 2006 - 6 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Computing System Architecture Controller Controller Controller Controller … Controller BUS CPU … CPU Switch Modern, high performance systems use a switch rather than a bus (multiple components can talk concurrently) Key. Multiple components, distributed system, concurrent operations possible.
+
+--- p7 ---
+7 May 2006 - 7 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Computer System Operation  I/O devices and the CPU can execute concurrently.  Device Controller is in charge of a particular device type.  Each device controller has a local buffer.  CPU moves data: main memory ↔ local buffers.  Actual I/O: device ↔ local buffer of controller.  Device controller informs CPU that it has finished its I/O operation by causing an interrupt. (there are others that only set a status-bit in a register of the device controller) I/O and CPU operation can overlap
+
+--- p8 ---
+8 May 2006 - 8 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt of CPU execution  I/O devices can interrupt the sequence of instructions that the CPU currently executes
+
+--- p9 ---
+9 May 2006 - 9 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt and Trap  An Interrupt is raised asynchronously by an external event  Transfers control to the interrupt service routine.  Interrupt vector = memory which contains the addresses of all the interrupt service routines.  A trap is raised synchronously by the software, either by an error or a by a trap-instruction. Interrupt Service Routine
+
+--- p10 ---
+10 May 2006 - 10 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt Handling  During an Interrupt, the operating system - preserves the state of the CPU by storing registers and the program counter (pc). - determines which type of interrupt has occurred: - status register - vectored interrupt system  Interrupt Service Routine determines what action should be taken for each type of interrupt - Calls interrupt handler functions  Interrupt switches CPU to “privileged mode”
+
+--- p11 ---
+11 May 2006 - 11 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt Handling  Multiple HW-devices may use (share) the same interrupt Interrupt Service Routine (Interrupt Dispatcher) Disable interrupts Record machine state (trap frame) Mask equal- and lower-IRQL interrupts Find and call appropriate Interrupt handler Dismiss interrupt Restore machine state (including mode and enabled interrupts) Tell the device to stop interrupting Interrogate device state, start next operation on device, etc. return Interrupt handler interrupt ! iret Tell the device to stop interrupting Interrogate device state, start next operation on device, etc. return
+
+--- p12 ---
+12 May 2006 - 12 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt Precedence via IRQLs (x86)  IRQL = Interrupt Request Level - the “precedence” of the interrupt with respect to other interrupts - Different interrupt sources have different IRQLs - not the same as IRQ  IRQL is part of the processor state  Servicing an interrupt raises IRQL to that interrupt’s IRQL - this masks subsequent interrupts at equal and lower IRQLs  User mode is limited to IRQL 0 IRQL Interrupt Source 31 High 30 Power Fail 29 Interprocessor Interrupt 28 Clock …… … Device 1 2 Dispatch 1 APC 0 Passive / Low normal execution hardware interrupts deferrable software interrupts
+
+--- p13 ---
+13 May 2006 - 13 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Resource Protection
+
+--- p14 ---
+14 May 2006 - 14 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Resource Protection  Sharing physical system resources (in order to construct high-level virtual resources) requires the operating system to ensure that an incorrect program cannot cause other programs to execute incorrectly. - Memory - Prevent user from accessing other user’s data - Prevent user from modifying OS code and data structures - CPU - Prevent a user from using the CPU forever - Prevent a user from executing certain instructions - I/O - Prevent users from performing illegal I/O
+
+--- p15 ---
+15 May 2006 - 15 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Resource Protection (Memory)
+
+--- p16 ---
+16 May 2006 - 16 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Memory Protection (Memory Protection Unit – MPU)  Add two registers to determine the range of legal addresses a program may access: - base register – holds the smallest legal physical memory address. - limit register – contains the size of the range. OS Job 1 Job 2 Job 3 Job 4 300040 120900 limit register base register 0 300040 420940 880000 1024000 Memory outside the defined range is protected.
+
+--- p17 ---
+17 May 2006 - 17 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Memory Management Unit (MMU)  Add one layer of indirection - Program addresses are called virtual addresses - Actual addresses are called physical addresses  Translation mechanism: MMU  CPU load/store supplies virtual address which MMU translates to physical address CPU MMU Virtual Address memory Physical Address „programmable“ 0815 4711
+
+--- p18 ---
+18 May 2006 - 18 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Address Translation with Page Table Organize memory into pages (e.g. 4 KBytes)
+
+--- p19 ---
+19 May 2006 - 19 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Resource Protection (Privilege Levels) (to restrict what the CPU can do)
+
+--- p20 ---
+20 May 2006 - 20 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Privilege Levels (dual-mode operation)  Mode bit added to CPU state to indicate mode of operation: - User mode (1) – execution done on behalf of a user, also known as: unprivileged mode. - Privileged mode (0) – execution done on behalf of operating system, also known as: monitor/supervisor/system mode.  At interrupt or fault → hardware switches to privileged mode. interrupt or trap (INT) special instruction (IRET)Kernel (privileged) mode• regular instructions • privileged instructions • access user memory • access kernel memory User (unprivileged) mode • regular instructions • access user memory Privilege Level State Diagram
+
+--- p21 ---
+21 May 2006 - 21 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Privileged Instruction Examples  Memory address mapping  Flush or invalidate data cache  Invalidate TLB entries  Load and read system registers  Change processor modes from unprivileged to privileged  Change the voltage and frequency of processor  Halt a processor  Reset a processor  Perform I/O operations  Dual Mode Operation: - instruction causes execution of operation if in one mode, - causes interrupt if in another mode
+
+--- p22 ---
+22 May 2006 - 22 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de FYI: x86 Protection Rings Operating System (kernel) Operating System Services User Applications Most systems only use privilege levels 0 and 3 (  dual-mode ) Level 3 Level 2 Level 1 Level 0
+
+--- p23 ---
+23 May 2006 - 23 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de System Call (program generated interrupt)
+
+--- p24 ---
+24 May 2006 - 24 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de System Calls  Given that I/O instructions are privileged, how does the user program perform I/O?  System Call – the method used by a process to request action by the operating system. - Software generated Interrupt - Control passes through the interrupt vector to a service routine - CPU switches to privileged mode. - Verify parameters - Execute system call - Return with results
+
+--- p25 ---
+25 May 2006 - 25 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Interrupt and Exceptions  Interrupt Sources - Hardware (by external devices) - Software: INT n See Intel document volume 3 for details
+
+--- p26 ---
+26 May 2006 - 26 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Library Stubs for System Calls  Example: int read( int fd, char * buf, int size) { move fd, buf, size to R1,R2,R3 move READ to R0 int $0x80 move result to Rresult }  Issues - One result register; what about more results? - How do we pass errors back to the caller? Linux: 0x80 NT: 0x2E
+
+--- p27 ---
+27 May 2006 - 27 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de System Call Entry Point  EntryPoint: - switch to kernel stack - save context - check R0 - call the code pointed by R0 - place result in Rresult - restore context - switch to user stack - iret (change to user mode and return)  Issues - User code can be arbitrary - Can user code lie? - Separation of user stack and kernel stack
+
+--- p28 ---
+28 May 2006 - 28 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Ex. Linux System Calls  User program invokes system calls to access kernel services - e.g. getpid()  In User Space, system calls are implemented as wrapper functions (libc).  System calls are defined using macros: _syscall0() ... _syscall5() … see include/asm-i386/unistd.h pid_t getpid() _syscall0(int,getpid) unsigned int alarm(unsigned int seconds) _syscall1(unsigned int,alarm,unsigned int,seconds) int write(int fd, const char * buf, unsigned int count) _syscall3(int,write,int,fd,const char *,buf,unsigned int,count)  If failed: return -1 and set errno
+
+--- p29 ---
+29 May 2006 - 29 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Macro Expansion for alarm() unsigned int alarm(unsigned int seconds) { long res; __asm__ volatile ("int $0x80" : "=a" (res) : "" (__NR_alarm), "b" ((long)(seconds))); if ((unsigned long)(res) >= (unsigned long)(-125)) { errno = -(res); res = -1; } return (unsigned int) (res); }
+
+--- p30 ---
+30 May 2006 - 30 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Transfer of Control  int $0x80 - Programmed interrupt  Inside the kernel: - Interrupt Service Routine calls Interrupt Handler system_call() (a.k.a. System Call Handler, written in assembly code) - According to system call number , e.g. __NR_alarm, the System Call Handler dispatches to the corresponding System Call Service Routine, e.g., sys_alarm() - System call dispatch table (see arch/i386/kernel/entry.S) .data ENTRY(sys_call_table) .long SYMBOL_NAME(sys_ni_syscall) /* 0 */ .long SYMBOL_NAME(sys_exit) .long SYMBOL_NAME(sys_fork) .long SYMBOL_NAME(sys_read) .long SYMBOL_NAME(sys_write) .long SYMBOL_NAME(sys_open) /* 5 */ .long SYMBOL_NAME(sys_close)
+
+--- p31 ---
+31 May 2006 - 31 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de System Call Service Routine Corresponding to each system call, e.g.: asmlinkage unsigned long sys_alarm(unsigned int seconds) { struct itimerval it_new, it_old; unsigned int oldalarm; it_new.it_interval.tv_sec = it_new.it_interval.tv_usec = 0; it_new.it_value.tv_sec = seconds; it_new.it_value.tv_usec = 0; do_setitimer(ITIMER_REAL, &it_new, &it_old); oldalarm = it_old.it_value.tv_sec; if (it_old.it_value.tv_usec) oldalarm++; return oldalarm; }
+
+--- p32 ---
+32 May 2006 - 32 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de System Call – Passing Parameters  Three general methods are used to pass parameters between a running program and the operating system. - Pass parameters in registers. - Store parameters in a table in memory, pass the table address in a register. - Push parameters onto the stack, pop off the stack by interrupt handler. passing of parameters as a table
+
+--- p33 ---
+33 May 2006 - 33 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Parameter Passing  Through CPU Registers - Each parameter is a word (32bit on IA32) - Parameters limited by register number  What about complex data (e.g., buffer, such as in write() )? - Parameter: memory address - Kernel will copy data from/to process' user-mode memory space  Two service routines copy_from_user(void* to,const void *from,unsigned long n ); copy_to_user(void* to, const void *from, unsigned long n );  A systems programmer’s dream: “Zero Copy”
+
+--- p34 ---
+34 May 2006 - 34 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Steps for adding a new System Call XYZ  Include a macro definition for NR_XYZ - In include/asm-i386/unistd.h  Write corresponding System Call Service Routine, e.g., sys_XYZ() (in kernel source tree)  Add an entry to system call dispatch table - In arch/i386/kernel/entry.S  Add a wrapper function in user-space code - Include <linux/unistd.h> - Use _syscall0() ... _syscall5()
+
+--- p35 ---
+35 May 2006 - 35 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Typical Unix OS Structure Application Libraries Machine dependent Layer Portable OS Layer user level kernel level User function calls written by programmers and compiled by programmers Written by elves Pre-compiled (in libraries) Defined in header files Possibly „shared library“ „Guts“ of system functions Boot Loader System Initialization Interrupt handling I/O device driver Memory Management Mode switching CPU management INT IRET Q. Where is the POSIX API?
+
+--- p36 ---
+36 May 2006 - 36 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Where to put which function?  All in the kernel (Windows98) - Pros: efficient - Cons: difficult to develop new services  All at user level (Microkernel, Exokernel) - Pros: easy to develop new services - Cons: protection mechanism costs  Compromise - Kernel: interrupt handling, CPU/memory management, device drivers - User: the rest User 1 User n File System services Physical disk … ? ?System calls vs. library callsWhat should be system calls? What should be library calls?
+
+--- p37 ---
+37 May 2006 - 37 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Monolithic OS Structure  The kernel sources may well be structured, but at runtime, every procedure can call any other procedure directly.  No protection / enforced boundaries.  Examples: - Early Unix - Linux  Pros? - Performance - Shared kernel space  Cons? - Stability - Flexibility
+
+--- p38 ---
+38 May 2006 - 38 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Layered OS Structure  Hiding information at each layer  Layered dependency  Examples: - MS-DOS (4 layers) - BSD Unix - THE (6 layers)  Pros? - Layered abstraction - Separation of concerns  Cons? - Inefficient - Inflexible
+
+--- p39 ---
+39 May 2006 - 39 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de MS-DOS Layer Structure
+
+--- p40 ---
+40 May 2006 - 40 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de 4.3BSD Layer Structure
+
+--- p41 ---
+41 May 2006 - 41 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Microkernel OS Structure  Services are implemented as regular processes  Micro-kernel gets services by messaging with service processes  Examples: - L4, Mach, OS-X, (Windows NT) - Exokernel (MIT) - Singularity (Microsoft Research)  Pros? - Easier to develop services - Fault isolation - Customization  Cons? - Lots of boundary crossings
+
+--- p42 ---
+42 May 2006 - 42 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Simplified Windows NT Architecture OS/2 Windows POSIX Environment Subsystems User Application Subsystem DLL Executive Device Drivers Kernel Hardware Abstraction Layer (HAL) User Mode Kernel Mode System & Service Processes Windows
+
+--- p43 ---
+43 May 2006 - 43 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Detailed NT/2000/XP/2003 Architecture hardware interfaces (buses, I/O devices, interrupts, interval timers, DMA, memory cache control, etc., etc.) System Service Dispatcher Task Manager Explorer SvcHost.Exe WinMgt.Exe SpoolSv.Exe Service Control Mgr. LSASS Object Mgr. Windows USER, GDI File System Cache I/O Mgr Environment Subsystems User Application Subsystem DLLs System Processes Services Applications User Mode Kernel Mode NTDLL.DLL Device & File Sys. Drivers WinLogon Services.Exe POSIX Windows DLLs Plug and Play Mgr. Power Mgr. Security Reference Monitor Virtual Memory Processes & Threads Local Procedure Call Graphics Drivers Kernel Hardware Abstraction Layer (HAL) (kernel mode callable interfaces) Configura- tion Mgr (registry) OS/2 Windows Session Manager
+
+--- p44 ---
+44 May 2006 - 44 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Is Windows NT a Micro-Kernel-OS?  No – not using the academic definition - Microkernel OS components and drivers run in their own private address spaces - WinNT kernel components live in a common shared address space  no protection between OS and drivers  Why not pure microkernel? - Performance – separate address spaces would mean context switching to call basic OS services  But it does have some attributes of a microkernel OS - OS personalities running in user space as separate processes - Kernel-mode components don't reach into one another’s data structures - Use formal interfaces to pass parameters and access and/or modify data structures  Therefore the term “modified microkernel”
+
+--- p45 ---
+45 May 2006 - 45 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Mr. Osborne, may I be excused? My brain is full.
+
+--- p46 ---
+46 May 2006 - 46 /g54 /g92/g86/g87 /g72/g80 /g86/g3/g36/g85 /g70 /g75 /g76/g87 /g72/g70/g87 /g88/g85 /g72 http://sar.informatik.hu-berlin.de Appendix: Vocabulary Check  Computing System Architecture (von Neumann Architecture)  Device Controller  Concurrent execution of CPU and IO  Interrupt, Trap  Interrupt Vector, IRQL  Interrupt Dispatcher (Interrupt Service Routine)  Interrupt Handler  Synchronous / asynchronous I/O operation  Direct Memory Access (DMA)  CPU privilege levels  x86 Protection Rings  Dual mode operation  System Call  System call entry point  OS structure: monolithic / layered / micro-kernel
+

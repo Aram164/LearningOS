@@ -33,14 +33,20 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: read
+  - material_ref:
+      route_id: route-eb5c6b1b09ac69064d94ade3
+      inherit:
+      - source_id
+    kind: read
     label: SaD current-scope index
-    source_id: source-sad-ss26-lectures
     locator: L01-L15 deck contents and the SaD.X error ledger
     scope_triage: required-now
-  - kind: read
+  - material_ref:
+      route_id: route-686945337831d30097efd0a5
+      inherit:
+      - source_id
+    kind: read
     label: Analysis current-scope index
-    source_id: source-analysis-skript
     locator: unser skript.pdf contents/course contract and the AN.X theorem ledger
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-blueprint/notes.md
@@ -69,14 +75,20 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: practise
+  - material_ref:
+      route_id: route-1db639dec976a8c8a14a9bbc
+      inherit:
+      - source_id
+    kind: practise
     label: Fresh Statistics half
-    source_id: source-sad-klausuren-extern
     locator: Unused scope-matched German questions with solutions
     scope_triage: required-now
-  - kind: practise
+  - material_ref:
+      route_id: route-b52242711bc5df661f001fa7
+      inherit:
+      - source_id
+    kind: practise
     label: Fresh Analysis half
-    source_id: source-analysis-klausuren-extern
     locator: Unused scope-matched German questions with solutions
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-one/notes.md
@@ -103,19 +115,28 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: read
+  - material_ref:
+      route_id: route-eb5c6b1b09ac69064d94ade3
+      inherit:
+      - source_id
+    kind: read
     label: SaD correction authorities
-    source_id: source-sad-ss26-lectures
     locator: Exact current deck for each SaD error
     scope_triage: required-now
-  - kind: practise
+  - material_ref:
+      route_id: route-bba83db0dc9d9f588c11fe61
+      inherit:
+      - source_id
+    kind: practise
     label: SaD current repair tasks
-    source_id: source-sad-uebungen
     locator: One near transfer for each SaD error
     scope_triage: required-now
-  - kind: read
+  - material_ref:
+      route_id: route-686945337831d30097efd0a5
+      inherit:
+      - source_id
+    kind: read
     label: Analysis correction authority
-    source_id: source-analysis-skript
     locator: Exact definition/result/example for each Analysis error
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-repair/notes.md
@@ -142,14 +163,20 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: practise
+  - material_ref:
+      route_id: route-16b01eb7e461c69ae61e851a
+      inherit:
+      - source_id
+    kind: practise
     label: Second fresh Statistics half
-    source_id: source-fau-klausur-ws1415
     locator: Unused FAU items or unused source-sad-klausuren-extern questions
     scope_triage: required-now
-  - kind: practise
+  - material_ref:
+      route_id: route-b52242711bc5df661f001fa7
+      inherit:
+      - source_id
+    kind: practise
     label: Second fresh Analysis half
-    source_id: source-analysis-klausuren-extern
     locator: Fresh Ulm/Leipzig or other unused scope-matched selection
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-two/notes.md

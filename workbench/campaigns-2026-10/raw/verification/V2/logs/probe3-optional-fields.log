@@ -1,0 +1,19 @@
+
+probe 3 · no view throws on a missing optional field
+  ok   home: renders with optional fields absent
+  ok   program: renders with optional fields absent
+  ok   module-list: renders with optional fields absent
+  ok   module-detail: renders with optional fields absent
+  ok   project-detail: renders with optional fields absent
+  ok   unit: renders with optional fields absent
+  ok   library: renders with optional fields absent
+  ok   atlas-concept: renders with optional fields absent
+  ok   atlas-domains: renders with optional fields absent
+  ok   abilities: renders with optional fields absent
+  ok   shelving: renders with optional fields absent
+  ok   boundary: renders with optional fields absent
+  ok   review: renders with optional fields absent
+  ok   garden: renders with optional fields absent
+  ok   diagnostics: renders with optional fields absent
+
+probe 3 (missing optional fields): all checks passed

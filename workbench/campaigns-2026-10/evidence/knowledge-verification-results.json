@@ -1,0 +1,82 @@
+[
+  {
+    "file": "test_k1_1_edge_evidence.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_2_no_inferred_edges.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_3_index_pivots.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_4_prereq_cycles.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_5_canvas_direction.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_6_domain_atlas.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k1_7_alias_resolution.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_1_stale_old_row.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_2_replace_cycle.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_3_operation_budget.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_4_alias_endpoints.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_5_two_sessions.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_6_question_lifecycle.py",
+    "exit_code": 0
+  },
+  {
+    "file": "test_k4_7_note_concept_link.py",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-authoring.js",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-direction-inspector.js",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-focused-graph.js",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-module-lenses.js",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-questions.js",
+    "exit_code": 0
+  },
+  {
+    "file": "k3-route-state.js",
+    "exit_code": 0
+  }
+]

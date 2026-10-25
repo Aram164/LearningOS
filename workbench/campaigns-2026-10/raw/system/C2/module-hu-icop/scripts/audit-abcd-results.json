@@ -1,0 +1,1315 @@
+{
+  "A": [
+    {
+      "id": "route-icop-l01-blum-bases",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-forms",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-general-duality",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-geometry",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-oral-review",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-phase-one",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-pivots",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-slackness",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-blum-standard-duality",
+      "vault_path": "material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf",
+      "ok": true,
+      "target": "algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf"
+    },
+    {
+      "id": "route-icop-l01-cornell-1",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-14",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-15",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-16",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-17",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-2",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-3",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-4",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-5",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-6",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-7",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-8",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-9",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-1",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-14",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-15",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-16",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-17",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-2",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-3",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-4",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-5",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-6",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-7",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-8",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-cornell-notes-9",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-deck-bases",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-forms",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-general-duality",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-geometry",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-oral-review",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-phase-one",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-pivots",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-slackness",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-deck-standard-duality",
+      "vault_path": "material://source-icop-hu-ws2627/ico_linearprogramming.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf",
+      "locator_names": "ico_linearprogramming.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-kv-review",
+      "vault_path": "material://source-korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf",
+      "ok": true,
+      "target": "optimization/korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf"
+    },
+    {
+      "id": "route-icop-l01-mit12",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-mit13",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-mit6046",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-organization",
+      "vault_path": "material://source-icop-hu-ws2627/ico_organization.pdf",
+      "ok": true,
+      "target": "algorithms/structures/icop-hu-ws2627/ico_organization.pdf",
+      "locator_names": "ico_organization.pdf",
+      "basename_match": true
+    },
+    {
+      "id": "route-icop-l01-stanford-10",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-stanford-7",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-stanford-8",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "route-icop-l01-stanford-9",
+      "ok": null,
+      "note": "no vault_path (url-only route)"
+    },
+    {
+      "id": "resource-icop-l01-forms-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-geometry-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-bases-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-pivots-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-phase-one-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-standard-duality-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-general-duality-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-slackness-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-oral-review-exercise-bank",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "resource-icop-l01-oral-mock",
+      "vault_path": "knowledge/notes/algorithms/note-icop-l01-mock-exam.md",
+      "ok": true,
+      "exists": true,
+      "locator_id_matches_stem": true
+    },
+    {
+      "id": "artifact:ultimate_reference:note-icop-l01-reference",
+      "ok": true,
+      "found": [
+        "knowledge/notes/algorithms/note-icop-l01-reference.md"
+      ]
+    },
+    {
+      "id": "artifact:exercise_bank:note-icop-l01-exercise-bank",
+      "ok": true,
+      "found": [
+        "knowledge/notes/algorithms/note-icop-l01-exercise-bank.md"
+      ]
+    },
+    {
+      "id": "artifact:mock_exam:note-icop-l01-mock-exam",
+      "ok": true,
+      "found": [
+        "knowledge/notes/algorithms/note-icop-l01-mock-exam.md"
+      ]
+    }
+  ],
+  "B": {
+    "rows": [
+      {
+        "id": "route-icop-l01-blum-bases",
+        "range": [
+          234,
+          238
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-forms",
+        "range": [
+          229,
+          232
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-general-duality",
+        "range": [
+          251,
+          254
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-geometry",
+        "range": [
+          232,
+          234
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-oral-review",
+        "range": [
+          266,
+          266
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-phase-one",
+        "range": [
+          245,
+          249
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-pivots",
+        "range": [
+          238,
+          245
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-slackness",
+        "range": [
+          254,
+          255
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-blum-standard-duality",
+        "range": [
+          249,
+          251
+        ],
+        "pdf": "blum",
+        "pdf_pages": 279,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-cornell-1",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-14",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-15",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-16",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-17",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-2",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-3",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-4",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-5",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-6",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-7",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-8",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-9",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-1",
+        "range": [
+          1,
+          7
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-14",
+        "range": [
+          1,
+          9
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-15",
+        "range": [
+          1,
+          9
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-16",
+        "range": [
+          1,
+          9
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-17",
+        "range": [
+          1,
+          6
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-2",
+        "range": [
+          1,
+          5
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-3",
+        "range": [
+          1,
+          6
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-4",
+        "range": [
+          1,
+          6
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-5",
+        "range": [
+          1,
+          7
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-6",
+        "range": [
+          1,
+          7
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-7",
+        "range": [
+          1,
+          10
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-8",
+        "range": [
+          1,
+          3
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-cornell-notes-9",
+        "range": [
+          1,
+          9
+        ],
+        "ok": null,
+        "note": "url-only; no local PDF"
+      },
+      {
+        "id": "route-icop-l01-deck-bases",
+        "range": [
+          41,
+          62
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-forms",
+        "range": [
+          1,
+          23
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-general-duality",
+        "range": [
+          103,
+          115
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-geometry",
+        "range": [
+          24,
+          40
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-oral-review",
+        "range": [
+          126,
+          129
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-phase-one",
+        "range": [
+          82,
+          91
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-pivots",
+        "range": [
+          63,
+          81
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-slackness",
+        "range": [
+          116,
+          125
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-deck-standard-duality",
+        "range": [
+          92,
+          102
+        ],
+        "pdf": "ico_linearprogramming.pdf",
+        "pdf_pages": 129,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-kv-review",
+        "range": [
+          70,
+          90
+        ],
+        "pdf": "korte-vygen",
+        "pdf_pages": 664,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-mit12",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-mit13",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-mit6046",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-organization",
+        "range": [
+          12,
+          16
+        ],
+        "pdf": "ico_organization.pdf",
+        "pdf_pages": 17,
+        "ok": true
+      },
+      {
+        "id": "route-icop-l01-stanford-10",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-stanford-7",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-stanford-8",
+        "ok": null,
+        "note": "no page range in locator"
+      },
+      {
+        "id": "route-icop-l01-stanford-9",
+        "ok": null,
+        "note": "no page range in locator"
+      }
+    ],
+    "pdf_page_counts": {
+      "ico_linearprogramming.pdf": 129,
+      "ico_organization.pdf": 17,
+      "korte-vygen": 664,
+      "blum": 279
+    }
+  },
+  "C": [
+    {
+      "id": "lp-p23-shortest-path",
+      "ok": false,
+      "evidence": "exercises exercise: let a digraph g be given along with vertices s, t \u2208 v (g ) and positive edge weights w : e (g ) \u2192 r>0. write a linear program whose optimum value is equal to the distance from s to t in g relative to weights w . exercise: transform the above lp into canonical form. exercise: tran"
+    },
+    {
+      "id": "lp-p55-vertex-question",
+      "ok": true,
+      "evidence": "some comments theorem: for every feasible and bounded linear program in standard form with corresponding polyhedron p there is a vertex where the target function takes optimal value. comments \u25b6 we can now at least design a finite algorithm for solving linear programs min{c t x : ax = b, x \u2265 0} if th"
+    },
+    {
+      "id": "lp-p67-nondegeneracy",
+      "ok": true,
+      "evidence": "formal description fix a linear program in standard form with a \u2208 rm\u00d7n, b \u2208 rm, and c \u2208 rn. min c t x s.t. ax = b x \u2265 0 some assumptions \u25b6 rows of a are linearly independent, i.e., rk( a) = m (else gaussian elimination) \u25b6 assume that there are no degenerate basic feasible solutions: \u25b6 x \u2208 pis degene"
+    },
+    {
+      "id": "lp-p87-phase1-questions",
+      "ok": true,
+      "evidence": "solving the first-stage lp min \u001ax hi : (a, im) \u0012x h \u0013 = b, \u0012x h \u0013 \u2265 0 \u001b solving the first-stage lp \u25b6 we can run the second-stage local search starting with the basic feasible solution x = 0 and h = b \u25b6 if basic feasible solution \u0012 x h \u0013 with target function value 0 is found then return x as a basic "
+    },
+    {
+      "id": "lp-p89-bitsize",
+      "ok": true,
+      "evidence": "running time per pivot operation theorem: the pivot operations can be implemented to run in time polynomial in the size of the input linear program. comments \u25b6 should be clear from our description of the pivot operation that only a polynomial number of arithmetic operations are needed \u25b6 why do the c"
+    },
+    {
+      "id": "lp-p90-kleeminty",
+      "ok": true,
+      "evidence": "number of pivot operations theorem (klee and minty [1972]): for every n \u2208 n there is a linear program in standard form with 3n variables and 2n constraints, in which all coefficients are integer value"
+    },
+    {
+      "id": "lp-p91-hirsch",
+      "ok": true,
+      "evidence": "simplex algorithm - wrap-up simplex algorithm \u25b6 greedy/local search algorithm for optimizing lps in standard form \u25b6 fairly intuitive scheme of traversing basic feasible solutions (pivot operation) \u25b6 n"
+    },
+    {
+      "id": "lp-p112-dual-of-dual",
+      "ok": true,
+      "evidence": "dual of the dual theorem: the dual of the dual lp is again the primal lp. exercise: prove the theorem for the form of primal lp that we just used. proof idea: \u25b6 transform the obtained dual so that it is again a minimization problem and has the right "
+    },
+    {
+      "id": "lp-p114-both-infeasible",
+      "ok": true,
+      "evidence": "how could both primal and dual lp be infeasible? note: a pair of primal and dual lp that are both infeasible. primal dual min x1 max y1 + y2 s.t. x1 + x2 \u2265 1 s.t. y1 \u2265 0 \u2212 x1 \u2212 x2 \u2265 1 y2 \u2265 0 x1 unrestricted y1 \u2212 y2 = 1 x2 unrestricted y1 \u2212 y2 = 0 s. "
+    },
+    {
+      "id": "lp-p115-shortest-path-dual",
+      "ok": true,
+      "evidence": "exercise exercise: recall the linear program for determining the distance from s to t in an edge-weighted digraph. use the transformation rules to create its dual. exercise: what is the intuitive meaning of the primal/dual variables and constraints? "
+    },
+    {
+      "id": "lp-p125-summary",
+      "ok": true,
+      "evidence": "summary summary \u25b6 introduced linear programming basics and notation \u25b6 transformations of lps and special forms \u25b6 geometrical and algebraical interpretation \u25b6 the simplex algorithm for optimizing linear programs \u25b6 dual of a linear program \u25b6 weak and s"
+    },
+    {
+      "id": "lp-p126-outlook",
+      "ok": true,
+      "evidence": "outlook outlook \u25b6 other algorithmic approaches for optimizing lps: \u25b6 ellipsoid method \u25b6 interior points methods \u25b6 linear programs for integral problems? \u25b6 when linear programs have integral vertices/o"
+    },
+    {
+      "id": "lp-p128-inscribed-ball",
+      "ok": true,
+      "evidence": "further exercises exercise: show that the problem to compute a largest ball that is a subset of a given polyhedron can be formulated as a linear program. exercise: let a \u2208 rm\u00d7n, b \u2208 rm, c \u2208 rn, and u \u2208 zn. consider the lp max{c t x : ax \u2264 b, 0 \u2264 x \u2264 "
+    },
+    {
+      "id": "lp-p129-simplex-exercises",
+      "ok": true,
+      "evidence": "further exercises exercise: use the simplex algorithm to solve the following linear programs: max x1 \u2212 3x2 + x3 min 6 x1 \u2212 9x2 s.t. 3x1 + 2x2 = 6 s.t. x1 \u2212 x2 = 6 4x1 + x2 + 4x3 = 12 3 x1 + x2 \u2265 1 x2, x3 \u2264 0 2 x1 \u2212 3x2 \u2265 3 x1 \u2265 0 x2 \u2264 0 note: while h"
+    },
+    {
+      "id": "lp-p1-5-framing",
+      "ok": true,
+      "evidence": "introduction to combinatorial optimization linear programming stefan kratsch humboldt-universit \u0308 at zu berlin institut f \u0308 ur informatik stefan.kratsch@hu-berlin.de winter term 2026/27 s. kratsch ( stefan.kratsch@hu-berlin.de) combinatorial optimiza"
+    },
+    {
+      "id": "org-p12-sketches",
+      "ok": true,
+      "evidence": "lectures lectures \u25b6 about 75% of the time slots will be used for lectures \u25b6 presentation uses a mix of pdf slides and the board \u25b6 the pdf slides are shared via moodle \u25b6 you have to take your own notes of sketches etc. made on the board \u25b6 progress on "
+    },
+    {
+      "id": "org-p15-oral-30min",
+      "ok": true,
+      "evidence": "oral exam and exam admission exam admission \u25b6 no requirements, everyone can take the exam oral exam \u25b6 length is 30 minutes \u25b6 in person at the institute \u25b6 appointments can be made via moodle + agnes when the time comes \u25b6 you can take the exam in english or german s. kratsch ( stefan.kratsch@hu-berlin"
+    },
+    {
+      "id": "org-p16-expectations",
+      "ok": true,
+      "evidence": "what is important in the exam? content \u25b6 everything that we covered in the lecture (slides and notes from black board) \u25b6 solutions to exercises that are part of lecture content (e.g. a small proof) \u25b6 not: solutions to further exercises (e.g. transfer to new problems) what is important? \u25b6 being able "
+    },
+    {
+      "id": "kv-p70-ch3-heading",
+      "ok": true,
+      "evidence": "3 linear programming in this chapter we review the most important facts about linear programming. although this chapter is self-contained, it cannot be considered to be a compre- hensive treatment of the field. the reader unfamiliar with linear programming is referred to the textbooks mentioned at t"
+    },
+    {
+      "id": "kv-p87-89-exercises",
+      "ok": true,
+      "evidence": "68 3 linear programming corollary 3.32. a polytope is the convex hull of its vertices. proof: letp be a polytope. by theorem 3.31, the convex hull of its vertices is a polytopeq. obviouslyq /dc2 p . suppose there is a point \u0301 2 p nq. then there is a "
+    },
+    {
+      "id": "kv-p89-90-references",
+      "ok": true,
+      "evidence": "70 3 linear programming 11. use fourier-motzkin elimination (exercise 10) to prove theorem 3.24 directly. (kuhn [1956]) 12. show that theorem 3.24 implies the duality theorem 3.20. 13. prove the decomposition theorem for polyhedra: any polyhedron p c"
+    },
+    {
+      "id": "kv-ch3-max-form",
+      "ok": true,
+      "evidence": "3 linear programming in this chapter we review the most important facts about linear programming. although this chapter is self-contained, it cannot be considered to be a compre- hensive treatment of the field. the reader unfamiliar with linear progr"
+    },
+    {
+      "id": "blum-p229-8.1",
+      "ok": false,
+      "evidence": "8 lineare programmierung in anwendungen m\u00fcssen des \u00f6fteren optimierungsprobleme ge l\u00f6st werden. einige haben wir in den kapiteln 3, 4 und 5 kennengelernt und algorit hmen zu deren l\u00f6- sung entwickelt. h\u00e4ufig ging der beschreibung des algorithm us eine problemanalyse voraus, mittels derer wir speziel"
+    },
+    {
+      "id": "blum-p238-8.2",
+      "ok": true,
+      "evidence": "226 8 lineare programmierung zielfunktion z gegen \u2212\u221e konvergiert, existiert. nehmen wir an, dass das gegebene lineare programm minimiere z(x) = ctx ax =b x \u2265 0 eine endliche optimale l\u00f6sung besitzt. da ( n m ) basisl\u00f6sungen existieren k\u00f6nnen, ist f\u00fcr gro\u00dfe n und m die betrachtung aller basisl\u00f6sungen"
+    },
+    {
+      "id": "blum-p245-start-basis",
+      "ok": true,
+      "evidence": "8.2 die simplexmethode 233 tabelle 8.3: tafel vom typ 2. alle v ariablen \u2212xj \u00b7 \u00b7 \u00b7 \u2212 xbi \u00b7 \u00b7 \u00b7 xb0 y00 y0j 0... ... ... ... xbi yi0 yij 1 basisvariablen ... ... ... ... xbp yp0 ypj 0... ... ... ... tafeln vom typ 2 haben den v orteil, dass jede v ariable eine fe ste spaltenposition erh\u00e4lt und dass s"
+    },
+    {
+      "id": "blum-p249-8.3",
+      "ok": true,
+      "evidence": "8.3 dualit\u00e4t 237 v ektors mit einem anderen v ektor die lineare unabh\u00e4ngigkeit einer menge von linear unabh\u00e4ngigen v ektoren nicht st\u00f6rt, sind \u02c6vi, 1 \u2264i \u2264m linear unabh\u00e4ngig. in der q-ten iteration h\u00e4ngt die tafel, bis auf permutation von nich tbasisspalten und permutation von basiszeilen, nur von d"
+    },
+    {
+      "id": "blum-p255-stop-before-dual-simplex",
+      "ok": false,
+      "evidence": "8.3 dualit\u00e4t 243 dual paar von linearen programmen optimal ist, ist im nachfo lgenden satz formuliert. diese bedingung wird komplement\u00e4re schlupfbedingung genannt. satz 8.9 seien x,\u03c0 zul\u00e4ssige l\u00f6sungen f\u00fcr ein primal-dual paar von linearen pr o- gram || 256: 244 8 lineare programmierung basisl\u00f6sung, zu einer benachbarten wandert. dieser hei\u00dft dualer simplexalgorithmus. betrachten wir hierzu noch einmal ein"
+    },
+    {
+      "id": "blum-p266-ex-8.15-16",
+      "ok": true,
+      "evidence": "254 8 lineare programmierung \u00fcbung 8.15: l\u00f6sen sie folgende lineare programme mit hilfe des simplexa lgorith- mus: a) maximiere z(x) = x1 \u2212 3x2 +x3 3x1 + 2x2 = 6 4x1 +x2 + 4x3 = 12 x1\u2276 0 x2,x 3 \u2264 0 b) minimiere z(x) = 6x1 \u2212 9x2 x1 \u2212x2 = 6 3x1 +x2 \u2265 1 2x1 \u2212 3x2 \u2265 3 x1 \u2265 0 x2 \u2264 0 \u00fcbung 8.16: betrachte"
+    },
+    {
+      "id": "blum-printed-offset-+12",
+      "ok": false,
+      "evidence": "[{\"physical\": 229, \"printed_expected\": 217, \"found_candidates\": [], \"hit\": false}, {\"physical\": 238, \"printed_expected\": 226, \"found_candidates\": [226], \"hit\": true}, {\"physical\": 249, \"printed_expected\": 237, \"found_candidates\": [237], \"hit\": true}, {\"physical\": 266, \"printed_expected\": 254, \"found_candidates\": [254], \"hit\": true}]"
+    },
+    {
+      "id": "aml-l06-s7-exists",
+      "ok": true,
+      "evidence": "heading match: True"
+    },
+    {
+      "id": "exercise-bank-questions-answers",
+      "ok": false,
+      "evidence": "sections found"
+    },
+    {
+      "id": "mock-exam-then-answers",
+      "ok": true,
+      "evidence": "sections found"
+    }
+  ],
+  "D": {
+    "inherit_failures": [
+      {
+        "stage": "stage-icop-l01-forms",
+        "resource": "resource-icop-l01-forms-mit12",
+        "field": "label",
+        "route": "route-icop-l01-mit12"
+      },
+      {
+        "stage": "stage-icop-l01-forms",
+        "resource": "resource-icop-l01-forms-deck-forms",
+        "field": "label",
+        "route": "route-icop-l01-deck-forms"
+      },
+      {
+        "stage": "stage-icop-l01-forms",
+        "resource": "resource-icop-l01-forms-blum-forms",
+        "field": "label",
+        "route": "route-icop-l01-blum-forms"
+      },
+      {
+        "stage": "stage-icop-l01-forms",
+        "resource": "resource-icop-l01-forms-cornell-8",
+        "field": "label",
+        "route": "route-icop-l01-cornell-8"
+      },
+      {
+        "stage": "stage-icop-l01-geometry",
+        "resource": "resource-icop-l01-geometry-deck-geometry",
+        "field": "label",
+        "route": "route-icop-l01-deck-geometry"
+      },
+      {
+        "stage": "stage-icop-l01-geometry",
+        "resource": "resource-icop-l01-geometry-cornell-2",
+        "field": "label",
+        "route": "route-icop-l01-cornell-2"
+      },
+      {
+        "stage": "stage-icop-l01-geometry",
+        "resource": "resource-icop-l01-geometry-cornell-notes-2",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-2"
+      },
+      {
+        "stage": "stage-icop-l01-geometry",
+        "resource": "resource-icop-l01-geometry-blum-geometry",
+        "field": "label",
+        "route": "route-icop-l01-blum-geometry"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-deck-bases",
+        "field": "label",
+        "route": "route-icop-l01-deck-bases"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-cornell-3",
+        "field": "label",
+        "route": "route-icop-l01-cornell-3"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-cornell-notes-3",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-3"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-cornell-4",
+        "field": "label",
+        "route": "route-icop-l01-cornell-4"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-cornell-notes-4",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-4"
+      },
+      {
+        "stage": "stage-icop-l01-bases",
+        "resource": "resource-icop-l01-bases-blum-bases",
+        "field": "label",
+        "route": "route-icop-l01-blum-bases"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-deck-pivots",
+        "field": "label",
+        "route": "route-icop-l01-deck-pivots"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-cornell-4",
+        "field": "label",
+        "route": "route-icop-l01-cornell-4"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-cornell-notes-4",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-4"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-cornell-5",
+        "field": "label",
+        "route": "route-icop-l01-cornell-5"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-cornell-notes-5",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-5"
+      },
+      {
+        "stage": "stage-icop-l01-pivots",
+        "resource": "resource-icop-l01-pivots-blum-pivots",
+        "field": "label",
+        "route": "route-icop-l01-blum-pivots"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-deck-phase-one",
+        "field": "label",
+        "route": "route-icop-l01-deck-phase-one"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-6",
+        "field": "label",
+        "route": "route-icop-l01-cornell-6"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-notes-6",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-6"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-7",
+        "field": "label",
+        "route": "route-icop-l01-cornell-7"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-notes-7",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-7"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-9",
+        "field": "label",
+        "route": "route-icop-l01-cornell-9"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-cornell-notes-9",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-9"
+      },
+      {
+        "stage": "stage-icop-l01-phase-one",
+        "resource": "resource-icop-l01-phase-one-blum-phase-one",
+        "field": "label",
+        "route": "route-icop-l01-blum-phase-one"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-deck-standard-duality",
+        "field": "label",
+        "route": "route-icop-l01-deck-standard-duality"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-14",
+        "field": "label",
+        "route": "route-icop-l01-cornell-14"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-notes-14",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-14"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-15",
+        "field": "label",
+        "route": "route-icop-l01-cornell-15"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-notes-15",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-15"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-16",
+        "field": "label",
+        "route": "route-icop-l01-cornell-16"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-cornell-notes-16",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-16"
+      },
+      {
+        "stage": "stage-icop-l01-standard-duality",
+        "resource": "resource-icop-l01-standard-duality-blum-standard-duality",
+        "field": "label",
+        "route": "route-icop-l01-blum-standard-duality"
+      },
+      {
+        "stage": "stage-icop-l01-general-duality",
+        "resource": "resource-icop-l01-general-duality-deck-general-duality",
+        "field": "label",
+        "route": "route-icop-l01-deck-general-duality"
+      },
+      {
+        "stage": "stage-icop-l01-general-duality",
+        "resource": "resource-icop-l01-general-duality-cornell-8",
+        "field": "label",
+        "route": "route-icop-l01-cornell-8"
+      },
+      {
+        "stage": "stage-icop-l01-general-duality",
+        "resource": "resource-icop-l01-general-duality-cornell-notes-8",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-8"
+      },
+      {
+        "stage": "stage-icop-l01-general-duality",
+        "resource": "resource-icop-l01-general-duality-blum-general-duality",
+        "field": "label",
+        "route": "route-icop-l01-blum-general-duality"
+      },
+      {
+        "stage": "stage-icop-l01-slackness",
+        "resource": "resource-icop-l01-slackness-deck-slackness",
+        "field": "label",
+        "route": "route-icop-l01-deck-slackness"
+      },
+      {
+        "stage": "stage-icop-l01-slackness",
+        "resource": "resource-icop-l01-slackness-cornell-17",
+        "field": "label",
+        "route": "route-icop-l01-cornell-17"
+      },
+      {
+        "stage": "stage-icop-l01-slackness",
+        "resource": "resource-icop-l01-slackness-cornell-notes-17",
+        "field": "label",
+        "route": "route-icop-l01-cornell-notes-17"
+      },
+      {
+        "stage": "stage-icop-l01-slackness",
+        "resource": "resource-icop-l01-slackness-blum-slackness",
+        "field": "label",
+        "route": "route-icop-l01-blum-slackness"
+      },
+      {
+        "stage": "stage-icop-l01-oral-review",
+        "resource": "resource-icop-l01-oral-review-deck-oral-review",
+        "field": "label",
+        "route": "route-icop-l01-deck-oral-review"
+      },
+      {
+        "stage": "stage-icop-l01-oral-review",
+        "resource": "resource-icop-l01-oral-review-blum-oral-review",
+        "field": "label",
+        "route": "route-icop-l01-blum-oral-review"
+      },
+      {
+        "stage": "stage-icop-l01-oral-review",
+        "resource": "resource-icop-l01-oral-review-organization",
+        "field": "label",
+        "route": "route-icop-l01-organization"
+      },
+      {
+        "stage": "stage-icop-l01-oral-review",
+        "resource": "resource-icop-l01-oral-review-kv-review",
+        "field": "label",
+        "route": "route-icop-l01-kv-review"
+      }
+    ],
+    "duplicate_locators_any_source": {},
+    "sibling_duplicate_angle_details": {
+      "('source-blum-algorithmen-datenstrukturen', 'unit-icop-l01-linear-programming')::Read only the stated subsection span as a repair/derivation ...": [
+        "route-icop-l01-blum-forms",
+        "route-icop-l01-blum-geometry",
+        "route-icop-l01-blum-bases",
+        "route-icop-l01-blum-pivots",
+        "route-icop-l01-blum-phase-one",
+        "route-icop-l01-blum-standard-duality",
+        "route-icop-l01-blum-general-duality",
+        "route-icop-l01-blum-oral-review"
+      ],
+      "('source-cornell-topaloglu-lp', 'unit-icop-l01-linear-programming')::Official course title, linked handwritten notes and course p...": [
+        "route-icop-l01-cornell-3",
+        "route-icop-l01-cornell-4"
+      ],
+      "('source-stanford-cs261-2016', 'unit-icop-l01-linear-programming')::Official 2016 course schedule verifies the numbered lecture....": [
+        "route-icop-l01-stanford-7",
+        "route-icop-l01-stanford-8",
+        "route-icop-l01-stanford-9",
+        "route-icop-l01-stanford-10"
+      ]
+    },
+    "covers_not_in_knowledge_map": [],
+    "knowledge_never_covered": [],
+    "dangling_references": []
+  },
+  "provenance": {
+    "source_map_meta_equal": true,
+    "route_sets_equal": true,
+    "orig_unit_ids": [
+      null
+    ],
+    "stage_diffs": []
+  }
+}

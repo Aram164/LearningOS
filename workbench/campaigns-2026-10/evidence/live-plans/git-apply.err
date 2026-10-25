@@ -1,0 +1,1 @@
+seal_envelope: --submit derives its own guards and keeps its own envelope; drop --out

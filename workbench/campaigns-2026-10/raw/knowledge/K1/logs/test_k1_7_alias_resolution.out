@@ -1,0 +1,15 @@
+# command: .venv/bin/pytest tests/test_k1_7_alias_resolution.py -v   (cwd: /Users/aramaljanadi/los-glm-K1-2026-10/repository; Core pin fb73b0f9)
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/aramaljanadi/los-glm-K1-2026-10/repository/.venv/bin/python3.14
+cachedir: .pytest_cache
+rootdir: /Users/aramaljanadi/los-glm-K1-2026-10/repository
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 4 items
+
+tests/test_k1_7_alias_resolution.py::test_german_alias_resolves_to_the_same_concept_id_as_the_id_itself PASSED [ 25%]
+tests/test_k1_7_alias_resolution.py::test_alias_case_insensitivity_and_ambiguity PASSED [ 50%]
+tests/test_k1_7_alias_resolution.py::test_note_search_reaches_the_concept_id_through_the_declared_alias PASSED [ 75%]
+tests/test_k1_7_alias_resolution.py::test_content_search_boundary_recorded PASSED [100%]
+
+============================== 4 passed in 1.84s ===============================

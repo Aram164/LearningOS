@@ -995,6 +995,40 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-an-ch05-analysisdrillblaetterext-2:
+    claim_id: covers:route-an-ch05-analysisdrillblaetterext-2
+    claim_kind: route-covers
+    statement: route-an-ch05-analysisdrillblaetterext-2 covers knowledge-m2-analysis-ch05-einseitige-grenzwerte,
+      knowledge-m2-analysis-ch05-exponentialfunktion, knowledge-m2-analysis-ch05-funktionsgrenzwerte,
+      knowledge-m2-analysis-ch05-gleichmaessige-konvergenz, knowledge-m2-analysis-ch05-kompakte-intervalle,
+      knowledge-m2-analysis-ch05-stetigkeit, knowledge-m2-analysis-ch05-zwischenwertsatz
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:mathematics/analysis/analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf: b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0
+        node-content:knowledge-m2-analysis-ch05-einseitige-grenzwerte: sha256:5ebee871c2f95222ff18cc7d82dba962fd5e11df4b04aa0af6a3dafd9a9b836c
+        node-content:knowledge-m2-analysis-ch05-exponentialfunktion: sha256:dd6559cb1189dcda05c45116ba9e697d36c471925285bec92398a49a2d502c22
+        node-content:knowledge-m2-analysis-ch05-funktionsgrenzwerte: sha256:31709f54b170cdfedfb5a50506a3101eb2220142c1a28e426f171d938bdcd217
+        node-content:knowledge-m2-analysis-ch05-gleichmaessige-konvergenz: sha256:1013fae38e10a35f4961b9278fc93a2ee33e8e39060a787612d4a42f20df8b13
+        node-content:knowledge-m2-analysis-ch05-kompakte-intervalle: sha256:7a8f70776b87f5731b197779b733de9f6d211a4a551224b541c2599ea0713423
+        node-content:knowledge-m2-analysis-ch05-stetigkeit: sha256:ff40cd979a6c7f7da296bcdef18e1ec562b7c4c4772f1f0c4f87b59fe2f48789
+        node-content:knowledge-m2-analysis-ch05-zwischenwertsatz: sha256:c74a6b40b75392c6b9c874d26728e5c08f2d094021790cf9fb8ba0c084fca5b2
+        route-content:route-an-ch05-analysisdrillblaetterext-2: sha256:4fa26896821ec618d135b3f2d67e37fa097daa95267f686ca9173af508d3bb61
+        source-material:source-analysis-drill-blaetter-extern: sha256:76ea3933c669510b04ae5983c8cc076aa1fbf8fa621271928ecf93e6cd537404
+      evidence:
+      - 'quote:material://source-analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf#p78
+        sha256:c72e0bcc2fafa5d5cf6114f67f616e12714473ca94e3b4a2187bd21b56815958 --
+        trail: the page the corrected §11.1 anchor names; the page header carries
+        the printed book number 75, so the PDF position is printed + 3 for this book
+        (RECHECK-80 F2)'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-2cc1baa77fac4d8daf1e5cf72743d9d4
+      idempotency_key: reviewed-a9db45f5735c45bd82ca228e23ef56ca
+    reviewed_by: ''
+    status: supported
   covers:route-an-ch05-henningdierks:
     claim_id: covers:route-an-ch05-henningdierks
     claim_kind: route-covers
@@ -1053,6 +1087,39 @@ records:
     admitted_by:
       request_id: 58248434-af9e-44cd-99f1-56d8d054b642
       idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch06-analysisdrillblaetterext:
+    claim_id: covers:route-an-ch06-analysisdrillblaetterext
+    claim_kind: route-covers
+    statement: route-an-ch06-analysisdrillblaetterext covers knowledge-m2-analysis-ch06-differenzierbarkeit,
+      knowledge-m2-analysis-ch06-hoehere-ableitungen, knowledge-m2-analysis-ch06-hospital,
+      knowledge-m2-analysis-ch06-interpolation, knowledge-m2-analysis-ch06-mittelwertsatz,
+      knowledge-m2-analysis-ch06-taylor, knowledge-m2-analysis-ch06-trigonometrie
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:mathematics/analysis/analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf: b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0
+        node-content:knowledge-m2-analysis-ch06-differenzierbarkeit: sha256:528bab73e01ed33f9e2be934d6f14b13126a2d42ccc214d2215c23e47cb7951f
+        node-content:knowledge-m2-analysis-ch06-hoehere-ableitungen: sha256:d90851bba5e49861881f77e2ec93e273c4dc7382dade5dc4610891e4f63b00ca
+        node-content:knowledge-m2-analysis-ch06-hospital: sha256:03b7ef1de2932a097bcacfe1cb79e50ebd2922a9126a20c89237d9365f52e857
+        node-content:knowledge-m2-analysis-ch06-interpolation: sha256:4784c3e4fcaa5b3bd0a6898e0e8ba60c0c4cd46c7afe2cd956f116114c0365d7
+        node-content:knowledge-m2-analysis-ch06-mittelwertsatz: sha256:c6ef938fd68c1679e43159963bcf39b4d2e220adb371b4c1234b31d59004652d
+        node-content:knowledge-m2-analysis-ch06-taylor: sha256:e3116869be10e7b29cf9516589b8fa5e0bbaf3ca7ab6f7fd389b51dd14c2d94f
+        node-content:knowledge-m2-analysis-ch06-trigonometrie: sha256:858fedeaa8541406b50352692db535ae94bdb3f4335f9227ea06c88de9baddb4
+        route-content:route-an-ch06-analysisdrillblaetterext: sha256:d25efdb747c0a792823fb04b97d5cd2afdd770f40e9aad6ed5698fa1ee69af15
+        source-material:source-analysis-drill-blaetter-extern: sha256:76ea3933c669510b04ae5983c8cc076aa1fbf8fa621271928ecf93e6cd537404
+      evidence:
+      - 'quote:material://source-analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf#p161
+        sha256:db6b4c6e84e70bfcad78f1cff1c6a7c397df23f81e4add35ec8b35671ab75271 --
+        trail: the page the corrected §14.3 anchor names; its header carries the printed
+        number 158, confirming the +3 offset measured in RECHECK-80 F2'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-2cc1baa77fac4d8daf1e5cf72743d9d4
+      idempotency_key: reviewed-a9db45f5735c45bd82ca228e23ef56ca
     reviewed_by: ''
     status: supported
   covers:route-an-ch06-henningdierks:
@@ -1141,6 +1208,34 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-an-ch07-analysisdrillblaetterext:
+    claim_id: covers:route-an-ch07-analysisdrillblaetterext
+    claim_kind: route-covers
+    statement: route-an-ch07-analysisdrillblaetterext covers knowledge-m2-analysis-ch07-hauptsatz,
+      knowledge-m2-analysis-ch07-riemann-integral, knowledge-m2-analysis-ch07-uneigentliche-integrale
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:mathematics/analysis/analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf: b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0
+        node-content:knowledge-m2-analysis-ch07-hauptsatz: sha256:abfe2e9377972bd10a80ebfd0554d096edd241324aca5a747c2bc61aa0eada74
+        node-content:knowledge-m2-analysis-ch07-riemann-integral: sha256:ad5ccf56ab0f12a192a87fa28999b4ddc8cb58341b133a3f1ffed4049b94aa60
+        node-content:knowledge-m2-analysis-ch07-uneigentliche-integrale: sha256:5fda7f9e5df9105bbd3c35b1b2ff9f9dc6bbe05a8b116bed88171818f04b5ac2
+        route-content:route-an-ch07-analysisdrillblaetterext: sha256:893341548b72db99cd2ef08ad72427dcbdcc5ecf88cc7c0bee050ab8c997c9d7
+        source-material:source-analysis-drill-blaetter-extern: sha256:76ea3933c669510b04ae5983c8cc076aa1fbf8fa621271928ecf93e6cd537404
+      evidence:
+      - 'quote:material://source-analysis-drill-blaetter-extern/IngMath2_Aufgaben.pdf#p222
+        sha256:ec93e1faa8d822d73a80b0e5af1dff25b67ab8ada71b9f88a292710d20688fb6 --
+        trail: the page the corrected §16.1 anchor names; the printed book number
+        219 is on the facing header sequence, the PDF position is printed + 3 per
+        RECHECK-80 F2'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-2cc1baa77fac4d8daf1e5cf72743d9d4
+      idempotency_key: reviewed-a9db45f5735c45bd82ca228e23ef56ca
+    reviewed_by: ''
+    status: supported
   covers:route-an-ch07-henningdierks:
     claim_id: covers:route-an-ch07-henningdierks
     claim_kind: route-covers
@@ -1325,6 +1420,38 @@ records:
     admitted_by:
       request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
       idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+    reviewed_by: ''
+    status: supported
+  covers:route-b3e5bcb8f3813cbc477ac799:
+    claim_id: covers:route-b3e5bcb8f3813cbc477ac799
+    claim_kind: route-covers
+    statement: route-b3e5bcb8f3813cbc477ac799 covers knowledge-sad-l15-activation,
+      knowledge-sad-l15-backprop, knowledge-sad-l15-forward, knowledge-sad-l15-output,
+      knowledge-sad-l15-training
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:machine-learning/classical/aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf: 95473d635afd11d8ba1b2155b13d73c558f712845dba3b9df549fabd741a1947
+        node-content:knowledge-sad-l15-activation: sha256:fb0a39827b576f4736a4e06e3f3a326a714803d8145c5724dc172237f7c640ee
+        node-content:knowledge-sad-l15-backprop: sha256:af770de2a9fde3f4e7bfda6ec8158466c496f2e201d0254e24d8955a21a6190c
+        node-content:knowledge-sad-l15-forward: sha256:28b17c2737b99512d4d1dcad79f10eecfde179c3e19c0665b602be770e662ba2
+        node-content:knowledge-sad-l15-output: sha256:a9aeafe18b69dc75284f8f25d9d8f36d12aefe14965543cf27fe0df18288060c
+        node-content:knowledge-sad-l15-training: sha256:08df7ed4c2bf41bdd0503f7d08d81756261298710bb8f1fdbd947130aa0fc88a
+        route-content:route-b3e5bcb8f3813cbc477ac799: sha256:ee21b840e9d26941ec6a91dd2c617dbb777c299f36933c46338c96da8ad6fd84
+        source-material:source-aml-ss26-lectures: sha256:6bd2b68a801746b37b66c758762c4fdd8864eb4109c7a972f712129b6102d148
+      evidence:
+      - 'quote:material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf#p2
+        sha256:dfe4b9ad841b9a56c51ef2111cb8e92af92f3057fd8813fa5f94c01e01743340 --
+        trail: the deck the corrected locator names; its own title slide pair p. 1-2
+        reads ''Training Feedforward Neural Networks'' / ''Training Neural Networks'',
+        and module-hu-aml binds the same file for unit-aml-l09 as ''VL 09-neural-networks.pdf
+        (74 pages)'''
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-2cc1baa77fac4d8daf1e5cf72743d9d4
+      idempotency_key: reviewed-a9db45f5735c45bd82ca228e23ef56ca
     reviewed_by: ''
     status: supported
   covers:route-b51a9ce76538f13c02e94238:

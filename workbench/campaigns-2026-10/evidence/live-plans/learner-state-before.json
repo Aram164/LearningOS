@@ -1,0 +1,3648 @@
+{
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l09-estimator"
+    },
+    "stages": {
+      "stage-sad-l09-estimator": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-properties": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-standard-error": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-z-interval": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-t-interval": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-bootstrap": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l09-data-bias": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l07-model-selection"
+    },
+    "stages": {
+      "stage-sad-l07-model-selection": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l07-bernoulli-binomial": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l07-hypergeometric": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l07-geometric": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l07-poisson": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l07-relationships": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l06-random-variable"
+    },
+    "stages": {
+      "stage-sad-l06-random-variable": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-distribution-functions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-transformations": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-transformations/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-expectation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-variance-covariance": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-variance-covariance/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-sample-mean": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-sample-mean/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l06-concentration": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l01-data-questions"
+    },
+    "stages": {
+      "stage-sad-l01-data-questions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-data-questions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-location": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-location/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-distributions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-distributions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-sampling-context": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-sampling-context/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-classification": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-base-rates": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l01-course-map": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l08-normal"
+    },
+    "stages": {
+      "stage-sad-l08-normal": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l08-standardization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-standardization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l08-transform-sum": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-transform-sum/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l08-clt": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex",
+          "reviewed_on": "2026-09-24",
+          "fingerprint": "sha256:aedf1b39e0c2fb72634349582c0d9bbce03ab3ebacac35e3a04f74eec8ba6e75"
+        }
+      },
+      "stage-sad-l08-approximation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-approximation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l08-likelihood": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l08-mle": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l12-tree-model"
+    },
+    "stages": {
+      "stage-sad-l12-tree-model": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-entropy-id3": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-regression": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-pruning": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-bagging-forest": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-boosting": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l12-stacking": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l15-neuron"
+    },
+    "stages": {
+      "stage-sad-l15-neuron": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-neuron/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-activation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-activation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-output": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-output/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-forward": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-forward/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-backprop": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-backprop/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-training": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-training/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-universality": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-universality/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l15-outlook": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-outlook/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l14-nb-recap"
+    },
+    "stages": {
+      "stage-sad-l14-nb-recap": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-nb-recap/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-smoothing": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-smoothing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-numeric": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-numeric/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-gaussian": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-gaussian/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-multinomial": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-multinomial/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-bayes-net": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l14-markov": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-m2-joint-blueprint"
+    },
+    "stages": {
+      "stage-m2-joint-blueprint": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-blueprint/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-joint-mock-one": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-one/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-joint-repair": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-repair/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-joint-mock-two": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-two/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-joint-final-retrieval": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-final-retrieval/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l13-neighbors"
+    },
+    "stages": {
+      "stage-sad-l13-neighbors": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-neighbors/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-aggregation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-aggregation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-metrics": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-metrics/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-minkowski": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-minkowski/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-special-measures": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-special-measures/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-exact-indexing": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l13-lsh": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch02-koerperaxiome"
+    },
+    "stages": {
+      "stage-m2-analysis-ch02-koerperaxiome": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-koerperaxiome/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-anordnung": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-anordnung/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-intervalle-betrag": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-intervalle-betrag/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-supremum-infimum": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-supremum-infimum/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-vollstaendigkeitsaxiom": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-vollstaendigkeitsaxiom/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-folgerungen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-folgerungen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-potenzen-wurzeln": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-potenzen-wurzeln/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch02-maschinenzahlen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-maschinenzahlen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch05-funktionsgrenzwerte"
+    },
+    "stages": {
+      "stage-m2-analysis-ch05-funktionsgrenzwerte": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-funktionsgrenzwerte/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-einseitige-grenzwerte": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-einseitige-grenzwerte/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-stetigkeit": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-stetigkeit/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-zwischenwertsatz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-zwischenwertsatz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-kompakte-intervalle": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-kompakte-intervalle/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-exponentialfunktion": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-exponentialfunktion/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch05-gleichmaessige-konvergenz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-gleichmaessige-konvergenz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch04-reihen"
+    },
+    "stages": {
+      "stage-m2-analysis-ch04-reihen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-reihen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch04-konvergenzkriterien": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-konvergenzkriterien/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch04-absolute-konvergenz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-absolute-konvergenz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch04-umordnungen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-umordnungen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch03-folgen"
+    },
+    "stages": {
+      "stage-m2-analysis-ch03-folgen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-folgen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch03-rekursionen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rekursionen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch03-konvergenzkriterien": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-konvergenzkriterien/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch03-rechenregeln": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rechenregeln/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch03-bestimmte-divergenz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-bestimmte-divergenz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch03-quadratwurzel": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-quadratwurzel/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-clustering-unsupervised"
+    },
+    "stages": {
+      "stage-sad-clustering-unsupervised": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-clustering-families": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-clustering-kmeans": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-clustering-initialization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-clustering-evaluation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-m2-sad-calibrate"
+    },
+    "stages": {
+      "stage-m2-sad-calibrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s01-descriptive": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s01-descriptive/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s02-regression": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s02-regression/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s03-probability-counting": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s03-probability-counting/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s04-random-variables": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s04-random-variables/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s05-discrete-distributions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s05-discrete-distributions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s06-normal-clt-likelihood": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s06-normal-clt-likelihood/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s07-estimation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s07-estimation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s08-testing": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s08-testing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s09-workflow-evaluation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s09-workflow-evaluation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s10-trees-ensembles": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s10-trees-ensembles/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s11-similarity-clustering": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s11-similarity-clustering/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s12-probabilistic-learning": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s12-probabilistic-learning/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s13-neural-networks": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s13-neural-networks/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-sad-s14-exam-transfer": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l04-framing"
+    },
+    "stages": {
+      "stage-sad-l04-framing": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-events": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-axioms": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-conditional": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-bayes": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-independence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l04-naive-bayes": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l03-paired-data"
+    },
+    "stages": {
+      "stage-sad-l03-paired-data": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-covariance": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-covariance/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-interpretation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-simple-regression": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-simple-regression/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-multivariate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-multivariate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-gradient-descent": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-gradient-descent/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l03-scaling-weights": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l02-vocabulary"
+    },
+    "stages": {
+      "stage-sad-l02-vocabulary": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-vocabulary/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-scales": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-scales/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-frequencies": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-frequencies/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-location": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-location/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-dispersion": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-dispersion/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-simpson": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-simpson/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l02-sampling": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-sampling/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l05-decision-grid"
+    },
+    "stages": {
+      "stage-sad-l05-decision-grid": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-permutations": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-variations": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-combinations": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-repetition": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-counting-probability": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l05-identities": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l11-pipeline"
+    },
+    "stages": {
+      "stage-sad-l11-pipeline": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-tasks": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-representation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-resampling": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-objectives": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-evaluation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l11-generalization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-sad-l10-test-model"
+    },
+    "stages": {
+      "stage-sad-l10-test-model": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-tails-pvalue": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-errors-power": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-z-t": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-ci-duality": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-chi-square": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-nonparametric": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-sad-l10-multiple": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch06-differenzierbarkeit"
+    },
+    "stages": {
+      "stage-m2-analysis-ch06-differenzierbarkeit": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-differenzierbarkeit/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-mittelwertsatz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-mittelwertsatz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-trigonometrie": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-trigonometrie/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-hospital": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hospital/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-hoehere-ableitungen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hoehere-ableitungen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-taylor": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-taylor/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch06-interpolation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-interpolation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch01-zahlenmengen"
+    },
+    "stages": {
+      "stage-m2-analysis-ch01-zahlenmengen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-zahlenmengen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch01-induktion": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-induktion/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch01-beziehungen": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-beziehungen/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-calibrate"
+    },
+    "stages": {
+      "stage-m2-analysis-calibrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-anx": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-exkurse": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-exkurse/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-m2-analysis-ch07-riemann-integral"
+    },
+    "stages": {
+      "stage-m2-analysis-ch07-riemann-integral": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-riemann-integral/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch07-hauptsatz": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-hauptsatz/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-m2-analysis-ch07-uneigentliche-integrale": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-uneigentliche-integrale/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-git-01-snapshots-objects-the-commit-dag-and-refs"
+    },
+    "stages": {
+      "stage-git-01-snapshots-objects-the-commit-dag-and-refs": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-01-snapshots-objects-the-commit-dag-and-refs/notes.md"
+      },
+      "stage-git-02-the-state-triangle-working-tree-index-and-head": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-02-the-state-triangle-working-tree-index-and-head/notes.md"
+      },
+      "stage-git-03-intentional-staging-and-atomic-commits": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-03-intentional-staging-and-atomic-commits/notes.md"
+      },
+      "stage-git-04-branches-head-revision-syntax-and-detached-work": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-04-branches-head-revision-syntax-and-detached-work/notes.md"
+      },
+      "stage-git-05-merge-bases-three-way-merges-and-conflicts": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-05-merge-bases-three-way-merges-and-conflicts/notes.md"
+      },
+      "stage-git-06-rebase-and-deliberate-history-editing": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-06-rebase-and-deliberate-history-editing/notes.md"
+      },
+      "stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog/notes.md"
+      },
+      "stage-git-08-stash-and-honest-work-in-progress-management": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-08-stash-and-honest-work-in-progress-management/notes.md"
+      },
+      "stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams/notes.md"
+      },
+      "stage-git-10-pull-push-divergence-and-force-with-lease": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-10-pull-push-divergence-and-force-with-lease/notes.md"
+      },
+      "stage-git-11-pull-requests-forks-and-reviewable-contribution-flow": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-11-pull-requests-forks-and-reviewable-contribution-flow/notes.md"
+      },
+      "stage-git-12-selective-history-cherry-pick-tags-and-releases": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-12-selective-history-cherry-pick-tags-and-releases/notes.md"
+      },
+      "stage-git-13-history-archaeology-log-show-blame-search-and-bisect": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-13-history-archaeology-log-show-blame-search-and-bisect/notes.md"
+      },
+      "stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook/notes.md"
+      },
+      "stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay/notes.md"
+      },
+      "stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-python-00-mechanism-diagnostic"
+    },
+    "stages": {
+      "stage-python-00-mechanism-diagnostic": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-00-mechanism-diagnostic/notes.md"
+      },
+      "stage-python-repair-mechanism-gaps": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-repair-mechanism-gaps/notes.md"
+      },
+      "stage-python-optimizer-theory-and-rewrite-soundness": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-optimizer-theory-and-rewrite-soundness/notes.md"
+      },
+      "stage-python-rewriter-tests-and-benchmark-evidence": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-rewriter-tests-and-benchmark-evidence/notes.md"
+      },
+      "stage-python-contribution-loop": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-contribution-loop/notes.md"
+      },
+      "stage-python-14-packaging-environments-maturin-and-the-python-to-rust": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md"
+      },
+      "stage-python-15-requirements-decomposition-and-design-records": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md"
+      },
+      "stage-python-16-api-design-boundaries-and-refactoring": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md"
+      },
+      "stage-python-17-concurrency-async-and-resource-lifetimes": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md"
+      },
+      "stage-python-18-errors-observability-and-operational-debugging": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml": {
+    "map": {
+      "status": "active",
+      "current_stage": "stage-aml-calibration"
+    },
+    "stages": {
+      "stage-aml-calibration": {
+        "status": "active",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-calibration/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-foundations-repair": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-foundations-repair/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-linear-optimization-repair": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-linear-optimization-repair/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-neural-transformer-loop": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-neural-transformer-loop/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-integration-sheet": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-integration-sheet/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-mock-one": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-mock-one-repair": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one-repair/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-mock-two": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-final-repair": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-final-repair/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-taper": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-taper/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l07/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l07-linear-geometry"
+    },
+    "stages": {
+      "stage-aml-l07-linear-geometry": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-linear-geometry/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-perceptron": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-perceptron/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-dual": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-dual/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-xor": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-xor/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-kernels": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-kernels/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-rbf": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-rbf/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l07-multiclass": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-multiclass/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l09-graph"
+    },
+    "stages": {
+      "stage-aml-l09-graph": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-graph/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-chain-rule": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-chain-rule/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-backprop": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-regularization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-stopping": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-stopping/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-gradient-health": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l09-autograd": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l08/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l08-xor-stacking"
+    },
+    "stages": {
+      "stage-aml-l08-xor-stacking": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-xor-stacking/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l08-forward": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-forward/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l08-activations": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-activations/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l08-output": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-output/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l08-softmax": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-softmax/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l08-metrics": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-metrics/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l06/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l06-gradient"
+    },
+    "stages": {
+      "stage-aml-l06-gradient": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-gradient/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-batch-gd": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-batch-gd/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-rate-scaling": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-rate-scaling/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-stochastic": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-stochastic/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-convexity": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-convexity/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-optimizers": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-optimizers/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l06-newton": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-newton/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l01-history"
+    },
+    "stages": {
+      "stage-aml-l01-history": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-history/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l01-formulation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l01-data": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-data/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l01-generalization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-generalization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l01-prerequisites": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l04/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l04-multivariate"
+    },
+    "stages": {
+      "stage-aml-l04-multivariate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-multivariate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l04-normal-equation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-normal-equation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l04-basis": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-basis/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l04-overfitting": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-overfitting/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l04-ridge": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-ridge/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l04-lasso": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-lasso/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l03-problem"
+    },
+    "stages": {
+      "stage-aml-l03-problem": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-problem/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l03-loss": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-loss/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l03-solution": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-solution/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l03-linear-algebra": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-linear-algebra/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l03-vectorization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-vectorization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l03-probabilistic": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-probabilistic/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l02-representation"
+    },
+    "stages": {
+      "stage-aml-l02-representation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-representation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l02-algorithm": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-algorithm/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l02-distance": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-distance/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l02-dimensionality": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-dimensionality/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l02-bias-variance": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-bias-variance/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l02-validation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-validation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l05/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l05-classification"
+    },
+    "stages": {
+      "stage-aml-l05-classification": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-classification/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l05-boundary": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-boundary/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l05-sigmoid": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-sigmoid/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l05-likelihood": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-likelihood/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l05-cross-entropy": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-cross-entropy/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l05-gradient": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-gradient/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l11/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l11-language-task"
+    },
+    "stages": {
+      "stage-aml-l11-language-task": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-language-task/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-tokenization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-tokenization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-embeddings": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-embeddings/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-attention": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-attention/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-qkv": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-qkv/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-position": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-position/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-block": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-block/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-training": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-training/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l11-parallelization": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-parallelization/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-aml/units/unit-aml-l10/study-map.yaml": {
+    "map": {
+      "status": "not-started",
+      "current_stage": "stage-aml-l10-motivation"
+    },
+    "stages": {
+      "stage-aml-l10-motivation": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-motivation/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l10-convolution": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l10-shapes": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l10-pooling": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l10-network": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-network/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-aml-l10-architectures": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga"
+    },
+    "stages": {
+      "stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga/notes.md"
+      },
+      "stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta/notes.md"
+      },
+      "stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design/notes.md"
+      },
+      "stage-missing-semester-04-processes-jobs-signals-and-resource-ownership": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-04-processes-jobs-signals-and-resource-ownership/notes.md"
+      },
+      "stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions/notes.md"
+      },
+      "stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang/notes.md"
+      },
+      "stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag/notes.md"
+      },
+      "stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics/notes.md"
+      },
+      "stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima/notes.md"
+      },
+      "stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query/notes.md"
+      },
+      "stage-missing-semester-11-version-control-integration-applying-the-git-track-to": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-11-version-control-integration-applying-the-git-track-to/notes.md"
+      },
+      "stage-missing-semester-12-dependencies-environments-artifacts-and-versioning": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-12-dependencies-environments-artifacts-and-versioning/notes.md"
+      },
+      "stage-missing-semester-13-containers-configuration-services-and-publishing": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-13-containers-configuration-services-and-publishing/notes.md"
+      },
+      "stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci/notes.md"
+      },
+      "stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and/notes.md"
+      },
+      "stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver/notes.md"
+      },
+      "stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col/notes.md"
+      },
+      "stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and/notes.md"
+      },
+      "stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too/notes.md"
+      },
+      "stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-algo2-phase0"
+    },
+    "stages": {
+      "stage-algo2-phase0": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-phase0/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t01-fast-multiplication": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t01-fast-multiplication/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t02-amortized-analysis": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t02-amortized-analysis/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t03-b-trees": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t03-b-trees/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t04-fibonacci-heaps": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t04-fibonacci-heaps/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t05-splay-trees": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t05-splay-trees/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t06-cuckoo-hashing": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t06-cuckoo-hashing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t07-shortest-paths": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t07-shortest-paths/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t08-maximum-flow": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t08-maximum-flow/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t09-bipartite-matching": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t09-bipartite-matching/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t10-stable-matching": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t10-stable-matching/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t11-computational-geometry": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t11-computational-geometry/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-t12-fft": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t12-fft/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-algo2-oral-delivery": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-oral-delivery/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop"
+    },
+    "stages": {
+      "stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop/notes.md"
+      },
+      "stage-rust-02-bindings-types-expressions-and-control-flow": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-02-bindings-types-expressions-and-control-flow/notes.md"
+      },
+      "stage-rust-03-ownership-moves-clone-and-drop": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-03-ownership-moves-clone-and-drop/notes.md"
+      },
+      "stage-rust-04-borrowing-slices-and-reborrowing": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-04-borrowing-slices-and-reborrowing/notes.md"
+      },
+      "stage-rust-05-structs-enums-pattern-matching-and-domain-models": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-05-structs-enums-pattern-matching-and-domain-models/notes.md"
+      },
+      "stage-rust-06-collections-result-and-iterator-fundamentals": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-06-collections-result-and-iterator-fundamentals/notes.md"
+      },
+      "stage-rust-07-traits-generics-and-interface-design": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-07-traits-generics-and-interface-design/notes.md"
+      },
+      "stage-rust-08-lifetimes-and-borrowed-api-contracts": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-08-lifetimes-and-borrowed-api-contracts/notes.md"
+      },
+      "stage-rust-09-modules-crates-workspaces-and-public-boundaries": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-09-modules-crates-workspaces-and-public-boundaries/notes.md"
+      },
+      "stage-rust-10-closures-iterators-and-zero-cost-pipelines": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-10-closures-iterators-and-zero-cost-pipelines/notes.md"
+      },
+      "stage-rust-11-smart-pointers-shared-ownership-and-interior-mut": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-11-smart-pointers-shared-ownership-and-interior-mut/notes.md"
+      },
+      "stage-rust-12-testing-documentation-clippy-and-api-quality": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-12-testing-documentation-clippy-and-api-quality/notes.md"
+      },
+      "stage-rust-13-concurrency-send-sync-channels-and-rayon": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-13-concurrency-send-sync-channels-and-rayon/notes.md"
+      },
+      "stage-rust-14-async-rust-cancellation-and-blocking-boundaries": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-14-async-rust-cancellation-and-blocking-boundaries/notes.md"
+      },
+      "stage-rust-15-production-errors-serialization-and-ecosystem-ch": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-15-production-errors-serialization-and-ecosystem-ch/notes.md"
+      },
+      "stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design/notes.md"
+      },
+      "stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi/notes.md"
+      },
+      "stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end/notes.md"
+      },
+      "stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-icop-l01-forms"
+    },
+    "stages": {
+      "stage-icop-l01-forms": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-forms/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:3c86e675ab171b099fafc1818c55e28d5951276736b2cf79233cea5bb179f2e7"
+        }
+      },
+      "stage-icop-l01-geometry": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-geometry/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:439329ae4a02ea89945db2ef8c6121ee71661d4b1c594b294cd6d03efbe1d397"
+        }
+      },
+      "stage-icop-l01-bases": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-bases/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:56cda235bc9ee2dd31030dc9528993b6eed8a0c39bf8b6413405407549f7850a"
+        }
+      },
+      "stage-icop-l01-pivots": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-pivots/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:033382344de0536c49735068b6891c67dcb836484f33194573520f73ae178cc0"
+        }
+      },
+      "stage-icop-l01-phase-one": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-phase-one/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:733edf0bb7f058fa51839ca9cb52a4cfc8d05b7176234e86dc24696c0be015e2"
+        }
+      },
+      "stage-icop-l01-standard-duality": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-standard-duality/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:26343d6990a6b5e0d3c4bf30088dda6a47786e6976c17d4bc2d1a821239257a4"
+        }
+      },
+      "stage-icop-l01-general-duality": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-general-duality/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:ce04bc7b0f911b02465da537da23ee7b043c64b1b1326ff315bd118a0a7c3f0a"
+        }
+      },
+      "stage-icop-l01-slackness": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-slackness/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:a858474012704e5f3f0a33f72c77fa6af15f7950d1dc0425c9f6c6e12efe1bef"
+        }
+      },
+      "stage-icop-l01-oral-review": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-oral-review/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "Codex",
+          "reviewed_on": "2026-10-22",
+          "fingerprint": "sha256:aff7e76b55431cf80cffce81b0b24959fd056e48a62b9df9408e39bb46528896"
+        }
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l08/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l08-scope"
+    },
+    "stages": {
+      "stage-amls-l08-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l08-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l08-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l06/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l06-scope"
+    },
+    "stages": {
+      "stage-amls-l06-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l06-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l06-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l01/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l01-scope"
+    },
+    "stages": {
+      "stage-amls-l01-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l01-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l01-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l07/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l07-scope"
+    },
+    "stages": {
+      "stage-amls-l07-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l07-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l07-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l09/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l09-scope"
+    },
+    "stages": {
+      "stage-amls-l09-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l09-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l09-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l13/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l13-scope"
+    },
+    "stages": {
+      "stage-amls-l13-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l13-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l13-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l12/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l12-scope"
+    },
+    "stages": {
+      "stage-amls-l12-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l12-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l12-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-theory/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-mock-blueprint"
+    },
+    "stages": {
+      "stage-amls-mock-blueprint": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-blueprint/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-mock-sit": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-sit/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-mock-remediate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-remediate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l02/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l02-scope"
+    },
+    "stages": {
+      "stage-amls-l02-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l02-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l02-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l05/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l05-scope"
+    },
+    "stages": {
+      "stage-amls-l05-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l05-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l05-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l04/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l04-scope"
+    },
+    "stages": {
+      "stage-amls-l04-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l04-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l04-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l03/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l03-scope"
+    },
+    "stages": {
+      "stage-amls-l03-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l03-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l03-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l10/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l10-scope"
+    },
+    "stages": {
+      "stage-amls-l10-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l10-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l10-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-amls/units/unit-amls-l11/study-map.yaml": {
+    "map": {
+      "status": "paused",
+      "current_stage": "stage-amls-l11-scope"
+    },
+    "stages": {
+      "stage-amls-l11-scope": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-scope/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l11-integrate": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-integrate/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-amls-l11-evidence": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-evidence/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-python-depth-0-names-and-identity"
+    },
+    "stages": {
+      "stage-python-depth-0-names-and-identity": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-0-names-and-identity/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-1-functions-as-objects": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-1-functions-as-objects/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-2-scope-and-closures": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-2-scope-and-closures/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-3-decorators": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-3-decorators/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-4-classes-as-objects": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-4-classes-as-objects/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-5-imports-and-registration": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-5-imports-and-registration/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-6-data-model-and-dunders": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-6-data-model-and-dunders/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-7-generators-and-iterators": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-7-generators-and-iterators/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-8-interfaces-and-dispatch": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-8-interfaces-and-dispatch/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-depth-capstone": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-capstone/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-python-step-01-baseline-syntax-and-core-mechanics"
+    },
+    "stages": {
+      "stage-python-step-01-baseline-syntax-and-core-mechanics": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-01-baseline-syntax-and-core-mechanics/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-02-names-objects-references-mutability": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-02-names-objects-references-mutability/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-03-scope-namespaces-functions-as-objects": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-03-scope-namespaces-functions-as-objects/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-04-the-data-model-and-dunder-methods": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-04-the-data-model-and-dunder-methods/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-05-built-in-containers-and-comprehensions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-05-built-in-containers-and-comprehensions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-06-strings-bytes-and-formatting": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-06-strings-bytes-and-formatting/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-07-classes-i-mechanics": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-07-classes-i-mechanics/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-08-classes-ii-inheritance-super-mro-mixins": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-08-classes-ii-inheritance-super-mro-mixins/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-09-data-class-builders": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-09-data-class-builders/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-10-duck-typing-abcs-protocols": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-10-duck-typing-abcs-protocols/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-11-closures-and-decorators": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-11-closures-and-decorators/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-12-iterators-generators-lazy-pipelines": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-12-iterators-generators-lazy-pipelines/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-13-context-managers-with-else-match": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-13-context-managers-with-else-match/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-14-exceptions-and-error-handling": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-14-exceptions-and-error-handling/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-15-type-hints": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-15-type-hints/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-16-modules-imports-packages-environments": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-16-modules-imports-packages-environments/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-17-standard-library-power-tools": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-17-standard-library-power-tools/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-18-pythonic-style-and-idioms": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-18-pythonic-style-and-idioms/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-19-concurrency-and-the-gil": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-19-concurrency-and-the-gil/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-20-interpreter-internals": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-20-interpreter-internals/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-21-attribute-magic-properties-descriptors-metaclasses-module-getattr": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-21-attribute-magic-properties-descriptors-metaclasses-module-getattr/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-22-runtime-introspection-and-reflection": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-22-runtime-introspection-and-reflection/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-23-import-machinery-and-monkey-patching": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-23-import-machinery-and-monkey-patching/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-24-generator-coroutines-send-throw-stopiteration-value": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-24-generator-coroutines-send-throw-stopiteration-value/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-26-dag-ir-patterns-in-python": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-26-dag-ir-patterns-in-python/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-27-slots-weakref-memory-layout": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-27-slots-weakref-memory-layout/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-step-28-cpu-and-timing-profiling-making-python-faster": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-28-cpu-and-timing-profiling-making-python-faster/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-python-repair-session-1-names-values-scope-the-root-of-everything"
+    },
+    "stages": {
+      "stage-python-repair-session-1-names-values-scope-the-root-of-everything": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-1-names-values-scope-the-root-of-everything/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-repair-session-3-inheritance-plus-super-the-headache-session": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-3-inheritance-plus-super-the-headache-session/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-python-repair-session-5-the-interpreter-demystified": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-5-the-interpreter-demystified/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/study-map.yaml": {
+    "map": {
+      "status": "active",
+      "current_stage": "stage-01-research-landscape-and-question-framing"
+    },
+    "stages": {
+      "stage-01-research-landscape-and-question-framing": {
+        "status": "active",
+        "working_note": "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/stages/stage-01-research-landscape-and-question-framing/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-bs-os-hardware"
+    },
+    "stages": {
+      "stage-bs-os-hardware": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-hardware/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:43fa76de0bb887ca5a79864b8bca76fdcc3da1f16a53e89fd2cc69c110b8eb68"
+        }
+      },
+      "stage-bs-interrupts": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-interrupts/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:b001578b0c05fb1c60ce3ea9ffc2cf2df3a07e2f4a3209be409dee5b8d75d997"
+        }
+      },
+      "stage-bs-memory": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-memory/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:5871149aa29bb0f32d963a143d1d882aef9e8f4ab0af037031a13a43c6509718"
+        }
+      },
+      "stage-bs-privileges": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-privileges/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:d75f64ad62306b67ac1321022e09f50ec0ab264363813bcb8eb24cf205e311e5"
+        }
+      },
+      "stage-bs-syscall-boundary": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-syscall-boundary/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:04e066d442f679a411d6b810edce03a5dfee5da7ceabdf6dc9138520a408b79a"
+        }
+      },
+      "stage-bs-linux-example": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-linux-example/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:70b6503dfd342363ce76e48ea05c523d4d7eb2eaae327b64050935a41dbe4b4a"
+        }
+      },
+      "stage-bs-os-structures": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-structures/notes.md",
+        "attachments": [],
+        "source_feedback": [],
+        "runtime_review": {
+          "reviewed_by": "codex (operator)",
+          "reviewed_on": "2026-10-23",
+          "fingerprint": "sha256:ee4e4cc42566007defa1d8a0ee840a0b62c8689b35be025b1eacc55a0ff69439"
+        }
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-03-construction-i-o-schema-and-chunks"
+    },
+    "stages": {
+      "stage-polars-03-construction-i-o-schema-and-chunks": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-exercises.md",
+            "label": "Exercise sheet - construction, IO inference, chunks"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-check.py",
+            "label": "Answer-key self-check (26 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/notes.md"
+      },
+      "stage-polars-07-type-promotion-coercion-and-strictness": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-exercises.md",
+            "label": "Exercise sheet - supertypes, strictness, the cast that lies"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-check.py",
+            "label": "Answer-key self-check (27 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/notes.md"
+      },
+      "stage-polars-06-nulls-nans-and-the-missing-value-model": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-exercises.md",
+            "label": "Exercise sheet - three-valued logic and the flipped defaults"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-check.py",
+            "label": "Answer-key self-check (28 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-01-two-data-models-and-the-eight-divergence-axes"
+    },
+    "stages": {
+      "stage-polars-01-two-data-models-and-the-eight-divergence-axes": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-exercises.md",
+            "label": "Exercise sheet - verified against pandas 3.0.2 / Polars 1.36.0"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-check.py",
+            "label": "Answer-key self-check (22 assertions)"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first.md",
+            "label": "Polars-first drill set - no pandas anywhere"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check.py",
+            "label": "Polars-first drill self-check (25 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/notes.md"
+      },
+      "stage-polars-02-the-parity-harness-differential-testing-from-day": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-exercises.md",
+            "label": "Exercise sheet - twelve seed cases, verified"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-check.py",
+            "label": "Seed-case self-check (43 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-10-groupby-aggregation-counting-and-de-duplication"
+    },
+    "stages": {
+      "stage-polars-10-groupby-aggregation-counting-and-de-duplication": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-10-groupby-aggregation-counting-and-de-duplication/notes.md"
+      },
+      "stage-polars-aggregation-signature-contract": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-aggregation-signature-contract/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-polars-11-windows-and-per-group-transformations": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-11-windows-and-per-group-transformations/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-08-ordering-sorting-and-determinism"
+    },
+    "stages": {
+      "stage-polars-08-ordering-sorting-and-determinism": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-08-ordering-sorting-and-determinism/notes.md"
+      },
+      "stage-polars-09-strings-datetimes-and-namespace-translation": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-09-strings-datetimes-and-namespace-translation/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-04-selection-and-projection-index-logic-versus-expr"
+    },
+    "stages": {
+      "stage-polars-04-selection-and-projection-index-logic-versus-expr": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-exercises.md",
+            "label": "Exercise sheet - Polars-first selection, plan reading, pandas contract"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-check.py",
+            "label": "Answer-key self-check (27 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/notes.md"
+      },
+      "stage-polars-selection-head-tail-sample": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-exercises.md",
+            "label": "Exercise sheet - HEAD/TAIL/SAMPLE, runtime operands, randomness contract"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-check.py",
+            "label": "Answer-key self-check (30 assertions)"
+          }
+        ],
+        "source_feedback": []
+      },
+      "stage-polars-selection-duplicates": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-exercises.md",
+            "label": "Exercise sheet - unique/drop_duplicates and the two duplicate masks"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-check.py",
+            "label": "Answer-key self-check (24 assertions)"
+          }
+        ],
+        "source_feedback": []
+      },
+      "stage-polars-selection-dropna": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-exercises.md",
+            "label": "Exercise sheet - DROPNA implementation and the NaN policy"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-check.py",
+            "label": "Answer-key self-check (26 assertions)"
+          }
+        ],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-12-joins-i-relational-semantics-and-key-cardinality"
+    },
+    "stages": {
+      "stage-polars-12-joins-i-relational-semantics-and-key-cardinality": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-exercises.md",
+            "label": "Exercise sheet - join cardinality, null keys, the full join that loses keys"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-check.py",
+            "label": "Answer-key self-check (29 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/notes.md"
+      },
+      "stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-exercises.md",
+            "label": "Exercise sheet - JoinConfig from blank, 16 parity cases, boundaries"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-check.py",
+            "label": "Answer-key self-check (20 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/notes.md"
+      },
+      "stage-polars-14-concatenation-and-reshaping": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-exercises.md",
+            "label": "Exercise sheet - five concat modes, reshaping, and a 2.0 currency pass"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-check.py",
+            "label": "Answer-key self-check (24 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-05-expressions-and-column-creation"
+    },
+    "stages": {
+      "stage-polars-05-expressions-and-column-creation": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises.md",
+            "label": "Exercise sheet - contexts, sibling visibility, expression trees"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-check.py",
+            "label": "Answer-key self-check (27 assertions)"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first.md",
+            "label": "Polars-first drill set - 28 expressions from intent"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-check.py",
+            "label": "Polars-first drill self-check (26 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/notes.md"
+      },
+      "stage-polars-expr-selectors-expansion": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-exercises.md",
+            "label": "Exercise sheet - selector set algebra and schema drift"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-check.py",
+            "label": "Answer-key self-check (22 assertions)"
+          }
+        ],
+        "source_feedback": []
+      },
+      "stage-polars-expr-horizontal-conditional": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises.md",
+            "label": "Exercise sheet - Kleene tables, folds, branch validity, dropna core"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-check.py",
+            "label": "Answer-key self-check (32 assertions)"
+          }
+        ],
+        "source_feedback": []
+      },
+      "stage-polars-expr-assignmap-lowering": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/notes.md",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises.md",
+            "label": "Exercise sheet - twelve-case assign lowering matrix"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-check.py",
+            "label": "Answer-key self-check (24 assertions)"
+          }
+        ],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-15-lazy-plans-and-optimizer-literacy"
+    },
+    "stages": {
+      "stage-polars-15-lazy-plans-and-optimizer-literacy": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-exercises.md",
+            "label": "Exercise sheet - the eight optimizer passes, found in your own plans"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-check.py",
+            "label": "Answer-key self-check (22 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/notes.md"
+      },
+      "stage-polars-16-udfs-fallbacks-and-native-expression-rewrites": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-exercises.md",
+            "label": "Exercise sheet - the five UDF rungs and the native ladder"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-check.py",
+            "label": "Answer-key self-check (18 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/notes.md"
+      },
+      "stage-polars-17-arrow-interop-chunks-and-conversion-costs": {
+        "status": "pending",
+        "attachments": [
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-exercises.md",
+            "label": "Exercise sheet - Arrow types, zero-copy as an assertion, schema degradation"
+          },
+          {
+            "path": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-check.py",
+            "label": "Answer-key self-check (22 assertions)"
+          }
+        ],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/notes.md"
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-18-capstone-specify-implement-and-prove-a-mirrored"
+    },
+    "stages": {
+      "stage-polars-18-capstone-specify-implement-and-prove-a-mirrored": {
+        "status": "pending",
+        "attachments": [],
+        "source_feedback": [],
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-18-capstone-specify-implement-and-prove-a-mirrored/notes.md"
+      },
+      "stage-polars-capstone-property-stress": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-capstone-property-stress/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-polars-version-transition-lab": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-version-transition-lab/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  },
+  "curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml": {
+    "map": {
+      "status": "ready",
+      "current_stage": "stage-polars-backend-trace-lifecycle"
+    },
+    "stages": {
+      "stage-polars-backend-trace-lifecycle": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-trace-lifecycle/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-polars-backend-decision-loop": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-decision-loop/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-polars-backend-family-transfer": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-family-transfer/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      },
+      "stage-polars-backend-regression-policy": {
+        "status": "pending",
+        "working_note": "curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-regression-policy/notes.md",
+        "attachments": [],
+        "source_feedback": []
+      }
+    }
+  }
+}

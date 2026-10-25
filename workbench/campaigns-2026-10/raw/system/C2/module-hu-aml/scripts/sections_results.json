@@ -1,0 +1,3683 @@
+[
+ {
+  "item": "route-5ee4aec41221a1821604773c",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L01 lecture deck",
+  "file": "VL 01-Introduction.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5ee4aec41221a1821604773c",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "MIT 6.036 introduction and representations",
+  "file": "VL 01-Introduction.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7449e02fa820ef5534caa5b8",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Linear-algebra primer",
+  "file": "Primer_Linear_Algebra.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7449e02fa820ef5534caa5b8",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Essence of Linear Algebra — targeted prerequisite repair",
+  "file": "Primer_Linear_Algebra.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9c80105b5495e5d254b86990",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L01 lecture variant",
+  "file": "01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9c80105b5495e5d254b86990",
+  "uid": "unit-aml-l01",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L01 lecture deck",
+  "file": "01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f9b5997cc6cbea9906b40de7",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L02 lecture deck",
+  "file": "VL 02-nearest-neighbor.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f9b5997cc6cbea9906b40de7",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 02 — k-NN search with vector embeddings",
+  "file": "VL 02-nearest-neighbor.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-60bc74e346dcfde204afeba3",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "slides 3-17",
+  "file": "Übung 02 .pdf",
+  "status": "ok",
+  "evidence": "slides 3-17 within 44 pages"
+ },
+ {
+  "item": "route-60bc74e346dcfde204afeba3",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 02 — k-NN search with vector embeddings",
+  "file": "Übung 02 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-60bc74e346dcfde204afeba3",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L02 lecture deck",
+  "file": "Übung 02 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-395dcc13f28ee6b07d06b1f9",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Aufgabe 1",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-395dcc13f28ee6b07d06b1f9",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Aufgabe 2",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-395dcc13f28ee6b07d06b1f9",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 01 — k-NN task",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-395dcc13f28ee6b07d06b1f9",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 02 — k-NN search with vector embeddings",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e9dd11cd5622eb22c86608fa",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L02 lecture variant",
+  "file": "02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e9dd11cd5622eb22c86608fa",
+  "uid": "unit-aml-l02",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L02 lecture deck",
+  "file": "02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-416cc9388b788502702749a2",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L03 lecture deck",
+  "file": "VL 03-linear-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-416cc9388b788502702749a2",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Ng linear regression with one and multiple variables",
+  "file": "VL 03-linear-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-6f7a1f9823223aa5100aee9a",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 03 — vectorization and linear regression",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-6f7a1f9823223aa5100aee9a",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L03 lecture deck",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d71822ce9022bf399076c135",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 01 — vectorization task",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d71822ce9022bf399076c135",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 03 — vectorization and linear regression",
+  "file": "zusatz-blatt01.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c930a81c9480f2f510dc6a3f",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 02 — linear-regression task",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c930a81c9480f2f510dc6a3f",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L03 lecture deck",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b94816e116508743cb644e5c",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L03 lecture variant",
+  "file": "03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b94816e116508743cb644e5c",
+  "uid": "unit-aml-l03",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L03 lecture deck",
+  "file": "03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-1c4baf7d25512832c30efc2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L04 lecture deck",
+  "file": "VL 04-non-linear-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-1c4baf7d25512832c30efc2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "VL 04-non-linear-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2f7b5688b08c9734c9cec975",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2f7b5688b08c9734c9cec975",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L04 lecture deck",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-8cfa00b981055d91858ac5a2",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 02 — multivariate-regression task",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-8cfa00b981055d91858ac5a2",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5387860b2180073538c89abf",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L04 lecture variant",
+  "file": "04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5387860b2180073538c89abf",
+  "uid": "unit-aml-l04",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-24446ef673e9b912e6cd5177",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L05 lecture deck",
+  "file": "VL 05-logistic-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-24446ef673e9b912e6cd5177",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Murphy logistic regression end to end",
+  "file": "VL 05-logistic-regression.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2cf4ce0fbf139b5333dd3dad",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 05 — logistic-regression geometry",
+  "file": "Übung 05.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2cf4ce0fbf139b5333dd3dad",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L05 lecture deck",
+  "file": "Übung 05.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-57a9e25c00310eb54bc52039",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "slides 3-10",
+  "file": "Übung 06 .pdf",
+  "status": "ok",
+  "evidence": "slides 3-10 within 52 pages"
+ },
+ {
+  "item": "route-57a9e25c00310eb54bc52039",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 06 — logistic loss and fitted classifier",
+  "file": "Übung 06 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-57a9e25c00310eb54bc52039",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L05 lecture deck",
+  "file": "Übung 06 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c42e153ad62162b678786456",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 02 — classification task",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c42e153ad62162b678786456",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 05 — logistic-regression geometry",
+  "file": "zusatz-blatt02.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0ee0354952ef0e7d2bd1cb22",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L05 lecture variant",
+  "file": "05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0ee0354952ef0e7d2bd1cb22",
+  "uid": "unit-aml-l05",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L05 lecture deck",
+  "file": "05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-446c1d8cfb60bd43f0315cdd",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L06 lecture deck",
+  "file": "VL 06-gradient_descent.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-446c1d8cfb60bd43f0315cdd",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Murphy optimization chapter",
+  "file": "VL 06-gradient_descent.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-bef5d1b1bd52e5ddd842c0f7",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "slides 12-14",
+  "file": "Übung 06 .pdf",
+  "status": "ok",
+  "evidence": "slides 12-14 within 52 pages"
+ },
+ {
+  "item": "route-bef5d1b1bd52e5ddd842c0f7",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 06 — gradient-descent bridge",
+  "file": "Übung 06 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-bef5d1b1bd52e5ddd842c0f7",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L06 lecture deck",
+  "file": "Übung 06 .pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5be9b7f03fc0793a0b8e1d96",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 03 — gradient descent",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5be9b7f03fc0793a0b8e1d96",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L06 lecture deck",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-fd41cca19058435a4944931c",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L06 lecture variant",
+  "file": "06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-fd41cca19058435a4944931c",
+  "uid": "unit-aml-l06",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L06 lecture deck",
+  "file": "06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b6a4e4277ae6fd34a0802141",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L07 lecture deck",
+  "file": "VL 07-linear-classifiers.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b6a4e4277ae6fd34a0802141",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "MIT 6.036 perceptron and feature-transform units",
+  "file": "VL 07-linear-classifiers.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e1edea93b1a74b6acf98f646",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 07 — perceptron and kernel matrix",
+  "file": "Übung 07.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e1edea93b1a74b6acf98f646",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L07 lecture deck",
+  "file": "Übung 07.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-636a2abb1c28162c73ec7a1a",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 03 — model choice and decision boundary",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-636a2abb1c28162c73ec7a1a",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 04 — perceptron and separability",
+  "file": "zusatz-blatt03.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d3d6b5c98c909b1340c01e91",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 04 — perceptron and separability",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d3d6b5c98c909b1340c01e91",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L07 lecture deck",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f968dcfe59c4db9183a6dac9",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L07 lecture variant",
+  "file": "07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f968dcfe59c4db9183a6dac9",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L07 lecture deck",
+  "file": "07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f0ca5b873f040ee18e78a4ff",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L08 lecture deck",
+  "file": "VL 08-feedforward-neural-network.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f0ca5b873f040ee18e78a4ff",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "VL 08-feedforward-neural-network.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-472c144c5c394a0d35a0d8e2",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Bonusblatt 04 — neural-network tasks",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-472c144c5c394a0d35a0d8e2",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "zusatz-blatt04.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-13e71a0950b7c8806214918d",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L08 lecture variant",
+  "file": "08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-13e71a0950b7c8806214918d",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4af0fc22b73c45810f0f66cf",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L09 lecture deck",
+  "file": "VL 09-neural-networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4af0fc22b73c45810f0f66cf",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Murphy reverse-mode backprop and training",
+  "file": "VL 09-neural-networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2c3ae492bdeebfeef14cb049",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L09 lecture variant",
+  "file": "09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2c3ae492bdeebfeef14cb049",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L09 lecture deck",
+  "file": "09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-31fd0969b1aa551394d33f29",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L10 lecture deck",
+  "file": "VL 10-cnn.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-31fd0969b1aa551394d33f29",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 11 — CNN calculations and fourth sheet",
+  "file": "VL 10-cnn.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-639b0d917507497f3b417d30",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Older L10 lecture variant",
+  "file": "10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-639b0d917507497f3b417d30",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 11 — CNN calculations and fourth sheet",
+  "file": "10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e4df0fb431660606a33d696d",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 08 — dual and kernel perceptron",
+  "file": "Übung 08.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e4df0fb431660606a33d696d",
+  "uid": "unit-aml-l07",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L07 lecture deck",
+  "file": "Übung 08.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-1feb31839f78659d79b486bb",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "Übung 08.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-1feb31839f78659d79b486bb",
+  "uid": "unit-aml-l08",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L08 lecture deck",
+  "file": "Übung 08.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5f1ea869f82b2d6e7d244ffb",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 10 — computation graphs and autodiff",
+  "file": "Übung 10.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5f1ea869f82b2d6e7d244ffb",
+  "uid": "unit-aml-l09",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L09 lecture deck",
+  "file": "Übung 10.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-60ced8fb640e4960a9091dd2",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 11 — CNN calculations and fourth sheet",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-60ced8fb640e4960a9091dd2",
+  "uid": "unit-aml-l10",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L10 lecture deck",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-23db0f203fdcdc8b9ba51c41",
+  "uid": "unit-aml-l11",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Chapter 8",
+  "file": "VL 11-transformers.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-23db0f203fdcdc8b9ba51c41",
+  "uid": "unit-aml-l11",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "VL 11-transformers.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-23db0f203fdcdc8b9ba51c41",
+  "uid": "unit-aml-l11",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Jurafsky & Martin Chapter 8 — Transformers",
+  "file": "VL 11-transformers.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9be11f4c735b1fab72ff7fd5",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current AML L01–L11 scope spine",
+  "file": "VL 01-Introduction.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9be11f4c735b1fab72ff7fd5",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current AML exercises and bonus sheets",
+  "file": "VL 01-Introduction.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5f890476996a6d9847807cc6",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "slides 2–3",
+  "file": "Übung 10.pdf",
+  "status": "ok",
+  "evidence": "slides 2-3 within 76 pages"
+ },
+ {
+  "item": "route-5f890476996a6d9847807cc6",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Übung 10 — exam notice and Themen list",
+  "file": "Übung 10.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5f890476996a6d9847807cc6",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-aml-ss26-lectures",
+  "ref": "Current AML L01–L11 scope spine",
+  "file": "Übung 10.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "§2.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.1 What Is Statistical Learning?"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "§2.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2 Assessing Model Accuracy"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "§2.2.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2.2 The Bias-Variance Trade-Off"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "§2.2.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2.3 The Classification Setting"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "Chapter 2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2 Statistical Learning"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "ISLP Chapter 2 — statistical learning",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-21f9795d5af805470f6b7aa8",
+  "uid": "unit-aml-l01",
+  "sid": "source-islp",
+  "ref": "Current L01 lecture deck",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9654e119999a435926afd588",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§2.2.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2.2 The Bias-Variance Trade-Off"
+ },
+ {
+  "item": "route-9654e119999a435926afd588",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§2.2.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2.3 The Classification Setting"
+ },
+ {
+  "item": "route-70fa847b6d98c5b1c15f1b67",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§3.5",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.5 Sequences and Slice Notation"
+ },
+ {
+  "item": "route-27f0b891c4075763371fc04b",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§4.7.6",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.7.6 K-Nearest Neighbors"
+ },
+ {
+  "item": "route-27f0b891c4075763371fc04b",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "s Python workflow is complementary and may not match the lecturer",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7721480f8976c20d5fa0b4eb",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§5.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.5.1 An Analytical Comparison"
+ },
+ {
+  "item": "route-7721480f8976c20d5fa0b4eb",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§5.1.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 5.1.3 k-Fold Cross-Validation"
+ },
+ {
+  "item": "route-7721480f8976c20d5fa0b4eb",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "§5.1.4",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 5.1.4 Bias-Variance Trade-Off for k-Fold Cross-Validation"
+ },
+ {
+  "item": "route-7721480f8976c20d5fa0b4eb",
+  "uid": "unit-aml-l02",
+  "sid": "source-islp",
+  "ref": "s required procedure and should not replace the course deck",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d3bb781518afd9298b86e667",
+  "uid": "unit-aml-l03",
+  "sid": "source-islp",
+  "ref": "§3.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.1 Getting Started"
+ },
+ {
+  "item": "route-d3bb781518afd9298b86e667",
+  "uid": "unit-aml-l03",
+  "sid": "source-islp",
+  "ref": "§3.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.2 Basic Commands"
+ },
+ {
+  "item": "route-d3bb781518afd9298b86e667",
+  "uid": "unit-aml-l03",
+  "sid": "source-islp",
+  "ref": "Chapter 3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.1.3 The Trade-Off Between Prediction Accuracy and Model Interpretabi"
+ },
+ {
+  "item": "route-d3bb781518afd9298b86e667",
+  "uid": "unit-aml-l03",
+  "sid": "source-islp",
+  "ref": "ISLP Chapter 3 — linear regression",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d3bb781518afd9298b86e667",
+  "uid": "unit-aml-l03",
+  "sid": "source-islp",
+  "ref": "Bonusblatt 02 — linear-regression task",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "§3.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.2 Basic Commands"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "§2.2.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.2.2 The Bias-Variance Trade-Off"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "§6.2.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 6.2.1 Ridge Regression"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "§7.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.7.1 The Stock Market Data"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "ISLP polynomial regression, Ridge, and Lasso",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9b7338b2096b7f03eef6d176",
+  "uid": "unit-aml-l04",
+  "sid": "source-islp",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b5479427410717e42df4b6af",
+  "uid": "unit-aml-l05",
+  "sid": "source-islp",
+  "ref": "§4.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.3 Logistic Regression"
+ },
+ {
+  "item": "route-b5479427410717e42df4b6af",
+  "uid": "unit-aml-l05",
+  "sid": "source-islp",
+  "ref": "§4.3.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.3.1 The Logistic Model"
+ },
+ {
+  "item": "route-b5479427410717e42df4b6af",
+  "uid": "unit-aml-l05",
+  "sid": "source-islp",
+  "ref": "§4.3.4",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.3.4 Multiple Logistic Regression"
+ },
+ {
+  "item": "route-b5479427410717e42df4b6af",
+  "uid": "unit-aml-l05",
+  "sid": "source-islp",
+  "ref": "ISLP logistic-regression sections",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b5479427410717e42df4b6af",
+  "uid": "unit-aml-l05",
+  "sid": "source-islp",
+  "ref": "Current L05 lecture deck",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "§10.7",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.7 Fitting a Neural Network"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "§10.7.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.7.1 Backpropagation"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "§10.7.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.7.2 Regularization and Stochastic Gradient Descent"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "§10.7",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.7 Fitting a Neural Network"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "ISLP neural-network optimization selection",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f0ccf205ed8c7df0ef0c8687",
+  "uid": "unit-aml-l06",
+  "sid": "source-islp",
+  "ref": "Bonusblatt 03 — gradient descent",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "§9.4.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 9.4.2 One-Versus-All Classification"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "§9.3.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 9.3.2 The Support Vector Machine"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "§9.4.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 9.4.2 One-Versus-All Classification"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "§9.3.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 9.3.2 The Support Vector Machine"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "ISLP one-versus-all and kernel enrichment",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-250a1234665348201198e7ef",
+  "uid": "unit-aml-l07",
+  "sid": "source-islp",
+  "ref": "Übung 08 — dual and kernel perceptron",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-987303d08d29f8315ce9a8e6",
+  "uid": "unit-aml-l08",
+  "sid": "source-islp",
+  "ref": "§10.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.1 Single Layer Neural Networks"
+ },
+ {
+  "item": "route-987303d08d29f8315ce9a8e6",
+  "uid": "unit-aml-l08",
+  "sid": "source-islp",
+  "ref": "§10.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.2 Multilayer Neural Networks"
+ },
+ {
+  "item": "route-987303d08d29f8315ce9a8e6",
+  "uid": "unit-aml-l08",
+  "sid": "source-islp",
+  "ref": "ISLP feedforward-network introduction",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-987303d08d29f8315ce9a8e6",
+  "uid": "unit-aml-l08",
+  "sid": "source-islp",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9479853098e251427bc92b4a",
+  "uid": "unit-aml-l09",
+  "sid": "source-islp",
+  "ref": "§10.7",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.7 Fitting a Neural Network"
+ },
+ {
+  "item": "route-9479853098e251427bc92b4a",
+  "uid": "unit-aml-l09",
+  "sid": "source-islp",
+  "ref": "§10.8",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.8 Interpolation and Double Descent"
+ },
+ {
+  "item": "route-9479853098e251427bc92b4a",
+  "uid": "unit-aml-l09",
+  "sid": "source-islp",
+  "ref": "ISLP training, regularization, and double descent",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9479853098e251427bc92b4a",
+  "uid": "unit-aml-l09",
+  "sid": "source-islp",
+  "ref": "Current L09 lecture deck",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "§10.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.3 Convolutional Neural Networks"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "§10.3.1",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.3.1 Convolution Layers"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "§10.3.2",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.3.2 Pooling Layers"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "§10.3.3",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.3.3 Architecture of a Convolutional Neural Network"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "§10.3.4",
+  "file": "islp.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.3.4 Data Augmentation"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "ISLP convolutional-neural-network section",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-96b3bc3586d74e35b541bcb5",
+  "uid": "unit-aml-l10",
+  "sid": "source-islp",
+  "ref": "Current L10 lecture deck",
+  "file": "islp.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f57ab8d5f480edd3bc6cf623",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§2.3.2",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.2 Nearest-Neighbor Methods"
+ },
+ {
+  "item": "route-f57ab8d5f480edd3bc6cf623",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§2.3.3",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.3 From Least Squares to Nearest Neighbors"
+ },
+ {
+  "item": "route-0086c6cff5d3c462f714408f",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§2.9",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.9 Model Selection and the Bias–Variance Tradeoff"
+ },
+ {
+  "item": "route-0e95ad858b8e59f63b8fe519",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§7.2",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.2 Bias, Variance and Model Complexity"
+ },
+ {
+  "item": "route-0e95ad858b8e59f63b8fe519",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§7.3",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.3 The Bias–Variance Decomposition"
+ },
+ {
+  "item": "route-0e95ad858b8e59f63b8fe519",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§7.3.1",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.3.1 Example: Bias–Variance Tradeoff"
+ },
+ {
+  "item": "route-7e3161b4c0b53524a0ce4dfa",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§7.10",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.1\t0.1K-Fold Cross-Validation"
+ },
+ {
+  "item": "route-83427e17512bd5e78ca4603e",
+  "uid": "unit-aml-l02",
+  "sid": "source-esl",
+  "ref": "§13.3",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.3k-Nearest-Neighbor Classifiers"
+ },
+ {
+  "item": "route-0c5b2516f89b5265bb3c86e2",
+  "uid": "unit-aml-l03",
+  "sid": "source-esl",
+  "ref": "§3.2",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.3.2 Nearest-Neighbor Methods"
+ },
+ {
+  "item": "route-0c5b2516f89b5265bb3c86e2",
+  "uid": "unit-aml-l03",
+  "sid": "source-esl",
+  "ref": "ESL least-squares statistical depth",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0c5b2516f89b5265bb3c86e2",
+  "uid": "unit-aml-l03",
+  "sid": "source-esl",
+  "ref": "CS229 linear-regression lecture",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "§3.4.1",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 3.4.1Ridge Regression"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "§3.4.2",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 3.4.2 The Lasso"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "§3.4.3",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 3.4.3 Discussion: Subset Selection, Ridge Regressionand the Lasso"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "§3.4.4",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 3.4.4 Least Angle Regression"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "ESL Ridge and Lasso depth",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-387627946adffa7177aebbb4",
+  "uid": "unit-aml-l04",
+  "sid": "source-esl",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-da6e469fc665bfad1ee8045c",
+  "uid": "unit-aml-l05",
+  "sid": "source-esl",
+  "ref": "§4.4",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 3.4.4 Least Angle Regression"
+ },
+ {
+  "item": "route-da6e469fc665bfad1ee8045c",
+  "uid": "unit-aml-l05",
+  "sid": "source-esl",
+  "ref": "§4.4.1",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.4.1 Fitting Logistic Regression Models"
+ },
+ {
+  "item": "route-da6e469fc665bfad1ee8045c",
+  "uid": "unit-aml-l05",
+  "sid": "source-esl",
+  "ref": "§4.4.4",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.4.4L1Regularized Logistic Regression"
+ },
+ {
+  "item": "route-da6e469fc665bfad1ee8045c",
+  "uid": "unit-aml-l05",
+  "sid": "source-esl",
+  "ref": "ESL logistic-regression depth",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-da6e469fc665bfad1ee8045c",
+  "uid": "unit-aml-l05",
+  "sid": "source-esl",
+  "ref": "Current L05 lecture deck",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f9bae648830b68b38885701f",
+  "uid": "unit-aml-l07",
+  "sid": "source-esl",
+  "ref": "§4.5.1",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.5.1 Rosenblatt’s Perceptron Learning Algorithm"
+ },
+ {
+  "item": "route-f9bae648830b68b38885701f",
+  "uid": "unit-aml-l07",
+  "sid": "source-esl",
+  "ref": "§4.5.2",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.5.2 Optimal Separating Hyperplanes"
+ },
+ {
+  "item": "route-f9bae648830b68b38885701f",
+  "uid": "unit-aml-l07",
+  "sid": "source-esl",
+  "ref": "ESL perceptron convergence",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f9bae648830b68b38885701f",
+  "uid": "unit-aml-l07",
+  "sid": "source-esl",
+  "ref": "Bonusblatt 03 — model choice and decision boundary",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-48d3ff104dc9cf8297be28ca",
+  "uid": "unit-aml-l08",
+  "sid": "source-esl",
+  "ref": "§11.3",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.3 Neural Networks"
+ },
+ {
+  "item": "route-48d3ff104dc9cf8297be28ca",
+  "uid": "unit-aml-l08",
+  "sid": "source-esl",
+  "ref": "§11.4",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.4 Fitting Neural Networks"
+ },
+ {
+  "item": "route-48d3ff104dc9cf8297be28ca",
+  "uid": "unit-aml-l08",
+  "sid": "source-esl",
+  "ref": "§11.5",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.5 Some Issues in Training Neural Networks"
+ },
+ {
+  "item": "route-48d3ff104dc9cf8297be28ca",
+  "uid": "unit-aml-l08",
+  "sid": "source-esl",
+  "ref": "ESL neural-network historical and statistical view",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-48d3ff104dc9cf8297be28ca",
+  "uid": "unit-aml-l08",
+  "sid": "source-esl",
+  "ref": "Bonusblatt 04 — neural-network tasks",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5537c790ee855af15adac484",
+  "uid": "unit-aml-l09",
+  "sid": "source-esl",
+  "ref": "§11.4",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.4 Fitting Neural Networks"
+ },
+ {
+  "item": "route-5537c790ee855af15adac484",
+  "uid": "unit-aml-l09",
+  "sid": "source-esl",
+  "ref": "§11.5",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.5 Some Issues in Training Neural Networks"
+ },
+ {
+  "item": "route-5537c790ee855af15adac484",
+  "uid": "unit-aml-l09",
+  "sid": "source-esl",
+  "ref": "ESL neural-network training depth",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-5537c790ee855af15adac484",
+  "uid": "unit-aml-l09",
+  "sid": "source-esl",
+  "ref": "Current L09 lecture deck",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-ff147162ccc891125fca6e2c",
+  "uid": "unit-aml-l10",
+  "sid": "source-esl",
+  "ref": "§11.7",
+  "file": "esl.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.7 Example: ZIP Code Data"
+ },
+ {
+  "item": "route-ff147162ccc891125fca6e2c",
+  "uid": "unit-aml-l10",
+  "sid": "source-esl",
+  "ref": "ESL early weight-sharing example",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-ff147162ccc891125fca6e2c",
+  "uid": "unit-aml-l10",
+  "sid": "source-esl",
+  "ref": "Current L10 lecture deck",
+  "file": "esl.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7414f700392cabbc7991a6c6",
+  "uid": "unit-aml-l02",
+  "sid": "source-murphy-pml1",
+  "ref": "§16.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 16.1 K nearest neighbor (KNN) classification"
+ },
+ {
+  "item": "route-7414f700392cabbc7991a6c6",
+  "uid": "unit-aml-l02",
+  "sid": "source-murphy-pml1",
+  "ref": "§16.1.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 16.1.2 The curse of dimensionality"
+ },
+ {
+  "item": "route-7414f700392cabbc7991a6c6",
+  "uid": "unit-aml-l02",
+  "sid": "source-murphy-pml1",
+  "ref": "§4.7.6",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 4.7.6 The bias-variance tradeoff"
+ },
+ {
+  "item": "route-7414f700392cabbc7991a6c6",
+  "uid": "unit-aml-l02",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy k-NN and dimensionality",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7414f700392cabbc7991a6c6",
+  "uid": "unit-aml-l02",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L02 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-773bc4e5073c9add77b9f2d8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2 Least squares linear regression"
+ },
+ {
+  "item": "route-773bc4e5073c9add77b9f2d8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy linear regression and Gaussian MLE",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-773bc4e5073c9add77b9f2d8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "CS229 LMS and normal-equation notes",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-edfd22e1d584f506b0efdd2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2 Least squares linear regression"
+ },
+ {
+  "item": "route-edfd22e1d584f506b0efdd2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.3 Ridge regression"
+ },
+ {
+  "item": "route-edfd22e1d584f506b0efdd2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.4 Lasso regression"
+ },
+ {
+  "item": "route-edfd22e1d584f506b0efdd2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy basis functions and regularized regression",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-edfd22e1d584f506b0efdd2c",
+  "uid": "unit-aml-l04",
+  "sid": "source-murphy-pml1",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-37104c3c217b32519e132f1f",
+  "uid": "unit-aml-l05",
+  "sid": "source-murphy-pml1",
+  "ref": "§10.2.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.2.3 Maximum likelihood estimation"
+ },
+ {
+  "item": "route-37104c3c217b32519e132f1f",
+  "uid": "unit-aml-l05",
+  "sid": "source-murphy-pml1",
+  "ref": "§10.2.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.2.4 Stochastic gradient descent"
+ },
+ {
+  "item": "route-37104c3c217b32519e132f1f",
+  "uid": "unit-aml-l05",
+  "sid": "source-murphy-pml1",
+  "ref": "§10.2.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.2.5 Perceptron algorithm"
+ },
+ {
+  "item": "route-37104c3c217b32519e132f1f",
+  "uid": "unit-aml-l05",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy logistic regression end to end",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-37104c3c217b32519e132f1f",
+  "uid": "unit-aml-l05",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L05 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.1.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.1.3 Convex vs nonconvex optimization"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.2.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.2.4 Momentum methods"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.8.3 Invertible transformations (bijections)"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.4.6",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.4.6 Preconditioned SGD"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy optimization chapter",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2859463c0a0acd4759eb3acb",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L06 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "§10.2.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 10.2.5 Perceptron algorithm"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "§17.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 17.1 Mercer kernels"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "§17.1.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 17.1.1 Mercer's theorem"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "§17.1.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 17.1.2 Some popular Mercer kernels"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy kernels and perceptron link",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cd7615636cab19837678f3bc",
+  "uid": "unit-aml-l07",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L07 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c1a26eea429baf963f8f3ed4",
+  "uid": "unit-aml-l08",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.2 Multilayer perceptrons (MLPs)"
+ },
+ {
+  "item": "route-c1a26eea429baf963f8f3ed4",
+  "uid": "unit-aml-l08",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.2.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.2.1 The XOR problem"
+ },
+ {
+  "item": "route-c1a26eea429baf963f8f3ed4",
+  "uid": "unit-aml-l08",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.2.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.2.3 Activation functions"
+ },
+ {
+  "item": "route-c1a26eea429baf963f8f3ed4",
+  "uid": "unit-aml-l08",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy MLPs, XOR, and activations",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c1a26eea429baf963f8f3ed4",
+  "uid": "unit-aml-l08",
+  "sid": "source-murphy-pml1",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e25d9a6869ecc1aabd95b158",
+  "uid": "unit-aml-l09",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.3 Backpropagation"
+ },
+ {
+  "item": "route-e25d9a6869ecc1aabd95b158",
+  "uid": "unit-aml-l09",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.4 Training neural networks"
+ },
+ {
+  "item": "route-e25d9a6869ecc1aabd95b158",
+  "uid": "unit-aml-l09",
+  "sid": "source-murphy-pml1",
+  "ref": "§13.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 13.5 Regularization"
+ },
+ {
+  "item": "route-e25d9a6869ecc1aabd95b158",
+  "uid": "unit-aml-l09",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy reverse-mode backprop and training",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e25d9a6869ecc1aabd95b158",
+  "uid": "unit-aml-l09",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L09 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "§14.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 14.1 Introduction"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "§14.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 14.2 Common layers"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "§14.2.1",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 14.2.1 Convolutional layers"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "§14.2.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 14.2.2 Pooling layers"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "§14.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 14.3 Common architectures for image classification"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy convolution and classic CNN architectures",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4d9bdcdef94d579ed5bc99c8",
+  "uid": "unit-aml-l10",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L10 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2.2 Least squares estimation"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2.4 Measuring goodness of fit"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2.4 Measuring goodness of fit"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "§11.2.2",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 11.2.2 Least squares estimation"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §11.2.2 — least squares as a negative log-likelihood",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c67a99b0cdc7f85ce29bece8",
+  "uid": "unit-aml-l03",
+  "sid": "source-murphy-pml1",
+  "ref": "CS229 practice midterm — Bayesian linear regression",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-09ae79cd78e352276370c8d0",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.1.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.1.3 Convex vs nonconvex optimization"
+ },
+ {
+  "item": "route-09ae79cd78e352276370c8d0",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.1.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.1.3 Convex vs nonconvex optimization"
+ },
+ {
+  "item": "route-09ae79cd78e352276370c8d0",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §8.1.3 — convex versus nonconvex, and the Hessian test",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-09ae79cd78e352276370c8d0",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L06 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d2797d2723a780a4c3715a01",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.8.3 Invertible transformations (bijections)"
+ },
+ {
+  "item": "route-d2797d2723a780a4c3715a01",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.8.3 Invertible transformations (bijections)"
+ },
+ {
+  "item": "route-d2797d2723a780a4c3715a01",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §8.3 — Newton and the quasi-Newton family",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d2797d2723a780a4c3715a01",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L06 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.4.6",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.4.6 Preconditioned SGD"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.2.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.2.4 Momentum methods"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.4.6.4",
+  "file": "pml1.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.4.6",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.4.6 Preconditioned SGD"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §8.4.6 — the adaptive optimizers derived in one place",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c446c7532bc169a9759f14ce",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L06 lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-c16dd407fb2579c179f20a8a",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "§10.1",
+  "file": "solutions-public.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-c16dd407fb2579c179f20a8a",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Gradient and Hessian of log-likelihood for multinomial logistic regression",
+  "file": "solutions-public.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Gradient and Hessian of log-likelihood for multinomial logistic regres"
+ },
+ {
+  "item": "route-c16dd407fb2579c179f20a8a",
+  "uid": "unit-aml-l06",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy solution manual §10.1 — gradient and Hessian worked out",
+  "file": "solutions-public.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-3224d420145c8529499ae635",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.4 Attention"
+ },
+ {
+  "item": "route-3224d420145c8529499ae635",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.4 Attention"
+ },
+ {
+  "item": "route-3224d420145c8529499ae635",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §15.4 — attention as a soft dictionary lookup",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-3224d420145c8529499ae635",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2c65706e0f943446ed4f5f28",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.5 Transformers"
+ },
+ {
+  "item": "route-2c65706e0f943446ed4f5f28",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.5 Transformers"
+ },
+ {
+  "item": "route-2c65706e0f943446ed4f5f28",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §15.5 — the Transformer assembled step by step",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2c65706e0f943446ed4f5f28",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-480b485364dfde6ba7eba3ca",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.7",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.7 Language models and unsupervised representation learning"
+ },
+ {
+  "item": "route-480b485364dfde6ba7eba3ca",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.7",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.7 Language models and unsupervised representation learning"
+ },
+ {
+  "item": "route-480b485364dfde6ba7eba3ca",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §15.7 — language modelling as the training objective",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-480b485364dfde6ba7eba3ca",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b4767511bb52dcb8e0cdd2d0",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§20.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 20.5 Word embeddings"
+ },
+ {
+  "item": "route-b4767511bb52dcb8e0cdd2d0",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "§20.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 20.5 Word embeddings"
+ },
+ {
+  "item": "route-b4767511bb52dcb8e0cdd2d0",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Murphy §20.5 — where static embeddings come from",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b4767511bb52dcb8e0cdd2d0",
+  "uid": "unit-aml-l11",
+  "sid": "source-murphy-pml1",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.1.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.1.3 Convex vs nonconvex optimization"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.3",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 2.8.3 Invertible transformations (bijections)"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§8.4.6",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 8.4.6 Preconditioned SGD"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.4 Attention"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.5",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.5 Transformers"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "§15.4",
+  "file": "pml1.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 15.4 Attention"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "Gradient and Hessian of log-likelihood for multinomial logistic regression",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f426a3cf4e1b48b8f1c408d3",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-murphy-pml1",
+  "ref": "Backpropagation for a 1 layer MLP",
+  "file": "pml1.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "§3.4",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "§8.4",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "Aufgabe 1",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "Aufgabe 2",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 compact k-NN notes",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be209f0a3a6bc848da75f184",
+  "uid": "unit-aml-l02",
+  "sid": "source-csc411-notes",
+  "ref": "Bonusblatt 01 — k-NN task",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d644dc77c149abc299b420c9",
+  "uid": "unit-aml-l04",
+  "sid": "source-csc411-notes",
+  "ref": "§3.1",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d644dc77c149abc299b420c9",
+  "uid": "unit-aml-l04",
+  "sid": "source-csc411-notes",
+  "ref": "§3.2",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d644dc77c149abc299b420c9",
+  "uid": "unit-aml-l04",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 nonlinear regression and regularization",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d644dc77c149abc299b420c9",
+  "uid": "unit-aml-l04",
+  "sid": "source-csc411-notes",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7523f3a6574bcd59ec9049dc",
+  "uid": "unit-aml-l05",
+  "sid": "source-csc411-notes",
+  "ref": "§8.2",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7523f3a6574bcd59ec9049dc",
+  "uid": "unit-aml-l05",
+  "sid": "source-csc411-notes",
+  "ref": "§8.6",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7523f3a6574bcd59ec9049dc",
+  "uid": "unit-aml-l05",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 classification and logistic loss",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7523f3a6574bcd59ec9049dc",
+  "uid": "unit-aml-l05",
+  "sid": "source-csc411-notes",
+  "ref": "Übung 05 — logistic-regression geometry",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9a435fb743f7e6a7298b2ff1",
+  "uid": "unit-aml-l06",
+  "sid": "source-csc411-notes",
+  "ref": "§9",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9a435fb743f7e6a7298b2ff1",
+  "uid": "unit-aml-l06",
+  "sid": "source-csc411-notes",
+  "ref": "§9.1",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9a435fb743f7e6a7298b2ff1",
+  "uid": "unit-aml-l06",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 gradient-descent reference",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-9a435fb743f7e6a7298b2ff1",
+  "uid": "unit-aml-l06",
+  "sid": "source-csc411-notes",
+  "ref": "Übung 06 — gradient-descent bridge",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-3a57aca9cbff2316a93e4e6e",
+  "uid": "unit-aml-l07",
+  "sid": "source-csc411-notes",
+  "ref": "§17.1",
+  "file": "csc411.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-3a57aca9cbff2316a93e4e6e",
+  "uid": "unit-aml-l07",
+  "sid": "source-csc411-notes",
+  "ref": "§17.3",
+  "file": "csc411.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-3a57aca9cbff2316a93e4e6e",
+  "uid": "unit-aml-l07",
+  "sid": "source-csc411-notes",
+  "ref": "§17.4",
+  "file": "csc411.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-3a57aca9cbff2316a93e4e6e",
+  "uid": "unit-aml-l07",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 linear-classifier reference",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-3a57aca9cbff2316a93e4e6e",
+  "uid": "unit-aml-l07",
+  "sid": "source-csc411-notes",
+  "ref": "Current L07 lecture deck",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0a14c0a2625dad335f7469e3",
+  "uid": "unit-aml-l08",
+  "sid": "source-csc411-notes",
+  "ref": "§3.3",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0a14c0a2625dad335f7469e3",
+  "uid": "unit-aml-l08",
+  "sid": "source-csc411-notes",
+  "ref": "§8.3",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0a14c0a2625dad335f7469e3",
+  "uid": "unit-aml-l08",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 network and metrics notes",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-0a14c0a2625dad335f7469e3",
+  "uid": "unit-aml-l08",
+  "sid": "source-csc411-notes",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cc1692a36cdffbe573dd3279",
+  "uid": "unit-aml-l09",
+  "sid": "source-csc411-notes",
+  "ref": "§9.1",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cc1692a36cdffbe573dd3279",
+  "uid": "unit-aml-l09",
+  "sid": "source-csc411-notes",
+  "ref": "CSC411 finite-difference gradient check",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cc1692a36cdffbe573dd3279",
+  "uid": "unit-aml-l09",
+  "sid": "source-csc411-notes",
+  "ref": "Current L09 lecture deck",
+  "file": "csc411.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-add32fc5153a4c50969e540d",
+  "uid": "unit-aml-l01",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese ML workflow framing",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-add32fc5153a4c50969e540d",
+  "uid": "unit-aml-l01",
+  "sid": "source-kroese-dsml",
+  "ref": "Current L01 lecture deck",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-214b495f9a3e48dae5e1dbb2",
+  "uid": "unit-aml-l02",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese k-NN and cross-validation",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-214b495f9a3e48dae5e1dbb2",
+  "uid": "unit-aml-l02",
+  "sid": "source-kroese-dsml",
+  "ref": "Übung 02 — k-NN search with vector embeddings",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-350570d160a9c93e8e15c31b",
+  "uid": "unit-aml-l03",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese regression reference",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-350570d160a9c93e8e15c31b",
+  "uid": "unit-aml-l03",
+  "sid": "source-kroese-dsml",
+  "ref": "Murphy linear regression and Gaussian MLE",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-fa5c8cd2be60115843c542e9",
+  "uid": "unit-aml-l04",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese nonlinear and regularized regression",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-fa5c8cd2be60115843c542e9",
+  "uid": "unit-aml-l04",
+  "sid": "source-kroese-dsml",
+  "ref": "Übung 04 — nonlinear regression and regularization",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cba6b8ab6cc94afb1e892c0f",
+  "uid": "unit-aml-l05",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese logistic and softmax models",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-cba6b8ab6cc94afb1e892c0f",
+  "uid": "unit-aml-l05",
+  "sid": "source-kroese-dsml",
+  "ref": "Current L05 lecture deck",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d87a2b230c35407d76c77688",
+  "uid": "unit-aml-l08",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese networks and evaluation",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-d87a2b230c35407d76c77688",
+  "uid": "unit-aml-l08",
+  "sid": "source-kroese-dsml",
+  "ref": "Current L08 lecture deck",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-207185556058e90371302703",
+  "uid": "unit-aml-l09",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese layer-wise backpropagation",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-207185556058e90371302703",
+  "uid": "unit-aml-l09",
+  "sid": "source-kroese-dsml",
+  "ref": "Übung 10 — computation graphs and autodiff",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-08a08216d5d79326650ef693",
+  "uid": "unit-aml-l10",
+  "sid": "source-kroese-dsml",
+  "ref": "§9.5.2",
+  "file": "kroese.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-08a08216d5d79326650ef693",
+  "uid": "unit-aml-l10",
+  "sid": "source-kroese-dsml",
+  "ref": "convolution neural network",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-08a08216d5d79326650ef693",
+  "uid": "unit-aml-l10",
+  "sid": "source-kroese-dsml",
+  "ref": "Kroese CNN reference",
+  "file": "kroese.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-eadacb35cc80b4a95220b6e7",
+  "uid": "unit-aml-l02",
+  "sid": "source-cs229-notes",
+  "ref": "Bias-variance tradeoff",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Bias-variance tradeoff"
+ },
+ {
+  "item": "route-eadacb35cc80b4a95220b6e7",
+  "uid": "unit-aml-l02",
+  "sid": "source-cs229-notes",
+  "ref": "CS229 bias-variance and model selection",
+  "file": "cs229-notes.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-8ec3da0114ef9468d3f63a51",
+  "uid": "unit-aml-l03",
+  "sid": "source-cs229-notes",
+  "ref": "LMS algorithm",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: LMS algorithm"
+ },
+ {
+  "item": "route-8ec3da0114ef9468d3f63a51",
+  "uid": "unit-aml-l03",
+  "sid": "source-cs229-notes",
+  "ref": "The normal equations",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The normal equations"
+ },
+ {
+  "item": "route-645d8b43b56e2e686b72e717",
+  "uid": "unit-aml-l04",
+  "sid": "source-cs229-notes",
+  "ref": "Feature maps",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Feature maps"
+ },
+ {
+  "item": "route-645d8b43b56e2e686b72e717",
+  "uid": "unit-aml-l04",
+  "sid": "source-cs229-notes",
+  "ref": "LMS with features",
+  "file": "cs229-notes.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-bd9f3f470427052f4909004e",
+  "uid": "unit-aml-l05",
+  "sid": "source-cs229-notes",
+  "ref": "Logistic regression",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Classification and logistic regression"
+ },
+ {
+  "item": "route-bd9f3f470427052f4909004e",
+  "uid": "unit-aml-l05",
+  "sid": "source-cs229-notes",
+  "ref": "Another algorithm for maximizing l(theta)",
+  "file": "cs229-notes.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f7a2035554358e7bdf8c0472",
+  "uid": "unit-aml-l06",
+  "sid": "source-cs229-notes",
+  "ref": "LMS algorithm",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: LMS algorithm"
+ },
+ {
+  "item": "route-f7a2035554358e7bdf8c0472",
+  "uid": "unit-aml-l06",
+  "sid": "source-cs229-notes",
+  "ref": "CS229 gradient-descent derivation",
+  "file": "cs229-notes.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-7c963103098bcf54f78b7c94",
+  "uid": "unit-aml-l08",
+  "sid": "source-cs229-notes",
+  "ref": "Supervised learning with non-linear models",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Supervised learning with non-linear models"
+ },
+ {
+  "item": "route-7c963103098bcf54f78b7c94",
+  "uid": "unit-aml-l08",
+  "sid": "source-cs229-notes",
+  "ref": "Neural networks",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Neural networks"
+ },
+ {
+  "item": "route-034d7a304227e9ea24516e86",
+  "uid": "unit-aml-l09",
+  "sid": "source-cs229-notes",
+  "ref": "The double descent phenomenon",
+  "file": "cs229-notes.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The double descent phenomenon"
+ },
+ {
+  "item": "route-034d7a304227e9ea24516e86",
+  "uid": "unit-aml-l09",
+  "sid": "source-cs229-notes",
+  "ref": "CS229 backprop, regularization, and double descent",
+  "file": "cs229-notes.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-832a42bb1f63ec6ea43fa373",
+  "uid": "unit-aml-l01",
+  "sid": "source-geron-handson",
+  "ref": "Géron end-to-end ML project overview",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-832a42bb1f63ec6ea43fa373",
+  "uid": "unit-aml-l01",
+  "sid": "source-geron-handson",
+  "ref": "Current L01 lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-21d8ed20ec2a60ffd4fabe71",
+  "uid": "unit-aml-l03",
+  "sid": "source-geron-handson",
+  "ref": "Linear Regression",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Linear Regression"
+ },
+ {
+  "item": "route-21d8ed20ec2a60ffd4fabe71",
+  "uid": "unit-aml-l03",
+  "sid": "source-geron-handson",
+  "ref": "Gradient Descent",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Gradient Descent"
+ },
+ {
+  "item": "route-33a411ac067444cf1a290747",
+  "uid": "unit-aml-l04",
+  "sid": "source-geron-handson",
+  "ref": "Polynomial Regression",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Polynomial Regression"
+ },
+ {
+  "item": "route-33a411ac067444cf1a290747",
+  "uid": "unit-aml-l04",
+  "sid": "source-geron-handson",
+  "ref": "Learning Curves",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Learning Curves"
+ },
+ {
+  "item": "route-760cfc6e64bcdad0cfffaa15",
+  "uid": "unit-aml-l05",
+  "sid": "source-geron-handson",
+  "ref": "Logistic Regression",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Logistic Regression"
+ },
+ {
+  "item": "route-760cfc6e64bcdad0cfffaa15",
+  "uid": "unit-aml-l05",
+  "sid": "source-geron-handson",
+  "ref": "Géron logistic and softmax regression",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-be37c217e550b50efbf0cfd3",
+  "uid": "unit-aml-l06",
+  "sid": "source-geron-handson",
+  "ref": "Gradient Descent",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Gradient Descent"
+ },
+ {
+  "item": "route-be37c217e550b50efbf0cfd3",
+  "uid": "unit-aml-l06",
+  "sid": "source-geron-handson",
+  "ref": "Géron batch, stochastic, and mini-batch GD code",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4973b76c89eb8da1abe050fe",
+  "uid": "unit-aml-l08",
+  "sid": "source-geron-handson",
+  "ref": "The Perceptron",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The Perceptron"
+ },
+ {
+  "item": "route-4973b76c89eb8da1abe050fe",
+  "uid": "unit-aml-l08",
+  "sid": "source-geron-handson",
+  "ref": "The Multilayer Perceptron and Backpropagation",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The Multilayer Perceptron and Backpropagation"
+ },
+ {
+  "item": "route-f94d721af516f6854fdf31e8",
+  "uid": "unit-aml-l09",
+  "sid": "source-geron-handson",
+  "ref": "Géron training deep neural networks",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-f94d721af516f6854fdf31e8",
+  "uid": "unit-aml-l09",
+  "sid": "source-geron-handson",
+  "ref": "Current L09 lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-515ab334a05432e324931153",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "Géron convolutional-network implementation",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-515ab334a05432e324931153",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "Übung 11 — CNN calculations and fourth sheet",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-de995049c1e4ed54a8327621",
+  "uid": "unit-aml-l01",
+  "sid": "source-geron-handson",
+  "ref": "From Biological to Artificial Neurons",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: From Biological to Artificial Neurons"
+ },
+ {
+  "item": "route-de995049c1e4ed54a8327621",
+  "uid": "unit-aml-l01",
+  "sid": "source-geron-handson",
+  "ref": "The Perceptron",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The Perceptron"
+ },
+ {
+  "item": "route-78d45203d54588d647811548",
+  "uid": "unit-aml-l06",
+  "sid": "source-geron-handson",
+  "ref": "Faster Optimizers",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Faster Optimizers"
+ },
+ {
+  "item": "route-78d45203d54588d647811548",
+  "uid": "unit-aml-l06",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 11 — the same optimizers, as code you can run",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e79a950d14654bc6276d98a3",
+  "uid": "unit-aml-l08",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 3 — the confusion matrix computed on real predictions",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e79a950d14654bc6276d98a3",
+  "uid": "unit-aml-l08",
+  "sid": "source-geron-handson",
+  "ref": "Current L08 lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-05e06c3d31f148c803e866f5",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "The Architecture of the Visual Cortex",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: The Architecture of the Visual Cortex"
+ },
+ {
+  "item": "route-05e06c3d31f148c803e866f5",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "Convolutional Layers",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Convolutional Layers"
+ },
+ {
+  "item": "route-a279edf1db6e1037b5fd6c16",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 14 exercises — the motivation asked back",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-a279edf1db6e1037b5fd6c16",
+  "uid": "unit-aml-l10",
+  "sid": "source-geron-handson",
+  "ref": "Current L10 lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4c72e8b44dc1933ab9c46826",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 16 — tokens and the vocabulary, in code",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-4c72e8b44dc1933ab9c46826",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e0a9ab589c30dad9eb7dcbad",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Reusing Pretrained Embeddings and Language Models",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Reusing Pretrained Embeddings and Language Models"
+ },
+ {
+  "item": "route-e0a9ab589c30dad9eb7dcbad",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 16 — embeddings, static then contextual",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-a464fd47324657962d1113e4",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Attention Mechanisms",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Attention Mechanisms"
+ },
+ {
+  "item": "route-a464fd47324657962d1113e4",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Attention Is All You Need: The Original Transformer Architecture",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Attention Is All You Need: The Original Transformer Architecture"
+ },
+ {
+  "item": "route-075378562a94297205c269f8",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Multi-head attention",
+  "file": "geron-copy2.pdf",
+  "status": "outline",
+  "evidence": "outline entry: Multi-head attention"
+ },
+ {
+  "item": "route-075378562a94297205c269f8",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 16 — multi-head attention and masking",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-61efa9f1147d5765ad520338",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. Ch 16 exercises 5 and 6",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-61efa9f1147d5765ad520338",
+  "uid": "unit-aml-l11",
+  "sid": "source-geron-handson",
+  "ref": "Current L11 Transformers lecture deck",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-53277505603f22eedc9d81b7",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-geron-handson",
+  "ref": "Géron 3rd ed. — the executable half of both repair clusters",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-53277505603f22eedc9d81b7",
+  "uid": "unit-aml-exam-prep",
+  "sid": "source-geron-handson",
+  "ref": "Current AML exercises and bonus sheets",
+  "file": "geron-copy2.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b7ad49a27ce531882edd8afe",
+  "uid": "unit-aml-l01",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§1.2",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 1.2 What Is Machine Learning?"
+ },
+ {
+  "item": "route-b7ad49a27ce531882edd8afe",
+  "uid": "unit-aml-l01",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§1.4",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 1.4 What Can Go Wrong with Machine Learning?"
+ },
+ {
+  "item": "route-b7ad49a27ce531882edd8afe",
+  "uid": "unit-aml-l01",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Kelleher et al. — predictive-analytics framing",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b7ad49a27ce531882edd8afe",
+  "uid": "unit-aml-l01",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Current L01 lecture deck",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-8b24329d3d132e44d2db2bad",
+  "uid": "unit-aml-l08",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.2.1",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.2.1 Simple Linear Regression"
+ },
+ {
+  "item": "route-8b24329d3d132e44d2db2bad",
+  "uid": "unit-aml-l08",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.2.3",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.2.3 Error Surfaces"
+ },
+ {
+  "item": "route-8b24329d3d132e44d2db2bad",
+  "uid": "unit-aml-l08",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.3",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.3 Standard Approach: Multivariable Linear Regression with Gradient D"
+ },
+ {
+  "item": "route-8b24329d3d132e44d2db2bad",
+  "uid": "unit-aml-l08",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Kelleher et al. Ch 7 — neural networks as error-based learning",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-8b24329d3d132e44d2db2bad",
+  "uid": "unit-aml-l08",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Bonusblatt 04 — neural-network tasks",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-af0dec1a20a6184eaf0ca273",
+  "uid": "unit-aml-l09",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.3.2",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.3.2 Gradient Descent"
+ },
+ {
+  "item": "route-af0dec1a20a6184eaf0ca273",
+  "uid": "unit-aml-l09",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.3.3",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.3.3 Choosing Learning Rates and Initial Weights"
+ },
+ {
+  "item": "route-af0dec1a20a6184eaf0ca273",
+  "uid": "unit-aml-l09",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "§7.4.2",
+  "file": "kelleher.pdf",
+  "status": "outline",
+  "evidence": "outline entry: 7.4.2 Setting the Learning Rate Using Weight Decay"
+ },
+ {
+  "item": "route-af0dec1a20a6184eaf0ca273",
+  "uid": "unit-aml-l09",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Kelleher et al. Ch 7 — learning rates and weight decay",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-af0dec1a20a6184eaf0ca273",
+  "uid": "unit-aml-l09",
+  "sid": "source-kelleher-fmlpda",
+  "ref": "Current L09 lecture deck",
+  "file": "kelleher.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2b133f42c89b800e823d83c2",
+  "uid": "unit-aml-l08",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "slides 5-9",
+  "file": "15_neural_networks.pdf",
+  "status": "ok",
+  "evidence": "slides 5-9 within 38 pages"
+ },
+ {
+  "item": "route-2b133f42c89b800e823d83c2",
+  "uid": "unit-aml-l08",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "SaD L15 — perceptron-to-MLP bridge",
+  "file": "15_neural_networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-2b133f42c89b800e823d83c2",
+  "uid": "unit-aml-l08",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "Übung 08–09 — MLP and feedforward practice",
+  "file": "15_neural_networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b907809826ba756aa1d65f9d",
+  "uid": "unit-aml-l09",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "slides 26",
+  "file": "15_neural_networks.pdf",
+  "status": "ok",
+  "evidence": "slides 26-26 within 38 pages"
+ },
+ {
+  "item": "route-b907809826ba756aa1d65f9d",
+  "uid": "unit-aml-l09",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "SaD L15 — backpropagation preview",
+  "file": "15_neural_networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-b907809826ba756aa1d65f9d",
+  "uid": "unit-aml-l09",
+  "sid": "source-sad-ss26-lectures",
+  "ref": "Übung 10 — computation graphs and autodiff",
+  "file": "15_neural_networks.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-142725fc373154de7ce46773",
+  "uid": "unit-aml-l02",
+  "sid": "source-zacharski-data-mining",
+  "ref": "Manhattan Distance",
+  "file": "Zacharski_Programmers-Guide-to-Data-Mining.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-142725fc373154de7ce46773",
+  "uid": "unit-aml-l02",
+  "sid": "source-zacharski-data-mining",
+  "ref": "Euclidean Distance",
+  "file": "Zacharski_Programmers-Guide-to-Data-Mining.pdf",
+  "status": "text",
+  "evidence": "found in page text"
+ },
+ {
+  "item": "route-e52061692703bb9ee2044d70",
+  "uid": "unit-aml-l01",
+  "sid": "source-lineare-algebra-archive",
+  "ref": "Solved Lineare-Algebra Übungen and Klausuren",
+  "file": "Theoretische Informatik Grundlagen mit Übungsaufgaben und Lösungen.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ },
+ {
+  "item": "route-e52061692703bb9ee2044d70",
+  "uid": "unit-aml-l01",
+  "sid": "source-lineare-algebra-archive",
+  "ref": "MIT 18.06 — targeted linear-algebra prerequisite check",
+  "file": "Theoretische Informatik Grundlagen mit Übungsaufgaben und Lösungen.pdf",
+  "status": "miss",
+  "evidence": "not in outline nor whole-document text"
+ }
+]

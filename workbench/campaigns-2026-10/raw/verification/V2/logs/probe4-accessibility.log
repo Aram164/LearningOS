@@ -1,0 +1,28 @@
+
+probe 4 · accessible names and keyboard-navigable button groups
+  ok   program: group "Learning areas" moves focus on arrow keys and stays inside
+  ok   module-detail: group "Module sections" moves focus on arrow keys and stays inside
+  ok   module-detail: group "Module components" moves focus on arrow keys and stays inside
+  ok   project-detail: group "Project sections" moves focus on arrow keys and stays inside
+  ok   library: group "Folder layout" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "Atlas views" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "Which question to ask about the selected concept" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "Graph depth" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "Concepts around Bayes theorem" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "Relations of Bayes theorem, as text" moves focus on arrow keys and stays inside
+  ok   atlas-concept: group "What to inspect about this concept" moves focus on arrow keys and stays inside
+  ok   atlas-domains: group "Atlas views" moves focus on arrow keys and stays inside
+  ok   atlas-domains: group "Knowledge domains" moves focus on arrow keys and stays inside
+  ok   atlas-domains: group "Domain content" moves focus on arrow keys and stays inside
+  ok   atlas-domains: group "Notes in Mathematics" moves focus on arrow keys and stays inside
+  ok   abilities: group "Atlas views" moves focus on arrow keys and stays inside
+  ok   abilities: group "Ability map layout" moves focus on arrow keys and stays inside
+  note abilities: "Ability camera" uses a documented non-roving keyboard scheme (see finding notes)
+  ok   abilities: group "Ability groups at overview scale" moves focus on arrow keys and stays inside
+  note abilities: "Loaded abilities in preparation order" uses a documented non-roving keyboard scheme (see finding notes)
+  ok   garden: group "Garden filters" moves focus on arrow keys and stays inside
+  ok   every interactive element across all views has an accessible name
+  ok   no inaccessible click-only containers across all views
+keyboard groups exercised: 19
+
+probe 4 (accessible names + keyboard): all checks passed

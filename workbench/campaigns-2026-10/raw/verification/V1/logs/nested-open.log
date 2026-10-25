@@ -1,0 +1,20 @@
+fixture records matched to a record schema: 168
+nested unknown-key acceptance on real frozen records:
+  learning-plan.schema.json:
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key <here> still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key [0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key [1] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key <here> still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][1] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][2] still validates
+  material-comparison-defs.schema.json:
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key <here> still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key [0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/module.yaml -> unknown key [1] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key <here> still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][0] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][1] still validates
+    tests/fixtures/formats/v12/curriculum/modules/module-demo/source-map.yaml -> unknown key [0][2] still validates

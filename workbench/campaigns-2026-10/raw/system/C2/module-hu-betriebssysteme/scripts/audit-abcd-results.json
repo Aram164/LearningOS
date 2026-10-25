@@ -1,0 +1,322 @@
+{
+  "A": [
+    {
+      "uri": "material://source-bs-hu-prior-slides/02_structure.pdf",
+      "ok": false,
+      "error": "'/Users/aramaljanadi/los-glm-C2-2026-10/materials/data-systems/architecture/bs-hu-prior-slides/02_structure.pdf' is not in the subpath of '/Users/aramaljanadi/Desktop/semestercontext/LearningOS/materials'"
+    },
+    {
+      "uri": "material://source-bs-hu-prior-slides/02_structure.pdf",
+      "ok": false,
+      "error": "'/Users/aramaljanadi/los-glm-C2-2026-10/materials/data-systems/architecture/bs-hu-prior-slides/02_structure.pdf' is not in the subpath of '/Users/aramaljanadi/Desktop/semestercontext/LearningOS/materials'"
+    }
+  ],
+  "B": [
+    {
+      "id": "route-bs-os-hardware",
+      "locator": "02_structure.pdf, pdf pp. 1-7",
+      "range": [
+        1,
+        7
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-interrupts",
+      "locator": "02_structure.pdf, pdf pp. 8-12",
+      "range": [
+        8,
+        12
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-memory",
+      "locator": "02_structure.pdf, pdf pp. 13-18",
+      "range": [
+        13,
+        18
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-privileges",
+      "locator": "02_structure.pdf, pdf pp. 19-22",
+      "range": [
+        19,
+        22
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-syscall-boundary",
+      "locator": "02_structure.pdf, pdf pp. 23-27",
+      "range": [
+        23,
+        27
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-linux-example",
+      "locator": "02_structure.pdf, pdf pp. 28-34",
+      "range": [
+        28,
+        34
+      ],
+      "ok": true
+    },
+    {
+      "id": "route-bs-os-structures",
+      "locator": "02_structure.pdf, pdf pp. 35-44",
+      "range": [
+        35,
+        44
+      ],
+      "ok": true
+    },
+    {
+      "id": "resource-bs-vocabulary",
+      "locator": "02_structure.pdf, pdf p. 46",
+      "range": [
+        46,
+        46
+      ],
+      "ok": true
+    }
+  ],
+  "C": [
+    {
+      "claim": "covers:route-bs-os-hardware",
+      "quote_page": 7,
+      "quote": "Device Controller is in charge of a particular device type.",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-interrupts",
+      "quote_page": 9,
+      "quote": "A trap is raised synchronously by the software, either by an",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-memory",
+      "quote_page": 16,
+      "quote": "base register – holds the smallest legal physical memory add",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-privileges",
+      "quote_page": 20,
+      "quote": "Mode bit added to CPU state to indicate mode of operation:",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-syscall-boundary",
+      "quote_page": 24,
+      "quote": "System Call – the method used by a process to request action",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-linux-example",
+      "quote_page": 33,
+      "quote": "Kernel will copy data from/to process' user-mode memory spac",
+      "ok": true
+    },
+    {
+      "claim": "covers:route-bs-os-structures",
+      "quote_page": 37,
+      "quote": "The kernel sources may well be structured, but at runtime, e",
+      "ok": true
+    },
+    {
+      "route": "route-bs-os-hardware",
+      "range": [
+        1,
+        7
+      ],
+      "anchors": {
+        "device controller": [
+          7
+        ],
+        "cpu": [
+          5,
+          6,
+          7
+        ],
+        "memory": [
+          5,
+          7
+        ],
+        "bus": [
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "route": "route-bs-interrupts",
+      "range": [
+        8,
+        12
+      ],
+      "anchors": {
+        "trap": [
+          9,
+          11
+        ],
+        "irql": [
+          11,
+          12
+        ],
+        "level 2": [],
+        "28": [
+          12
+        ]
+      }
+    },
+    {
+      "route": "route-bs-memory",
+      "range": [
+        13,
+        18
+      ],
+      "anchors": {
+        "base register": [
+          16
+        ],
+        "limit register": [
+          16
+        ],
+        "page": [
+          18
+        ],
+        "frame": [],
+        "offset": []
+      }
+    },
+    {
+      "route": "route-bs-privileges",
+      "range": [
+        19,
+        22
+      ],
+      "anchors": {
+        "mode bit": [
+          20
+        ],
+        "ring": [
+          22
+        ]
+      }
+    },
+    {
+      "route": "route-bs-syscall-boundary",
+      "range": [
+        23,
+        27
+      ],
+      "anchors": {
+        "system call": [
+          23,
+          24,
+          26,
+          27
+        ],
+        "stack": [
+          27
+        ],
+        "read": [
+          26
+        ]
+      }
+    },
+    {
+      "route": "route-bs-linux-example",
+      "range": [
+        28,
+        34
+      ],
+      "anchors": {
+        "0x80": [
+          29,
+          30
+        ],
+        "sys_alarm": [
+          30,
+          31
+        ],
+        "errno": [
+          28,
+          29
+        ],
+        "alarm": [
+          28,
+          29,
+          30,
+          31
+        ]
+      }
+    },
+    {
+      "route": "route-bs-os-structures",
+      "range": [
+        35,
+        44
+      ],
+      "anchors": {
+        "microkernel": [
+          36,
+          41,
+          44
+        ],
+        "nt": [
+          35,
+          36,
+          37,
+          38,
+          41,
+          42,
+          43,
+          44
+        ],
+        "ms-dos": [
+          38,
+          39
+        ],
+        "unix": [
+          35,
+          37,
+          38
+        ],
+        "bsd": [
+          38,
+          40
+        ]
+      }
+    },
+    {
+      "p45_len": 189,
+      "p46_len": 629,
+      "p46_anchors": {
+        "dma": true,
+        "synchronous": true,
+        "asynchronous": true
+      }
+    }
+  ],
+  "D": {
+    "dup_locators": {},
+    "dup_angle_details": {},
+    "dangling_route_refs": [],
+    "missing_knowledge_ids": [
+      "knowledge-bs-interrupts",
+      "knowledge-bs-linux-example",
+      "knowledge-bs-memory",
+      "knowledge-bs-os-hardware",
+      "knowledge-bs-os-structures",
+      "knowledge-bs-privileges",
+      "knowledge-bs-syscall-boundary"
+    ],
+    "n_stage_resources": 8
+  }
+}

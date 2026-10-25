@@ -1,0 +1,73 @@
+{
+ "module-job-git": {
+  "units": 1,
+  "stages": 16,
+  "resources": 215,
+  "kinds": {
+   "read": 70,
+   "reference": 47,
+   "practise": 98
+  },
+  "routes": 0,
+  "vault_path_rows": 59,
+  "url_rows": 62,
+  "source_id_rows": 59
+ },
+ "module-job-python-engineering": {
+  "units": 1,
+  "stages": 10,
+  "resources": 81,
+  "kinds": {
+   "practise": 36,
+   "reference": 14,
+   "read": 31
+  },
+  "routes": 0,
+  "vault_path_rows": 25,
+  "url_rows": 24,
+  "source_id_rows": 24
+ },
+ "module-job-engineering-tools": {
+  "units": 1,
+  "stages": 20,
+  "resources": 248,
+  "kinds": {
+   "read": 60,
+   "reference": 65,
+   "practise": 123
+  },
+  "routes": 0,
+  "vault_path_rows": 22,
+  "url_rows": 113,
+  "source_id_rows": 12
+ },
+ "module-job-rust-engineering": {
+  "units": 1,
+  "stages": 19,
+  "resources": 77,
+  "kinds": {
+   "read": 37,
+   "practise": 28,
+   "reference": 12
+  },
+  "routes": 0,
+  "vault_path_rows": 19,
+  "url_rows": 39,
+  "source_id_rows": 15
+ },
+ "module-job-polars": {
+  "units": 10,
+  "stages": 31,
+  "resources": 290,
+  "kinds": {
+   "read": 101,
+   "reference": 72,
+   "practise": 115,
+   "watch": 2
+  },
+  "routes": 29,
+  "vault_path_rows": 114,
+  "url_rows": 100,
+  "source_id_rows": 39
+ }
+}

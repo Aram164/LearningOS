@@ -1,0 +1,91 @@
+module_id: module-job-git
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-job-modules-l2-17-2026-10-24/outputs/coverage-audit-l2-17.md
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+unit_revisions:
+- unit_id: unit-job-git-fluency
+  route_changes:
+    add: []
+    update: []
+    remove: []
+  stage_patches:
+  - stage_id: stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay
+    fields:
+      resources:
+      - kind: read
+        label: Required core — ProGit_2ed.pdf
+        id: resource-git-15-01-required-core-progit-2ed-pdf
+        source_id: source-progit
+        locator: Pro Git submodules and replace Chs. 7.11, 7.13
+        vault_path: material://source-progit/ProGit_2ed.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: Official reference — git-scm.com — git worktree
+        id: resource-git-15-02-official-reference-git-scm-com-git-wor
+        locator: git-worktree and submodule model
+        url: https://git-scm.com/docs/git-worktree
+        scope_triage: reference-only
+      - kind: reference
+        label: Official reference — git-scm.com — gitsubmodules
+        id: resource-git-15-03-official-reference-git-scm-com-gitsubm
+        locator: git-worktree and submodule model
+        url: https://git-scm.com/docs/gitsubmodules
+        scope_triage: reference-only
+      - kind: practise
+        label: Guided exercises — Create, lock, move, remove, and prune disposable
+          worktrees; then complete the clone/worktree/submodule/subtree/package decision
+          table.
+        id: resource-git-15-04-guided-exercises-create-lock-move-remo
+        locator: Create, lock, move, remove, and prune disposable worktrees; then
+          complete the clone/worktree/submodule/subtree/package decision table.
+        scope_triage: required-now
+      - kind: read
+        label: Alternative explanation — missing.csail.mit.edu — version control
+        id: resource-git-15-05-alternative-explanation-missing-csail
+        locator: MIT advanced Git worktree pointer
+        url: https://missing.csail.mit.edu/2026/version-control/#advanced-git
+        scope_triage: helpful-now
+      - kind: reference
+        label: Optional depth — git-scm.com — partial clone
+        id: resource-git-15-06-optional-depth-git-scm-com-partial-clo
+        locator: Partial clone design
+        url: https://git-scm.com/docs/partial-clone
+        scope_triage: deferred
+      - kind: practise
+        label: Create two linked worktrees for independent branches and show their
+          separate HEAD/index/working-tree state.
+        id: resource-git-15-07-create-two-linked-worktrees-for-indepe
+        locator: Exercise 1
+        scope_triage: required-now
+      - kind: practise
+        label: Attempt to check out one branch twice and explain the protection.
+        id: resource-git-15-08-attempt-to-check-out-one-branch-twice
+        locator: Exercise 2
+        scope_triage: required-now
+      - kind: practise
+        label: Make an object in one worktree and prove it is visible through the
+          shared database in the other without changing branches.
+        id: resource-git-15-09-make-an-object-in-one-worktree-and-pro
+        locator: Exercise 3
+        scope_triage: required-now
+      - kind: practise
+        label: Lock, move, remove, and prune a disposable worktree through Git commands,
+          never manual deletion.
+        id: resource-git-15-10-lock-move-remove-and-prune-a-disposabl
+        locator: Exercise 4
+        scope_triage: required-now
+      - kind: practise
+        label: Compare clone, worktree, submodule, subtree, and package dependency
+          for five project scenarios.
+        id: resource-git-15-11-compare-clone-worktree-submodule-subtr
+        locator: Exercise 5
+        scope_triage: required-now

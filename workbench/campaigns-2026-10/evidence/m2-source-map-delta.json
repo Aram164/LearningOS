@@ -1,0 +1,46 @@
+[
+  {
+    "path": [
+      "sources",
+      73,
+      "unit_routes",
+      1,
+      "locator"
+    ],
+    "before": "lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf",
+    "after": "lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf"
+  },
+  {
+    "path": [
+      "sources",
+      9,
+      "unit_routes",
+      13,
+      "locator"
+    ],
+    "before": "IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90, §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped.",
+    "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 11 Stetige Funktionen PDF p. 78 (printed p. 75) (§11.1 Motivation und Definition PDF p. 78 (printed p. 75), §11.2 Eigenschaften stetiger reeller Funktionen PDF p. 88 (printed p. 85), §11.3 Gleichmäßige Stetigkeit PDF p. 93 (printed p. 90), §11.4 Grenzwerte von Funktionen PDF p. 95 (printed p. 92)), §12.3 Exponentialfunktion, Logarithmusfunktion PDF p. 121 (printed p. 118). §12.2 Potenzreihen matches the §5.8 Exkurs and is skipped."
+  },
+  {
+    "path": [
+      "sources",
+      9,
+      "unit_routes",
+      15,
+      "locator"
+    ],
+    "before": "IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l'Hospital p. 150, §14.3 Der Satz von Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.",
+    "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 13 Differenzierbare reelle Funktionen PDF p. 130 (printed p. 127) (§13.1 Motivation und Definition PDF p. 130 (printed p. 127), §13.2 Rechenregeln PDF p. 135 (printed p. 132)), Kap. 14 Anwendungen der Differentialrechnung PDF p. 143 (printed p. 140) (§14.1 Mittelwertsätze PDF p. 143 (printed p. 140), §14.2 Regeln von de l'Hospital PDF p. 153 (printed p. 150), §14.3 Der Satz von Taylor PDF p. 161 (printed p. 158), §14.4 Kurvendiskussion PDF p. 183 (printed p. 180), §14.5 Noch einmal Polynominterpolation PDF p. 193 (printed p. 190)). Kap. 15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped."
+  },
+  {
+    "path": [
+      "sources",
+      9,
+      "unit_routes",
+      16,
+      "locator"
+    ],
+    "before": "IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225, §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234, §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped.",
+    "after": "IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): Kap. 16 Das bestimmte Riemannsche Integral PDF p. 222 (printed p. 219) (§16.1 Definition PDF p. 222 (printed p. 219), §16.2 Integrierbarkeitskriterien PDF p. 224 (printed p. 221), §16.3 Klassen integrierbarer Funktionen PDF p. 228 (printed p. 225), §16.4 Rechenregeln PDF p. 230 (printed p. 227)), Kap. 17 Das unbestimmte Integral PDF p. 237 (printed p. 234) (§17.1 Fundamentalsatz PDF p. 237 (printed p. 234), §17.2 Partielle Integration PDF p. 241 (printed p. 238), §17.3 Substitutionsregel PDF p. 248 (printed p. 245), §17.4 Partialbruchzerlegung PDF p. 249 (printed p. 246)), Kap. 18 Uneigentliche Integrale PDF p. 255 (printed p. 252) (§18.1 unbeschränkte Intervalle PDF p. 255 (printed p. 252), §18.2 unbeschränkte Integranden PDF p. 268 (printed p. 265)). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and are skipped."
+  }
+]

@@ -1,0 +1,11 @@
+{
+ "note-icop-l01-mock-exam": [
+  "concept-convexity"
+ ],
+ "note-aml-l06-mock-exam": [
+  "concept-gradient-descent",
+  "concept-adam-optimizer",
+  "concept-convexity",
+  "concept-feature-scaling"
+ ]
+}

@@ -1,0 +1,67 @@
+
+=== CASE 1: exact-target binding ===
+1a import-after-target-change refused: Garden target changed after request preparation
+1b apply-after-target-change refused: Garden target changed after request preparation
+1b nothing canonical written: True canonical-side effects: []
+1c prepare with stale expected-snapshot refused: True expected snapshot sha256:0000000000000000000000000000000000000000000000000000000000000000, current snapshot is sha256:ed36cd64f2db2d678bb3a9
+1d operation target_id mismatch refused: delivery 'ai-delivery-c1d' is invalid: operations[0] targets an unrelated artifact
+
+=== CASE 2: partial approval ===
+2a subset-selection payload refused: invalid payload for ai-action.delivery.apply: <payload>: Additional properties are not allowed ('selected_operations' was unexpected)
+2b all three destinations written: True missing: set()
+2b garden.update applied: True
+2b relationship applied: True
+2b request completed: completed
+
+=== CASE 3: receipts ===
+3a exactly one receipt after first apply: True ['transaction-20261025-090004-001.yaml']
+3a replay replayed: True same receipt: True
+3a replay wrote nothing canonical: True
+3a still exactly one receipt: True
+3b receipt writes match disk bytes: True []
+3b snapshot_after == live projection fingerprint: True
+3e manifest carries the completed request: True
+3c re-apply under new key refused: a transcription for garden-note-handwritten-import-registration already exists (from request ai-request-20261025-080004-c2436a); set supersedes: transcription-garden-note-handwritt
+3c still exactly one receipt: True
+3d update-only re-apply under new key: accepted = True | replayed = False
+3d receipts: 2 (first round: 1 ) | state revision: 1 -> 2
+3d request receipt_id moved: True | distinct transaction ids: True
+
+=== CASE 4: replay / foreign request ids ===
+4a replayed flag: True same transaction: True no writes: False []
+4b unknown request id refused: AI action request not found: ai-request-does-not-exist
+4c foreign request id with wrong preconditions refused: delivery 'ai-delivery-c4c' is invalid: delivery preconditions must equal the prepared request preconditions
+
+=== CASE 5: relation proposals, one path ===
+5a declared writers of concept-relations.yaml: ['commands:concept.relations.change', 'commands:concept.relations.change']
+5b AI delivery cannot carry concept.relations.change: delivery 'ai-delivery-c5b' is invalid: operations[0] capability is not allowed: 'concept.relations.change'
+5c operator-approval manual edit accepted: True oncept-relations": 1
+    },
+    "snapshot_after": "sha256:1ec33635a113f6ee8e73680b786cf9868d668572d100e75f5aa267ff1c38b744",
+    "replayed": false
+  },
+  "error": null
+}
+
+5c manual path added the relation: True
+5e gesture-kind claim of the relation editor refused: True concept.relations.change is authorized by a reviewed action in the LearningOS app, not by a operator-channel request: apply it from the screen that shows the exact change
+5d concept-relations.yaml byte-identical after AI apply: True
+
+=== CASE 6: no provider configured ===
+6a prepare(claude) refused: True provider claude has no available adapter (claude-code is declared unavailable)
+6b ai-action-list works with zero adapters: True
+6b prepare(manual-bundle) refused, typed: True provider manual-bundle has no available adapter (manual-bundle is declared unavailable)
+6b manual concept authoring works with zero adapters: True 
+6c manual-bundle round trip works: True
+
+=== CASE 7: provider response never writes canonical directly ===
+7a symlink bundle refused: delivery bundles may not contain symbolic links
+7a quarantine-only side effects: True []
+7b traversal artifact_ref refused: delivery 'ai-delivery-c7b' is invalid: operations[0] artifact_ref is unsafe: unsafe bundle path: artifacts/../../seed-escape.md
+7b seed untouched: True
+7c deliveries/ empty after rejection: True
+7d canonical-writer operation refused: delivery 'ai-delivery-c7d' is invalid: operations[0] capability is not allowed: 'note.create'
+7e tampered artifact refused at apply: approved delivery artifact content hash does not match the imported bytes: artifacts/transcription.md
+7e nothing canonical written: True []
+
+tmp: /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/v4-cases-pgcbxv3f

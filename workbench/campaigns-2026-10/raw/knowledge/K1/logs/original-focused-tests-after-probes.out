@@ -1,0 +1,8 @@
+### .venv/bin/pytest tests/test_module_concept_atlas.py
+============================== 16 passed in 3.47s ==============================
+### .venv/bin/pytest tests/test_thematic_navigation_projection.py
+============================== 4 passed in 2.49s ===============================
+### .venv/bin/pytest tests/test_atlas_authoring.py
+============================== 6 passed in 7.19s ===============================
+### .venv/bin/pytest tests/test_semantic_contract.py
+============================== 99 passed in 0.06s ==============================
