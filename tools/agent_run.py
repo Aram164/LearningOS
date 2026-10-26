@@ -48,11 +48,13 @@ import time
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 
+from learning_os.domain.codes import INVALID_REQUEST, VALIDATION_FAILED
+
 TOOLS = Path(__file__).resolve().parent
 
 
 class AgentRunError(Exception):
-    def __init__(self, message: str, code: str = "INVALID_REQUEST"):
+    def __init__(self, message: str, code: str = INVALID_REQUEST):
         super().__init__(message)
         self.code = code
 
@@ -350,7 +352,7 @@ def _preflight(executor, root: Path, writes: list[str]) -> dict | None:
                 "message": "validation did not return a trustworthy result",
                 "exit": code, "stderr": err.strip()[-400:]}
     if errors:
-        return {"code": "VALIDATION_FAILED", "retryable": False,
+        return {"code": VALIDATION_FAILED, "retryable": False,
                 "scope": classify_scope(errors, writes)}
     return None
 
@@ -643,17 +645,21 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
         "out_bytes": sum(row.get("out_bytes", 0) for row in rows), "agent_calls": 1}}
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("plan", help="plan JSON file")
     parser.add_argument("--root", default=None, help="selected data root (default: tool repository)")
     parser.add_argument("--poll-s", type=float, default=0.1)
-    args = parser.parse_args()
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
     root = Path(args.root).resolve() if args.root else TOOLS.parent
     try:
         report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")), root, poll_s=args.poll_s)
     except (OSError, ValueError, AgentRunError) as exc:
-        print(_json({"error": {"code": getattr(exc, "code", "INVALID_REQUEST"),
+        print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))
         return 2
     print(_json(report))
