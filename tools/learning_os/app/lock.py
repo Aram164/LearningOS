@@ -35,6 +35,14 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
 #: malformed means wait as long as the holder needs, announced on stderr.
 LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
 
+#: Cancellable read workers set this so they defer canonical recovery (D09):
+#: they must report recovery-required instead of reconciling transactions.
+LOS_DEFER_RECOVERY_ENV = "LOS_WORKER_DEFER_RECOVERY"
+
+
+def defer_recovery() -> bool:
+    return os.environ.get(LOS_DEFER_RECOVERY_ENV) == "1"
+
 
 #: Poll interval while a lock timeout is armed. The default (unbounded)
 #: wait keeps kernel blocking with no polling.
@@ -186,6 +194,9 @@ def escalate_operator_lock(root: Path) -> bool:
         (key, "released" if key == root_key else held_mode, held_handle)
         for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
     ))
+    if defer_recovery():
+        raise WriteRefused(
+            "recovery-required: lock escalation deferred in worker mode")
     fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
     _acquire_flock(handle, exclusive=True,
                    lock_path=_operator_lock_path(root),
@@ -248,6 +259,10 @@ def operator_lock(root: Path, *, shared: bool = False):
             _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
         try:
             if shared and _has_armed_inflight(root):
+                if defer_recovery():
+                    raise WriteRefused(
+                        "recovery-required: a published crash journal awaits "
+                        "foreground recovery; worker deferred")
                 escalate_operator_lock(root)
             yield
         finally:

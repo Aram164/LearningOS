@@ -48,7 +48,11 @@ import time
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 
+from learning_os.adapters.agent_plans import Executor  # noqa: F401
+from learning_os.app.projection_readiness import observe as _observe_projection
+from learning_os.app.read_session import ReadSession
 from learning_os.domain.codes import INVALID_REQUEST, VALIDATION_FAILED
+from learning_os.store.contracts.agent_plans import parse_controls
 
 TOOLS = Path(__file__).resolve().parent
 
@@ -193,15 +197,11 @@ def writes_ready(root: Path, required: list, known: list) -> tuple[bool, str]:
     latest = max(positions[signature] for signature in signatures)
     snapshots = {_field(result, "snapshot_after") for result in known[latest:]
                  if _receipt_ready(root, result)[0]}
-    try:
-        manifest = json.loads((root / "generated/manifest.json").read_text(encoding="utf-8"))
-        identity = json.loads((root / "generated/manifest.identity.json").read_text(encoding="utf-8"))
-        stamp = manifest["_generated"]["snapshot_id"]
-        identity_stamp = identity["snapshot_id"]
-    except (OSError, ValueError, KeyError, TypeError):
-        return False, "projection-not-readable"
-    if stamp != identity_stamp:
-        return False, "projection-publication-pending"
+    obs = _observe_projection(root)
+    stamp = obs["snapshot_id"]
+    if stamp is None:
+        return False, ("projection-publication-pending" if (root / "generated/manifest.json").exists()
+                       else "projection-not-readable")
     if stamp not in snapshots:
         return False, "projection-not-current"
     return True, "ready"
@@ -442,9 +442,20 @@ def _expand_log_step(step: dict, session_id=None) -> list[str]:
 def _validate_plan(plan, poll_s: float) -> list[dict]:
     if not math.isfinite(poll_s) or poll_s < 0:
         raise AgentRunError("poll interval must be finite and nonnegative")
+    if isinstance(plan, dict):
+        unknown = set(plan) - {"steps", "session_id", "on_error", "schema_version",
+                               "read_workers", "deadline_s", "report_max_bytes"}
+        if unknown:
+            raise AgentRunError(f"unknown plan fields: {sorted(unknown)}")
+        try:
+            parse_controls(plan)
+        except ValueError as exc:
+            raise AgentRunError(str(exc)) from exc
     steps = plan.get("steps") if isinstance(plan, dict) else None
     if not isinstance(steps, list) or not steps:
         raise AgentRunError("plan needs a non-empty steps list")
+    if len(steps) > 256:
+        raise AgentRunError("plans are limited to 256 steps")
     if plan.get("on_error", "stop") not in ("stop", "continue"):
         raise AgentRunError("on_error must be stop or continue")
     session_id = plan.get("session_id")
@@ -455,6 +466,8 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
     for step in steps:
         if not isinstance(step, dict) or not isinstance(step.get("id"), str) or not step["id"]:
             raise AgentRunError("steps need nonempty string ids")
+        if len(step["id"]) > 64:
+            raise AgentRunError("step ids are limited to 64 characters")
         if step["id"] in seen:
             raise AgentRunError("step ids must be unique")
         deps = step.get("depends_on", [])
@@ -530,13 +543,19 @@ def _step_argv(step: dict, index: dict, session_id=None) -> list[str]:
 
 
 def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
-             index: dict | None = None) -> dict:
+             index: dict | None = None, report_dir=None) -> dict:
     steps = _validate_plan(plan, poll_s)
+    from learning_os.app.agent_reporting import minimum_ledger_bytes
+
+    if minimum_ledger_bytes([s["id"] for s in steps]) > plan.get("report_max_bytes", 65536):
+        raise AgentRunError("report_max_bytes cannot hold the minimum step ledger",
+                            "REPORT_BUDGET_TOO_SMALL")
     with _session_environment(plan.get("session_id")):
-        return _run_steps(plan, steps, root, executor=executor, poll_s=poll_s, index=index)
+        return _run_steps(plan, steps, root, executor=executor, poll_s=poll_s,
+                          index=index, report_dir=report_dir)
 
 
-def _run_steps(plan, steps, root, *, executor, poll_s, index):
+def _run_steps(plan, steps, root, *, executor, poll_s, index, report_dir=None):
     root = root.resolve()
     session_id = plan.get("session_id")
     policy = plan.get("on_error", "stop")
@@ -552,6 +571,30 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
                 continue  # Unknown selectors retain their per-step error.
             if argv and argv[0] in index.get("write_verbs", []):
                 raise AgentRunError("write plans require an explicit session_id stable across retries")
+    deadline_end = time.perf_counter() + float(plan.get("deadline_s", 120))
+    workers = int(plan.get("read_workers", 1))
+    prefetched: dict[str, tuple] = {}
+    if workers > 1:
+        from learning_os.adapters.agent_workers import parallel_reads
+
+        wave_ids, wave_argvs = [], []
+        for s in steps:
+            if s.get("depends_on") or s.get("kind") or s.get("describe") \
+                    or s.get("clusters") or s.get("preflight"):
+                continue
+            try:
+                a = _step_argv(s, index, session_id)
+            except AgentRunError:
+                continue
+            if a and a[0] in index.get("write_verbs", []):
+                continue
+            wave_ids.append(s["id"])
+            wave_argvs.append(a)
+        if len(wave_argvs) > 1:
+            raw = parallel_reads(root, wave_argvs, workers,
+                                 executor=(lambda a: executor(a, root)) if executor else None)
+            prefetched = dict(zip(wave_ids, raw, strict=True))
+    read_session = ReadSession(root)
     results: dict[str, dict] = {}
     writes: dict[str, object] = {}
     ancestors: dict[str, set[str]] = {}
@@ -561,6 +604,14 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
         step_id = step["id"]
         started = time.perf_counter()
         row: dict = {"id": step_id, "status": "ok", "ready_wait_ms": 0}
+        if time.perf_counter() > deadline_end and row["status"] == "ok":
+            row.update(status="deadline", ms=0, error={
+                "code": "DEADLINE_EXPIRED", "retryable": False})
+            rows.append(row)
+            results[step_id] = row
+            if policy == "stop":
+                stopped_by = stopped_by or step_id
+            continue
         if stopped_by is not None:
             row.update(status="skipped", ms=0, error={"code": "PLAN_STOPPED", "retryable": False,
                                                       "failed_step": stopped_by})
@@ -606,7 +657,18 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
                 if error:
                     row.update(status="blocked", error=error)
                 else:
-                    code, out, err = executor(argv, root)
+                    memo_key = tuple(argv)
+                    cached = read_session.get(memo_key) if not (
+                        deps or step.get("kind") or step.get("describe")
+                        or step.get("clusters") or step.get("preflight")) else None
+                    if prefetched.get(step_id):
+                        code, out, err = prefetched[step_id]
+                    elif cached is not None:
+                        code, out, err = cached  # type: ignore[misc]
+                    else:
+                        code, out, err = executor(argv, root)
+                        if not step.get("kind") and "snapshot_after" not in out:
+                            read_session.put(memo_key, (code, out, err))
                     row.update(exit=code, raw_bytes=len(out.encode("utf-8")))
                     try:
                         payload = json.loads(out, parse_float=_finite_number, parse_constant=_finite_number)
@@ -618,6 +680,7 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
                             "code": "STEP_FAILED", "retryable": False, "stderr": err.strip()[-400:]})
                     elif step.get("write") or step.get("kind") == "log" or _field(payload, "snapshot_after"):
                         writes[step_id] = payload
+                        read_session.invalidate()
                     validation = [line for line in err.splitlines() if "seal_envelope: validation:" in line]
                     if validation:
                         row["validation"] = validation[-1]
@@ -636,13 +699,20 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
         rows.append(row)
         if row["status"] != "ok" and policy == "stop":
             stopped_by = step_id
-    return {"schema_version": 1, "experimental": True, "session_id": session_id,
+    report = {"schema_version": 2, "experimental": True, "session_id": session_id,
             "on_error": policy, "steps": rows, "totals": {
         "steps": len(rows), "ok": sum(row["status"] == "ok" for row in rows),
         "not_ready": sum(row["status"] == "not_ready" for row in rows),
         "ms": sum(row["ms"] for row in rows),
         "raw_bytes": sum(row.get("raw_bytes", 0) for row in rows),
-        "out_bytes": sum(row.get("out_bytes", 0) for row in rows), "agent_calls": 1}}
+        "out_bytes": sum(row.get("out_bytes", 0) for row in rows),
+        "process_count": 1}}
+    if report_dir is not None:
+        from learning_os.app.agent_reporting import bound_report, write_full_report
+
+        full = write_full_report(Path(report_dir), report)
+        return bound_report(report, int(plan.get("report_max_bytes", 65536)), str(full))
+    return report
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -650,6 +720,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("plan", help="plan JSON file")
     parser.add_argument("--root", default=None, help="selected data root (default: tool repository)")
     parser.add_argument("--poll-s", type=float, default=0.1)
+    parser.add_argument("--report-dir", default=None,
+                        help="directory for the full report artifact (bounded stdout)")
     return parser
 
 
@@ -657,7 +729,7 @@ def main() -> int:
     args = build_parser().parse_args()
     root = Path(args.root).resolve() if args.root else TOOLS.parent
     try:
-        report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")), root, poll_s=args.poll_s)
+        report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")), root, poll_s=args.poll_s, report_dir=args.report_dir)
     except (OSError, ValueError, AgentRunError) as exc:
         print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))

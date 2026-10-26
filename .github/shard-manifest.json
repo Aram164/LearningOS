@@ -137,7 +137,10 @@
    "tests/test_transactions.py",
    "tests/test_verbatim_anchor_admission.py",
    "tests/test_warning_baseline.py",
-   "tests/test_write_scopes.py"
+   "tests/test_write_scopes.py",
+   "tests/test_projection_readiness.py",
+   "tests/test_read_session.py",
+   "tests/test_review_consolidation.py"
   ],
   "rest-2": [
    "tests/test_abilities.py",

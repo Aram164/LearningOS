@@ -22,3 +22,12 @@ def invoke(args) -> int:
     sys.stdout.write(outcome.stdout)
     sys.stderr.write(outcome.stderr)
     return outcome.exit_code
+
+
+def invoke_outcome(args):  # type: ignore[no-untyped-def]
+    """Outcome-returning execution (D03): same pipeline, no global capture."""
+    if args.root:
+        root = Path(args.root).resolve()
+    else:
+        root = Path(__file__).resolve().parents[3]
+    return run_cli(root, args._operation, args)

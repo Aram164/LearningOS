@@ -92,3 +92,22 @@ def status_issues(repo: Repo, pins: dict[str, str] | None = None) -> list[Issue]
 def collect(root: Path) -> tuple[Counter, list[str]]:
     """(signature counter, error strings) for the repository at ``root``."""
     return signatures_from_issues(validate(load_repo(root), online=False))
+
+
+def diagnostic_report(root: Path) -> dict:
+    """Typed diagnostic issues for preflight (D11): never authorization.
+
+    Reuses the cached-static + live-advisory split; a failure to obtain a
+    trustworthy result is reported, never read as clean.
+    """
+    try:
+        from learning_os.store.loader import load_repo
+
+        issues = status_issues(load_repo(root))
+    except Exception as exc:  # noqa: BLE001 - typed refusal, not clean
+        return {"ok": False, "trustworthy": False,
+                "error": {"code": "PREFLIGHT_FAILED", "message": str(exc)}}
+    errors = [{"code": i.code, "path": i.path, "message": i.message}
+              for i in issues if i.severity == "error"]
+    return {"ok": not errors, "trustworthy": True, "errors": errors,
+            "issues": [{"code": i.code, "path": i.path} for i in issues]}

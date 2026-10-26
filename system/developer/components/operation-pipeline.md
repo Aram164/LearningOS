@@ -25,6 +25,10 @@ Admit, lock, dispatch and settle one operation through the shared application bo
 - `tools/learning_os/app/projection.py`
 - `tools/learning_os/app/ranking.py`
 - `tools/learning_os/app/session.py`
+- `tools/learning_os/app/agent_plans.py`
+- `tools/learning_os/app/agent_reporting.py`
+- `tools/learning_os/app/projection_readiness.py`
+- `tools/learning_os/app/read_session.py`
 
 ## Entry points
 

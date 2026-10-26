@@ -1,0 +1,507 @@
+schema_version: 1
+findings:
+- id: G30
+  source: '#30'
+  root_cause: route-wide inspection union
+  owner: material slicing / inspection authority (route, URI, pages)
+  affected_callers: CLI,gateway,AI delivery,agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_material_slices.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G31
+  source: '#31'
+  root_cause: audit eligibility vs actionability split
+  owner: claim audit semantics owner
+  affected_callers: CLI,gateway,agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G32
+  source: '#32'
+  root_cause: reviewed edit/evidence non-atomic
+  owner: prospective state commit owner
+  affected_callers: gateway,agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G33
+  source: '#33'
+  root_cause: page expression parsed repeatedly
+  owner: page-expression parser
+  affected_callers: CLI,AI delivery
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_material_slices.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G34
+  source: '#34'
+  root_cause: file resolution identity drift
+  owner: locator segmentation owner
+  affected_callers: CLI,gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_material_slices.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G35
+  source: '#35'
+  root_cause: range/path evidence widened
+  owner: exact range/path evidence owner
+  affected_callers: CLI,gateway,AI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_material_slices.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: G36
+  source: '#36'
+  root_cause: state transition drops attributes
+  owner: goal transition owner
+  affected_callers: CLI,UI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O37
+  source: '#37'
+  root_cause: AI delivery accounting split
+  owner: session accounting owner
+  affected_callers: AI delivery,gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O38
+  source: '#38'
+  root_cause: backup alias validated after mutation
+  owner: backup alias validation
+  affected_callers: CLI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O39
+  source: '#39'
+  root_cause: scaffold self-invalidating pins
+  owner: scaffold lineage owner
+  affected_callers: gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O40
+  source: '#40'
+  root_cause: compact refs lose identity; one bad resource hides rest
+  owner: compact reference owner
+  affected_callers: CLI,gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O41
+  source: '#41'
+  root_cause: metadata ops rewrite body bytes
+  owner: note bytes owner
+  affected_callers: gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O42
+  source: '#42'
+  root_cause: transaction invariants ignore effect kind
+  owner: transaction recovery owner
+  affected_callers: gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_transaction_faults.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O43
+  source: '#43'
+  root_cause: missing refs mutate; reactivation keeps completion
+  owner: detour/reactivation owner
+  affected_callers: gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O44
+  source: '#44'
+  root_cause: legacy route identity inconsistent
+  owner: route identity boundary
+  affected_callers: CLI,gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O45
+  source: '#45'
+  root_cause: derived impact/session/totals disagree
+  owner: derived impact owner
+  affected_callers: CLI,UI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O46
+  source: '#46'
+  root_cause: absence claims not per-material
+  owner: absence claim owner
+  affected_callers: CLI,AI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: O47
+  source: '#47'
+  root_cause: ranking erases alternative roles
+  owner: ranking owner
+  affected_callers: CLI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: I49
+  source: '#49'
+  root_cause: wire-layout change missed consumers
+  owner: compact output consumers
+  affected_callers: CLI,procedures,UI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: already-inherited
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R50
+  source: '#50'
+  root_cause: write keys not explicit/unique
+  owner: tools/agent_run.py plan validation
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R51
+  note: 'projection.observe CLI verb deferred pending A11 surface approval; shared service in app/projection_readiness.py is runner-adopted and UI settlement keeps its existing gateway path'
+  source: '#51'
+  root_cause: dependency readiness weak
+  owner: projection readiness service
+  affected_callers: agent plan,UI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_projection_readiness.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R52
+  source: '#52'
+  root_cause: failed validation read as clean
+  owner: typed diagnostic service
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_projection_readiness.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R53
+  source: '#53'
+  root_cause: root/code/session conflated
+  owner: runner adapter binding
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R54
+  source: '#54'
+  root_cause: byte budget ignores wrappers
+  owner: report budgeting owner
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R55
+  source: '#55'
+  root_cause: expansions fictitious
+  owner: cluster expansion owner
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R56
+  source: '#56'
+  root_cause: nonfinite output loses outcomes
+  owner: step outcome handling
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R57
+  source: '#57'
+  root_cause: absent vs null conflated
+  owner: summary owner
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R58
+  source: Muse session proposal
+  root_cause: writes without stable session
+  owner: session binding owner
+  affected_callers: agent plan,gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R59
+  source: Muse failure proposal
+  root_cause: later writes after failure
+  owner: stop policy owner
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: R60
+  source: integration follow-up
+  root_cause: tools bypass parser/vocabulary/typing
+  owner: runner extraction owners
+  affected_callers: agent plan,CI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E01
+  source: efficiency
+  root_cause: per-call handler reload
+  owner: ReadSession (app/read_session.py)
+  affected_callers: CLI,agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_read_session.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E02
+  source: efficiency
+  root_cause: serial-only reads
+  owner: process workers (adapters/agent_workers.py)
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_read_session.py
+  disposition: implemented-opt-in
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E03
+  source: efficiency
+  root_cause: repeated reads rediscover
+  owner: memo under dependency pins
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_read_session.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E04
+  source: efficiency
+  root_cause: no plan deadline
+  owner: deadline admission (app/agent_plans.py)
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E05
+  source: efficiency
+  root_cause: preflight rescans
+  owner: validation cache pins + typed diagnostics
+  affected_callers: agent plan,validation tools
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_projection_readiness.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E06
+  source: efficiency
+  root_cause: per-step caps unbounded total
+  owner: complete report budget (app/agent_reporting.py)
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E07
+  source: efficiency
+  root_cause: anecdotal efficiency claims
+  owner: benchmark matrix
+  affected_callers: agent plan
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/benchmark_agent_plans.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E08
+  source: efficiency
+  root_cause: runner not default route
+  owner: OPERATOR + agent-plans procedure
+  affected_callers: agents,UI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_review_consolidation.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E09
+  source: efficiency
+  root_cause: CI bootstrap ad hoc
+  owner: guarded pre-push bootstrap mode
+  affected_callers: CI
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_pre_push_hook.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E10
+  source: efficiency
+  root_cause: endless review cycles
+  owner: this register + fixed budgets
+  affected_callers: all
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_review_consolidation.py
+  disposition: implemented
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E11
+  source: Gemini envelope suggestion
+  root_cause: file-reference bypass risk
+  owner: inline reviewed revision retained
+  affected_callers: gateway
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: rejected-as-unsafe
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
+- id: E12
+  source: Gemini evidence suggestion
+  root_cause: generated quotation risk
+  owner: safe scaffolds retained
+  affected_callers: AI delivery
+  existing_repair: 'recorded main history through PR #48 / runner 3604c43'
+  regression_tests: tests/test_agent_run.py
+  disposition: rejected-as-unsafe
+  measured_evidence: see implementation/benchmarks and baseline.json
+  source_status: implemented-or-inherited
+  hosted_ci_status: pending
+  installed_status: not-installed
