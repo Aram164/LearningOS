@@ -1,0 +1,482 @@
+"""Runner contracts, with real CLI/gateway writes on ordinary fixtures."""
+from __future__ import annotations
+
+import importlib.util
+import json
+import subprocess
+import sys
+import threading
+from pathlib import Path
+
+import pytest
+from repo_builders import add_curriculum, seed_live_goal_ids
+
+ROOT = Path(__file__).resolve().parents[1]
+_spec = importlib.util.spec_from_file_location("agent_run", ROOT / "tools/agent_run.py")
+agent_run = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(agent_run)
+INDEX = {"verbs": ["bootstrap", "capture", "inspect"],
+         "verb_to_operation": {"bootstrap": "operator.bootstrap", "capture": "capture.create",
+                               "inspect": "project.inspect"},
+         "task_to_use": {"open-work-or-priority-question": "bootstrap"}}
+
+
+def _run(plan, *args, **kwargs):
+    """Legacy independent-step scenarios explicitly retain continue policy."""
+    return agent_run.run_plan({"session_id": "runner-test", "on_error": "continue", **plan}, *args, **kwargs)
+
+
+def test_resolver_accepts_verb_operation_and_task():
+    assert agent_run.resolve_use("inspect", INDEX) == "inspect"
+    assert agent_run.resolve_use("capture.create", INDEX) == "capture"
+    assert agent_run.resolve_use("open-work-or-priority-question", INDEX) == "bootstrap"
+    with pytest.raises(agent_run.AgentRunError, match="unknown"):
+        agent_run.resolve_use("no-such-name", INDEX)
+
+
+def _published(root, stamp):
+    gen = root / "generated"
+    gen.mkdir(exist_ok=True)
+    (gen / "manifest.json").write_text(json.dumps({"_generated": {"snapshot_id": stamp}}))
+    (gen / "manifest.identity.json").write_text(json.dumps({"snapshot_id": stamp}))
+
+
+def _receipt(root, name="w", snapshot="sha256:abc", create=True):
+    path = root / "operations/transactions" / (name + ".yaml")
+    if create:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("status: committed\n")
+    return {"ok": True, "receipt_path": str(path.relative_to(root)), "snapshot_after": snapshot}
+
+
+def test_readiness_requires_receipt_and_matching_published_pair(tmp_path):
+    result = _receipt(tmp_path)
+    _published(tmp_path, "sha256:abc")
+    assert agent_run.write_ready(tmp_path, result)[0]
+    _published(tmp_path, "sha256:other")
+    assert not agent_run.write_ready(tmp_path, result)[0]
+    assert not agent_run.write_ready(tmp_path, _receipt(tmp_path, "missing", create=False))[0]
+    result["receipt_path"] = str(Path(__file__).resolve())
+    assert not agent_run.write_ready(tmp_path, result)[0]
+
+
+@pytest.mark.parametrize("ready", [True, False])
+def test_pending_write_waits_and_stale_read_never_executes(tmp_path, ready):
+    calls = []
+    result = _receipt(tmp_path, create=ready)
+    _published(tmp_path, "sha256:old")
+
+    def executor(argv, root):
+        calls.append(argv[0])
+        return 0, json.dumps(result if argv[0] == "capture" else {"id": "fresh"}), ""
+
+    timer = threading.Timer(0.02, _published, args=(tmp_path, "sha256:abc")) if ready else None
+    if timer:
+        timer.start()
+    try:
+        report = _run({"steps": [
+            {"id": "w", "use": "capture", "write": True},
+            {"id": "r", "use": "inspect", "depends_on": ["w"], "ready_timeout_s": 0.15},
+            {"id": "free", "use": "bootstrap"},
+        ]}, tmp_path, executor=executor, index=INDEX, poll_s=0.005)
+    finally:
+        if timer:
+            timer.join()
+    row = report["steps"][1]
+    assert row["status"] == ("ok" if ready else "not_ready")
+    if not ready:
+        assert row["error"]["code"] == "NOT_READY"
+        assert row["error"]["retryable"] is True
+    assert calls == (["capture", "inspect", "bootstrap"] if ready else ["capture", "bootstrap"])
+
+
+@pytest.mark.parametrize("change", ["external", "broken-identity"])
+def test_unknown_projection_or_partial_publication_refuses_read(tmp_path, change):
+    result = _receipt(tmp_path)
+    _published(tmp_path, "sha256:external")
+    if change == "broken-identity":
+        (tmp_path / "generated/manifest.identity.json").write_text('{"snapshot_id":"different"}')
+    calls = []
+
+    def executor(argv, root):
+        calls.append(argv[0])
+        return 0, json.dumps(result), ""
+
+    report = _run({"steps": [
+        {"id": "w", "use": "capture", "write": True},
+        {"id": "r", "use": "inspect", "depends_on": ["w"], "ready_timeout_s": 0},
+    ]}, tmp_path, executor=executor, index=INDEX)
+    assert calls == ["capture"]
+    error = report["steps"][1]["error"]
+    assert error["code"] == ("SNAPSHOT_CONFLICT" if change == "external" else "NOT_READY")
+    assert error["retryable"] is (change != "external")
+
+
+def test_write_hint_cannot_exempt_a_read_from_readiness(tmp_path):
+    result = _receipt(tmp_path)
+    _published(tmp_path, "sha256:external")
+    calls = []
+
+    def executor(argv, root):
+        calls.append(argv[0])
+        return 0, json.dumps(result), ""
+
+    report = _run({"steps": [
+        {"id": "w", "use": "capture", "write": True},
+        {"id": "r", "use": "inspect", "write": True, "depends_on": ["w"], "ready_timeout_s": 0},
+    ]}, tmp_path, executor=executor, index=INDEX)
+    assert calls == ["capture"]
+    assert report["steps"][1]["error"]["code"] == "SNAPSHOT_CONFLICT"
+
+
+@pytest.mark.parametrize("steps", [
+    [{"id": "a", "kind": "log", "text": "first", "key": "valid"},
+     {"id": "b", "kind": "log", "text": "missing key"}],
+    [{"id": "a", "kind": "log", "text": "first", "key": "same"},
+     {"id": "b", "kind": "log", "text": "second", "key": "same"}],
+])
+def test_invalid_log_keys_refuse_whole_plan_before_any_write(tmp_path, steps):
+    calls = []
+    with pytest.raises(agent_run.AgentRunError, match="key"):
+        _run({"steps": steps}, tmp_path,
+                           executor=lambda *args: calls.append(args), index=INDEX)
+    assert calls == []
+    assert not (tmp_path / "operations").exists()
+
+
+def _write_plan():
+    return {"steps": [
+        {"id": "a", "kind": "log", "text": "alpha fixture log", "key": "runner-alpha"},
+        {"id": "b", "kind": "log", "text": "beta fixture log", "key": "runner-beta", "depends_on": ["a"]},
+        {"id": "read", "use": "inspect", "args": ["unit-demo-l01"], "depends_on": ["a", "b"],
+         "ready_timeout_s": 0},
+    ]}
+
+
+def test_real_logs_multiwrite_read_and_replay_use_selected_root(mini_repo):
+    add_curriculum(mini_repo)
+    assert not (mini_repo / "tools/learning_os").exists()
+    plan = _write_plan()
+    first = _run(plan, mini_repo)
+    assert first["totals"]["ok"] == 3, first
+    assert first["steps"][2]["output"]["id"] == "unit-demo-l01"
+    for row in first["steps"][:2]:
+        assert "0 error(s)" in row["validation"]
+        assert (mini_repo / row["output"]["receipt_path"]).is_file()
+    receipts = list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 2
+    second = _run(plan, mini_repo)
+    assert second["totals"]["ok"] == 3, second
+    assert all(row["output"]["replayed"] for row in second["steps"][:2])
+    assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 2
+    # A distinct intent under an existing key remains a gateway conflict.
+    plan["steps"][0]["text"] = "changed intent"
+    conflict = _run(plan, mini_repo)
+    assert conflict["steps"][0]["error"]["code"] == "IDEMPOTENCY_CONFLICT"
+    assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 2
+
+
+def test_real_stage_log_preserves_text_and_receipt(mini_repo):
+    add_curriculum(mini_repo)
+    text = 'learner wording: ä \\ "quoted"'
+    result = _run({"steps": [{"id": "note", "kind": "log", "text": text,
+        "key": "runner-stage", "unit_id": "unit-demo-l01", "stage_id": "stage-demo"}]}, mini_repo)
+    assert result["totals"]["ok"] == 1, result
+    note = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    assert text in note.read_text()
+    assert (mini_repo / result["steps"][0]["output"]["receipt_path"]).is_file()
+
+
+def test_real_replay_after_unknown_later_write_requires_reload(mini_repo):
+    add_curriculum(mini_repo)
+    first = {"id": "first", "kind": "log", "text": "first", "key": "known-first"}
+    assert _run({"steps": [first]}, mini_repo)["totals"]["ok"] == 1
+    external = {"id": "external", "kind": "log", "text": "later", "key": "external-later"}
+    assert _run({"steps": [external]}, mini_repo)["totals"]["ok"] == 1
+    result = _run({"steps": [first,
+        {"id": "read", "use": "inspect", "args": ["note-demo"], "depends_on": ["first"], "ready_timeout_s": 0},
+        {"id": "free", "use": "inspect", "args": ["note-demo"]},
+    ]}, mini_repo)
+    assert result["steps"][0]["output"]["replayed"] is True
+    assert result["steps"][1]["error"]["code"] == "SNAPSHOT_CONFLICT"
+    assert result["steps"][1]["error"]["retryable"] is False
+    assert result["steps"][2]["status"] == "ok"
+    assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 2
+
+
+def test_real_cli_root_without_implementation_copy(mini_repo, tmp_path):
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"steps": [{"id": "r", "use": "inspect", "args": ["note-demo"]}]}))
+    proc = subprocess.run([sys.executable, str(ROOT / "tools/agent_run.py"), str(plan),
+                           "--root", str(mini_repo)], capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert json.loads(proc.stdout)["steps"][0]["output"]["id"] == "note-demo"
+
+
+@pytest.mark.parametrize("args", [["--root", "/tmp"], ["--root=/tmp"]])
+def test_root_override_refuses_entire_plan(tmp_path, args):
+    with pytest.raises(agent_run.AgentRunError, match="root overrides"):
+        _run({"steps": [{"id": "r", "argv": [*args, "inspect", "note-demo"]}]}, tmp_path)
+
+
+@pytest.mark.parametrize("text", ["a", "ä", '"\\\n', "😀"])
+@pytest.mark.parametrize("fields", [None, ["x"]])
+def test_summary_bounds_final_utf8_json(text, fields):
+    encoded = agent_run.summarize({"x": text * 10000}, fields=fields, max_bytes=120)
+    assert len(encoded.encode("utf-8")) <= 120
+    assert json.loads(encoded)["_truncated_bytes"] > 120
+    out = agent_run.summarize({"counts": {"modules": 15}}, fields=["counts.modules"])
+    assert json.loads(out) == {"counts": {"modules": 15}}
+
+
+@pytest.mark.parametrize("budget", [-1, 1, 63, 64.1, True])
+def test_impossible_byte_budget_refuses_before_execution(tmp_path, budget):
+    with pytest.raises(agent_run.AgentRunError, match="max_bytes"):
+        _run({"steps": [{"id": "r", "use": "inspect", "summary": {"max_bytes": budget}}]}, tmp_path)
+
+
+@pytest.mark.parametrize("code,out,expected", [
+    (2, "", "PREFLIGHT_FAILED"),
+    (1, "validator crashed", "PREFLIGHT_FAILED"),
+    (0, "", "PREFLIGHT_FAILED"),
+    (1, "E GLOBAL: pathless error\n1 error(s), 0 warning(s) — FAIL", "VALIDATION_FAILED"),
+    (1, "E A: in scope [work/inbox/a.md]\nE B: elsewhere [curriculum/b.yaml]\n"
+        "2 error(s), 0 warning(s) — FAIL", "VALIDATION_FAILED"),
+])
+def test_preflight_failure_blocks_execution_and_keeps_pathless_errors(tmp_path, code, out, expected):
+    calls = []
+
+    def executor(argv, root):
+        calls.append(argv)
+        return code, out, "validator stderr"
+
+    result = _run({"steps": [{"id": "w", "kind": "log", "text": "x",
+        "key": "preflight-test", "preflight": True, "writes": ["work/inbox/**"]}]},
+        tmp_path, executor=executor, index=INDEX)
+    assert calls == [["validate"]]
+    error = result["steps"][0]["error"]
+    assert error["code"] == expected
+    if "GLOBAL" in out:
+        assert error["scope"]["unrelated"][0]["path"] == ""
+    if "E A:" in out:
+        assert [e["code"] for e in error["scope"]["in_scope"]] == ["A"]
+        assert [e["code"] for e in error["scope"]["unrelated"]] == ["B"]
+
+
+def test_real_preflight_catches_unrelated_error_before_sealing(mini_repo):
+    add_curriculum(mini_repo)
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text().replace("concept-expected-value", "concept-does-not-exist"))
+    result = _run({"steps": [{"id": "w", "kind": "log", "text": "must not write",
+        "key": "preflight-refused", "preflight": True, "writes": ["work/inbox/**"]}]}, mini_repo)
+    error = result["steps"][0]["error"]
+    assert error["code"] == "VALIDATION_FAILED", result
+    assert error["scope"]["unrelated"]
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert not list((mini_repo / "work/inbox").iterdir())
+
+
+def test_preflight_revalidates_after_write_and_gateway_still_checks(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _write_plan()
+    for row in plan["steps"][:2]:
+        row.update(preflight=True, writes=["work/inbox/**"])
+    execute = agent_run._cli_executor_factory(mini_repo)
+    validations = []
+
+    def executor(argv, root):
+        if argv == ["validate"]:
+            validations.append(len(list((root / "operations/transactions").glob("transaction-*.yaml"))))
+        return execute(argv, root)
+
+    result = _run(plan, mini_repo, executor=executor)
+    assert result["totals"]["ok"] == 3, result
+    assert validations == [0, 1]
+    assert all("0 error(s)" in row["validation"] for row in result["steps"][:2])
+
+
+@pytest.mark.parametrize("args", [[], ["--brief", "--json"]])
+def test_cluster_expansion_is_executable_and_recovers_all_members(mini_repo, args):
+    expected = seed_live_goal_ids(mini_repo, "one", "two", "three")
+    execute = agent_run._cli_executor_factory(mini_repo)
+    result = _run({"steps": [{"id": "q", "use": "intelligence-scan",
+        "args": args, "clusters": True}]}, mini_repo, executor=execute)
+    assert result["totals"]["ok"] == 1, result
+    preview = result["steps"][0]["output"]
+    assert "--cluster" not in preview["expand_argv"]
+    assert "--brief" not in preview["expand_argv"]
+    code, out, err = execute(preview["expand_argv"], mini_repo)
+    assert code == 0, err
+    full = json.loads(out)
+    assert set(expected).issubset({goal["goal_id"] for goal in full["goals"]})
+    assert preview["total_goals"] == len(full["goals"])
+
+
+def test_cluster_byte_cap_preserves_counts_and_expansion(tmp_path):
+    scan = {"groups": [{"cluster_id": "c", "title": "ä" * 1000,
+        "member_count": 107, "sample_goal_ids": ["g1", "g2"]}],
+        "total_groups": 9, "total_goals": 200, "omitted_groups": 8, "omitted_goals": 93,
+        "full_result": "intelligence-scan --json"}
+    report = _run({"steps": [{"id": "q", "use": "inspect", "clusters": True,
+        "argv": ["intelligence-scan", "--brief", "--json"], "summary": {"max_bytes": 260}}]},
+        tmp_path, executor=lambda *a: (0, json.dumps(scan), ""), index=INDEX)
+    row = report["steps"][0]
+    assert row["status"] == "ok", row
+    assert row["out_bytes"] <= 260
+    assert len(json.dumps(row["output"], ensure_ascii=False, separators=(",", ":")).encode()) <= 260
+    assert row["output"]["omitted_groups"] == 9
+    assert row["output"]["omitted_goals"] == 200
+    assert row["output"]["expand_argv"] == ["intelligence-scan", "--json"]
+
+
+def test_followup_projection_cannot_precede_latest_required_write(tmp_path):
+    a = _receipt(tmp_path, "a", "sha256:A")
+    b = _receipt(tmp_path, "b", "sha256:B")
+    c = _receipt(tmp_path, "c", "sha256:C")
+    _published(tmp_path, "sha256:A")
+    assert not agent_run.writes_ready(tmp_path, [a, b], [a, b])[0]
+    _published(tmp_path, "sha256:B")
+    assert agent_run.writes_ready(tmp_path, [b, a], [a, b])[0]
+    _published(tmp_path, "sha256:C")
+    assert agent_run.writes_ready(tmp_path, [a, b], [a, b, c])[0]
+
+
+@pytest.mark.parametrize("number", ["NaN", "Infinity", "-Infinity", "1e999"])
+def test_followup_nonfinite_output_is_per_step_failure(tmp_path, number):
+    def executor(argv, root):
+        return (0, '{"x":' + number + '}', "") if argv[0] == "inspect" else (0, '{"ok":true}', "")
+    report = agent_run.run_plan({"on_error": "continue", "steps": [
+        {"id": "bad", "use": "inspect"}, {"id": "good", "use": "bootstrap"},
+    ]}, tmp_path, executor=executor, index=INDEX)
+    assert report["steps"][0]["error"]["code"] == "INVALID_STEP_OUTPUT"
+    assert report["steps"][1]["status"] == "ok"
+    assert report["totals"]["ok"] == 1
+
+
+def test_followup_missing_fields_are_explicit_and_bounded():
+    result = agent_run.summarize({"a": 1, "empty": None}, fields=["a", "empty", "nope.deep"], max_bytes=120)
+    decoded = json.loads(result)
+    assert decoded == {"a": 1, "empty": None, "_missing_fields": ["nope.deep"]}
+    assert len(result.encode()) <= 120
+    truncated = json.loads(agent_run.summarize({"a": "ä" * 1000}, fields=["a", "missing"], max_bytes=120))
+    assert truncated["_missing_fields"] == ["missing"]
+    with pytest.raises(agent_run.AgentRunError, match="metadata"):
+        agent_run.summarize({}, fields=["missing" * 100], max_bytes=64)
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_followup_stop_policy_preserves_commit_and_skips_later_write(mini_repo, explicit):
+    add_curriculum(mini_repo)
+    plan = {"session_id": "stop-policy", "steps": [
+        {"id": "a", "kind": "log", "text": "first committed", "key": "stop-a"},
+        {"id": "bad", "use": "inspect", "args": ["not-a-record"]},
+        {"id": "b", "kind": "log", "text": "must not commit", "key": "stop-b"},
+    ]}
+    if explicit:
+        plan["on_error"] = "stop"
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["steps"][0]["status"] == "ok"
+    assert report["steps"][1]["status"] == "error"
+    assert report["steps"][2]["status"] == "skipped"
+    assert report["steps"][2]["error"]["code"] == "PLAN_STOPPED"
+    assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
+
+
+def test_followup_plan_sessions_isolate_ledgers_and_restore_environment(mini_repo, monkeypatch):
+    from learning_os.store.session_ledger import load_session_paths
+    add_curriculum(mini_repo)
+    monkeypatch.setenv("LOS_SESSION_ID", "outside-session")
+    for session in ("agent-A", "agent-B"):
+        plan = {"session_id": session, "steps": [{"id": "log", "kind": "log", "text": session, "key": session}]}
+        report = agent_run.run_plan(plan, mini_repo)
+        assert report["totals"]["ok"] == 1, report
+        assert report["session_id"] == session
+    a = load_session_paths(mini_repo, "agent-A")
+    b = load_session_paths(mini_repo, "agent-B")
+    a_captures = {path for path in a if path.startswith("work/inbox/")}
+    b_captures = {path for path in b if path.startswith("work/inbox/")}
+    assert len(a_captures) == len(b_captures) == 1
+    assert not a_captures.intersection(b_captures)
+    assert not load_session_paths(mini_repo, "outside-session")
+    import os
+    assert os.environ["LOS_SESSION_ID"] == "outside-session"
+
+
+@pytest.mark.parametrize("bound_session", ["other-session", "plan-session"])
+def test_followup_gateway_requires_matching_sealed_session(mini_repo, tmp_path, bound_session):
+    from gateway_helpers import approved_v2_envelope, request_artifact_id
+
+    from learning_os.store.contracts.gateway import intent_sha256
+    add_curriculum(mini_repo)
+    envelope = approved_v2_envelope(mini_repo, capability="capture.create", payload={"text": "wrong session"},
+        artifact_ids=[request_artifact_id("capture.create", "bound-session")], idempotency_key="bound-session")
+    envelope["session_id"] = bound_session
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    path = tmp_path / "envelope.json"
+    path.write_text(json.dumps(envelope))
+    before = path.read_bytes()
+    report = agent_run.run_plan({"session_id": "plan-session", "steps": [
+        {"id": "write", "use": "capability", "args": ["capture.create", "--payload-file", str(path)]}
+    ]}, mini_repo)
+    receipts = list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    if bound_session == "other-session":
+        assert report["steps"][0]["error"]["code"] == "SESSION_MISMATCH"
+        assert not receipts
+    else:
+        assert report["steps"][0]["status"] == "ok", report
+        assert len(receipts) == 1
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("extra", [{}, {"session_id": ""}, {"session_id": " x "},
+                                    {"session_id": "x" * 129},
+                                    {"session_id": "s", "on_error": "ignore"}])
+def test_write_plan_session_and_policy_validate_before_execution(tmp_path, extra):
+    calls = []
+    with pytest.raises(agent_run.AgentRunError):
+        agent_run.run_plan({**extra, "steps": [
+            {"id": "write", "kind": "log", "text": "x", "key": "key"}
+        ]}, tmp_path, executor=lambda *a: calls.append(a), index=INDEX)
+    assert calls == []
+
+
+def test_session_environment_restores_when_execution_raises(tmp_path, monkeypatch):
+    import os
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+
+    def fail(argv, root):
+        assert os.environ["LOS_SESSION_ID"] == "local-session"
+        raise OSError("broken executor")
+
+    report = agent_run.run_plan({"session_id": "local-session", "steps": [
+        {"id": "fail", "use": "inspect"}, {"id": "skipped", "use": "bootstrap"},
+    ]}, tmp_path, executor=fail, index=INDEX)
+    assert report["steps"][0]["status"] == "error"
+    assert report["steps"][1]["status"] == "skipped"
+    assert "LOS_SESSION_ID" not in os.environ
+
+
+def test_parser_classified_writer_requires_plan_session(mini_repo):
+    with pytest.raises(agent_run.AgentRunError, match="session_id"):
+        agent_run.run_plan({"steps": [{"id": "goal", "use": "goal", "args": ["missing"]}]}, mini_repo)
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_nonfinite_cli_failure_returns_complete_report(tmp_path, monkeypatch, capsys):
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"on_error": "continue", "steps": [
+        {"id": "bad", "use": "inspect"}, {"id": "good", "use": "bootstrap"},
+    ]}))
+    original = agent_run.run_plan
+
+    def run(plan, root, **kwargs):
+        def executor(argv, root):
+            return 0, '{"x":NaN}' if argv[0] == "inspect" else '{"ok":true}', ""
+        return original(plan, root, executor=executor, index=INDEX)
+
+    monkeypatch.setattr(agent_run, "run_plan", run)
+    monkeypatch.setattr(sys, "argv", ["agent_run.py", str(plan), "--root", str(tmp_path)])
+    assert agent_run.main() == 3
+    report = json.loads(capsys.readouterr().out)
+    assert report["steps"][0]["error"]["code"] == "INVALID_STEP_OUTPUT"
+    assert report["steps"][1]["status"] == "ok"

@@ -127,6 +127,7 @@ GROUPS: dict[str, list[str]] = {
     # diagnostics, and the write path they exercise.
     "gateway": [
         "test_agent_efficiency.py",
+        "test_agent_run.py",
         "test_atlas_authoring.py",
         "test_bounded_reads.py",
         "test_c1c_revise_voids_dedicated_guarantees.py",
