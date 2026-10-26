@@ -6,4 +6,4 @@ Code: app/claim_admission.py; app/handlers/plan.py under `tools/learning_os/`. R
 
 The proposed acceptance is the corresponding regressions passing while existing mutation, evidence, scope, and recovery guards continue to pass.
 
-GitHub publication is blocked: automatic approval review rejected issue creation because it would export private repository findings without explicit user authorization. No issue exists. The ready-to-file body and full local evidence are retained in the overnight-audit-fixes-2026-10-25 workbench.
+GitHub issue: [Claim scaffolds can create immediately stale judgments](https://github.com/Aram164/LearningOS/issues/39). Publication was explicitly approved by Aram on 2026-10-26. The repair is on `codex/overnight-audit-fixes-20261025`; hosted CI must verify the final Core/UI pair before release acceptance.
