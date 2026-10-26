@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-import tempfile
 from pathlib import Path
+
+from learning_os.store.transactions import atomic_write_bytes
 
 
 def encode(value: object) -> str:
@@ -22,18 +22,8 @@ def write_full_report(artifact_dir: Path, report: dict[str, object]) -> Path:
     body = encode(report)
     digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
     target = artifact_dir / "full-report.json"
-    fd, tmp = tempfile.mkstemp(dir=artifact_dir, suffix=".tmp")
-    try:
-        os.write(fd, body.encode("utf-8"))
-        os.close(fd)
-        os.replace(tmp, target)
-    except BaseException:
-        try:
-            os.close(fd)
-        except OSError:
-            pass
-        raise
-    (artifact_dir / "full-report.sha256").write_text(digest + "\n", encoding="utf-8")
+    atomic_write_bytes(target, body.encode("utf-8"))
+    atomic_write_bytes(artifact_dir / "full-report.sha256", (digest + "\n").encode("utf-8"))
     return target
 
 

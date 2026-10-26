@@ -193,6 +193,15 @@ contracts:
     severity: error
     test: tests/test_operator_discovery.py
 
+  - declaration: system/contracts/review-consolidation.yaml
+    governs: >-
+      The finding/caller adoption register for the systemwide review
+      consolidation: every finding names an owner, affected callers,
+      regression tests and a disposition. Metadata only, not learner state.
+    enforced_by: test
+    checker: tests.test_review_consolidation
+    test: tests/test_review_consolidation.py
+
 exempt:
 
   - path: system/contracts/normative-corpus.schema.json
