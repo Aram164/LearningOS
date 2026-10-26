@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261026-065951-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-10-26T06:59:51+01:00'
+snapshot_before: sha256:cc0cd605a54c74bbd9e3f960aa85e11fe2204adbc05dd2fdd0905d6bf37ffd77
+snapshot_after: sha256:1863555b263d1b736d277bf5534ab09db6ea7f08df101de6a32e530291e3ffae
+expected_revisions:
+  study-map-m2-combined-exam-rehearsal: 0
+  unit-m2-combined-exam-rehearsal: 6
+artifact_revisions:
+  study-map-m2-combined-exam-rehearsal:
+    before: 0
+    after: 1
+  unit-m2-combined-exam-rehearsal:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  sha256_before: a21dc39dd253e4a5ec9b5d1404aafcf6b3a6f0bd3944a70f970133f8714c9418
+  sha256_after: 529466db054e312b28a3e9dbc6343f2025f7a167e151d04ba929cc23c2a486e5
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml
+  sha256_before: 030efb7545402799a5149494edef1a3354679f9e28162ed850405339527f8d7e
+  sha256_after: 030efb7545402799a5149494edef1a3354679f9e28162ed850405339527f8d7e
+  created: false
+metadata:
+  data_roots_sha256: sha256:a4855c023176b1ef4cc1efa2db32f5e05cf5fa7ab6d2ef73fb887a01a6d491e5
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-overnight-review-m2-scaffolding-20261026-cf8363f5
+  idempotency_key: overnight-review-m2-scaffolding-20261026
+  intent_sha256: sha256:6460d99365230592975bdeb060d6c4d42cd97ace84552a0858397ac87fb18cf8
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6460d99365230592975bdeb060d6c4d42cd97ace84552a0858397ac87fb18cf8

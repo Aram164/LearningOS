@@ -1873,6 +1873,30 @@ entries:
       unit-m2-sad-l09: 12
     snapshot_before: sha256:ebfdd709f3d4ed8c70a8fa2be5573b0a9d3a0fee0237549b9902fd278e192a16
     snapshot_after: sha256:12d70351ba8c05ef7f56c642e84bde400bc4c3a72794bcd79bf229a5f2018611
+  overnight-review-aml-scaffolding-20261026:
+    request_id: request-overnight-review-aml-scaffolding-20261026-aeed6fd2
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:9df0ec002850af1c59b4ba7ee4290db8ed2b9f011518afbded7bfe4015e15351
+    transaction_id: transaction-20261026-065931-001
+    receipt_path: operations/transactions/transaction-20261026-065931-001.yaml
+    revisions:
+      study-map-aml-exam-prep: 1
+      unit-aml-exam-prep: 10
+    snapshot_before: sha256:3309328e51d4f8815f6293ded1a3a58f055c0d0fca875835b6dbbb06c5ce97d8
+    snapshot_after: sha256:cc0cd605a54c74bbd9e3f960aa85e11fe2204adbc05dd2fdd0905d6bf37ffd77
+  overnight-review-m2-scaffolding-20261026:
+    request_id: request-overnight-review-m2-scaffolding-20261026-cf8363f5
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:6460d99365230592975bdeb060d6c4d42cd97ace84552a0858397ac87fb18cf8
+    transaction_id: transaction-20261026-065951-001
+    receipt_path: operations/transactions/transaction-20261026-065951-001.yaml
+    revisions:
+      study-map-m2-combined-exam-rehearsal: 1
+      unit-m2-combined-exam-rehearsal: 7
+    snapshot_before: sha256:cc0cd605a54c74bbd9e3f960aa85e11fe2204adbc05dd2fdd0905d6bf37ffd77
+    snapshot_after: sha256:1863555b263d1b736d277bf5534ab09db6ea7f08df101de6a32e530291e3ffae
   pl-s4a-ck-20260904:
     request_id: request-pl-s4a-ck-20260904
     capability: stage.attachment.add

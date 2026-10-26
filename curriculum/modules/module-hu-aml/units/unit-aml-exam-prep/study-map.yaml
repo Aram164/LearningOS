@@ -402,6 +402,9 @@ stages:
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 10.pdf slide 2
     scope_triage: required-now
+    node_scaffold_note: The exam notice supplies the first-sitting scope and 120-minute closed-book/A4-sheet
+      constraints for this mixed mock. Integration practice comes from the unseen mixed questions; the
+      notice is supporting logistics, not evidence of integration coverage.
   - material_ref:
       route_id: route-9be11f4c735b1fab72ff7fd5
       inherit:
@@ -506,6 +509,9 @@ stages:
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 10.pdf slide 2, plus any later current second-sitting notice
     scope_triage: required-now
+    node_scaffold_note: The exam notice supplies the same sitting constraints for the independent second
+      mock unless a later notice supersedes them. Integration and repair-transfer evidence comes from
+      the mixed questions, not from the logistics notice.
   - kind: reference
     label: A4 sheet version 2 and the mock 1 error ledger, as the comparison baseline
     locator: stage-aml-mock-one-repair outputs
