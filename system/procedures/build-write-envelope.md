@@ -210,29 +210,7 @@ $LOS_FIXTURE_INTENT_1
 ```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-envelope-capture-a",
-  "idempotency_key": "envelope-capture-a",
-  "capability": "capture.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "capture-request:envelope-capture-a": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-envelope-capture-a","idempotency_key":"envelope-capture-a","capability":"capture.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"captured":"work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"capture-request:envelope-capture-a":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -252,28 +230,7 @@ $ $H/los-assert-file work/inbox/20261001-090000-half-formed-idea-about-the-deriv
 ```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-envelope-capture-a",
-  "idempotency_key": "envelope-capture-a",
-  "capability": "capture.create",
-  "ok": true,
-  "replayed": true,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "capture-request:envelope-capture-a": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": true,
-    "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md"
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-envelope-capture-a","idempotency_key":"envelope-capture-a","capability":"capture.create","ok":true,"replayed":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"capture-request:envelope-capture-a":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":true,"captured":"work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md"},"error":null}
 ```
 
 ## A second envelope, sealed against the new snapshot
@@ -297,29 +254,7 @@ seal_envelope: guards auto: capture-request:envelope-capture-c=0
 ```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-envelope-capture-b",
-  "idempotency_key": "envelope-capture-b",
-  "capability": "capture.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "captured": "work/inbox/20261001-090000-a-second-capture-that-moves-the-snapshot.md",
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "capture-request:envelope-capture-b": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-envelope-capture-b","idempotency_key":"envelope-capture-b","capability":"capture.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"captured":"work/inbox/20261001-090000-a-second-capture-that-moves-the-snapshot.md","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"capture-request:envelope-capture-b":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The third envelope now refuses as stale
@@ -327,27 +262,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
 ```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-c.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-envelope-capture-c",
-  "idempotency_key": "envelope-capture-c",
-  "capability": "capture.create",
-  "ok": false,
-  "replayed": false,
-  "transaction_id": null,
-  "receipt_path": null,
-  "snapshot_after": null,
-  "result": {},
-  "error": {
-    "code": "STALE_SNAPSHOT",
-    "message": "canonical state changed since this request was approved",
-    "retryable": true,
-    "details": {
-      "expected": "$LOS_FIXTURE_SNAPSHOT_2",
-      "actual": "$LOS_FIXTURE_SNAPSHOT_3"
-    }
-  }
-}
+{"schema_version":2,"request_id":"request-envelope-capture-c","idempotency_key":"envelope-capture-c","capability":"capture.create","ok":false,"replayed":false,"transaction_id":null,"receipt_path":null,"snapshot_after":null,"result":{},"error":{"code":"STALE_SNAPSHOT","message":"canonical state changed since this request was approved","retryable":true,"details":{"expected":"$LOS_FIXTURE_SNAPSHOT_2","actual":"$LOS_FIXTURE_SNAPSHOT_3"}}}
 [3]
 ```
 

@@ -135,28 +135,7 @@ seal_envelope: guards auto: source-scenario-bare=0
 ```scrut {interpolated: true}
 $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s06-intake",
-  "idempotency_key": "s06-intake",
-  "capability": "source.intake.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "source-scenario-bare": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s06-intake","idempotency_key":"s06-intake","capability":"source.intake.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"source-scenario-bare":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -302,28 +281,7 @@ seal_envelope: guards auto: source-scenario-bare=1
 ```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s06-attach",
-  "idempotency_key": "s06-attach",
-  "capability": "source.record.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "source-scenario-bare": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s06-attach","idempotency_key":"s06-attach","capability":"source.record.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"source-scenario-bare":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -348,28 +306,7 @@ seal_envelope: guards auto: source-scenario-bare=2
 ```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s06-eval",
-  "idempotency_key": "s06-eval",
-  "capability": "source.record.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "source-scenario-bare": 3
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s06-eval","idempotency_key":"s06-eval","capability":"source.record.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"source-scenario-bare":3},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -449,28 +386,7 @@ seal_envelope: guards auto: collection:probe-essays=1
 ```scrut {interpolated: true}
 $ los capability collection.entry.revise --payload-file "$TMPDIR/s06-entry.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s06-entry",
-  "idempotency_key": "s06-entry",
-  "capability": "collection.entry.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-005",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-005",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-    "artifact_revisions": {
-      "collection:probe-essays": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s06-entry","idempotency_key":"s06-entry","capability":"collection.entry.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","artifact_revisions":{"collection:probe-essays":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

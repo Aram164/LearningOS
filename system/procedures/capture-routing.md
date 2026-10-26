@@ -27,31 +27,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ```scrut {interpolated: true}
 $ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key log-stage-note-001 --request-id request-log-stage-note-001 --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-log-stage-note-001",
-  "idempotency_key": "log-stage-note-001",
-  "capability": "stage.note.write",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "stage_id": "stage-demo",
-    "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "unit-demo-l01": 4
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-log-stage-note-001","idempotency_key":"log-stage-note-001","capability":"stage.note.write","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"unit_id":"unit-demo-l01","stage_id":"stage-demo","working_note":"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -71,29 +47,7 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/stages/s
 ```scrut {interpolated: true}
 $ $H/los-seal --capability capture.create --payload '{"text": "Log: a stray thought with no stage yet."}' --key log-capture-001 --request-id request-log-capture-001 --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-log-capture-001",
-  "idempotency_key": "log-capture-001",
-  "capability": "capture.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "captured": "work/inbox/20261001-090000-log-a-stray-thought-with-no-stage-yet.md",
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "capture-request:log-capture-001": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-log-capture-001","idempotency_key":"log-capture-001","capability":"capture.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"captured":"work/inbox/20261001-090000-log-a-stray-thought-with-no-stage-yet.md","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"capture-request:log-capture-001":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

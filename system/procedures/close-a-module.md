@@ -44,34 +44,7 @@ seal_envelope: guards auto: module-demo=0
 ```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s19-pass",
-  "idempotency_key": "s19-pass",
-  "capability": "module.attempt.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "module_id": "module-demo",
-    "attempt": {
-      "termin": 2,
-      "date": "2026-10-09",
-      "result": "passed"
-    },
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "module-demo": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s19-pass","idempotency_key":"s19-pass","capability":"module.attempt.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"module_id":"module-demo","attempt":{"termin":2,"date":"2026-10-09","result":"passed"},"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"module-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -91,35 +64,7 @@ seal_envelope: guards auto: module-demo=1
 ```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s19-grade",
-  "idempotency_key": "s19-grade",
-  "capability": "module.attempt.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "module_id": "module-demo",
-    "attempt": {
-      "termin": 2,
-      "date": "2026-10-09",
-      "result": "passed",
-      "grade": 1.0
-    },
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "module-demo": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s19-grade","idempotency_key":"s19-grade","capability":"module.attempt.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"module_id":"module-demo","attempt":{"termin":2,"date":"2026-10-09","result":"passed","grade":1.0},"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"module-demo":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -180,29 +125,7 @@ seal_envelope: guards auto: coordination=0
 ```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s19-defer",
-  "idempotency_key": "s19-defer",
-  "capability": "coordination.section.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-  "result": {
-    "ok": true,
-    "section": "Deferrals",
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "coordination": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s19-defer","idempotency_key":"s19-defer","capability":"coordination.section.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"section":"Deferrals","transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"coordination":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

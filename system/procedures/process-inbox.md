@@ -63,36 +63,7 @@ seal_envelope: guards auto: file:archive/inbox/2026/note-drop.md=0, file:work/in
 ```scrut {interpolated: true}
 $ los capability inbox.resolve --payload-file "$TMPDIR/inbox-resolve.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-inbox-resolve-001",
-  "idempotency_key": "inbox-resolve-001",
-  "capability": "inbox.resolve",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "resolved": "note-drop.md",
-    "archived": [
-      "archive/inbox/2026/note-drop.md"
-    ],
-    "routed_to": [
-      "note-demo"
-    ],
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "file:archive/inbox/2026/note-drop.md": 1,
-      "file:work/inbox/note-drop.md": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-inbox-resolve-001","idempotency_key":"inbox-resolve-001","capability":"inbox.resolve","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"resolved":"note-drop.md","archived":["archive/inbox/2026/note-drop.md"],"routed_to":["note-demo"],"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"file:archive/inbox/2026/note-drop.md":1,"file:work/inbox/note-drop.md":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

@@ -44,34 +44,7 @@ seal_envelope: guards auto: note-demo=0, note-worked-variance-v2=0
 ```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s15-create",
-  "idempotency_key": "s15-create",
-  "capability": "note.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "note_id": "note-worked-variance-v2",
-    "note_path": "knowledge/notes/mathematics/note-worked-variance-v2.md",
-    "deprecated": [
-      "knowledge/notes/mathematics/note-demo.md"
-    ],
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "note-demo": 1,
-      "note-worked-variance-v2": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s15-create","idempotency_key":"s15-create","capability":"note.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"note_id":"note-worked-variance-v2","note_path":"knowledge/notes/mathematics/note-worked-variance-v2.md","deprecated":["knowledge/notes/mathematics/note-demo.md"],"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"note-demo":1,"note-worked-variance-v2":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

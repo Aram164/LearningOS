@@ -67,34 +67,7 @@ seal_envelope: guards auto: module-demo=0
 ```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sat.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-module-attempt-sat",
-  "idempotency_key": "module-attempt-sat",
-  "capability": "module.attempt.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "module_id": "module-demo",
-    "attempt": {
-      "termin": 2,
-      "date": "2026-10-09",
-      "result": "sat"
-    },
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "module-demo": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-module-attempt-sat","idempotency_key":"module-attempt-sat","capability":"module.attempt.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"module_id":"module-demo","attempt":{"termin":2,"date":"2026-10-09","result":"sat"},"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"module-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -129,31 +102,7 @@ seal_envelope: guards auto: module-demo=1
 ```scrut {interpolated: true}
 $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-deadline.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-module-sitting-deadline",
-  "idempotency_key": "module-sitting-deadline",
-  "capability": "module.sitting.update",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "module_id": "module-demo",
-    "termin": 2,
-    "withdrawal_deadline": "2026-09-30",
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "module-demo": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-module-sitting-deadline","idempotency_key":"module-sitting-deadline","capability":"module.sitting.update","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"module_id":"module-demo","termin":2,"withdrawal_deadline":"2026-09-30","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"module-demo":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

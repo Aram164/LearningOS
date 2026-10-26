@@ -152,29 +152,7 @@ seal_envelope: guards auto: coordination=0
 ```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s20-dep.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s20-dep",
-  "idempotency_key": "s20-dep",
-  "capability": "coordination.section.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
-  "result": {
-    "ok": true,
-    "section": "Dependencies",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "coordination": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s20-dep","idempotency_key":"s20-dep","capability":"coordination.section.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"section":"Dependencies","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"coordination":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

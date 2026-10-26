@@ -81,30 +81,7 @@ seal_envelope: guards auto: note-demo=0
 ```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-durable-revise-demo",
-  "idempotency_key": "durable-revise-demo",
-  "capability": "note.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "note_id": "note-demo",
-    "path": "knowledge/notes/mathematics/note-demo.md",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "note-demo": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-durable-revise-demo","idempotency_key":"durable-revise-demo","capability":"note.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"note_id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"note-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -149,31 +126,7 @@ seal_envelope: guards auto: note-triangulation-memo=0
 ```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-durable-create-memo",
-  "idempotency_key": "durable-create-memo",
-  "capability": "note.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "note_id": "note-triangulation-memo",
-    "note_path": "knowledge/notes/mathematics/note-triangulation-memo.md",
-    "deprecated": [],
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "note-triangulation-memo": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-durable-create-memo","idempotency_key":"durable-create-memo","capability":"note.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"note_id":"note-triangulation-memo","note_path":"knowledge/notes/mathematics/note-triangulation-memo.md","deprecated":[],"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"note-triangulation-memo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -231,30 +184,7 @@ seal_envelope: guards auto: note-variance-order=0
 ```scrut {interpolated: true}
 $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-durable-question",
-  "idempotency_key": "durable-question",
-  "capability": "atlas.question.save",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "note_id": "note-variance-order",
-    "note_path": "knowledge/notes/questions/note-variance-order.md",
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "note-variance-order": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-durable-question","idempotency_key":"durable-question","capability":"atlas.question.save","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"note_id":"note-variance-order","note_path":"knowledge/notes/questions/note-variance-order.md","transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"note-variance-order":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -299,30 +229,7 @@ seal_envelope: guards auto: note-deck-analysis=0
 ```scrut {interpolated: true}
 $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-durable-analysis",
-  "idempotency_key": "durable-analysis",
-  "capability": "note.analysis.save",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-004",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
-  "result": {
-    "ok": true,
-    "replayed": false,
-    "note_id": "note-deck-analysis",
-    "note_path": "knowledge/notes/mathematics/note-deck-analysis.md",
-    "transaction_id": "transaction-20261001-090000-004",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-    "artifact_revisions": {
-      "note-deck-analysis": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5"
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-durable-analysis","idempotency_key":"durable-analysis","capability":"note.analysis.save","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"replayed":false,"note_id":"note-deck-analysis","note_path":"knowledge/notes/mathematics/note-deck-analysis.md","transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","artifact_revisions":{"note-deck-analysis":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5"},"error":null}
 ```
 
 ## The newest receipt names the capability

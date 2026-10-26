@@ -49,32 +49,7 @@ seal_envelope: guards auto: unit-demo-l02=0
 ```scrut {interpolated: true}
 $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-sel-remove-l02",
-  "idempotency_key": "sel-remove-l02",
-  "capability": "unit.source-selection.set",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l02",
-    "source_id": "source-demo-book",
-    "locator": "lecture-02.pdf",
-    "selected": false,
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "unit-demo-l02": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-sel-remove-l02","idempotency_key":"sel-remove-l02","capability":"unit.source-selection.set","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"unit_id":"unit-demo-l02","source_id":"source-demo-book","locator":"lecture-02.pdf","selected":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"unit-demo-l02":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -102,32 +77,7 @@ seal_envelope: guards auto: unit-demo-l02=1
 ```scrut {interpolated: true}
 $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-sel-select-l02",
-  "idempotency_key": "sel-select-l02",
-  "capability": "unit.source-selection.set",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l02",
-    "source_id": "source-demo-book",
-    "locator": "lecture-02.pdf",
-    "selected": true,
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "unit-demo-l02": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-sel-select-l02","idempotency_key":"sel-select-l02","capability":"unit.source-selection.set","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"unit_id":"unit-demo-l02","source_id":"source-demo-book","locator":"lecture-02.pdf","selected":true,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"unit-demo-l02":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

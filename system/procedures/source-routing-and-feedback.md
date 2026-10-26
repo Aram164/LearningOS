@@ -76,94 +76,7 @@ seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-
 ```scrut {interpolated: true}
 $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s26-locator",
-  "idempotency_key": "s26-locator",
-  "capability": "route.patch",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "schema_version": 1,
-    "unit_id": "unit-demo-l01",
-    "route_id": "route-b2f1f80014860a929a3af0bc",
-    "changes": {
-      "locator": {
-        "before": "lecture-01.pdf",
-        "after": "lecture-01.pdf, PDF pp. 20-22"
-      }
-    },
-    "claim_anchors": [
-      {
-        "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
-        "classification": "anchored",
-        "quotes": [
-          {
-            "ref": "material://source-demo-book/lecture-01.pdf",
-            "text": "Worked example part 1 of 4: a biased coin pays two on heads",
-            "page": 21,
-            "page_end": null,
-            "window": null,
-            "node": "",
-            "matched": true
-          }
-        ],
-        "bindings": [
-          {
-            "material": "material://source-demo-book/lecture-01.pdf",
-            "manifest": "source-demo-book/lecture-01.pdf",
-            "sha256": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
-            "place": "p21",
-            "language": "en"
-          }
-        ]
-      }
-    ],
-    "claims": [
-      {
-        "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
-        "before": "stale",
-        "after": "rejudged",
-        "warning": "",
-        "next": ""
-      }
-    ],
-    "plan_sha256": "sha256:b9f78241d3f717544d1b2bcdb7ae0c36b05c492ee845924132c94522bb6f8346",
-    "affected_files": [
-      "curriculum/modules/module-demo/source-map.yaml",
-      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-      "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
-      "operations/transactions/lineage.yaml"
-    ],
-    "artifact_ids": [
-      "file:operations/transactions/lineage.yaml",
-      "module-demo",
-      "study-map-demo-l01",
-      "unit-demo-l01"
-    ],
-    "expected_revisions": {
-      "file:operations/transactions/lineage.yaml": 0,
-      "module-demo": 0,
-      "study-map-demo-l01": 0,
-      "unit-demo-l01": 3
-    },
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "file:operations/transactions/lineage.yaml": 1,
-      "module-demo": 1,
-      "study-map-demo-l01": 1,
-      "unit-demo-l01": 4
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s26-locator","idempotency_key":"s26-locator","capability":"route.patch","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"schema_version":1,"unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"locator":{"before":"lecture-01.pdf","after":"lecture-01.pdf, PDF pp. 20-22"}},"claim_anchors":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","classification":"anchored","quotes":[{"ref":"material://source-demo-book/lecture-01.pdf","text":"Worked example part 1 of 4: a biased coin pays two on heads","page":21,"page_end":null,"window":null,"node":"","matched":true}],"bindings":[{"material":"material://source-demo-book/lecture-01.pdf","manifest":"source-demo-book/lecture-01.pdf","sha256":"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5","place":"p21","language":"en"}]}],"claims":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","before":"stale","after":"rejudged","warning":"","next":""}],"plan_sha256":"sha256:b9f78241d3f717544d1b2bcdb7ae0c36b05c492ee845924132c94522bb6f8346","affected_files":["curriculum/modules/module-demo/source-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","operations/transactions/lineage.yaml"],"artifact_ids":["file:operations/transactions/lineage.yaml","module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"file:operations/transactions/lineage.yaml":0,"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"ok":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"file:operations/transactions/lineage.yaml":1,"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -190,36 +103,7 @@ seal_envelope: guards auto: study-map-demo-l01=1, unit-demo-l01=4
 ```scrut {interpolated: true}
 $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s26-fb",
-  "idempotency_key": "s26-fb",
-  "capability": "source.feedback.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "stage_id": "stage-demo",
-    "feedback": {
-      "source_id": "source-demo-book",
-      "feedback": "helpful",
-      "recorded": "2026-10-01"
-    },
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "study-map-demo-l01": 2,
-      "unit-demo-l01": 5
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s26-fb","idempotency_key":"s26-fb","capability":"source.feedback.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"unit_id":"unit-demo-l01","stage_id":"stage-demo","feedback":{"source_id":"source-demo-book","feedback":"helpful","recorded":"2026-10-01"},"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"study-map-demo-l01":2,"unit-demo-l01":5},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -239,38 +123,7 @@ seal_envelope: guards auto: study-map-demo-l01=2, unit-demo-l01=5
 ```scrut {interpolated: true}
 $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s26-fb2",
-  "idempotency_key": "s26-fb2",
-  "capability": "source.feedback.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "stage_id": "stage-demo",
-    "feedback": {
-      "source_id": "source-demo-book",
-      "feedback": "useful-for-derivation",
-      "recorded": "2026-10-01",
-      "resource_id": "resource-demo-book-ch01",
-      "note": "Clear derivation."
-    },
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "study-map-demo-l01": 3,
-      "unit-demo-l01": 6
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s26-fb2","idempotency_key":"s26-fb2","capability":"source.feedback.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"unit_id":"unit-demo-l01","stage_id":"stage-demo","feedback":{"source_id":"source-demo-book","feedback":"useful-for-derivation","recorded":"2026-10-01","resource_id":"resource-demo-book-ch01","note":"Clear derivation."},"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"study-map-demo-l01":3,"unit-demo-l01":6},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
