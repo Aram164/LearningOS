@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 from learning_os.derive.validation import validate
 from learning_os.derive.validation.advisories import advisory_issues
+from learning_os.domain.codes import PREFLIGHT_FAILED
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.validation import Issue
 from learning_os.store.derived.engine import BuildContext, evaluate
@@ -103,11 +104,12 @@ def diagnostic_report(root: Path) -> dict:
     try:
         from learning_os.store.loader import load_repo
 
-        issues = status_issues(load_repo(root))
+        pins = observe_pins(root)
+        issues = status_issues(load_repo(root), pins=pins)
     except Exception as exc:  # noqa: BLE001 - typed refusal, not clean
         return {"ok": False, "trustworthy": False,
-                "error": {"code": "PREFLIGHT_FAILED", "message": str(exc)}}
+                "error": {"code": PREFLIGHT_FAILED, "message": str(exc)}}
     errors = [{"code": i.code, "path": i.path, "message": i.message}
-              for i in issues if i.severity == "error"]
+              for i in issues if i.severity == "E"]
     return {"ok": not errors, "trustworthy": True, "errors": errors,
             "issues": [{"code": i.code, "path": i.path} for i in issues]}

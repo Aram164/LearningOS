@@ -15,7 +15,7 @@ Parse CLI requests and render operation outcomes without owning semantic rules.
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `contracts`, `diagnostics`, `domain`, `operation-pipeline`.
+Depends on: `contracts`, `diagnostics`, `domain`, `loading`, `operation-pipeline`.
 
 Used by: none.
 <!-- system-map:end -->

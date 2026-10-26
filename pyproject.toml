@@ -75,7 +75,6 @@ files = [
   "tools/learning_os/app/projection_readiness.py",
   "tools/learning_os/app/agent_reporting.py",
   "tools/learning_os/app/agent_plans.py",
-  "tools/learning_os/adapters/agent_plans.py",
   "tools/learning_os/adapters/agent_workers.py",
 ]
 

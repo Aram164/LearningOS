@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
-from learning_os.app.pipeline import run_cli
+from learning_os.app.pipeline import Outcome, run_cli
 
 
 def invoke(args) -> int:
@@ -24,7 +25,7 @@ def invoke(args) -> int:
     return outcome.exit_code
 
 
-def invoke_outcome(args):  # type: ignore[no-untyped-def]
+def invoke_outcome(args: argparse.Namespace) -> Outcome:
     """Outcome-returning execution (D03): same pipeline, no global capture."""
     if args.root:
         root = Path(args.root).resolve()

@@ -6746,6 +6746,48 @@
     "type": "json_object"
    }
   ],
+  "projection-observe": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "confirmation",
+    "metavar": "JSON",
+    "nargs": null,
+    "option_strings": [
+     "--confirmation"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "related": [
    {
     "action": "store",
@@ -9510,6 +9552,7 @@
   "project.list.schema.json": "21515ab76275ae9c009f014e72b2ed5ebc4546467b8ae65e839b01a1d9011c04",
   "project.update.schema.json": "80bb64f356b256f86abb9d4e29a189025af70b9e71b4e70332c571c41db85956",
   "projection.generate.schema.json": "b2fc48a34025bf4306eca85ccafe93e81692a9b865b354d150c5c8cb776d08ce",
+  "projection.observe.schema.json": "6c846a118a81d9bbb7f8153007542f3587b50ef90ee23b80cd0d59e837c8abe6",
   "related.read.schema.json": "bed0d80d693eaa35143226b0da7849f1c0e2620fdb17216e86842b06c0ce994e",
   "repository.validate.schema.json": "ae2e47618d9bd5229f6bedeb2a6b45db14b15fb8e71fe117e7ac8f94278f03bd",
   "resume.read.schema.json": "873cd342a30c7e35416eb7f62688de7a3c2df3e5848b000aa100a2cbfb97460e",

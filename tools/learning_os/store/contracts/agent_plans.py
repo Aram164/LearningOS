@@ -22,7 +22,7 @@ def parse_controls(plan: dict[str, object]) -> dict[str, object]:
     if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1024:
         raise ValueError("report_max_bytes must be an integer >= 1024")
     version = plan.get("schema_version", 1)
-    if version not in (1, 2):
+    if isinstance(version, bool) or not isinstance(version, int) or version not in (1, 2):
         raise ValueError("unsupported plan schema_version")
     return {"read_workers": workers, "deadline_s": float(deadline),
             "report_max_bytes": budget, "unknown_plan_fields": sorted(unknown)}

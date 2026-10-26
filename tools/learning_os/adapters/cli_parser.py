@@ -54,6 +54,7 @@ _SUBCOMMAND_ORDER = (
     "inbox-read",
     "inbox-list",
     "inspect",
+    "projection-observe",
     "related",
     "program-list",
     "plan-template",

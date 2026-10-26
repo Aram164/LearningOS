@@ -1,0 +1,20 @@
+operation: projection.observe
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: missing-receipt
+  kind: success
+  transport: cli
+  argv:
+  - projection-observe
+  - --confirmation
+  - '{"receipt_path": "operations/transactions/missing.yaml", "snapshot_after": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}'
+  expect:
+    site: null
+untriggered: []

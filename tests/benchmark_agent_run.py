@@ -48,7 +48,7 @@ def baseline() -> dict:
         raw += len(proc.stdout)
         wire += len(proc.stdout) + len(proc.stderr)
     return {"ms": round((time.perf_counter() - started) * 1000), "raw_bytes": raw,
-            "wire_bytes": wire, "step_output_bytes": raw, "processes": 5, "agent_calls": 5}
+            "wire_bytes": wire, "step_output_bytes": raw, "processes": 5}
 
 
 def runner(plan_path: Path) -> dict:
@@ -63,8 +63,8 @@ def runner(plan_path: Path) -> dict:
     assert not any(row.get("output", {}).get("_missing_fields") for row in report["steps"]), report
     return {"ms": ms, "raw_bytes": totals["raw_bytes"],
             "wire_bytes": len(proc.stdout) + len(proc.stderr),
-            "step_output_bytes": totals["out_bytes"], "processes": 1,
-            "agent_calls": totals["agent_calls"], "step_ms_sum": totals["ms"],
+            "step_output_bytes": totals["out_bytes"], "processes": totals["process_count"],
+            "step_ms_sum": totals["step_ms_sum"],
             "step_ms": {row["id"]: row["ms"] for row in report["steps"]}}
 
 

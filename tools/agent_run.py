@@ -12,12 +12,13 @@ projection must match a successful write at or after the latest required write
 in this plan's execution order. Unrecognised
 projection changes refuse; the CLI's own freshness/snapshot guards still run.
 
-Each output field has a UTF-8 byte budget (including its JSON encoding).
-Report metadata is separate and included in benchmark wire-byte measurements.
+Each summary has a UTF-8 byte budget; report_max_bytes caps all stdout,
+including metadata. Every run retains a private full report and raw journals.
+Use --expand-report PATH [--step ID] to verify and retrieve complete output.
 ``clusters: true`` retains omission counts and an executable full-scan route;
 it neither makes learner decisions nor implements bulk mutations. Optional
-preflight runs fresh validation for each opted-in step, refusing on any error
-or unusable validation result. It never replaces gateway validation.
+preflight reuses the existing validation cache under its complete pins,
+refusing on any error or unusable validation result. It never replaces gateway validation.
 
 Example::
 
@@ -48,10 +49,18 @@ import time
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 
-from learning_os.adapters.agent_plans import Executor  # noqa: F401
 from learning_os.app.projection_readiness import observe as _observe_projection
-from learning_os.app.read_session import ReadSession
-from learning_os.domain.codes import INVALID_REQUEST, VALIDATION_FAILED
+from learning_os.domain.codes import (
+    DISCOVERY_FAILED,
+    INVALID_REQUEST,
+    INVALID_STEP_OUTPUT,
+    PREFLIGHT_FAILED,
+    REPORT_BUDGET_TOO_SMALL,
+    ROOT_MISMATCH,
+    SESSION_MISMATCH,
+    SESSION_REQUIRED,
+    VALIDATION_FAILED,
+)
 from learning_os.store.contracts.agent_plans import parse_controls
 
 TOOLS = Path(__file__).resolve().parent
@@ -67,13 +76,13 @@ def _json(value) -> str:
     try:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
     except (ValueError, TypeError) as exc:
-        raise AgentRunError("output must be finite JSON", "INVALID_STEP_OUTPUT") from exc
+        raise AgentRunError("output must be finite JSON", INVALID_STEP_OUTPUT) from exc
 
 
 def _finite_number(value: str) -> float:
     number = float(value)
     if not math.isfinite(number):
-        raise AgentRunError("nonfinite JSON number in step output", "INVALID_STEP_OUTPUT")
+        raise AgentRunError("nonfinite JSON number in step output", INVALID_STEP_OUTPUT)
     return number
 
 
@@ -110,7 +119,7 @@ def build_index(root: Path, executor) -> dict:
         sys.path.insert(0, str(TOOLS))
     from learning_os.adapters.cli_parser import build_parser
 
-    parser = build_parser()
+    parser = getattr(executor, "parser", None) or build_parser()
     choices = parser._subparsers._group_actions[0].choices  # noqa: SLF001
     verb_to_operation = {}
     for name, sub in choices.items():
@@ -119,10 +128,22 @@ def build_index(root: Path, executor) -> dict:
             verb_to_operation[name] = operation
     # Full catalogue rows carry authoritative writer classification; the
     # compact surface intentionally retains only verb names.
-    code, out, err = executor(["capabilities", "--json"], root)
-    if code:
-        raise AgentRunError(f"capability discovery failed: {err.strip()}", "DISCOVERY_FAILED")
-    compact = json.loads(out)
+    if hasattr(executor, "parser"):
+        from learning_os.store.contracts.verb_catalogue import (
+            VerbCatalogueError,
+            build_verb_catalogue,
+        )
+        try:
+            catalogue = build_verb_catalogue(root)
+        except VerbCatalogueError as exc:
+            raise AgentRunError(f"capability discovery failed: {exc}", DISCOVERY_FAILED) from exc
+        compact = {"verbs": [row.as_dict() for row in catalogue.verbs],
+                   "tasks": [row.as_dict() for row in catalogue.tasks]}
+    else:
+        code, out, err = executor(["capabilities", "--json"], root)
+        if code:
+            raise AgentRunError(f"capability discovery failed: {err.strip()}", DISCOVERY_FAILED)
+        compact = json.loads(out)
     for row in compact.get("verbs", []):
         if isinstance(row, dict) and row["verb"] in choices:
             verb_to_operation[row["verb"]] = row["operation"]
@@ -197,7 +218,7 @@ def writes_ready(root: Path, required: list, known: list) -> tuple[bool, str]:
     latest = max(positions[signature] for signature in signatures)
     snapshots = {_field(result, "snapshot_after") for result in known[latest:]
                  if _receipt_ready(root, result)[0]}
-    obs = _observe_projection(root)
+    obs = _observe_projection(root, verify_current=False)
     stamp = obs["snapshot_id"]
     if stamp is None:
         return False, ("projection-publication-pending" if (root / "generated/manifest.json").exists()
@@ -348,7 +369,7 @@ def _preflight(executor, root: Path, writes: list[str]) -> dict | None:
     summary = re.search(r"(?m)^(\d+) error\(s\), \d+ warning\(s\) — (OK|FAIL)$", out)
     if code not in (0, 1) or not summary or int(summary[1]) != len(errors) \
             or (code == 0) != (not errors) or (summary[2] == "OK") != (not errors):
-        return {"code": "PREFLIGHT_FAILED", "retryable": False,
+        return {"code": PREFLIGHT_FAILED, "retryable": False,
                 "message": "validation did not return a trustworthy result",
                 "exit": code, "stderr": err.strip()[-400:]}
     if errors:
@@ -363,14 +384,14 @@ def _session_bound_envelope(namespace, session_id):
         yield
         return
     if namespace.payload_file == "-":
-        raise AgentRunError("session-bound gateway steps require an envelope file", "SESSION_MISMATCH")
+        raise AgentRunError("session-bound gateway steps require an envelope file", SESSION_MISMATCH)
     content = Path(namespace.payload_file).read_bytes()
     try:
         envelope = json.loads(content)
     except ValueError as exc:
-        raise AgentRunError("session-bound gateway steps require a JSON envelope", "SESSION_MISMATCH") from exc
+        raise AgentRunError("session-bound gateway steps require a JSON envelope", SESSION_MISMATCH) from exc
     if not isinstance(envelope, dict) or envelope.get("session_id") != session_id:
-        raise AgentRunError("sealed envelope session differs from plan; reseal the approved intent", "SESSION_MISMATCH")
+        raise AgentRunError("sealed envelope session differs from plan; reseal the approved intent", SESSION_MISMATCH)
     # Preserve approved bytes. Submit an immutable copy of the file checked
     # here, avoiding a second read of a caller-changeable source pathname.
     previous = namespace.payload_file
@@ -385,47 +406,66 @@ def _session_bound_envelope(namespace, session_id):
 
 
 def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
-    if str(TOOLS) not in sys.path:
-        sys.path.insert(0, str(TOOLS))
-    from learning_os.adapters.cli_entry import run
+    from learning_os.adapters.cli import invoke_outcome
     from learning_os.adapters.cli_parser import build_parser
+    from learning_os.app.lock import LOS_LOCK_TIMEOUT_ENV
 
     parser = build_parser()
     writers = write_commands if write_commands is not None else {"capability"}
+    admitted_envelopes = {}
+
+    def validate(argv):
+        if any(arg == "--root" or arg.startswith("--root=") for arg in argv):
+            raise AgentRunError("step root overrides are forbidden; use runner --root")
+        errors = io.StringIO()
+        try:
+            with redirect_stderr(errors), redirect_stdout(errors):
+                namespace = parser.parse_args(["--root", str(root), *argv])
+        except SystemExit as exc:
+            raise AgentRunError("invalid step arguments: " + errors.getvalue()[-1000:]) from exc
+        if Path(namespace.root).resolve() != root:
+            raise AgentRunError("parsed step root differs from selected root", ROOT_MISMATCH)
+        if session_id is not None and getattr(namespace, "session_id", None) not in (None, session_id):
+            raise AgentRunError("parsed step session differs from plan", SESSION_MISMATCH)
+        if session_id is None and namespace.command in writers:
+            raise AgentRunError("parsed write command requires a plan session_id", SESSION_REQUIRED)
+        return namespace
 
     def executor(argv, selected_root):
-        if Path(selected_root).resolve() != root:
-            raise AgentRunError("executor root changed")
-        if argv and argv[0] == "__seal_submit__":
+        if selected_root.resolve() != root:
+            raise AgentRunError("executor root differs from plan", ROOT_MISMATCH)
+        if argv[:1] == ["__seal_submit__"]:
             _, capability, payload, key, *session_args = argv
             proc = subprocess.run(
                 [sys.executable, str(TOOLS / "seal_envelope.py"), "--root", str(root),
-                 "--capability", capability, "--payload=" + payload, "--key=" + key, "--submit", *session_args],
-                capture_output=True, text=True, cwd=root)
+                 "--capability", capability, "--payload=" + payload, "--key=" + key,
+                 "--submit", *session_args], capture_output=True, text=True, cwd=root)
             return proc.returncode, proc.stdout, proc.stderr
-        if any(arg == "--root" or arg.startswith("--root=") for arg in argv):
-            raise AgentRunError("step root overrides are forbidden; use runner --root")
-        out, err = io.StringIO(), io.StringIO()
-        cwd = os.getcwd()
-        os.chdir(root)
+        namespace = validate(argv)
+        previous = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
         try:
-            with redirect_stdout(out), redirect_stderr(err):
-                try:
-                    namespace = parser.parse_args(["--root", str(root), *argv])
-                except SystemExit as exc:
-                    return int(exc.code or 0), out.getvalue(), err.getvalue()
-                if Path(namespace.root).resolve() != root:
-                    raise AgentRunError("parsed step root differs from selected root", "ROOT_MISMATCH")
-                if session_id is not None and getattr(namespace, "session_id", None) not in (None, session_id):
-                    raise AgentRunError("parsed step session differs from plan", "SESSION_MISMATCH")
-                if session_id is None and namespace.command in writers:
-                    raise AgentRunError("parsed write command requires a plan session_id", "SESSION_REQUIRED")
-                with _session_bound_envelope(namespace, session_id):
-                    code = run(namespace)
+            if namespace.lock_timeout is not None:
+                os.environ[LOS_LOCK_TIMEOUT_ENV] = str(namespace.lock_timeout)
+            with _session_bound_envelope(namespace, session_id):
+                expected = admitted_envelopes.get(tuple(argv))
+                if expected is not None and Path(namespace.payload_file).read_bytes() != expected:
+                    raise AgentRunError("approved envelope changed since plan admission")
+                if hasattr(namespace, "_operation"):
+                    outcome = invoke_outcome(namespace)
+                    return outcome.exit_code, outcome.stdout, outcome.stderr
+                proc = subprocess.run(
+                    [sys.executable, str(TOOLS / "los.py"), "--root", str(root), *argv],
+                    capture_output=True, text=True, cwd=root)
+                return proc.returncode, proc.stdout, proc.stderr
         finally:
-            os.chdir(cwd)
-        return int(code or 0), out.getvalue(), err.getvalue()
+            if previous is None:
+                os.environ.pop(LOS_LOCK_TIMEOUT_ENV, None)
+            else:
+                os.environ[LOS_LOCK_TIMEOUT_ENV] = previous
 
+    executor.validate = validate
+    executor.parser = parser
+    executor.envelope_bytes = admitted_envelopes
     return executor
 
 
@@ -440,7 +480,9 @@ def _expand_log_step(step: dict, session_id=None) -> list[str]:
 
 
 def _validate_plan(plan, poll_s: float) -> list[dict]:
-    if not math.isfinite(poll_s) or poll_s < 0:
+    if len(_json(plan).encode("utf-8")) > 1048576:
+        raise AgentRunError("plan input exceeds 1 MiB")
+    if isinstance(poll_s, bool) or not math.isfinite(poll_s) or poll_s < 0:
         raise AgentRunError("poll interval must be finite and nonnegative")
     if isinstance(plan, dict):
         unknown = set(plan) - {"steps", "session_id", "on_error", "schema_version",
@@ -470,6 +512,13 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
             raise AgentRunError("step ids are limited to 64 characters")
         if step["id"] in seen:
             raise AgentRunError("step ids must be unique")
+        allowed_step = {"id", "depends_on", "kind", "describe", "write", "preflight", "clusters",
+                        "ready_timeout_s", "args", "argv", "writes", "summary", "key", "text",
+                        "stage_id", "unit_id", "use"}
+        if set(step) - allowed_step:
+            raise AgentRunError("unknown step fields: " + str(sorted(set(step) - allowed_step)))
+        if "argv" in step and ("use" in step or "args" in step):
+            raise AgentRunError("argv and use/args are mutually exclusive")
         deps = step.get("depends_on", [])
         if not isinstance(deps, list) or any(not isinstance(d, str) or d not in seen for d in deps):
             raise AgentRunError("dependencies must name earlier steps")
@@ -482,7 +531,7 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
         if step.get("describe") and not isinstance(step.get("use"), str):
             raise AgentRunError("describe requires use")
         timeout = step.get("ready_timeout_s", 10)
-        if not isinstance(timeout, (int, float)) or not math.isfinite(timeout) or timeout < 0:
+        if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not math.isfinite(timeout) or timeout < 0:
             raise AgentRunError("readiness timeout must be finite and nonnegative")
         for name in ("args", "argv", "writes"):
             values = step.get(name, [])
@@ -495,6 +544,8 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
         summary = step.get("summary", {})
         if not isinstance(summary, dict):
             raise AgentRunError("summary must be an object")
+        if set(summary) - {"fields", "max_items", "max_bytes"}:
+            raise AgentRunError("unknown summary fields")
         fields = summary.get("fields", [])
         if not isinstance(fields, list) or any(not isinstance(f, str) or not f or "" in f.split(".") for f in fields):
             raise AgentRunError("summary fields must be dotted strings")
@@ -544,180 +595,132 @@ def _step_argv(step: dict, index: dict, session_id=None) -> list[str]:
 
 def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
              index: dict | None = None, report_dir=None) -> dict:
+    from learning_os.adapters.agent_workers import parallel_reads
+    from learning_os.app.agent_plans import execute_plan
+    from learning_os.app.agent_reporting import ReportStore, minimum_ledger_bytes
+    from learning_os.app.projection_readiness import dependency_ready
+    from learning_os.app.registry import REGISTRY
+    from learning_os.app.validation_service import diagnostic_report
+    from learning_os.domain.agent_plans import CompiledStep, PlanControls, RawOutcome
+
+    started = time.monotonic()
     steps = _validate_plan(plan, poll_s)
-    from learning_os.app.agent_reporting import minimum_ledger_bytes
-
-    if minimum_ledger_bytes([s["id"] for s in steps]) > plan.get("report_max_bytes", 65536):
-        raise AgentRunError("report_max_bytes cannot hold the minimum step ledger",
-                            "REPORT_BUDGET_TOO_SMALL")
-    with _session_environment(plan.get("session_id")):
-        return _run_steps(plan, steps, root, executor=executor, poll_s=poll_s,
-                          index=index, report_dir=report_dir)
-
-
-def _run_steps(plan, steps, root, *, executor, poll_s, index, report_dir=None):
     root = root.resolve()
+    injected = executor is not None
     session_id = plan.get("session_id")
-    policy = plan.get("on_error", "stop")
-    write_commands = {"capability"}
-    executor = executor or _cli_executor_factory(root, session_id=session_id, write_commands=write_commands)
-    index = index if index is not None else build_index(root, executor)
-    write_commands.update(index.get("write_verbs", []))
-    if session_id is None:
+    writers = {"capability"}
+    actual = executor or _cli_executor_factory(root, session_id=session_id, write_commands=writers)
+    with _session_environment(session_id):
+        index = index if index is not None else build_index(root, actual)
+        writers.update(index.get("write_verbs", []))
+        compiled = []
         for step in steps:
-            try:
-                argv = _step_argv(step, index)
-            except AgentRunError:
-                continue  # Unknown selectors retain their per-step error.
-            if argv and argv[0] in index.get("write_verbs", []):
-                raise AgentRunError("write plans require an explicit session_id stable across retries")
-    deadline_end = time.perf_counter() + float(plan.get("deadline_s", 120))
-    workers = int(plan.get("read_workers", 1))
-    prefetched: dict[str, tuple] = {}
-    if workers > 1:
-        from learning_os.adapters.agent_workers import parallel_reads
-
-        wave_ids, wave_argvs = [], []
-        for s in steps:
-            if s.get("depends_on") or s.get("kind") or s.get("describe") \
-                    or s.get("clusters") or s.get("preflight"):
-                continue
-            try:
-                a = _step_argv(s, index, session_id)
-            except AgentRunError:
-                continue
-            if a and a[0] in index.get("write_verbs", []):
-                continue
-            wave_ids.append(s["id"])
-            wave_argvs.append(a)
-        if len(wave_argvs) > 1:
-            raw = parallel_reads(root, wave_argvs, workers,
-                                 executor=(lambda a: executor(a, root)) if executor else None)
-            prefetched = dict(zip(wave_ids, raw, strict=True))
-    read_session = ReadSession(root)
-    results: dict[str, dict] = {}
-    writes: dict[str, object] = {}
-    ancestors: dict[str, set[str]] = {}
-    rows = []
-    stopped_by = None
-    for step in steps:
-        step_id = step["id"]
-        started = time.perf_counter()
-        row: dict = {"id": step_id, "status": "ok", "ready_wait_ms": 0}
-        if time.perf_counter() > deadline_end and row["status"] == "ok":
-            row.update(status="deadline", ms=0, error={
-                "code": "DEADLINE_EXPIRED", "retryable": False})
-            rows.append(row)
-            results[step_id] = row
-            if policy == "stop":
-                stopped_by = stopped_by or step_id
-            continue
-        if stopped_by is not None:
-            row.update(status="skipped", ms=0, error={"code": "PLAN_STOPPED", "retryable": False,
-                                                      "failed_step": stopped_by})
-            rows.append(row)
-            continue
-        deps = step.get("depends_on", [])
-        ancestors[step_id] = set(deps).union(*(ancestors[d] for d in deps))
-        failed = next((d for d in deps if results[d]["status"] != "ok"), None)
-        required = [writes[d] for d in writes if d in ancestors[step_id]]
-        if failed:
-            row.update(status="blocked", error={"code": "DEPENDENCY_FAILED", "retryable": False,
-                                                "dependency": failed})
-        elif required:
-            deadline = time.perf_counter() + step.get("ready_timeout_s", 10)
-            # A caller's write hint classifies results, never grants a read
-            # an exemption. Only actual gateway submission forms skip the
-            # projection check before deriving their own write guards.
-            command = (step.get("argv") or [step.get("use")])[0]
-            submitting = step.get("kind") == "log" or command in ("capability", "cli.capability")
-            while True:
-                # Subsequent writes derive/check their own current guards.
-                # Completion suffices here, including during exact replay;
-                # the read after them checks the final projection below.
-                ready, reason = (_writes_completed(root, required)
-                                 if submitting
-                                 else writes_ready(root, required, list(writes.values())))
-                if ready:
-                    break
-                if time.perf_counter() >= deadline:
-                    conflict = reason == "projection-not-current"
-                    row.update(status="not_ready", error={
-                        "code": "SNAPSHOT_CONFLICT" if conflict else "NOT_READY",
-                        "retryable": not conflict,
-                        "dependencies": [d for d in writes if d in ancestors[step_id]],
-                        "reason": reason})
-                    break
-                time.sleep(poll_s)
-            row["ready_wait_ms"] = round((time.perf_counter() - started) * 1000)
-        if row["status"] == "ok":
+            direct = (step.get("argv") or [step.get("use")])[0]
+            if session_id is None and direct in writers:
+                raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
             try:
                 argv = _step_argv(step, index, session_id)
-                error = _preflight(executor, root, step.get("writes", [])) if step.get("preflight") else None
-                if error:
-                    row.update(status="blocked", error=error)
-                else:
-                    memo_key = tuple(argv)
-                    cached = read_session.get(memo_key) if not (
-                        deps or step.get("kind") or step.get("describe")
-                        or step.get("clusters") or step.get("preflight")) else None
-                    if prefetched.get(step_id):
-                        code, out, err = prefetched[step_id]
-                    elif cached is not None:
-                        code, out, err = cached  # type: ignore[misc]
-                    else:
-                        code, out, err = executor(argv, root)
-                        if not step.get("kind") and "snapshot_after" not in out:
-                            read_session.put(memo_key, (code, out, err))
-                    row.update(exit=code, raw_bytes=len(out.encode("utf-8")))
-                    try:
-                        payload = json.loads(out, parse_float=_finite_number, parse_constant=_finite_number)
-                    except ValueError:
-                        payload = out
-                    if code or (isinstance(payload, dict) and payload.get("ok") is False):
-                        detail = payload.get("error") if isinstance(payload, dict) else None
-                        row.update(status="error", error=detail if isinstance(detail, dict) else {
-                            "code": "STEP_FAILED", "retryable": False, "stderr": err.strip()[-400:]})
-                    elif step.get("write") or step.get("kind") == "log" or _field(payload, "snapshot_after"):
-                        writes[step_id] = payload
-                        read_session.invalidate()
-                    validation = [line for line in err.splitlines() if "seal_envelope: validation:" in line]
-                    if validation:
-                        row["validation"] = validation[-1]
-                    summary = step.get("summary") or {}
-                    encoded = (_cluster_summary(payload, argv, summary)
-                               if step.get("clusters") and isinstance(payload, dict)
-                               else summarize(payload, fields=summary.get("fields"),
-                                              max_items=summary.get("max_items", 5),
-                                              max_bytes=summary.get("max_bytes", 2000)))
-                    row.update(output=json.loads(encoded), out_bytes=len(encoded.encode("utf-8")))
-            except (AgentRunError, OSError, ValueError, TypeError) as exc:
-                row.update(status="error", error={"code": getattr(exc, "code", "STEP_FAILED"),
-                                                  "message": str(exc), "retryable": False})
-        row["ms"] = round((time.perf_counter() - started) * 1000)
-        results[step_id] = row
-        rows.append(row)
-        if row["status"] != "ok" and policy == "stop":
-            stopped_by = step_id
-    report = {"schema_version": 2, "experimental": True, "session_id": session_id,
-            "on_error": policy, "steps": rows, "totals": {
-        "steps": len(rows), "ok": sum(row["status"] == "ok" for row in rows),
-        "not_ready": sum(row["status"] == "not_ready" for row in rows),
-        "ms": sum(row["ms"] for row in rows),
-        "raw_bytes": sum(row.get("raw_bytes", 0) for row in rows),
-        "out_bytes": sum(row.get("out_bytes", 0) for row in rows),
-        "process_count": 1}}
-    if report_dir is not None:
-        from learning_os.app.agent_reporting import bound_report, write_full_report
+                command = argv[0] if argv else ""
+                if not injected and command != "__seal_submit__":
+                    namespace = actual.validate(argv)
+                    command = namespace.command
+                    # Check all static envelope/session bindings before the first mutation.
+                    with _session_bound_envelope(namespace, session_id):
+                        if command == "capability":
+                            actual.envelope_bytes[tuple(argv)] = Path(namespace.payload_file).read_bytes()
+                writer = command in writers or step.get("kind") == "log" or step.get("write", False)
+                if writer and session_id is None:
+                    raise AgentRunError("write plans require an explicit session_id stable across retries")
+                operation = index.get("verb_to_operation", {}).get(command)
+                entry = REGISTRY.get(operation)
+                profile = entry.memo_profile if entry is not None else "none"
+                reusable = not injected and not writer and profile != "none"
+                if profile == "manifest-brief" and "--brief" not in argv:
+                    reusable = False
+                compiled.append(CompiledStep(
+                    id=step["id"], argv=tuple(argv), dependencies=tuple(step.get("depends_on", [])),
+                    writer=bool(writer), submitting=command in ("capability", "__seal_submit__"),
+                    reusable=reusable, parallel_safe=bool(reusable and entry.parallel_safe),
+                    ready_timeout_s=float(step.get("ready_timeout_s", 10)),
+                    preflight=step.get("preflight", False), scope=tuple(step.get("writes", [])),
+                    presentation=step))
+            except AgentRunError as exc:
+                compiled.append(CompiledStep(id=step["id"], argv=(),
+                    admission_error={"code": exc.code, "retryable": False, "message": str(exc)}))
+        store = ReportStore(root, Path(report_dir) if report_dir is not None else None)
+        budget = plan.get("report_max_bytes", 65536)
+        if minimum_ledger_bytes([s.id for s in compiled], str(store.full_path)) > budget:
+            raise AgentRunError("report_max_bytes cannot hold the minimum step ledger",
+                                REPORT_BUDGET_TOO_SMALL)
 
-        full = write_full_report(Path(report_dir), report)
-        return bound_report(report, int(plan.get("report_max_bytes", 65536)), str(full))
-    return report
+        class Port:
+            def __init__(self):
+                self.resource_info = {}
+
+            def execute(self, step, remaining):
+                code, out, err = actual(list(step.argv), root)
+                count = int(not injected and step.submitting and step.argv[0] == "__seal_submit__")
+                return RawOutcome(code, out, err, count)
+
+            def parallel(self, batch, workers, remaining):
+                counter = [0]
+                elapsed = {}
+                outcomes = parallel_reads(root, [list(s.argv) for s in batch], workers,
+                                          timeout_s=remaining, session_id=session_id,
+                                          process_counter=counter, resource_stats=self.resource_info, elapsed_times=elapsed)
+                return [RawOutcome(*outcome, processes=counter[0] if i == 0 else 0, elapsed_ms=elapsed.get(i, 0))
+                        for i, outcome in enumerate(outcomes)]
+
+            def preflight(self, step):
+                if injected:
+                    return _preflight(actual, root, list(step.scope))
+                report = diagnostic_report(root)
+                if not report.get("trustworthy"):
+                    return report.get("error")
+                errors = report.get("errors", [])
+                return ({"code": VALIDATION_FAILED, "retryable": False,
+                         "scope": classify_scope(errors, list(step.scope))}
+                        if errors else None)
+
+            def summarize(self, step, payload):
+                description = step.presentation
+                summary = description.get("summary") or {}
+                return (_cluster_summary(payload, list(step.argv), summary)
+                        if description.get("clusters") and isinstance(payload, dict)
+                        else summarize(payload, fields=summary.get("fields"),
+                                       max_items=summary.get("max_items", 5),
+                                       max_bytes=summary.get("max_bytes", 2000)))
+
+            def ready(self, required, known, submitting):
+                if injected:
+                    return (_writes_completed(root, required) if submitting
+                            else writes_ready(root, required, known))
+                records = [{"receipt_path": _field(r, "receipt_path"),
+                            "snapshot_after": _field(r, "snapshot_after")} for r in required]
+                all_records = [{"receipt_path": _field(r, "receipt_path"),
+                                "snapshot_after": _field(r, "snapshot_after")} for r in known]
+                return dependency_ready(root, records, all_records, completion_only=submitting)
+
+            def epoch(self, selected_root):
+                return not injected
+
+            def resources(self):
+                import resource
+                return {**self.resource_info, "runner_peak_rss_bytes":
+                    resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (1 if sys.platform == "darwin" else 1024)}
+
+        store.inputs(plan, list(actual.envelope_bytes.values()) if not injected else [])
+        controls = PlanControls(read_workers=plan.get("read_workers", 1),
+            deadline_s=float(plan.get("deadline_s", 120)), report_max_bytes=budget,
+            on_error=plan.get("on_error", "stop"), session_id=session_id)
+        return execute_plan(compiled, root, Port(), controls, store, started, poll_s)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("plan", help="plan JSON file")
+    parser.add_argument("plan", nargs="?", help="plan JSON file")
+    parser.add_argument("--expand-report", help="verify and expand a finalized full report")
+    parser.add_argument("--step", help="expand only this step (with --expand-report)")
     parser.add_argument("--root", default=None, help="selected data root (default: tool repository)")
     parser.add_argument("--poll-s", type=float, default=0.1)
     parser.add_argument("--report-dir", default=None,
@@ -729,8 +732,18 @@ def main() -> int:
     args = build_parser().parse_args()
     root = Path(args.root).resolve() if args.root else TOOLS.parent
     try:
-        report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")), root, poll_s=args.poll_s, report_dir=args.report_dir)
-    except (OSError, ValueError, AgentRunError) as exc:
+        if args.expand_report:
+            from learning_os.app.agent_reporting import expand_report
+            if args.plan:
+                raise AgentRunError("choose a plan or --expand-report")
+            print(_json(expand_report(Path(args.expand_report), args.step)))
+            return 0
+        if not args.plan or args.step:
+            raise AgentRunError("a plan is required; --step needs --expand-report")
+        if Path(args.plan).stat().st_size > 1048576:
+            raise AgentRunError("plan input exceeds 1 MiB")
+        report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8"), parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
+    except (OSError, ValueError, KeyError, TypeError, AgentRunError) as exc:
         print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))
         return 2

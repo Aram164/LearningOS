@@ -59,6 +59,12 @@ class _LazyRepo:
     def _resolve(self):
         if self._lazy_repo is None:
             self._lazy_repo = load_repo(self._lazy_root)
+            from learning_os.app.read_session import current_session
+
+            session = current_session(self._lazy_root)
+            if session is not None:
+                session.loads += 1
+                session.model = self._lazy_repo
         return self._lazy_repo
 
     @property
@@ -130,6 +136,11 @@ def fresh_manifest_and_repo(
     and every other read answers from payload keys the check already
     verified.
     """
+    from learning_os.app.read_session import current_session
+
+    session = current_session(root)
+    if session is not None and session.manifest is not None and not restamp:
+        return session.manifest, session.model
     # Every projection read takes the operator lock shared: concurrent
     # current-manifest reads proceed together, and acquisition still runs
     # crash recovery first (escalating when a journal awaits it), so

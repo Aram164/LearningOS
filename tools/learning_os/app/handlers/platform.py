@@ -339,7 +339,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("project.inspect", kind="query")
+@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest")
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):
@@ -1131,3 +1131,13 @@ def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
 
 
     )
+
+
+@register("projection.observe", kind="query")
+def projection_observe(ctx: OpContext, req: dict) -> Result:
+    """Verify Core facts for receipt completion and current projection settlement."""
+    from learning_os.app.projection_readiness import settlement_ready
+
+    confirmation = req["confirmation"]
+    return Result(payload=settlement_ready(
+        ctx.root, confirmation["receipt_path"], confirmation["snapshot_after"]))

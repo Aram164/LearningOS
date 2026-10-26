@@ -1,6 +1,7 @@
 """Runner contracts, with real CLI/gateway writes on ordinary fixtures."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -38,7 +39,7 @@ def _published(root, stamp):
     gen = root / "generated"
     gen.mkdir(exist_ok=True)
     (gen / "manifest.json").write_text(json.dumps({"_generated": {"snapshot_id": stamp}}))
-    (gen / "manifest.identity.json").write_text(json.dumps({"snapshot_id": stamp}))
+    (gen / "manifest.identity.json").write_text(json.dumps({"snapshot_id": stamp, "manifest_sha256": "sha256:" + hashlib.sha256((gen / "manifest.json").read_bytes()).hexdigest()}))
 
 
 def _receipt(root, name="w", snapshot="sha256:abc", create=True):
@@ -317,7 +318,7 @@ def test_cluster_byte_cap_preserves_counts_and_expansion(tmp_path):
         "member_count": 107, "sample_goal_ids": ["g1", "g2"]}],
         "total_groups": 9, "total_goals": 200, "omitted_groups": 8, "omitted_goals": 93,
         "full_result": "intelligence-scan --json"}
-    report = _run({"steps": [{"id": "q", "use": "inspect", "clusters": True,
+    report = _run({"steps": [{"id": "q", "clusters": True,
         "argv": ["intelligence-scan", "--brief", "--json"], "summary": {"max_bytes": 260}}]},
         tmp_path, executor=lambda *a: (0, json.dumps(scan), ""), index=INDEX)
     row = report["steps"][0]
@@ -543,3 +544,127 @@ def test_flag_like_log_values_are_passed_as_values(mini_repo):
         {"id": "log", "kind": "log", "text": "flag-like values", "key": "flag-like-values"},
     ]}, mini_repo)
     assert report["steps"][0]["status"] == "ok", report
+
+
+def test_takeover_whole_report_cap_is_always_enforced(tmp_path):
+    report = _run({'report_max_bytes': 4096, 'steps': [
+        {'id': str(i), 'argv': ['inspect'], 'summary': {'max_bytes': 1500}}
+        for i in range(10)]}, tmp_path, index=INDEX,
+        executor=lambda *_: (0, json.dumps({'value': 'x' * 1200}), 'notice'))
+    assert len((agent_run._json(report) + '\n').encode()) <= 4096
+    full = Path(report['full_report'])
+    assert full.is_file()
+    assert len(json.loads(full.read_text())['steps']) == 10
+    from learning_os.app.agent_reporting import expand_report
+    expanded = expand_report(full)
+    assert len(expanded['steps']) == 10
+    assert all(r['raw']['stderr'] == 'notice' for r in expanded['steps'])
+    assert expanded['steps'][0]['raw']['stdout'] == json.dumps({'value': 'x' * 1200})
+    (full.parent / 'raw-steps.jsonl').write_bytes(b'{}\n')
+    with pytest.raises((ValueError, KeyError)):
+        expand_report(full)
+
+
+def test_takeover_late_bad_arguments_refuse_before_any_write(tmp_path):
+    calls = []
+    report = _run({'steps': [
+        {'id': 'write', 'kind': 'log', 'text': 'must not execute', 'key': 'stable-key'},
+        {'id': 'invalid', 'use': 'does-not-exist'}]}, tmp_path, index=INDEX,
+        executor=lambda *args: calls.append(args))
+    assert calls == []
+    assert report['steps'][1]['status'] == 'error'
+
+
+def test_takeover_parallel_reads_do_not_cross_write_barrier(tmp_path):
+    calls = []
+    def executor(argv, root):
+        calls.append(argv[0])
+        return 0, '{"value":1}', ''
+    _run({'read_workers': 2, 'steps': [
+        {'id': 'a', 'argv': ['inspect']},
+        {'id': 'w', 'argv': ['capture'], 'write': True},
+        {'id': 'b', 'argv': ['bootstrap']}]}, tmp_path, index=INDEX, executor=executor)
+    assert calls == ['inspect', 'capture', 'bootstrap']
+
+
+def test_takeover_global_deadline_bounds_readiness(tmp_path):
+    import time
+    result = _receipt(tmp_path)
+    _published(tmp_path, 'sha256:other')
+    calls = []
+    def executor(argv, root):
+        calls.append(argv[0])
+        return 0, json.dumps(result), ''
+    started = time.monotonic()
+    report = _run({'deadline_s': 0.04, 'steps': [
+        {'id': 'w', 'argv': ['capture'], 'write': True},
+        {'id': 'r', 'argv': ['inspect'], 'depends_on': ['w'], 'ready_timeout_s': 5}]},
+        tmp_path, index=INDEX, executor=executor, poll_s=0.005)
+    assert time.monotonic() - started < 1
+    assert report['steps'][1]['status'] == 'deadline'
+    assert calls == ['capture']
+
+
+def test_takeover_real_process_wave_and_write_barrier(mini_repo):
+    report = _run({'read_workers': 2, 'steps': [
+        {'id': 'a', 'argv': ['inspect', 'note-demo']},
+        {'id': 'b', 'argv': ['bootstrap', '--brief']},
+        {'id': 'w', 'kind': 'log', 'text': 'worker barrier', 'key': 'worker-barrier'},
+        {'id': 'after', 'argv': ['inspect', 'note-demo'], 'depends_on': ['w']}]}, mini_repo)
+    assert report['totals']['ok'] == 4, report
+    assert report['totals']['process_count'] == 4  # runner + two persistent workers + sealer
+    assert report['steps'][2]['commit_certainty'] == 'committed'
+
+
+def test_takeover_read_epoch_reuses_model_and_detects_authored_change(mini_repo):
+    from learning_os.app.read_session import ReadSession
+    session = ReadSession(mini_repo)
+    session.put(('inspect', 'note-demo'), {'value': 'old'})
+    note = mini_repo / 'knowledge/notes/mathematics/note-demo.md'
+    note.write_text(note.read_text() + '\nChanged authored content.\n')
+    assert session.get(('inspect', 'note-demo')) is None
+    report = _run({'steps': [
+        {'id': 'a', 'argv': ['inspect', 'note-demo']},
+        {'id': 'b', 'argv': ['inspect', 'note-demo']}]}, mini_repo)
+    assert report['totals']['ok'] == 2, report
+    assert report['totals']['memo_hits'] == 1
+    assert report['totals']['model_loads'] <= 1
+
+
+def test_takeover_report_schema_and_missing_fields_survive_cap(tmp_path):
+    from jsonschema import Draft202012Validator
+    report = _run({'report_max_bytes': 2048, 'steps': [
+        {'id': 'a', 'argv': ['inspect'], 'summary': {'fields': ['missing'], 'max_bytes': 1000}}]},
+        tmp_path, index=INDEX, executor=lambda *_: (0, '{}', ''))
+    schema = json.loads((ROOT / 'system/contracts/agent-plan-report.schema.json').read_text())
+    Draft202012Validator(schema).validate(report)
+    assert report['steps'][0]['output']['_missing_fields'] == ['missing']
+
+
+def test_takeover_typed_preflight_keeps_error_severity(mini_repo, monkeypatch):
+    from learning_os.app import validation_service
+    from learning_os.domain.validation import Issue
+    monkeypatch.setattr(validation_service, 'status_issues',
+                        lambda *a, **k: [Issue('E', 'SYNTHETIC', 'blocked', 'unrelated.yaml')])
+    report = validation_service.diagnostic_report(mini_repo)
+    assert report['trustworthy'] is True and report['ok'] is False
+    assert report['errors'][0]['path'] == 'unrelated.yaml'
+
+
+def test_artifact_failure_preserves_commit_and_blocks_later_writes(tmp_path, monkeypatch):
+    from learning_os.app.agent_reporting import ReportStore
+    result = _receipt(tmp_path)
+    calls = []
+    def execute(argv, root):
+        calls.append(argv[0])
+        return 0, json.dumps(result), ''
+    monkeypatch.setattr(ReportStore, 'record', lambda *_: (_ for _ in ()).throw(OSError('disk full')))
+    report = _run({'on_error': 'continue', 'steps': [
+        {'id': 'first', 'argv': ['capture'], 'write': True},
+        {'id': 'later', 'argv': ['capture'], 'write': True}]},
+        tmp_path, index=INDEX, executor=execute)
+    assert calls == ['capture']
+    assert report['steps'][0]['commit_certainty'] == 'committed'
+    assert report['steps'][0]['receipt']['receipt_path'] == result['receipt_path']
+    assert report['steps'][0]['error']['code'] == 'ARTIFACT_FAILED'
+    assert report['steps'][1]['status'] == 'error'  # record of the refusal also fails

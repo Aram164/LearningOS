@@ -241,7 +241,7 @@ findings:
   hosted_ci_status: pending
   installed_status: not-installed
 - id: R51
-  note: 'projection.observe CLI verb deferred pending A11 surface approval; shared service in app/projection_readiness.py is runner-adopted and UI settlement keeps its existing gateway path'
+  note: 'projection.observe is approved under the authorized D07 plan and registered in the generated CLI; agent dependencies and UI recovery call the shared authority service with distinct policies'
   source: '#51'
   root_cause: dependency readiness weak
   owner: projection readiness service

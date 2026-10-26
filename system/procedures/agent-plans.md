@@ -47,3 +47,16 @@ schema=2 ok=2/2
 ```scrut
 $ $H/los-assert-receipt --last --capability capture.create
 ```
+
+The default worker count is one. Opt in to two through four workers only for
+measured workloads; process startup can dominate small plans. Read waves stop at
+every write or unknown-effect operation. `deadline_s` stops admission and
+cancellable reads, while an admitted commit is allowed to finish.
+
+`report_max_bytes` caps the entire stdout report. The `full_report` pointer
+leads to a private report outside canonical data, with the approved plan, sealed
+envelopes, and append-only raw/status journals. Evidence is synced after every
+write, uncertainty or error and at finalization. Expand a finalized report with
+`tools/agent_run.py --expand-report PATH --step STEP_ID`; expansion verifies
+the report and raw-output digests. A checkpoint after storage failure is partial
+evidence and cannot be represented as a finalized report.

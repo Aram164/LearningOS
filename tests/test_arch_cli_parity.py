@@ -31,7 +31,7 @@ def test_cli_operations_lists_every_cli_primary():
     data = yaml.safe_load(CLI_OPS_PATH.read_text(encoding="utf-8"))
     assert data.get("schema") == 1
     operations = data.get("operations", {})
-    assert len(operations) == 41, len(operations)
+    assert len(operations) == 42, len(operations)
     for name, entry in sorted(operations.items()):
         command = entry.get("cli_command")
         assert isinstance(command, str) and command, name
