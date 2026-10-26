@@ -78,4 +78,6 @@ cases:
       detour_id: detour-nope
     artifact_ids: []
     expect: {site: detour.resolve.no-study-map}
-untriggered: []
+untriggered:
+  - site: detour.resolve.unknown-stage
+    reason: fixture-inexpressible

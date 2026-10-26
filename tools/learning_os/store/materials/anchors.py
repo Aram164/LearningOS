@@ -275,6 +275,25 @@ class AnchorReader:
             raise AnchorError("quote page is outside this file's locator span")
         return "\n".join(self._page(snapshot, number) for number in pages)
 
+    def candidate_excerpt(self, file: ResolvedMaterialFile, locator: str) -> dict[str, object] | None:
+        """An unadmitted, bounded hint from the exact registered page/window."""
+        snapshot = self.snapshot(file)
+        if snapshot.path.suffix.casefold() == ".pdf":
+            ranges = parse_locator_page_ranges(locator)
+            if not ranges:
+                return None
+            page = ranges[0][0]
+            return {"text": self._page(snapshot, page)[:200], "page": page}
+        transcript = parse_transcript(snapshot.content)
+        times = _LOCATOR_TIME.findall(locator)
+        if not times:
+            return None
+        start = seconds(times[0])
+        for time, text in transcript.windows:
+            if time <= start < time + transcript.grid:
+                return {"text": text[:200], "window": f"{time // 60:02d}:{time % 60:02d}-{(time + transcript.grid) // 60:02d}:{(time + transcript.grid) % 60:02d}"}
+        return None
+
     def verify_quote(self, route: RouteMaterial, quote: Quote,
                      previous: RouteMaterial | None = None) -> AnchorProof:
         file = self._quote_file(route, quote, previous)

@@ -88,6 +88,7 @@ rule as current, which is indistinguishable from the rule being wrong.
 - **E** Every note `sources` entry resolves in the source registry.
 - **E** Every relation `from`/`to` resolves; endpoints are distinct.
 - **E** Every `supersedes` / `replaced_by` target resolves.
+- **E** A question's `atlas_question.answer_notes` resolve to other existing notes; self references are refused.
 - **E** Workspace IDs cited in COORDINATION.md dependencies resolve to active workspaces.
 - **E** Evidence refs use a valid URI scheme (`note://`, `source://`, `concept://`, `workspace://`, `material://`, `project://`, `github://`, or https URL).
 - **W** `material://` or `project://` URI does not resolve on disk (reported, not fatal — media may be offline).

@@ -1882,3 +1882,10 @@ def test_prepare_review_envelope_seals_active_gateway_channel_or_operator():
             "note.revise", {"test": True}, "sha256:" + "0" * 64, {},
         )
         assert inside["channel"] == "ui"
+
+
+def test_overnight_review_envelope_retains_named_session(monkeypatch):
+    monkeypatch.setenv("LOS_SESSION_ID", "overnight-session")
+    envelope = prepare_review_envelope("unit.plan.revise", {}, "sha256:" + "0" * 64, {})
+    assert envelope["session_id"] == "overnight-session"
+    assert envelope["approval"]["subject_sha256"] == intent_sha256(envelope)

@@ -141,8 +141,8 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
     """Unfilled review drafts: identities and scope hints never stand in for evidence."""
     owned = {**_owned(previous_repo.module_source_maps.get(module_id) if previous_repo else None),
              **_owned(repo.module_source_maps.get(module_id))}
-    revisions = load_revisions(root)
     result: dict[str, dict[str, object]] = {}
+    reader = AnchorReader(repo, read_material_manifest(root))
     for cid in sorted(set(claim_ids)):
         item = owned.get(cid.removeprefix("covers:")) if cid.startswith("covers:") else None
         if item is None:
@@ -163,6 +163,12 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
             scopes.append({"ref": file.material_uri, "locator": locator,
                            "page_ranges": [list(span) for span in ranges]})
             if file.path.suffix.lower() in {".pdf", ".md", ".txt"}:
+                try:
+                    candidate = reader.candidate_excerpt(file, locator)
+                except (AnchorError, OSError, UnicodeError, ValueError):
+                    candidate = None
+                if candidate and candidate.get("text"):
+                    scopes[-1]["candidate_excerpt"] = candidate
                 quote: dict[str, object] = {"kind": "quote", "ref": file.material_uri, "text": ""}
                 if file.path.suffix.lower() == ".pdf":
                     quote["page"] = ranges[0][0] if ranges else None
@@ -174,10 +180,9 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
                                  "note": ""})
         if not files and str(row.get("url") or "").startswith(("https://", "http://")):
             evidence.append({"kind": "external", "ref": row["url"], "note": ""})
-        owners = {module_id, str(row.get("unit_id") or ""), LINEAGE_ARTIFACT}
         result[cid] = {
             "claim_evidence": [{"claim_id": cid, "evidence": evidence,
-                                "reads": {key: value for key, value in sorted(revisions.items()) if key in owners}}],
+                                "reads": {}}],
             "material_scope": scopes,
             "instruction": ("Resolve the reported file/locator mismatch before drafting evidence; this draft is not admitted evidence."
                             if any("scope_error" in scope for scope in scopes) else
@@ -429,7 +434,7 @@ def render_claim_lineage(root: Path, repo: Repo, module_id: str, package: Mappin
     nodes: dict[str, Mapping[str, object]] = {}
     for unit in repo.units.values():
         nodes.update(knowledge_node_rows(unit.data))
-    incremented = {module_id}
+    incremented = {module_id, LINEAGE_ARTIFACT}
     units = package.get("units")
     for entry in units if isinstance(units, list) else ():
         data: object = entry.get("unit") if isinstance(entry, dict) else None
@@ -467,10 +472,10 @@ def render_claim_lineage(root: Path, repo: Repo, module_id: str, package: Mappin
                     records[lineage.claim_id] = lineage
     for unit_id, dossier in synthesis_entries:
         content = dump_yaml(dict(dossier))
-        path = synthesis_destination(root, unit_id)
+        path = synthesis_destination(root, unit_id, repo=repo)
         if path.is_file() and path.read_bytes() == content.encode("utf-8"):
             continue
         cid = f"dossier:{dossier['id']}"
         records[cid] = publication_lineage_record(root, unit_id, dict(dossier), content, request,
-                                                  prior=records.get(cid))
+                                                  prior=records.get(cid), repo=repo)
     return dump_ledger(records)

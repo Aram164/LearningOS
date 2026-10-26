@@ -143,7 +143,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.plan.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"module_id\": \"module-demo\",\n    \"units_written\": [\n      \"unit-demo-l01\"\n    ],\n    \"files_written\": 1,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"module-demo\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"unit.plan.revise\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"module_id\":\"module-demo\",\"units_written\":[\"unit-demo-l01\"],\"files_written\":1,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"module-demo\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "unit.plan.revise",
         "error": null,
@@ -254,7 +254,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.plan.revise\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"module-demo\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"unit.plan.revise\",\"ok\":true,\"replayed\":true,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"module-demo\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":true},\"error\":null}\n",
       "stdout_json": {
         "capability": "unit.plan.revise",
         "error": null,

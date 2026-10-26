@@ -144,7 +144,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"capture.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"captured\":\"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"capture-request:KEY2\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "capture.create",
         "error": null,
@@ -255,7 +255,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\"\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"capture.create\",\"ok\":true,\"replayed\":true,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"capture-request:KEY2\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":true,\"captured\":\"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\"},\"error\":null}\n",
       "stdout_json": {
         "capability": "capture.create",
         "error": null,

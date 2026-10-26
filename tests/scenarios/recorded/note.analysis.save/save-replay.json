@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"replayed\": true,\n    \"note_id\": \"note-demo-analysis\",\n    \"note_path\": \"knowledge/notes/mathematics/note-demo-analysis.md\"\n  },\n  \"error\": null\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"note.analysis.save\",\"ok\":true,\"replayed\":true,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"replayed\":true,\"note_id\":\"note-demo-analysis\",\"note_path\":\"knowledge/notes/mathematics/note-demo-analysis.md\"},\"error\":null}\n",
   "stdout_json": {
     "capability": "note.analysis.save",
     "error": null,

@@ -139,7 +139,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"garden.seed.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"seed_path\": \"knowledge/garden/same-title.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"garden-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"garden.seed.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"seed_path\":\"knowledge/garden/same-title.md\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"garden-request:KEY2\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "garden.seed.create",
         "error": null,
@@ -383,7 +383,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"garden.seed.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"seed_path\": \"knowledge/garden/same-title-2.md\",\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"garden-request:KEY4\": 1\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"garden.seed.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX2\",\"receipt_path\":\"operations/transactions/TX2.yaml\",\"snapshot_after\":\"SNAP2\",\"result\":{\"ok\":true,\"seed_path\":\"knowledge/garden/same-title-2.md\",\"transaction_id\":\"TX2\",\"receipt_path\":\"operations/transactions/TX2.yaml\",\"artifact_revisions\":{\"garden-request:KEY4\":1},\"snapshot_after\":\"SNAP2\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "garden.seed.create",
         "error": null,

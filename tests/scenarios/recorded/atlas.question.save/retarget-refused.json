@@ -139,7 +139,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"atlas.question.save\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"note_id\": \"note-demo-seq-1\",\n    \"note_path\": \"knowledge/notes/questions/note-demo-seq-1.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"note-demo-seq-1\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"atlas.question.save\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"note_id\":\"note-demo-seq-1\",\"note_path\":\"knowledge/notes/questions/note-demo-seq-1.md\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"note-demo-seq-1\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "atlas.question.save",
         "error": null,
@@ -246,7 +246,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"atlas.question.save\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"the original question target is preserved\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"atlas.question.save\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"the original question target is preserved\",\"retryable\":false,\"details\":{}}}\n",
       "stdout_json": {
         "capability": "atlas.question.save",
         "error": {

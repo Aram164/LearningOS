@@ -847,7 +847,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             error=error_object(INVALID_REQUEST, str(exc), retryable=False),
         )
         _validate_capability_envelope(root, response, kind="result")
-        stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+        stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
         return _finish(attempt, 2, "error", {"stage": "core.admission"},
                        stdout=stdout, stderr=stderr, response=response)
     attempt.event(diag_conventions.EVENT_ENVELOPE_VALIDATED,
@@ -866,7 +866,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.admission"},
                            stdout=stdout, stderr=stderr, response=response)
         _audit_direct_refused(envelope.get("capability"), 2)
@@ -889,7 +889,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.admission"},
                            stdout=stdout, stderr=stderr, response=response)
         _audit_direct_refused(envelope.get("capability"), 2)
@@ -917,7 +917,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 error=error_object(UNCONFIRMED, str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.approval"},
                            stdout=stdout, stderr=stderr, response=response)
         if context.approval_kind == "direct-user-gesture" \
@@ -940,7 +940,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.approval"},
                            stdout=stdout, stderr=stderr, response=response)
         attempt.event(diag_conventions.EVENT_APPROVAL_PASSED)
@@ -972,7 +972,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         error=error_object(IDEMPOTENCY_CONFLICT, str(exc), retryable=False),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
                                   status="error", attrs={"outcome": "conflict"})
                     return _finish(attempt, 2, "error", {"stage": "core.replay"},
@@ -990,7 +990,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         error=error_object(INTERNAL_FAILURE, str(exc), retryable=False),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
                                   status="error", attrs={"outcome": "evidence-error"})
                     return _finish(attempt, 2, "error", {"stage": "core.replay"},
@@ -1020,7 +1020,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         ),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
                                   status="error", attrs={"outcome": "recovery-conflict"})
                     return _finish(attempt, 2, "error", {"stage": "core.replay"},
@@ -1033,7 +1033,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         error=error_object(INTERNAL_FAILURE, str(exc), retryable=True),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
                                   status="error", attrs={"outcome": "lookup-failed"})
                     return _finish(attempt, 2, "error", {"stage": "core.replay"},
@@ -1044,7 +1044,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 # committed receipt; replay-only without one is unconfirmed; a miss
                 # falls through to fresh dispatch below.
                 if replay is not None:
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     return _finish(attempt, 0, "ok", {"replayed": True},
                                    stdout=stdout, stderr=stderr, response=response)
                 if replay_only:
@@ -1063,7 +1063,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         ),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     return _finish(attempt, 2, "error", {"stage": "core.replay"},
                                    stdout=stdout, stderr=stderr, response=response)
                 actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
@@ -1083,7 +1083,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         ),
                     )
                     _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
                     return _finish(
                         attempt, 3, "error", {"stage": "core.snapshot_guard"},
                         stdout=stdout, stderr=stderr, response=response)
@@ -1124,7 +1124,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(
                 attempt, 3, "error", {"stage": "core.snapshot_guard"},
                 stdout=stdout, stderr=stderr, response=response)
@@ -1136,7 +1136,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 error=_projection_error(exc),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(
                 attempt, 2, "error", {"stage": "core.projection"},
                 stdout=stdout, stderr=stderr, response=response)
@@ -1153,7 +1153,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 error=_publication_error(exc),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(
                 attempt, 2, "error", {"stage": "core.receipt"},
                 stdout=stdout, stderr=stderr, response=response,
@@ -1169,7 +1169,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 error=_post_commit_error(exc),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(
                 attempt, 2, "error", {"stage": "core.commit"},
                 stdout=stdout, stderr=stderr, response=response)
@@ -1198,7 +1198,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             return _finish(attempt, 2, "error", {"code": INTERNAL_FAILURE},
                            stdout=stdout, stderr=stderr, response=response)
         except TransactionFailure as exc:
@@ -1219,7 +1219,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
             # The precise stage is already on record: the transaction span
             # names the boundary that broke; this close carries the outcome.
             return _finish(attempt, 2, "error", {"code": INTERNAL_FAILURE},
@@ -1245,7 +1245,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             error=error,
         )
         _validate_capability_envelope(root, response, kind="result")
-        stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+        stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
         # A carried (INTERNAL_FAILURE, True) pair is exactly the
         # TransactionRollbackIncomplete refusal row: no WriteRefused carries
         # it, and it is the row's only producer. The commit outcome is

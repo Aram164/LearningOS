@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"source.record.revise\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"{\\\"ok\\\": false, \\\"error\\\": \\\"source-demo-book: 'material' must be a non-empty string\\\"}\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"source.record.revise\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"{\\\"ok\\\": false, \\\"error\\\": \\\"source-demo-book: 'material' must be a non-empty string\\\"}\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "source.record.revise",
     "error": {

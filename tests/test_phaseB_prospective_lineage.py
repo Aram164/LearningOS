@@ -877,3 +877,25 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
     withdrawn = _load_ledger(mini_repo)["covers:route-demo-rich"]
     assert withdrawn.status == "withdrawn"
     assert withdrawn.supersedes["statement"] == record.statement
+
+
+def test_overnight_scaffolds_do_not_pin_coarse_owners(tmp_path):
+    from learning_os.app.claim_admission import LINEAGE_ARTIFACT, claim_evidence_scaffolds
+    root = _root_with_revisions(tmp_path, {**REVS, LINEAGE_ARTIFACT: 4})
+    scaffold = claim_evidence_scaffolds(root, _repo(LIVE), "module-demo", ["covers:route-keep"])
+    assert scaffold["covers:route-keep"]["claim_evidence"][0]["reads"] == {}
+
+
+def test_overnight_explicit_lineage_read_is_stamped_after_its_commit(tmp_path):
+    from learning_os.app.claim_admission import LINEAGE_ARTIFACT
+    revisions = {**REVS, LINEAGE_ARTIFACT: 4}
+    root = _root_with_revisions(tmp_path, revisions)
+    package = _package(_map(_route("route-keep", ["n1", "n3"])),
+                       _evidence_for("covers:route-keep", reads={LINEAGE_ARTIFACT: 4}))
+    problems, changed, evidence, live = _phaseB_validate(root, _repo(LIVE), "module-demo", package)
+    assert not problems
+    with gateway_request_context(_request()):
+        text = _phaseB_ledger_text(root, _repo(LIVE), "module-demo", package, changed, evidence, live)
+    ledger = root / "operations/transactions/lineage.yaml"
+    ledger.write_text(text)
+    assert yaml.safe_load(text)["records"]["covers:route-keep"]["derived_from"]["revisions"][LINEAGE_ARTIFACT] == 5

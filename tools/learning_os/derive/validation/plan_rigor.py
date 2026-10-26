@@ -255,13 +255,14 @@ class ChecksPlanRigor:
     def _routes_by_id(self) -> dict[str, dict]:
         """Every rich route in the repository, by stable id."""
         index: dict[str, dict] = {}
-        for source_map in self.repo.module_source_maps.values():
+        for module_id, source_map in self.repo.module_source_maps.items():
             for entry in source_map.get("sources", []) or []:
                 if not isinstance(entry, dict):
                     continue
                 for route in entry.get("unit_routes", []) or []:
-                    if isinstance(route, dict) and isinstance(route.get("id"), str):
-                        index[route["id"]] = {**route, "source_id": entry.get("source_id")}
+                    if isinstance(route, dict):
+                        identified = route_with_identity(module_id, str(entry.get("source_id") or ""), route)
+                        index[str(identified["id"])] = {**identified, "source_id": entry.get("source_id")}
         return index
 
 
@@ -342,7 +343,8 @@ class ChecksPlanRigor:
 
 
     def _check_row_angle(self, smid: str, stage: dict, resource: dict,
-                         routes: dict[str, dict], where: str) -> None:
+                         routes: dict[str, dict], where: str, *,
+                         material_route_id: str | None = None) -> None:
         """A stage row's angle against the route it claims to place.
 
         The angle a learner reads at session time lives on the row, not on the
@@ -361,7 +363,7 @@ class ChecksPlanRigor:
         justifies the difference — comes after that triage.
         """
         angle = str(resource.get("angle") or "").strip()
-        route_id = resource.get("route_id")
+        route_id = material_route_id or resource.get("route_id")
         if not isinstance(route_id, str):
             ref = resource.get("material_ref")
             route_id = ref.get("route_id") if isinstance(ref, dict) else None
@@ -451,7 +453,8 @@ class ChecksPlanRigor:
         return None
 
     def _check_row_node(self, smid: str, stage: dict, node_id: str,
-                        resource: dict, routes: dict[str, dict], where: str) -> None:
+                        resource: dict, routes: dict[str, dict], where: str, *,
+                        material_route_id: str | None = None) -> None:
         """A placed route against the node of the stage it sits on.
 
         A warning, not an error: the placement may be deliberate scaffolding
@@ -460,7 +463,7 @@ class ChecksPlanRigor:
         records that call and silences the warning; anything else must move
         or gain covers.
         """
-        route_id = resource.get("route_id")
+        route_id = material_route_id or resource.get("route_id")
         if not isinstance(route_id, str):
             ref = resource.get("material_ref")
             route_id = ref.get("route_id") if isinstance(ref, dict) else None
@@ -661,7 +664,8 @@ class ChecksPlanRigor:
                 for index, resource in enumerate(stage.get("resources", []) or []):
                     if not isinstance(resource, dict):
                         continue
-                    self._check_row_angle(smid, stage, resource, routes, where)
+                    self._check_row_angle(smid, stage, resource, routes, where,
+                                          material_route_id=authored_routes.get((stage_id, index)))
                     if scope_for is not None:
                         self._check_row_scope(
                             smid, stage, resource, scope_for, where,
@@ -669,7 +673,8 @@ class ChecksPlanRigor:
                             material_route_id=authored_routes.get((stage_id, index)),
                         )
                     if node_id is not None:
-                        self._check_row_node(smid, stage, node_id, resource, routes, where)
+                        self._check_row_node(smid, stage, node_id, resource, routes, where,
+                                             material_route_id=authored_routes.get((stage_id, index)))
                     locator = str(resource.get("locator") or "")
                     if _looks_fused(locator):
                         self.err(
@@ -679,4 +684,4 @@ class ChecksPlanRigor:
                             f"tools/assemble_lecture_study_maps.py",
                             where,
                         )
-                        return
+                        continue

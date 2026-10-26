@@ -755,3 +755,20 @@ def test_cli_snapshot_mismatch_still_refuses(tmp_path: Path):
         tmp_path, "gradient", expected_snapshot="sha256:" + "0" * 64)
     assert code == 3
     assert "snapshot" in err
+
+
+def test_overnight_failed_index_and_empty_search_hint_reuse_admitted_bytes(mini_repo, monkeypatch):
+    from types import SimpleNamespace
+    original = notes_module._note_bytes
+    reads = []
+    def counted(root, note):
+        reads.append(note.id)
+        return original(root, note)
+    def failed(*args, **kwargs):
+        raise DerivedError("unavailable accelerator")
+    monkeypatch.setattr(notes_module, "_note_bytes", counted)
+    monkeypatch.setattr(notes_module, "evaluate", failed)
+    ctx = SimpleNamespace(root=mini_repo)
+    result = notes_module._content_search(ctx, {"offset": 0, "limit": 20, "type": "note", "query": "absent-zqx"})
+    assert result.payload["items"] == []
+    assert reads and len(reads) == len(set(reads))

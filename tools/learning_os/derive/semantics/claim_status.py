@@ -65,6 +65,7 @@ class ClaimStatus:
     moved: tuple[str, ...] = ()
     unit_id: str = ""
     audit: str = "unaudited"
+    blocked_by: tuple[str, ...] = ()
 
     @property
     def goal_id(self) -> str:
@@ -127,7 +128,7 @@ def interpret_claims(records: Mapping[str, ClaimLineage], revisions: Mapping[str
                  "audited" if (cid, basis) in certified else "unaudited")
         occurrence = _digest(dependency_facts(cid)) if verdict.status == "stale" else basis
         out[cid] = ClaimStatus(cid, verdict.status, basis, occurrence, tuple(sorted(causes)),
-                               moved, (units or {}).get(cid, ""), audit)
+                               moved, (units or {}).get(cid, ""), audit, tuple(verdict.blocked_by))
     return out
 
 
@@ -256,9 +257,9 @@ def live_evidence_digest(root: Path, key: str, manifest_files: Mapping[str, obje
             repo = load_repo(root) if repo is None else repo
             cache: dict[Path, str] = {}
             basis = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
-            value = read_optional_yaml(synthesis_destination(root, unit_id))
+            value = read_optional_yaml(synthesis_destination(root, unit_id, repo=repo))
             if not isinstance(value, dict) or material_synthesis_freshness(
-                    root, unit_id, value, repo=repo, cache=cache)["status"] != "current":
+                    root, unit_id, value, repo=repo, cache=cache, current_basis=basis)["status"] != "current":
                 return None
             return material_basis_checksum(basis)
         except (MaterialSynthesisError, OSError, ValueError):

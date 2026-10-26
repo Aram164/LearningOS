@@ -533,3 +533,15 @@ def test_basic_claim_evidence_never_reads_optional_audit_storage(mini_repo, monk
     states = observe_claims(mini_repo)
     assert len(states) == 30
     assert all(row.status == "supported" and row.audit == "unavailable" for row in states.values())
+
+
+def test_overnight_goals_separate_evidence_drift_from_blocked_claims():
+    parent = claim("covers:route-root", source_hashes={"route-content:route-root": "old"})
+    child = record_claim(claim_id="dossier:unit-demo", claim_kind="dossier-freshness", statement="review",
+        judged_by="test", admitted_by={"request_id": "request-test", "idempotency_key": "key-test"},
+        source_hashes={"file:work/a.md": "old"}, assumes=[parent.claim_id])
+    row = interpret_claims({parent.claim_id: parent, child.claim_id: child}, {},
+                          {"route-content:route-root": "new", "file:work/a.md": "new"})[child.claim_id]
+    [goal] = detect_claim_findings(claims=[row])
+    assert "cause:evidence:file:work/a.md" in goal.evidence
+    assert "cause:evidence:covers:route-root" not in goal.evidence

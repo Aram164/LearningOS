@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY1\",\n  \"capability\": \"capture.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"invalid capability envelope: {'capability': 'capture.create', 'schema_version': 2} is not valid under any of the given schemas\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY1\",\"capability\":\"capture.create\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"invalid capability envelope: {'capability': 'capture.create', 'schema_version': 2} is not valid under any of the given schemas\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "capture.create",
     "error": {

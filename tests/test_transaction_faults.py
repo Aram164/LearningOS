@@ -889,3 +889,10 @@ def test_damaged_journal_after_uncertainty_keeps_recovery_proof(
 
     assert target.read_bytes() == b"forward\n"
     assert journal.is_dir(), "damaged recovery evidence is preserved, not cleaned"
+
+
+def test_overnight_delete_rows_do_not_impose_created_directory_contiguity(tmp_path):
+    intent = {"paths": [
+        {"path": "A/B/new.yaml", "before": {"kind": "absent"}, "after": {"kind": "file"}},
+        {"path": "A/B/C/old.yaml", "before": {"kind": "absent"}, "after": {"kind": "absent"}}]}
+    transaction_module._bind_created_directories(tmp_path, tmp_path / "tx", intent, ["A/B", "A"])

@@ -174,7 +174,8 @@ def detect_claim_findings(*, claims: Sequence[ClaimStatus],
                 cause = ["cause:contract-version"]
             elif "evidence-changed" in row.causes:
                 cause = ["cause:evidence:" + key for key in row.moved
-                         if not key.startswith(("route-content:", "node-content:"))]
+                         if key not in row.blocked_by
+                         and not key.startswith(("route-content:", "node-content:"))]
             else:
                 cause = ["cause:unit:" + row.unit_id] if row.unit_id else []
             title = f"Re-judge {row.claim_id}: lineage reads moved"

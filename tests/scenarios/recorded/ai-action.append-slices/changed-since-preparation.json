@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: records changed since request preparation; re-prepare the request instead of continuing it\n",
+  "stderr": "los: Garden target changed after request preparation\n",
   "stdout": "",
   "stdout_json": null
 }

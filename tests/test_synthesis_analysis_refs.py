@@ -431,3 +431,51 @@ def test_referenced_material_outside_route_basis_binds_continuation(mini_repo):
     fresh = _context(mini_repo, "weighted")
     assessment = next(row for row in fresh["items"] if row["origin"] == "unit-assessment")
     assert assessment["freshness"] == {"status": "stale", "reasons": [ANALYSIS_REFS_STALE]}
+
+
+@pytest.mark.parametrize("body", ["Density without final newline", "\n  Density with leading and trailing whitespace.  \n\n"])
+def test_overnight_frozen_note_frontmatter_edits_preserve_all_body_bytes(mini_repo, tmp_path, body):
+    from gateway_helpers import approved_v2_cli, file_sha256
+    _compact_setup(mini_repo)
+    path = _plant_note(mini_repo, body)
+    revised = tmp_path / "revised.md"
+    revised.write_bytes(path.read_bytes().replace(b"title: Density analysis", b"title: Revised analysis"))
+    proc = approved_v2_cli(mini_repo, "note-revise", NOTE_ID, "--file", str(revised), "--approve",
+        "--file-sha256", file_sha256(revised), artifact_ids=[NOTE_ID], idempotency_key="overnight-revise")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert path.read_bytes() == revised.read_bytes()
+    proc = approved_v2_cli(mini_repo, "note-evidence", NOTE_ID, "derivation", "note://note-demo",
+        artifact_ids=[NOTE_ID], idempotency_key="overnight-evidence")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert path.read_bytes().endswith(body.encode())
+
+
+def test_overnight_supersession_preserves_frozen_predecessor_bytes(mini_repo):
+    from test_note_create import _save
+    _compact_setup(mini_repo)
+    body = "\n  Preserved frozen predecessor.  \n\n"
+    path = _plant_note(mini_repo, body)
+    proc = _save(mini_repo, b"Successor explanation.\n", "overnight-successor",
+                 note={"supersedes": [NOTE_ID]}, artifact_ids=["note-create-demo", NOTE_ID])
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert path.read_bytes().endswith(body.encode())
+
+
+def test_overnight_synthesis_destination_and_digest_reuse_repo_and_basis(mini_repo, monkeypatch):
+    from learning_os.derive import material_synthesis as module
+    from learning_os.derive.semantics.claim_status import live_evidence_digest
+    from learning_os.store.loader import load_repo
+    _seed(mini_repo)
+    repo = load_repo(mini_repo)
+    original_basis = module.current_unit_material_basis
+    calls = []
+    def counted(*args, **kwargs):
+        calls.append(args)
+        return original_basis(*args, **kwargs)
+    def forbidden(_root):
+        raise AssertionError("existing read model must be reused")
+    monkeypatch.setattr(module, "load_repo", forbidden)
+    monkeypatch.setattr(module, "current_unit_material_basis", counted)
+    assert synthesis_destination(mini_repo, "unit-demo-l01", repo=repo).is_file()
+    assert live_evidence_digest(mini_repo, "material-synthesis-basis:unit-demo-l01", {}, repo=repo)
+    assert len(calls) == 1

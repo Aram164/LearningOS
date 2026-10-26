@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"approved analysis body file changed before use; expected sha256:0000000000000000000000000000000000000000000000000000000000000000, found sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d. Review the new bytes and create a new approval.\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"note.analysis.save\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"approved analysis body file changed before use; expected sha256:0000000000000000000000000000000000000000000000000000000000000000, found sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d. Review the new bytes and create a new approval.\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "note.analysis.save",
     "error": {

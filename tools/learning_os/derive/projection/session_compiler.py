@@ -383,8 +383,7 @@ def _pools(repo: Repo, req: dict, context: dict, eligible: list, status: str,
     preferred, fallback = (("mixed", "intervention") if status == "fragile"
                            else ("intervention", "mixed"))
     intervention = [r for r in eligible if r["affordance"] == preferred]
-    if not intervention:
-        intervention = [r for r in eligible if r["affordance"] == fallback]
+    intervention += [r for r in eligible if r["affordance"] == fallback]
     return intervention, evidence
 
 
@@ -517,7 +516,7 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
             distinct = [[a, b] for a in intervention for b in evidence
                         if a["route_id"] != b["route_id"]]
             candidates = [pair for pair in distinct if not _reveals(repo, *pair)]
-            if not intervention:
+            if not distinct:
                 candidates = [[b] for b in evidence]
             for candidate in candidates:
                 if _fits(candidate, budget, durations):

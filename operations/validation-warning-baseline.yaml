@@ -23,11 +23,18 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-10-25'
-note: Verified campaign corrections bind existing Math2 and AML resource placements;
-  498 RESOURCE-SCOPE-UNBOUND warnings repaired
-total: 964
-distinct_signatures: 32
+note: Correct compact material_ref route binding exposes five existing RESOURCE-NODE-ORPHAN
+  placements in AML/M2 exam maps; retain learner data unchanged, record the two exact
+  signatures for separate pedagogical review.
+total: 969
+distinct_signatures: 34
 signatures:
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  count: 2
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  count: 3
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
   count: 14

@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"source.feedback.record\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: resource not found on stage stage-demo: resource-nope (did you mean: resource-demo-book-appendix?)\\n     known: resource-demo-book-appendix, resource-demo-book-ch01, resource-demo-route-mirror\",\n    \"retryable\": false,\n    \"details\": {\n      \"reason\": \"NOT_FOUND\",\n      \"suggestions\": [\n        \"resource-demo-book-appendix\"\n      ]\n    }\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"source.feedback.record\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: resource not found on stage stage-demo: resource-nope (did you mean: resource-demo-book-appendix?)\\n     known: resource-demo-book-appendix, resource-demo-book-ch01, resource-demo-route-mirror\",\"retryable\":false,\"details\":{\"reason\":\"NOT_FOUND\",\"suggestions\":[\"resource-demo-book-appendix\"]}}}\n",
   "stdout_json": {
     "capability": "source.feedback.record",
     "error": {

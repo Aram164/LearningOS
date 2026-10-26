@@ -3323,6 +3323,37 @@ for _phase4_site in ('lineage.restamp.analysis-failed', 'lineage.restamp.restamp
 for _helper_site in ('module.plan.import.noop-revision', 'module.plan.import.inventory-preflight-failed', 'module.plan.import.source-patch-splice', 'module.plan.import.synthesis-destination', 'module.plan.import.lineage-admission-failed', 'module.plan.import.validation-crash', 'module.plan.import.report-out-failed', 'module.plan.import.promotion-hash-mismatch', 'module.plan.import.promotion-needs-hash', 'module.plan.import.promotion-preflight-failed', 'module.plan.import.promotion-revisions-mismatch', 'module.plan.import.promotion-needs-approval', 'module.plan.import.promotion-needs-snapshot', 'module.plan.import.assembled-contract-failed', 'module.plan.import.reviewed-needs-file', 'unit.plan.revise.module-patch-escape', 'unit.plan.revise.source-patches-nonlist', 'unit.plan.revise.units-nonlist', 'unit.plan.revise.workspace-updates-nonlist', 'unit.plan.revise.ordering-preflight-failed', 'unit.plan.revise.routing-preflight-failed', 'unit.plan.revise.lineage-preflight-failed', 'unit.plan.revise.source-map-foreign', 'unit.plan.revise.source-patch-unknown', 'unit.plan.revise.unit-invalid', 'unit.plan.revise.map-foreign-unit', 'unit.plan.revise.synthesis-unknown-unit', 'unit.plan.revise.workspace-not-joined', 'unit.plan.revise.staged-outside-package', 'unit.plan.revise.validation-preflight-failed', 'unit.plan.revise.inventory-preflight-failed', 'unit.plan.revise.source-patch-splice', 'unit.plan.revise.stage-note-escape', 'unit.plan.revise.synthesis-destination', 'unit.plan.revise.workspace-splice', 'unit.plan.revise.lineage-admission-failed', 'unit.plan.revise.staged-unavailable', 'unit.plan.revise.validation-crash', 'unit.plan.revise.report-out-failed', 'unit.plan.revise.assembled-contract-failed', 'unit.plan.revise.needs-file-or-record'):
     _PROOF_FNS[_helper_site] = _phase4_partial(_prove_helper_plan_backstop, site=_helper_site)
 
+def _prove_overnight_learner_backstops(mini_repo, tmp_path, monkeypatch, *, operation):
+    """Malformed pre-state cannot be created by the governed fixture operations."""
+    import hashlib
+
+    import yaml
+    ctx = _a9_world("stage.attachment.add", "attach-file", tmp_path)
+    path = ctx.root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text())
+    if operation == "stage.attachment.add":
+        data["stages"][0].pop("working_note")
+        file = ctx.root / "work/inbox/note-drop.md"
+        payload = {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                   "file": str(file), "file_sha256": "sha256:" + hashlib.sha256(file.read_bytes()).hexdigest()}
+        suffix, kind = "no-working-note", "WriteRefused"
+    else:
+        data["detours"] = [{"id": "detour-test", "status": "deferred", "return_to_stage": "stage-gone"}]
+        payload = {"unit_id": "unit-demo-l01", "detour_id": "detour-test"}
+        suffix, kind = "unknown-stage", "NotFound"
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    outcome, lines = _a9_run_gateway(ctx.root, operation, payload, [],
+                                    "a9-overnight-" + suffix, tmp_path, monkeypatch)
+    assert not outcome.ok and outcome.exit_code == 2
+    assert len(lines) == 1 and lines[0]["site"] == operation + "." + suffix
+    assert lines[0]["class"] == kind
+
+
+for _overnight_op, _overnight_slug in (("stage.attachment.add", "no-working-note"), ("detour.resolve", "unknown-stage")):
+    _PROOF_FNS[_overnight_op + "." + _overnight_slug] = _phase4_partial(
+        _prove_overnight_learner_backstops, operation=_overnight_op)
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)

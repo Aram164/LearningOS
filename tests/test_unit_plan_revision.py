@@ -1492,3 +1492,54 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
                   {"unit_id": "unit-demo-l01", "record": {},
                    "report_out": "/tmp/check.json"},
                   parser_factory=parser_factory)
+
+
+def test_overnight_legacy_route_update_remove_and_collision():
+    from learning_os.domain.plan_import import (
+        apply_unit_route_changes,
+        source_map_routes_with_source,
+    )
+    from learning_os.domain.route_identity import deterministic_route_id
+    route = {"unit_id": "unit-demo", "title": "Old", "locator": "book.pdf, PDF p. 1"}
+    rid = deterministic_route_id("module-demo", "source-demo", route)
+    original = {"module_id": "module-demo", "sources": [{"source_id": "source-demo", "unit_routes": [route]}]}
+    assert rid in source_map_routes_with_source(original)
+    updated, summary, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"update": [{"route_id": rid, "fields": {"title": "Changed"}}]})
+    assert not errors and summary["updated"] == [rid]
+    assert updated["sources"][0]["unit_routes"][0]["id"] == rid
+    assert "id" not in route
+    removed, _, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"remove": [{"route_id": rid, "reason": "Reviewed removal"}]})
+    assert not errors and removed["sources"][0]["unit_routes"] == []
+    _, _, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"add": [{"source_id": "source-demo", "route": {**route, "id": rid}}]})
+    assert any("duplicates existing route" in error for error in errors)
+
+
+def test_overnight_plan_check_shares_one_shadow_and_two_loaded_models(mini_repo, tmp_path, monkeypatch, capsys):
+    import contextlib
+
+    import los
+    from learning_os.app import _plan_gate, context
+    from learning_os.app.handlers import plan
+    from learning_os.derive import material_synthesis
+    from learning_os.store.loader import load_repo
+    draft = _report_out_revision(mini_repo, tmp_path)
+    loads, shadows = [], []
+    original_shadow = plan._staged_shadow
+    def counted(root):
+        loads.append(root)
+        return load_repo(root)
+    @contextlib.contextmanager
+    def shadow(root, writes):
+        shadows.append(root)
+        with original_shadow(root, writes) as staged:
+            yield staged
+    for module in (context, plan, _plan_gate, material_synthesis):
+        monkeypatch.setattr(module, "load_repo", counted)
+    monkeypatch.setattr(plan, "_staged_shadow", shadow)
+    monkeypatch.setattr(_plan_gate, "_staged_shadow", shadow)
+    args = los.build_parser().parse_args(["--root", str(mini_repo), "unit-plan-revise", "unit-demo-l01", "--file", str(draft), "--check"])
+    assert args.func(args) == 0
+    assert len(loads) == 2 and len(shadows) == 1

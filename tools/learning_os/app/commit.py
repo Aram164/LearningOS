@@ -42,6 +42,7 @@ from learning_os.store.transactions import (
     ProjectionFailure,
     TransactionFailure,
     TransactionPublicationUncertain,
+    TransactionRollbackIncomplete,
     TransactionService,
 )
 from learning_os.store.warning_baseline import delta, load_baseline, signatures_from_issues
@@ -251,7 +252,8 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
         # expected/actual values cross that boundary without being flattened
         # into a generic transaction failure.
         raise
-    except (ProjectionFailure, PostCommitFailure, TransactionPublicationUncertain):
+    except (ProjectionFailure, PostCommitFailure, TransactionPublicationUncertain,
+            TransactionRollbackIncomplete):
         # Typed failure provenance crosses the (code, errors) channel by
         # propagation: the gateway classifies by its attrs, and direct CLI
         # use still exits 2 through los.py's TransactionFailure handler.

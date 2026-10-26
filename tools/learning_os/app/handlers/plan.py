@@ -76,6 +76,7 @@ from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.contracts import current_template_problems
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.loader import load_repo
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
@@ -582,7 +583,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             _plan_refuse(ctx, f"synthesis replacement targets an unknown unit: {unit_id}",
                          "synthesis-unknown-unit")
         try:
-            destination = synthesis_destination(root, unit_id)
+            destination = synthesis_destination(root, unit_id, repo=repo)
         except MaterialSynthesisError as exc:
             _plan_refuse(ctx, str(exc), "synthesis-destination")
         writes[destination] = _dump_yaml(dossier)
@@ -641,7 +642,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             extra=tuple(f"- {problem}" for problem in lineage_problems),
         )
     lineage_will_change = bool(changed_claims) or any(
-        synthesis_destination(root, uid) in _drop_unchanged_writes(writes)
+        synthesis_destination(root, uid, repo=repo) in _drop_unchanged_writes(writes)
         for uid, _ in synthesis_entries)
     if not req.get("check") and lineage_will_change:
         try:
@@ -649,8 +650,8 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                 root, repo, module_id, package,
                 changed_claims, claim_evidence, live_routes,
                 synthesis_entries=synthesis_entries,
-                incremented_artifacts=_minimal_artifact_ids(
-                    root, module_id, _drop_unchanged_writes(writes), synthesis_entries)
+                incremented_artifacts=lineage_artifacts(_minimal_artifact_ids(
+                    root, module_id, _drop_unchanged_writes(writes), synthesis_entries))
                 if minimal_writes else None)
         except LineageError as exc:
             _plan_refuse(
@@ -680,15 +681,20 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
              "package_sha256": package_sha, "validated": False},
 
         )
+    checked_report = None
     if req.get("check") or current_gateway_request() is None:
         try:
-            errors = _module_plan_validation_errors(
-                root, writes,
-                module_id=module_id,
-                syntheses=synthesis_entries,
-                touched_units=sorted(seen_units),
-                acknowledgments=acknowledgments,
-            )
+            with _staged_shadow(root, writes) as shadow:
+                staged_repo = load_repo(shadow)
+                errors = _module_plan_validation_errors(
+                    root, writes, module_id=module_id, syntheses=synthesis_entries,
+                    touched_units=sorted(seen_units), acknowledgments=acknowledgments,
+                    live_repo=repo, shadow=shadow, staged_repo=staged_repo)
+                if not errors and req.get("check"):
+                    checked_report = _module_plan_check_report(
+                        root, module_id, package, writes,
+                        synthesis_entries, package_sha, seen_units,
+                        live_repo=repo, shadow=shadow, staged_repo=staged_repo)
         except ValueError as exc:
             _plan_refuse(ctx, str(exc), "validation-crash")
         if errors:
@@ -700,9 +706,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                 extra=tuple(str(issue) for issue in errors[:12]),
             )
     if req.get("check"):
-        result = _module_plan_check_report(
-            root, module_id, package, writes,
-            synthesis_entries, package_sha, seen_units)
+        result = checked_report
         result["units_checked"] = sorted(seen_units)
         result["files_checked"] = len(writes) + int(lineage_will_change)
         capability = capability_override or "module.plan.import"

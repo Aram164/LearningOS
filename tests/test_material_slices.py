@@ -153,7 +153,7 @@ def test_singular_range_keeps_unrelated_note_pages_out_of_direct_evidence(mini_r
     assert material_slices.unit_note_scope(load_repo(mini_repo), binding, [("source-demo-book", routes[0])]) == "related"
 
 
-def test_evidence_scaffold_has_exact_file_scopes_and_current_read_integers(mini_repo):
+def test_evidence_scaffold_has_exact_file_scopes_without_coarse_revision_pins(mini_repo):
     from learning_os.app.claim_admission import claim_evidence_scaffolds
     from learning_os.store.revisions import dump_revisions
 
@@ -165,7 +165,7 @@ def test_evidence_scaffold_has_exact_file_scopes_and_current_read_integers(mini_
     draft = claim_evidence_scaffolds(mini_repo, load_repo(mini_repo), "module-demo", ["covers:route-demo-multi"])
     scaffold = draft["covers:route-demo-multi"]
     entry = scaffold["claim_evidence"][0]
-    assert entry["reads"] == {"module-demo": 3, "unit-demo-l01": 7}
+    assert entry["reads"] == {}
     assert [quote["page"] for quote in entry["evidence"]] == [1, 3]
     assert all(quote["text"] == "" for quote in entry["evidence"])
     assert [scope["page_ranges"] for scope in scaffold["material_scope"]] == [[[1, 2]], [[3, 4]]]
@@ -1336,3 +1336,47 @@ def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
         {"operation": "ai-action.append-slices", "kind": "failure",
          "site": None, "class": "ActionPolicyError", "exit_code": None},
     ]
+
+
+def test_overnight_relative_paths_and_multi_file_absence_scopes():
+    from learning_os.derive.material_synthesis import (
+        MaterialSynthesisError,
+        validate_synthesis_page_provenance,
+    )
+    inspected = {"route-demo": {
+        "material://source-demo/a/book.pdf": {"kind": "pdf", "pages": [1, 2]},
+        "material://source-demo/b/book.pdf": {"kind": "pdf", "pages": [3, 4]}}}
+    record = {"route_assessments": [{"route_id": "route-demo", "review_status": "deep-reviewed",
+        "evidence": [{"locator": "a/book.pdf, PDF pp. 1-2"}],
+        "scope_of_absence": "a/book.pdf, PDF pp. 1-2; b/book.pdf, PDF pp. 3-4"}]}
+    validate_synthesis_page_provenance(inspected, record)
+    record["route_assessments"][0]["evidence"][0]["locator"] = "book.pdf, PDF p. 1"
+    with pytest.raises(MaterialSynthesisError, match="exactly one"):
+        validate_synthesis_page_provenance(inspected, record)
+    record["route_assessments"][0]["evidence"][0]["locator"] = "b/book.pdf, PDF p. 1"
+    with pytest.raises(MaterialSynthesisError, match="never inspected"):
+        validate_synthesis_page_provenance(inspected, record)
+
+
+def test_overnight_continuation_ignores_unrelated_note_but_checks_target(mini_repo):
+    from learning_os.domain.ai_errors import DeliveryValidationError
+    app, _ = _prepared_long_route(mini_repo)
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text() + "Unrelated note edit.\n")
+    _append(app)
+    unit = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit.write_text(unit.read_text().replace("title:", "title: Changed ", 1))
+    with pytest.raises(DeliveryValidationError, match="original artifact changed"):
+        _append(app)
+
+
+def test_overnight_compare_prepare_reuses_one_loaded_repo(mini_repo, monkeypatch):
+    from learning_os.app.ai_actions import service as module
+    original = module.load_repo
+    calls = []
+    def counted(root):
+        calls.append(root)
+        return original(root)
+    monkeypatch.setattr(module, "load_repo", counted)
+    _prepared_long_route(mini_repo)
+    assert len(calls) == 1

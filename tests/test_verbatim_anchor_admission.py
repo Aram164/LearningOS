@@ -528,3 +528,23 @@ def test_source_binding_change_stales_an_admitted_claim(mini_repo):
     write_yaml(registry, data)
     status = observe_claims(mini_repo)["covers:route-test"]
     assert status.status == "stale" and "source-material:source-demo-book" in status.moved
+
+
+def test_overnight_scaffold_hint_is_exact_and_does_not_fill_claim_evidence(material_world):
+    from learning_os.app.claim_admission import claim_evidence_scaffolds
+    root, _, manifest = material_world
+    write_yaml(root / "records/materials-manifest.yaml", {"files": manifest})
+    repo = load_repo(root)
+    repo.module_source_maps["module-demo"] = {"module_id": "module-demo", "sources": [{
+        "source_id": "source-demo-book", "unit_routes": [route().row()]}]}
+    scaffold = claim_evidence_scaffolds(root, repo, "module-demo", ["covers:route-test"])["covers:route-test"]
+    assert scaffold["material_scope"][0]["candidate_excerpt"]["text"] == TEXT
+    assert scaffold["claim_evidence"][0]["evidence"][0]["text"] == ""
+
+
+def test_overnight_transcript_hint_uses_the_exact_locator_window(material_world):
+    from learning_os.store.materials.resolution import ResolvedMaterialFile
+    ref = _transcript(material_world)
+    file = ResolvedMaterialFile(ref, material_world[1] / "transcript.md")
+    candidate = reader(material_world).candidate_excerpt(file, "transcript.md, video 00:00-00:30")
+    assert candidate == {"text": TEXT, "window": "00:00-00:30"}

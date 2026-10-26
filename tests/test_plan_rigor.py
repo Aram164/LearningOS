@@ -696,3 +696,34 @@ def test_filename_present_prefilter_never_changes_the_answer(name, locator):
 
     expected = bool(re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", locator))
     assert _filename_present(name, locator) is expected
+
+
+def test_overnight_compact_route_binding_reaches_angle_and_node_checks():
+    route = {"id": "route-bound", "angle": "Original angle", "covers": ["node-original"]}
+    resource = {"angle": "Changed angle", "locator": "Overridden locator"}
+    checker = _StubChecker({}, {}, {})
+    checker._check_row_angle("sm", {"id": "stage-demo"}, resource, {"route-bound": route}, "map",
+                             material_route_id="route-bound")
+    checker._check_row_node("sm", {"id": "stage-demo"}, "node-new", resource,
+                            {"route-bound": route}, "map", material_route_id="route-bound")
+    assert {code for code, _ in checker.warnings} == {"ANGLE-DIVERGES-FROM-ROUTE", "RESOURCE-NODE-ORPHAN"}
+
+
+def test_overnight_fused_locator_does_not_hide_later_resources():
+    checker = _StubChecker({"unit-demo": _unit("node-a")}, {"sm": _map({
+        "id": "stage-demo", "knowledge_node_id": "node-a", "resources": [
+            {"locator": "Ch 1 — an intuitive explanation of these examples."},
+            {"route_id": "route-second", "angle": "Different"}]} )},
+        {"route-second": {"angle": "Original", "covers": []}})
+    errors = []
+    checker.err = lambda code, *_: errors.append(code)
+    checker.check_plan_rigor()
+    assert "LOCATOR-ANGLE-FUSED" in errors
+    assert "ANGLE-DIVERGES-FROM-ROUTE" in {code for code, _ in checker.warnings}
+
+
+def test_overnight_rigor_indexes_legacy_route_ids():
+    route = _demo_route()
+    checker = _ScopeChecker(_demo_source_map(route), resources=[])
+    index = ChecksPlanRigor._routes_by_id(checker)
+    assert deterministic_route_id("module-demo", "source-demo-book", route) in index

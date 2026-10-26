@@ -29,6 +29,7 @@ from learning_os.store.materials.resolution import (
     MATERIAL_SUFFIX_TOKEN,
     evidential_route_projection,
     evidential_source_map_projection,
+    parse_material_uri,
     stable_checksum,
 )
 from learning_os.store.materials.slices import parse_locator_page_ranges
@@ -108,7 +109,7 @@ def material_basis_checksum(basis: dict) -> str:
     return stable_checksum({key: basis.get(key) for key in COMPARED_BASIS_FIELDS})
 
 
-def publication_lineage(root: Path, unit_id: str, value: dict, content: str, request) -> str:
+def publication_lineage(root: Path, unit_id: str, value: dict, content: str, request, *, repo=None) -> str:
     """Prepare the sidecar for the same transaction as a reviewed publication.
 
     Both the direct publisher and approved-delivery publisher use this owner.
@@ -117,12 +118,12 @@ def publication_lineage(root: Path, unit_id: str, value: dict, content: str, req
     records = load_ledger(root)
     claim_id = f"dossier:{value['id']}"
     records[claim_id] = publication_lineage_record(
-        root, unit_id, value, content, request, prior=records.get(claim_id))
+        root, unit_id, value, content, request, prior=records.get(claim_id), repo=repo)
     return dump_ledger(records)
 
 
 def publication_lineage_record(root: Path, unit_id: str, value: dict,
-                               content: str, request, *, prior=None):
+                               content: str, request, *, prior=None, repo=None):
     """Bind a dossier already validated against its live or staged basis.
 
     Import and source-attachment writers validate the proposed basis before
@@ -130,7 +131,7 @@ def publication_lineage_record(root: Path, unit_id: str, value: dict,
     old material state and make the claim stale on its own transaction.
     The caller merges this record with any other lineage in that transaction.
     """
-    destination = synthesis_destination(root, unit_id)
+    destination = synthesis_destination(root, unit_id, repo=repo)
     return emit_dossier_freshness(
         dossier_key=value["id"],
         hashes={
@@ -502,7 +503,14 @@ def _evidence_material(materials: dict[str, dict[str, Any]], locator: Any,
         return next(iter(materials))
     filename = _evidence_filename(locator)
     if filename is not None:
-        hits = [uri for uri in materials if uri.rsplit("/", 1)[-1] == filename]
+        hits = []
+        for uri in materials:
+            parsed = parse_material_uri(uri)
+            if parsed is None:
+                continue
+            relative = parsed.path.removeprefix(parsed.authority + "/")
+            if (relative == filename if "/" in filename else relative.rsplit("/", 1)[-1] == filename):
+                hits.append(uri)
         if len(hits) == 1:
             return hits[0]
     refs = parse_locator_page_ranges(locator)
@@ -579,8 +587,10 @@ def validate_synthesis_page_provenance(
         # one thing the reading budget cannot detect on its own.
         scope = row.get("scope_of_absence")
         if scope is not None:
-            _check_material_evidence(materials, scope,
-                                     where=f"{route_id} scope_of_absence")
+            clauses = scope.split(";") if isinstance(scope, str) else [scope]
+            for clause in clauses:
+                _check_material_evidence(materials, clause,
+                                         where=f"{route_id} scope_of_absence")
     for comparison in synthesis.get("comparisons", []) or []:
         if not isinstance(comparison, dict):
             continue
@@ -609,13 +619,14 @@ def material_synthesis_freshness(
     *,
     repo=None,
     cache: dict[Path, str] | None = None,
+    current_basis: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return derived freshness without trusting a stored status flag."""
     if cache is None:
         cache = {}
     reasons: list[str] = []
     try:
-        current = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
+        current = current_unit_material_basis(root, unit_id, repo=repo, cache=cache) if current_basis is None else current_basis
     except Exception:
         # A published historical dossier remains useful evidence even when its
         # current basis can no longer be resolved.  Keep the projection
@@ -721,8 +732,8 @@ def material_synthesis_completeness(
     }
 
 
-def synthesis_destination(root: Path, unit_id: str) -> Path:
-    repo = load_repo(root)
+def synthesis_destination(root: Path, unit_id: str, *, repo=None) -> Path:
+    repo = load_repo(root) if repo is None else repo
     unit = repo.units.get(unit_id)
     if unit is None:
         raise MaterialSynthesisError(f"unit not found: {unit_id}")

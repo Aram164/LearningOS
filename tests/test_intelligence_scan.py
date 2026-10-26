@@ -560,3 +560,17 @@ def test_covered_node_edit_stales_exactly_the_covering_claim(mini_repo):
     stale = dict(collect_observations(mini_repo, days=0).stale_claims)
     assert set(stale) == {f"covers:{route_a}"}
     assert stale[f"covers:{route_a}"] == ("node-content:knowledge-demo-alpha",)
+
+
+def test_overnight_brief_totals_and_human_output_exclude_quiet_groups():
+    from learning_os.app.handlers.reads import _brief_scan_page, _human_intelligence_scan
+    from learning_os.derive.semantics.goals import CandidateGoal, GoalCluster, RankedCluster
+    goals = [CandidateGoal("loud", "test", "Loud", "reason"), CandidateGoal("quiet", "test", "Quiet", "reason", quiet=True)]
+    ranked = [RankedCluster(GoalCluster("q", "test", "Quiet", ("quiet",)), 3),
+              RankedCluster(GoalCluster("l", "test", "Loud", ("loud",)), 3)]
+    result = _brief_scan_page({}, goals, ranked)
+    assert result["total_goals"] == 1 and result["omitted_goals"] == 0
+    text = _human_intelligence_scan({}, {"brief": True, "goal_count": 2, "hidden_count": 0, "evidence": {}, "ranked": [
+        {"title": row.cluster.title, "members": list(row.cluster.member_ids), "quiet": row.cluster.cluster_id == "q",
+         "tier": 3, "tier_label": "active study", "days_until": None} for row in ranked]})
+    assert "Quiet" not in text and "Loud" in text

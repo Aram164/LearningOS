@@ -137,7 +137,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"legacy.archive.lock.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"legacy-archive-lock\": 1\n    },\n    \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"legacy.archive.lock.publish\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"<FIXTURE_SNAPSHOT>\",\"result\":{\"ok\":true,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"legacy-archive-lock\":1},\"snapshot_after\":\"<FIXTURE_SNAPSHOT>\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "legacy.archive.lock.publish",
         "error": null,
@@ -242,7 +242,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"legacy.archive.lock.publish\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"legacy-archive-lock\": 1\n    },\n    \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"legacy.archive.lock.publish\",\"ok\":true,\"replayed\":true,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"<FIXTURE_SNAPSHOT>\",\"result\":{\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"legacy-archive-lock\":1},\"snapshot_after\":\"<FIXTURE_SNAPSHOT>\",\"replayed\":true},\"error\":null}\n",
       "stdout_json": {
         "capability": "legacy.archive.lock.publish",
         "error": null,

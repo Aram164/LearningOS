@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"coordination.section.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"section\": \"Priorities\",\n    \"before\": \"(none)\",\n    \"after\": \"Preview only.\",\n    \"expected_content_sha256\": \"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655\",\n    \"expected_snapshot\": \"<FIXTURE_SNAPSHOT>\",\n    \"expected_revisions\": {\n      \"coordination\": 0\n    },\n    \"write_paths\": [\n      \"work/COORDINATION.md\"\n    ]\n  },\n  \"error\": null\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"coordination.section.revise\",\"ok\":true,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"section\":\"Priorities\",\"before\":\"(none)\",\"after\":\"Preview only.\",\"expected_content_sha256\":\"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"coordination\":0},\"write_paths\":[\"work/COORDINATION.md\"]},\"error\":null}\n",
   "stdout_json": {
     "capability": "coordination.section.revise",
     "error": null,

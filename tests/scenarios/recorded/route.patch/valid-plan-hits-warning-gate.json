@@ -139,7 +139,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"project.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"project_id\": \"project-scenario-new\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"project-scenario-new\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"project.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"project_id\":\"project-scenario-new\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"project-scenario-new\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "project.create",
         "error": null,
@@ -245,7 +245,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"route.patch\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed\\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"route.patch\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"VALIDATION_FAILED\",\"message\":\"canonical validation failed\\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\"retryable\":false,\"details\":{}}}\n",
       "stdout_json": {
         "capability": "route.patch",
         "error": {

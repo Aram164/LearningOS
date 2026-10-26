@@ -8,6 +8,7 @@ handler can use them without an upward import.
 
 from __future__ import annotations
 
+from contextlib import nullcontext
 from pathlib import Path
 
 import yaml
@@ -116,7 +117,7 @@ def _staged_synthesis_errors(root: Path, module_id: str, live_repo,
             errors.append(f"material_syntheses: unknown unit for {module_id}: {unit_id}")
             continue
         try:
-            expected = synthesis_destination(live_repo.root, unit_id)
+            expected = synthesis_destination(live_repo.root, unit_id, repo=live_repo)
         except MaterialSynthesisError as exc:
             errors.append(f"material_syntheses {unit_id}: {exc}")
             continue
@@ -135,7 +136,7 @@ def _staged_synthesis_errors(root: Path, module_id: str, live_repo,
         if unit.module_id != module_id:
             continue
         try:
-            destination = synthesis_destination(live_repo.root, unit_id)
+            destination = synthesis_destination(live_repo.root, unit_id, repo=live_repo)
         except MaterialSynthesisError:
             continue
         if not destination.exists():
@@ -512,6 +513,9 @@ def module_plan_validation_errors(
     syntheses: list[tuple[str, dict]] | None = None,
     touched_units: list[str] | None = None,
     acknowledgments: list[dict] | None = None,
+    live_repo=None,
+    shadow: Path | None = None,
+    staged_repo=None,
 ) -> list[str]:
     """Validate planned files in a small shadow repository without canonical writes.
 
@@ -530,14 +534,14 @@ def module_plan_validation_errors(
     string, before any canonical write begins.
     """
     perimeter_errors = real_perimeter_errors(root)
-    with _staged_shadow(root, writes) as shadow:
+    with _staged_shadow(root, writes) if shadow is None else nullcontext(shadow) as shadow:
+        staged_repo = load_repo(shadow) if staged_repo is None else staged_repo
         signatures, errors = signatures_from_issues(
-            validate(load_repo(shadow), online=False))
+            validate(staged_repo, online=False))
         synthesis_errors: list[str] = []
         ack_errors: list[str] = []
         if module_id is not None and syntheses is not None:
-            live_repo = load_repo(root)
-            staged_repo = load_repo(shadow)
+            live_repo = load_repo(root) if live_repo is None else live_repo
             try:
                 synthesis_errors = _staged_synthesis_errors(
                     root, module_id, live_repo, shadow, staged_repo, syntheses)
@@ -808,7 +812,8 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
                               writes: dict[Path, str],
                               entries: list[tuple[str, dict]],
                               package_sha: str,
-                              seen_units: set[str]) -> dict:
+                              seen_units: set[str], *, live_repo=None,
+                              shadow: Path | None = None, staged_repo=None) -> dict:
     """The review artifact for a plan preflight: stable schema, no writes.
 
     Counts, diffs, freshness and learner-state preservation for exactly the
@@ -818,12 +823,12 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         validate_unit_material_synthesis as _validate_dossier,
     )
 
-    live_repo = load_repo(root)
+    live_repo = load_repo(root) if live_repo is None else live_repo
     live_map = (live_repo.module_source_maps or {}).get(module_id) or {}
     acknowledgments = package.get("acknowledgments", []) or []
     supplied = {unit_id for unit_id, _ in entries}
-    with _staged_shadow(root, writes) as shadow:
-        staged_repo = load_repo(shadow)
+    with _staged_shadow(root, writes) if shadow is None else nullcontext(shadow) as shadow:
+        staged_repo = load_repo(shadow) if staged_repo is None else staged_repo
         staged_map = (staged_repo.module_source_maps or {}).get(module_id) or {}
 
         def rows(source_map):
@@ -866,7 +871,7 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         synthesis: dict[str, dict] = {}
         for uid in sorted(seen_units):
             try:
-                destination = synthesis_destination(root, uid)
+                destination = synthesis_destination(root, uid, repo=live_repo)
             except MaterialSynthesisError:
                 continue
             exists = destination.exists()
@@ -874,7 +879,7 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
             if exists:
                 try:
                     current = yaml.safe_load(destination.read_text(encoding="utf-8"))
-                    validate_unit_material_synthesis(root, uid, current)
+                    validate_unit_material_synthesis(root, uid, current, repo=live_repo)
                     before["fresh"] = True
                 except (MaterialSynthesisError, OSError, ValueError) as exc:
                     before["detail"] = str(exc)
