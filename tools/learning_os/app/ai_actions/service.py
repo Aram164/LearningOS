@@ -14,7 +14,6 @@ from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.material_synthesis import (
     current_unit_material_basis,
     inspected_material_by_route,
-    inspected_pages_by_route,
     publication_lineage,
     synthesis_destination,
     validate_synthesis_page_provenance,
@@ -48,9 +47,13 @@ from learning_os.domain.ai_types import (
     ValidatedDelivery,
 )
 from learning_os.domain.failures import (
+    PostCommitFailure,
+    ProjectionFailure,
     TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
+    TransactionPublicationUncertain,
+    TransactionRollbackIncomplete,
     TransactionSnapshotConflict,
 )
 from learning_os.store import observations
@@ -261,13 +264,13 @@ class AIActionService:
             ],
         })
 
-    def list_garden_targets(self) -> list[dict[str, Any]]:
+    def list_garden_targets(self, *, repo=None) -> list[dict[str, Any]]:
         """Use the same Garden projection every other Core consumer uses."""
-        return project_garden_entries(load_repo(self.root))
+        return project_garden_entries(load_repo(self.root) if repo is None else repo)
 
-    def _target(self, target_id: str, target_kind: str = "garden-note") -> tuple[GardenTarget, Path]:
+    def _target(self, target_id: str, target_kind: str = "garden-note", *, repo=None) -> tuple[GardenTarget, Path]:
+        repo = load_repo(self.root) if repo is None else repo
         if target_kind == "unit":
-            repo = load_repo(self.root)
             unit = repo.units.get(target_id)
             if unit is None:
                 # Already loaded above ((cx) D-8).
@@ -283,7 +286,7 @@ class AIActionService:
                 "tags": [],
                 "revision": artifact_revision(self.root, unit.id),
             }), unit.path
-        rows = self.list_garden_targets()
+        rows = self.list_garden_targets(repo=repo)
         for row in rows:
             if row["id"] == target_id:
                 target = cast(GardenTarget, row)
@@ -318,7 +321,8 @@ class AIActionService:
             raise ActionPolicyError(
                 f"adapter {adapter.id} does not support {action.interaction_mode} mode"
             )
-        target, source = self._target(target_id, target_kind)
+        repo = load_repo(self.root)
+        target, source = self._target(target_id, target_kind, repo=repo)
         snapshot = _snapshot(self.root)
         if expected_snapshot and expected_snapshot != snapshot:
             raise StaleDeliveryError(
@@ -402,7 +406,6 @@ class AIActionService:
             original["bundle_path"]: source.read_bytes(),
         }
         if action.id == "unit.compare-materials":
-            repo = load_repo(self.root)
             unit = repo.units[target_id]
             source_map_path = repo.module_source_map_origins.get(unit.module_id)
             source_map = repo.module_source_maps.get(unit.module_id) or {}
@@ -559,12 +562,9 @@ class AIActionService:
             raise StaleDeliveryError(
                 f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
             )
-        if snapshot != (request.get("preconditions") or {}).get("snapshot_id"):
-            raise StaleDeliveryError(
-                "records changed since request preparation; "
-                "re-prepare the request instead of continuing it")
         target_id = str((request.get("target") or {}).get("id"))
         repo = load_repo(self.root)
+        self._assert_target_unchanged(request, repo=repo)
         unit = repo.units.get(target_id)
         if unit is None:
             raise TargetNotFoundError(f"Unit target not found: {target_id}")
@@ -598,7 +598,8 @@ class AIActionService:
             raise ContinuationRefusedError(
                 f"route {route_id} continuation refused: this request predates "
                 "slice-basis binding; re-prepare the request instead of continuing it")
-        inspected = inspected_pages_by_route(index_records).get(route_id, [])
+        inspected = {uri: entry["pages"] for uri, entry in
+                     inspected_material_by_route(index_records).get(route_id, {}).items()}
         try:
             record, index_entry, body = plan_continuation(
                 repo, route, basis=stored_basis, inspected=inspected,
@@ -662,7 +663,7 @@ class AIActionService:
         return {"ok": True, "delivery_id": outcome.delivery_id,
                 "request_id": outcome.request_id}
 
-    def _validate(self, delivery: DeliveryRecord, directory: Path) -> ValidatedDelivery:
+    def _validate(self, delivery: DeliveryRecord, directory: Path, *, repo=None) -> ValidatedDelivery:
         delivery_id = str(delivery.get("id", ""))
         if not str(delivery.get("request_id", "")):
             raise DeliveryValidationError("delivery must name its request_id")
@@ -707,6 +708,8 @@ class AIActionService:
                 if operation.get("target_id") and operation.get("target_id") != target_id:
                     problems.append(f"{where} targets an unrelated artifact")
                 artifact_ref = operation.get("artifact_ref")
+                if capability in {"garden.add-transcription", "unit.material-synthesis.publish"} and not artifact_ref:
+                    problems.append(f"{where} requires artifact_ref")
                 if artifact_ref:
                     try:
                         artifact = _inside(directory, str(artifact_ref))
@@ -727,7 +730,7 @@ class AIActionService:
         # delivery because an unrelated note moved (feature specification §20.4
         # scopes staleness to *the target*) makes the workflow unusable in a
         # live repository and tempts users to re-prepare blindly.
-        target = self._assert_target_unchanged(request)
+        target = self._assert_target_unchanged(request, repo=repo)
         return ValidatedDelivery(
             delivery_id=delivery_id,
             request_id=request["id"],
@@ -735,7 +738,7 @@ class AIActionService:
             target=target,
         )
 
-    def _assert_target_unchanged(self, request: AIActionRequest) -> GardenTarget:
+    def _assert_target_unchanged(self, request: AIActionRequest, *, repo=None) -> GardenTarget:
         """Re-read the target, refuse if it moved, and hand back the fresh row.
 
         Returning the row is what lets callers stop re-walking the Garden tree:
@@ -743,7 +746,7 @@ class AIActionService:
         """
         target_id = str((request.get("target") or {}).get("id", ""))
         target_kind = str((request.get("target") or {}).get("kind", "garden-note"))
-        target, _ = self._target(target_id, target_kind)
+        target, _ = self._target(target_id, target_kind, repo=repo)
         expected_revision = (request.get("preconditions") or {}).get(
             "artifact_revisions", {}).get(target_id)
         if target.get("revision") != expected_revision:
@@ -809,7 +812,8 @@ class AIActionService:
                 )
         # Validation already read the delivery, the request and the target; reuse
         # them rather than parsing the same three files a second time.
-        outcome = self._validate(delivery, directory)
+        repo = load_repo(self.root)
+        outcome = self._validate(delivery, directory, repo=repo)
         request = outcome.request
         target = outcome.target
         capability_definitions = self.capability_definitions()
@@ -917,7 +921,7 @@ class AIActionService:
                 if not isinstance(synthesis, dict):
                     raise DeliveryValidationError("material synthesis artifact must be an object")
                 try:
-                    validate_unit_material_synthesis(self.root, target_id, synthesis)
+                    validate_unit_material_synthesis(self.root, target_id, synthesis, repo=repo)
                 except ValueError as exc:
                     raise DeliveryValidationError(str(exc)) from exc
                 bundle_dir = self.repository.request_dir(str(request["id"]))
@@ -938,7 +942,7 @@ class AIActionService:
                     raise DeliveryValidationError(
                         "material synthesis provenance does not match its approved delivery"
                     )
-                destination = synthesis_destination(self.root, target_id)
+                destination = synthesis_destination(self.root, target_id, repo=repo)
                 if destination.is_file() and operation.get("supersedes") != synthesis.get("id"):
                     raise DeliveryValidationError(
                         f"a dossier for {target_id} already exists; explicit supersedes is required"
@@ -946,7 +950,7 @@ class AIActionService:
                 content = _dump_yaml(synthesis)
                 staged[destination] = (content, capability)
                 staged[self.root / LEDGER_RELATIVE] = (
-                    publication_lineage(self.root, target_id, synthesis, content, authority), capability)
+                    publication_lineage(self.root, target_id, synthesis, content, authority, repo=repo), capability)
                 (updated_ids if destination.is_file() else created_ids).append(synthesis["id"])
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")
@@ -1064,7 +1068,7 @@ class AIActionService:
             validate_state=validation_errors,
             publish=publish,
             rollback_publish=rollback_publish,
-            touched=None,
+            touched="STANDARD",
             metadata=metadata,
             expected_snapshot=expected_snapshot,
             transaction_writes=request_write,
@@ -1089,6 +1093,9 @@ class AIActionService:
             return StaleDeliveryError(str(exc))
         if isinstance(exc, TransactionIdempotencyConflict):
             return DeliveryValidationError(f"delivery idempotency conflict: {exc}")
+        if isinstance(exc, (PostCommitFailure, ProjectionFailure,
+                            TransactionPublicationUncertain, TransactionRollbackIncomplete)):
+            return None
         if isinstance(exc, TransactionFailure):
             return DeliveryValidationError(f"delivery transaction failed: {exc}")
         return None

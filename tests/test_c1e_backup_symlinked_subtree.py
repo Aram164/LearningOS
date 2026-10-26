@@ -64,3 +64,23 @@ def test_symlinked_subtree_is_refused_or_recorded(mini_repo):
         "backup-manifest completed green while the declared records tree's "
         "symlinked subtree left the inventory without a trace; entries cover "
         f"{len(rows)} files and the manifest records no skipped subtree")
+
+
+def test_overnight_alias_restore_rejects_escapes_before_touching_files(tmp_path):
+    from learning_os.app.backup_manifest import _rebuild_materials_alias_layer
+    base = tmp_path / "restore"
+    core = base / "repository"
+    core.mkdir(parents=True)
+    materials = base / "materials"
+    (materials / "real").mkdir(parents=True)
+    victim = base / "victim.txt"
+    victim.write_text("keep")
+    for aliases in ({"../../victim.txt": "real"}, {"safe": "../../outside"}, {"safe": "/tmp"}, {"..": "real"}):
+        result = _rebuild_materials_alias_layer({"materials_aliases": aliases}, materials, core)
+        assert not result["ok"]
+        assert victim.read_text() == "keep" and not victim.is_symlink()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (materials / ".flat").symlink_to(outside, target_is_directory=True)
+    result = _rebuild_materials_alias_layer({"materials_aliases": {"safe": "real"}}, materials, core)
+    assert not result["ok"] and list(outside.iterdir()) == []

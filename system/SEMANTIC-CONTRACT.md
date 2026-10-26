@@ -102,7 +102,14 @@ transaction as the canonical mutation. Implementation and pinning tests:
 Prospective admission is shared by plan import, unit revision and evidence-bearing
 `route.patch`. Coverage or material identity changes require admitted evidence;
 unchanged claims may be rejudged only when stale, contested or exactly
-audit-defective, inside the selected unit. A ledger-only repair changes no
+audit-defective, inside the selected unit. Voluntary evidence may also rejudge
+a claim made stale by the same package's proposed route or covered-node edits;
+the edit and its new judgment commit together. Description-only edits without
+rejudgment still report their stale impact. Missing required evidence and stale
+impact reports include unfilled `claim_evidence` scaffolds with exact file
+identities, page-scope hints and current declared revision values. Quotation
+text and verification notes remain empty until an actual review supplies them.
+A scaffold grants no admission. A ledger-only repair changes no
 unit/module bytes or revisions. Local claims require exact-file quotation
 presence (or an explicit digest-bound unreadable-place fallback), while remote
 claims remain explicitly unanchored. New judgments pin declared source material
@@ -150,8 +157,11 @@ existing snapshot/revision guards, without trusting an earlier scan observation.
 
 One `lineage-stale` detector reports each stale claim, with causes and
 root-cause clustering. `claims-needing-review` reports contests and exact-basis
-audit defects, not every unreviewed claim. Supported fresh covers claims outside
-a clean audited population form the `claims-audit` pool. Unrecorded coverage
+audit defects, not every unreviewed claim. Withdrawn claims retain historical
+audit evidence but no longer produce active review findings. Supported fresh,
+unaudited covers claims form the `claims-audit` pool; known defective or
+unavailable claims cannot re-enter it. A new audit is proposed only after active
+defects have been repaired or withdrawn. Unrecorded coverage
 is reported honestly and is excluded from audits; prior claims are not
 retroactively quotation-anchored.
 

@@ -1,0 +1,9 @@
+# Detour return and missing attachment destinations crash or invalidate writes
+
+During the authorized overnight audit repair, the `c09fb16` source and regression fixtures confirmed this family. Clear the stage completion date on reactivation and refuse a missing return stage. An attachment without the required working-note destination receives a typed refusal. Contrary to the report, working_note is required by the current stage schema; no destination is invented.
+
+Code: app/handlers/learner.py under `tools/learning_os/`. Regression evidence: test_curriculum_v2.py under `tests/`; the task's retained red/green logs distinguish original and repaired behavior. Synthetic fixtures only; learner data is unchanged.
+
+The proposed acceptance is the corresponding regressions passing while existing mutation, evidence, scope, and recovery guards continue to pass.
+
+GitHub issue: [Detour return and missing attachment destinations crash or invalidate writes](https://github.com/Aram164/LearningOS/issues/43). Publication was explicitly approved by Aram on 2026-10-26. The repair is on `codex/overnight-audit-fixes-20261025`; hosted CI must verify the final Core/UI pair before release acceptance.

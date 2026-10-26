@@ -242,3 +242,24 @@ def test_a_body_without_frontmatter_still_writes(mini_repo):
     text = _note_bytes(mini_repo).decode("utf-8")
     assert text.count("---") == 2, "exactly one frontmatter block"
     assert "Triangulation memo" in text
+
+
+def test_overnight_note_revision_refuses_self_or_missing_answer_notes(mini_repo, tmp_path):
+    from types import SimpleNamespace
+
+    import pytest
+    import yaml
+
+    from learning_os.app.handlers.notes import note_revise
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.store.loader import load_repo
+    repo = load_repo(mini_repo)
+    note = repo.notes["note-demo"]
+    note.meta.update(role="question", atlas_question={"target": {"kind": "concept", "id": "concept-demo"}})
+    ctx = SimpleNamespace(root=mini_repo, operation="note.revise", repo=lambda: repo, require_snapshot=lambda _: None)
+    revised = tmp_path / "question.md"
+    for answer in ("note-demo", "note-missing"):
+        meta = {**note.meta, "atlas_question": {**note.meta["atlas_question"], "answer_notes": [answer]}}
+        revised.write_text("---\n" + yaml.safe_dump(meta) + "---\nQuestion?\n")
+        with pytest.raises(WriteRefused, match="existing other notes"):
+            note_revise(ctx, {"approve": True, "note_id": note.id, "file": str(revised)})

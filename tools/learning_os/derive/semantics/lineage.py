@@ -539,15 +539,11 @@ def impacted(
     every record: contested and withdrawn claims are reported as-is (they
     already need a human), everything else exactly when its reads moved.
     """
-    hashes = current_source_hashes or {}
-    return tuple(
-        lineage.claim_id
-        for lineage in lineages
-        if lineage.status in ("contested", "withdrawn")
-        or refresh(
-            lineage, current_contract_version, current_revisions, hashes,
-        ).status == "stale"
-    )
+    statuses = effective_statuses(
+        {row.claim_id: row for row in lineages}, current_contract_version,
+        current_revisions, current_source_hashes)
+    return tuple(row.claim_id for row in lineages
+                 if statuses[row.claim_id].status in {"stale", "contested", "withdrawn"})
 
 
 def retraction_impact(

@@ -7,7 +7,25 @@ still reach a terminal one.
 
 from __future__ import annotations
 
-from learning_os.derive.semantics.goals import STATES, TERMINAL_STATES, TRANSITIONS
+from learning_os.derive.semantics.goals import (
+    STATES,
+    TERMINAL_STATES,
+    TRANSITIONS,
+    CandidateGoal,
+    goal_from_dict,
+    goal_to_dict,
+    transition,
+)
+
+
+def test_quiet_survives_every_transition_and_persisted_state():
+    for state in STATES:
+        goal = CandidateGoal("test", "test", "Audit trail", "Reviewed reason", ("proof",),
+                             state=state, quiet=True)
+        assert goal_from_dict(goal_to_dict(goal)) == goal
+        for target in TRANSITIONS[state]:
+            moved = transition(goal, target, authorized_by="Aram", superseded_by="successor")
+            assert moved.quiet is True
 
 
 def _reachable(start: str) -> set[str]:

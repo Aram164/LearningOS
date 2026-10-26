@@ -120,6 +120,28 @@ def test_multi_file_page_span_belongs_to_the_named_file(material_world):
         reader(material_world).verify_quote(both, Quote(URI + "other.pdf", OTHER, page=1))
 
 
+def test_disjoint_locator_refuses_a_quote_in_the_gap(material_world):
+    _, folder, manifest = material_world
+    write_minimal_pdf(folder / "book.pdf", [TEXT] * 10)
+    manifest["source-demo-book/book.pdf"]["sha256"] = hashlib.sha256((folder / "book.pdf").read_bytes()).hexdigest()
+    selected = route(locator="book.pdf pp. 1-2, pp. 9-10")
+    with pytest.raises(AnchorError, match="locator span"):
+        reader(material_world).verify_quote(selected, Quote(URI + "book.pdf", TEXT, page=5))
+    assert reader(material_world).verify_quote(selected, Quote(URI + "book.pdf", TEXT, page=9))
+
+
+@pytest.mark.parametrize("names", [("book.pdf", "lecture_book.pdf"), ("a/book.pdf", "b/book.pdf")])
+def test_multi_file_anchor_matches_exact_relative_path(material_world, names):
+    _, folder, manifest = material_world
+    for name in names:
+        write_minimal_pdf(folder / name, [TEXT, OTHER])
+        manifest["source-demo-book/" + name] = {"sha256": hashlib.sha256((folder / name).read_bytes()).hexdigest()}
+    selected = route(vault_path="", locator=f"{names[0]} p. 1; {names[1]} p. 2")
+    assert reader(material_world).verify_quote(selected, Quote(URI + names[0], TEXT, page=1))
+    with pytest.raises(AnchorError, match="locator span"):
+        reader(material_world).verify_quote(selected, Quote(URI + names[1], TEXT, page=1))
+
+
 def test_no_text_fallback_needs_explicit_place_and_note(material_world):
     _, folder, manifest = material_world
     write_minimal_pdf(folder / "book.pdf", [""])
@@ -265,20 +287,50 @@ def test_route_patch_material_change_requires_evidence_before_writing(mini_repo)
                      json.dumps({"locator": "lecture-01.pdf, PDF p. 1"}), "--check")
     assert result.returncode == 1
     assert "without claim evidence" in result.stderr
+    assert "claim_evidence scaffold (unfilled)" in result.stderr
+    assert '"ref": "material://source-demo-book/lecture-01.pdf"' in result.stderr
     assert canonical_fingerprint(mini_repo) == before
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
 
 
-def test_route_patch_uses_shared_admission_guard_and_atomic_lineage(mini_repo):
+@pytest.mark.parametrize("field", ["locator", "angle"])
+def test_route_patch_uses_shared_admission_guard_and_atomic_lineage(mini_repo, field):
     import json
 
     from gateway_helpers import approved_v2_envelope, run_v2_capability
     from repo_builders import SLICED_LECTURE_TEXT, run_los
 
-    from learning_os.derive.semantics.lineage import load_ledger
+    from learning_os.derive.semantics.claim_status import observe_claims
+    from learning_os.derive.semantics.lineage import (
+        dump_ledger,
+        emit_route_covers,
+        load_ledger,
+        route_content_digest,
+    )
 
     evidence = _patch_world(mini_repo)
-    changes = {"locator": "lecture-01.pdf, PDF p. 1"}
+    changes = {field: "lecture-01.pdf, PDF p. 1" if field == "locator" else "A reviewed sharper angle."}
+    if field == "angle":
+        repo = load_repo(mini_repo)
+        row = repo.module_source_maps["module-demo"]["sources"][0]["unit_routes"][0]
+        prior = emit_route_covers(route_id="route-test", covers=row["covers"], read_revisions={},
+                                 judged_by="prior", admitted_by={"request_id": "prior", "idempotency_key": "prior"},
+                                 source_hashes={"route-content:route-test": route_content_digest(
+                                     module_id="module-demo", source_id="source-demo-book", route=row)})
+        ledger = mini_repo / "operations/transactions/lineage.yaml"
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text(dump_ledger({prior.claim_id: prior}))
+        assert observe_claims(mini_repo)[prior.claim_id].status == "supported"
+        warning = run_los(mini_repo, "route-patch", "unit-demo-l01", "route-test", "--changes",
+                          json.dumps(changes), "--check")
+        assert warning.returncode == 0, warning.stderr
+        scaffold = json.loads(warning.stdout)["claims"][0]["claim_evidence_scaffold"]
+        item = scaffold["claim_evidence"][0]
+        assert item["evidence"][0]["ref"] == URI + "lecture-01.pdf"
+        assert item["evidence"][0]["text"] == ""
+        blank = run_los(mini_repo, "route-patch", "unit-demo-l01", "route-test", "--changes",
+                        json.dumps(changes), "--claim-evidence", json.dumps(item), "--check")
+        assert blank.returncode != 0 and "quote text needs" in blank.stderr
     checked = run_los(mini_repo, "route-patch", "unit-demo-l01", "route-test", "--changes",
                       json.dumps(changes), "--claim-evidence", json.dumps(evidence), "--check")
     assert checked.returncode == 0, checked.stderr + checked.stdout
@@ -292,6 +344,7 @@ def test_route_patch_uses_shared_admission_guard_and_atomic_lineage(mini_repo):
     assert applied.returncode == 0, applied.stdout + applied.stderr
     response = json.loads(applied.stdout)
     lineage = load_ledger(mini_repo)["covers:route-test"]
+    assert observe_claims(mini_repo)[lineage.claim_id].status == "supported"
     assert any(trail.startswith("quote:") for trail in lineage.derived_from.evidence)
     receipt = yaml.safe_load((mini_repo / response["receipt_path"]).read_text())
     for row in receipt["writes"]:
@@ -475,3 +528,23 @@ def test_source_binding_change_stales_an_admitted_claim(mini_repo):
     write_yaml(registry, data)
     status = observe_claims(mini_repo)["covers:route-test"]
     assert status.status == "stale" and "source-material:source-demo-book" in status.moved
+
+
+def test_overnight_scaffold_hint_is_exact_and_does_not_fill_claim_evidence(material_world):
+    from learning_os.app.claim_admission import claim_evidence_scaffolds
+    root, _, manifest = material_world
+    write_yaml(root / "records/materials-manifest.yaml", {"files": manifest})
+    repo = load_repo(root)
+    repo.module_source_maps["module-demo"] = {"module_id": "module-demo", "sources": [{
+        "source_id": "source-demo-book", "unit_routes": [route().row()]}]}
+    scaffold = claim_evidence_scaffolds(root, repo, "module-demo", ["covers:route-test"])["covers:route-test"]
+    assert scaffold["material_scope"][0]["candidate_excerpt"]["text"] == TEXT
+    assert scaffold["claim_evidence"][0]["evidence"][0]["text"] == ""
+
+
+def test_overnight_transcript_hint_uses_the_exact_locator_window(material_world):
+    from learning_os.store.materials.resolution import ResolvedMaterialFile
+    ref = _transcript(material_world)
+    file = ResolvedMaterialFile(ref, material_world[1] / "transcript.md")
+    candidate = reader(material_world).candidate_excerpt(file, "transcript.md, video 00:00-00:30")
+    assert candidate == {"text": TEXT, "window": "00:00-00:30"}

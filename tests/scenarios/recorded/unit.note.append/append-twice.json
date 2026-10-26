@@ -151,7 +151,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.note.append\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"working_note\": \"curriculum/modules/module-demo/units/unit-demo-l01/notes.md\",\n    \"recorded_at\": \"2026-10-01T09:00:00+02:00\",\n    \"stage_ids\": [],\n    \"attachments\": [],\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"unit.note.append\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"unit_id\":\"unit-demo-l01\",\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/notes.md\",\"recorded_at\":\"2026-10-01T09:00:00+02:00\",\"stage_ids\":[],\"attachments\":[],\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"unit-demo-l01\":4},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "unit.note.append",
         "error": null,
@@ -408,7 +408,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"unit.note.append\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"working_note\": \"curriculum/modules/module-demo/units/unit-demo-l01/notes.md\",\n    \"recorded_at\": \"2026-10-01T09:00:00+02:00\",\n    \"stage_ids\": [],\n    \"attachments\": [],\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"unit-demo-l01\": 5\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"unit.note.append\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX2\",\"receipt_path\":\"operations/transactions/TX2.yaml\",\"snapshot_after\":\"SNAP2\",\"result\":{\"ok\":true,\"unit_id\":\"unit-demo-l01\",\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/notes.md\",\"recorded_at\":\"2026-10-01T09:00:00+02:00\",\"stage_ids\":[],\"attachments\":[],\"transaction_id\":\"TX2\",\"receipt_path\":\"operations/transactions/TX2.yaml\",\"artifact_revisions\":{\"unit-demo-l01\":5},\"snapshot_after\":\"SNAP2\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "unit.note.append",
         "error": null,

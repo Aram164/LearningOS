@@ -306,3 +306,16 @@ def test_cli_apply_shape_runs_through_the_gateway(mini_repo, tmp_path):
         artifact_ids=["source-new-course"], idempotency_key="intake-cli")
     assert lone.returncode == 0, lone.stderr + lone.stdout
     assert json.loads(lone.stdout)["ok"] is True
+
+
+def test_overnight_batch_source_index_is_built_once(mini_repo, monkeypatch):
+    from learning_os.app.handlers import sources
+    from learning_os.store.loader import load_repo
+    original = sources._registry_link_index
+    calls = []
+    def counted(repo):
+        calls.append(repo)
+        return original(repo)
+    monkeypatch.setattr(sources, "_registry_link_index", counted)
+    sources._plan_source_intake(mini_repo, load_repo(mini_repo), [_create("source-new-a"), _create("source-new-b")])
+    assert len(calls) == 1

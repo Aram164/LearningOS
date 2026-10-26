@@ -38,14 +38,13 @@ from learning_os.store.loading import load_garden, load_notes
 from learning_os.store.transactions import parse_expected_revisions
 
 
-def _render_frontmatter(meta: dict, body: str) -> str:
-    """Frontmatter plus body, the commands.support formula.
-
-    The shared original stays for unconverted callers; an upward import
-    is not available here, so its one-line formula over the downward
-    ``_dump_yaml`` is repeated verbatim.
-    """
-    return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
+def _rewrite_frontmatter(meta: dict, original: bytes) -> bytes:
+    """Replace metadata while preserving every byte after its closing line."""
+    front = re.match(rb"\A---[^\S\r\n]*\r?\n.*?\r?\n---[^\S\r\n]*(?:\r?\n|$)",
+                     original, re.DOTALL)
+    if front is None:
+        raise LoaderError("note has no frontmatter block")
+    return ("---\n" + _dump_yaml(meta).rstrip() + "\n---\n").encode("utf-8") + original[front.end():]
 
 
 @register("note.evidence.add", kind="command")
@@ -89,7 +88,8 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {message}",
             exit_code=2,
         )
-    content = note.path.read_text(encoding="utf-8")
+    original_bytes = note.path.read_bytes()
+    content = original_bytes.decode("utf-8")
     try:
         meta, body = parse_frontmatter(content, note.path)
     except LoaderError as exc:
@@ -124,7 +124,7 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
          "scheme": req["ref"].split("://", 1)[0]},
         proposal=TransactionProposal(
             capability="note.evidence.add",
-            writes={note.path: _render_frontmatter(meta, body)},
+            writes={note.path: _rewrite_frontmatter(meta, original_bytes)},
             artifact_ids=[req["note_id"]],
             expected_revisions=expected_revisions,
         ),
@@ -212,17 +212,23 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             )
+        answers = (meta.get("atlas_question") or {}).get("answer_notes", [])
+        if not isinstance(answers, list) or any(
+                not isinstance(answer, str) or answer == note.id or answer not in repo.notes
+                for answer in answers):
+            raise WriteRefused("question answer_notes must name existing other notes",
+                               site=f"{ctx.operation}.invalid-answers")
     binding = note.meta.get("material_analysis")
     if isinstance(binding, dict):
-        written = (content.rstrip() + "\n").encode("utf-8")
+        written = content_bytes
         frozen_sha = str(
             binding.get("frozen_input_sha256", "")
         ).removeprefix("sha256:")
         frozen_size = binding.get("frozen_input_bytes")
         still_describes = (
             meta.get("material_analysis") == binding
-            and isinstance(frozen_size, int)
-            and hashlib.sha256(written[-frozen_size:]).hexdigest() == frozen_sha
+            and isinstance(frozen_size, int) and frozen_size >= 0
+            and hashlib.sha256(written[-frozen_size:] if frozen_size else b"").hexdigest() == frozen_sha
         )
         if not still_describes:
             # note.schema.json: the note body is exactly the file's last N
@@ -247,7 +253,7 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
          "path": note.path.relative_to(ctx.root).as_posix()},
         proposal=TransactionProposal(
             capability="note.revise",
-            writes={note.path: content.rstrip() + "\n"},
+            writes={note.path: content_bytes if isinstance(binding, dict) else content.rstrip() + "\n"},
             artifact_ids=[req["note_id"]],
             expected_revisions=expected_revisions,
         ),
@@ -310,7 +316,7 @@ def _schema(root: Path, name: str, data: object) -> None:
 def _render_exact_note(meta: dict, body: bytes) -> bytes:
     """Frontmatter plus the body bytes verbatim.
 
-    Unlike the evidence renderer this never strips leading whitespace: the
+    This never strips leading whitespace: the
     bytes after the frontmatter block are exactly the approved capture.
     """
     front = "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n"
@@ -422,7 +428,7 @@ def _precheck_note(note: object, body: bytes) -> dict:
 
 
 def _resolve_note_create(root: Path, repo, note: dict,
-                         body: bytes) -> tuple[str, Path, bytes, dict[Path, str]]:
+                         body: bytes) -> tuple[str, Path, bytes, dict[Path, bytes]]:
     """Classify one prechecked note against the loaded repository.
 
     Returns (note_id, destination, rendered_bytes, deprecations) where
@@ -481,12 +487,12 @@ def _resolve_note_create(root: Path, repo, note: dict,
             meta[field] = list(note[field])
     # Validate id before it can be used as a filename.
     _schema(root, "note", meta)
-    deprecations: dict[Path, str] = {}
+    deprecations: dict[Path, bytes] = {}
     for old_id in supersedes:
         old = repo.notes[old_id]
         try:
-            old_meta, old_body = parse_frontmatter(
-                old.path.read_text(encoding="utf-8"), old.path)
+            old_bytes = old.path.read_bytes()
+            old_meta, _ = parse_frontmatter(old_bytes.decode("utf-8"), old.path)
         except (LoaderError, OSError) as exc:
             raise WriteRefused(
                 f"cannot read superseded note {old_id!r}: {exc}",
@@ -494,7 +500,7 @@ def _resolve_note_create(root: Path, repo, note: dict,
             ) from exc
         if old_meta.get("state") != "deprecated":
             old_meta["state"] = "deprecated"
-            deprecations[old.path] = _render_frontmatter(old_meta, old_body)
+            deprecations[old.path] = _rewrite_frontmatter(old_meta, old_bytes)
     return note_id, path, _render_exact_note(meta, body), deprecations
 
 
@@ -830,7 +836,7 @@ def _note_match_text(meta: dict, text: str) -> str:
     return "\n".join([*flatten_search_values(meta), body])
 
 
-def _content_term_hits(root, ordered, terms):
+def _content_term_hits(root, ordered, terms, *, actual_bytes=None):
     """Per-term note counts for an empty content result, or None.
 
     Best-effort by design: the search itself already answered [], so a
@@ -840,7 +846,7 @@ def _content_term_hits(root, ordered, terms):
         hits = [0] * len(terms)
         for note in ordered:
             text = _note_match_text(
-                note.meta, _note_bytes(root, note).decode("utf-8"))
+                note.meta, _search_note_bytes(root, note, actual_bytes).decode("utf-8"))
             for index, term in enumerate(terms):
                 if term.search(text):
                     hits[index] += 1
@@ -887,18 +893,26 @@ def _match_verified(items, terms):
 # MEASURED (S23 cold-search scaling, 2026-09-26): 145 notes 1.02s cold /
 # 0.76s warm; 290 notes 1.07s / 0.84s; 725 notes 2.00s / 1.14s. Loader
 # dominates (warm tracks cold); no index or rebuild work triggered.
-def _exhaustive_content_search(root, ordered, terms):
+def _search_note_bytes(root, note, actual_bytes):
+    if actual_bytes is None:
+        return _note_bytes(root, note)
+    if note.id not in actual_bytes:
+        actual_bytes[note.id] = _note_bytes(root, note)
+    return actual_bytes[note.id]
+
+
+def _exhaustive_content_search(root, ordered, terms, *, actual_bytes=None):
     """The current implementation, kept as the differential oracle."""
     matches = []
     for note in ordered:
-        raw = _note_bytes(root, note)
+        raw = _search_note_bytes(root, note, actual_bytes)
         matches.extend(_match_verified(
             [(note.id, note.meta.get("title", note.id),
               note.path.relative_to(root).as_posix(), raw, note.meta)], terms))
     return matches
 
 
-def _indexed_content_search(root, ordered, terms, raw_terms):
+def _indexed_content_search(root, ordered, terms, raw_terms, *, actual_bytes=None):
     """Indexed path: derived postings narrow candidates, regex verifies.
 
     Reads every note once with the same admitted reader (identical
@@ -914,7 +928,7 @@ def _indexed_content_search(root, ordered, terms, raw_terms):
             note_id=note.id,
             relpath=note.path.relative_to(root).as_posix(),
             title=note.meta.get("title", note.id),
-            raw=_note_bytes(root, note))
+            raw=_search_note_bytes(root, note, actual_bytes))
     registry, inputs = build_registry(list(blobs.values()))
     postings = evaluate(root, POSTINGS_NODE_ID, registry=registry, inputs=inputs).value
     shortlist = candidates(root, postings, raw_terms)
@@ -971,18 +985,19 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
         if note_failures:
             raise WriteRefused(unreadable_refusal(root, note_failures, "search"))
         ordered = sorted(repo.notes.values(), key=lambda row: row.id)
+        actual_bytes = {}
         try:
-            matches = _indexed_content_search(root, ordered, terms, raw_terms)
+            matches = _indexed_content_search(root, ordered, terms, raw_terms, actual_bytes=actual_bytes)
         except DerivedError:
             # The index is a pure accelerator: any cache failure
             # (tampering already self-healed before raising) falls
             # back to the exhaustive implementation, never to a
             # partial answer. Bytes/symlink refusals are not
             # DerivedError and still propagate unchanged.
-            matches = _exhaustive_content_search(root, ordered, terms)
+            matches = _exhaustive_content_search(root, ordered, terms, actual_bytes=actual_bytes)
         notices = []
         if not matches:
-            hint_hits = _content_term_hits(root, ordered, terms)
+            hint_hits = _content_term_hits(root, ordered, terms, actual_bytes=actual_bytes)
             if hint_hits is not None:
                 notices.append(
                     f"los: {empty_search_hint('note', raw_terms, hint_hits)}")

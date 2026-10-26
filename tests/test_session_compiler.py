@@ -250,7 +250,6 @@ def test_prerequisite_repair_without_mapping_is_blocked(runtime_root):
 
 
 @pytest.mark.parametrize("repairs, reason", [
-    ({"standardization": "route-demo-0"}, "no target intervention remains"),
     ({"standardization": "route-missing"}, "not eligible"),
     ({"standardization": "route-demo-1"}, "not an intervention resource"),
 ])
@@ -1259,3 +1258,28 @@ def test_a_qualified_failure_spends_its_credit_too(runtime_root):
     )
     assert result["status"] == "fragile"
     assert {row["activity"] for row in result["not_counted_evidence"]} == {"task-a", "task-b"}
+
+
+def test_overnight_fragile_keeps_pure_intervention_when_mixed_is_only_evidence(runtime_root):
+    repo, req = inputs(runtime_root)
+    repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"][1]["scope_triage"] = "reference-only"
+    session = compile_session(repo, req, {"status": "fragile"})
+    assert session["plan_status"] == "ready"
+    assert [step["resource_id"] for step in session["steps"]] == ["route-demo-0", "route-demo-2"]
+
+
+def test_overnight_single_mixed_resource_can_produce_evidence(runtime_root):
+    repo, req = inputs(runtime_root)
+    resources = repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"]
+    resources[:] = [resource for resource in resources if resource["affordance"] == "mixed"]
+    session = compile_session(repo, req, {"status": "fragile"})
+    assert session["plan_status"] == "ready"
+    assert len(session["steps"]) == 1 and session["steps"][0]["intent"] == "evidence"
+
+
+def test_overnight_prerequisite_repair_keeps_remaining_mixed_intervention(runtime_root):
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {}, {"failed_prerequisites": ["standardization"],
+        "prerequisite_repairs": {"standardization": "route-demo-0"}})
+    assert session["plan_status"] == "ready"
+    assert [step["resource_id"] for step in session["steps"]] == ["route-demo-0", "route-demo-2", "route-demo-1"]

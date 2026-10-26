@@ -562,7 +562,7 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
             if not isinstance(value, dict):
                 raise ValueError("synthesis is not an object")
             validate_contract(root, "unit-material-synthesis.schema.json", value)
-            freshness = material_synthesis_freshness(root, unit.id, value)
+            freshness = material_synthesis_freshness(root, unit.id, value, repo=repo)
         except Exception as exc:
             freshness = {"status": "stale", "reasons": [str(exc)]}
         synthesis_rows.append({"unit_id": unit.id, **freshness})

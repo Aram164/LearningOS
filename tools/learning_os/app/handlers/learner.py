@@ -296,7 +296,11 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
     _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     stage = require_stage(ctx, data, req["stage_id"])
-    note_path = root / stage["working_note"]
+    note_ref = stage.get("working_note")
+    if not isinstance(note_ref, str) or not note_ref:
+        raise WriteRefused("stage has no working_note",
+                           site="stage.attachment.add.no-working-note", prefixed=True, exit_code=2)
+    note_path = root / note_ref
     attachment_dir = note_path.parent / "attachments"
     target = _allocate_attachment_path(attachment_dir, source.name)
     rel = target.relative_to(root).as_posix()
@@ -556,11 +560,12 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
     detour["status"] = "resolved"
     if req.get("resolution"):
         detour["resolution"] = req["resolution"]
-    target_stage = _stage(data, detour["return_to_stage"])
+    target_stage = require_stage(ctx, data, detour["return_to_stage"])
     for other in data.get("stages", []) or []:
         if other.get("status") in {"active", "paused"}:
             other["status"] = "pending"
     target_stage["status"] = "active"
+    target_stage.pop("completed", None)
     data["current_stage"] = target_stage["id"]
     data["status"] = "active"
     unit_data = copy.deepcopy(unit.data)

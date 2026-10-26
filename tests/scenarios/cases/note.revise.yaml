@@ -101,4 +101,36 @@ cases:
     transport: cli
     argv: [note-revise, note-demo, --file, "<CASEDATA>/revised.md", --approve, --expected-revision, bogus]
     expect: {site: note.revise.bad-expected-revision}
+  - id: self-answer
+    kind: sequence
+    expect: {site: note.revise.invalid-answers}
+    steps:
+      - transport: gateway
+        operation: atlas.question.save
+        request:
+          question:
+            id: note-question-demo
+            title: Where does variance live?
+            text: Is variance the second central moment?
+            target: {concepts: [concept-variance]}
+        artifact_ids: [note-question-demo]
+      - transport: gateway
+        request: {note_id: note-question-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:efd72bd1aa1af4a0729ea5e5d5af4628f8578d963015eff6e41931cb35537205"}
+        artifact_ids: []
+  - id: missing-answer
+    kind: sequence
+    expect: {site: note.revise.invalid-answers}
+    steps:
+      - transport: gateway
+        operation: atlas.question.save
+        request:
+          question:
+            id: note-question-demo
+            title: Where does variance live?
+            text: Is variance the second central moment?
+            target: {concepts: [concept-variance]}
+        artifact_ids: [note-question-demo]
+      - transport: gateway
+        request: {note_id: note-question-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:1efff54e20b0c77fec79222348d8d9a35ab15d7b4a73cc5801c783ac5058edfc"}
+        artifact_ids: []
 untriggered: []

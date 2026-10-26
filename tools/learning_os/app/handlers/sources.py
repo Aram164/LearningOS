@@ -561,7 +561,7 @@ def _require_text(item: dict, field: str, sid: str) -> str:
     return value
 
 def _plan_one(root: Path, repo, item: Any, index: int,
-              planned: dict[str, tuple[str, str]]) -> tuple[dict, dict, Path]:
+              planned: dict[str, tuple[str, str]], *, link_index=None) -> tuple[dict, dict, Path]:
     """Validate one intake row; return (record, diff-row, destination)."""
     tag = f"records[{index}]"
     if not isinstance(item, dict):
@@ -715,7 +715,8 @@ def _plan_one(root: Path, repo, item: Any, index: int,
         for label, address in incoming.items():
             if held.get(label) != address and isinstance(address, str):
                 added.append(address)
-    link_index = _registry_link_index(repo)
+    if link_index is None:
+        link_index = _registry_link_index(repo)
     for raw in added:
         holder, where = link_index.get(_normalize_link(raw), (None, ""))
         if holder is not None and holder != sid:
@@ -790,8 +791,9 @@ def _plan_source_intake(root: Path, repo, items: Any) -> dict:
     diff = []
     per_file: dict[Path, dict[str, dict]] = {}
     seen: set[str] = set()
+    link_index = _registry_link_index(repo)
     for position, item in enumerate(items):
-        record, row, destination = _plan_one(root, repo, item, position, planned)
+        record, row, destination = _plan_one(root, repo, item, position, planned, link_index=link_index)
         if record["id"] in seen:
             raise WriteRefused(f"{record['id']}: named twice in one batch")
         seen.add(record["id"])

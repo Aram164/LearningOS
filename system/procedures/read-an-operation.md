@@ -61,31 +61,7 @@ seal_envelope: guards auto: note-ops-first=0
 ```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-ops-first",
-  "idempotency_key": "ops-first",
-  "capability": "note.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "note_id": "note-ops-first",
-    "note_path": "knowledge/notes/mathematics/note-ops-first.md",
-    "deprecated": [],
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "note-ops-first": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-ops-first","idempotency_key":"ops-first","capability":"note.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"note_id":"note-ops-first","note_path":"knowledge/notes/mathematics/note-ops-first.md","deprecated":[],"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"note-ops-first":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## Setup: the first note persisted with a receipt
@@ -231,27 +207,7 @@ captured 2
 ```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-ops-refused",
-  "idempotency_key": "ops-refused",
-  "capability": "note.create",
-  "ok": false,
-  "replayed": false,
-  "transaction_id": null,
-  "receipt_path": null,
-  "snapshot_after": null,
-  "result": {},
-  "error": {
-    "code": "STALE_SNAPSHOT",
-    "message": "canonical state changed since this request was approved",
-    "retryable": true,
-    "details": {
-      "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "actual": "$LOS_FIXTURE_SNAPSHOT_2"
-    }
-  }
-}
+{"schema_version":2,"request_id":"request-ops-refused","idempotency_key":"ops-refused","capability":"note.create","ok":false,"replayed":false,"transaction_id":null,"receipt_path":null,"snapshot_after":null,"result":{},"error":{"code":"STALE_SNAPSHOT","message":"canonical state changed since this request was approved","retryable":true,"details":{"expected":"sha256:0000000000000000000000000000000000000000000000000000000000000000","actual":"$LOS_FIXTURE_SNAPSHOT_2"}}}
 [3]
 ```
 

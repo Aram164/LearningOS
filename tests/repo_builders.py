@@ -329,7 +329,8 @@ def material_fixture(root):
         stage["number"] = number
         stage.setdefault("exam_critical", False)
         stage.setdefault("concepts", ["concept-expected-value"])
-    row = {"kind": "read", "label": route["title"], "source_id": "source-demo-book",
+    # Bind the intentional angle override before recording its existing warnings.
+    row = {"kind": "read", "route_id": route_id, "label": route["title"], "source_id": "source-demo-book",
            "locator": route["locator"], "angle": route["angle"],
            "angle_detail": route["angle_detail"], "scope_triage": "required-now"}
     sm.data["stages"][0]["resources"] = [

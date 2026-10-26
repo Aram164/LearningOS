@@ -691,9 +691,9 @@ def test_approved_delivery_stages_only_hash_verified_artifact_bytes(
     original_target_check = app._assert_target_unchanged
     target_checks = 0
 
-    def mutate_after_verified_read(request):
+    def mutate_after_verified_read(request, *, repo=None):
         nonlocal target_checks
-        target = original_target_check(request)
+        target = original_target_check(request, repo=repo)
         target_checks += 1
         if target_checks == 1:
             artifact.write_bytes(b"unapproved race content\n")
@@ -861,3 +861,50 @@ def test_validator_names_a_persisted_bundle_with_a_bad_request_id(ai_repo: Path)
     write_yaml(bundle, {"id": "ai-request-ok-1", "type": "ai-action-request"})
     codes = [i.code for i in validate(load_repo(ai_repo))]
     assert "AI-REQUEST-ID" not in codes
+
+
+def test_overnight_transcription_without_artifact_is_rejected_at_import(ai_repo, tmp_path):
+    app, _, source = make_delivery(ai_repo, tmp_path)
+    path = source / "delivery.yaml"
+    delivery = yaml.safe_load(path.read_text())
+    delivery["operations"][0].pop("artifact_ref")
+    write_yaml(path, delivery)
+    with pytest.raises(DeliveryValidationError, match="requires artifact_ref"):
+        app.import_delivery(source)
+
+
+def test_overnight_typed_commit_failures_are_not_validation_errors():
+    from learning_os.domain.failures import (
+        PostCommitFailure,
+        ProjectionFailure,
+        TransactionPublicationUncertain,
+        TransactionRollbackIncomplete,
+    )
+    for failure in (PostCommitFailure, ProjectionFailure, TransactionPublicationUncertain, TransactionRollbackIncomplete):
+        # Allocate without the constructor: only exception identity is relevant here.
+        exc = failure.__new__(failure)
+        assert AIActionService._translate_commit_failure(exc) is None
+
+
+def test_overnight_prepare_loads_the_repo_once(ai_repo, monkeypatch):
+    from learning_os.app.ai_actions import service as module
+    tid = target_id(ai_repo)
+    original = module.load_repo
+    calls = []
+    def counted(root):
+        calls.append(root)
+        return original(root)
+    monkeypatch.setattr(module, "load_repo", counted)
+    service(ai_repo).prepare(action_id="garden.shelve", target_kind="garden-note", target_id=tid)
+    assert len(calls) == 1
+
+
+def test_overnight_delivery_records_shared_ledgers_in_session(ai_repo, tmp_path, monkeypatch):
+    from learning_os.store.session_ledger import load_session_ledger
+    monkeypatch.setenv("LOS_SESSION_ID", "overnight-ai-ledger")
+    app, _, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    apply_approved_delivery(app, delivery["id"])
+    ledger = load_session_ledger(ai_repo)
+    assert "operations/transactions/revisions.yaml" in ledger["paths"]
+    assert "operations/transactions/idempotency.yaml" in ledger["paths"]

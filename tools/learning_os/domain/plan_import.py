@@ -15,6 +15,7 @@ from typing import Any
 import yaml  # type: ignore[import-untyped]
 
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
+from learning_os.domain.route_identity import route_with_identity
 from learning_os.domain.suggest import not_found
 
 _COMPACT_STAGE_FIELDS = frozenset({
@@ -48,8 +49,10 @@ def source_map_routes(source_map: Any) -> dict[str, dict[str, Any]]:
         if not isinstance(source, dict):
             continue
         for route in source.get("unit_routes") or []:
-            if isinstance(route, dict) and route.get("id"):
-                routes[str(route["id"])] = route
+            if isinstance(route, dict):
+                identified = route_with_identity(str(source_map.get("module_id") or ""),
+                                                 str(source.get("source_id") or ""), route)
+                routes[str(identified["id"])] = identified
     return routes
 
 
@@ -64,8 +67,9 @@ def source_map_routes_with_source(
             continue
         source_id = str(source.get("source_id") or "")
         for route in source.get("unit_routes") or []:
-            if isinstance(route, dict) and route.get("id"):
-                routes[str(route["id"])] = (source_id, route)
+            if isinstance(route, dict):
+                identified = route_with_identity(str(source_map.get("module_id") or ""), source_id, route)
+                routes[str(identified["id"])] = (source_id, identified)
     return routes
 
 
@@ -574,8 +578,9 @@ def apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_id
         if not isinstance(source, dict):
             continue
         for route in source.get("unit_routes", []) or []:
-            if isinstance(route, dict) and route.get("id"):
-                by_id.setdefault(str(route["id"]), (source, route))
+            if isinstance(route, dict):
+                identified = route_with_identity(module_id, str(source.get("source_id") or ""), route)
+                by_id.setdefault(str(identified["id"]), (source, route))
 
     def unit_of(route: dict[str, Any]) -> str | None:
         return route.get("unit_id") if isinstance(route, dict) else None
@@ -657,6 +662,8 @@ def apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_id
         if not fields:
             problems.append(f"route_changes.update {rid} changes nothing")
             continue
+        # Persist the public identity before changing the fields it derives from.
+        route.setdefault("id", rid)
         route.update(copy.deepcopy(fields))
         summary["updated"].append(rid)
     for row in (changes.get("remove", []) or []):

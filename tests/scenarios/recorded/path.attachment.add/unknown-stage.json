@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"path.attachment.add\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: stage not found: stage-nope\",\n    \"retryable\": false,\n    \"details\": {\n      \"reason\": \"NOT_FOUND\",\n      \"suggestions\": []\n    }\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"path.attachment.add\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: stage not found: stage-nope\",\"retryable\":false,\"details\":{\"reason\":\"NOT_FOUND\",\"suggestions\":[]}}}\n",
   "stdout_json": {
     "capability": "path.attachment.add",
     "error": {

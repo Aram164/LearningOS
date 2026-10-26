@@ -88,31 +88,7 @@ seal_envelope: guards auto: note-probe-derivation=0
 ```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s17-create",
-  "idempotency_key": "s17-create",
-  "capability": "note.create",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "note_id": "note-probe-derivation",
-    "note_path": "knowledge/notes/mathematics/note-probe-derivation.md",
-    "deprecated": [],
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "note-probe-derivation": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s17-create","idempotency_key":"s17-create","capability":"note.create","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"note_id":"note-probe-derivation","note_path":"knowledge/notes/mathematics/note-probe-derivation.md","deprecated":[],"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"note-probe-derivation":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -159,30 +135,7 @@ seal_envelope: guards auto: note-probe-derivation=1
 ```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s17-rev",
-  "idempotency_key": "s17-rev",
-  "capability": "note.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
-  "result": {
-    "ok": true,
-    "note_id": "note-probe-derivation",
-    "path": "knowledge/notes/mathematics/note-probe-derivation.md",
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "note-probe-derivation": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s17-rev","idempotency_key":"s17-rev","capability":"note.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"note_id":"note-probe-derivation","path":"knowledge/notes/mathematics/note-probe-derivation.md","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"note-probe-derivation":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -202,36 +155,7 @@ seal_envelope: guards auto: note-probe-derivation=2
 ```scrut {interpolated: true}
 $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s17-ev",
-  "idempotency_key": "s17-ev",
-  "capability": "note.evidence.add",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-  "result": {
-    "ok": true,
-    "note_id": "note-probe-derivation",
-    "path": "knowledge/notes/mathematics/note-probe-derivation.md",
-    "evidence": {
-      "type": "derivation",
-      "ref": "note://note-probe-derivation"
-    },
-    "evidence_count": 1,
-    "scheme": "note",
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "note-probe-derivation": 3
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s17-ev","idempotency_key":"s17-ev","capability":"note.evidence.add","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"note_id":"note-probe-derivation","path":"knowledge/notes/mathematics/note-probe-derivation.md","evidence":{"type":"derivation","ref":"note://note-probe-derivation"},"evidence_count":1,"scheme":"note","transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"note-probe-derivation":3},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

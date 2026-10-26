@@ -134,6 +134,10 @@ def prepare_review_envelope(capability_name: str, payload: dict,
         "payload": payload,
         "approval": {"kind": "operator-approval", "subject_sha256": ""},
     }
+    from learning_os.store.session_ledger import resolve_session_identity
+    session_id, source = resolve_session_identity(channel=channel)
+    if source != "channel":
+        envelope["session_id"] = session_id
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     return envelope
 

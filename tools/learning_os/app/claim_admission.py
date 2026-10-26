@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -39,7 +40,12 @@ from learning_os.store.materials.anchors import (
     AnchorReader,
     RouteMaterial,
 )
-from learning_os.store.materials.resolution import stable_checksum
+from learning_os.store.materials.resolution import (
+    locator_for_material,
+    resolve_route_material_files,
+    stable_checksum,
+)
+from learning_os.store.materials.slices import parse_locator_page_ranges
 from learning_os.store.revisions import load_revisions
 
 LINEAGE_ARTIFACT = "file:operations/transactions/lineage.yaml"
@@ -127,6 +133,62 @@ def _material(rid: str, owned: tuple[str, Mapping[str, object]]) -> RouteMateria
     source, row = owned
     return RouteMaterial(rid, source, str(row.get("locator") or ""),
                          str(row.get("vault_path") or ""), str(row.get("url") or ""))
+
+
+def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
+                             claim_ids: Iterable[str], *,
+                             previous_repo: Repo | None = None) -> dict[str, dict[str, object]]:
+    """Unfilled review drafts: identities and scope hints never stand in for evidence."""
+    owned = {**_owned(previous_repo.module_source_maps.get(module_id) if previous_repo else None),
+             **_owned(repo.module_source_maps.get(module_id))}
+    result: dict[str, dict[str, object]] = {}
+    reader = AnchorReader(repo, read_material_manifest(root))
+    for cid in sorted(set(claim_ids)):
+        item = owned.get(cid.removeprefix("covers:")) if cid.startswith("covers:") else None
+        if item is None:
+            continue
+        sid, row = item
+        evidence: list[dict[str, object]] = []
+        scopes: list[dict[str, object]] = []
+        files = resolve_route_material_files(repo, {**row, "source_id": sid})
+        for file in files:
+            authored_locator = str(row.get("locator") or "")
+            try:
+                locator = locator_for_material(authored_locator, file.material_uri)
+            except ValueError as exc:
+                scopes.append({"ref": file.material_uri, "locator": authored_locator,
+                               "page_ranges": [], "scope_error": str(exc)})
+                continue
+            ranges = parse_locator_page_ranges(locator)
+            scopes.append({"ref": file.material_uri, "locator": locator,
+                           "page_ranges": [list(span) for span in ranges]})
+            if file.path.suffix.lower() in {".pdf", ".md", ".txt"}:
+                try:
+                    candidate = reader.candidate_excerpt(file, locator)
+                except (AnchorError, OSError, UnicodeError, ValueError):
+                    candidate = None
+                if candidate and candidate.get("text"):
+                    scopes[-1]["candidate_excerpt"] = candidate
+                quote: dict[str, object] = {"kind": "quote", "ref": file.material_uri, "text": ""}
+                if file.path.suffix.lower() == ".pdf":
+                    quote["page"] = ranges[0][0] if ranges else None
+                else:
+                    quote["window"] = ""
+                evidence.append(quote)
+            else:
+                evidence.append({"kind": "manifest", "ref": file.material_uri.removeprefix("material://"),
+                                 "note": ""})
+        if not files and str(row.get("url") or "").startswith(("https://", "http://")):
+            evidence.append({"kind": "external", "ref": row["url"], "note": ""})
+        result[cid] = {
+            "claim_evidence": [{"claim_id": cid, "evidence": evidence,
+                                "reads": {}}],
+            "material_scope": scopes,
+            "instruction": ("Resolve the reported file/locator mismatch before drafting evidence; this draft is not admitted evidence."
+                            if any("scope_error" in scope for scope in scopes) else
+                            "Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence."),
+        }
+    return result
 
 
 def admit_evidence(root: Path, reader: AnchorReader, claim_id: str, route: RouteMaterial,
@@ -226,6 +288,8 @@ def prepare_claim_admission(root: Path, repo: Repo, module_id: str,
                             package: Mapping[str, object], *, unit_scope: str | None = None) -> ClaimAdmission:
     live_map = repo.module_source_maps.get(module_id) or {}
     proposed_map = package.get("source_map") if package.get("source_map") is not None else live_map
+    if not isinstance(proposed_map, dict):
+        return ClaimAdmission(["source_map must be a mapping"], {}, {}, _routes(live_map))
     live, proposed = _routes(live_map), _routes(proposed_map)
     live_owned, owned = _owned(live_map), _owned(proposed_map)
     sources = dict(repo.sources)
@@ -241,7 +305,15 @@ def prepare_claim_admission(root: Path, repo: Repo, module_id: str,
         sources[sid] = {**before_source, **patch}
         if before_source.get("material") != sources[sid].get("material"):
             material_changes.add(sid)
-    proposed_repo = replace(repo, sources=sources)
+    units = dict(repo.units)
+    raw_units = package.get("units")
+    for entry in raw_units if isinstance(raw_units, list) else ():
+        data = entry.get("unit") if isinstance(entry, dict) else None
+        uid = data.get("id") if isinstance(data, dict) else None
+        if isinstance(data, dict) and isinstance(uid, str) and uid in units and units[uid].module_id == module_id:
+            units[uid] = replace(units[uid], data=data)
+    proposed_repo = replace(repo, sources=sources, units=units,
+                            module_source_maps={**repo.module_source_maps, module_id: proposed_map})
     changed: dict[str, list[str]] = {}
     if package.get("source_map") is not None:
         for rid, row in sorted(proposed.items()):
@@ -289,6 +361,8 @@ def prepare_claim_admission(root: Path, repo: Repo, module_id: str,
         revisions = load_revisions(root)
         statuses = observe_claims(root, repo=repo, records=records,
                                   route_ids=[key.removeprefix("covers:") for key in supplied])
+        after_statuses = observe_claims(root, repo=proposed_repo, records=records,
+                                        route_ids=[key.removeprefix("covers:") for key in supplied]) if supplied else {}
     except (ValueError, TransactionFailure) as exc:
         return ClaimAdmission([str(exc)], {}, {}, live)
     audit_defects: frozenset[tuple[str, str]] | None = None
@@ -307,7 +381,8 @@ def prepare_claim_admission(root: Path, repo: Repo, module_id: str,
                 eligible = True
             elif prior.status == "supported":
                 status = statuses.get(claim_id)
-                if status is not None and status.status == "stale":
+                after = after_statuses.get(claim_id)
+                if any(row is not None and row.status == "stale" for row in (status, after)):
                     eligible = True
                 elif status is not None:
                     if audit_defects is None:
@@ -321,9 +396,13 @@ def prepare_claim_admission(root: Path, repo: Repo, module_id: str,
             changed[rid] = _covers(claim_row)
         else:
             problems.append(f"claim evidence names {claim_id!r}, which this package does not change and is not stale or disputed; lineage is prospective only, never backfill")
+    missing = ["covers:" + rid for rid in sorted(changed) if "covers:" + rid not in supplied]
+    scaffolds = claim_evidence_scaffolds(root, proposed_repo, module_id, missing, previous_repo=repo) if missing else {}
     for rid in sorted(changed):
         if "covers:" + rid not in supplied:
             problems.append(f"route {rid} changes covers or material identity without claim evidence; Phase B requires admitted evidence for covers:{rid}")
+            if scaffold := scaffolds.get("covers:" + rid):
+                problems.append("claim_evidence scaffold (unfilled): " + json.dumps(scaffold, ensure_ascii=False))
     if problems:
         return ClaimAdmission(problems, {}, {}, live)
     reader = AnchorReader(proposed_repo, manifest, previous_repo=repo)
@@ -355,7 +434,7 @@ def render_claim_lineage(root: Path, repo: Repo, module_id: str, package: Mappin
     nodes: dict[str, Mapping[str, object]] = {}
     for unit in repo.units.values():
         nodes.update(knowledge_node_rows(unit.data))
-    incremented = {module_id}
+    incremented = {module_id, LINEAGE_ARTIFACT}
     units = package.get("units")
     for entry in units if isinstance(units, list) else ():
         data: object = entry.get("unit") if isinstance(entry, dict) else None
@@ -393,10 +472,10 @@ def render_claim_lineage(root: Path, repo: Repo, module_id: str, package: Mappin
                     records[lineage.claim_id] = lineage
     for unit_id, dossier in synthesis_entries:
         content = dump_yaml(dict(dossier))
-        path = synthesis_destination(root, unit_id)
+        path = synthesis_destination(root, unit_id, repo=repo)
         if path.is_file() and path.read_bytes() == content.encode("utf-8"):
             continue
         cid = f"dossier:{dossier['id']}"
         records[cid] = publication_lineage_record(root, unit_id, dict(dossier), content, request,
-                                                  prior=records.get(cid))
+                                                  prior=records.get(cid), repo=repo)
     return dump_ledger(records)

@@ -18,6 +18,7 @@ from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app.check import real_perimeter_errors as _real_perimeter_errors
 from learning_os.app.claim_admission import (
     anchor_report,
+    claim_evidence_scaffolds,
     lineage_artifacts,
     prepare_claim_admission,
     render_claim_lineage,
@@ -313,9 +314,15 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
             before = observe_claims(root, repo=repo, route_ids=[req["route_id"]])
         except ValueError as exc:
             raise WriteRefused(f"cannot read claim impact: {exc}") from exc
+        proposed_repo = replace(repo, module_source_maps={**repo.module_source_maps, unit.module_id: proposed})
         after = {cid: replace(row, status="stale") if writes and row.status == "supported" else row
                  for cid, row in before.items()}
         detail["claims"] = claim_impacts(before, after, ["covers:" + rid for rid in admission.changed])
+        scaffolds = claim_evidence_scaffolds(root, proposed_repo, unit.module_id,
+                                            [str(row["claim_id"]) for row in detail["claims"] if row["after"] == "will-be-stale"])
+        for row in detail["claims"]:
+            if scaffold := scaffolds.get(str(row["claim_id"])):
+                row["claim_evidence_scaffold"] = scaffold
 
         if lineage_will_change and not checking and current_gateway_request() is not None:
             writes[root / LEDGER_RELATIVE] = render_claim_lineage(

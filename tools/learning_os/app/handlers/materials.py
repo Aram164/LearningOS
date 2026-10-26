@@ -304,7 +304,7 @@ def _unit_audit(root, repo, unit) -> dict:
         if route.get("source_id") in legacy_sources)
     unplaced = sorted(route["id"] for route in routes if not placed(route))
     try:
-        destination = synthesis_destination(root, unit.id)
+        destination = synthesis_destination(root, unit.id, repo=repo)
     except MaterialSynthesisError:
         destination = None
     present = bool(destination and destination.is_file())

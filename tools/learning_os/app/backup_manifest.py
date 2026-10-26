@@ -588,7 +588,22 @@ def _rebuild_materials_alias_layer(
     stays a failure: that is a material actually lost.
     """
     aliases: dict[str, str] = manifest.get("materials_aliases") or {}
-    detail: dict[str, Any] = {"recorded": len(aliases)}
+    detail: dict[str, Any] = {"recorded": len(aliases) if isinstance(aliases, dict) else 0}
+    try:
+        if not isinstance(aliases, dict):
+            raise BackupManifestError("materials_aliases must be a mapping")
+        if (restored_materials / ".flat").is_symlink():
+            raise BackupManifestError("materials alias directory must not be a symlink")
+        for name, relative in aliases.items():
+            if not isinstance(name, str) or name in {"", ".", ".."} or any(
+                    char in name for char in ("/", "\\", "\0")):
+                raise BackupManifestError("materials alias name must be one safe path segment")
+            if not isinstance(relative, str):
+                raise BackupManifestError("materials alias target must be a relative path")
+            _inside(restored_materials, relative)
+    except (BackupManifestError, OSError, ValueError) as exc:
+        detail["error"] = str(exc)
+        return {"id": "materials-alias-layer", "ok": False, "detail": detail}
 
     # `Repo.materials_root` resolves material:// URIs at <core>/../materials, so
     # a restore laid out any other way validates against a tree this never

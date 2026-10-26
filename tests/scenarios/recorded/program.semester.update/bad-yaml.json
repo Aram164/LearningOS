@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"program.semester.update\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: invalid program semester YAML: while parsing a flow mapping\\n  in \\\"<unicode string>\\\", line 2, column 11:\\n    semester: {id: semester-wise-2026\\n              ^\\nexpected ',' or '}', but got '<stream end>'\\n  in \\\"<unicode string>\\\", line 3, column 1:\\n    \\n    ^\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"program.semester.update\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: invalid program semester YAML: while parsing a flow mapping\\n  in \\\"<unicode string>\\\", line 2, column 11:\\n    semester: {id: semester-wise-2026\\n              ^\\nexpected ',' or '}', but got '<stream end>'\\n  in \\\"<unicode string>\\\", line 3, column 1:\\n    \\n    ^\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "program.semester.update",
     "error": {

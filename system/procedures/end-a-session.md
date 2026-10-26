@@ -83,40 +83,7 @@ $ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 "$LOS_FIXTURE_FILE_2
 ```scrut {interpolated: true}
 $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-end-a-session-stage-001",
-  "idempotency_key": "end-a-session-stage-001",
-  "capability": "stage.progress.update",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "stage_id": "stage-demo",
-    "status": "complete",
-    "map_status": "active",
-    "current_stage": "stage-demo-pending",
-    "observe_requirement": "req-demo-l01-demo",
-    "observe_next": "los observe req-demo-l01-demo --activity <what-you-did> --result <correct|incorrect|partial|abandoned> --condition unfamiliar-example",
-    "observe_conditions": [
-      "unfamiliar-example"
-    ],
-    "observe_note": "keep only the conditions that actually held; an omitted one is read as unknown, never as met",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "study-map-demo-l01": 1,
-      "unit-demo-l01": 4
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-end-a-session-stage-001","idempotency_key":"end-a-session-stage-001","capability":"stage.progress.update","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"unit_id":"unit-demo-l01","stage_id":"stage-demo","status":"complete","map_status":"active","current_stage":"stage-demo-pending","observe_requirement":"req-demo-l01-demo","observe_next":"los observe req-demo-l01-demo --activity <what-you-did> --result <correct|incorrect|partial|abandoned> --condition unfamiliar-example","observe_conditions":["unfamiliar-example"],"observe_note":"keep only the conditions that actually held; an omitted one is read as unknown, never as met","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"study-map-demo-l01":1,"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability
@@ -136,27 +103,7 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/study-ma
 ```scrut {interpolated: true}
 $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-end-a-session-stale-001",
-  "idempotency_key": "end-a-session-stale-001",
-  "capability": "unit.note.append",
-  "ok": false,
-  "replayed": false,
-  "transaction_id": null,
-  "receipt_path": null,
-  "snapshot_after": null,
-  "result": {},
-  "error": {
-    "code": "STALE_SNAPSHOT",
-    "message": "canonical state changed since this request was approved",
-    "retryable": true,
-    "details": {
-      "expected": "$LOS_FIXTURE_SNAPSHOT_1",
-      "actual": "$LOS_FIXTURE_SNAPSHOT_2"
-    }
-  }
-}
+{"schema_version":2,"request_id":"request-end-a-session-stale-001","idempotency_key":"end-a-session-stale-001","capability":"unit.note.append","ok":false,"replayed":false,"transaction_id":null,"receipt_path":null,"snapshot_after":null,"result":{},"error":{"code":"STALE_SNAPSHOT","message":"canonical state changed since this request was approved","retryable":true,"details":{"expected":"$LOS_FIXTURE_SNAPSHOT_1","actual":"$LOS_FIXTURE_SNAPSHOT_2"}}}
 [3]
 ```
 

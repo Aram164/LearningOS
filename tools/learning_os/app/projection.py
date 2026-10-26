@@ -15,12 +15,14 @@ from learning_os.derive.projection import (
     write_outputs,
 )
 from learning_os.derive.projection.common import git_state as _git_state
+from learning_os.domain.snapshot import Repo
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.fingerprint import (
     canonical_fingerprint,
     seed_source_fingerprint,
 )
 from learning_os.store.loader import load_repo
+from learning_os.store.loading import load_workspaces
 from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     bytes_sha256,
@@ -43,7 +45,8 @@ class _LazyRepo:
     ``_fresh_manifest_and_repo`` serves the stored manifest without parsing
     canonical inputs; callers that only read the manifest never pay for the
     load (measured: load 0.24 s of a 2.0 s read). The first attribute access
-    loads once; afterwards this answers exactly like the real repo. Reads
+    loads once; afterwards this answers exactly like the real repo. The
+    workspace-owned learning_paths registry has its own partial load. Reads
     that need repo-only state (path-stage lookup, use evidence) trigger the
     load implicitly and stay correct.
     """
@@ -51,11 +54,22 @@ class _LazyRepo:
     def __init__(self, root: Path) -> None:
         self._lazy_root = root
         self._lazy_repo = None
+        self._lazy_paths = None
 
     def _resolve(self):
         if self._lazy_repo is None:
             self._lazy_repo = load_repo(self._lazy_root)
         return self._lazy_repo
+
+    @property
+    def learning_paths(self):
+        if self._lazy_repo is not None:
+            return self._lazy_repo.learning_paths
+        if self._lazy_paths is None:
+            partial = Repo(root=self._lazy_root)
+            load_workspaces(partial, self._lazy_root)
+            self._lazy_paths = partial.learning_paths
+        return self._lazy_paths
 
     def __getattr__(self, name: str):
         return getattr(self._resolve(), name)

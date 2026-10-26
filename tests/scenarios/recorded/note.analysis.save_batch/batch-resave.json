@@ -139,7 +139,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save_batch\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"note-scenario-batch-4\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false,\n    \"ok\": true,\n    \"created_note_ids\": [\n      \"note-scenario-batch-4\"\n    ],\n    \"replayed_note_ids\": [],\n    \"note_paths\": {\n      \"note-scenario-batch-4\": \"knowledge/notes/mathematics/note-scenario-batch-4.md\"\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"note.analysis.save_batch\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"note-scenario-batch-4\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false,\"ok\":true,\"created_note_ids\":[\"note-scenario-batch-4\"],\"replayed_note_ids\":[],\"note_paths\":{\"note-scenario-batch-4\":\"knowledge/notes/mathematics/note-scenario-batch-4.md\"}},\"error\":null}\n",
       "stdout_json": {
         "capability": "note.analysis.save_batch",
         "error": null,
@@ -251,7 +251,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"note.analysis.save_batch\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"replayed\": true,\n    \"created_note_ids\": [],\n    \"replayed_note_ids\": [\n      \"note-scenario-batch-4\"\n    ],\n    \"note_paths\": {\n      \"note-scenario-batch-4\": \"knowledge/notes/mathematics/note-scenario-batch-4.md\"\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"note.analysis.save_batch\",\"ok\":true,\"replayed\":true,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"replayed\":true,\"created_note_ids\":[],\"replayed_note_ids\":[\"note-scenario-batch-4\"],\"note_paths\":{\"note-scenario-batch-4\":\"knowledge/notes/mathematics/note-scenario-batch-4.md\"}},\"error\":null}\n",
       "stdout_json": {
         "capability": "note.analysis.save_batch",
         "error": null,

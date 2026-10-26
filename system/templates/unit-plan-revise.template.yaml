@@ -82,6 +82,9 @@ route_changes:
 #     reason: "Superseded by the new derivation; the tutorial keeps the drill."
 
 # claim_evidence also admits unchanged stale, contested or exact-basis audit-defective
-# claims. For local material use kind: quote with canonical ref, explicit page or
+# claims, and claims made stale by this package's route or covered-node edits.
+# Check diagnostics offer unfilled evidence scaffolds; supply actual quotations
+# or verification notes before submitting them.
+# For local material use kind: quote with canonical ref, explicit page or
 # window and 40-300-character text; keep quotation-bearing drafts outside Core.
 # Coverage or material-identity changes require evidence even when covers stays equal.

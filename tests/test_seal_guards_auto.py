@@ -526,10 +526,10 @@ def test_public_module_plan_guards_auto_preserves_guard_derivation(
     envelope = json.loads(out.read_text(encoding="utf-8"))
     assert envelope["expected_snapshot"] == f"sha256:{before}"
     assert envelope["expected_revisions"] == {"module-demo": 0}
-    # The second live load resolves the synthesis destination of the unit.
-    assert counts["live_loads"] == 2, counts
+    # Synthesis destination resolution shares the planner's live repository.
+    assert counts["live_loads"] == 1, counts
     assert counts["shadow_loads"] == 1, counts
-    assert counts["load_repo"] == 3, counts
+    assert counts["load_repo"] == 2, counts
     assert counts["walks"] == 1, counts
     assert counts["validate"] == 1, counts
     assert canonical_fingerprint(mini_repo) == before

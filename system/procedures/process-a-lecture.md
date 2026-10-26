@@ -131,28 +131,7 @@ seal_envelope: guards auto: source-demo-lecture=0
 ```scrut {interpolated: true}
 $ los capability source.intake.record --payload-file "$TMPDIR/s23-intake.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s23-intake",
-  "idempotency_key": "s23-intake",
-  "capability": "source.intake.record",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "source-demo-lecture": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s23-intake","idempotency_key":"s23-intake","capability":"source.intake.record","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"source-demo-lecture":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ```scrut
@@ -188,28 +167,7 @@ seal_envelope: guards auto: source-demo-lecture=1
 ```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/s23-attach.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s23-attach",
-  "idempotency_key": "s23-attach",
-  "capability": "source.record.revise",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "source-demo-lecture": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s23-attach","idempotency_key":"s23-attach","capability":"source.record.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"source-demo-lecture":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ```scrut
@@ -432,36 +390,7 @@ seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-
 ```scrut {interpolated: true}
 $ los capability module.plan.import --payload-file "$TMPDIR/s23-import.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s23-import",
-  "idempotency_key": "s23-import",
-  "capability": "module.plan.import",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-  "result": {
-    "ok": true,
-    "mode": "apply",
-    "module_id": "module-demo",
-    "units_written": [
-      "unit-demo-l03"
-    ],
-    "files_written": 5,
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "file:operations/transactions/lineage.yaml": 1,
-      "module-demo": 1,
-      "unit-demo-l03": 1
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s23-import","idempotency_key":"s23-import","capability":"module.plan.import","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"mode":"apply","module_id":"module-demo","units_written":["unit-demo-l03"],"files_written":5,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"file:operations/transactions/lineage.yaml":1,"module-demo":1,"unit-demo-l03":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```
 
 ```scrut
@@ -484,32 +413,7 @@ seal_envelope: guards auto: unit-demo-l03=1
 ```scrut {interpolated: true}
 $ los capability unit.source-selection.set --payload-file "$TMPDIR/s23-select.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-s23-select",
-  "idempotency_key": "s23-select",
-  "capability": "unit.source-selection.set",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-004",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_7",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l03",
-    "source_id": "source-demo-lecture",
-    "locator": "lecture-03.pdf, PDF pp. 1-6",
-    "selected": true,
-    "transaction_id": "transaction-20261001-090000-004",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-    "artifact_revisions": {
-      "unit-demo-l03": 2
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_7",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-s23-select","idempotency_key":"s23-select","capability":"unit.source-selection.set","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_7","result":{"ok":true,"unit_id":"unit-demo-l03","source_id":"source-demo-lecture","locator":"lecture-03.pdf, PDF pp. 1-6","selected":true,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","artifact_revisions":{"unit-demo-l03":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_7","replayed":false},"error":null}
 ```
 
 ```scrut

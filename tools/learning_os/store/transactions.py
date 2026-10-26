@@ -740,7 +740,9 @@ def _bind_created_directories(root: Path, tx_dir: Path, intent: dict,
                 f"this journal describes none", path=relative)
     # A — contiguity: no named ancestor may sit above a level the list
     # skipped. The engine creates a contiguous run of missing ancestors.
-    for relative, chain, _, _ in rows:
+    for relative, chain, _, after in rows:
+        if not isinstance(after, dict) or after.get("kind") != "file":
+            continue
         gap = False
         for ancestor in chain:
             if ancestor not in listed_set:

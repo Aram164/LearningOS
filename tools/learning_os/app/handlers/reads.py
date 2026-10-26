@@ -659,13 +659,14 @@ def _brief_scan_page(req, goals, ranked) -> dict:
     summaries = [_brief_group_summary(number, row)
                  for number, row in enumerate(shown, start=1)]
     shown_goals = sum(item["member_count"] for item in summaries)
+    total_goals = sum(len(row.cluster.member_ids) for row in ranked)
     return {
         "contract": "intelligence-scan-brief",
         "groups": summaries,
         "total_groups": len(ranked),
-        "total_goals": len(goals),
+        "total_goals": total_goals,
         "omitted_groups": len(ranked) - len(shown),
-        "omitted_goals": len(goals) - shown_goals,
+        "omitted_goals": total_goals - shown_goals,
         "full_result": _full_result_route(req),
     }
 
@@ -682,6 +683,9 @@ def _unique_feed_object(pairs: list[tuple[str, object]]) -> dict:
 
 def _human_intelligence_scan(payload, view) -> str:
     """The exact scan screen, rendered from the handler's view (SPEC (bu) 1)."""
+    if view["brief"]:
+        view = {**view, "ranked": [row for row in view["ranked"] if not row.get("quiet")]}
+        view["goal_count"] = sum(len(row["members"]) for row in view["ranked"])
     if view["goal_count"] == 0:
         return ("intelligence scan: no candidates — "
                 "nothing moved that the detectors cover")
@@ -784,6 +788,7 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
         payload["detectors"] = {key: dict(row) for key, row in ledger.metrics.items()}
     else:
         payload = {"goals": [goal_to_dict(goal) for goal in goals]}
+    quiet_ids = {goal.goal_id for goal in goals if goal.quiet}
     view = {
         "brief": bool(req.get("brief")),
         "goal_count": len(goals),
@@ -793,6 +798,7 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
             "days_until": row.days_until,
             "title": row.cluster.title,
             "members": list(row.cluster.member_ids),
+            "quiet": set(row.cluster.member_ids).issubset(quiet_ids),
             "tier_label": _tier_label(row),
         } for row in ranked],
         "evidence": {goal.goal_id: list(goal.evidence) for goal in goals},

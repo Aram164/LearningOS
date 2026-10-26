@@ -22,9 +22,9 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-10-25'
-note: Verified campaign corrections bind existing Math2 and AML resource placements;
-  498 RESOURCE-SCOPE-UNBOUND warnings repaired
+recorded: '2026-10-26'
+note: Reviewed AML mock logistics and Math2 subject-repair placements; governed map
+  imports record five deliberate supporting roles without extending route coverage.
 total: 964
 distinct_signatures: 32
 signatures:

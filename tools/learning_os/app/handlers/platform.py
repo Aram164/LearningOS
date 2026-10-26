@@ -165,7 +165,7 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
                 "edit_via": (f"plan-edit-context {unit_id} "
                              f"--stage-id {record_id}"),
             })
-    if repo is not None:
+    if repo is not None and record_id.startswith("stage-"):
         for path in sorted(getattr(repo, "learning_paths", {}).values(),
                            key=lambda candidate: candidate.id):
             for stage in path.data.get("stages", []) or []:
@@ -221,7 +221,7 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
 STRUCTURAL_PREFIXES = ("stage-", "detour-", "step-", "workstream-", "milestone-")
 
 
-def _inspect_candidates(manifest: dict, repo=None) -> list[str]:
+def _inspect_candidates(manifest: dict, repo=None, *, include_paths=True) -> list[str]:
     """Every id ``inspect`` could have resolved: records plus structural ids."""
     ids = [row.get("id") for row in manifest.get("records", []) or []
            if isinstance(row, dict) and isinstance(row.get("id"), str)]
@@ -238,7 +238,7 @@ def _inspect_candidates(manifest: dict, repo=None) -> list[str]:
         ids.extend(node["id"] for node, _ in _structure_nodes(record.get("structure")))
         ids.extend(mid for mid in record.get("milestone_ids", []) or []
                    if isinstance(mid, str))
-    if repo is not None:
+    if repo is not None and include_paths:
         for path in getattr(repo, "learning_paths", {}).values():
             ids.extend(stage.get("id") for stage in path.data.get("stages", []) or []
                        if isinstance(stage, dict) and isinstance(stage.get("id"), str))
@@ -302,7 +302,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
                 # separate stderr line (R2 extra_stderr), never part of
                 # the complaint.
                 message = inspect_not_found(
-                    record_id, _inspect_candidates(manifest, repo))
+                    record_id, _inspect_candidates(manifest, repo, include_paths=record_id.startswith("stage-")))
                 hint = describe_unresolved_reference(manifest, record_id)
                 extra = (f"los: hint: {hint}",) if hint else ()
                 raise WriteRefused(

@@ -238,10 +238,12 @@ def _precise_locator_fixture(mini_repo: Path):
     from learning_os.app.validation_service import collect
     from learning_os.store.warning_baseline import write_baseline
 
-    repo, _, smid = material_fixture(mini_repo)
+    repo, rid, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id
     source_path = (mini_repo / "curriculum/modules/module-demo/source-map.yaml")
     source_map = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    # This fixture edits a locator while retaining the bound route's identity.
+    source_map["sources"][0]["unit_routes"][0]["id"] = rid
     source_map["sources"][0]["unit_routes"][0]["locator"] = "Chapter 1, pp. 1-20"
     write_yaml(source_path, source_map)
     study_map = load_repo(mini_repo).study_maps[smid]

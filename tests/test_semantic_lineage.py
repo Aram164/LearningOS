@@ -708,3 +708,10 @@ def test_impact_for_a_single_route_move_names_only_that_claim():
         [ours, theirs], CONTRACT_VERSION,
         {"module-demo": 59, "unit-demo-l01": 99, "unit-demo-l02": 6}, live,
     ) == ("covers:route-a", "covers:route-b")
+
+
+def test_overnight_impacted_includes_transitive_assumptions():
+    root = _covers()
+    child = _judged("child", root.claim_id)
+    grandchild = _judged("grandchild", "child")
+    assert impacted([root, child, grandchild], CONTRACT_VERSION, {"unit-aml-l01": 5}) == (root.claim_id, "child", "grandchild")

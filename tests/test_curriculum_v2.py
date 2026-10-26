@@ -2753,3 +2753,39 @@ def test_review_queue_projects_needs_map_as_planning_decision(mini_repo):
     assert item["target"]["id"] == "unit-demo-l01"
     assert item["target"]["module_id"] == "module-demo"
     assert "needs a study map" in item["reason"]
+
+
+def test_overnight_detour_reactivation_clears_completion_and_refuses_missing_stage(mini_repo):
+    from types import SimpleNamespace
+
+    from learning_os.app.handlers.learner import detour_resolve
+    from learning_os.domain.failures import NotFound
+    add_curriculum(mini_repo)
+    repo = load_repo(mini_repo)
+    study_map = repo.study_maps["study-map-demo-l01"]
+    stage = study_map.data["stages"][0]
+    stage.update(status="completed", completed="2026-10-24")
+    study_map.data["detours"] = [{"id": "detour-test", "return_to_stage": stage["id"], "status": "deferred"}]
+    ctx = SimpleNamespace(root=mini_repo, operation="detour.resolve", repo=lambda: repo, require_snapshot=lambda _: None)
+    result = detour_resolve(ctx, {"unit_id": "unit-demo-l01", "detour_id": "detour-test"})
+    staged = yaml.safe_load(result.proposal.writes[study_map.path])
+    assert staged["stages"][0]["status"] == "active"
+    assert "completed" not in staged["stages"][0]
+    study_map.data["detours"][0]["return_to_stage"] = "stage-gone"
+    with pytest.raises(NotFound):
+        detour_resolve(ctx, {"unit_id": "unit-demo-l01", "detour_id": "detour-test"})
+
+
+def test_overnight_attachment_without_working_note_is_a_clear_refusal(mini_repo, tmp_path):
+    from types import SimpleNamespace
+
+    from learning_os.app.handlers.learner import stage_attach
+    from learning_os.domain.failures import WriteRefused
+    add_curriculum(mini_repo)
+    repo = load_repo(mini_repo)
+    repo.study_maps["study-map-demo-l01"].data["stages"][0].pop("working_note", None)
+    file = tmp_path / "attachment.txt"
+    file.write_text("approved attachment")
+    ctx = SimpleNamespace(root=mini_repo, operation="stage.attachment.add", repo=lambda: repo, require_snapshot=lambda _: None)
+    with pytest.raises(WriteRefused, match="no working_note"):
+        stage_attach(ctx, {"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "file": str(file)})

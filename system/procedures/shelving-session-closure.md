@@ -46,31 +46,7 @@ seal_envelope: guards auto: unit-demo-l01=3
 ```scrut {interpolated: true}
 $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-shelve-note-001",
-  "idempotency_key": "shelve-note-001",
-  "capability": "stage.note.write",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-001",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "stage_id": "stage-demo",
-    "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    "transaction_id": "transaction-20261001-090000-001",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "artifact_revisions": {
-      "unit-demo-l01": 4
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-shelve-note-001","idempotency_key":"shelve-note-001","capability":"stage.note.write","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"unit_id":"unit-demo-l01","stage_id":"stage-demo","working_note":"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
 ## Stage the explicit proposal items outside the repo
@@ -102,32 +78,7 @@ seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=4
 ```scrut {interpolated: true}
 $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-shelve-prepare-001",
-  "idempotency_key": "shelve-prepare-001",
-  "capability": "review.prepare",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-002",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "proposal_path": "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
-    "state": "proposed",
-    "transaction_id": "transaction-20261001-090000-002",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "artifact_revisions": {
-      "study-map-demo-l01": 1,
-      "unit-demo-l01": 5
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-shelve-prepare-001","idempotency_key":"shelve-prepare-001","capability":"review.prepare","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"unit_id":"unit-demo-l01","proposal_path":"curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md","state":"proposed","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"study-map-demo-l01":1,"unit-demo-l01":5},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
 ## The proposal packet names the stage note
@@ -157,34 +108,7 @@ seal_envelope: guards auto: proposal-derivation-note=0, study-map-demo-l01=1, un
 ```scrut {interpolated: true}
 $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{
-  "schema_version": 2,
-  "request_id": "request-shelve-apply-001",
-  "idempotency_key": "shelve-apply-001",
-  "capability": "review.apply",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "applied": [
-      "proposal-derivation-note"
-    ],
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "proposal-derivation-note": 1,
-      "study-map-demo-l01": 2,
-      "unit-demo-l01": 6
-    },
-    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
-    "replayed": false
-  },
-  "error": null
-}
+{"schema_version":2,"request_id":"request-shelve-apply-001","idempotency_key":"shelve-apply-001","capability":"review.apply","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"unit_id":"unit-demo-l01","applied":["proposal-derivation-note"],"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"proposal-derivation-note":1,"study-map-demo-l01":2,"unit-demo-l01":6},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

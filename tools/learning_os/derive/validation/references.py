@@ -185,6 +185,12 @@ class ChecksReferences:
             for target in id_list_items(note.meta.get("supersedes")):
                 if target not in r.notes:
                     self.err("REF-SUPERSEDES", f"note '{note.id}' supersedes unknown note '{target}'", where)
+            question = note.meta.get("atlas_question") or {}
+            if isinstance(question, dict):
+                for answer in id_list_items(question.get("answer_notes")):
+                    if answer == note.id or answer not in r.notes:
+                        self.err("REF-ANSWER-NOTE",
+                                 f"question {note.id!r} must reference an existing other answer note: {answer!r}", where)
             for ev in note.meta.get("evidence", []) or []:
                 ref = str(ev.get("ref", ""))
                 if not ref.startswith(EVIDENCE_SCHEMES):

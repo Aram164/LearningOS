@@ -208,3 +208,17 @@ def test_cli_inspect_unknown_structural_id_names_the_search(mini_repo):
     plain = run_los(root, "inspect", "note-missing")
     assert plain.returncode == 2
     assert plain.stderr.strip() == "los: INVALID_REQUEST: record not found: note-missing"
+
+
+def test_overnight_inspection_loads_only_workspaces_and_keeps_collisions(mini_repo, monkeypatch):
+    from repo_builders import write_yaml
+
+    from learning_os.app import projection
+    path = mini_repo / "work/active/workspace-demo/paths/path-demo.yaml"
+    write_yaml(path, {"id": "path-demo", "type": "learning-path", "workspace_id": "workspace-demo",
+                      "stages": [{"id": "stage-both"}]})
+    def forbidden(_root):
+        raise AssertionError("inspect must not load the full repo")
+    monkeypatch.setattr(projection, "load_repo", forbidden)
+    payload = structural_payload(_manifest(stages=[_stage("stage-both")]), "stage-both", projection._LazyRepo(mini_repo))
+    assert payload["structural_kind"] == "ambiguous"

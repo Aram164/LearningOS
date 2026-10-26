@@ -8,6 +8,8 @@ handler can use them without an upward import.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 import yaml
@@ -15,6 +17,7 @@ import yaml
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
 from learning_os.app.check import real_perimeter_errors
 from learning_os.app.check import staged_shadow as _staged_shadow
+from learning_os.app.claim_admission import claim_evidence_scaffolds
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     synthesis_destination,
@@ -31,6 +34,7 @@ from learning_os.domain.plan_import import (
 )
 from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
 from learning_os.domain.route_identity import route_with_identity
+from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
@@ -47,6 +51,13 @@ _PLAN_COMPLETENESS_CHECKS = (
     "duplicates_and_numbering_checked",
     "exclusions_and_unresolved_gaps_recorded",
 )
+
+
+@contextmanager
+def staged_plan_repository(root: Path, writes: dict[Path, str]) -> Iterator[tuple[Path, Repo]]:
+    """Share one loaded prospective repository across validation and review."""
+    with _staged_shadow(root, writes) as shadow:
+        yield shadow, load_repo(shadow)
 
 
 def _unit_route_rows(source_map: dict, unit_id: str) -> dict[str, dict]:
@@ -115,7 +126,7 @@ def _staged_synthesis_errors(root: Path, module_id: str, live_repo,
             errors.append(f"material_syntheses: unknown unit for {module_id}: {unit_id}")
             continue
         try:
-            expected = synthesis_destination(live_repo.root, unit_id)
+            expected = synthesis_destination(live_repo.root, unit_id, repo=live_repo)
         except MaterialSynthesisError as exc:
             errors.append(f"material_syntheses {unit_id}: {exc}")
             continue
@@ -134,7 +145,7 @@ def _staged_synthesis_errors(root: Path, module_id: str, live_repo,
         if unit.module_id != module_id:
             continue
         try:
-            destination = synthesis_destination(live_repo.root, unit_id)
+            destination = synthesis_destination(live_repo.root, unit_id, repo=live_repo)
         except MaterialSynthesisError:
             continue
         if not destination.exists():
@@ -511,6 +522,9 @@ def module_plan_validation_errors(
     syntheses: list[tuple[str, dict]] | None = None,
     touched_units: list[str] | None = None,
     acknowledgments: list[dict] | None = None,
+    live_repo=None,
+    shadow: Path | None = None,
+    staged_repo=None,
 ) -> list[str]:
     """Validate planned files in a small shadow repository without canonical writes.
 
@@ -529,14 +543,14 @@ def module_plan_validation_errors(
     string, before any canonical write begins.
     """
     perimeter_errors = real_perimeter_errors(root)
-    with _staged_shadow(root, writes) as shadow:
+    with _staged_shadow(root, writes) if shadow is None else nullcontext(shadow) as shadow:
+        staged_repo = load_repo(shadow) if staged_repo is None else staged_repo
         signatures, errors = signatures_from_issues(
-            validate(load_repo(shadow), online=False))
+            validate(staged_repo, online=False))
         synthesis_errors: list[str] = []
         ack_errors: list[str] = []
         if module_id is not None and syntheses is not None:
-            live_repo = load_repo(root)
-            staged_repo = load_repo(shadow)
+            live_repo = load_repo(root) if live_repo is None else live_repo
             try:
                 synthesis_errors = _staged_synthesis_errors(
                     root, module_id, live_repo, shadow, staged_repo, syntheses)
@@ -807,7 +821,8 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
                               writes: dict[Path, str],
                               entries: list[tuple[str, dict]],
                               package_sha: str,
-                              seen_units: set[str]) -> dict:
+                              seen_units: set[str], *, live_repo=None,
+                              shadow: Path | None = None, staged_repo=None) -> dict:
     """The review artifact for a plan preflight: stable schema, no writes.
 
     Counts, diffs, freshness and learner-state preservation for exactly the
@@ -817,12 +832,12 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         validate_unit_material_synthesis as _validate_dossier,
     )
 
-    live_repo = load_repo(root)
+    live_repo = load_repo(root) if live_repo is None else live_repo
     live_map = (live_repo.module_source_maps or {}).get(module_id) or {}
     acknowledgments = package.get("acknowledgments", []) or []
     supplied = {unit_id for unit_id, _ in entries}
-    with _staged_shadow(root, writes) as shadow:
-        staged_repo = load_repo(shadow)
+    with _staged_shadow(root, writes) if shadow is None else nullcontext(shadow) as shadow:
+        staged_repo = load_repo(shadow) if staged_repo is None else staged_repo
         staged_map = (staged_repo.module_source_maps or {}).get(module_id) or {}
 
         def rows(source_map):
@@ -849,6 +864,11 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         after_claims = observe_claims(shadow, repo=staged_repo, route_ids=touched_routes & set(staged_rows))
         rejudged = [row["claim_id"] for row in package.get("claim_evidence", []) or [] if isinstance(row, dict)]
         claims = claim_impacts(before_claims, after_claims, rejudged)
+        scaffolds = claim_evidence_scaffolds(root, staged_repo, module_id,
+                                            [str(row["claim_id"]) for row in claims if row["after"] == "will-be-stale"])
+        for row in claims:
+            if scaffold := scaffolds.get(str(row["claim_id"])):
+                row["claim_evidence_scaffold"] = scaffold
 
         units: dict[str, dict] = {}
         for uid in sorted(seen_units):
@@ -860,7 +880,7 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         synthesis: dict[str, dict] = {}
         for uid in sorted(seen_units):
             try:
-                destination = synthesis_destination(root, uid)
+                destination = synthesis_destination(root, uid, repo=live_repo)
             except MaterialSynthesisError:
                 continue
             exists = destination.exists()
@@ -868,7 +888,7 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
             if exists:
                 try:
                     current = yaml.safe_load(destination.read_text(encoding="utf-8"))
-                    validate_unit_material_synthesis(root, uid, current)
+                    validate_unit_material_synthesis(root, uid, current, repo=live_repo)
                     before["fresh"] = True
                 except (MaterialSynthesisError, OSError, ValueError) as exc:
                     before["detail"] = str(exc)

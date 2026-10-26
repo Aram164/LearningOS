@@ -475,7 +475,8 @@ def test_compact_revision_applies_through_the_gateway(mini_repo, tmp_path):
     assert row["angle"] == "A sharper lecture-specific angle."
 
 
-def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
+@pytest.mark.parametrize("rejudge", [False, True])
+def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path, rejudge):
     """--check, review the SHA, apply it: one receipt, operator approval."""
     import json
 
@@ -483,12 +484,34 @@ def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
     from repo_builders import run_los, write_yaml
 
     _compact_setup(mini_repo)
+    evidence = []
+    if rejudge:
+        from learning_os.derive.semantics.claim_status import observe_claims
+        from learning_os.derive.semantics.lineage import (
+            dump_ledger,
+            emit_route_covers,
+            route_content_digest,
+        )
+        from learning_os.store.loader import load_repo
+
+        row = load_repo(mini_repo).module_source_maps["module-demo"]["sources"][0]["unit_routes"][0]
+        prior = emit_route_covers(route_id=row["id"], covers=row["covers"], read_revisions={},
+                                 judged_by="prior", admitted_by={"request_id": "prior", "idempotency_key": "prior"},
+                                 source_hashes={"route-content:" + row["id"]: route_content_digest(
+                                     module_id="module-demo", source_id="source-demo-book", route=row)})
+        ledger = mini_repo / "operations/transactions/lineage.yaml"
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text(dump_ledger({prior.claim_id: prior}))
+        assert observe_claims(mini_repo)[prior.claim_id].status == "supported"
+        evidence = [{"claim_id": prior.claim_id, "evidence": [{"kind": "quote",
+                     "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": SLICED_LECTURE_TEXT}]}]
     revision_file = tmp_path / "l04-revision.yaml"
     write_yaml(revision_file, _compact_revision(
         mini_repo,
         route_changes={"update": [{
             "route_id": "route-demo-book",
             "fields": {"angle": "A sharper lecture-specific angle."}}]},
+        claim_evidence=evidence,
     ))
     checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
                       "--file", str(revision_file), "--check")
@@ -520,6 +543,12 @@ def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
     row = next(r for s in live_map["sources"] for r in s["unit_routes"]
                if r.get("id") == "route-demo-book")
     assert row["angle"] == "A sharper lecture-specific angle."
+    if rejudge:
+        from learning_os.derive.semantics.lineage import load_ledger
+
+        assert observe_claims(mini_repo)[prior.claim_id].status == "supported"
+        assert load_ledger(mini_repo)[prior.claim_id].supersedes is not None
+        assert "operations/transactions/lineage.yaml" in {row["path"] for row in receipt["writes"]}
 
 
 def test_verify_plan_receipt_checks_projection(mini_repo, tmp_path):
@@ -1463,3 +1492,54 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
                   {"unit_id": "unit-demo-l01", "record": {},
                    "report_out": "/tmp/check.json"},
                   parser_factory=parser_factory)
+
+
+def test_overnight_legacy_route_update_remove_and_collision():
+    from learning_os.domain.plan_import import (
+        apply_unit_route_changes,
+        source_map_routes_with_source,
+    )
+    from learning_os.domain.route_identity import deterministic_route_id
+    route = {"unit_id": "unit-demo", "title": "Old", "locator": "book.pdf, PDF p. 1"}
+    rid = deterministic_route_id("module-demo", "source-demo", route)
+    original = {"module_id": "module-demo", "sources": [{"source_id": "source-demo", "unit_routes": [route]}]}
+    assert rid in source_map_routes_with_source(original)
+    updated, summary, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"update": [{"route_id": rid, "fields": {"title": "Changed"}}]})
+    assert not errors and summary["updated"] == [rid]
+    assert updated["sources"][0]["unit_routes"][0]["id"] == rid
+    assert "id" not in route
+    removed, _, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"remove": [{"route_id": rid, "reason": "Reviewed removal"}]})
+    assert not errors and removed["sources"][0]["unit_routes"] == []
+    _, _, errors = apply_unit_route_changes(original, "module-demo", "unit-demo",
+        {"add": [{"source_id": "source-demo", "route": {**route, "id": rid}}]})
+    assert any("duplicates existing route" in error for error in errors)
+
+
+def test_overnight_plan_check_shares_one_shadow_and_two_loaded_models(mini_repo, tmp_path, monkeypatch, capsys):
+    import contextlib
+
+    import los
+    from learning_os.app import _plan_gate, context
+    from learning_os.app.handlers import plan
+    from learning_os.derive import material_synthesis
+    from learning_os.store.loader import load_repo
+    draft = _report_out_revision(mini_repo, tmp_path)
+    loads, shadows = [], []
+    original_shadow = _plan_gate._staged_shadow
+    def counted(root):
+        loads.append(root)
+        return load_repo(root)
+    @contextlib.contextmanager
+    def shadow(root, writes):
+        shadows.append(root)
+        with original_shadow(root, writes) as staged:
+            yield staged
+    for module in (context, _plan_gate, material_synthesis):
+        monkeypatch.setattr(module, "load_repo", counted)
+    monkeypatch.setattr(plan, "_staged_shadow", shadow)
+    monkeypatch.setattr(_plan_gate, "_staged_shadow", shadow)
+    args = los.build_parser().parse_args(["--root", str(mini_repo), "unit-plan-revise", "unit-demo-l01", "--file", str(draft), "--check"])
+    assert args.func(args) == 0
+    assert len(loads) == 2 and len(shadows) == 1
