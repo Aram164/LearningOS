@@ -668,3 +668,12 @@ def test_artifact_failure_preserves_commit_and_blocks_later_writes(tmp_path, mon
     assert report['steps'][0]['receipt']['receipt_path'] == result['receipt_path']
     assert report['steps'][0]['error']['code'] == 'ARTIFACT_FAILED'
     assert report['steps'][1]['status'] == 'error'  # record of the refusal also fails
+
+
+def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
+    from learning_os.store.contracts import verb_catalogue
+    def unnecessary(*_):
+        raise AssertionError('an explicit command must not expand task prose')
+    monkeypatch.setattr(verb_catalogue, 'build_verb_catalogue', unnecessary)
+    report = _run({'steps': [{'id': 'read', 'argv': ['inspect', 'note-demo']}]}, mini_repo)
+    assert report['totals']['ok'] == 1, report

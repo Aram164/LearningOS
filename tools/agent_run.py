@@ -113,7 +113,7 @@ def resolve_use(use: str, index: dict) -> str:
     raise AgentRunError(f"unknown task, capability, or verb: {use}")
 
 
-def build_index(root: Path, executor) -> dict:
+def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
     """Use the executing parser and selected root's capability catalogue."""
     if str(TOOLS) not in sys.path:
         sys.path.insert(0, str(TOOLS))
@@ -126,6 +126,16 @@ def build_index(root: Path, executor) -> dict:
         operation = getattr(sub, "_defaults", {}).get("_operation")
         if operation:
             verb_to_operation[name] = operation
+    if not resolve_tasks:
+        from learning_os.app.registry import REGISTRY
+
+        # Explicit argv and log steps need no task prose/catalogue expansion.
+        # Classification comes from the same runtime registry as dispatch;
+        # an unregistered legacy command is conservatively a write barrier.
+        return {"verbs": sorted(choices), "verb_to_operation": verb_to_operation,
+                "task_to_use": {}, "write_verbs": [name for name in choices
+                    if (entry := REGISTRY.get(verb_to_operation.get(name))) is None
+                    or entry.kind == "command"]}
     # Full catalogue rows carry authoritative writer classification; the
     # compact surface intentionally retains only verb names.
     if hasattr(executor, "parser"):
@@ -611,7 +621,9 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
     writers = {"capability"}
     actual = executor or _cli_executor_factory(root, session_id=session_id, write_commands=writers)
     with _session_environment(session_id):
-        index = index if index is not None else build_index(root, actual)
+        index = index if index is not None else build_index(root, actual,
+            resolve_tasks=any("use" in s and not s.get("describe") and s.get("kind") != "log"
+                              for s in steps) or injected)
         writers.update(index.get("write_verbs", []))
         compiled = []
         for step in steps:

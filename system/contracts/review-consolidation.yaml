@@ -8,34 +8,50 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/materials/slices.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/materials.py
+  - tools/learning_os/app/handlers/ai.py
 - id: G31
   source: '#31'
   root_cause: audit eligibility vs actionability split
   owner: claim audit semantics owner
   affected_callers: CLI,gateway,agent plan
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_claim_status_audits.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_claim_status_audits.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/derive/semantics/claim_audits.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/goals.py
+  - tools/learning_os/app/handlers/reads.py
 - id: G32
   source: '#32'
   root_cause: reviewed edit/evidence non-atomic
   owner: prospective state commit owner
   affected_callers: gateway,agent plan
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_claim_status_audits.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_claim_status_audits.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/claim_admission.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: G33
   source: '#33'
   root_cause: page expression parsed repeatedly
@@ -44,10 +60,16 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/materials/slices.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/materials.py
+  - tools/learning_os/app/handlers/ai.py
 - id: G34
   source: '#34'
   root_cause: file resolution identity drift
@@ -56,10 +78,16 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/materials/resolution.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/materials.py
+  - tools/learning_os/app/handlers/ai.py
 - id: G35
   source: '#35'
   root_cause: range/path evidence widened
@@ -68,82 +96,114 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/materials/slices.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/materials.py
+  - tools/learning_os/app/handlers/ai.py
 - id: G36
   source: '#36'
   root_cause: state transition drops attributes
   owner: goal transition owner
   affected_callers: CLI,UI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_goal_lifecycle_properties.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_goal_lifecycle_properties.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/goals.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/goals.py
+  - tools/learning_os/app/handlers/reads.py
 - id: O37
   source: '#37'
   root_cause: AI delivery accounting split
   owner: session accounting owner
   affected_callers: AI delivery,gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_ai_actions.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_ai_actions.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/ai.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O38
   source: '#38'
   root_cause: backup alias validated after mutation
   owner: backup alias validation
   affected_callers: CLI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_c1e_backup_symlinked_subtree.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_c1e_backup_symlinked_subtree.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/backup_manifest.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O39
   source: '#39'
   root_cause: scaffold self-invalidating pins
   owner: scaffold lineage owner
   affected_callers: gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_phaseB_prospective_lineage.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_phaseB_prospective_lineage.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/plan.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O40
   source: '#40'
   root_cause: compact refs lose identity; one bad resource hides rest
   owner: compact reference owner
   affected_callers: CLI,gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_plan_rigor.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_plan_rigor.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/derive/validation/plan_rigor.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O41
   source: '#41'
   root_cause: metadata ops rewrite body bytes
   owner: note bytes owner
   affected_callers: gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_note_evidence.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_note_evidence.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/notes.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O42
   source: '#42'
   root_cause: transaction invariants ignore effect kind
@@ -152,82 +212,118 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_transaction_faults.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_transaction_faults.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/transactions.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O43
   source: '#43'
   root_cause: missing refs mutate; reactivation keeps completion
   owner: detour/reactivation owner
   affected_callers: gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_curriculum_v2.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_curriculum_v2.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/maps.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O44
   source: '#44'
   root_cause: legacy route identity inconsistent
   owner: route identity boundary
   affected_callers: CLI,gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_plan_rigor.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_plan_rigor.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/derive/validation/plan_rigor.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
 - id: O45
   source: '#45'
   root_cause: derived impact/session/totals disagree
   owner: derived impact owner
   affected_callers: CLI,UI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_intelligence_scan.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_intelligence_scan.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/ranking.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/goals.py
+  - tools/learning_os/app/handlers/reads.py
 - id: O46
   source: '#46'
   root_cause: absence claims not per-material
   owner: absence claim owner
   affected_callers: CLI,AI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/store/materials/slices.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/materials.py
+  - tools/learning_os/app/handlers/ai.py
 - id: O47
   source: '#47'
   root_cause: ranking erases alternative roles
   owner: ranking owner
   affected_callers: CLI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_goal_select.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_goal_select.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/ranking.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - tools/learning_os/app/handlers/goals.py
+  - tools/learning_os/app/handlers/reads.py
 - id: I49
   source: '#49'
   root_cause: wire-layout change missed consumers
   owner: compact output consumers
   affected_callers: CLI,procedures,UI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_procedures.py
   disposition: already-inherited
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_procedures.py; external promotion record implementation/OUTCOME.md
+  source_status: inherited-regression-covered
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/reads.py
+  caller_paths:
+  - tools/learning_os/app/pipeline.py
+  - tools/learning_os/adapters/cli.py
+  - system/procedures/start-here.md
+  - system/procedures/bootstrap-order.md
 - id: R50
   source: '#50'
   root_cause: write keys not explicit/unique
@@ -236,12 +332,17 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/agent_run.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R51
-  note: 'projection.observe is approved under the authorized D07 plan and registered in the generated CLI; agent dependencies and UI recovery call the shared authority service with distinct policies'
+  note: projection.observe is approved under the authorized D07 plan and registered in the generated CLI; agent
+    dependencies and UI recovery call the shared authority service with distinct policies
   source: '#51'
   root_cause: dependency readiness weak
   owner: projection readiness service
@@ -249,22 +350,34 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_projection_readiness.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_projection_readiness.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/projection_readiness.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
+  - tools/learning_os/app/handlers/platform.py
+  - ../obsidian-ui/src/main.ts
+  - ../obsidian-ui/src/gateway-client.ts
 - id: R52
   source: '#52'
   root_cause: failed validation read as clean
   owner: typed diagnostic service
   affected_callers: agent plan
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_projection_readiness.py
+  regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/validation_service.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
+  - tools/learning_os/app/validation_service.py
 - id: R53
   source: '#53'
   root_cause: root/code/session conflated
@@ -273,10 +386,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/agent_run.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R54
   source: '#54'
   root_cause: byte budget ignores wrappers
@@ -285,10 +402,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/agent_reporting.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R55
   source: '#55'
   root_cause: expansions fictitious
@@ -297,10 +418,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/agent_run.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R56
   source: '#56'
   root_cause: nonfinite output loses outcomes
@@ -309,10 +434,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/agent_plans.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R57
   source: '#57'
   root_cause: absent vs null conflated
@@ -321,10 +450,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/agent_run.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R58
   source: Muse session proposal
   root_cause: writes without stable session
@@ -333,10 +466,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/agent_run.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R59
   source: Muse failure proposal
   root_cause: later writes after failure
@@ -345,10 +482,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/agent_plans.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: R60
   source: integration follow-up
   root_cause: tools bypass parser/vocabulary/typing
@@ -357,10 +498,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/domain/agent_plans.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E01
   source: efficiency
   root_cause: per-call handler reload
@@ -369,10 +514,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/read_session.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E02
   source: efficiency
   root_cause: serial-only reads
@@ -381,10 +530,16 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented-opt-in
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented-opt-in
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/adapters/agent_workers.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
+  - tools/learning_os/adapters/agent_workers.py
+  - tools/learning_os/app/lock.py
 - id: E03
   source: efficiency
   root_cause: repeated reads rediscover
@@ -393,10 +548,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/read_session.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E04
   source: efficiency
   root_cause: no plan deadline
@@ -405,22 +564,31 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/agent_plans.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E05
   source: efficiency
   root_cause: preflight rescans
   owner: validation cache pins + typed diagnostics
   affected_callers: agent plan,validation tools
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_projection_readiness.py
+  regression_tests: tests/test_validation_cache.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/validation_service.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
+  - tools/learning_os/app/validation_service.py
 - id: E06
   source: efficiency
   root_cause: per-step caps unbounded total
@@ -429,10 +597,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/agent_reporting.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E07
   source: efficiency
   root_cause: anecdotal efficiency claims
@@ -441,22 +613,30 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/benchmark_agent_plans.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tests/benchmark_agent_plans.py
+  caller_paths:
+  - tools/agent_run.py
+  - tools/learning_os/app/agent_plans.py
 - id: E08
   source: efficiency
   root_cause: runner not default route
   owner: OPERATOR + agent-plans procedure
   affected_callers: agents,UI
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_review_consolidation.py
+  regression_tests: tests/test_procedures.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_procedures.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: system/procedures/agent-plans.md
+  caller_paths:
+  - system/OPERATOR.md
+  - system/procedures/agent-plans.md
 - id: E09
   source: efficiency
   root_cause: CI bootstrap ad hoc
@@ -465,10 +645,14 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_pre_push_hook.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_pre_push_hook.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/hooks/pre-push
+  caller_paths:
+  - tools/hooks/pre-push
+  - .github/workflows/release-pair.yml
 - id: E10
   source: efficiency
   root_cause: endless review cycles
@@ -477,31 +661,42 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_review_consolidation.py
   disposition: implemented
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_review_consolidation.py; external promotion record implementation/OUTCOME.md
+  source_status: implemented
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: system/contracts/review-consolidation.yaml
+  caller_paths:
+  - tests/test_review_consolidation.py
 - id: E11
   source: Gemini envelope suggestion
   root_cause: file-reference bypass risk
   owner: inline reviewed revision retained
   affected_callers: gateway
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_note_create.py
   disposition: rejected-as-unsafe
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_note_create.py; external promotion record implementation/OUTCOME.md
+  source_status: rejected-as-unsafe
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/notes.py
+  caller_paths:
+  - tools/seal_envelope.py
+  - tools/learning_os/app/handlers/notes.py
 - id: E12
   source: Gemini evidence suggestion
   root_cause: generated quotation risk
   owner: safe scaffolds retained
   affected_callers: AI delivery
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
-  regression_tests: tests/test_agent_run.py
+  regression_tests: tests/test_verbatim_anchor_admission.py
   disposition: rejected-as-unsafe
-  measured_evidence: see implementation/benchmarks and baseline.json
-  source_status: implemented-or-inherited
-  hosted_ci_status: pending
-  installed_status: not-installed
+  measured_evidence: tests/test_verbatim_anchor_admission.py; external promotion record implementation/OUTCOME.md
+  source_status: rejected-as-unsafe
+  hosted_ci_status: external-promotion-record
+  installed_status: external-promotion-record
+  owner_path: tools/learning_os/app/handlers/synthesis.py
+  caller_paths:
+  - tools/learning_os/app/handlers/synthesis.py
+  - tools/learning_os/app/handlers/ai.py
