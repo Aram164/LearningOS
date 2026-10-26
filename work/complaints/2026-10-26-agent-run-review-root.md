@@ -15,3 +15,7 @@ Issue: https://github.com/Aram164/LearningOS/issues/53
 Executing tools are taken from the runner implementation directory; the selected data root is passed explicitly to every CLI and seal invocation. Per-step root overrides are refused before execution. Real subprocess reads, inbox captures, and stage notes work on ordinary fixtures without copied implementation code.
 
 38 runner checks and 102 workflow/architecture checks passed. Full hosted CI remains pending. Repair evidence: `LearningOS/workbench/agent-operator-readiness-2026-10-26/fixes/REPORT.md`; source SHA-256 `3c11a770c4a89c2d73b7d8947e6d11f842f30de01088fc1e9e519cb19a4bd44d`. Outcome issue: https://github.com/Aram164/LearningOS/issues/53
+
+## Parsed-argument boundary follow-up
+
+Argparse accepted `--roo` and `--r` as root flags, escaping the original exact-token filter. Two-fixture regressions demonstrated that the old runner could read the other root. Execution now verifies the parsed, resolved root before dispatch. Session identity and writer classification are also enforced at the parsed-command boundary, and user plans cannot invoke the private seal marker. Evidence: `LearningOS/workbench/agent-operator-readiness-2026-10-26/followup/parsed-boundaries-red.log` and `session-boundary-red.log`; the expanded runner suite passes 63 cases.

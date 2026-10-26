@@ -382,26 +382,27 @@ def _session_bound_envelope(namespace, session_id):
             namespace.payload_file = previous
 
 
-def _cli_executor_factory(root: Path, *, session_id=None):
+def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
     if str(TOOLS) not in sys.path:
         sys.path.insert(0, str(TOOLS))
     from learning_os.adapters.cli_entry import run
     from learning_os.adapters.cli_parser import build_parser
 
     parser = build_parser()
+    writers = write_commands if write_commands is not None else {"capability"}
 
     def executor(argv, selected_root):
         if Path(selected_root).resolve() != root:
             raise AgentRunError("executor root changed")
-        if any(arg == "--root" or arg.startswith("--root=") for arg in argv):
-            raise AgentRunError("step root overrides are forbidden; use runner --root")
         if argv and argv[0] == "__seal_submit__":
             _, capability, payload, key, *session_args = argv
             proc = subprocess.run(
                 [sys.executable, str(TOOLS / "seal_envelope.py"), "--root", str(root),
-                 "--capability", capability, "--payload", payload, "--key", key, "--submit", *session_args],
+                 "--capability", capability, "--payload=" + payload, "--key=" + key, "--submit", *session_args],
                 capture_output=True, text=True, cwd=root)
             return proc.returncode, proc.stdout, proc.stderr
+        if any(arg == "--root" or arg.startswith("--root=") for arg in argv):
+            raise AgentRunError("step root overrides are forbidden; use runner --root")
         out, err = io.StringIO(), io.StringIO()
         cwd = os.getcwd()
         os.chdir(root)
@@ -411,6 +412,12 @@ def _cli_executor_factory(root: Path, *, session_id=None):
                     namespace = parser.parse_args(["--root", str(root), *argv])
                 except SystemExit as exc:
                     return int(exc.code or 0), out.getvalue(), err.getvalue()
+                if Path(namespace.root).resolve() != root:
+                    raise AgentRunError("parsed step root differs from selected root", "ROOT_MISMATCH")
+                if session_id is not None and getattr(namespace, "session_id", None) not in (None, session_id):
+                    raise AgentRunError("parsed step session differs from plan", "SESSION_MISMATCH")
+                if session_id is None and namespace.command in writers:
+                    raise AgentRunError("parsed write command requires a plan session_id", "SESSION_REQUIRED")
                 with _session_bound_envelope(namespace, session_id):
                     code = run(namespace)
         finally:
@@ -427,7 +434,7 @@ def _expand_log_step(step: dict, session_id=None) -> list[str]:
     else:
         capability, payload = "capture.create", {"text": step["text"]}
     return ["__seal_submit__", capability, _json(payload), step["key"],
-            *(["--session-id", session_id] if session_id is not None else [])]
+            *(["--session-id=" + session_id] if session_id is not None else [])]
 
 
 def _validate_plan(plan, poll_s: float) -> list[dict]:
@@ -466,6 +473,8 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
             values = step.get(name, [])
             if not isinstance(values, list) or any(not isinstance(v, str) for v in values):
                 raise AgentRunError(f"{name} must be a string list")
+        if step.get("argv", [])[:1] == ["__seal_submit__"]:
+            raise AgentRunError("internal executor commands cannot be supplied in a plan")
         if any(a == "--root" or a.startswith("--root=") for a in step.get("argv", []) + step.get("args", [])):
             raise AgentRunError("step root overrides are forbidden")
         summary = step.get("summary", {})
@@ -529,8 +538,10 @@ def _run_steps(plan, steps, root, *, executor, poll_s, index):
     root = root.resolve()
     session_id = plan.get("session_id")
     policy = plan.get("on_error", "stop")
-    executor = executor or _cli_executor_factory(root, session_id=session_id)
+    write_commands = {"capability"}
+    executor = executor or _cli_executor_factory(root, session_id=session_id, write_commands=write_commands)
     index = index if index is not None else build_index(root, executor)
+    write_commands.update(index.get("write_verbs", []))
     if session_id is None:
         for step in steps:
             try:

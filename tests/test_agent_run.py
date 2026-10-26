@@ -480,3 +480,66 @@ def test_nonfinite_cli_failure_returns_complete_report(tmp_path, monkeypatch, ca
     report = json.loads(capsys.readouterr().out)
     assert report["steps"][0]["error"]["code"] == "INVALID_STEP_OUTPUT"
     assert report["steps"][1]["status"] == "ok"
+
+
+def test_internal_seal_marker_cannot_be_supplied_by_plan(mini_repo):
+    add_curriculum(mini_repo)
+    with pytest.raises(agent_run.AgentRunError, match="internal"):
+        agent_run.run_plan({"steps": [{"id": "write", "argv": [
+            "__seal_submit__", "capture.create", '{"text":"must not write"}', "private-bypass",
+        ]}]}, mini_repo)
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_prefixed_gateway_write_cannot_escape_session_requirement(mini_repo, tmp_path):
+    from gateway_helpers import approved_v2_envelope, request_artifact_id
+    add_curriculum(mini_repo)
+    key = "prefixed-gateway"
+    envelope = approved_v2_envelope(mini_repo, capability="capture.create", payload={"text": "must not write"},
+        artifact_ids=[request_artifact_id("capture.create", key)], idempotency_key=key)
+    path = tmp_path / "envelope.json"
+    path.write_text(json.dumps(envelope))
+    report = agent_run.run_plan({"steps": [{"id": "write", "argv": [
+        "--lock-timeout", "1", "capability", "capture.create", "--payload-file", str(path),
+    ]}]}, mini_repo)
+    assert report["steps"][0]["error"]["code"] == "SESSION_REQUIRED"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+@pytest.mark.parametrize("flag", ["--roo", "--r"])
+def test_abbreviated_root_override_cannot_change_selected_root(mini_repo, tmp_path, flag):
+    from conftest import build_mini_repo
+    other = build_mini_repo(tmp_path / "other")
+    note = other / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text().replace("id: note-demo", "id: note-other"))
+    report = agent_run.run_plan({"steps": [{"id": "read", "argv": [
+        flag, str(other), "inspect", "note-other",
+    ]}]}, mini_repo)
+    assert report["steps"][0]["error"]["code"] == "ROOT_MISMATCH"
+
+
+def test_abbreviated_session_override_is_checked_after_parsing(mini_repo, monkeypatch):
+    from learning_os.adapters import cli_entry
+    original = cli_entry.run
+    calls = []
+
+    def spy(namespace):
+        if namespace.command == "session-end":
+            calls.append(namespace.session_id)
+            return 0
+        return original(namespace)
+
+    monkeypatch.setattr(cli_entry, "run", spy)
+    report = agent_run.run_plan({"session_id": "plan-session", "steps": [
+        {"id": "end", "argv": ["session-end", "--session-i", "other-session"]},
+    ]}, mini_repo)
+    assert report["steps"][0]["error"]["code"] == "SESSION_MISMATCH"
+    assert calls == []
+
+
+def test_flag_like_log_values_are_passed_as_values(mini_repo):
+    add_curriculum(mini_repo)
+    report = agent_run.run_plan({"session_id": "--root", "steps": [
+        {"id": "log", "kind": "log", "text": "flag-like values", "key": "flag-like-values"},
+    ]}, mini_repo)
+    assert report["steps"][0]["status"] == "ok", report
