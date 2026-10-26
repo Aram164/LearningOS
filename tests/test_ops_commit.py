@@ -341,7 +341,9 @@ def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monk
         transaction_module.TransactionService, "commit", live_recording_commit)
     receipt = apply_approved_delivery(app, delivery["id"])
     assert receipt["status"] == "committed"
-    assert sorted(live_kwargs) == AI_KEYS
+    # Live deliveries now record their touched files in the session ledger.
+    assert sorted(live_kwargs) == sorted([*AI_KEYS, "touched"])
+    assert callable(live_kwargs["touched"])
     assert sorted(live_init) == ["clock"]
 
     # The same engine call through a proposal: exact omission, containers,
@@ -371,7 +373,7 @@ def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monk
         validate_state=live_kwargs["validate_state"],
         publish=live_kwargs["publish"],
         rollback_publish=live_kwargs["rollback_publish"],
-        touched=None, clock=live_init["clock"],
+        touched=live_kwargs["touched"], clock=live_init["clock"],
         expected_snapshot=live_kwargs["expected_snapshot"],
         translate=lambda exc: None)
     with gateway_request_context(

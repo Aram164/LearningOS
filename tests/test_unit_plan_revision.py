@@ -1527,7 +1527,7 @@ def test_overnight_plan_check_shares_one_shadow_and_two_loaded_models(mini_repo,
     from learning_os.store.loader import load_repo
     draft = _report_out_revision(mini_repo, tmp_path)
     loads, shadows = [], []
-    original_shadow = plan._staged_shadow
+    original_shadow = _plan_gate._staged_shadow
     def counted(root):
         loads.append(root)
         return load_repo(root)
@@ -1536,7 +1536,7 @@ def test_overnight_plan_check_shares_one_shadow_and_two_loaded_models(mini_repo,
         shadows.append(root)
         with original_shadow(root, writes) as staged:
             yield staged
-    for module in (context, plan, _plan_gate, material_synthesis):
+    for module in (context, _plan_gate, material_synthesis):
         monkeypatch.setattr(module, "load_repo", counted)
     monkeypatch.setattr(plan, "_staged_shadow", shadow)
     monkeypatch.setattr(_plan_gate, "_staged_shadow", shadow)

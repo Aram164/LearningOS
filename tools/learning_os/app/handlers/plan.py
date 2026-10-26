@@ -28,6 +28,7 @@ from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
 )
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
+from learning_os.app._plan_gate import staged_plan_repository
 from learning_os.app.admin.masters_planning import prepare_master_promotion
 from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.app.claim_admission import anchor_report, lineage_artifacts
@@ -76,7 +77,6 @@ from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.contracts import current_template_problems
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
-from learning_os.store.loader import load_repo
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
@@ -684,8 +684,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
     checked_report = None
     if req.get("check") or current_gateway_request() is None:
         try:
-            with _staged_shadow(root, writes) as shadow:
-                staged_repo = load_repo(shadow)
+            with staged_plan_repository(root, writes) as (shadow, staged_repo):
                 errors = _module_plan_validation_errors(
                     root, writes, module_id=module_id, syntheses=synthesis_entries,
                     touched_units=sorted(seen_units), acknowledgments=acknowledgments,

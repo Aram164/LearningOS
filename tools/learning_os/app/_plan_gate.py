@@ -8,7 +8,8 @@ handler can use them without an upward import.
 
 from __future__ import annotations
 
-from contextlib import nullcontext
+from collections.abc import Iterator
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 import yaml
@@ -33,6 +34,7 @@ from learning_os.domain.plan_import import (
 )
 from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
 from learning_os.domain.route_identity import route_with_identity
+from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
@@ -49,6 +51,13 @@ _PLAN_COMPLETENESS_CHECKS = (
     "duplicates_and_numbering_checked",
     "exclusions_and_unresolved_gaps_recorded",
 )
+
+
+@contextmanager
+def staged_plan_repository(root: Path, writes: dict[Path, str]) -> Iterator[tuple[Path, Repo]]:
+    """Share one loaded prospective repository across validation and review."""
+    with _staged_shadow(root, writes) as shadow:
+        yield shadow, load_repo(shadow)
 
 
 def _unit_route_rows(source_map: dict, unit_id: str) -> dict[str, dict]:
