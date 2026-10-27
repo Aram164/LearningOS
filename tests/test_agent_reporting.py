@@ -123,6 +123,96 @@ def test_correction_cannot_erase_commit_receipt(tmp_path):
         assert len((store.path / "checkpoint.jsonl").read_text().splitlines()) == 1
 
 
+def _flaky_sync(store, failures):
+    real = store.sync
+    calls = {"n": 0}
+
+    def flaky():
+        calls["n"] += 1
+        if calls["n"] <= failures:
+            raise OSError("sync failed")
+        return real()
+
+    store.sync = flaky
+
+
+def _committed_row():
+    return {"id": "write", "status": "ok", "commit_certainty": "committed",
+            "receipt": {"receipt_path": "operations/transactions/one.yaml",
+                        "snapshot_after": "sha256:one"}}
+
+
+def _entries(store):
+    return [json.loads(line) for line in
+            (store.path / "checkpoint.jsonl").read_text().splitlines()]
+
+
+def _latest(entries, index=0):
+    row = entries[index]
+    for entry in entries[index + 1:]:
+        if entry.get("event") == "step-correction" and entry["details_index"] == index:
+            row = entry["row"]
+    return row
+
+
+def test_one_shot_sync_failure_after_record_append_is_reconciled(tmp_path):
+    with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
+        row = _committed_row()
+        _flaky_sync(store, 1)
+        with pytest.raises(OSError, match="sync failed"):
+            store.record(row)
+        row.update(status="error", error={"code": "ARTIFACT_FAILED", "retryable": False})
+        assert store.reconcile(row) is True
+        assert store.checkpoint_consistent
+        latest = _latest(_entries(store))
+        assert latest["error"]["code"] == "ARTIFACT_FAILED"
+        assert latest["commit_certainty"] == "committed"
+        assert latest["receipt"] == row["receipt"]
+
+
+def test_one_shot_sync_failure_after_correction_append_is_reconciled(tmp_path):
+    with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
+        store.record({"id": "read", "status": "ok", "commit_certainty": "none",
+                      "output": {"answer": 1}})
+        row = {"id": "read", "status": "error", "commit_certainty": "none",
+               "error": {"code": "SNAPSHOT_CONFLICT", "retryable": True}}
+        _flaky_sync(store, 1)
+        with pytest.raises(OSError, match="sync failed"):
+            store.correct(row)
+        row.update(status="error", error={"code": "ARTIFACT_FAILED", "retryable": False})
+        assert store.reconcile(row) is True
+        assert _latest(_entries(store))["error"]["code"] == "ARTIFACT_FAILED"
+
+
+def test_persistent_sync_failure_stays_pending_and_refuses_finalization(tmp_path):
+    with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
+        row = _committed_row()
+        _flaky_sync(store, 100)
+        with pytest.raises(OSError, match="sync failed"):
+            store.record(row)
+        row.update(status="error", error={"code": "ARTIFACT_FAILED", "retryable": False})
+        assert store.reconcile(row) is False
+        assert not store.checkpoint_consistent
+        with pytest.raises(OSError, match="reconciliation unresolved"):
+            store.flush_pending()
+        # The correction was appended but never durably synced: still unresolved.
+        assert _latest(_entries(store))["error"]["code"] == "ARTIFACT_FAILED"
+
+
+def test_record_failure_before_append_never_corrects_an_unrecorded_row(tmp_path):
+    with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
+        checkpoint = store.path / "checkpoint.jsonl"
+        checkpoint.unlink()
+        checkpoint.mkdir()
+        row = _committed_row()
+        with pytest.raises(OSError):
+            store.record(row)
+        assert store.rows == []
+        assert store.reconcile(row) is False
+        assert store.checkpoint_consistent
+        store.flush_pending()
+
+
 def test_correction_requires_an_existing_step(tmp_path):
     with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
         with pytest.raises(ValueError, match="unrecorded"):

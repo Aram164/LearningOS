@@ -151,6 +151,7 @@ class ReportStore:
         atomic_write_bytes(self.path / RETENTION_MARKER, encode(marker).encode())
         self.full_path = self.path / "full-report.json"
         self.rows: list[dict[str, object]] = []
+        self._pending: dict[str, dict[str, object]] = {}
         self.plan_digest = ""
         # Probe before any mutation; the directory is also the emergency recovery index.
         for name in ("checkpoint.jsonl", "raw-steps.jsonl"):
@@ -214,6 +215,40 @@ class ReportStore:
             stream.write(encode(event).encode("utf-8") + b"\n")
         self.rows[index] = stored
         self.sync()
+
+    @property
+    def checkpoint_consistent(self) -> bool:
+        return not self._pending
+
+    def _recorded(self, row: dict[str, object]) -> bool:
+        return any(old["id"] == row["id"] for old in self.rows)
+
+    def reconcile(self, row: dict[str, object]) -> bool:
+        """Append a correction matching a relabelled recorded row.
+
+        Returns False without writing when the row was never recorded:
+        an unrecorded row must not gain checkpoint evidence. Storage
+        failures leave the row pending so finalization can refuse.
+        """
+        if not self._recorded(row):
+            return False
+        try:
+            self.correct(row)
+        except OSError:
+            self._pending[str(row["id"])] = cast(
+                dict[str, object], json.loads(encode(row)))
+            return False
+        except ValueError:
+            return False  # A guard refusal keeps the stronger checkpoint evidence.
+        self._pending.pop(str(row["id"]), None)
+        return True
+
+    def flush_pending(self) -> None:
+        for row in list(self._pending.values()):
+            self.reconcile(row)
+        if self._pending:
+            raise OSError("checkpoint reconciliation unresolved for steps: "
+                          + ", ".join(sorted(self._pending)))
 
     def sync(self) -> None:
         for name in ("raw-steps.jsonl", "checkpoint.jsonl"):

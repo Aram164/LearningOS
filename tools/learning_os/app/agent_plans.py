@@ -156,6 +156,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             row.update(status="error", error={"code": ARTIFACT_FAILED,
                        "retryable": False, "message": str(exc)})
             uncertain = True  # report storage failure blocks further writes too
+            store.reconcile(row)
         rows.append(row)
         results[step.id] = row
         error = row.get("error")
@@ -174,6 +175,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             row.update(status="error", error={"code": ARTIFACT_FAILED,
                        "retryable": False, "message": str(exc)})
             uncertain = True
+            store.reconcile(row)
 
     def consume(step: CompiledStep, raw: RawOutcome, begin: float,
                 ready_ms: int = 0) -> dict[str, object]:
@@ -374,6 +376,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
     report["full_report"] = str(store.full_path)
     try:
         from learning_os.app.agent_reporting import write_full_report
+        store.flush_pending()
         store.sync()
         full = write_full_report(store.path, report)
     except OSError as exc:

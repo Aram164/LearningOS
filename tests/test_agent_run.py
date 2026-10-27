@@ -684,6 +684,48 @@ def test_artifact_failure_preserves_commit_and_blocks_later_writes(tmp_path, mon
     assert report['steps'][1]['status'] == 'error'  # record of the refusal also fails
 
 
+def test_one_shot_checkpoint_sync_failure_reconciles_before_finalizing(tmp_path, monkeypatch):
+    result = _receipt(tmp_path)
+    real_sync = ReportStore.sync
+    calls = {"n": 0}
+
+    def flaky(self):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise OSError("sync failed once")
+        return real_sync(self)
+
+    monkeypatch.setattr(ReportStore, "sync", flaky)
+    report = _run({"steps": [{"id": "w", "argv": ["capture"], "write": True}]},
+                  tmp_path, index=INDEX, report_dir=str(tmp_path) + "-reports",
+                  executor=lambda argv, root: (0, json.dumps(result), ""))
+    step = report["steps"][0]
+    assert step["error"]["code"] == "ARTIFACT_FAILED"
+    assert step["commit_certainty"] == "committed"
+    assert step["receipt"]["receipt_path"] == result["receipt_path"]
+    store_dir = next(Path(str(tmp_path) + "-reports").glob("los-agent-plan-*"))
+    full = json.loads((store_dir / "full-report.json").read_text())
+    assert full["steps"][0]["error"]["code"] == "ARTIFACT_FAILED"
+    entries = [json.loads(line) for line in (store_dir / "checkpoint.jsonl").read_text().splitlines()]
+    corrections = [e["row"] for e in entries if e.get("event") == "step-correction"]
+    assert corrections and corrections[-1]["error"]["code"] == "ARTIFACT_FAILED"
+    assert corrections[-1]["receipt"]["receipt_path"] == result["receipt_path"]
+
+
+def test_persistent_checkpoint_sync_failure_refuses_a_finalized_report(tmp_path, monkeypatch):
+    result = _receipt(tmp_path)
+    monkeypatch.setattr(ReportStore, "sync",
+                        lambda self: (_ for _ in ()).throw(OSError("sync always fails")))
+    report = _run({"steps": [{"id": "w", "argv": ["capture"], "write": True}]},
+                  tmp_path, index=INDEX, report_dir=str(tmp_path) + "-reports",
+                  executor=lambda argv, root: (0, json.dumps(result), ""))
+    assert report["steps"][0]["commit_certainty"] == "committed"
+    assert report["totals"]["ok"] == 0
+    store_dir = next(Path(str(tmp_path) + "-reports").glob("los-agent-plan-*"))
+    assert not (store_dir / "full-report.json").exists()
+    assert report["full_report"].endswith("checkpoint.jsonl")
+
+
 def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
     from learning_os.store.contracts import verb_catalogue
     def unnecessary(*_):
