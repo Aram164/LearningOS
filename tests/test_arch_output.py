@@ -856,6 +856,9 @@ NO_REFUSAL_UNIT = {
                          "only filters manifest rows"),
     "project.list": ("no refusal raise in the handler closure: "
                           "project_list only filters manifest rows"),
+    "projection.observe": ("no refusal raise in the handler closure: "
+                           "settlement_ready only reads the receipt and the "
+                           "current projection"),
 }
 
 
