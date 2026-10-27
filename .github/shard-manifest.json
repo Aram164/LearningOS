@@ -67,6 +67,7 @@
   "rest-1": [
    "tests/test_agent_efficiency.py",
    "tests/test_agent_run.py",
+   "tests/test_task_ir.py",
    "tests/test_arch_error_details.py",
    "tests/test_arch_plumbing.py",
    "tests/test_arch_private_names.py",

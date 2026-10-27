@@ -77,6 +77,7 @@ files = [
   "tools/learning_os/app/agent_plans.py",
   "tools/learning_os/adapters/agent_runner.py",
   "tools/learning_os/app/agent_presentation.py",
+  "tools/learning_os/app/task_ir.py",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).
