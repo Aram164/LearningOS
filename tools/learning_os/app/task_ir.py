@@ -56,6 +56,7 @@ from learning_os.app.agent_reporting import encode
 from learning_os.app.gateway import context_from_v2, validate_capability_envelope
 from learning_os.app.registry import REGISTRY, OperationEffects
 from learning_os.derive.learning_runtime import requirement_id_for
+from learning_os.domain.codes import IDEMPOTENCY_CONFLICT, UNCONFIRMED
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.material_refs import PATCH_FIELDS
 from learning_os.store.contracts.gateway import intent_sha256
@@ -735,7 +736,7 @@ def apply_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
     try:
         receipt = _committed_receipt(root, original)
     except Exception as exc:
-        if not recovering and error_code == "IDEMPOTENCY_CONFLICT":
+        if not recovering and error_code == IDEMPOTENCY_CONFLICT:
             return settle("refused", error="gateway refused conflicting idempotency intent")
         return settle("uncertain", error=f"commit evidence could not be verified: {exc}")
     if receipt is not None:
@@ -744,7 +745,7 @@ def apply_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
         receipt["replayed"] = recovering or result.get("replayed") is True
         return settle("committed", receipt=receipt)
     detail = (err.strip().splitlines() or [out.strip() or "gateway returned no verified receipt"])[-1]
-    if recovering or code == 0 or not error_code or error_code == "UNCONFIRMED":
+    if recovering or code == 0 or not error_code or error_code == UNCONFIRMED:
         return settle("uncertain", error=detail)
     return settle("refused", error=detail)
 
