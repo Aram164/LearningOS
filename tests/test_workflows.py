@@ -70,9 +70,14 @@ def test_ordinary_ci_runs_every_gate_stage():
         "tools/validate.py --no-report",
         "tools/warning_baseline.py --check",
         "npm run check",
-        "--collect-only",
+        "tools/check_shard_completeness.py",
     ):
         assert stage in runs, f"validate.yml lost gate stage: {stage}"
+    # The release gate must run the same shared completeness proof, so the
+    # two workflows cannot drift back into separate implementations.
+    release_runs = "\n".join(_all_run_steps(_load(RELEASE_PAIR)))
+    assert "tools/check_shard_completeness.py" in release_runs, (
+        "release-pair.yml lost the shared completeness proof")
     # A lesser target must never stand in for the full gate.
     assert "make check\n" not in runs
 

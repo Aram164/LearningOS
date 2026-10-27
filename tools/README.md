@@ -23,6 +23,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `warning_baseline.py` | supported gate | No-new-warning policy. |
 | `verify_plan_receipt.py` | supported gate | Receipt/projection check for one plan transaction (`make plan-check`). |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
+| `check_shard_completeness.py` | supported CI gate | Proves the sharded CI runs are exactly the collected suite: manifest partition plus executed node-ID multiset equality. Invoked by validate.yml and release-pair.yml. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
 | `system_map.py` | supported development gate | Checks module ownership, named references, layers and generated developer-map blocks; `--write` regenerates those blocks. Never a canonical validation rule. |
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
