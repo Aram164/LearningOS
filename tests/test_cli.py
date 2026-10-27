@@ -652,12 +652,12 @@ def test_production_bindings_and_baseline_stay_frozen(repo_root):
     import los
     from learning_os.store.contracts.payloads import subparsers
 
-    assert len(subparsers(los.build_parser())) == 94
+    assert len(subparsers(los.build_parser())) == 95
     baseline = json.loads(
         (repo_root / "tests/architecture/cli-parity-baseline.json")
         .read_text(encoding="utf-8"))
     assert baseline["parser_class"] == "los._LosArgumentParser"
-    assert len(baseline["subparsers"]) == 94
+    assert len(baseline["subparsers"]) == 95
     corpus = json.loads(
         (repo_root / "tests/architecture/cli-parity-corpus.json")
         .read_text(encoding="utf-8"))
