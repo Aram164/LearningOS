@@ -396,7 +396,11 @@ jobs:
           cases = []
           for leg in sorted(parts):
               for log in sorted(parts[leg][2].glob("*.jsonl")):
-                  shutil.copy(log, audit / log.name)
+                  target = audit / log.name
+                  assert not target.exists(), (
+                      f"audit log {log.name!r} from leg {leg!r} collides "
+                      f"with an earlier leg's log of the same name")
+                  shutil.copy(log, target)
               index = parts[leg][2] / "cases.txt"
               if index.is_file():
                   cases.extend(index.read_text(encoding="utf-8").split())
@@ -611,6 +615,19 @@ jobs:
           ref: ${{ steps.inputs.outputs.ui_sha }}
           fetch-depth: 0
 
+      # This workflow certifies the pair Core declares, not an arbitrary
+      # combination: the dispatched UI SHA must equal Core's own pin.
+      - name: Require the dispatched UI SHA to equal Core's declared pin
+        working-directory: .
+        env:
+          UI_SHA_INPUT: ${{ steps.inputs.outputs.ui_sha }}
+        run: |
+          pinned="$(tr -d '[:space:]' < repository/.github/ui-revision.txt)"
+          if [ "$pinned" != "$UI_SHA_INPUT" ]; then
+            echo "ui_sha $UI_SHA_INPUT does not equal Core's .github/ui-revision.txt pin $pinned" >&2
+            exit 1
+          fi
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.14.4"
@@ -633,10 +650,11 @@ jobs:
           path: junit-in
 
       # The completeness proof, run on every trigger: collect the whole
-      # suite fresh, count <testcase> elements across all shard results,
-      # and require set equality — no test lost, none duplicated, none
-      # invented. Then the static gates the local paired gate runs before
-      # pytest: lint, typecheck, validate, warning baseline.
+      # suite fresh, map every shard <testcase> back to its canonical
+      # node ID, and require multiset equality — no test lost, none
+      # duplicated, none invented. Then the static gates the local
+      # paired gate runs before pytest: lint, typecheck, validate,
+      # warning baseline.
       - name: Prove the shards are exactly the suite, then run static gates
         run: |
           set -eu
@@ -668,26 +686,49 @@ jobs:
               [".venv/bin/python", "-m", "pytest", "--collect-only", "-q",
                "-m", "not live_install"],
               capture_output=True, text=True, check=True)
-          tail = out.stdout.strip().splitlines()[-1]
-          # "8520/8521 tests collected (1 deselected) in 7.26s"
-          collected = int(tail.split()[0].split("/")[0])
-          ran = 0
+          # Node IDs, one per line, ahead of the summary line. Counts alone
+          # cannot prove identity, so compare the executed ID multiset.
+          collected_ids = [line.strip() for line in out.stdout.splitlines()
+                           if "::" in line and not line.startswith(" ")]
+          expected = Counter(collected_ids)
+          assert expected, "full collection produced no node IDs"
+
+          def node_id(classname, name):
+              parts = (classname or "").split(".")
+              for split in range(1, len(parts) + 1):
+                  candidate = ("/".join(parts[:split]) + ".py::"
+                               + "::".join(parts[split:] + [name]))
+                  if candidate in expected:
+                      return candidate
+              return None
+
+          executed = Counter()
+          unmapped = []
           skipped = 0
           for path in sorted(Path("../junit-in").glob("junit-*.xml")):
               root = ET.parse(path).getroot()
               for case in root.iter("testcase"):
-                  ran += 1
+                  mapped = node_id(case.get("classname"), case.get("name"))
+                  if mapped is None:
+                      unmapped.append(
+                          f"{case.get('classname')}::{case.get('name')}")
+                  else:
+                      executed[mapped] += 1
                   if case.find("skipped") is not None:
                       skipped += 1
                   if (case.find("failure") is not None
                           or case.find("error") is not None):
                       sys.exit(f"{path.name}: failing testcase "
                                f"{case.get('classname')}::{case.get('name')}")
-          assert ran == collected, (
-              f"shards ran {ran} tests; the full collection has {collected} "
-              "(deselecting live_install) — a test was lost, duplicated "
-              "or added")
-          print(f"gate: {ran} tests across shards == full collection "
+          assert not unmapped, (
+              f"executed tests with no collected node ID: {unmapped[:10]}")
+          missing = sorted((expected - executed).elements())
+          extra = sorted((executed - expected).elements())
+          assert executed == expected, (
+              f"shard test identities differ from the full collection: "
+              f"missing={missing[:10]} extra_or_duplicated={extra[:10]}")
+          print(f"gate: {sum(executed.values())} executed test IDs == "
+                f"full collection, each exactly once "
                 f"({skipped} skipped, visible, never blocking)")
           PY
           .venv/bin/python -m ruff check tools tests
@@ -719,6 +760,7 @@ jobs:
             --ui-sha "$UI_SHA" \
             --workflow-run-id "$WORKFLOW_RUN_ID" \
             --workflow-run-attempt "$WORKFLOW_RUN_ATTEMPT" \
+            --system-check-passed \
             --live-install-scope not-run-live-install-deselected \
             --out ../release-pair-artifact/pair-receipt.json
 

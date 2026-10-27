@@ -137,7 +137,7 @@ def test_a_valid_exact_pair_generates_a_schema_valid_receipt(clean_pair):
         assert receipt["shipped_asset_sha256"][name] == _sha256(
             (clean_pair["ui"] / "plugin" / name).read_bytes()
         )
-    assert receipt["system_check_passed"] is True
+    assert receipt["system_check_passed"] is False  # never self-proven
     assert receipt["stress_scope"] == "not-run-materials-unprovisioned"
     assert receipt["live_install_scope"] == "not-run-live-install-deselected"
 
@@ -149,6 +149,12 @@ def test_receipt_records_the_declared_live_install_scope(clean_pair, tmp_path, s
     rpr.validate_receipt(receipt)
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
     rpr.verify(receipt, artifact)  # must not raise
+
+
+def test_system_check_claim_must_be_asserted_by_the_caller(clean_pair):
+    receipt = _generate(clean_pair, system_check_passed=True)
+    assert receipt["system_check_passed"] is True
+    rpr.validate_receipt(receipt)
 
 
 def test_undeclared_live_install_scope_is_refused(clean_pair):
