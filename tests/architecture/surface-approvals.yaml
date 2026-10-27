@@ -366,3 +366,9 @@ approvals:
   - {change: added, key: request_schemas.projection.observe.schema.json, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
   - {change: added, key: cli.projection-observe, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
   - {change: added, key: catalog.commands.projection.observe, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
+  # Improvement item 8 added explicit session/lock invocation controls to
+  # OpContext. Authorized by Aram's instruction to implement the improvement
+  # list; this records implementation authorization, not merge approval.
+  # Section 15 exact-head review of this protected file remains Aram's.
+  - {change: added, key: opcontext.session_id, plan_ref: Improvement list item 8, pre_approved_by: 'Aram 2026-10-27: authorized implementing the improvement list (do all fixes that improve the system from the list)'}
+  - {change: added, key: opcontext.lock_timeout_s, plan_ref: Improvement list item 8, pre_approved_by: 'Aram 2026-10-27: authorized implementing the improvement list (do all fixes that improve the system from the list)'}

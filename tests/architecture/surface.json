@@ -9474,10 +9474,12 @@
   "channel": "field: str",
   "gateway": "field: GatewayRequestContext | None",
   "invocation": "field: str",
+  "lock_timeout_s": "field: float | None",
   "operation": "field: str",
   "repo": "method: (self) -> 'Repo'",
   "require_snapshot": "method: (self, expected: 'str | None') -> 'None'",
   "root": "field: Path",
+  "session_id": "field: str | None",
   "snapshot_id": "method: (self) -> 'str'"
  },
  "request_schemas": {
