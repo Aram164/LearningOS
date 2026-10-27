@@ -54,7 +54,9 @@ from learning_os.app import handlers as _handlers  # noqa: F401  (registration)
 from learning_os.app.agent_reporting import encode
 from learning_os.app.registry import REGISTRY, OperationEffects
 from learning_os.derive.learning_runtime import requirement_id_for
+from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.material_refs import PATCH_FIELDS
+from learning_os.store.transactions import atomic_write_bytes
 
 TOOLS = Path(__file__).resolve().parents[2]
 
@@ -383,14 +385,35 @@ def _evidence_path(evidence_dir: Path, request_id: str) -> Path:
     return evidence_dir / f"task-{name}.json"
 
 
+def _evidence_directory(root: Path, evidence_dir: Path) -> Path:
+    directory = evidence_dir.resolve()
+    if directory.is_relative_to(root.resolve()):
+        raise _fail("evidence directory must live outside the data root", "TASK_IR_EVIDENCE")
+    return directory
+
+
+def _check_evidence_path(path: Path) -> None:
+    """Refuse redirected evidence, including the atomic writer's sibling."""
+    if any(part.is_symlink() for part in (path, *path.parents)):
+        raise _fail(f"evidence path traverses a symlink: {path}", "TASK_IR_EVIDENCE")
+    if path.exists() and not path.is_file():
+        raise _fail(f"evidence path is not a regular file: {path}", "TASK_IR_EVIDENCE")
+
+
 def _save_evidence(path: Path, evidence: dict[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(encode(evidence) + "\n", encoding="utf-8")
-    tmp.replace(path)
+    # As in agent_reporting, this is private recovery evidence, not a
+    # canonical transaction or disposable cache. Reuse the shared persistence
+    # barrier so dispatch cannot precede a durable checkpoint.
+    _check_evidence_path(path)
+    _check_evidence_path(path.with_name(f".{path.name}.tmp"))
+    try:
+        atomic_write_bytes(path, (encode(evidence) + "\n").encode("utf-8"))
+    except TransactionFailure as exc:
+        raise _fail(f"run evidence could not be persisted: {exc}", "TASK_IR_EVIDENCE") from exc
 
 
 def _load_evidence(path: Path, spec: TaskSpec) -> dict[str, object] | None:
+    _check_evidence_path(path)
     if not path.is_file():
         return None
     try:
@@ -461,8 +484,7 @@ def preview_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
                  run_reads: ReadRunner,
                  seal_check: SealCheck = default_seal_check) -> dict[str, object]:
     """Run reads and the reviewed check; zero canonical writes, zero receipts."""
-    if evidence_dir.resolve().is_relative_to(root.resolve()):
-        raise _fail("evidence directory must live outside the data root", "TASK_IR_EVIDENCE")
+    evidence_dir = _evidence_directory(root, evidence_dir)
     evidence_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     path = _evidence_path(evidence_dir, spec.request_id)
     prior = _load_evidence(path, spec)
@@ -503,6 +525,7 @@ def preview_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
                 payload = write_payload(write, route_id)
                 key = operation_key(spec.request_id, write.id)
                 record_path = evidence_dir / f"task-{spec.request_id}-{write.id}.check.json"
+                _check_evidence_path(record_path)
                 code, _out, err = seal_check(root, payload, key, record_path)
                 if code != 0 and "no material changes to apply" in err:
                     # The existing machinery itself refuses a no-change patch
@@ -545,8 +568,7 @@ def _committed_receipt(root: Path, key: str) -> dict[str, object] | None:
 def apply_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
                seal_submit: SealSubmit = default_seal_submit) -> dict[str, object]:
     """Apply the previewed write once; retries look up, never redispatch blind."""
-    if evidence_dir.resolve().is_relative_to(root.resolve()):
-        raise _fail("evidence directory must live outside the data root", "TASK_IR_EVIDENCE")
+    evidence_dir = _evidence_directory(root, evidence_dir)
     path = _evidence_path(evidence_dir, spec.request_id)
     evidence = _load_evidence(path, spec)
     if evidence is None:
@@ -559,6 +581,11 @@ def apply_task(root: Path, spec: TaskSpec, evidence_dir: Path, *,
     assert compiled.write is not None  # needs_review is only set with a write
     key = str(evidence["key"])
     record_path = Path(str(evidence["check_record"]))
+    expected_record = evidence_dir / f"task-{spec.request_id}-{compiled.write.id}.check.json"
+    _check_evidence_path(expected_record)
+    if record_path.resolve() != expected_record:
+        raise _fail("check record must stay in the evidence directory", "TASK_IR_EVIDENCE")
+    record_path = expected_record
     payload = evidence["payload"]
     if not isinstance(payload, dict) or not record_path.is_file():
         raise _fail("preview evidence is incomplete", "TASK_IR_EVIDENCE")

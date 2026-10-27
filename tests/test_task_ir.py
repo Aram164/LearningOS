@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import subprocess
 import sys
@@ -221,3 +222,108 @@ def test_cli_preview_writes_nothing(mini_repo, tmp_path):
     verify = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--route-id",
                      report["operations"][1]["outputs"]["route_id"])
     assert verify.returncode == 0, verify.stderr
+
+
+@pytest.mark.parametrize("phase", ["preview", "apply"])
+@pytest.mark.parametrize("destination", ["evidence", "temporary", "check"])
+def test_evidence_symlinks_never_touch_canonical_files(mini_repo, tmp_path, phase, destination):
+    material_fixture(mini_repo)
+    spec = task_ir.parse_spec(_spec())
+    directory = tmp_path / "evidence"
+    directory.mkdir()
+    if phase == "apply":
+        assert task_ir.preview_task(mini_repo, spec, directory,
+                                    run_reads=_run_reads)["status"] == "needs_review"
+    # The request evidence uses a hashed name, separate from its check record.
+    evidence_path = directory / f"task-{hashlib.sha256(spec.request_id.encode()).hexdigest()[:32]}.json"
+    paths = {"evidence": evidence_path,
+             "temporary": evidence_path.with_name(f".{evidence_path.name}.tmp"),
+             "check": directory / f"task-{spec.request_id}-patch-route.check.json"}
+    redirected = paths[destination]
+    redirected.unlink(missing_ok=True)
+    redirected.symlink_to(mini_repo / "sources/sources.yaml")
+    before = canonical_fingerprint(mini_repo)
+    calls = []
+
+    def submit(*args):
+        calls.append(args)
+        pytest.fail("redirected evidence must be refused before submission")
+
+    with pytest.raises(task_ir.TaskSpecError, match="symlink") as exc:
+        if phase == "preview":
+            task_ir.preview_task(mini_repo, spec, directory, run_reads=_run_reads)
+        else:
+            task_ir.apply_task(mini_repo, spec, directory, seal_submit=submit)
+    assert exc.value.code == "TASK_IR_EVIDENCE"
+    assert calls == []
+    assert canonical_fingerprint(mini_repo) == before
+    assert _receipts(mini_repo) == []
+
+
+def test_evidence_directory_cannot_resolve_into_data_root(mini_repo, tmp_path):
+    material_fixture(mini_repo)
+    spec = task_ir.parse_spec(_spec())
+    directory = tmp_path / "redirected-evidence"
+    directory.symlink_to(mini_repo, target_is_directory=True)
+    before = canonical_fingerprint(mini_repo)
+    for phase in (task_ir.preview_task, task_ir.apply_task):
+        kwargs = {"run_reads": _run_reads} if phase is task_ir.preview_task else {}
+        with pytest.raises(task_ir.TaskSpecError, match="outside the data root"):
+            phase(mini_repo, spec, directory, **kwargs)
+    assert canonical_fingerprint(mini_repo) == before
+    assert _receipts(mini_repo) == []
+
+
+def test_failed_checkpoint_publication_prevents_dispatch_and_keeps_preview(mini_repo, tmp_path, monkeypatch):
+    from learning_os.store import transactions
+
+    material_fixture(mini_repo)
+    spec = task_ir.parse_spec(_spec())
+    directory = tmp_path / "evidence"
+    assert task_ir.preview_task(mini_repo, spec, directory,
+                                run_reads=_run_reads)["status"] == "needs_review"
+    evidence_path = next(path for path in directory.glob("task-*.json")
+                         if not path.name.endswith(".check.json"))
+    before_bytes = evidence_path.read_bytes()
+    before = canonical_fingerprint(mini_repo)
+    calls = []
+    replace = transactions.os.replace
+
+    def fail_publication(source, target):
+        if target == evidence_path:
+            raise OSError("simulated interruption before checkpoint publication")
+        return replace(source, target)
+
+    def submit(*args):
+        calls.append(args)
+        pytest.fail("dispatch must wait for its durable checkpoint")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(transactions.os, "replace", fail_publication)
+        with pytest.raises(task_ir.TaskSpecError, match="could not be persisted") as exc:
+            task_ir.apply_task(mini_repo, spec, directory, seal_submit=submit)
+        assert exc.value.code == "TASK_IR_EVIDENCE"
+    assert calls == []
+    assert evidence_path.read_bytes() == before_bytes
+    assert canonical_fingerprint(mini_repo) == before
+    assert _receipts(mini_repo) == []
+    assert task_ir.apply_task(mini_repo, spec, directory)["status"] == "committed"
+    assert len(_receipts(mini_repo)) == 1
+
+
+def test_earlier_relative_check_record_still_applies(mini_repo, tmp_path, monkeypatch):
+    material_fixture(mini_repo)
+    spec = task_ir.parse_spec(_spec())
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "nested").mkdir()
+    directory = Path("nested/../evidence")
+    assert task_ir.preview_task(mini_repo, spec, directory,
+                                run_reads=_run_reads)["status"] == "needs_review"
+    evidence_path = next(path for path in directory.glob("task-*.json")
+                         if not path.name.endswith(".check.json"))
+    evidence = json.loads(evidence_path.read_text())
+    # The preceding implementation persisted the caller's relative spelling.
+    evidence["check_record"] = str(directory / Path(evidence["check_record"]).name)
+    evidence_path.write_text(json.dumps(evidence))
+    assert task_ir.apply_task(mini_repo, spec, directory)["status"] == "committed"
+    assert len(_receipts(mini_repo)) == 1
