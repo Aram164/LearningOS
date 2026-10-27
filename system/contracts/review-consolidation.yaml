@@ -522,6 +522,10 @@ findings:
   caller_paths:
   - tools/agent_run.py
   - tools/learning_os/app/agent_plans.py
+  - tools/learning_os/app/ranking.py
+  - tools/learning_os/derive/semantics/scan.py
+  - tools/learning_os/app/context.py
+  - tools/learning_os/app/projection.py
 - id: E02
   source: efficiency
   root_cause: serial-only reads

@@ -75,3 +75,19 @@ def test_cancellable_worker_never_recovers_or_escalates(mini_repo, monkeypatch):
         with lock.operator_lock(mini_repo, shared=True):
             pass
     assert journal.is_dir() and calls == []
+
+
+def test_ranked_scan_loads_one_model_and_reuses_active_epoch(mini_repo):
+    from learning_os.app.ranking import ranked_scan
+    from learning_os.store.loading import count_repo_loads
+
+    with count_repo_loads() as standalone:
+        expected = ranked_scan(mini_repo)
+    assert standalone == [1]
+    session = ReadSession(mini_repo)
+    with count_repo_loads() as bounded:
+        with session.activate():
+            assert ranked_scan(mini_repo) == expected
+            assert ranked_scan(mini_repo) == expected
+    assert bounded == [1]
+    assert session.loads == 1
