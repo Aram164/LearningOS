@@ -60,8 +60,24 @@ def write_full_report(artifact_dir: Path, report: dict[str, object]) -> Path:
     return target
 
 
-def _retention_info(path: Path) -> tuple[int, bool] | None:
-    """Recognize only owned report directories, including finalized legacy runs."""
+def _finalized(path: Path) -> bool:
+    """A report is disposable only once its digest-bound final form exists."""
+    names = ("plan.json", "approved-envelopes.json", "checkpoint.jsonl",
+             "raw-steps.jsonl", "full-report.json", "full-report.sha256")
+    if any((path / name).is_symlink() or not (path / name).is_file() for name in names):
+        return False
+    with (path / "full-report.json").open("rb") as stream:
+        digest = hashlib.file_digest(stream, "sha256").hexdigest()
+    return digest == (path / "full-report.sha256").read_text().strip()
+
+
+def _retention_info(path: Path) -> tuple[int, bool, bool] | None:
+    """(created_ns, keep, finalized) for an owned report directory.
+
+    An unfinalized report can hold the only runner evidence of an uncertain
+    or partial write; it still occupies a retention slot, but routine
+    retention must never delete it, marker or legacy alike.
+    """
     marker = path / RETENTION_MARKER
     try:
         if marker.is_symlink():
@@ -72,19 +88,13 @@ def _retention_info(path: Path) -> tuple[int, bool] | None:
                     or data.get("version") != 1 or type(data.get("created_ns")) is not int
                     or data["created_ns"] <= 0 or type(data.get("keep")) is not bool):
                 return None
-            return data["created_ns"], data["keep"]
+            return data["created_ns"], data["keep"], _finalized(path)
         # Old versions had no marker/lock. Only finalized, digest-bound reports
-        # with the complete known layout are eligible; partial legacy evidence
-        # stays available for review rather than being guessed disposable.
-        names = ("plan.json", "approved-envelopes.json", "checkpoint.jsonl",
-                 "raw-steps.jsonl", "full-report.json", "full-report.sha256")
-        if any((path / name).is_symlink() or not (path / name).is_file() for name in names):
+        # with the complete known layout are recognized; partial legacy
+        # evidence stays available for review rather than being guessed owned.
+        if not _finalized(path):
             return None
-        with (path / "full-report.json").open("rb") as stream:
-            digest = hashlib.file_digest(stream, "sha256").hexdigest()
-        if digest != (path / "full-report.sha256").read_text().strip():
-            return None
-        return (path / "full-report.json").stat().st_mtime_ns, False
+        return (path / "full-report.json").stat().st_mtime_ns, False, True
     except (OSError, ValueError, TypeError):
         return None
 
@@ -92,7 +102,7 @@ def _retention_info(path: Path) -> tuple[int, bool] | None:
 def prune_reports(parent: Path, *, now_ns: int | None = None,
                   max_runs: int = MAX_REPORT_RUNS,
                   max_age_s: int = MAX_REPORT_AGE_S) -> list[Path]:
-    """Bound one report collection, preserving kept and actively locked runs."""
+    """Bound one report collection, preserving kept and unfinished runs."""
     now = time.time_ns() if now_ns is None else now_ns
     candidates = []
     for path in parent.glob(REPORT_PREFIX + "*"):
@@ -100,12 +110,14 @@ def prune_reports(parent: Path, *, now_ns: int | None = None,
             continue
         info = _retention_info(path)
         if info is not None and not info[1]:
-            candidates.append((info[0], path))
+            candidates.append((info[0], path, info[2]))
     candidates.sort(key=lambda item: (item[0], item[1].name), reverse=True)
     removed = []
-    for index, (created, path) in enumerate(candidates):
+    for index, (created, path, finalized) in enumerate(candidates):
         if index < max_runs and now - created <= max_age_s * 1_000_000_000:
             continue
+        if not finalized:
+            continue  # Unresolved execution evidence is never routine waste.
         descriptor = None
         try:
             flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)

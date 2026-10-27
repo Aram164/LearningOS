@@ -49,11 +49,17 @@ def test_retention_preserves_active_and_kept_reports(tmp_path):
     _created(expired, old)
     _created(kept, old)
     with ReportStore(tmp_path / "root", parent) as active:
+        active.inputs({"steps": []}, [])
         _created(active.path, old)
         prune_reports(parent, now_ns=now, max_runs=0)
         assert active.path.is_dir()
         assert kept.is_dir()
         assert not expired.exists()
+    # Closed but never finalized: unresolved evidence still survives.
+    prune_reports(parent, now_ns=now, max_runs=0)
+    assert active.path.exists() and kept.is_dir()
+    write_full_report(active.path, {"schema_version": 2, "steps": [], "totals": {},
+                                    "full_report": str(active.path / "full-report.json")})
     prune_reports(parent, now_ns=now, max_runs=0)
     assert not active.path.exists() and kept.is_dir()
 
@@ -70,6 +76,19 @@ def test_retention_does_not_touch_unowned_or_symlinked_directories(tmp_path):
     assert prune_reports(parent, max_runs=0) == []
     assert target.is_dir() and link.is_symlink()
     assert (unrelated / "important.txt").read_text() == "preserve"
+
+
+def test_unfinalized_reports_survive_retention_beyond_the_run_limit(tmp_path):
+    parent = tmp_path / "reports"
+    unfinished = [_run(tmp_path / "root", parent, finalize=False) for _ in range(3)]
+    completed = _run(tmp_path / "root", parent)
+    assert prune_reports(parent, max_runs=0) == [completed]
+    assert all(path.is_dir() for path in unfinished)
+    # A finalized report with a corrupt digest is likewise preserved.
+    corrupt = _run(tmp_path / "root", parent)
+    (corrupt / "full-report.sha256").write_text("0" * 64)
+    assert prune_reports(parent, max_runs=0) == []
+    assert corrupt.is_dir()
 
 
 def test_invalid_marker_is_preserved_instead_of_treated_as_legacy(tmp_path):

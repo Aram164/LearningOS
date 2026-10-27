@@ -36,6 +36,15 @@ def test_dependency_ready_at_latest_and_later_known_write(mini_repo):
     assert dependency_ready(mini_repo, [a, b], [a, b]) == (True, "ready")
 
 
+def test_dependency_ready_refuses_a_stale_projection_after_an_unpublished_edit(mini_repo):
+    a = capture(mini_repo, "ready-a")
+    assert dependency_ready(mini_repo, [a], [a]) == (True, "ready")
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text() + "\nUnpublished authored edit.\n")
+    ready, reason = dependency_ready(mini_repo, [a], [a])
+    assert ready is False and reason != "ready"
+
+
 def test_unknown_projection_and_missing_receipt_refuse(mini_repo):
     a = capture(mini_repo, "ready-a")
     assert not receipt_completed(mini_repo, a["receipt_path"], "sha256:wrong")

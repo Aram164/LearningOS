@@ -181,7 +181,9 @@ def dependency_ready(root: Path, required: list[dict[str, str | None]],
     latest = max(positions[s] for s in signatures)
     allowed = {r.get("snapshot_after") for r in known[latest:]
                if completed(r.get("receipt_path"), r.get("snapshot_after"))}
-    obs = observe(root, verify_current=False)
+    # Final readiness must prove the publication still matches canonical
+    # state; the cheap unverified observation above is only an early hint.
+    obs = observe(root)
     if not obs["published"]:
         return False, str(obs["reason"])
     return (True, "ready") if obs["snapshot_id"] in allowed else (False, "projection-not-current")
