@@ -679,6 +679,93 @@ def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
     assert report['totals']['ok'] == 1, report
 
 
+@pytest.mark.parametrize("kind", [None, "unknown", "porcelain", "command", "query", "tool"])
+def test_write_classification_is_conservative_and_independent_of_task_resolution(mini_repo, monkeypatch, kind):
+    from dataclasses import replace
+
+    from learning_os.app.registry import REGISTRY
+
+    executor = agent_run._cli_executor_factory(mini_repo.resolve())
+    original = REGISTRY["project.inspect"]
+    if kind is None:
+        monkeypatch.delitem(REGISTRY, "project.inspect")
+    else:
+        monkeypatch.setitem(REGISTRY, "project.inspect", replace(original, kind=kind))
+    direct = agent_run.build_index(mini_repo, executor, resolve_tasks=False)
+    expanded = agent_run.build_index(mini_repo, executor, resolve_tasks=True)
+    assert set(direct["write_verbs"]) == set(expanded["write_verbs"])
+    for index in (direct, expanded):
+        assert {"session-end", "generate", "ai-action-prepare", "ai-action-append-slices",
+                "ai-action-import-delivery"}.issubset(index["write_verbs"])
+        assert ("inspect" in index["write_verbs"]) is (kind not in {"query", "tool"})
+        assert "bootstrap" not in index["write_verbs"]
+        assert "capabilities" not in index["write_verbs"]
+
+
+@pytest.mark.parametrize("form", ["argv", "prefixed", "use"])
+@pytest.mark.parametrize("mixed", [False, True])
+def test_session_end_commit_push_requires_plan_session_before_dispatch(mini_repo, monkeypatch, form, mixed):
+    from types import SimpleNamespace
+
+    from learning_os.adapters import cli
+
+    calls = []
+    monkeypatch.setattr(cli, "invoke_outcome", lambda ns: (
+        calls.append(ns.command) or SimpleNamespace(exit_code=0, stdout='{"ok":true}', stderr="")))
+    args = ["--commit-message", "fixture commit", "--push"]
+    step = ({"id": "end", "use": "session.end", "args": args} if form == "use" else
+            {"id": "end", "argv": [*(["--lock-timeout", "1"] if form == "prefixed" else []), "session-end", *args]})
+    step["write"] = False  # A presentation hint cannot weaken registry effects.
+    steps = ([{"id": "read", "use": "inspect", "args": ["note-demo"]}] if mixed else []) + [step]
+    try:
+        report = agent_run.run_plan({"steps": steps}, mini_repo)
+    except agent_run.AgentRunError as exc:
+        assert exc.code == "SESSION_REQUIRED"
+    else:
+        assert report["steps"][-1]["error"]["code"] == "SESSION_REQUIRED", report
+    assert calls == []
+
+
+@pytest.mark.parametrize("use", [False, True])
+def test_uncertain_write_blocks_porcelain_but_allows_independent_read(mini_repo, monkeypatch, use):
+    from types import SimpleNamespace
+
+    from learning_os.adapters import cli
+
+    calls = []
+
+    def lost_write_response(argv, **kwargs):
+        assert any(str(arg).endswith("/seal_envelope.py") for arg in argv)
+        calls.append("seal")
+        return subprocess.CompletedProcess(argv, 1, "", "fixture lost write response")
+
+    def dispatch(namespace):
+        calls.append(namespace.command)
+        return SimpleNamespace(exit_code=0, stdout='{"ok":true}', stderr="")
+
+    monkeypatch.setattr(agent_run.subprocess, "run", lost_write_response)
+    monkeypatch.setattr(cli, "invoke_outcome", dispatch)
+    step = ({"id": "end", "use": "session-end", "args": ["--commit-message", "fixture", "--push"]}
+            if use else {"id": "end", "argv": ["session-end", "--commit-message", "fixture", "--push"]})
+    report = agent_run.run_plan({"session_id": "classification-fixture", "on_error": "continue", "steps": [
+        {"id": "write", "kind": "log", "text": "fixture", "key": "classification-fixture"},
+        step, {"id": "read", "argv": ["inspect", "note-demo"]},
+    ]}, mini_repo)
+    assert calls == ["seal", "inspect"], report
+    assert report["steps"][0]["commit_certainty"] == "uncertain"
+    assert report["steps"][1]["status"] == "skipped"
+    assert report["steps"][1]["error"]["code"] == "PLAN_STOPPED"
+    assert report["steps"][2]["status"] == "ok"
+
+
+def test_describing_porcelain_requires_no_write_session(mini_repo):
+    report = agent_run.run_plan({"steps": [
+        {"id": "describe", "use": "session-end", "describe": True},
+    ]}, mini_repo)
+    assert report["totals"]["ok"] == 1, report
+    assert report["steps"][0]["commit_certainty"] == "none"
+
+
 def test_external_feed_reads_are_neither_memoized_nor_parallel(mini_repo, tmp_path):
     feed = tmp_path / 'external-feed.json'
     feed.write_text('{}')

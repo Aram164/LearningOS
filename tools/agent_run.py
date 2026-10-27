@@ -3,9 +3,11 @@
 
 ``use`` accepts a task, operation id or verb; ``describe: true`` reads its
 contract. Log steps require an explicit, unique ``key`` stable across retries.
-Log/gateway plans require a stable ``session_id``; presealed gateway envelopes
+Write plans require a stable ``session_id``; presealed gateway envelopes
 must already bind that session. ``on_error`` defaults to ``stop``; explicitly
 choose ``continue`` to keep running independent steps after a failure.
+Only runtime-registered queries and read tools are reads. Commands, porcelain
+operations and unknown effects are write barriers for both ``argv`` and ``use``.
 Dependencies mean completion of successful receipted writes, not persistence
 of their effects after later writes. Before a dependent read, the current
 projection must match a successful write at or after the latest required write
@@ -118,6 +120,7 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
     if str(TOOLS) not in sys.path:
         sys.path.insert(0, str(TOOLS))
     from learning_os.adapters.cli_parser import build_parser
+    from learning_os.app.registry import REGISTRY
 
     parser = getattr(executor, "parser", None) or build_parser()
     choices = parser._subparsers._group_actions[0].choices  # noqa: SLF001
@@ -126,18 +129,15 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
         operation = getattr(sub, "_defaults", {}).get("_operation")
         if operation:
             verb_to_operation[name] = operation
+    # The executing parser/registry owns effects for every plan shape. Only
+    # an explicitly registered query or read tool is a read; porcelain,
+    # missing and unknown kinds may mutate. Discovery cannot weaken this barrier.
+    index = {"verbs": sorted(choices), "verb_to_operation": verb_to_operation,
+             "task_to_use": {}, "write_verbs": [name for name in choices
+                 if (entry := REGISTRY.get(verb_to_operation.get(name))) is None
+                 or entry.kind not in {"query", "tool"}]}
     if not resolve_tasks:
-        from learning_os.app.registry import REGISTRY
-
-        # Explicit argv and log steps need no task prose/catalogue expansion.
-        # Classification comes from the same runtime registry as dispatch;
-        # an unregistered legacy command is conservatively a write barrier.
-        return {"verbs": sorted(choices), "verb_to_operation": verb_to_operation,
-                "task_to_use": {}, "write_verbs": [name for name in choices
-                    if (entry := REGISTRY.get(verb_to_operation.get(name))) is None
-                    or entry.kind == "command"]}
-    # Full catalogue rows carry authoritative writer classification; the
-    # compact surface intentionally retains only verb names.
+        return index  # Explicit argv/log steps need no task prose expansion.
     if hasattr(executor, "parser"):
         from learning_os.store.contracts.verb_catalogue import (
             VerbCatalogueError,
@@ -154,9 +154,6 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
         if code:
             raise AgentRunError(f"capability discovery failed: {err.strip()}", DISCOVERY_FAILED)
         compact = json.loads(out)
-    for row in compact.get("verbs", []):
-        if isinstance(row, dict) and row["verb"] in choices:
-            verb_to_operation[row["verb"]] = row["operation"]
     task_to_use = {}
     operation_to_verb = {op: v for v, op in verb_to_operation.items()}
     for task in compact.get("tasks", []):
@@ -168,10 +165,8 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
             task_to_use[task["id"]] = operation_to_verb[tokens[1]]
         elif tokens[0] in verb_to_operation:
             task_to_use[task["id"]] = tokens[0]
-    return {"verbs": sorted(choices), "verb_to_operation": verb_to_operation,
-            "task_to_use": task_to_use,
-            "write_verbs": [row["verb"] for row in compact.get("verbs", [])
-                            if isinstance(row, dict) and (row.get("writes") is True or row.get("kind") == "command")]}
+    index["task_to_use"] = task_to_use
+    return index
 
 
 def _field(payload, name):
@@ -628,7 +623,7 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
         compiled = []
         for step in steps:
             direct = (step.get("argv") or [step.get("use")])[0]
-            if session_id is None and direct in writers:
+            if session_id is None and direct in writers and not step.get("describe"):
                 raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
             try:
                 argv = _step_argv(step, index, session_id)
@@ -642,7 +637,7 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                             actual.envelope_bytes[tuple(argv)] = Path(namespace.payload_file).read_bytes()
                 writer = command in writers or step.get("kind") == "log" or step.get("write", False)
                 if writer and session_id is None:
-                    raise AgentRunError("write plans require an explicit session_id stable across retries")
+                    raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
                 operation = index.get("verb_to_operation", {}).get(command)
                 entry = REGISTRY.get(operation)
                 profile = entry.memo_profile if entry is not None else "none"
