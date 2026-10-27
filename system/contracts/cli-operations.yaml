@@ -1,4 +1,7 @@
 operations:
+  projection.observe:
+    cli_command: projection-observe
+    kind: query
   ai-action.append-slices:
     cli_command: ai-action-append-slices
     kind: porcelain

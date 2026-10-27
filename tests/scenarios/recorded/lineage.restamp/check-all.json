@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"lineage.restamp\",\"ok\":true,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"mode\":\"check\",\"capability\":\"lineage.restamp\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"claims\":{\"covers:route-b2f1f80014860a929a3af0bc\":{\"claim_id\":\"covers:route-b2f1f80014860a929a3af0bc\",\"verdict\":\"eligible\",\"reasons\":[],\"basis\":\"exact\",\"judgment_commit\":\"60b8c0812ae7929640795c1fac761a7df5f19c87\",\"module_id\":\"module-demo\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"nodes\":[\"knowledge-demo-expectation\",\"knowledge-demo-outcomes\"],\"new_reads\":{\"route-content:route-b2f1f80014860a929a3af0bc\":\"sha256:28afdd9ac02bf323e243457332f678dd4054757e0388327c9c044feb301f43b3\",\"node-content:knowledge-demo-expectation\":\"sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d\",\"node-content:knowledge-demo-outcomes\":\"sha256:474df21ce2189e4a94c4b6b6a26221fb99aaa91e773a3c65cf3bea55bbd38ad7\"},\"stampable\":\"exact\",\"bundled_rewriters\":[]}},\"already_stamped\":[],\"totals\":{\"eligible\":1,\"needs-rejudgment\":0,\"needs-review\":0}},\"error\":null}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"lineage.restamp\",\"ok\":true,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"mode\":\"check\",\"capability\":\"lineage.restamp\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"claims\":{\"covers:route-b2f1f80014860a929a3af0bc\":{\"claim_id\":\"covers:route-b2f1f80014860a929a3af0bc\",\"verdict\":\"eligible\",\"reasons\":[],\"basis\":\"exact\",\"judgment_commit\":\"001177fc67a90948242c1ea970252862fe793333\",\"module_id\":\"module-demo\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"nodes\":[\"knowledge-demo-expectation\",\"knowledge-demo-outcomes\"],\"new_reads\":{\"route-content:route-b2f1f80014860a929a3af0bc\":\"sha256:28afdd9ac02bf323e243457332f678dd4054757e0388327c9c044feb301f43b3\",\"node-content:knowledge-demo-expectation\":\"sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d\",\"node-content:knowledge-demo-outcomes\":\"sha256:474df21ce2189e4a94c4b6b6a26221fb99aaa91e773a3c65cf3bea55bbd38ad7\"},\"stampable\":\"exact\",\"bundled_rewriters\":[]}},\"already_stamped\":[],\"totals\":{\"eligible\":1,\"needs-rejudgment\":0,\"needs-review\":0}},\"error\":null}\n",
   "stdout_json": {
     "capability": "lineage.restamp",
     "error": null,
@@ -24,7 +24,7 @@
           "basis": "exact",
           "bundled_rewriters": [],
           "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
-          "judgment_commit": "60b8c0812ae7929640795c1fac761a7df5f19c87",
+          "judgment_commit": "001177fc67a90948242c1ea970252862fe793333",
           "module_id": "module-demo",
           "new_reads": {
             "node-content:knowledge-demo-expectation": "sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d",

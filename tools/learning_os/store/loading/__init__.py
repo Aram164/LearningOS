@@ -34,6 +34,9 @@ Snapshot values are owned by ``learning_os.domain.snapshot``, vocabulary by
 
 from __future__ import annotations
 
+import contextvars
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 from learning_os.domain.snapshot import Repo
@@ -74,7 +77,23 @@ __all__ = [
 ]
 
 
+_REPO_LOADS: contextvars.ContextVar[list[int] | None] = contextvars.ContextVar("repo_loads", default=None)
+
+
+@contextmanager
+def count_repo_loads() -> Iterator[list[int]]:
+    counter = [0]
+    token = _REPO_LOADS.set(counter)
+    try:
+        yield counter
+    finally:
+        _REPO_LOADS.reset(token)
+
+
 def load_repo(root: Path | str) -> Repo:
+    counter = _REPO_LOADS.get()
+    if counter is not None:
+        counter[0] += 1
     root = Path(root).resolve()
     repo = Repo(root=root)
 

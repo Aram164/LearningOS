@@ -360,3 +360,6 @@ approvals:
   # command. Aram told the session to execute that plan on 2026-10-23 and then
   # approved landing its changes ("approved do as you see fit").
   - {key: "tools.seal_envelope.py", change: changed, plan_ref: "AGENT-COST-2026-10-23 D1", pre_approved_by: "Aram 2026-10-23: told the session to execute the agent-cost plan, then 'approved do as you see fit' for landing it"}
+  - {change: added, key: request_schemas.projection.observe.schema.json, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
+  - {change: added, key: cli.projection-observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
+  - {change: added, key: catalog.commands.projection.observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}

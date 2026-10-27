@@ -25,6 +25,7 @@ TOOLS_ROOT = Path(__file__).resolve().parent
 # and in tools/README.md.
 ENTRYPOINTS = (
     "affected_tests.py",
+    "agent_run.py",
     "assemble_lecture_study_maps.py",
     "build_materials_index.py",
     "build_materials_tree.py",

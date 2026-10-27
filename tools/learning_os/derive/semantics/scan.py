@@ -68,6 +68,7 @@ from learning_os.derive.semantics.predicates import (
     needs_study_map,
 )
 from learning_os.derive.semantics.session_counts import feed_scan_kwargs
+from learning_os.domain.snapshot import Repo
 from learning_os.store import observations
 from learning_os.store.loader import load_repo
 
@@ -248,7 +249,8 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
 
 def collect_observations(root: Path | str, *,
                          days: int = DEFAULT_DAYS,
-                         goal_ledger: GoalLedgerObservation | None = None) -> ScanInput:
+                         goal_ledger: GoalLedgerObservation | None = None,
+                         repo: Repo | None = None) -> ScanInput:
     """OBSERVE: read the current world. No writes, no queue, no memory.
 
     ``days`` is retained for caller compatibility and ignored:
@@ -256,7 +258,7 @@ def collect_observations(root: Path | str, *,
     never a recency window, so the scan needs no Git history at all.
     """
     root = Path(root)
-    repo = load_repo(root)
+    repo = repo if repo is not None else load_repo(root)
     ledger = goal_ledger if goal_ledger is not None else observe_goal_ledger(root)
     audits = dict(ledger.audits)
     status_map = observe_claims(root, repo=repo, audits=audits)
@@ -332,6 +334,7 @@ def intelligence_scan(root: Path | str, *,
                       days: int = DEFAULT_DAYS,
                       feed: Mapping | None = None,
                       goal_ledger: GoalLedgerObservation | None = None,
+                      repo: Repo | None = None,
                       ) -> tuple[CandidateGoal, ...]:
     """One observation loop: read the world, interpret, propose.
 
@@ -341,7 +344,7 @@ def intelligence_scan(root: Path | str, *,
     silent. The scan records nothing either way.
     """
     ledger = goal_ledger if goal_ledger is not None else observe_goal_ledger(Path(root))
-    observations = collect_observations(root, days=days, goal_ledger=ledger)
+    observations = collect_observations(root, days=days, goal_ledger=ledger, repo=repo)
     if feed:
         observations = replace(observations, **feed_scan_kwargs(feed))
     goals = scan_observations(observations)

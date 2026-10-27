@@ -148,6 +148,18 @@ for repo in "$core" "$ui"; do
     fi
 done
 
+# Guarded CI-bootstrap mode (D15): explicit, command-scoped, unverified.
+# Submits only the checked-out HEAD to one non-main, non-tag branch; never
+# creates a verified-pair stamp. Normal behavior is unchanged.
+if [ "${LOS_CI_BOOTSTRAP:-}" = "1" ]; then
+    if [ "$main_pushed" = "1" ]; then
+        echo "pre-push: CI-bootstrap refuses protected refs (main/tag)" >&2; exit 1
+    fi
+    case "$refs" in *refs/tags/*) echo "pre-push: CI-bootstrap refuses tags" >&2; exit 1;; esac
+    echo "pre-push: CI-bootstrap submission of $HEAD_SHA (UNVERIFIED until hosted exact-pair gate succeeds)"
+    exit 0
+fi
+
 if [ -n "${PY:-}" ] && "$PY" "$core/tools/verified_pairs.py" check; then
     echo "pre-push: skipping the full gate for the stamped pair above"
     exit 0

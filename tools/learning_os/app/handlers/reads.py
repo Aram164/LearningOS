@@ -356,7 +356,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("operator.bootstrap", kind="query")
+@register("operator.bootstrap", kind="query", parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief")
 def bootstrap(ctx: OpContext, req: dict) -> Result:
     """Serve the operator bootstrap: full, brief, or compact pages."""
     if req.get("brief"):
@@ -720,7 +720,7 @@ def _human_intelligence_scan(payload, view) -> str:
     return "\n".join(lines)
 
 
-@register("intelligence.scan", kind="tool", human=_human_intelligence_scan)
+@register("intelligence.scan", kind="tool", human=_human_intelligence_scan, parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief")
 def intelligence_scan(ctx: OpContext, req: dict) -> Result:
     """Run one observation loop: observe, interpret, propose.
 
@@ -821,7 +821,15 @@ CONTRACT_VERSION = 2
 
 def _capabilities(root: Path) -> dict:
     """Return the executable capability catalogue, not a duplicated list."""
-    catalogue = load_capability_catalog(root)
+    import copy
+
+    from learning_os.app.read_session import current_session
+
+    session = current_session(root)
+    cached = session.get(("resource", "capability-catalogue")) if session is not None else None
+    catalogue = copy.deepcopy(cached) if isinstance(cached, dict) else load_capability_catalog(root)
+    if cached is None and session is not None:
+        session.put(("resource", "capability-catalogue"), copy.deepcopy(catalogue))
     return {
         "contract_version": CONTRACT_VERSION,
         "capability_contract_version": catalogue["contract_version"],
@@ -847,8 +855,17 @@ def _capabilities(root: Path) -> dict:
 
 def _verb_catalogue(root: Path):
     """The merged catalogue: one row per CLI verb, with the task it starts."""
+    from learning_os.app.read_session import current_session
+
+    session = current_session(root)
+    cached = session.get(("resource", "verb-catalogue")) if session is not None else None
+    if cached is not None:
+        return cached
     try:
-        return build_verb_catalogue(root)
+        catalogue = build_verb_catalogue(root)
+        if session is not None:
+            session.put(("resource", "verb-catalogue"), catalogue)
+        return catalogue
     except VerbCatalogueError as exc:
         raise WriteRefused(
             f"the declared CLI surfaces do not join into one catalogue: "
@@ -876,7 +893,7 @@ def _human_capabilities(payload, view) -> str:
          "  every successful canonical write has one receipt"])
 
 
-@register("capabilities.read", kind="tool", human=_human_capabilities)
+@register("capabilities.read", kind="tool", human=_human_capabilities, parallel_safe=True, memo_profile="catalogue", read_session_profile="catalogue")
 def capabilities(ctx: OpContext, req: dict) -> Result:
     """Serve the machine discovery/read catalogue, in full or in part.
 

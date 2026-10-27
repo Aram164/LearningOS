@@ -35,6 +35,14 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
 #: malformed means wait as long as the holder needs, announced on stderr.
 LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
 
+#: Cancellable read workers set this so they defer canonical recovery (D09):
+#: they must report recovery-required instead of reconciling transactions.
+LOS_DEFER_RECOVERY_ENV = "LOS_WORKER_DEFER_RECOVERY"
+
+
+def defer_recovery() -> bool:
+    return os.environ.get(LOS_DEFER_RECOVERY_ENV) == "1"
+
 
 #: Poll interval while a lock timeout is armed. The default (unbounded)
 #: wait keeps kernel blocking with no polling.
@@ -182,6 +190,8 @@ def escalate_operator_lock(root: Path) -> bool:
     # Invalidate re-entrancy before dropping SH. If acquisition, holder
     # publication, or recovery fails, an outer caller that catches the
     # exception must never mistake this scope for a still-held read lock.
+    if defer_recovery():
+        raise WriteRefused("recovery-required: lock escalation deferred in worker mode")
     _HELD_OPERATOR_LOCKS.set(tuple(
         (key, "released" if key == root_key else held_mode, held_handle)
         for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
@@ -219,6 +229,8 @@ def operator_lock(root: Path, *, shared: bool = False):
     wait announcement and `--lock-timeout` semantics are identical for
     both modes, and re-entrancy is unchanged.
     """
+    if defer_recovery() and not shared:
+        raise WriteRefused("recovery-required: exclusive operation deferred in worker mode")
     root_key = str(root.resolve())
     entry = _held_entry(root_key)
     if entry is not None:
@@ -248,6 +260,10 @@ def operator_lock(root: Path, *, shared: bool = False):
             _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
         try:
             if shared and _has_armed_inflight(root):
+                if defer_recovery():
+                    raise WriteRefused(
+                        "recovery-required: a published crash journal awaits "
+                        "foreground recovery; worker deferred")
                 escalate_operator_lock(root)
             yield
         finally:

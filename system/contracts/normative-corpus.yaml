@@ -201,6 +201,17 @@ documents:
     summary: >-
       Developer entry point and focused task routing.
 
+  - path: system/developer/review-consolidation.md
+    audience: developer
+    applies_to: []
+    class: reference
+    status: current
+    authority: informative
+    owner: system-map
+    summary: >-
+      Informative owner/caller adoption table for the review consolidation
+      register; the binding contracts remain OPERATOR.md and component pages.
+
   - path: system/developer/C4.md
     audience: developer
     applies_to: []
@@ -590,6 +601,17 @@ documents:
       Executable Scrut transcript of OPERATOR's Shelving and session
       closure: prepare and apply a shelving proposal, validate,
       regenerate, and close the session.
+
+  - path: system/procedures/agent-plans.md
+    audience: operator
+    applies_to: []
+    class: procedure
+    status: current
+    authority: informative
+    owner: workflows
+    summary: >-
+      Executable route for multi-step agent plans through the declared
+      runner; single focused reads remain direct CLI calls.
 
   - path: system/procedures/start-here.md
     audience: operator

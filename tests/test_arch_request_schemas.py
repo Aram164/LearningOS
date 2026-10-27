@@ -96,15 +96,15 @@ def test_required_and_defaults_preserved_through_alias():
                 subschema["x-los-cli"]["default"], f"{alias}::{prop}"
 
 
-def test_exactly_94_cli_bindings_and_107_union():
+def test_exactly_95_cli_bindings_and_union():
     primaries = _primaries()
     aliases = _aliases()
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 94, len(with_cli)
-    assert len(primaries) == 94, len(primaries)
+    assert len(with_cli) == 95, len(with_cli)
+    assert len(primaries) == 95, len(primaries)
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)
-    assert len(union) == 94, len(union)
+    assert len(union) == 95, len(union)
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     assert union == cases, f"missing={sorted(cases - union)} extra={sorted(union - cases)}"
 

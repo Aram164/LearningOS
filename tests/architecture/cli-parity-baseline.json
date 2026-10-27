@@ -68,6 +68,7 @@
     "inbox-read",
     "inbox-list",
     "inspect",
+    "projection-observe",
     "related",
     "program-list",
     "plan-template",
@@ -11365,6 +11366,65 @@
           "help": "no-op: this command always prints JSON",
           "metavar": null,
           "action": "store_true"
+        }
+      ]
+    },
+    "projection-observe": {
+      "help": "verify receipt completion and currency of the published projection",
+      "description": null,
+      "epilog": null,
+      "prog": "los projection-observe",
+      "defaults": {
+        "_operation": "'projection.observe'",
+        "func": "learning_os.adapters.cli.invoke"
+      },
+      "groups": [],
+      "actions": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "const_repr": "None",
+          "default_repr": "'==SUPPRESS=='",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "metavar": null,
+          "action": "help"
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "no-op: this command always prints JSON",
+          "metavar": null,
+          "action": "store_true"
+        },
+        {
+          "option_strings": [
+            "--confirmation"
+          ],
+          "dest": "confirmation",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": "json_object",
+          "choices": null,
+          "required": true,
+          "help": "The exact receipt and snapshot from the confirmed write.",
+          "metavar": "JSON",
+          "action": "store"
         }
       ]
     }

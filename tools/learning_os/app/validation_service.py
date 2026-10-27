@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 from learning_os.derive.validation import validate
 from learning_os.derive.validation.advisories import advisory_issues
+from learning_os.domain.codes import PREFLIGHT_FAILED
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.validation import Issue
 from learning_os.store.derived.engine import BuildContext, evaluate
@@ -92,3 +93,23 @@ def status_issues(repo: Repo, pins: dict[str, str] | None = None) -> list[Issue]
 def collect(root: Path) -> tuple[Counter, list[str]]:
     """(signature counter, error strings) for the repository at ``root``."""
     return signatures_from_issues(validate(load_repo(root), online=False))
+
+
+def diagnostic_report(root: Path) -> dict:
+    """Typed diagnostic issues for preflight (D11): never authorization.
+
+    Reuses the cached-static + live-advisory split; a failure to obtain a
+    trustworthy result is reported, never read as clean.
+    """
+    try:
+        from learning_os.store.loader import load_repo
+
+        pins = observe_pins(root)
+        issues = status_issues(load_repo(root), pins=pins)
+    except Exception as exc:  # noqa: BLE001 - typed refusal, not clean
+        return {"ok": False, "trustworthy": False,
+                "error": {"code": PREFLIGHT_FAILED, "message": str(exc)}}
+    errors = [{"code": i.code, "path": i.path, "message": i.message}
+              for i in issues if i.severity == "E"]
+    return {"ok": not errors, "trustworthy": True, "errors": errors,
+            "issues": [{"code": i.code, "path": i.path} for i in issues]}

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.domain.codes import PUBLIC_CODES
+from learning_os.domain.codes import PLAN_CODES, PUBLIC_CODES
 
 ROOT = Path(__file__).resolve().parent.parent
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
@@ -82,3 +82,8 @@ def test_current_exceptions_are_recorded():
                 f"A14 {signature}: no longer occurs — "
                 f"remove the fixed exception from ratchets.yaml")
     assert not failures, "\n".join(failures)
+
+
+def test_plan_report_codes_share_the_single_code_owner():
+    assert len(PLAN_CODES) == len(set(PLAN_CODES))
+    assert not scan_tree(ROOT, frozenset(PLAN_CODES))

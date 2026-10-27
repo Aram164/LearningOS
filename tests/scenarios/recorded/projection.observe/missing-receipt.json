@@ -1,0 +1,17 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"write_completed\":false,\"current_snapshot_id\":null,\"settled\":false,\"reason\":\"projection-publication-pending\"}\n",
+  "stdout_json": {
+    "current_snapshot_id": null,
+    "reason": "projection-publication-pending",
+    "settled": false,
+    "write_completed": false
+  }
+}

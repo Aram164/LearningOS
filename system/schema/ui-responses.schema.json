@@ -42,6 +42,9 @@
     },
     {
       "$ref": "#/$defs/AbilityUnmappedWire"
+    },
+    {
+      "$ref": "#/$defs/ProjectionSettlementWire"
     }
   ],
   "$defs": {
@@ -1646,6 +1649,33 @@
           }
         }
       ]
+    },
+    "ProjectionSettlementWire": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "write_completed",
+        "current_snapshot_id",
+        "settled",
+        "reason"
+      ],
+      "properties": {
+        "write_completed": {
+          "type": "boolean"
+        },
+        "current_snapshot_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
     }
   }
 }

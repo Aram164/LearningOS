@@ -66,6 +66,7 @@
   ],
   "rest-1": [
    "tests/test_agent_efficiency.py",
+   "tests/test_agent_run.py",
    "tests/test_arch_error_details.py",
    "tests/test_arch_plumbing.py",
    "tests/test_arch_private_names.py",
@@ -136,7 +137,10 @@
    "tests/test_transactions.py",
    "tests/test_verbatim_anchor_admission.py",
    "tests/test_warning_baseline.py",
-   "tests/test_write_scopes.py"
+   "tests/test_write_scopes.py",
+   "tests/test_projection_readiness.py",
+   "tests/test_read_session.py",
+   "tests/test_review_consolidation.py"
   ],
   "rest-2": [
    "tests/test_abilities.py",

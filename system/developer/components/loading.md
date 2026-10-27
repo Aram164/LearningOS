@@ -22,7 +22,7 @@ Load authored records and expand declared references into repository read models
 <!-- system-map:begin name=edges -->
 Depends on: `domain`.
 
-Used by: `ai-action-store`, `ai-delivery`, `backup`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `transactions`, `validation`.
+Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

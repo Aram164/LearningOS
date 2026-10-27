@@ -613,3 +613,19 @@ def test_commit_check_preserves_affected_selection_contract(tmp_path, selection)
     selected = ["-m", "pytest", "-q", "tests/test_selected.py"]
     assert (selected in invocations) == (selection == "selected")
     assert (result.returncode != 0) == (selection == "failure"), result.stderr
+
+
+def test_ci_bootstrap_accepts_clean_non_main_head(pair, monkeypatch):
+    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "1")
+    head = _head(pair["core"])
+    result = _run_hook(pair["core"], f"refs/heads/feat {head} refs/heads/feat {ZERO_SHA}\n")
+    assert result.returncode == 0
+    assert "UNVERIFIED" in result.stdout
+    assert _invocations(pair["log"]) == []  # no local gate, no stamp
+
+
+def test_ci_bootstrap_refuses_main(pair, monkeypatch):
+    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "1")
+    head = _head(pair["core"])
+    result = _run_hook(pair["core"], f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n")
+    assert result.returncode == 1

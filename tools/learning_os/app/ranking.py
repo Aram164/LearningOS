@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from pathlib import Path
 
+from learning_os.app.read_session import current_session
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -129,10 +131,12 @@ def ranked_scan(root, *, days: int = 30,
     existing detectors plus the goal ledger; still read-only. ``feed``
     is a caller-supplied session-count mapping; None behaves as before.
     """
+    root = Path(root)
     ledger = goal_ledger if goal_ledger is not None else observe_goal_ledger(root)
-    goals = intelligence_scan(root, days=days, feed=feed, goal_ledger=ledger)
+    session = current_session(root)
+    repo = session.repository() if session is not None else load_repo(root)
+    goals = intelligence_scan(root, days=days, feed=feed, goal_ledger=ledger, repo=repo)
     clusters = cluster_goals(goals)
-    repo = load_repo(root)
     deadlines = _academic_deadlines(repo)
     module_status = {
         module_id: (module.get("status") if isinstance(module, dict) else None)

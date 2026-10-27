@@ -27,6 +27,11 @@ class OpContext:
 
     def repo(self) -> Repo:
         """The loaded repository, loaded once and cached on the context."""
+        from learning_os.app.read_session import current_session
+
+        session = current_session(self.root)
+        if session is not None:
+            return session.repository()
         try:
             return self._repo
         except AttributeError:
@@ -35,6 +40,11 @@ class OpContext:
 
     def snapshot_id(self) -> str:
         """The live snapshot token, walked once and cached on the context."""
+        from learning_os.app.read_session import current_session
+
+        session = current_session(self.root)
+        if session is not None:
+            return session.snapshot
         try:
             return self._snapshot
         except AttributeError:
