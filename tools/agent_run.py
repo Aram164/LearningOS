@@ -31,13 +31,47 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--report-dir", default=None,
                         help="directory for the full report artifact (bounded stdout)")
     parser.add_argument("--keep-report", action="store_true", help="exclude this run from report retention")
+    parser.add_argument("--task", default=None,
+                        help="Task IR P1 spec JSON file (experimental; alternative to a plan)")
+    parser.add_argument("--task-phase", choices=("preview", "apply"), default="preview",
+                        help="Task IR phase: preview seals the reviewed check only; apply submits it once")
+    parser.add_argument("--evidence-dir", default=None,
+                        help="Task IR run-evidence directory (outside the data root)")
     return parser
+
+
+def _run_task(args: argparse.Namespace, root: Path) -> int:
+    from learning_os.app import task_ir
+
+    if args.plan or args.expand_report or args.step:
+        raise PlanStepError("choose a plan, --expand-report, or --task")
+    if not args.evidence_dir:
+        raise PlanStepError("--task requires --evidence-dir outside the data root")
+    if Path(args.task).stat().st_size > 262144:
+        raise PlanStepError("task spec exceeds 256 KiB")
+    spec = task_ir.parse_spec(json.loads(
+        Path(args.task).read_text(encoding="utf-8"),
+        parse_float=_finite_number, parse_constant=_finite_number))
+    evidence_dir = Path(args.evidence_dir)
+    if args.task_phase == "preview":
+        report = task_ir.preview_task(
+            root, spec, evidence_dir,
+            run_reads=lambda plan, data_root: agent_runner.run_plan(
+                plan, data_root, report_dir=args.report_dir,
+                keep_report=args.keep_report))
+    else:
+        report = task_ir.apply_task(root, spec, evidence_dir)
+    print(encode_json(report))
+    return {"ok": 0, "needs_review": 0, "committed": 0, "unchanged": 0,
+            "refused": 2, "partial": 3, "uncertain": 3}.get(str(report["status"]), 3)
 
 
 def main() -> int:
     args = build_parser().parse_args()
     root = Path(args.root).resolve() if args.root else TOOLS.parent
     try:
+        if args.task:
+            return _run_task(args, root)
         if args.expand_report:
             from learning_os.app.agent_reporting import expand_report
             if args.plan:
