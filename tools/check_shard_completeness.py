@@ -82,12 +82,16 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
             "never blocking)")
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--junit-dir", required=True, type=Path)
     parser.add_argument("--manifest", type=Path,
                         default=Path(".github/shard-manifest.json"))
-    args = parser.parse_args()
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
     print(check(args.junit_dir, args.manifest))
     return 0
 
