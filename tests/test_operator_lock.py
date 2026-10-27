@@ -68,7 +68,8 @@ def test_lock_timeout_exits_2_naming_holder(mini_repo):
         release.set()
         worker.join(timeout=60)
     assert proc.returncode == 2, proc.stderr
-    assert "timed out after 1s waiting for the operator lock" in proc.stderr
+    assert "timed out after " in proc.stderr
+    assert "s waiting for the operator lock" in proc.stderr
     assert f"pid {os.getpid()}" in proc.stderr
     assert not proc.stdout
     # The 60s holder was still holding: the timeout fired instead of waiting.
@@ -202,7 +203,7 @@ def test_reader_without_tmpdir_waits_and_names_the_holder(mini_repo):
     assert proc.returncode == 2, proc.stderr
     assert "waiting for the operator lock" in proc.stderr
     assert f"pid {os.getpid()}" in proc.stderr
-    assert "timed out after 1s" in proc.stderr
+    assert "timed out after " in proc.stderr
     assert elapsed >= 1.0, elapsed
 
 

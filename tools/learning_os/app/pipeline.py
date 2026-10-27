@@ -25,6 +25,7 @@ from learning_os.app.gateway import context_from_v2 as _context_from_v2
 from learning_os.app.gateway import dispatch as _dispatch
 from learning_os.app.gateway import prepare_dispatch
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
+from learning_os.app.lock import lock_wait_budget
 from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.app.outcomes import classify, error_object, resolve
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
@@ -80,6 +81,7 @@ from learning_os.store.evidence import (
     replay_for_request,
 )
 from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.session_ledger import invocation_session
 
 
 @dataclass(frozen=True)
@@ -223,7 +225,14 @@ def _commit_with_gesture(ctx, operation: str, result):
     return CommitOutcome(code, errors, confirmation, refusal=outcome.refusal)
 
 
-def run_cli(root: Path, operation: str, args) -> Outcome:
+def run_cli(root: Path, operation: str, args, *, session_id: str | None = None,
+            timeout_s: float | None = None) -> Outcome:
+    """Run the same pipeline with explicit invocation session and wait budget."""
+    with invocation_session(session_id), lock_wait_budget(timeout_s):
+        return _run_cli(root, operation, args, session_id=session_id, timeout_s=timeout_s)
+
+
+def _run_cli(root: Path, operation: str, args, *, session_id=None, timeout_s=None) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
     Takes the shared operator lock for a query, the exclusive lock for a
@@ -235,21 +244,21 @@ def run_cli(root: Path, operation: str, args) -> Outcome:
     kind = getattr(args, "_operation_kind", entry.kind)
     if kind == "query":
         with _operator_lock(root, shared=True):
-            return _execute_cli(root, operation, entry, args)
+            return _execute_cli(root, operation, entry, args, session_id=session_id, timeout_s=timeout_s)
     if kind == "tool":
-        return _execute_cli(root, operation, entry, args)
+        return _execute_cli(root, operation, entry, args, session_id=session_id, timeout_s=timeout_s)
     with _operator_lock(root):
-        return _execute_cli(root, operation, entry, args)
+        return _execute_cli(root, operation, entry, args, session_id=session_id, timeout_s=timeout_s)
 
 
-def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
+def _execute_cli(root: Path, operation: str, entry, args, *, session_id=None, timeout_s=None) -> Outcome:
     schema = request_schema(root, operation)
     properties = schema.get("properties", {})
     req = {key: value for key, value in vars(args).items() if key in properties}
     checking = req.get("check") is True
     ctx = OpContext(root=root, operation=operation, channel="operator",
         invocation="check" if checking else _KIND_TO_INVOCATION.get(getattr(args, "_operation_kind", entry.kind), "command"),
-        gateway=None)
+        gateway=None, session_id=session_id, lock_timeout_s=timeout_s)
     commit, receipt, replayed = "none", None, False
     _take_gateway_refusal()
     try:

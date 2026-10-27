@@ -79,6 +79,7 @@ class TaskRow:
     id: str
     task: str
     entry_read: str
+    entry_verb: str | None
     procedures: tuple[str, ...]
     procedure_text: str | None
     scope: tuple[str, ...]
@@ -88,6 +89,7 @@ class TaskRow:
             "id": self.id,
             "task": self.task,
             "entry_read": self.entry_read,
+            "entry_verb": self.entry_verb,
             "procedures": list(self.procedures),
             "procedure_text": self.procedure_text,
             "scope": list(self.scope),
@@ -312,6 +314,7 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
             id=task.id,
             task=task.task,
             entry_read=task.entry_read,
+            entry_verb=task.entry_verb,
             procedures=tuple(link.target for link in task.procedures),
             procedure_text=task.procedure_text,
             scope=task.scope,

@@ -17,6 +17,13 @@ class OperationEffects(StrEnum):
     UNKNOWN = "unknown"
 
 
+class CacheProfile(StrEnum):
+    NONE = "none"
+    MANIFEST = "manifest"
+    MANIFEST_BRIEF = "manifest-brief"
+    CATALOGUE = "catalogue"
+
+
 @dataclass(frozen=True)
 class Operation:
     name: str
@@ -28,9 +35,7 @@ class Operation:
     render_check: Callable[[dict, dict], dict] | None = None  # (check record, prepared Result.payload)
     # Execution traits (D05): conservative defaults; a query kind alone does
     # not prove purity. Traits describe execution, never write authority.
-    parallel_safe: bool = False
-    memo_profile: str = "none"
-    read_session_profile: str = "none"
+    cache: CacheProfile = CacheProfile.NONE
     # Invocation kind controls dispatch/locking, not effects. A new operation
     # is a write barrier until its owner explicitly declares a read.
     effects: OperationEffects = OperationEffects.UNKNOWN
@@ -45,9 +50,7 @@ def register(
     kind: str,
     human: Callable[[dict], str] | Callable[[dict, dict], str] | None = None,
     render_check: Callable[[dict, dict], dict] | None = None,
-    parallel_safe: bool = False,
-    memo_profile: str = "none",
-    read_session_profile: str = "none",
+    cache: CacheProfile = CacheProfile.NONE,
     effects: OperationEffects = OperationEffects.UNKNOWN,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
@@ -56,8 +59,7 @@ def register(
         REGISTRY[name] = Operation(
             name=name, kind=kind, handler=fn,
             human=human, render_check=render_check,
-            parallel_safe=parallel_safe, memo_profile=memo_profile,
-            read_session_profile=read_session_profile,
+            cache=CacheProfile(cache),
             effects=OperationEffects(effects),
         )
         return fn

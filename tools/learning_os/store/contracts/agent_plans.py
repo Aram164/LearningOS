@@ -1,28 +1,29 @@
-"""Strict loading/validation helpers for agent-plan controls (D12)."""
+"""One schema authority for agent-plan input shapes."""
 from __future__ import annotations
 
-import math
+import json
+from pathlib import Path
+from typing import cast
 
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
-def parse_controls(plan: dict[str, object]) -> dict[str, object]:
-    """Validate optional plan controls; reject bools/nonfinite/misspellings."""
-    allowed = {"steps", "session_id", "on_error", "schema_version",
-               "read_workers", "deadline_s", "report_max_bytes"}
-    unknown = set(plan) - allowed
-    # Per-step fields are validated by the runner; only plan-level unknowns
-    # that look like misspelled controls are refused here by caller.
-    workers = plan.get("read_workers", 1)
-    if isinstance(workers, bool) or not isinstance(workers, int) or not 1 <= workers <= 4:
-        raise ValueError("read_workers must be an integer 1..4")
-    deadline = plan.get("deadline_s", 120)
-    if isinstance(deadline, bool) or not isinstance(deadline, (int, float)) \
-            or not math.isfinite(deadline) or deadline <= 0:
-        raise ValueError("deadline_s must be a finite positive number")
-    budget = plan.get("report_max_bytes", 65536)
-    if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1024:
-        raise ValueError("report_max_bytes must be an integer >= 1024")
-    version = plan.get("schema_version", 1)
-    if isinstance(version, bool) or not isinstance(version, int) or version not in (1, 2):
-        raise ValueError("unsupported plan schema_version")
-    return {"read_workers": workers, "deadline_s": float(deadline),
-            "report_max_bytes": budget, "unknown_plan_fields": sorted(unknown)}
+from learning_os.domain.agent_plans import PlanInput, PlanStepError
+
+SCHEMA_PATH = Path(__file__).resolve().parents[4] / "system/contracts/agent-plan-input.schema.json"
+
+def validate_input(plan: object) -> PlanInput:
+    try:
+        body = json.dumps(plan, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise PlanStepError("plan must contain finite JSON values") from exc
+    if len(body.encode("utf-8")) > 1048576:
+        raise PlanStepError("plan input exceeds 1 MiB")
+    schema = json.loads(SCHEMA_PATH.read_text())
+    errors = sorted(Draft202012Validator(schema).iter_errors(plan), key=lambda e: str(list(e.absolute_path)))
+    if errors:
+        error = errors[0]
+        if list(error.absolute_path) == ["schema_version"]:
+            raise PlanStepError("unsupported schema_version; migrate the plan to schema_version: 2")
+        location = ".".join(map(str, error.absolute_path)) or "plan"
+        raise PlanStepError(f"invalid plan at {location}: {error.message}")
+    return cast(PlanInput, plan)

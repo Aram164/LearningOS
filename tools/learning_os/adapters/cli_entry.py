@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-import os
 import sys
 
-from learning_os.app.lock import LOS_LOCK_TIMEOUT_ENV
+from learning_os.app.lock import lock_wait_budget
 from learning_os.app.outcomes import classify, resolve
 
 
 def run(args) -> int:
-    if args.lock_timeout is not None:
-        os.environ[LOS_LOCK_TIMEOUT_ENV] = str(args.lock_timeout)
     try:
-        return args.func(args)
+        with lock_wait_budget(args.lock_timeout):
+            return args.func(args)
     except Exception as exc:
         row = classify(exc, "cli")
         if row is None:

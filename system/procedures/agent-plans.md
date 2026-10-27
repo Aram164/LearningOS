@@ -48,10 +48,14 @@ schema=2 ok=2/2
 $ $H/los-assert-receipt --last --capability capture.create
 ```
 
-The default worker count is one. Opt in to two through four workers only for
-measured workloads; process startup can dominate small plans. Read waves stop at
-every write or unknown-effect operation. `deadline_s` stops admission and
-cancellable reads, while an admitted commit is allowed to finish.
+Plans execute serially. Legacy `read_workers` values 1 through 4 remain accepted
+and all execute with one worker; no worker processes are created. Read epochs
+stop at every write or unknown-effect operation. `deadline_s` stops new steps,
+bounds lock waits and subprocess calls by the remaining time, and reports a
+timed-out write as uncertain. An in-process handler that has acquired its lock
+can finish its work; the deadline does not interrupt its commit. Explicit
+`schema_version: 1` is refused with a migration message; omitted versions
+default to version 2.
 Only operations explicitly declaring `read` effects in the executing Core are
 reads. Derived writes, canonical writes (including `session-end`), and unknown effects
 require a plan `session_id` and cannot run after an unresolved write, for both

@@ -144,7 +144,7 @@ def test_all_cache_eligible_read_operations_preserve_the_loaded_model(mini_repo)
         "intelligence.scan": ["intelligence-scan", "--brief", "--json"],
     }
     # Pin the complete eligible set: a new registration needs an exercised read.
-    eligible = {name for name, op in REGISTRY.items() if op.memo_profile != "none"}
+    eligible = {name for name, op in REGISTRY.items() if op.cache != "none"}
     assert eligible == commands.keys()
     parser = build_parser()
     session = ReadSession(mini_repo)

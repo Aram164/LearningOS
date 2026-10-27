@@ -46,6 +46,7 @@ class TaskScope:
     id: str
     task: str
     entry_read: str
+    entry_verb: str | None
     procedures: tuple[ProcedureLink, ...]
     procedure_text: str | None
     scope: tuple[str, ...]
@@ -253,6 +254,13 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
                 raise TaskScopeError(
                     f"task scope {identifier} names {verb!r}, which is not a "
                     f"CLI command")
+        if "entry_verb" not in row:
+            raise TaskScopeError(f"task scope {identifier} must declare entry_verb (null for a boundary)")
+        entry_verb = row["entry_verb"]
+        if entry_verb is not None and (not isinstance(entry_verb, str) or entry_verb not in verbs):
+            raise TaskScopeError(f"task scope {identifier} entry_verb must name a CLI command")
+        if entry_read_verbs(entry_read) and entry_verb is None:
+            raise TaskScopeError(f"task scope {identifier} executable entry needs entry_verb")
         procedures = []
         for link in row.get("procedures") or []:
             if not isinstance(link, dict):
@@ -324,6 +332,7 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
             id=identifier,
             task=task.strip(),
             entry_read=entry_read.strip(),
+            entry_verb=entry_verb,
             procedures=tuple(procedures),
             procedure_text=procedure_text.strip() if procedure_text else None,
             scope=tuple(scope),

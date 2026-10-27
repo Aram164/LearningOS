@@ -289,4 +289,12 @@ def build_parser() -> argparse.ArgumentParser:
             p.set_defaults(func=func, _parser_factory=build_parser)
         else:
             p.set_defaults(func=func)
+    parser._los_verbs = {name: getattr(child, "_defaults", {}).get("_operation")
+                         for name, child in sub.choices.items()}
     return parser
+
+
+def verb_table(parser: argparse.ArgumentParser | None = None) -> dict[str, str | None]:
+    """The executing parser's declared command-to-operation table (a copy)."""
+    selected = parser if parser is not None else build_parser()
+    return dict(selected._los_verbs)
