@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import json
 import time
+from pathlib import Path
 
 import pytest
 
 from learning_os.app.agent_reporting import (
     RETENTION_MARKER,
     ReportStore,
+    expand_report,
     prune_reports,
     write_full_report,
 )
@@ -125,3 +127,27 @@ def test_correction_requires_an_existing_step(tmp_path):
     with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
         with pytest.raises(ValueError, match="unrecorded"):
             store.correct({"id": "unknown", "status": "error", "commit_certainty": "none"})
+
+
+def test_expansion_holds_a_read_lease_against_retention(tmp_path, monkeypatch):
+    path = _run(tmp_path / "root", tmp_path / "reports")
+    full = path / "full-report.json"
+    original = Path.read_bytes
+
+    def prune_after_body_read(candidate):
+        body = original(candidate)
+        if candidate == full:
+            assert prune_reports(path.parent, max_runs=0) == []
+            assert path.is_dir()
+        return body
+
+    monkeypatch.setattr(Path, "read_bytes", prune_after_body_read)
+    assert expand_report(full)["schema_version"] == 2
+    assert prune_reports(path.parent, max_runs=0) == [path]
+
+
+def test_expansion_of_an_active_report_refuses_without_waiting(tmp_path):
+    with ReportStore(tmp_path / "root", tmp_path / "reports") as store:
+        write_full_report(store.path, {"schema_version": 2, "steps": [], "totals": {}})
+        with pytest.raises(ValueError, match="still active"):
+            expand_report(store.full_path)

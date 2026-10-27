@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
+from types import TracebackType
 from typing import cast
 
 from learning_os.domain.codes import STEP_FAILED
@@ -156,10 +157,11 @@ class ReportStore:
             atomic_write_bytes(self.path / name, b"")
         prune_reports(parent)
 
-    def __enter__(self):
+    def __enter__(self) -> ReportStore:
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, exc_type: type[BaseException] | None,
+                 exc: BaseException | None, traceback: TracebackType | None) -> None:
         self.close()
 
     def close(self) -> None:
@@ -167,7 +169,7 @@ class ReportStore:
         if lock is not None and not lock.closed:
             lock.close()
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
 
     def inputs(self, plan: object, envelopes: list[bytes]) -> None:
@@ -226,6 +228,21 @@ def expand_report(path: Path, step_id: str | None = None) -> dict[str, object]:
     Adjacent digests are not signatures: changing both data and its digest can
     pass these checks. They do not authenticate reports or approval evidence.
     """
+    if path.name != "full-report.json":
+        raise ValueError("full report is not finalized")
+    flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path.parent / ".active.lock", flags, 0o600)
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise ValueError("report is still active; expand it after finalization") from exc
+        return _expand_report_contents(path, step_id)
+    finally:
+        os.close(descriptor)
+
+
+def _expand_report_contents(path: Path, step_id: str | None) -> dict[str, object]:
     body = path.read_bytes()
     if path.name != "full-report.json" or hashlib.sha256(body).hexdigest() != (path.parent / "full-report.sha256").read_text().strip():
         raise ValueError("full report digest mismatch or report is not finalized")
