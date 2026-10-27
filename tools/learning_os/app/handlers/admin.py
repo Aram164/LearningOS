@@ -14,7 +14,7 @@ from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.semesters import semester_plan as _semester_plan
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.render import parse_sections
@@ -44,7 +44,7 @@ _DIGEST_RE = re.compile(r"sha256:[a-f0-9]{64}")
 
 
 
-@register("module.attempt.record", kind="command")
+@register("module.attempt.record", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def module_attempt(ctx: OpContext, req: dict) -> Result:
     """Record one exam attempt fact in the owning module's module.yaml."""
     if req["termin"] not in (1, 2, 3):
@@ -148,7 +148,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("module.sitting.update", kind="command")
+@register("module.sitting.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def module_sitting(ctx: OpContext, req: dict) -> Result:
     """Record one sitting's withdrawal deadline in the owning module.yaml."""
     if req["termin"] not in (1, 2, 3):
@@ -221,7 +221,7 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("coordination.section.revise", kind="command")
+@register("coordination.section.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one reviewed coordination section, never a curriculum record."""
     root = ctx.root
@@ -347,7 +347,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("workspace.next-action.update", kind="command")
+@register("workspace.next-action.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def workspace_next_action(ctx: OpContext, req: dict) -> Result:
     """Replace one active workspace's Next Action section."""
     root = ctx.root
@@ -441,7 +441,7 @@ def _semester_fact(row: dict | None) -> dict | None:
 
 
 @register("program.semester.update", kind="command",
-           render_check=_render_creation_check)
+           render_check=_render_creation_check, effects=OperationEffects.CANONICAL_WRITE)
 def program_semester_update(ctx: OpContext, req: dict) -> Result:
     """Turn one program's current semester, from a reviewed package.
 

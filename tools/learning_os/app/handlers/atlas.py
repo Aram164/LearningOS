@@ -13,7 +13,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive import abilities
 from learning_os.derive.learning_runtime import runtime_path
 from learning_os.domain.failures import NotFound, WriteRefused
@@ -69,7 +69,7 @@ def _registries(root: Path) -> dict[Path, dict]:
 
 
 
-@register("ability.context", kind="porcelain")
+@register("ability.context", kind="porcelain", effects=OperationEffects.READ)
 def ability_context(ctx: OpContext, req: dict) -> Result:
     """Snapshot-bound ability horizon and focused expansion."""
     root = ctx.root
@@ -188,7 +188,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("ability.candidate.append", kind="command")
+@register("ability.candidate.append", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
     """Capture a tentative cross-ability connection; it never grants credit."""
     root = ctx.root
@@ -275,7 +275,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("atlas.question.save", kind="command")
+@register("atlas.question.save", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     """Save or resolve an explicitly authored personal question."""
     root = ctx.root
@@ -394,7 +394,7 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("concept.relations.change", kind="command")
+@register("concept.relations.change", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def concept_relations_change(ctx: OpContext, req: dict) -> Result:
     """Apply only explicitly authored relation operations."""
     root = ctx.root
@@ -477,7 +477,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("atlas.context", kind="porcelain")
+@register("atlas.context", kind="porcelain", effects=OperationEffects.READ)
 def atlas_context(ctx: OpContext, req: dict) -> Result:
     """Read connection editor guards and personal questions for one concept."""
     root = ctx.root

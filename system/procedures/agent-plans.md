@@ -52,10 +52,15 @@ The default worker count is one. Opt in to two through four workers only for
 measured workloads; process startup can dominate small plans. Read waves stop at
 every write or unknown-effect operation. `deadline_s` stops admission and
 cancellable reads, while an admitted commit is allowed to finish.
-Only operations registered as queries or read tools in the executing Core are
-reads. Commands, porcelain operations (including `session-end` and `generate`), and unknown effects
+Only operations explicitly declaring `read` effects in the executing Core are
+reads. Derived writes, canonical writes (including `session-end`), and unknown effects
 require a plan `session_id` and cannot run after an unresolved write, for both
 `argv` and `use` steps. Describing an operation remains a read.
+Every dispatched write starts with uncertain commit status, including porcelain.
+A receipt establishes commitment; an explicit gateway refusal can establish no
+commit. A porcelain error's generic `commit: none` cannot prove that it had no
+side effects. Without reliable evidence, later writes are skipped even under
+`on_error: continue`; independent reads can still run.
 
 `report_max_bytes` caps the entire stdout report. The `full_report` pointer
 leads to a private report outside canonical data, with the approved plan, sealed

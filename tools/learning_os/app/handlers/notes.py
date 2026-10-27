@@ -18,7 +18,7 @@ from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_
 from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.proposal import Presentation, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.garden import garden_id
 from learning_os.derive.search.index import NoteBlob, build_registry
 from learning_os.derive.search.model import POSTINGS_NODE_ID
@@ -47,7 +47,7 @@ def _rewrite_frontmatter(meta: dict, original: bytes) -> bytes:
     return ("---\n" + _dump_yaml(meta).rstrip() + "\n---\n").encode("utf-8") + original[front.end():]
 
 
-@register("note.evidence.add", kind="command")
+@register("note.evidence.add", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def note_evidence(ctx: OpContext, req: dict) -> Result:
     """Append one evidence pointer to a note without touching its body.
 
@@ -135,7 +135,7 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
 
 
 
-@register("note.revise", kind="command")
+@register("note.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def note_revise(ctx: OpContext, req: dict) -> Result:
     """Replace one existing note after explicit, reviewable approval.
 
@@ -504,7 +504,7 @@ def _resolve_note_create(root: Path, repo, note: dict,
     return note_id, path, _render_exact_note(meta, body), deprecations
 
 
-@register("note.create", kind="command")
+@register("note.create", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def note_create(ctx: OpContext, req: dict) -> Result:
     """Create one durable note from approved bytes.
 
@@ -568,7 +568,7 @@ def _garden_notes(root):
             for note in repo.garden_notes]
 
 
-@register("note.content", kind="query")
+@register("note.content", kind="query", effects=OperationEffects.READ)
 def note_read(ctx: OpContext, req: dict) -> Result:
     """Read a bounded segment of a durable note or garden seed by stable ID."""
     root = ctx.root
@@ -1034,7 +1034,7 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("note.search", kind="query")
+@register("note.search", kind="query", effects=OperationEffects.DERIVED_WRITE)
 def search(ctx: OpContext, req: dict) -> Result:
     """Search records, garden seeds, and inbox filenames; empty query lists rows."""
     if req["type"] is not None and req["type"] not in VALID_RECORD_TYPES:

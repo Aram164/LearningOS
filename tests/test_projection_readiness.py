@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from learning_os.app.projection_readiness import (
     dependency_ready,
     observe,
@@ -63,4 +65,27 @@ def test_forged_receipt_is_not_completion(mini_repo):
     path = mini_repo / "operations/transactions/forged.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("status: committed\nsnapshot_after: sha256:fake\n")
+    assert not receipt_completed(mini_repo, str(path.relative_to(mini_repo)), "sha256:fake")
+
+
+@pytest.mark.parametrize("relative", [
+    "knowledge/notes/fake.yaml", "operations/transactions/../../knowledge/fake.yaml",
+    "operations/transactions-other/fake.yaml", "../outside.yaml",
+])
+def test_receipt_paths_are_rejected_before_authority_read(mini_repo, monkeypatch, relative):
+    from learning_os.app import projection_readiness
+
+    def unexpected(*args):
+        pytest.fail("receipt outside the transaction boundary was opened")
+
+    monkeypatch.setattr(projection_readiness, "_completed", unexpected)
+    assert not receipt_completed(mini_repo, relative, "sha256:fake")
+
+
+def test_receipt_symlink_cannot_escape_transaction_boundary(mini_repo):
+    target = mini_repo / "knowledge/fake-receipt.yaml"
+    target.write_text("status: committed\nsnapshot_after: sha256:fake\n")
+    path = mini_repo / "operations/transactions/linked.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.symlink_to(target)
     assert not receipt_completed(mini_repo, str(path.relative_to(mini_repo)), "sha256:fake")

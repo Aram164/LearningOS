@@ -40,7 +40,7 @@ from learning_os.app.gateway import read_content_bound_file as _read_content_bou
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import (
@@ -854,7 +854,7 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
     )
 
 
-@register("module.plan.import", kind="command")
+@register("module.plan.import", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def module_plan_import(ctx: OpContext, req: dict) -> Result:
     """Apply one reviewable, module-scoped curriculum plan as a transaction.
 
@@ -961,7 +961,7 @@ def _creation_destination_problems(root: Path, module_id: str) -> list[str]:
 
 
 @register("module.create", kind="command",
-           render_check=_render_creation_check)
+           render_check=_render_creation_check, effects=OperationEffects.CANONICAL_WRITE)
 def module_create(ctx: OpContext, req: dict) -> Result:
     """Create one module record and its source map as one transaction.
 
@@ -1113,7 +1113,7 @@ def module_create(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("unit.plan.revise", kind="command")
+@register("unit.plan.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one existing lecture: compact patch in, one governed transaction out.
 

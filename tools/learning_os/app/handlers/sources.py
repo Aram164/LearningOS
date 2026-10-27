@@ -21,7 +21,7 @@ from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.material_synthesis import COMPARED_BASIS_FIELDS as _COMPARED_BASIS_FIELDS
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
@@ -230,7 +230,7 @@ def _plan_collection_entry_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("collection.entry.revise", kind="command")
+@register("collection.entry.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one collection entry's `why`, atomically."""
     root = ctx.root
@@ -319,7 +319,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
 
 
 @register("collection.create", kind="command",
-           render_check=_render_creation_check)
+           render_check=_render_creation_check, effects=OperationEffects.CANONICAL_WRITE)
 def collection_create(ctx: OpContext, req: dict) -> Result:
     """Create one source collection as one transaction.
 
@@ -830,7 +830,7 @@ def _plan_source_intake(root: Path, repo, items: Any) -> dict:
     }
 
 
-@register("source.intake.record", kind="command")
+@register("source.intake.record", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def source_intake_record(ctx: OpContext, req: dict) -> Result:
     """Create metadata-only sources or correct intake-owned fields, atomically."""
     root = ctx.root
@@ -1457,7 +1457,7 @@ def _plan_source_record_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("source.record.revise", kind="command")
+@register("source.record.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def source_record_revise(ctx: OpContext, req: dict) -> Result:
     """Attach verified local material to one existing source, atomically."""
     root = ctx.root

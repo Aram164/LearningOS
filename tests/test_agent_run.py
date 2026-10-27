@@ -679,27 +679,48 @@ def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
     assert report['totals']['ok'] == 1, report
 
 
-@pytest.mark.parametrize("kind", [None, "unknown", "porcelain", "command", "query", "tool"])
-def test_write_classification_is_conservative_and_independent_of_task_resolution(mini_repo, monkeypatch, kind):
+@pytest.mark.parametrize(("kind", "effects", "writer"), [
+    (None, "unknown", True), ("unknown", "unknown", True),
+    ("porcelain", "unknown", True), ("command", "canonical-write", True),
+    ("query", "unknown", True), ("tool", "unknown", True),
+    ("tool", "derived-write", True), ("query", "read", False),
+    ("tool", "read", False), ("porcelain", "read", False),
+])
+def test_write_classification_is_conservative_and_independent_of_task_resolution(mini_repo, monkeypatch, kind, effects, writer):
     from dataclasses import replace
 
-    from learning_os.app.registry import REGISTRY
+    from learning_os.app.registry import REGISTRY, OperationEffects
 
     executor = agent_run._cli_executor_factory(mini_repo.resolve())
     original = REGISTRY["project.inspect"]
     if kind is None:
         monkeypatch.delitem(REGISTRY, "project.inspect")
     else:
-        monkeypatch.setitem(REGISTRY, "project.inspect", replace(original, kind=kind))
+        monkeypatch.setitem(REGISTRY, "project.inspect", replace(original, kind=kind, effects=OperationEffects(effects)))
     direct = agent_run.build_index(mini_repo, executor, resolve_tasks=False)
     expanded = agent_run.build_index(mini_repo, executor, resolve_tasks=True)
     assert set(direct["write_verbs"]) == set(expanded["write_verbs"])
     for index in (direct, expanded):
         assert {"session-end", "generate", "ai-action-prepare", "ai-action-append-slices",
                 "ai-action-import-delivery"}.issubset(index["write_verbs"])
-        assert ("inspect" in index["write_verbs"]) is (kind not in {"query", "tool"})
+        assert ("inspect" in index["write_verbs"]) is writer
         assert "bootstrap" not in index["write_verbs"]
         assert "capabilities" not in index["write_verbs"]
+
+
+def test_query_and_tool_effects_are_explicit_and_file_outputs_are_writers(mini_repo):
+    from learning_os.app.registry import REGISTRY, OperationEffects
+
+    executor = agent_run._cli_executor_factory(mini_repo.resolve())
+    assert not [op.name for op in REGISTRY.values()
+                if op.kind in {"query", "tool"} and op.effects == OperationEffects.UNKNOWN]
+    writers = set(agent_run.build_index(mini_repo, executor, resolve_tasks=False)["write_verbs"])
+    assert {"validate", "note-analysis-prepare", "backup-manifest", "backup-verify", "search", "dossier"} <= writers
+    assert REGISTRY["ai-action.delivery.validate"].effects == OperationEffects.READ
+    assert "ability-context" not in writers  # Explicit read despite porcelain invocation.
+    with pytest.raises(agent_run.AgentRunError) as error:
+        agent_run.run_plan({"steps": [{"id": "validation", "argv": ["validate"]}]}, mini_repo)
+    assert error.value.code == "SESSION_REQUIRED"
 
 
 @pytest.mark.parametrize("form", ["argv", "prefixed", "use"])
@@ -764,6 +785,82 @@ def test_describing_porcelain_requires_no_write_session(mini_repo):
     ]}, mini_repo)
     assert report["totals"]["ok"] == 1, report
     assert report["steps"][0]["commit_certainty"] == "none"
+
+
+@pytest.mark.parametrize("use", [False, True])
+def test_session_commit_then_failed_push_blocks_later_writes(mini_repo, use):
+    from test_session_ledger import _git_init, _sealed_capture
+
+    from learning_os.store import session_ledger as session_store
+
+    session = "runner-partial-porcelain"
+    _git_init(mini_repo)
+    _sealed_capture(mini_repo, key="before-partial-porcelain", text="fixture capture", session_id=session)
+    execute = agent_run._cli_executor_factory(mini_repo.resolve(), session_id=session)
+    code, _, err = execute(["session-end", "--session-id", session], mini_repo)
+    assert code == 0, err
+    before = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=mini_repo, text=True)
+    receipts = set((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    # The fixture has no remote: commit is real and push fails without network access.
+    args = ["--commit-message", "fixture partial completion", "--push"]
+    step = ({"id": "end", "use": "session-end", "args": args} if use else
+            {"id": "end", "argv": ["session-end", *args]})
+    report = agent_run.run_plan({"session_id": session, "on_error": "continue", "steps": [
+        step, {"id": "later", "kind": "log", "text": "must not run", "key": "after-partial-porcelain"},
+        {"id": "read", "argv": ["inspect", "note-demo"]},
+    ]}, mini_repo)
+    assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=mini_repo, text=True) != before
+    assert session_store.load_session_ledger(mini_repo, session)["state"] == "committed_unpushed"
+    assert set((mini_repo / "operations/transactions").glob("transaction-*.yaml")) == receipts
+    assert report["steps"][0]["status"] == "error", report
+    assert report["steps"][0]["commit_certainty"] == "uncertain"
+    assert report["steps"][1]["status"] == "skipped"
+    assert report["steps"][1]["error"]["code"] == "PLAN_STOPPED"
+    assert report["steps"][2]["status"] == "ok"
+
+
+@pytest.mark.parametrize("response", ["exception", "error-with-none", "success-without-evidence"])
+def test_porcelain_without_commit_evidence_retains_uncertainty(mini_repo, monkeypatch, response):
+    from types import SimpleNamespace
+
+    from learning_os.adapters import cli
+
+    calls = []
+
+    def dispatch(namespace):
+        calls.append(namespace.command)
+        if namespace.command == "session-end":
+            if response == "exception":
+                raise RuntimeError("fixture transport failed after dispatch")
+            if response == "error-with-none":
+                return SimpleNamespace(exit_code=1, stdout='{"ok":false,"commit":"none"}', stderr="fixture failed")
+        return SimpleNamespace(exit_code=0, stdout='{"ok":true}', stderr="")
+
+    monkeypatch.setattr(cli, "invoke_outcome", dispatch)
+    report = agent_run.run_plan({"session_id": "porcelain-evidence", "on_error": "continue", "steps": [
+        {"id": "end", "argv": ["session-end"]},
+        {"id": "later", "argv": ["generate"]},
+        {"id": "read", "argv": ["inspect", "note-demo"]},
+    ]}, mini_repo)
+    assert calls == ["session-end", "inspect"], report
+    assert report["steps"][0]["commit_certainty"] == "uncertain"
+    assert report["steps"][1]["status"] == "skipped"
+    assert report["steps"][2]["status"] == "ok"
+
+
+@pytest.mark.parametrize("receipt", [False, True])
+def test_gateway_refusal_cannot_erase_commit_receipt(mini_repo, monkeypatch, receipt):
+    payload = {"ok": False, "commit": "none"}
+    if receipt:
+        payload.update(_receipt(mini_repo))
+        payload["ok"] = False
+    monkeypatch.setattr(agent_run.subprocess, "run", lambda argv, **kwargs:
+                        subprocess.CompletedProcess(argv, 1, json.dumps(payload), "fixture refusal"))
+    report = agent_run.run_plan({"session_id": "gateway-evidence", "steps": [
+        {"id": "write", "kind": "log", "text": "fixture", "key": "gateway-evidence"},
+    ]}, mini_repo)
+    assert report["steps"][0]["status"] == "error"
+    assert report["steps"][0]["commit_certainty"] == ("committed" if receipt else "none")
 
 
 def test_external_feed_reads_are_neither_memoized_nor_parallel(mini_repo, tmp_path):

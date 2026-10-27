@@ -14,7 +14,7 @@ from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisUnitNotFound,
     current_unit_material_basis,
@@ -61,7 +61,7 @@ def _validate_publication_synthesis(root, unit_id: str, value: dict) -> dict:
         ) from exc
 
 
-@register("unit.material-synthesis.publish", kind="command")
+@register("unit.material-synthesis.publish", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed unit dossier, with lineage, atomically."""
     root = ctx.root
@@ -181,7 +181,7 @@ def _ledger_guards(root: Path) -> tuple[list[str], dict[str, int]]:
 
 
 
-@register("lineage.restamp", kind="command")
+@register("lineage.restamp", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def lineage_restamp(ctx: OpContext, req: dict) -> Result:
     """Narrow old coarse reads, never re-judge (#94)."""
     root = ctx.root

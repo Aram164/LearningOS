@@ -14,7 +14,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.semantics.claim_audits import (
     AuditError,
     AuditRecord,
@@ -78,7 +78,7 @@ def _render_goal_check(record: dict, payload: dict) -> dict:
     }
 
 
-@register("goal.decide", kind="command", render_check=_render_goal_check)
+@register("goal.decide", kind="command", render_check=_render_goal_check, effects=OperationEffects.CANONICAL_WRITE)
 def goal(ctx: OpContext, req: dict) -> Result:
     """Record Aram's explicit decision on a proposed goal."""
     root = ctx.root

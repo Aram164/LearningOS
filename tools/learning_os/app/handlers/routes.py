@@ -27,7 +27,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.semantics.claim_status import claim_impacts, observe_claims
 from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
@@ -389,7 +389,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
     )
 
 
-@register("route.patch", kind="command", render_check=_render_plan_check)
+@register("route.patch", kind="command", render_check=_render_plan_check, effects=OperationEffects.CANONICAL_WRITE)
 def route_patch(ctx: OpContext, req: dict) -> Result:
     """Patch one material route's declared fields, with its map mirrors."""
     return _execute_material_plan(ctx, req, "route.patch", lambda repo: route_patch_plan(
@@ -398,7 +398,7 @@ def route_patch(ctx: OpContext, req: dict) -> Result:
 
 
 @register("module.materials.compact", kind="command",
-          render_check=_render_plan_check)
+          render_check=_render_plan_check, effects=OperationEffects.CANONICAL_WRITE)
 def module_materials_compact(ctx: OpContext, req: dict) -> Result:
     """Share repeated stage material fields losslessly across one module's maps."""
     return _execute_material_plan(

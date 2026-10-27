@@ -16,7 +16,7 @@ from learning_os.app.gateway import read_content_bound_file as _read_content_bou
 from learning_os.app.gateway import read_structured_file as _read_structured_file
 from learning_os.app.handlers._shared import NOTES_PREFIX
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.domain import ids
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
@@ -46,7 +46,7 @@ from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 
 
-@register("note.analysis.save", kind="command")
+@register("note.analysis.save", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def note_analysis_save(ctx: OpContext, req: dict) -> Result:
     """Preserve one source analysis as a durable reference note."""
     root = ctx.root
@@ -131,7 +131,7 @@ def _read_batch_items(bundle: object) -> list[tuple[int, dict, dict, bytes]]:
     return prepared
 
 
-@register("note.analysis.save_batch", kind="command")
+@register("note.analysis.save_batch", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
     """Preserve up to 20 source analyses atomically under one receipt."""
     root = ctx.root
@@ -588,7 +588,7 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     return resolved
 
 
-@register("note.analysis.prepare", kind="tool")
+@register("note.analysis.prepare", kind="tool", effects=OperationEffects.DERIVED_WRITE)
 def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     """Drafts in, reviewable staging plus the exact envelope out.
 

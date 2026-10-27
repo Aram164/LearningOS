@@ -22,6 +22,19 @@ def _stat(path: Path) -> tuple[int, ...]:
         return ()
 
 
+def _receipt_path(root: Path, receipt_path: str) -> Path | None:
+    relative = Path(receipt_path)
+    path = root / relative
+    boundary = root / "operations/transactions"
+    try:
+        safe = not relative.is_absolute() and not path.is_symlink() and path.resolve().is_relative_to(boundary)
+    except (OSError, RuntimeError):
+        return None
+    if not safe:
+        return None
+    return path
+
+
 @functools.lru_cache(maxsize=32)
 def _publication(root_text: str, manifest_stat: tuple[int, ...],
                  identity_stat: tuple[int, ...]) -> tuple[dict[str, object], dict[str, object]] | None:
@@ -66,9 +79,9 @@ def observe(root: Path, *, verify_current: bool = True) -> dict[str, object]:
 def _completed(root_text: str, receipt_path: str, snapshot_after: str,
                receipt_stat: tuple[int, ...], ledger_stat: tuple[int, ...]) -> bool:
     root = Path(root_text)
-    path = root / receipt_path
+    path = _receipt_path(root, receipt_path)
     try:
-        if path.is_symlink() or not path.resolve().is_relative_to(root):
+        if path is None:
             return False
         with path.open() as stream:
             data: object = yaml.load(stream, Loader=UniqueKeySafeLoader)
@@ -90,10 +103,10 @@ def _completed(root_text: str, receipt_path: str, snapshot_after: str,
 
 def receipt_completed(root: Path, receipt_path: str | None, snapshot_after: str | None) -> bool:
     root = root.resolve()
-    if not receipt_path or not snapshot_after or Path(receipt_path).is_absolute():
+    if not receipt_path or not snapshot_after:
         return False
-    path = root / receipt_path
-    if not path.resolve().is_relative_to(root):
+    path = _receipt_path(root, receipt_path)
+    if path is None:
         return False
     return _completed(str(root), receipt_path, snapshot_after, _stat(path),
                       _stat(root / "operations/transactions/idempotency.yaml"))

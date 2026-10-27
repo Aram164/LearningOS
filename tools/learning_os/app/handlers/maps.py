@@ -12,7 +12,7 @@ import yaml
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
@@ -44,7 +44,7 @@ def _human_plan_template(payload: dict) -> str:
     ).removesuffix("\n")
 
 
-@register("plan.template", kind="query", human=_human_plan_template)
+@register("plan.template", kind="query", human=_human_plan_template, effects=OperationEffects.READ)
 def plan_template(ctx: OpContext, req: dict) -> Result:
     """Read-only access to the single versioned study-map creation template."""
     root = ctx.root
@@ -280,7 +280,7 @@ def _plan_map_replacement(
 
 
 
-@register("unit.map.import", kind="command")
+@register("unit.map.import", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_map_import(ctx: OpContext, req: dict) -> Result:
     """Create, or revise under preservation rules, the one current study map.
 

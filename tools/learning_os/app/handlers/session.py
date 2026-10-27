@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.app.session import SessionChannelError as _SessionChannelError
 from learning_os.app.session import SessionCommittedError as _SessionCommittedError
 from learning_os.app.session import SessionConflictError as _SessionConflictError
@@ -21,7 +21,7 @@ from learning_os.app.session import session_end
 from learning_os.domain.failures import WriteRefused
 
 
-@register("session.end", kind="porcelain")
+@register("session.end", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
 def session_end_command(ctx: OpContext, req: dict) -> Result:
     """Validate, show exact session-owned files, optionally commit/push."""
     try:

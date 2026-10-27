@@ -51,3 +51,33 @@ zero errors; the baseline remains 964 warnings across 32 managed signatures
 (nine additional operational advisories are baseline-exempt in this checkout).
 
 GitHub issue: https://github.com/Aram164/LearningOS/issues/60
+
+## Follow-up: partial porcelain completion
+
+Aram identified a second uncertainty gap before PR #61 merges. At `531b63f`,
+the scheduler initializes only gateway submissions as uncertain, even though
+porcelain now correctly classifies as a write. Generic porcelain failures can
+therefore leave `commit_certainty: none` and permit later writes.
+
+New production-path tests initialize a synthetic Git repository, create a sealed
+capture in a named session, review it, and run session-end commit/push with no
+configured remote. The Git commit succeeds and push fails locally; the ledger
+retains `committed_unpushed`. No remote or live checkout is touched. Both argv
+and use forms must report uncertainty, skip a later log, retain the original
+receipt set, and permit an independent inspect.
+
+Additional tests cover an escaped dispatch exception, generic porcelain
+`commit: none`, successful output without commit evidence, a genuine gateway
+refusal, and receipt evidence contradicting a refusal field. The repair starts
+all writers as uncertain and permits only gateway refusals to establish no
+commit; a returned receipt is never downgraded by `commit: none`.
+
+The effect audit also confirmed file output behind non-command kinds:
+validation publishes its report, note-analysis preparation writes staging bodies
+and an envelope, backup export writes its output, backup verification can rebuild
+a restored projection, search can publish its index, and dossier building can
+publish its cache. These operations now explicitly declare derived writes;
+delivery validation and material-span inspection were checked and remain reads.
+Every query/tool declares an effect, and an undeclared read-looking operation
+still defaults to a write barrier. Receipt reads reject paths outside
+`operations/transactions/` before opening them, including escapes and symlinks.

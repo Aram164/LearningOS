@@ -13,7 +13,7 @@ from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.app.validation_service import status_issues
 from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
 from learning_os.derive.projection import adoption_counts, exam_spine
@@ -356,7 +356,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("operator.bootstrap", kind="query", parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief")
+@register("operator.bootstrap", kind="query", parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief", effects=OperationEffects.READ)
 def bootstrap(ctx: OpContext, req: dict) -> Result:
     """Serve the operator bootstrap: full, brief, or compact pages."""
     if req.get("brief"):
@@ -380,7 +380,7 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
     return Result(payload)
 
 
-@register("program.list", kind="query")
+@register("program.list", kind="query", effects=OperationEffects.READ)
 def program_list(ctx: OpContext, req: dict) -> Result:
     """List programs as discovery rows."""
     manifest = _fresh_manifest(ctx.root)
@@ -427,7 +427,7 @@ def _human_status(payload: dict) -> str:
     return "\n".join(lines)
 
 
-@register("status.read", kind="tool", human=_human_status)
+@register("status.read", kind="tool", human=_human_status, effects=OperationEffects.DERIVED_WRITE)
 def status(ctx: OpContext, req: dict) -> Result:
     """Serve the status screen: counts, exam spine, and validation."""
     root = ctx.root
@@ -535,7 +535,7 @@ def _coerce(raw: str) -> object:
         return raw
 
 
-@register("semantic.query", kind="tool")
+@register("semantic.query", kind="tool", effects=OperationEffects.READ)
 def semantic(ctx: OpContext, req: dict) -> Result:
     """Evaluate one predicate, list the registry, or serve a recipe."""
     if req.get("recipe"):
@@ -720,7 +720,7 @@ def _human_intelligence_scan(payload, view) -> str:
     return "\n".join(lines)
 
 
-@register("intelligence.scan", kind="tool", human=_human_intelligence_scan, parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief")
+@register("intelligence.scan", kind="tool", human=_human_intelligence_scan, parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief", effects=OperationEffects.READ)
 def intelligence_scan(ctx: OpContext, req: dict) -> Result:
     """Run one observation loop: observe, interpret, propose.
 
@@ -893,7 +893,7 @@ def _human_capabilities(payload, view) -> str:
          "  every successful canonical write has one receipt"])
 
 
-@register("capabilities.read", kind="tool", human=_human_capabilities, parallel_safe=True, memo_profile="catalogue", read_session_profile="catalogue")
+@register("capabilities.read", kind="tool", human=_human_capabilities, parallel_safe=True, memo_profile="catalogue", read_session_profile="catalogue", effects=OperationEffects.READ)
 def capabilities(ctx: OpContext, req: dict) -> Result:
     """Serve the machine discovery/read catalogue, in full or in part.
 
@@ -1167,7 +1167,7 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
             for _, _, _, rid in ranked]
 
 
-@register("related.read", kind="query")
+@register("related.read", kind="query", effects=OperationEffects.READ)
 def related(ctx: OpContext, req: dict) -> Result:
     """Ranked one-hop connections for one record id."""
     root = ctx.root
@@ -1189,7 +1189,7 @@ def related(ctx: OpContext, req: dict) -> Result:
     return Result(out)
 
 
-@register("runtime.session", kind="porcelain")
+@register("runtime.session", kind="porcelain", effects=OperationEffects.READ)
 def runtime_session(ctx: OpContext, req: dict) -> Result:
     """Propose (or repair) one runtime study session. Read-only."""
     root = ctx.root
@@ -1358,7 +1358,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("unit.list", kind="query")
+@register("unit.list", kind="query", effects=OperationEffects.READ)
 def unit_list(ctx: OpContext, req: dict) -> Result:
     """List units, optionally filtered; compact serves the summary page."""
     root = ctx.root
@@ -1376,7 +1376,7 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
     return Result(_filtered_units(manifest, req, ctx.operation))
 
 
-@register("module.list", kind="query")
+@register("module.list", kind="query", effects=OperationEffects.READ)
 def module_list(ctx: OpContext, req: dict) -> Result:
     """List modules with optional program/status filters."""
     root = ctx.root

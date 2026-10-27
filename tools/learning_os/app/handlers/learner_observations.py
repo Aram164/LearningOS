@@ -10,7 +10,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.abilities import ability_fingerprint, read_ability_observations
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
@@ -37,7 +37,7 @@ from learning_os.store.transactions import parse_expected_revisions
 STAGE_RESULT_CAPABILITY = "learner.stage-result.append"
 
 
-@register("learner.stage-result.append", kind="command")
+@register("learner.stage-result.append", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def stage_result(ctx: OpContext, req: dict) -> Result:
     """Append an untargeted learner result against a unit/stage."""
     root = ctx.root
@@ -232,7 +232,7 @@ def _condition_notice(requirement: dict, obs: dict) -> dict:
     }
 
 
-@register("learner.observation.append", kind="command")
+@register("learner.observation.append", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def observation_append(ctx: OpContext, req: dict) -> Result:
     """Append one immutable learner observation against a requirement."""
     root = ctx.root
@@ -363,7 +363,7 @@ def _resolve_observe_workspace(repo, requirement, explicit_id):
     return repo.workspaces[candidates[0]], ""
 
 
-@register("learner.observe", kind="command")
+@register("learner.observe", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def cli_observe(ctx: OpContext, req: dict) -> Result:
     """Record Aram's own evidence directly; the terminal session is the approval."""
     root = ctx.root
@@ -483,7 +483,7 @@ def _valid_work_ref(value: str) -> bool:
     return True
 
 
-@register("learner.ability-observation.append", kind="command")
+@register("learner.ability-observation.append", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def ability_observation_append(ctx: OpContext, req: dict) -> Result:
     """Record an exact learner-confirmed claim; the V2 approval binds payload."""
     root = ctx.root

@@ -17,7 +17,7 @@ from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_
 from learning_os.app.handlers._shared import require_unit_map_or_error
 from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.proposal import InboxCompletion, Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.domain.unit_notes import unit_note_sections
 from learning_os.store import observations
@@ -83,7 +83,7 @@ def _seed_content(text: str, title: str | None) -> str:
     return content if content.endswith("\n") else content + "\n"
 
 
-@register("capture.create", kind="command", human=_human_capture)
+@register("capture.create", kind="command", human=_human_capture, effects=OperationEffects.CANONICAL_WRITE)
 def capture(ctx: OpContext, req: dict) -> Result:
     """Judgment-free capture into work/inbox/ with a transaction receipt."""
     root = ctx.root
@@ -163,7 +163,7 @@ def capture(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("garden.seed.create", kind="command", human=_human_garden_seed)
+@register("garden.seed.create", kind="command", human=_human_garden_seed, effects=OperationEffects.CANONICAL_WRITE)
 def garden_seed_create(ctx: OpContext, req: dict) -> Result:
     """Create one free-form Markdown seed under knowledge/garden/."""
     root = ctx.root
@@ -229,7 +229,7 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("inbox.list", kind="tool")
+@register("inbox.list", kind="tool", effects=OperationEffects.READ)
 def inbox_list(ctx: OpContext, req: dict) -> Result:
     """List work/inbox files by name, without reading bytes."""
     root = ctx.root
@@ -274,7 +274,7 @@ def _inbox_folder_envelope(root: Path, name: str) -> dict:
     }
 
 
-@register("inbox.content", kind="query")
+@register("inbox.content", kind="query", effects=OperationEffects.READ)
 def inbox_read(ctx: OpContext, req: dict) -> Result:
     """Read a bounded segment of one work/inbox file by inbox-relative name.
 
@@ -402,7 +402,7 @@ def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> li
     return lines
 
 
-@register("review.prepare", kind="command")
+@register("review.prepare", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def shelving_prepare(ctx: OpContext, req: dict) -> Result:
     """Prepare a review packet; never applies canonical changes."""
     root = ctx.root
@@ -513,7 +513,7 @@ def _approved_destination(root: Path, item: dict) -> Path | None:
     return target
 
 
-@register("review.apply", kind="command")
+@register("review.apply", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def shelving_apply(ctx: OpContext, req: dict) -> Result:
     """Apply only explicitly approved proposal IDs."""
     if not req.get("approve"):
@@ -658,7 +658,7 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     return files
 
 
-@register("inbox.resolve", kind="command")
+@register("inbox.resolve", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def inbox_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve one routed inbox drop to the archive.
 

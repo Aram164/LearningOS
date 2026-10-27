@@ -100,7 +100,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
         nonlocal processes
         processes += raw.processes
         row: dict[str, object] = {"id": step.id, "status": "ok", "exit": raw.code,
-            "ready_wait_ms": ready_ms, "commit_certainty": "uncertain" if step.submitting else "none",
+            "ready_wait_ms": ready_ms, "commit_certainty": "uncertain" if step.writer else "none",
             "raw_bytes": len(raw.stdout.encode("utf-8"))}
         try:
             try:
@@ -118,8 +118,11 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                 detail = payload.get("error") if isinstance(payload, dict) else None
                 row.update(status="error", error=detail if isinstance(detail, dict) else {
                     "code": STEP_FAILED, "retryable": False, "stderr": raw.stderr[-400:]})
-                # A complete gateway refusal explicitly states no commit.
-                if isinstance(payload, dict) and payload.get("commit") == "none":
+                # Only a gateway refusal proves no commit. Porcelain may
+                # have changed files or Git before returning a generic failure.
+                # A receipt remains stronger evidence than a refusal field.
+                if (step.submitting and isinstance(payload, dict) and payload.get("commit") == "none"
+                        and row["commit_certainty"] != "committed"):
                     row["commit_certainty"] = "none"
             elif step.writer or snapshot:
                 writes[step.id] = payload
@@ -256,7 +259,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
         except Exception as exc:
             row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
             # Dispatch may have crossed the commit boundary before transport failed.
-            if step.submitting:
+            if step.writer:
                 row["commit_certainty"] = "uncertain"
             retain(step, row)
         index += 1

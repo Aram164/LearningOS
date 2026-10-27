@@ -9,7 +9,7 @@ from learning_os.app.ai_actions import AIActionService
 from learning_os.app.context import OpContext
 from learning_os.app.projection import publish as _publish
 from learning_os.app.proposal import DeliveryCompletion, ResponsePayload, Result
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.domain.ai_errors import (
     AIActionError,
     ConceptNotFound,
@@ -93,7 +93,7 @@ def _delivery_output(receipt: dict) -> dict:
     }
 
 
-@register("ai-action.delivery.apply", kind="command")
+@register("ai-action.delivery.apply", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     """Apply an approved AI delivery in one receipted transaction."""
     root = ctx.root
@@ -145,21 +145,21 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("ai-action.list", kind="tool")
+@register("ai-action.list", kind="tool", effects=OperationEffects.READ)
 def ai_action_list(ctx: OpContext, req: dict) -> Result:
     """List the provider-independent AI actions."""
     actions = AIActionService(ctx.root).list_actions()
     return Result({"ok": True, "actions": actions})
 
 
-@register("ai-action.status", kind="tool")
+@register("ai-action.status", kind="tool", effects=OperationEffects.READ)
 def ai_action_status(ctx: OpContext, req: dict) -> Result:
     """Show one prepared request status."""
     request = AIActionService(ctx.root).request_status(req["request_id"])
     return Result({"ok": True, "request": request})
 
 
-@register("ai-action.prepare", kind="porcelain")
+@register("ai-action.prepare", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
 def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     """Persist a bounded AI request bundle."""
     root = ctx.root
@@ -178,7 +178,7 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     })
 
 
-@register("ai-action.append-slices", kind="porcelain")
+@register("ai-action.append-slices", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
 def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     """Attach one targeted follow-up slice pass to a prepared request."""
     root = ctx.root
@@ -201,14 +201,14 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     return Result({"ok": True, "continuation": result})
 
 
-@register("ai-action.delivery.validate", kind="tool")
+@register("ai-action.delivery.validate", kind="tool", effects=OperationEffects.READ)
 def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
     """Validate one imported delivery without applying it."""
     result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
     return Result(result)
 
 
-@register("ai-action.delivery.import", kind="porcelain")
+@register("ai-action.delivery.import", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
 def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     """Import and validate an approved delivery directory."""
     root = ctx.root

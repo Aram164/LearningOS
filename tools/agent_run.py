@@ -6,8 +6,8 @@ contract. Log steps require an explicit, unique ``key`` stable across retries.
 Write plans require a stable ``session_id``; presealed gateway envelopes
 must already bind that session. ``on_error`` defaults to ``stop``; explicitly
 choose ``continue`` to keep running independent steps after a failure.
-Only runtime-registered queries and read tools are reads. Commands, porcelain
-operations and unknown effects are write barriers for both ``argv`` and ``use``.
+Only operations explicitly declaring read effects are reads. Derived, canonical
+and unknown effects are write barriers for both ``argv`` and ``use``.
 Dependencies mean completion of successful receipted writes, not persistence
 of their effects after later writes. Before a dependent read, the current
 projection must match a successful write at or after the latest required write
@@ -120,7 +120,7 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
     if str(TOOLS) not in sys.path:
         sys.path.insert(0, str(TOOLS))
     from learning_os.adapters.cli_parser import build_parser
-    from learning_os.app.registry import REGISTRY
+    from learning_os.app.registry import REGISTRY, OperationEffects
 
     parser = getattr(executor, "parser", None) or build_parser()
     choices = parser._subparsers._group_actions[0].choices  # noqa: SLF001
@@ -130,12 +130,12 @@ def build_index(root: Path, executor, *, resolve_tasks: bool = True) -> dict:
         if operation:
             verb_to_operation[name] = operation
     # The executing parser/registry owns effects for every plan shape. Only
-    # an explicitly registered query or read tool is a read; porcelain,
-    # missing and unknown kinds may mutate. Discovery cannot weaken this barrier.
+    # an explicitly declared read is a read. Neither invocation kind nor
+    # task discovery can weaken the default barrier for undeclared effects.
     index = {"verbs": sorted(choices), "verb_to_operation": verb_to_operation,
              "task_to_use": {}, "write_verbs": [name for name in choices
                  if (entry := REGISTRY.get(verb_to_operation.get(name))) is None
-                 or entry.kind not in {"query", "tool"}]}
+                 or entry.effects != OperationEffects.READ]}
     if not resolve_tasks:
         return index  # Explicit argv/log steps need no task prose expansion.
     if hasattr(executor, "parser"):

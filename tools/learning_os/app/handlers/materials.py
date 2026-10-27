@@ -14,7 +14,7 @@ from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
 from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.proposal import Result
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
@@ -547,7 +547,7 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
     }
 
 
-@register("plan.edit-context", kind="query")
+@register("plan.edit-context", kind="query", effects=OperationEffects.READ)
 def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     """Assemble one unit's edit context: map, routes, selections, audit."""
     root = ctx.root
@@ -717,7 +717,7 @@ def _placement_route(ctx, repo, unit, source_map, routes, route, req):
     return selected, f" --stage {stage_id} --resource-index {index}"
 
 
-@register("material.span", kind="query")
+@register("material.span", kind="query", effects=OperationEffects.READ)
 def material_span(ctx: OpContext, req: dict) -> Result:
     """One common source-span description, with optional bounded local inspection."""
     root = ctx.root
@@ -1195,7 +1195,7 @@ def _anchor_expansion_command(req, limit, snapshot, observed) -> str:
     return expansion(*parts)
 
 
-@register("material.context", kind="query")
+@register("material.context", kind="query", effects=OperationEffects.READ)
 def material_context(ctx: OpContext, req: dict) -> Result:
     """Find saved explanations from an explanation need."""
     root = ctx.root

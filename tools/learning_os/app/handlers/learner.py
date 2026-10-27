@@ -17,7 +17,7 @@ from learning_os.app.handlers._shared import (
     require_unit_map_or_error,
 )
 from learning_os.app.proposal import Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import requirement_id_for
 from learning_os.derive.routes import route_with_identity
 from learning_os.domain.curriculum.stages import (
@@ -109,7 +109,7 @@ def _observe_offer(unit_id: str, stage: dict) -> dict:
     return offer
 
 
-@register("stage.progress.update", kind="command")
+@register("stage.progress.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def stage_progress(ctx: OpContext, req: dict) -> Result:
     """Move one stage's status and record progress against it."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -191,7 +191,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("stage.note.write", kind="command")
+@register("stage.note.write", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def stage_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a stage's working note."""
     root = ctx.root
@@ -275,7 +275,7 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
         counter += 1
 
 
-@register("stage.attachment.add", kind="command")
+@register("stage.attachment.add", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def stage_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file beside a stage's working note."""
     root = ctx.root
@@ -327,7 +327,7 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("path.note.write", kind="command")
+@register("path.note.write", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def path_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a learning-path stage note."""
     root = ctx.root
@@ -379,7 +379,7 @@ def path_note(ctx: OpContext, req: dict) -> Result:
 
 
 
-@register("path.progress.update", kind="command")
+@register("path.progress.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def path_progress(ctx: OpContext, req: dict) -> Result:
     """Move one learning-path stage's status."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -428,7 +428,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
 
 
 
-@register("path.attachment.add", kind="command")
+@register("path.attachment.add", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def path_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file to a learning-path stage."""
     root = ctx.root
@@ -478,7 +478,7 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("detour.create", kind="command")
+@register("detour.create", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def detour_create(ctx: OpContext, req: dict) -> Result:
     """Open a scoped detour off one stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -539,7 +539,7 @@ def _stage(data: dict, stage_id: str):
                  if isinstance(row, dict) and row.get("id") == stage_id), None)
 
 
-@register("detour.resolve", kind="command")
+@register("detour.resolve", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def detour_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve a detour and reactivate its return stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -591,7 +591,7 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("source.feedback.record", kind="command")
+@register("source.feedback.record", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def source_feedback(ctx: OpContext, req: dict) -> Result:
     """Record source feedback against an exact unit/stage/source."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -673,7 +673,7 @@ def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
     return target, rel
 
 
-@register("unit.note.append", kind="command")
+@register("unit.note.append", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_note(ctx: OpContext, req: dict) -> Result:
     """Append one session-level section to the unit working note."""
     root = ctx.root
@@ -835,7 +835,7 @@ def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
     return False
 
 
-@register("unit.source-selection.set", kind="command")
+@register("unit.source-selection.set", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_source_selection(ctx: OpContext, req: dict) -> Result:
     """Persist one learner choice without changing the complete material menu."""
     ctx.require_snapshot(req.get("expected_snapshot"))

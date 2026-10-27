@@ -11,7 +11,7 @@ from types import SimpleNamespace
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -127,7 +127,7 @@ def _evidence(repo, source_ids) -> dict[str, str]:
     return evidence
 
 
-@register("dossier.read", kind="porcelain")
+@register("dossier.read", kind="porcelain", effects=OperationEffects.DERIVED_WRITE)
 def dossier(ctx: OpContext, req: dict) -> Result:
     """Build, serve, or rebuild one unit's semantic dossier. Read-only."""
     root = ctx.root
@@ -899,7 +899,7 @@ def _human_resume(payload, view) -> str:
     return rendered
 
 
-@register("resume.read", kind="tool", human=_human_resume)
+@register("resume.read", kind="tool", human=_human_resume, effects=OperationEffects.READ)
 def resume(ctx: OpContext, req: dict) -> Result:
     """Compile and print the return-to-study screen. Read-only."""
     root = ctx.root

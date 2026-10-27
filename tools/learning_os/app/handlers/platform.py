@@ -28,7 +28,7 @@ from learning_os.app.gateway import read_structured_file as _read_structured_fil
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 from learning_os.app.proposal import Result, TransactionProposal
-from learning_os.app.registry import register
+from learning_os.app.registry import OperationEffects, register
 from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
@@ -339,7 +339,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest")
+@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ)
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):
@@ -440,7 +440,7 @@ def _project_write(root: Path, data: dict, *,
     return {target: rendered}, project_id
 
 
-@register("project.create", kind="command")
+@register("project.create", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def project_create(ctx: OpContext, req: dict) -> Result:
     """Create one first-class project record."""
     root = ctx.root
@@ -465,7 +465,7 @@ def project_create(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("project.update", kind="command")
+@register("project.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def project_update(ctx: OpContext, req: dict) -> Result:
     """Update one first-class project record."""
     root = ctx.root
@@ -496,7 +496,7 @@ def project_update(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("project.list", kind="query")
+@register("project.list", kind="query", effects=OperationEffects.READ)
 def project_list(ctx: OpContext, req: dict) -> Result:
     """List first-class projects, optionally filtered by status."""
     manifest = _fresh_manifest(ctx.root)
@@ -512,7 +512,7 @@ def project_list(ctx: OpContext, req: dict) -> Result:
 # Moved with the units from commands.vnext (SPEC §12).
 
 
-@register("backup.manifest", kind="query")
+@register("backup.manifest", kind="query", effects=OperationEffects.DERIVED_WRITE)
 def backup_manifest(ctx: OpContext, req: dict) -> Result:
     """Build the backup manifest, or write it outside every backed-up root."""
     root = ctx.root
@@ -552,7 +552,7 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
         f"--stdout")
 
 
-@register("backup.verify", kind="tool")
+@register("backup.verify", kind="tool", effects=OperationEffects.DERIVED_WRITE)
 def backup_verify(ctx: OpContext, req: dict) -> Result:
     """Verify a backup manifest against the restored trees."""
     root = ctx.root
@@ -568,7 +568,7 @@ def backup_verify(ctx: OpContext, req: dict) -> Result:
     return Result(result, diagnostic_failed=not result["ok"])
 
 
-@register("health.report", kind="query")
+@register("health.report", kind="query", effects=OperationEffects.READ)
 def health_report(ctx: OpContext, req: dict) -> Result:
     """Build the repository health report."""
     # Attention is report data, not a transport failure: the UI must be able to
@@ -576,7 +576,7 @@ def health_report(ctx: OpContext, req: dict) -> Result:
     return Result(build_health_report(ctx.root))
 
 
-@register("legacy.archive.inspect", kind="query")
+@register("legacy.archive.inspect", kind="query", effects=OperationEffects.READ)
 def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect a legacy archive against its allowlist."""
     root = ctx.root
@@ -587,7 +587,7 @@ def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
     return Result(lock)
 
 
-@register("legacy.archive.status", kind="query")
+@register("legacy.archive.status", kind="query", effects=OperationEffects.READ)
 def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
     """Report the published legacy-archive lock, if any."""
     root = ctx.root
@@ -602,7 +602,7 @@ def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
     return Result(value)
 
 
-@register("masters-planning.dashboard", kind="query")
+@register("masters-planning.dashboard", kind="query", effects=OperationEffects.READ)
 def masters_planning_dashboard(ctx: OpContext, req: dict) -> Result:
     """Render the Master's Planning dashboard."""
     value = masters_planning.masters_planning_dashboard(
@@ -980,7 +980,7 @@ def _describe_from_records(root: Path, request_id: str,
     }
 
 
-@register("operations.read", kind="tool")
+@register("operations.read", kind="tool", effects=OperationEffects.READ)
 def operations(ctx: OpContext, req: dict) -> Result:
     """List recent causal operations or explain one request id."""
     root = ctx.root
@@ -1015,7 +1015,7 @@ def operations(ctx: OpContext, req: dict) -> Result:
 
 
 
-@register("legacy.archive.lock.publish", kind="command")
+@register("legacy.archive.lock.publish", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed safe Legacy disposition lock."""
     root = ctx.root
@@ -1051,7 +1051,7 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("masters-planning.catalog.update", kind="command")
+@register("masters-planning.catalog.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
     """Update the reviewed academic-only Master Planning catalog."""
     root = ctx.root
@@ -1091,7 +1091,7 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("masters-planning.comparison.publish", kind="command")
+@register("masters-planning.comparison.publish", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one prospective source comparison against its catalog."""
     root = ctx.root
@@ -1133,7 +1133,7 @@ def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("projection.observe", kind="query")
+@register("projection.observe", kind="query", effects=OperationEffects.READ)
 def projection_observe(ctx: OpContext, req: dict) -> Result:
     """Verify Core facts for receipt completion and current projection settlement."""
     from learning_os.app.projection_readiness import settlement_ready

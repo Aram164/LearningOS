@@ -47,6 +47,11 @@ Used by: `ai-delivery`, `cli-adapter`, `operation-handlers`, `plan-gate`.
 ## Invariants
 
 - Never dispatch an unadmitted write or bypass snapshot/replay checks. Pinning: `tests/test_ops_pipeline.py`.
+- Declare `OperationEffects` per operation independently of invocation kind. Pinning: `tests/test_agent_run.py`.
+  Only `READ` permits the runner to schedule a read. `DERIVED_WRITE` includes
+  optional report, cache, staging and export output; `CANONICAL_WRITE` includes
+  canonical records and Git/session mutations. The default is `UNKNOWN`, a
+  write barrier. This scheduling metadata grants no write authority.
 
 Admission lives in `system/contracts/capabilities.yaml`; `app/admission.py` constants
 `GESTURE_ALLOWLIST` and `UI_REVIEWED_ALLOWLIST` enforce it. The UI mirrors
