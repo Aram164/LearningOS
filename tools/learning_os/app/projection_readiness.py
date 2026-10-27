@@ -6,7 +6,7 @@ import json
 from collections.abc import Mapping
 from pathlib import Path
 from types import MappingProxyType
-from typing import cast
+from typing import cast, overload
 
 import yaml
 
@@ -59,7 +59,15 @@ def _publication(root_text: str, manifest_stat: tuple[int, ...],
         return None
 
 
-def _freeze(value):
+@overload
+def _freeze(value: Mapping[str, object]) -> Mapping[str, object]: ...
+
+
+@overload
+def _freeze(value: object) -> object: ...
+
+
+def _freeze(value: object) -> object:
     if isinstance(value, dict):
         return MappingProxyType({key: _freeze(item) for key, item in value.items()})
     if isinstance(value, list):
@@ -67,7 +75,15 @@ def _freeze(value):
     return value
 
 
-def _mutable(value):
+@overload
+def _mutable(value: Mapping[str, object]) -> dict[str, object]: ...
+
+
+@overload
+def _mutable(value: object) -> object: ...
+
+
+def _mutable(value: object) -> object:
     """Give the identity validator its actual dict/list wire contracts."""
     if isinstance(value, Mapping):
         return {key: _mutable(item) for key, item in value.items()}
@@ -111,8 +127,7 @@ def receipt_completed(root: Path, receipt_path: str | None, snapshot_after: str 
         try:
             with path.open() as stream:
                 data: object = yaml.load(stream, Loader=UniqueKeySafeLoader)
-            request = data.get("request") if isinstance(data, dict) else None
-            if isinstance(request, dict) and data.get("snapshot_after") == snapshot_after:
+            if isinstance(data, dict) and isinstance(request := data.get("request"), dict) and data.get("snapshot_after") == snapshot_after:
                 authority = collect_authority(root, request_id=str(request.get("request_id")),
                     idempotency_key=str(request.get("idempotency_key")), capability=str(data.get("capability")))
                 verified = authority.verified_receipt
