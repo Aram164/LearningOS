@@ -8,7 +8,7 @@ import math
 from pathlib import Path
 
 from learning_os.adapters import agent_runner
-from learning_os.app.agent_presentation import _json
+from learning_os.app.agent_presentation import encode_json
 from learning_os.domain.agent_plans import PlanStepError
 from learning_os.domain.codes import INVALID_REQUEST, INVALID_STEP_OUTPUT
 
@@ -42,7 +42,7 @@ def main() -> int:
             from learning_os.app.agent_reporting import expand_report
             if args.plan:
                 raise PlanStepError("choose a plan or --expand-report")
-            print(_json(expand_report(Path(args.expand_report), args.step)))
+            print(encode_json(expand_report(Path(args.expand_report), args.step)))
             return 0
         if not args.plan or args.step:
             raise PlanStepError("a plan is required; --step needs --expand-report")
@@ -50,10 +50,10 @@ def main() -> int:
             raise PlanStepError("plan input exceeds 1 MiB")
         report = agent_runner.run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8"), parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir, keep_report=args.keep_report)
     except (OSError, ValueError, KeyError, TypeError, PlanStepError) as exc:
-        print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
+        print(encode_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))
         return 2
-    print(_json(report))
+    print(encode_json(report))
     return 0 if all(row["status"] == "ok" for row in report["steps"]) else 3
 
 

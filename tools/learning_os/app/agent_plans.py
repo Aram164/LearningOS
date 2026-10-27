@@ -9,7 +9,7 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import cast
 
-from learning_os.app.agent_presentation import _step_argv
+from learning_os.app.agent_presentation import step_argv
 from learning_os.app.agent_reporting import ReportStore, bound_report
 from learning_os.app.lock import lock_wait_budget
 from learning_os.app.projection import fresh_manifest_and_repo
@@ -81,7 +81,7 @@ def compile_plan(steps: list[PlanStep], index: PlanIndex, admit: Callable[[list[
         if session_id is None and direct in writers and not step.get("describe"):
             raise PlanStepError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
         try:
-            argv = _step_argv(step, index, session_id)
+            argv = step_argv(step, index, session_id)
             command, feed = ("__seal_submit__", False) if argv[0] == "__seal_submit__" else admit(argv)
             writer = command in writers or step.get("kind") == "log" or step.get("write", False)
             if writer and session_id is None:

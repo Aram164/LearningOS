@@ -564,7 +564,7 @@ def test_takeover_whole_report_cap_is_always_enforced(tmp_path):
         {'id': str(i), 'argv': ['inspect'], 'summary': {'max_bytes': 1500}}
         for i in range(10)]}, tmp_path, index=INDEX,
         executor=lambda *_: (0, json.dumps({'value': 'x' * 1200}), 'notice'))
-    assert len((presentation._json(report) + '\n').encode()) <= 4096
+    assert len((presentation.encode_json(report) + '\n').encode()) <= 4096
     full = Path(report['full_report'])
     assert full.is_file()
     assert len(json.loads(full.read_text())['steps']) == 10

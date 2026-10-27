@@ -10,7 +10,7 @@ from learning_os.domain.agent_plans import PlanIndex, PlanStep, PlanStepError, S
 from learning_os.domain.codes import INVALID_STEP_OUTPUT, SUMMARY_BUDGET_TOO_SMALL
 
 
-def _json(value: object) -> str:
+def encode_json(value: object) -> str:
     try:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
     except (ValueError, TypeError) as exc:
@@ -76,27 +76,27 @@ def summarize(payload: object, *, fields: list[str] | None = None, max_items: in
                 missing.append(dotted)
         if missing:
             picked["_missing_fields"] = missing
-        encoded = _json(picked)
+        encoded = encode_json(picked)
     elif isinstance(payload, str):
-        encoded = _json({"text": payload})
+        encoded = encode_json({"text": payload})
     else:
-        encoded = _json(_cap(payload, max_items))
+        encoded = encode_json(_cap(payload, max_items))
     size = len(encoded.encode("utf-8"))
     if size <= max_bytes:
         return encoded
     metadata = {"_truncated_bytes": size, **({"_missing_fields": missing} if missing else {})}
-    if len(_json({**metadata, "preview": ""}).encode("utf-8")) > max_bytes:
+    if len(encode_json({**metadata, "preview": ""}).encode("utf-8")) > max_bytes:
         raise PlanStepError("budget cannot hold missing-field metadata; increase max_bytes", SUMMARY_BUDGET_TOO_SMALL)
     # Search the final escaped JSON bytes, not source character count.
     lo, hi = 0, min(len(encoded), max_bytes)
     while lo < hi:
         mid = (lo + hi + 1) // 2
-        candidate = _json({**metadata, "preview": encoded[:mid]})
+        candidate = encode_json({**metadata, "preview": encoded[:mid]})
         if len(candidate.encode("utf-8")) <= max_bytes:
             lo = mid
         else:
             hi = mid - 1
-    return _json({**metadata, "preview": encoded[:lo]})
+    return encode_json({**metadata, "preview": encoded[:lo]})
 
 class ClusterGroup(TypedDict):
     cluster_id: object
@@ -138,11 +138,11 @@ def cluster_preview(scan: dict[str, object], *, argv: list[str] | None = None, s
             "omitted_goals": cast(int, scan.get("omitted_goals", 0)),
             "full_result": shlex.join(full_argv), "expand_argv": full_argv}
 
-def _cluster_summary(scan: dict[str, object], argv: list[str], summary: SummarySpec) -> str:
+def cluster_summary(scan: dict[str, object], argv: list[str], summary: SummarySpec) -> str:
     preview = cluster_preview(scan, argv=argv, sample=summary.get("max_items", 3))
     budget = summary.get("max_bytes", 2000)
     # Keep recovery metadata even when groups/samples need to be removed.
-    while len(_json(preview).encode("utf-8")) > budget:
+    while len(encode_json(preview).encode("utf-8")) > budget:
         sampled = next((g for g in reversed(preview["groups"]) if g["sample_goal_ids"]), None)
         if sampled:
             sampled["sample_goal_ids"].pop()
@@ -153,7 +153,7 @@ def _cluster_summary(scan: dict[str, object], argv: list[str], summary: SummaryS
             preview["omitted_goals"] += removed["member_count"]
         else:
             raise PlanStepError("cluster budget cannot hold counts and expansion; increase max_bytes")
-    return _json(preview)
+    return encode_json(preview)
 
 def classify_scope(errors: list[dict[str, object]], writes: list[str]) -> dict[str, object]:
     in_scope: list[dict[str, object]] = []
@@ -170,10 +170,10 @@ def _expand_log_step(step: PlanStep, session_id: str | None = None) -> list[str]
         payload = {"unit_id": step["unit_id"], "stage_id": step["stage_id"], "text": step["text"]}
     else:
         capability, payload = "capture.create", {"text": step["text"]}
-    return ["__seal_submit__", capability, _json(payload), step["key"],
+    return ["__seal_submit__", capability, encode_json(payload), step["key"],
             *(["--session-id=" + session_id] if session_id is not None else [])]
 
-def _step_argv(step: PlanStep, index: PlanIndex, session_id: str | None = None) -> list[str]:
+def step_argv(step: PlanStep, index: PlanIndex, session_id: str | None = None) -> list[str]:
     if step.get("kind") == "log":
         argv = _expand_log_step(step, session_id)
     elif step.get("describe"):
@@ -191,7 +191,7 @@ def _step_argv(step: PlanStep, index: PlanIndex, session_id: str | None = None) 
     return argv
 
 
-def _field(payload: object, name: str) -> object:
+def field_value(payload: object, name: str) -> object:
     if isinstance(payload, dict):
         if payload.get(name):
             return payload[name]

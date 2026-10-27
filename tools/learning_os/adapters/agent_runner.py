@@ -15,7 +15,12 @@ from pathlib import Path
 from typing import cast
 
 from learning_os.app.agent_plans import compile_plan, execute_plan, validate_plan
-from learning_os.app.agent_presentation import _cluster_summary, _field, classify_scope, summarize
+from learning_os.app.agent_presentation import (
+    classify_scope,
+    cluster_summary,
+    field_value,
+    summarize,
+)
 from learning_os.app.agent_reporting import ReportStore, minimum_ledger_bytes
 from learning_os.app.projection_readiness import dependency_ready
 from learning_os.app.validation_service import diagnostic_report
@@ -182,17 +187,17 @@ class CliPlanPort:
     def summarize(self, step: CompiledStep, payload: object) -> str:
         description = step.presentation or {}
         summary = description.get("summary") or SummarySpec()
-        return (_cluster_summary(cast(dict[str, object], payload), list(step.argv), summary)
+        return (cluster_summary(cast(dict[str, object], payload), list(step.argv), summary)
                 if description.get("clusters") and isinstance(payload, dict)
                 else summarize(payload, fields=summary.get("fields"),
                                max_items=summary.get("max_items", 5),
                                max_bytes=summary.get("max_bytes", 2000)))
 
     def ready(self, required: list[object], known: list[object], submitting: bool) -> tuple[bool, str]:
-        records = [{"receipt_path": cast(str | None, _field(row, "receipt_path")),
-                    "snapshot_after": cast(str | None, _field(row, "snapshot_after"))} for row in required]
-        all_records = [{"receipt_path": cast(str | None, _field(row, "receipt_path")),
-                        "snapshot_after": cast(str | None, _field(row, "snapshot_after"))} for row in known]
+        records = [{"receipt_path": cast(str | None, field_value(row, "receipt_path")),
+                    "snapshot_after": cast(str | None, field_value(row, "snapshot_after"))} for row in required]
+        all_records = [{"receipt_path": cast(str | None, field_value(row, "receipt_path")),
+                        "snapshot_after": cast(str | None, field_value(row, "snapshot_after"))} for row in known]
         return dependency_ready(self.root, records, all_records, completion_only=submitting)
 
     def epoch(self, root: Path) -> bool:
