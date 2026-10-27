@@ -7,4 +7,4 @@
 - Smallest repair: retain strict mypy coverage and update only the transcript's expected pyproject hash. Do not weaken `tests/procedure_helpers/los-anchored-copy` or add wildcard output.
 - Acceptance: the exact hash matches `shasum -a 256 pyproject.toml`, and the complete procedure suite passes with its existing audit witnesses and expected failures. Final counts are retained in the workbench report.
 - Evidence: `../repair-baseline.log`, `../repair-procedures.log`, and `../REPAIR-REPORT.md` in the experiment workbench.
-- GitHub: not filed. Automatic approval review rejected publishing the first prepared issue to `Aram164/LearningOS`, stating that the specific contents and destination require explicit approval; the remaining issue submissions were halted. The exact ready-to-file body is this note, without this final status line.
+- GitHub: https://github.com/Aram164/LearningOS/issues/66

@@ -8,4 +8,6 @@
 - Impact: callers treat a successful read-only task as failure, and inspecting context or proposing a session cannot deliver its central result through the public task report.
 - Smallest improvement: settle read-only tasks from their actual operation results and align the CLI mapping; carry bounded inspect/session projections and snapshots from the existing runner. Reuse existing full-report references for larger content.
 - Acceptance: real CLI tests distinguish successful and refused read-only tasks; a valid authored runtime target produces a snapshot-bound session contract without evidence/mastery claims or canonical changes. No new session entity or requirement store. This remains later P1 acceptance work.
-- GitHub: not filed. Automatic approval review rejected publishing the first prepared issue to `Aram164/LearningOS`, stating that the specific contents and destination require explicit approval; the remaining issue submissions were halted. The exact ready-to-file body is this note, without this final status line.
+- GitHub: https://github.com/Aram164/LearningOS/issues/69
+
+- Acceptance follow-up: repaired in the separate P1 acceptance increment. The candidate Task IR suite passed 73 cases, with an independent review reporting no unresolved blockers. Final head/pair/hosted evidence is retained in `LearningOS/workbench/task-ir-p1-experiment/P1-ACCEPTANCE-REPORT.md`; hosted acceptance is not inferred from the local run.

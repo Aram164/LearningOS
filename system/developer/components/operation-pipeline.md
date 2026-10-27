@@ -59,6 +59,17 @@ Admission lives in `system/contracts/capabilities.yaml`; `app/admission.py` cons
 `GESTURE_ALLOWLIST` and `UI_REVIEWED_ALLOWLIST` enforce it. The UI mirrors
 its permitted gesture set and checks parity in its own contract check.
 
+### Experimental Task IR P1
+
+`task_ir.py` compiles four closed operations into the existing runner/gateway.
+Read results retain bounded content, snapshot pins and expansion references; route binding requires complete discovery.
+Private evidence retains original check/envelope bytes with digests and root/session/request bindings through the shared atomic writer.
+Apply submits copied original bytes; interrupted outcomes use gateway replay-only and the strict committed-evidence verifier. Missing proof stays uncertain;
+preview never replaces in-flight evidence, and interrupted requests are never
+resealed. Legacy previews lacking original bytes require a new reviewed request ID.
+Operator assertions do not authenticate human review. There is no new journal, session entity, approval protocol or general graph composition.
+Pinning: `tests/test_task_ir.py`.
+
 ## Pinning tests
 
 - `tests/test_ops_pipeline.py`

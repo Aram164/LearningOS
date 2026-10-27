@@ -8,4 +8,6 @@
 - Impact: a misspelled constraint can be silently ignored; this is a compile-contract failure, not evidence of a gateway authorization bypass.
 - Smallest improvement: apply the existing per-operation allowed-field check before every return. Add real-interface refusal cases for each read operation without creating another capability catalogue.
 - Acceptance: all three read operations reject unknown fields before dispatch, while valid existing specifications still compile deterministically. No repair for this gap is included in the immediate verification increment.
-- GitHub: not filed. Automatic approval review rejected publishing the first prepared issue to `Aram164/LearningOS`, stating that the specific contents and destination require explicit approval; the remaining issue submissions were halted. The exact ready-to-file body is this note, without this final status line.
+- GitHub: https://github.com/Aram164/LearningOS/issues/67
+
+- Acceptance follow-up: repaired in the separate P1 acceptance increment. The candidate Task IR suite passed 73 cases, with an independent review reporting no unresolved blockers. Final head/pair/hosted evidence is retained in `LearningOS/workbench/task-ir-p1-experiment/P1-ACCEPTANCE-REPORT.md`; hosted acceptance is not inferred from the local run.

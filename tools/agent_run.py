@@ -34,7 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--task", default=None,
                         help="Task IR P1 spec JSON file (experimental; alternative to a plan)")
     parser.add_argument("--task-phase", choices=("preview", "apply"), default="preview",
-                        help="Task IR phase: preview seals the reviewed check only; apply submits it once")
+                        help="Task IR phase: preview retains the checked envelope; apply submits or reconciles it")
     parser.add_argument("--evidence-dir", default=None,
                         help="Task IR run-evidence directory (outside the data root)")
     return parser

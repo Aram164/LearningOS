@@ -8,4 +8,6 @@
 - Impact: the adapter safely avoids blind redispatch but strands recoverable committed outcomes. Its current test proves non-redispatch, not completed recovery.
 - Smallest improvement: use the existing receipt/retained-envelope recovery mechanism for uncertain/dispatched states, preserve exact identity, and define explicit operator action when evidence cannot establish an outcome. No second journal or resealing protocol.
 - Acceptance: adapter-level lost-response, abrupt-exit, missing-receipt, conflicting-intent and exact-replay cases prove one transaction, one receipt, preserved identities, and truthful unresolved outcomes. This is deferred acceptance work.
-- GitHub: not filed. Automatic approval review rejected publishing the first prepared issue to `Aram164/LearningOS`, stating that the specific contents and destination require explicit approval; the remaining issue submissions were halted. The exact ready-to-file body is this note, without this final status line.
+- GitHub: https://github.com/Aram164/LearningOS/issues/68
+
+- Acceptance follow-up: repaired in the separate P1 acceptance increment. The candidate Task IR suite passed 73 cases, with an independent review reporting no unresolved blockers. Final head/pair/hosted evidence is retained in `LearningOS/workbench/task-ir-p1-experiment/P1-ACCEPTANCE-REPORT.md`; hosted acceptance is not inferred from the local run.
