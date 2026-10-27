@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import functools
 import json
+from collections.abc import Mapping
 from pathlib import Path
+from types import MappingProxyType
 from typing import cast
 
 import yaml
@@ -37,7 +39,7 @@ def _receipt_path(root: Path, receipt_path: str) -> Path | None:
 
 @functools.lru_cache(maxsize=32)
 def _publication(root_text: str, manifest_stat: tuple[int, ...],
-                 identity_stat: tuple[int, ...]) -> tuple[dict[str, object], dict[str, object]] | None:
+                 identity_stat: tuple[int, ...]) -> tuple[Mapping[str, object], Mapping[str, object]] | None:
     root = Path(root_text)
     try:
         raw = (root / "generated/manifest.json").read_bytes()
@@ -52,9 +54,26 @@ def _publication(root_text: str, manifest_stat: tuple[int, ...],
             return None
         if _stat(root / "generated/manifest.json") != manifest_stat or _stat(root / "generated/manifest.identity.json") != identity_stat:
             return None
-        return {"_generated": generated}, identity
+        return _freeze({"_generated": generated}), _freeze(identity)
     except (OSError, ValueError, TypeError):
         return None
+
+
+def _freeze(value):
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
+def _mutable(value):
+    """Give the identity validator its actual dict/list wire contracts."""
+    if isinstance(value, Mapping):
+        return {key: _mutable(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_mutable(item) for item in value]
+    return value
 
 
 def observe(root: Path, *, verify_current: bool = True) -> dict[str, object]:
@@ -66,7 +85,7 @@ def observe(root: Path, *, verify_current: bool = True) -> dict[str, object]:
     if pair is not None and verify_current:
         manifest, identity = pair
         try:
-            current, reason = check_identity(root, manifest, identity,
+            current, reason = check_identity(root, _mutable(manifest), _mutable(identity),
                                              live_snapshot="sha256:" + canonical_fingerprint(root))
         except (OSError, ValueError):
             current = False
@@ -76,40 +95,36 @@ def observe(root: Path, *, verify_current: bool = True) -> dict[str, object]:
     return {"snapshot_id": pair[1]["snapshot_id"], "published": True, "reason": "ready"}
 
 
-def _completed(root_text: str, receipt_path: str, snapshot_after: str,
-               receipt_stat: tuple[int, ...], ledger_stat: tuple[int, ...]) -> bool:
-    root = Path(root_text)
-    path = _receipt_path(root, receipt_path)
-    try:
-        if path is None:
-            return False
-        with path.open() as stream:
-            data: object = yaml.load(stream, Loader=UniqueKeySafeLoader)
-        if not isinstance(data, dict) or data.get("snapshot_after") != snapshot_after:
-            return False
-        request = data.get("request")
-        if not isinstance(request, dict):
-            return False
-        authority = collect_authority(root, request_id=str(request.get("request_id")),
-            idempotency_key=str(request.get("idempotency_key")), capability=str(data.get("capability")))
-        verified = authority.verified_receipt
-        return bool(verified is not None and verified.get("_path") == receipt_path
-                    and verified.get("snapshot_after") == snapshot_after
-                    and _stat(path) == receipt_stat
-                    and _stat(root / "operations/transactions/idempotency.yaml") == ledger_stat)
-    except (OSError, ValueError, TypeError, yaml.YAMLError):
-        return False
-
-
 def receipt_completed(root: Path, receipt_path: str | None, snapshot_after: str | None) -> bool:
     root = root.resolve()
     if not receipt_path or not snapshot_after:
         return False
-    path = _receipt_path(root, receipt_path)
-    if path is None:
-        return False
-    return _completed(str(root), receipt_path, snapshot_after, _stat(path),
-                      _stat(root / "operations/transactions/idempotency.yaml"))
+    ledger = root / "operations/transactions/idempotency.yaml"
+    # One concurrent commit can move the ledger during authority verification.
+    # Re-read from disk once; repeated movement cannot establish completion.
+    for _ in range(2):
+        path = _receipt_path(root, receipt_path)
+        if path is None:
+            return False
+        receipt_stat, ledger_stat = _stat(path), _stat(ledger)
+        completed = False
+        try:
+            with path.open() as stream:
+                data: object = yaml.load(stream, Loader=UniqueKeySafeLoader)
+            request = data.get("request") if isinstance(data, dict) else None
+            if isinstance(request, dict) and data.get("snapshot_after") == snapshot_after:
+                authority = collect_authority(root, request_id=str(request.get("request_id")),
+                    idempotency_key=str(request.get("idempotency_key")), capability=str(data.get("capability")))
+                verified = authority.verified_receipt
+                completed = bool(verified is not None and verified.get("_path") == receipt_path
+                                 and verified.get("snapshot_after") == snapshot_after)
+        except (OSError, ValueError, TypeError, yaml.YAMLError):
+            pass
+        if _receipt_path(root, receipt_path) is None:
+            return False
+        if _stat(path) == receipt_stat and _stat(ledger) == ledger_stat:
+            return completed
+    return False
 
 
 def dependency_ready(root: Path, required: list[dict[str, str | None]],

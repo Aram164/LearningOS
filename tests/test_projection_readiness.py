@@ -70,15 +70,13 @@ def test_forged_receipt_is_not_completion(mini_repo):
 
 @pytest.mark.parametrize("relative", [
     "knowledge/notes/fake.yaml", "operations/transactions/../../knowledge/fake.yaml",
-    "operations/transactions-other/fake.yaml", "../outside.yaml",
+    "operations/transactions-other/fake.yaml", "../outside.yaml", "/tmp/outside.yaml",
 ])
 def test_receipt_paths_are_rejected_before_authority_read(mini_repo, monkeypatch, relative):
-    from learning_os.app import projection_readiness
-
     def unexpected(*args):
         pytest.fail("receipt outside the transaction boundary was opened")
 
-    monkeypatch.setattr(projection_readiness, "_completed", unexpected)
+    monkeypatch.setattr(Path, "open", unexpected)
     assert not receipt_completed(mini_repo, relative, "sha256:fake")
 
 
@@ -89,3 +87,84 @@ def test_receipt_symlink_cannot_escape_transaction_boundary(mini_repo):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.symlink_to(target)
     assert not receipt_completed(mini_repo, str(path.relative_to(mini_repo)), "sha256:fake")
+
+
+def test_receipt_parent_symlink_cannot_escape_transaction_boundary(mini_repo, monkeypatch):
+    directory = mini_repo / "operations/transactions/linked-parent"
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    directory.symlink_to(mini_repo / "knowledge", target_is_directory=True)
+    monkeypatch.setattr(Path, "open", lambda *_: pytest.fail("escaped receipt was opened"))
+    assert not receipt_completed(mini_repo, "operations/transactions/linked-parent/fake.yaml", "sha256:fake")
+
+
+def test_publication_cache_is_deeply_immutable_and_identity_still_validates(mini_repo):
+    from learning_os.app import projection_readiness as readiness
+
+    capture(mini_repo, "immutable-publication")
+    pair = readiness._publication(str(mini_repo.resolve()),
+        readiness._stat(mini_repo / "generated/manifest.json"),
+        readiness._stat(mini_repo / "generated/manifest.identity.json"))
+    assert pair is not None
+    with pytest.raises(TypeError):
+        pair[0]["_generated"]["snapshot_id"] = "forged"
+    with pytest.raises(TypeError):
+        pair[1]["snapshot_id"] = "forged"
+    assert observe(mini_repo)["published"] is True
+
+
+def test_authority_retries_once_after_a_real_concurrent_commit(mini_repo, monkeypatch):
+    from learning_os.app import projection_readiness as readiness
+
+    first = capture(mini_repo, "race-first")
+    actual = readiness.collect_authority
+    calls = []
+
+    def concurrent(*args, **kwargs):
+        authority = actual(*args, **kwargs)
+        calls.append(1)
+        if len(calls) == 1:
+            capture(mini_repo, "race-second")
+        return authority
+
+    monkeypatch.setattr(readiness, "collect_authority", concurrent)
+    result = settlement_ready(mini_repo, first["receipt_path"], first["snapshot_after"])
+    assert result["write_completed"] is True and result["settled"] is True
+    assert result["current_snapshot_id"] != first["snapshot_after"]
+    assert len(calls) == 2
+
+
+def test_repeated_ledger_instability_fails_closed(mini_repo, monkeypatch):
+    from learning_os.app import projection_readiness as readiness
+
+    first = capture(mini_repo, "unstable-first")
+    actual = readiness.collect_authority
+    calls = []
+
+    def concurrent(*args, **kwargs):
+        authority = actual(*args, **kwargs)
+        calls.append(1)
+        ledger = mini_repo / "operations/transactions/idempotency.yaml"
+        ledger.write_text(ledger.read_text() + "\n")
+        return authority
+
+    monkeypatch.setattr(readiness, "collect_authority", concurrent)
+    assert not receipt_completed(mini_repo, first["receipt_path"], first["snapshot_after"])
+    assert len(calls) == 2
+
+
+def test_receipt_change_during_authority_read_cannot_reuse_old_verification(mini_repo, monkeypatch):
+    from learning_os.app import projection_readiness as readiness
+
+    first = capture(mini_repo, "receipt-race")
+    actual = readiness.collect_authority
+    calls = []
+
+    def concurrent(*args, **kwargs):
+        authority = actual(*args, **kwargs)
+        calls.append(1)
+        (mini_repo / first["receipt_path"]).write_text("snapshot_after: forged\n")
+        return authority
+
+    monkeypatch.setattr(readiness, "collect_authority", concurrent)
+    assert not receipt_completed(mini_repo, first["receipt_path"], first["snapshot_after"])
+    assert len(calls) == 1
