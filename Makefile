@@ -40,7 +40,7 @@ help:
 	@echo "make test-affected [BASE=main] - run the groups touched by this branch"
 	@echo "make test-paired - run the Core/UI boundary tests (the pre-push gate's UI-only path)"
 	@echo "make test-parallel - run the suite in parallel for fast feedback (WORKERS=4 workers max, zz population files stay serial; never the gate)"
-	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
+	@echo "make bench    - compare a disposable workload with retained measurements (no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
@@ -131,11 +131,10 @@ test-paired:
 test-parallel:
 	$(PY) -m pytest -q -n $(WORKERS) --dist loadscope -m "not live_install" --ignore=tests/test_scenarios_zz_refusal_sites.py --ignore=tests/test_scenarios_zz_operational_owners.py
 
-# Discoverability only: the read-only benchmark scripts are noisy by nature,
-# so they are runnable but never a gate and never part of check/CI.
+# Synthetic fixture setup is outside timed samples. Performance comparisons
+# are informational: this target is never a gate or part of check/CI.
 bench:
-	$(PY) tests/benchmark_runtime.py
-	$(PY) tests/benchmark_agent_reads.py
+	$(PY) tests/benchmark_runtime.py --baseline tests/architecture/runtime-benchmark-baseline.json
 
 lint:
 	$(PY) -m ruff check tools tests

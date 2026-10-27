@@ -40,6 +40,38 @@ make test                        # the full suite — still the gate
 `make system-check` and CI always run the full suite. Groups minimise reruns
 during development; they never replace the gate.
 
+## Measurements and historical engine evidence
+
+`make bench` measures loading, offline validation and in-memory generation on
+the disposable `synthetic-demo-v1` fixture. Each sample starts a fresh process;
+setup and one warmup are excluded. The retained measurements are in
+`architecture/runtime-benchmark-baseline.json`. The command prints percentage
+changes, environment agreement and exact semantic-output agreement. Timing
+never gates acceptance. Different machines or changed semantic output make
+the comparison less informative; update the baseline deliberately with
+`python tests/benchmark_runtime.py --write-baseline PATH`, after reviewing why
+the workload changed. `--root PATH` explicitly selects an existing read-only
+tree for a separate measurement. No benchmark is part of `make check` or CI.
+
+The engine neutrality oracle retains its original effects, including all
+2,688 digest comparisons. `architecture/engine-baseline.json` contains stable
+digest references; `engine-baseline-hashes.json` holds the 240 exact values.
+The test expands those references before comparing the complete record.
+Dictionary keys and filesystem traversal are sorted; receipt rows keep their
+existing deterministic ordering, and semantic list order remains significant.
+The original `074f4717` input archive is unchanged. The oracle's two additional
+PR #59 register inputs and contract inventory are retained separately in
+`engine-contract-inputs.json`, with provenance at `d3d3b35`; their original
+bytes match the existing oracle's content hashes. This prevents later
+contracts from changing historical snapshots. Current contracts remain
+covered by transaction, gateway, contract and backup tests; this oracle drives
+the current transaction engine against its intentionally historical inputs.
+
+CLI parity keeps parser structure and every diagnostic body, exit status and
+argument observation. Its shared recorder normalizes only wrapped usage to
+the first line, so the root verb inventory belongs to the structural oracle
+instead of being repeated in each error recording.
+
 ## Parallel fast gate
 
 `make test-parallel` runs the suite under pytest-xdist (`-n $(WORKERS)`,

@@ -244,7 +244,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: the following arguments are required: name, --payload-file\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: the following arguments are required: name, --payload-file\n"
         }
       }
     },
@@ -265,7 +265,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: the following arguments are required: goal_id\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: the following arguments are required: goal_id\n"
         },
         "stdout": ""
       }
@@ -365,7 +365,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
+          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
         }
       }
     },
@@ -386,7 +386,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: one of the arguments --file --record is required\n"
+          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: one of the arguments --file --record is required\n"
         }
       }
     },
@@ -409,7 +409,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: one of the arguments --file --record is required\n"
+          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: one of the arguments --file --record is required\n"
         }
       }
     },
@@ -432,7 +432,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: one of the arguments --file --record is required\n"
+          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: one of the arguments --file --record is required\n"
         }
       }
     },
@@ -506,7 +506,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
+          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
         }
       }
     },
@@ -750,11 +750,11 @@
         "--manifest",
         "manifest.json",
         "--restored-core",
-        "\u2026",
+        "…",
         "--restored-ui",
-        "\u2026",
+        "…",
         "--restored-materials",
-        "\u2026"
+        "…"
       ],
       "source": {
         "kind": "doc",
@@ -765,11 +765,11 @@
           "--manifest",
           "manifest.json",
           "--restored-core",
-          "\u2026",
+          "…",
           "--restored-ui",
-          "\u2026",
+          "…",
           "--restored-materials",
-          "\u2026"
+          "…"
         ]
       },
       "substitutions": [],
@@ -780,9 +780,9 @@
           "command": "backup-verify",
           "json": false,
           "manifest": "manifest.json",
-          "restored_core": "\u2026",
-          "restored_ui": "\u2026",
-          "restored_materials": "\u2026",
+          "restored_core": "…",
+          "restored_ui": "…",
+          "restored_materials": "…",
           "checksums_only": false,
           "func": "learning_os.commands.vnext.cmd_backup_verify"
         }
@@ -807,7 +807,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]",
-          "stderr": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION] [--json]\n                           unit_id stage_id source_id\n                           {helpful,too-advanced,wrong-perspective,useful-for-derivation,useful-for-review,skipped}\nlos source-feedback: error: argument --resource-id: expected one argument\n"
+          "stderr": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]\nlos source-feedback: error: argument --resource-id: expected one argument\n"
         }
       }
     },
@@ -852,7 +852,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: the following arguments are required: goal_id\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: the following arguments are required: goal_id\n"
         },
         "stdout": ""
       }
@@ -874,7 +874,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]",
-          "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       note_id\nlos note-revise: error: the following arguments are required: note_id, --file\n"
+          "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos note-revise: error: the following arguments are required: note_id, --file\n"
         }
       }
     },
@@ -883,7 +883,7 @@
         "status:",
         "reviewed",
         "0/50",
-        "\u00b7",
+        "·",
         "evidence",
         "0/50"
       ],
@@ -895,7 +895,7 @@
           "status:",
           "reviewed",
           "0/50",
-          "\u00b7",
+          "·",
           "evidence",
           "0/50"
         ]
@@ -905,7 +905,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]",
-          "stderr": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]\n           {status,capabilities,bootstrap,material-context,ability-context,material-span,search,intelligence-scan,goal,resume,dossier,semantic,note-read,inbox-read,inbox-list,inspect,projection-observe,related,program-list,plan-template,module-list,unit-list,project-list,project-create,project-update,capability,validate,generate,ai-action-list,ai-action-prepare,ai-action-append-slices,ai-action-import-delivery,ai-action-validate-delivery,ai-action-apply-delivery,ai-action-status,unit-material-synthesis-publish,legacy-archive-inspect,legacy-archive-status,legacy-archive-lock-publish,masters-planning-dashboard,masters-planning-catalog-update,masters-planning-comparison-publish,health-report,backup-manifest,backup-verify,capture,inbox-resolve,garden-seed-create,atlas-context,concept-relations-change,atlas-question-save,note-analysis-save,note-analysis-save-batch,note-analysis-prepare,plan-edit-context,route-patch,module-materials-compact,unit-map-import,module-plan-import,module-attempt,module-sitting,unit-plan-revise,lineage-restamp,note-create,note-revise,note-evidence,runtime-session,observation-append,stage-result,ability-observation-append,ability-candidate-append,observe,unit-note,unit-source-selection,stage-note,stage-progress,stage-attach,source-feedback,source-intake,collection-entry-revise,collection-create,module-create,program-semester-update,source-revise,detour-create,detour-resolve,shelving-prepare,shelving-apply,session-end,path-note,path-progress,coordination-section-revise,workspace-next-action,path-attach,operations} ...\nlos: error: argument command: invalid choice: 'status:' (choose from status, capabilities, bootstrap, material-context, ability-context, material-span, search, intelligence-scan, goal, resume, dossier, semantic, note-read, inbox-read, inbox-list, inspect, projection-observe, related, program-list, plan-template, module-list, unit-list, project-list, project-create, project-update, capability, validate, generate, ai-action-list, ai-action-prepare, ai-action-append-slices, ai-action-import-delivery, ai-action-validate-delivery, ai-action-apply-delivery, ai-action-status, unit-material-synthesis-publish, legacy-archive-inspect, legacy-archive-status, legacy-archive-lock-publish, masters-planning-dashboard, masters-planning-catalog-update, masters-planning-comparison-publish, health-report, backup-manifest, backup-verify, capture, inbox-resolve, garden-seed-create, atlas-context, concept-relations-change, atlas-question-save, note-analysis-save, note-analysis-save-batch, note-analysis-prepare, plan-edit-context, route-patch, module-materials-compact, unit-map-import, module-plan-import, module-attempt, module-sitting, unit-plan-revise, lineage-restamp, note-create, note-revise, note-evidence, runtime-session, observation-append, stage-result, ability-observation-append, ability-candidate-append, observe, unit-note, unit-source-selection, stage-note, stage-progress, stage-attach, source-feedback, source-intake, collection-entry-revise, collection-create, module-create, program-semester-update, source-revise, detour-create, detour-resolve, shelving-prepare, shelving-apply, session-end, path-note, path-progress, coordination-section-revise, workspace-next-action, path-attach, operations)\n"
+          "stderr": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]\nlos: error: argument command: invalid choice: 'status:' (choose from status, capabilities, bootstrap, material-context, ability-context, material-span, search, intelligence-scan, goal, resume, dossier, semantic, note-read, inbox-read, inbox-list, inspect, projection-observe, related, program-list, plan-template, module-list, unit-list, project-list, project-create, project-update, capability, validate, generate, ai-action-list, ai-action-prepare, ai-action-append-slices, ai-action-import-delivery, ai-action-validate-delivery, ai-action-apply-delivery, ai-action-status, unit-material-synthesis-publish, legacy-archive-inspect, legacy-archive-status, legacy-archive-lock-publish, masters-planning-dashboard, masters-planning-catalog-update, masters-planning-comparison-publish, health-report, backup-manifest, backup-verify, capture, inbox-resolve, garden-seed-create, atlas-context, concept-relations-change, atlas-question-save, note-analysis-save, note-analysis-save-batch, note-analysis-prepare, plan-edit-context, route-patch, module-materials-compact, unit-map-import, module-plan-import, module-attempt, module-sitting, unit-plan-revise, lineage-restamp, note-create, note-revise, note-evidence, runtime-session, observation-append, stage-result, ability-observation-append, ability-candidate-append, observe, unit-note, unit-source-selection, stage-note, stage-progress, stage-attach, source-feedback, source-intake, collection-entry-revise, collection-create, module-create, program-semester-update, source-revise, detour-create, detour-resolve, shelving-prepare, shelving-apply, session-end, path-note, path-progress, coordination-section-revise, workspace-next-action, path-attach, operations)\n"
         },
         "stdout": ""
       }
@@ -1863,7 +1863,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities capture.create --json`\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities capture.create --json`\n"
         }
       }
     },
@@ -2197,7 +2197,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities capture.create --json`\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities capture.create --json`\n"
         }
       }
     },
@@ -5400,7 +5400,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities review.prepare --json`\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities review.prepare --json`\n"
         }
       }
     },
@@ -6302,7 +6302,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities unit.source-selection.set --json`\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: unrecognized arguments: (payload schema: `los capabilities unit.source-selection.set --json`\n"
         }
       }
     },
@@ -6544,7 +6544,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-source-selection [-h] [--purpose PURPOSE]",
-          "stderr": "usage: los unit-source-selection [-h] [--purpose PURPOSE]\n                                 [--expected-snapshot EXPECTED_SNAPSHOT]\n                                 [--expected-revision EXPECTED_REVISION]\n                                 [--json]\n                                 unit_id source_id locator {select,remove}\nlos unit-source-selection: error: the following arguments are required: unit_id, source_id, locator, action\n"
+          "stderr": "usage: los unit-source-selection [-h] [--purpose PURPOSE]\nlos unit-source-selection: error: the following arguments are required: unit_id, source_id, locator, action\n"
         }
       }
     },
@@ -9806,7 +9806,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]",
-          "stderr": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]\n           {status,capabilities,bootstrap,material-context,ability-context,material-span,search,intelligence-scan,goal,resume,dossier,semantic,note-read,inbox-read,inbox-list,inspect,projection-observe,related,program-list,plan-template,module-list,unit-list,project-list,project-create,project-update,capability,validate,generate,ai-action-list,ai-action-prepare,ai-action-append-slices,ai-action-import-delivery,ai-action-validate-delivery,ai-action-apply-delivery,ai-action-status,unit-material-synthesis-publish,legacy-archive-inspect,legacy-archive-status,legacy-archive-lock-publish,masters-planning-dashboard,masters-planning-catalog-update,masters-planning-comparison-publish,health-report,backup-manifest,backup-verify,capture,inbox-resolve,garden-seed-create,atlas-context,concept-relations-change,atlas-question-save,note-analysis-save,note-analysis-save-batch,note-analysis-prepare,plan-edit-context,route-patch,module-materials-compact,unit-map-import,module-plan-import,module-attempt,module-sitting,unit-plan-revise,lineage-restamp,note-create,note-revise,note-evidence,runtime-session,observation-append,stage-result,ability-observation-append,ability-candidate-append,observe,unit-note,unit-source-selection,stage-note,stage-progress,stage-attach,source-feedback,source-intake,collection-entry-revise,collection-create,module-create,program-semester-update,source-revise,detour-create,detour-resolve,shelving-prepare,shelving-apply,session-end,path-note,path-progress,coordination-section-revise,workspace-next-action,path-attach,operations} ...\nlos: error: the following arguments are required: command\n"
+          "stderr": "usage: los [-h] [--root ROOT] [--lock-timeout SECONDS]\nlos: error: the following arguments are required: command\n"
         },
         "stdout": ""
       }
@@ -16282,7 +16282,7 @@
         "unit-source-selection",
         "unit-demo-l1",
         "source-demo-book",
-        "\u00a71",
+        "§1",
         "select"
       ],
       "source": {
@@ -16293,7 +16293,7 @@
           "unit-source-selection",
           "unit-demo-l1",
           "source-demo-book",
-          "\u00a71",
+          "§1",
           "select"
         ]
       },
@@ -16305,7 +16305,7 @@
           "command": "unit-source-selection",
           "unit_id": "unit-demo-l1",
           "source_id": "source-demo-book",
-          "locator": "\u00a71",
+          "locator": "§1",
           "action": "select",
           "purpose": null,
           "expected_snapshot": null,
@@ -16320,7 +16320,7 @@
         "unit-source-selection",
         "unit-demo-l01",
         "source-dem",
-        "\u00a71",
+        "§1",
         "select"
       ],
       "source": {
@@ -16331,7 +16331,7 @@
           "unit-source-selection",
           "unit-demo-l01",
           "source-dem",
-          "\u00a71",
+          "§1",
           "select"
         ]
       },
@@ -16343,7 +16343,7 @@
           "command": "unit-source-selection",
           "unit_id": "unit-demo-l01",
           "source_id": "source-dem",
-          "locator": "\u00a71",
+          "locator": "§1",
           "action": "select",
           "purpose": null,
           "expected_snapshot": null,
@@ -34400,7 +34400,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los ability-candidate-append [-h] --from-ability FROM_ABILITY",
-          "stderr": "usage: los ability-candidate-append [-h] --from-ability FROM_ABILITY\n                                    --to-ability TO_ABILITY\n                                    --kind {equivalence,extension,connection}\n                                    --carries CARRIES --changes CHANGES\n                                    [--condition CONDITION]\n                                    --source-ref SOURCE_REF\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\nlos ability-candidate-append: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los ability-candidate-append [-h] --from-ability FROM_ABILITY\nlos ability-candidate-append: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -34646,7 +34646,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\n                           [--brief] [--section {evidence}]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [ability_id]\nlos ability-context: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\nlos ability-context: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]"
         }
       }
@@ -35344,7 +35344,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los ability-observation-append [-h] --workspace WORKSPACE",
-          "stderr": "usage: los ability-observation-append [-h] --workspace WORKSPACE\n                                      --ability ABILITY --claim CLAIM\n                                      --work-ref WORK_REF\n                                      --confirmation-ref CONFIRMATION_REF\n                                      --activity ACTIVITY\n                                      --result {correct,incorrect,partial,abandoned}\n                                      --assistance ASSISTANCE\n                                      [--condition CONDITION]\n                                      [--evidence-tag EVIDENCE_TAG]\n                                      [--condition-not-met CONDITION_NOT_MET]\n                                      [--supersedes SUPERSEDES]\n                                      [--expected-snapshot EXPECTED_SNAPSHOT]\n                                      [--expected-revision EXPECTED_REVISION]\n                                      [--json]\nlos ability-observation-append: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los ability-observation-append [-h] --workspace WORKSPACE\nlos ability-observation-append: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -35644,7 +35644,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los ai-action-append-slices [-h] --request-id REQUEST_ID",
-          "stderr": "usage: los ai-action-append-slices [-h] --request-id REQUEST_ID\n                                   --route-id ROUTE_ID --start START --end END\n                                   --kind KIND [--concept-id CONCEPT_ID]\n                                   --reason REASON\n                                   [--material-uri MATERIAL_URI]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--json]\nlos ai-action-append-slices: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los ai-action-append-slices [-h] --request-id REQUEST_ID\nlos ai-action-append-slices: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -35838,7 +35838,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los ai-action-apply-delivery [-h] --delivery-sha256 DELIVERY_SHA256",
-          "stderr": "usage: los ai-action-apply-delivery [-h] --delivery-sha256 DELIVERY_SHA256\n                                    --artifact-sha256 ARTIFACT_SHA256\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\n                                    delivery_id\nlos ai-action-apply-delivery: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los ai-action-apply-delivery [-h] --delivery-sha256 DELIVERY_SHA256\nlos ai-action-apply-delivery: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -36189,7 +36189,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los ai-action-prepare [-h] --action-id ACTION_ID",
-          "stderr": "usage: los ai-action-prepare [-h] --action-id ACTION_ID\n                             --target-kind TARGET_KIND --target-id TARGET_ID\n                             [--provider PROVIDER]\n                             [--expected-snapshot EXPECTED_SNAPSHOT]\n                             [--request-id REQUEST_ID] [--json]\nlos ai-action-prepare: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los ai-action-prepare [-h] --action-id ACTION_ID\nlos ai-action-prepare: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -36493,7 +36493,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los atlas-context [-h] [--json] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         concept_id\nlos atlas-context: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los atlas-context [-h] [--json] [--expected-snapshot EXPECTED_SNAPSHOT]\nlos atlas-context: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los atlas-context [-h] [--json] [--expected-snapshot EXPECTED_SNAPSHOT]"
         }
       }
@@ -36659,7 +36659,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los atlas-question-save [-h] --question QUESTION",
-          "stderr": "usage: los atlas-question-save [-h] --question QUESTION\n                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                               [--expected-revision EXPECTED_REVISION]\n                               [--json]\nlos atlas-question-save: error: argument --question: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los atlas-question-save [-h] --question QUESTION\nlos atlas-question-save: error: argument --question: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -36681,7 +36681,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los atlas-question-save [-h] --question QUESTION",
-          "stderr": "usage: los atlas-question-save [-h] --question QUESTION\n                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                               [--expected-revision EXPECTED_REVISION]\n                               [--json]\nlos atlas-question-save: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los atlas-question-save [-h] --question QUESTION\nlos atlas-question-save: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -36884,7 +36884,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los backup-manifest [-h] [--ui-root UI_ROOT]\n                           [--materials-root MATERIALS_ROOT] [--out OUT]\n                           [--stdout]\nlos backup-manifest: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los backup-manifest [-h] [--ui-root UI_ROOT]\nlos backup-manifest: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los backup-manifest [-h] [--ui-root UI_ROOT]"
         }
       }
@@ -37085,7 +37085,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los backup-verify [-h] [--json] --manifest MANIFEST\n                         --restored-core RESTORED_CORE\n                         --restored-ui RESTORED_UI\n                         --restored-materials RESTORED_MATERIALS\n                         [--checksums-only]\nlos backup-verify: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los backup-verify [-h] [--json] --manifest MANIFEST\nlos backup-verify: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los backup-verify [-h] [--json] --manifest MANIFEST"
         }
       }
@@ -37323,7 +37323,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]\n                     [--limit LIMIT] [--expected-snapshot EXPECTED_SNAPSHOT]\nlos bootstrap: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]\nlos bootstrap: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]"
         }
       }
@@ -37576,7 +37576,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]",
-          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\n                      [--json]\n                      name\nlos capability: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los capability [-h] --payload-file PAYLOAD_FILE [--replay-only]\nlos capability: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -37878,7 +37878,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los capture [-h] [--text TEXT] [--file FILE]\n                   [--file-sha256 FILE_SHA256] [--title TITLE] [--json]\n                   [--expected-revision EXPECTED_REVISION]\nlos capture: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los capture [-h] [--text TEXT] [--file FILE]\nlos capture: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los capture [-h] [--text TEXT] [--file FILE]"
         }
       }
@@ -38092,7 +38092,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -38213,7 +38213,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -38235,7 +38235,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -38400,7 +38400,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los concept-relations-change [-h] --change CHANGE",
-          "stderr": "usage: los concept-relations-change [-h] --change CHANGE\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\nlos concept-relations-change: error: argument --change: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los concept-relations-change [-h] --change CHANGE\nlos concept-relations-change: error: argument --change: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -38422,7 +38422,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los concept-relations-change [-h] --change CHANGE",
-          "stderr": "usage: los concept-relations-change [-h] --change CHANGE\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\nlos concept-relations-change: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los concept-relations-change [-h] --change CHANGE\nlos concept-relations-change: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -38672,7 +38672,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los coordination-section-revise [-h] --text TEXT",
-          "stderr": "usage: los coordination-section-revise [-h] --text TEXT\n                                       [--expected-content-sha256 EXPECTED_CONTENT_SHA256]\n                                       [--check]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\n                                       {Commitments,Priorities,Dependencies,Deferrals}\nlos coordination-section-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los coordination-section-revise [-h] --text TEXT\nlos coordination-section-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -38877,7 +38877,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los detour-create [-h] --title TITLE",
-          "stderr": "usage: los detour-create [-h] --title TITLE\n                         --classification {required-now,helpful-now,deferred,reference-only}\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\n                         unit_id stage_id\nlos detour-create: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los detour-create [-h] --title TITLE\nlos detour-create: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -39083,7 +39083,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los detour-resolve [-h] [--resolution RESOLUTION]",
-          "stderr": "usage: los detour-resolve [-h] [--resolution RESOLUTION]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          unit_id detour_id\nlos detour-resolve: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los detour-resolve [-h] [--resolution RESOLUTION]\nlos detour-resolve: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -39402,7 +39402,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los garden-seed-create [-h] --text TEXT [--title TITLE] [--json]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\nlos garden-seed-create: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los garden-seed-create [-h] --text TEXT [--title TITLE] [--json]\nlos garden-seed-create: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los garden-seed-create [-h] --text TEXT [--title TITLE] [--json]"
         }
       }
@@ -39716,7 +39716,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: argument --defer: not allowed with argument --reject\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: argument --defer: not allowed with argument --reject\n"
         },
         "stdout": ""
       }
@@ -39739,7 +39739,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: argument --close: not allowed with argument --reject\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: argument --close: not allowed with argument --reject\n"
         },
         "stdout": ""
       }
@@ -39762,7 +39762,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: argument --close: not allowed with argument --defer\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: argument --close: not allowed with argument --defer\n"
         },
         "stdout": ""
       }
@@ -39862,7 +39862,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los goal [-h] (--reject | --defer | --close | --authorize)",
-          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\n                [--note NOTE] [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json] [--audit-file AUDIT_FILE]\n                goal_id [goal_id ...]\nlos goal: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los goal [-h] (--reject | --defer | --close | --authorize)\nlos goal: error: unrecognized arguments: --bogus-flag-xyz\n"
         },
         "stdout": ""
       }
@@ -40217,7 +40217,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\n                      [--expected-snapshot EXPECTED_SNAPSHOT]\n                      name\nlos inbox-read: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\nlos inbox-read: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]"
         }
       }
@@ -40458,7 +40458,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los inbox-resolve [-h] --drop-sha256 DROP_SHA256 --routed-to ROUTED_TO",
-          "stderr": "usage: los inbox-resolve [-h] --drop-sha256 DROP_SHA256 --routed-to ROUTED_TO\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\n                         name\nlos inbox-resolve: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los inbox-resolve [-h] --drop-sha256 DROP_SHA256 --routed-to ROUTED_TO\nlos inbox-resolve: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -40752,7 +40752,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]\n                             [--brief]\nlos intelligence-scan: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]\nlos intelligence-scan: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]"
         }
       }
@@ -40859,7 +40859,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los legacy-archive-inspect [-h] [--json] --archive-root ARCHIVE_ROOT\n                                  --allowlist ALLOWLIST\nlos legacy-archive-inspect: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los legacy-archive-inspect [-h] [--json] --archive-root ARCHIVE_ROOT\nlos legacy-archive-inspect: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los legacy-archive-inspect [-h] [--json] --archive-root ARCHIVE_ROOT"
         }
       }
@@ -41002,7 +41002,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -41117,7 +41117,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -41139,7 +41139,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\nlos legacy-archive-lock-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -41583,7 +41583,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]",
-          "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\n                           [--claims-sha256 CLAIMS_SHA256] [--check]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION]\n                           [--review-report REVIEW_REPORT] [--json]\nlos lineage-restamp: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\nlos lineage-restamp: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -41725,7 +41725,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -41840,7 +41840,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -41862,7 +41862,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\nlos masters-planning-catalog-update: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -42013,7 +42013,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -42135,7 +42135,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -42158,7 +42158,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
-          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\nlos masters-planning-comparison-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -42724,7 +42724,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\n                            [--purpose PURPOSE] [--unit UNIT]\n                            [--include-related] [--include-anchors]\n                            [--material REF] [--limit LIMIT] [--offset OFFSET]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-observations EXPECTED_OBSERVATIONS]\n                            [query]\nlos material-context: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\nlos material-context: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los material-context [-h] [--json] [--concept CONCEPT]"
         }
       }
@@ -42958,7 +42958,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         unit_id route_id\nlos material-span: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\nlos material-span: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los material-span [-h] [--json] [--stage STAGE_ID]"
         }
       }
@@ -43256,7 +43256,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE",
-          "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\n                          --result {registered,withdrawn,sat,passed,failed}\n                          [--grade GRADE] [--notes NOTES]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          module_id\nlos module-attempt: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\nlos module-attempt: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -43396,7 +43396,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los module-list [-h] [--json] [--program-id PROGRAM_ID]\n                       [--status STATUS]\nlos module-list: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los module-list [-h] [--json] [--program-id PROGRAM_ID]\nlos module-list: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los module-list [-h] [--json] [--program-id PROGRAM_ID]"
         }
       }
@@ -43624,7 +43624,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]",
-          "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\n                                    module_id\nlos module-materials-compact: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\nlos module-materials-compact: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -44036,7 +44036,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-          "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
+          "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
         }
       }
     },
@@ -44217,7 +44217,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-          "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\nlos module-plan-import: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -44411,7 +44411,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los module-sitting [-h] --termin {1,2,3}",
-          "stderr": "usage: los module-sitting [-h] --termin {1,2,3}\n                          --withdrawal-deadline WITHDRAWAL_DEADLINE\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          module_id\nlos module-sitting: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los module-sitting [-h] --termin {1,2,3}\nlos module-sitting: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -44736,7 +44736,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE",
-          "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\n                              [--body-file-sha256 BODY_FILE_SHA256]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION] [--json]\nlos note-analysis-save: error: argument --analysis: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\nlos note-analysis-save: error: argument --analysis: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -44790,7 +44790,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE",
-          "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\n                              [--body-file-sha256 BODY_FILE_SHA256]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION] [--json]\nlos note-analysis-save: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\nlos note-analysis-save: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -44955,7 +44955,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE",
-          "stderr": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\nlos note-analysis-save-batch: error: argument --bundle: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE\nlos note-analysis-save-batch: error: argument --bundle: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -44977,7 +44977,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE",
-          "stderr": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\nlos note-analysis-save-batch: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los note-analysis-save-batch [-h] --bundle BUNDLE\nlos note-analysis-save-batch: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -45227,7 +45227,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE",
-          "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\n                       [--body-file-sha256 BODY_FILE_SHA256]\n                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\nlos note-create: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\nlos note-create: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -45409,7 +45409,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-evidence [-h] [--expected-snapshot EXPECTED_SNAPSHOT]",
-          "stderr": "usage: los note-evidence [-h] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\n                         note_id\n                         {derivation,explanation,implementation,exercise,exam,external}\n                         ref\nlos note-evidence: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los note-evidence [-h] [--expected-snapshot EXPECTED_SNAPSHOT]\nlos note-evidence: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -45593,7 +45593,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     note_id\nlos note-read: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\nlos note-read: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]"
         }
       }
@@ -45874,7 +45874,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]",
-          "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       note_id\nlos note-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos note-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -46479,7 +46479,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los observation-append [-h] --workspace WORKSPACE",
-          "stderr": "usage: los observation-append [-h] --workspace WORKSPACE\n                              --requirement REQUIREMENT --activity ACTIVITY\n                              --result {correct,incorrect,partial,abandoned}\n                              [--assistance ASSISTANCE] [--tags TAGS]\n                              [--context CONTEXT] [--condition CONDITION]\n                              [--condition-not-met CONDITION_NOT_MET]\n                              [--supersedes SUPERSEDES]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION] [--json]\nlos observation-append: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los observation-append [-h] --workspace WORKSPACE\nlos observation-append: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -46933,7 +46933,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -47372,7 +47372,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
-          "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--label LABEL] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       path_id stage_id\nlos path-attach: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos path-attach: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -47614,7 +47614,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los path-note [-h] [--text TEXT] [--replace]",
-          "stderr": "usage: los path-note [-h] [--text TEXT] [--replace]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     [--expected-revision EXPECTED_REVISION] [--json]\n                     path_id stage_id\nlos path-note: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los path-note [-h] [--text TEXT] [--replace]\nlos path-note: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -47796,7 +47796,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los path-progress [-h] [--expected-snapshot EXPECTED_SNAPSHOT]",
-          "stderr": "usage: los path-progress [-h] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\n                         path_id stage_id {active,complete,skipped}\nlos path-progress: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los path-progress [-h] [--expected-snapshot EXPECTED_SNAPSHOT]\nlos path-progress: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -48144,7 +48144,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\n                             --route-ids ROUTE_ID [ROUTE_ID ...] |\n                             --stage-id STAGE_ID] [--audit] [--brief]\n                             [--include-related] [--include-neighbors]\n                             [--expected-snapshot EXPECTED_SNAPSHOT]\n                             unit_id\nlos plan-edit-context: error: argument --route-ids: not allowed with argument --route-id\n",
+          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\nlos plan-edit-context: error: argument --route-ids: not allowed with argument --route-id\n",
           "first_line": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |"
         }
       }
@@ -48168,7 +48168,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\n                             --route-ids ROUTE_ID [ROUTE_ID ...] |\n                             --stage-id STAGE_ID] [--audit] [--brief]\n                             [--include-related] [--include-neighbors]\n                             [--expected-snapshot EXPECTED_SNAPSHOT]\n                             unit_id\nlos plan-edit-context: error: argument --stage-id: not allowed with argument --route-id\n",
+          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\nlos plan-edit-context: error: argument --stage-id: not allowed with argument --route-id\n",
           "first_line": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |"
         }
       }
@@ -48192,7 +48192,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\n                             --route-ids ROUTE_ID [ROUTE_ID ...] |\n                             --stage-id STAGE_ID] [--audit] [--brief]\n                             [--include-related] [--include-neighbors]\n                             [--expected-snapshot EXPECTED_SNAPSHOT]\n                             unit_id\nlos plan-edit-context: error: argument --stage-id: not allowed with argument --route-ids\n",
+          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\nlos plan-edit-context: error: argument --stage-id: not allowed with argument --route-ids\n",
           "first_line": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |"
         }
       }
@@ -48282,7 +48282,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\n                             --route-ids ROUTE_ID [ROUTE_ID ...] |\n                             --stage-id STAGE_ID] [--audit] [--brief]\n                             [--include-related] [--include-neighbors]\n                             [--expected-snapshot EXPECTED_SNAPSHOT]\n                             unit_id\nlos plan-edit-context: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |\nlos plan-edit-context: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los plan-edit-context [-h] [--json] [--route-id ROUTE_ID |"
         }
       }
@@ -48451,7 +48451,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los plan-template [-h] --title TITLE [--unit-id UNIT_ID]\n                         [--module-id MODULE_ID] [--json]\n                         {curriculum}\nlos plan-template: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los plan-template [-h] --title TITLE [--unit-id UNIT_ID]\nlos plan-template: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los plan-template [-h] --title TITLE [--unit-id UNIT_ID]"
         }
       }
@@ -48680,7 +48680,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: not allowed with argument --file\n"
+          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\nlos project-create: error: argument --project: not allowed with argument --file\n"
         }
       }
     },
@@ -48795,7 +48795,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\nlos project-create: error: argument --project: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -48817,7 +48817,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\nlos project-create: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -49081,7 +49081,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: not allowed with argument --file\n"
+          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\nlos project-update: error: argument --project: not allowed with argument --file\n"
         }
       }
     },
@@ -49203,7 +49203,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\nlos project-update: error: argument --project: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -49226,7 +49226,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
-          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\nlos project-update: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -49695,7 +49695,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los route-patch [-h] --changes CHANGES [--check]",
-          "stderr": "usage: los route-patch [-h] --changes CHANGES [--check]\n                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       [--claim-evidence CLAIM_EVIDENCE]\n                       unit_id route_id\nlos route-patch: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los route-patch [-h] --changes CHANGES [--check]\nlos route-patch: error: unrecognized arguments: --bogus-flag-xyz\n"
         },
         "stdout": ""
       }
@@ -49923,7 +49923,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los runtime-session [-h] [--json] --requirement REQUIREMENT\n                           [--context-json CONTEXT_JSON]\n                           [--previous-json PREVIOUS_JSON] [--event EVENT]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\nlos runtime-session: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los runtime-session [-h] [--json] --requirement REQUIREMENT\nlos runtime-session: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los runtime-session [-h] [--json] --requirement REQUIREMENT"
         }
       }
@@ -50217,7 +50217,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\n                  [--offset OFFSET] [--expected-snapshot EXPECTED_SNAPSHOT]\n                  [--page]\n                  query\nlos search: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\nlos search: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]"
         }
       }
@@ -50428,7 +50428,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\n                    [predicate]\nlos semantic: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\nlos semantic: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]"
         }
       }
@@ -50675,7 +50675,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los session-end [-h] [--commit-message COMMIT_MESSAGE] [--close]",
-          "stderr": "usage: los session-end [-h] [--commit-message COMMIT_MESSAGE] [--close]\n                       [--push] [--session-id SESSION_ID] [--channel CHANNEL]\n                       [--include-stale] [--json]\nlos session-end: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los session-end [-h] [--commit-message COMMIT_MESSAGE] [--close]\nlos session-end: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -50932,7 +50932,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los shelving-apply [-h] --selected SELECTED [SELECTED ...] [--approve]",
-          "stderr": "usage: los shelving-apply [-h] --selected SELECTED [SELECTED ...] [--approve]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          unit_id\nlos shelving-apply: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los shelving-apply [-h] --selected SELECTED [SELECTED ...] [--approve]\nlos shelving-apply: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -51227,7 +51227,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]",
-          "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\n                            [--items-file-sha256 ITEMS_FILE_SHA256]\n                            [--summary SUMMARY]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION] [--json]\n                            unit_id\nlos shelving-prepare: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\nlos shelving-prepare: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -51500,7 +51500,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]",
-          "stderr": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION] [--json]\n                           unit_id stage_id source_id\n                           {helpful,too-advanced,wrong-perspective,useful-for-derivation,useful-for-review,skipped}\nlos source-feedback: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los source-feedback [-h] [--note NOTE] [--resource-id RESOURCE_ID]\nlos source-feedback: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -51713,7 +51713,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -51834,7 +51834,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -51856,7 +51856,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -52069,7 +52069,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -52190,7 +52190,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -52212,7 +52212,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -52510,7 +52510,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
-          "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                        [--label LABEL]\n                        [--expected-snapshot EXPECTED_SNAPSHOT]\n                        [--expected-revision EXPECTED_REVISION] [--json]\n                        unit_id stage_id\nlos stage-attach: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos stage-attach: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -52752,7 +52752,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los stage-note [-h] [--text TEXT] [--replace]",
-          "stderr": "usage: los stage-note [-h] [--text TEXT] [--replace]\n                      [--expected-snapshot EXPECTED_SNAPSHOT]\n                      [--expected-revision EXPECTED_REVISION] [--json]\n                      unit_id stage_id\nlos stage-note: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los stage-note [-h] [--text TEXT] [--replace]\nlos stage-note: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -53010,7 +53010,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los stage-progress [-h] [--progress-summary PROGRESS_SUMMARY]",
-          "stderr": "usage: los stage-progress [-h] [--progress-summary PROGRESS_SUMMARY]\n                          [--progress-next PROGRESS_NEXT]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          unit_id stage_id\n                          {active,paused,complete,skipped,revisit}\nlos stage-progress: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los stage-progress [-h] [--progress-summary PROGRESS_SUMMARY]\nlos stage-progress: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -53491,7 +53491,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los stage-result [-h] --workspace WORKSPACE --unit UNIT --stage STAGE",
-          "stderr": "usage: los stage-result [-h] --workspace WORKSPACE --unit UNIT --stage STAGE\n                        --activity ACTIVITY\n                        --result {correct,incorrect,partial,abandoned}\n                        [--assistance ASSISTANCE] [--note NOTE]\n                        [--condition CONDITION] [--supersedes SUPERSEDES]\n                        [--expected-snapshot EXPECTED_SNAPSHOT]\n                        [--expected-revision EXPECTED_REVISION] [--json]\nlos stage-result: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los stage-result [-h] --workspace WORKSPACE --unit UNIT --stage STAGE\nlos stage-result: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -53916,7 +53916,7 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]\n                     [--component-id COMPONENT_ID] [--status STATUS]\n                     [--compact] [--offset OFFSET] [--limit LIMIT]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\nlos unit-list: error: unrecognized arguments: --bogus-flag-xyz\n",
+          "stderr": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]\nlos unit-list: error: unrecognized arguments: --bogus-flag-xyz\n",
           "first_line": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]"
         }
       }
@@ -54465,7 +54465,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]",
-          "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\n                           [--replace] [--check]\n                           [--intentional-reorder REASON]\n                           [--intentional-state-reset REASON]\n                           [--retire-stage STAGE_ID] [--retire-reason REASON]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION] [--json]\n                           unit_id\nlos unit-map-import: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos unit-map-import: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -54652,7 +54652,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
-          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -54777,7 +54777,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
-          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -54800,7 +54800,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
-          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\nlos unit-material-synthesis-publish: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -55262,7 +55262,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]",
-          "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\n                     [--attachment ATTACHMENT]\n                     [--attachment-sha256 ATTACHMENT_SHA256]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     [--expected-revision EXPECTED_REVISION] [--json]\n                     unit_id\nlos unit-note: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\nlos unit-note: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -55627,7 +55627,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n"
+          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n"
         }
       }
     },
@@ -55767,7 +55767,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
+          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting value: line 1 column 1 (char 0)\n"
         }
       }
     },
@@ -55828,7 +55828,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -56060,7 +56060,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los unit-source-selection [-h] [--purpose PURPOSE]",
-          "stderr": "usage: los unit-source-selection [-h] [--purpose PURPOSE]\n                                 [--expected-snapshot EXPECTED_SNAPSHOT]\n                                 [--expected-revision EXPECTED_REVISION]\n                                 [--json]\n                                 unit_id source_id locator {select,remove}\nlos unit-source-selection: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los unit-source-selection [-h] [--purpose PURPOSE]\nlos unit-source-selection: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -56320,7 +56320,7 @@
         "error": {
           "exit": 2,
           "first_line": "usage: los workspace-next-action [-h] --next-action NEXT_ACTION",
-          "stderr": "usage: los workspace-next-action [-h] --next-action NEXT_ACTION\n                                 [--expected-snapshot EXPECTED_SNAPSHOT]\n                                 [--expected-revision EXPECTED_REVISION]\n                                 [--json]\n                                 workspace_id\nlos workspace-next-action: error: unrecognized arguments: --bogus-flag-xyz\n"
+          "stderr": "usage: los workspace-next-action [-h] --next-action NEXT_ACTION\nlos workspace-next-action: error: unrecognized arguments: --bogus-flag-xyz\n"
         }
       }
     },
@@ -56399,5 +56399,6 @@
         }
       }
     }
-  ]
+  ],
+  "usage_normalization": "first line only; diagnostic bodies and exits preserved"
 }

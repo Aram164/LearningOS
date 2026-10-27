@@ -765,7 +765,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --apply-reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: argument --apply-reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -1089,7 +1089,7 @@
    "argv": [
     "capture",
     "--text",
-    "\u2026"
+    "…"
    ],
    "source": {
     "kind": "doc-missed",
@@ -1098,7 +1098,7 @@
     "original": [
      "capture",
      "--text",
-     "\u2026"
+     "…"
     ]
    },
    "substitutions": [],
@@ -1107,7 +1107,7 @@
      "root": null,
      "lock_timeout": null,
      "command": "capture",
-     "text": "\u2026",
+     "text": "…",
      "file": null,
      "file_sha256": null,
      "title": null,
@@ -1679,7 +1679,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: unrecognized arguments: --conditions unfamiliar-example\n"
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: unrecognized arguments: --conditions unfamiliar-example\n"
     },
     "stdout": ""
    }
@@ -1764,7 +1764,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: --result\n"
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: the following arguments are required: --result\n"
     },
     "stdout": ""
    }
@@ -1805,7 +1805,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\n                    [predicate]\nlos semantic: error: unrecognized arguments: ... # evaluate one, X out\n",
+     "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\nlos semantic: error: unrecognized arguments: ... # evaluate one, X out\n",
      "first_line": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]"
     },
     "stdout": ""
@@ -1843,7 +1843,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\n                    [predicate]\nlos semantic: error: unrecognized arguments: the registry, with inputs and authority\n",
+     "stderr": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]\nlos semantic: error: unrecognized arguments: the registry, with inputs and authority\n",
      "first_line": "usage: los semantic [-h] [--json] [--input k=v] [--list] [--recipe CLASS]"
     },
     "stdout": ""
@@ -1991,7 +1991,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
     },
     "stdout": ""
    }
@@ -2225,7 +2225,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\n                           [--brief] [--section {evidence}]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [ability_id]\nlos ability-context: error: argument --section: invalid choice: 'NOT-A-DOCUMENTED-CHOICE' (choose from evidence)\n",
+     "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\nlos ability-context: error: argument --section: invalid choice: 'NOT-A-DOCUMENTED-CHOICE' (choose from evidence)\n",
      "first_line": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]"
     },
     "stdout": ""
@@ -2247,7 +2247,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\n                           [--brief] [--section {evidence}]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [ability_id]\nlos ability-context: error: argument --limit: invalid int value: 'notanint'\n",
+     "stderr": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]\nlos ability-context: error: argument --limit: invalid int value: 'notanint'\n",
      "first_line": "usage: los ability-context [-h] [--json] [--limit LIMIT] [--offset OFFSET]"
     },
     "stdout": ""
@@ -2909,7 +2909,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]\n                     [--limit LIMIT] [--expected-snapshot EXPECTED_SNAPSHOT]\nlos bootstrap: error: argument --offset: invalid int value: 'notanint'\n",
+     "stderr": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]\nlos bootstrap: error: argument --offset: invalid int value: 'notanint'\n",
      "first_line": "usage: los bootstrap [-h] [--json] [--brief] [--compact] [--offset OFFSET]"
     },
     "stdout": ""
@@ -3019,7 +3019,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los capture [-h] [--text TEXT] [--file FILE]\n                   [--file-sha256 FILE_SHA256] [--title TITLE] [--json]\n                   [--expected-revision EXPECTED_REVISION]\nlos capture: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
+     "stderr": "usage: los capture [-h] [--text TEXT] [--file FILE]\nlos capture: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
      "first_line": "usage: los capture [-h] [--text TEXT] [--file FILE]"
     },
     "stdout": ""
@@ -3046,7 +3046,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -3105,7 +3105,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -3469,7 +3469,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]",
-     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json]\n                goal_id [goal_id ...]\nlos goal: error: argument --defer: not allowed with argument --reject\n"
+     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\nlos goal: error: argument --defer: not allowed with argument --reject\n"
     },
     "stdout": ""
    }
@@ -3532,7 +3532,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]",
-     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json]\n                goal_id [goal_id ...]\nlos goal: error: argument --reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\nlos goal: error: argument --reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -3615,7 +3615,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\n                      [--expected-snapshot EXPECTED_SNAPSHOT]\n                      name\nlos inbox-read: error: argument --offset: invalid int value: 'notanint'\n",
+     "stderr": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\nlos inbox-read: error: argument --offset: invalid int value: 'notanint'\n",
      "first_line": "usage: los inbox-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]"
     },
     "stdout": ""
@@ -3773,7 +3773,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]\n                             [--brief]\nlos intelligence-scan: error: argument --days: invalid int value: 'notanint'\n",
+     "stderr": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]\nlos intelligence-scan: error: argument --days: invalid int value: 'notanint'\n",
      "first_line": "usage: los intelligence-scan [-h] [--days DAYS] [--feed FEED] [--json]"
     },
     "stdout": ""
@@ -3800,7 +3800,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -3857,7 +3857,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -3947,7 +3947,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]",
-     "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\n                           [--claims-sha256 CLAIMS_SHA256] [--check]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION]\n                           [--review-report REVIEW_REPORT] [--json]\nlos lineage-restamp: error: argument --claims-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\nlos lineage-restamp: error: argument --claims-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -3973,7 +3973,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
-     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4030,7 +4030,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
-     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4057,7 +4057,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
-     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4117,7 +4117,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
-     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4236,7 +4236,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\n                            [--purpose PURPOSE] [--unit UNIT]\n                            [--include-related] [--include-anchors]\n                            [--material REF] [--limit LIMIT] [--offset OFFSET]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-observations EXPECTED_OBSERVATIONS]\n                            [query]\nlos material-context: error: argument --limit: invalid int value: 'notanint'\n",
+     "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\nlos material-context: error: argument --limit: invalid int value: 'notanint'\n",
      "first_line": "usage: los material-context [-h] [--json] [--concept CONCEPT]"
     },
     "stdout": ""
@@ -4327,7 +4327,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         unit_id route_id\nlos material-span: error: argument --resource-index: invalid int value: 'notanint'\n",
+     "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\nlos material-span: error: argument --resource-index: invalid int value: 'notanint'\n",
      "first_line": "usage: los material-span [-h] [--json] [--stage STAGE_ID]"
     },
     "stdout": ""
@@ -4439,7 +4439,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE",
-     "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\n                          --result {registered,withdrawn,sat,passed,failed}\n                          [--grade GRADE] [--notes NOTES]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          module_id\nlos module-attempt: error: argument --grade: invalid float value: 'notafloat'\n"
+     "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\nlos module-attempt: error: argument --grade: invalid float value: 'notafloat'\n"
     },
     "stdout": ""
    }
@@ -4580,7 +4580,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]",
-     "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\n                                    module_id\nlos module-materials-compact: error: argument --plan-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\nlos module-materials-compact: error: argument --plan-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -4607,7 +4607,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4674,7 +4674,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4844,7 +4844,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE",
-     "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\n                              [--body-file-sha256 BODY_FILE_SHA256]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION] [--json]\nlos note-analysis-save: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\nlos note-analysis-save: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5004,7 +5004,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE",
-     "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\n                       [--body-file-sha256 BODY_FILE_SHA256]\n                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\nlos note-create: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\nlos note-create: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5157,7 +5157,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     note_id\nlos note-read: error: argument --offset: invalid int value: 'notanint'\n",
+     "stderr": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]\nlos note-read: error: argument --offset: invalid int value: 'notanint'\n",
      "first_line": "usage: los note-read [-h] [--json] [--offset OFFSET] [--limit LIMIT]"
     },
     "stdout": ""
@@ -5252,7 +5252,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]",
-     "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       note_id\nlos note-revise: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos note-revise: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5603,7 +5603,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
-     "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--label LABEL] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       path_id stage_id\nlos path-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos path-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5903,7 +5903,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
-     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: not allowed with argument --file\n"
+     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\nlos project-create: error: argument --project: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -5960,7 +5960,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
-     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\nlos project-create: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6040,7 +6040,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
-     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: not allowed with argument --file\n"
+     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\nlos project-update: error: argument --project: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -6100,7 +6100,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
-     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\nlos project-update: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6379,7 +6379,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\n                  [--offset OFFSET] [--expected-snapshot EXPECTED_SNAPSHOT]\n                  [--page]\n                  query\nlos search: error: argument --limit: invalid int value: 'notanint'\n",
+     "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\nlos search: error: argument --limit: invalid int value: 'notanint'\n",
      "first_line": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]"
     },
     "stdout": ""
@@ -6664,7 +6664,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]",
-     "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\n                            [--items-file-sha256 ITEMS_FILE_SHA256]\n                            [--summary SUMMARY]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION] [--json]\n                            unit_id\nlos shelving-prepare: error: argument --items-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\nlos shelving-prepare: error: argument --items-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -6766,7 +6766,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -6825,7 +6825,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
-     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\nlos source-intake: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6851,7 +6851,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -6910,7 +6910,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
-     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\nlos source-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -7010,7 +7010,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
-     "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                        [--label LABEL]\n                        [--expected-snapshot EXPECTED_SNAPSHOT]\n                        [--expected-revision EXPECTED_REVISION] [--json]\n                        unit_id stage_id\nlos stage-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos stage-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -7354,7 +7354,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]\n                     [--component-id COMPONENT_ID] [--status STATUS]\n                     [--compact] [--offset OFFSET] [--limit LIMIT]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\nlos unit-list: error: argument --offset: invalid int value: 'notanint'\n",
+     "stderr": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]\nlos unit-list: error: argument --offset: invalid int value: 'notanint'\n",
      "first_line": "usage: los unit-list [-h] [--json] [--module-id MODULE_ID]"
     },
     "stdout": ""
@@ -7459,7 +7459,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]",
-     "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\n                           [--replace] [--check]\n                           [--intentional-reorder REASON]\n                           [--intentional-state-reset REASON]\n                           [--retire-stage STAGE_ID] [--retire-reason REASON]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION] [--json]\n                           unit_id\nlos unit-map-import: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\nlos unit-map-import: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -7486,7 +7486,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
-     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -7547,7 +7547,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
-     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -7640,7 +7640,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]",
-     "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\n                     [--attachment ATTACHMENT]\n                     [--attachment-sha256 ATTACHMENT_SHA256]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     [--expected-revision EXPECTED_REVISION] [--json]\n                     unit_id\nlos unit-note: error: argument --attachment-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
+     "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\nlos unit-note: error: argument --attachment-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -7667,7 +7667,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n"
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -7733,7 +7733,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -8095,7 +8095,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\n                  [--offset OFFSET] [--expected-snapshot EXPECTED_SNAPSHOT]\n                  [--page]\n                  query\nlos search: error: unrecognized arguments: --bogus\n",
+     "stderr": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]\nlos search: error: unrecognized arguments: --bogus\n",
      "first_line": "usage: los search [-h] [--json] [--type TYPE] [--limit LIMIT] [--content]"
     },
     "stdout": ""
@@ -8613,5 +8613,6 @@
     "stdout": ""
    }
   }
- ]
+ ],
+ "usage_normalization": "first line only; diagnostic bodies and exits preserved"
 }

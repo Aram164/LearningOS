@@ -243,8 +243,6 @@ def main():
             ("W1-distinct-warm", None, 1, True),
             ("W2-repeated", 20, 1, True),
             ("W3-distinct-cold", None, 1, False),
-            ("W9-workers-2", None, 2, True),
-            ("W9-workers-4", None, 4, True),
         ]
         for label, repeats, workers, warm in definitions:
             samples = []
