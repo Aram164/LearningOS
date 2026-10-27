@@ -1,4 +1,5 @@
-schema_version: 1
+schema_version: 2
+recorded_revision: d3d3b3510349f84cee2d7aca1b8601330409539d
 findings:
 - id: G30
   source: '#30'
@@ -8,10 +9,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/materials/slices.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -26,10 +26,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_claim_status_audits.py
   disposition: already-inherited
-  measured_evidence: tests/test_claim_status_audits.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/derive/semantics/claim_audits.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -44,10 +43,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_claim_status_audits.py
   disposition: already-inherited
-  measured_evidence: tests/test_claim_status_audits.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/claim_admission.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -60,10 +58,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/materials/slices.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -78,10 +75,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/materials/resolution.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -96,10 +92,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/materials/slices.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -114,10 +109,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_goal_lifecycle_properties.py
   disposition: already-inherited
-  measured_evidence: tests/test_goal_lifecycle_properties.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/goals.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -132,10 +126,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_ai_actions.py
   disposition: already-inherited
-  measured_evidence: tests/test_ai_actions.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/ai.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -148,10 +141,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_c1e_backup_symlinked_subtree.py
   disposition: already-inherited
-  measured_evidence: tests/test_c1e_backup_symlinked_subtree.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/backup_manifest.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -164,10 +156,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_phaseB_prospective_lineage.py
   disposition: already-inherited
-  measured_evidence: tests/test_phaseB_prospective_lineage.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/plan.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -180,10 +171,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_plan_rigor.py
   disposition: already-inherited
-  measured_evidence: tests/test_plan_rigor.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/derive/validation/plan_rigor.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -196,10 +186,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_note_evidence.py
   disposition: already-inherited
-  measured_evidence: tests/test_note_evidence.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/notes.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -212,10 +201,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_transaction_faults.py
   disposition: already-inherited
-  measured_evidence: tests/test_transaction_faults.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/transactions.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -228,10 +216,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_curriculum_v2.py
   disposition: already-inherited
-  measured_evidence: tests/test_curriculum_v2.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/maps.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -244,10 +231,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_plan_rigor.py
   disposition: already-inherited
-  measured_evidence: tests/test_plan_rigor.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/derive/validation/plan_rigor.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -260,10 +246,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_intelligence_scan.py
   disposition: already-inherited
-  measured_evidence: tests/test_intelligence_scan.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/ranking.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -278,10 +263,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_material_slices.py
   disposition: already-inherited
-  measured_evidence: tests/test_material_slices.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/store/materials/slices.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -296,10 +280,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_goal_select.py
   disposition: already-inherited
-  measured_evidence: tests/test_goal_select.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/ranking.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -314,10 +297,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_procedures.py
   disposition: already-inherited
-  measured_evidence: tests/test_procedures.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: inherited-regression-covered
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/reads.py
   caller_paths:
   - tools/learning_os/app/pipeline.py
@@ -332,17 +314,17 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/agent_run.py
   caller_paths:
   - tools/agent_run.py
   - tools/learning_os/app/agent_plans.py
 - id: R51
-  note: projection.observe is approved under the authorized D07 plan and registered in the generated CLI; agent
-    dependencies and UI recovery call the shared authority service with distinct policies
+  note: The recorded implementation exposed projection.observe. Current approval authority
+    is surface-approvals.yaml; this historical row does not establish the earlier
+    approval.
   source: '#51'
   root_cause: dependency readiness weak
   owner: projection readiness service
@@ -350,10 +332,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_projection_readiness.py
   disposition: implemented
-  measured_evidence: tests/test_projection_readiness.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/projection_readiness.py
   caller_paths:
   - tools/agent_run.py
@@ -369,10 +350,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/validation_service.py
   caller_paths:
   - tools/agent_run.py
@@ -386,10 +366,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/agent_run.py
   caller_paths:
   - tools/agent_run.py
@@ -402,10 +381,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/agent_reporting.py
   caller_paths:
   - tools/agent_run.py
@@ -418,10 +396,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/agent_run.py
   caller_paths:
   - tools/agent_run.py
@@ -434,10 +411,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/agent_plans.py
   caller_paths:
   - tools/agent_run.py
@@ -450,10 +426,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/agent_run.py
   caller_paths:
   - tools/agent_run.py
@@ -466,10 +441,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/agent_run.py
   caller_paths:
   - tools/agent_run.py
@@ -482,10 +456,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/agent_plans.py
   caller_paths:
   - tools/agent_run.py
@@ -498,10 +471,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/test_agent_run.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/domain/agent_plans.py
   caller_paths:
   - tools/agent_run.py
@@ -514,10 +486,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/read_session.py
   caller_paths:
   - tools/agent_run.py
@@ -534,10 +505,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented-opt-in
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented-opt-in
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/adapters/agent_workers.py
   caller_paths:
   - tools/agent_run.py
@@ -552,10 +522,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_read_session.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/read_session.py
   caller_paths:
   - tools/agent_run.py
@@ -568,10 +537,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/agent_plans.py
   caller_paths:
   - tools/agent_run.py
@@ -584,10 +552,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_validation_cache.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/validation_service.py
   caller_paths:
   - tools/agent_run.py
@@ -601,10 +568,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_agent_run.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/agent_reporting.py
   caller_paths:
   - tools/agent_run.py
@@ -617,10 +583,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/benchmark_agent_plans.py
   disposition: implemented
-  measured_evidence: tests/benchmark_agent_plans.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tests/benchmark_agent_plans.py
   caller_paths:
   - tools/agent_run.py
@@ -633,10 +598,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_procedures.py
   disposition: implemented
-  measured_evidence: tests/test_procedures.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: system/procedures/agent-plans.md
   caller_paths:
   - system/OPERATOR.md
@@ -649,10 +613,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_pre_push_hook.py
   disposition: implemented
-  measured_evidence: tests/test_pre_push_hook.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/hooks/pre-push
   caller_paths:
   - tools/hooks/pre-push
@@ -665,10 +628,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_review_consolidation.py
   disposition: implemented
-  measured_evidence: tests/test_review_consolidation.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: implemented
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: system/contracts/review-consolidation.yaml
   caller_paths:
   - tests/test_review_consolidation.py
@@ -680,10 +642,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_note_create.py
   disposition: rejected-as-unsafe
-  measured_evidence: tests/test_note_create.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: rejected-as-unsafe
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/notes.py
   caller_paths:
   - tools/seal_envelope.py
@@ -696,10 +657,9 @@ findings:
   existing_repair: 'recorded main history through PR #48 / runner 3604c43'
   regression_tests: tests/test_verbatim_anchor_admission.py
   disposition: rejected-as-unsafe
-  measured_evidence: tests/test_verbatim_anchor_admission.py; external promotion record implementation/OUTCOME.md
+  measured_evidence:
+  - https://github.com/Aram164/LearningOS/actions/runs/40455753138
   source_status: rejected-as-unsafe
-  hosted_ci_status: external-promotion-record
-  installed_status: external-promotion-record
   owner_path: tools/learning_os/app/handlers/synthesis.py
   caller_paths:
   - tools/learning_os/app/handlers/synthesis.py

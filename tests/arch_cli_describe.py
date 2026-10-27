@@ -24,6 +24,22 @@ _ACTION_NAMES = {
 }
 
 
+def normalize_usage(text: str) -> str:
+    """Record the first usage line and preserve the complete diagnostic body.
+
+    Wrapped usage is a rendering of the structural parser oracle above; it
+    repeats every verb on root errors. Error text and all non-usage output
+    remain byte-for-byte evidence.
+    """
+    lines = text.splitlines(keepends=True)
+    if not lines or not lines[0].startswith("usage: "):
+        return text
+    end = 1
+    while end < len(lines) and lines[end].startswith((" ", "\t")):
+        end += 1
+    return lines[0] + "".join(lines[end:])
+
+
 def _action_name(action: argparse.Action) -> str:
     return _ACTION_NAMES.get(type(action).__name__, type(action).__name__)
 

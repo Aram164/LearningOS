@@ -1,17 +1,29 @@
-"""Admit, schedule and settle bounded plans through an injected adapter port."""
+"""Admit, schedule and settle bounded plans through the shared execution port."""
 from __future__ import annotations
 
 import json
 import math
 import time
+from collections.abc import Callable
 from contextlib import nullcontext
 from pathlib import Path
 from typing import cast
 
+from learning_os.app.agent_presentation import step_argv
 from learning_os.app.agent_reporting import ReportStore, bound_report
+from learning_os.app.lock import lock_wait_budget
 from learning_os.app.projection import fresh_manifest_and_repo
 from learning_os.app.read_session import ReadSession
-from learning_os.domain.agent_plans import CompiledStep, Executor, PlanControls, RawOutcome
+from learning_os.app.registry import REGISTRY, CacheProfile
+from learning_os.domain.agent_plans import (
+    CompiledStep,
+    Executor,
+    PlanControls,
+    PlanIndex,
+    PlanStep,
+    PlanStepError,
+    RawOutcome,
+)
 from learning_os.domain.codes import (
     ARTIFACT_FAILED,
     DEADLINE_EXPIRED,
@@ -21,12 +33,71 @@ from learning_os.domain.codes import (
     PLAN_INVALID,
     PLAN_STOPPED,
     PREFLIGHT_FAILED,
+    SESSION_REQUIRED,
     SNAPSHOT_CONFLICT,
     STEP_FAILED,
     UNCONFIRMED,
 )
+from learning_os.store.contracts.agent_plans import validate_input
 
-DEFAULT_CONTROLS = PlanControls()
+
+def validate_plan(plan: object, poll_s: float) -> list[PlanStep]:
+    if isinstance(poll_s, bool) or not isinstance(poll_s, (int, float)) or not math.isfinite(poll_s) or poll_s < 0:
+        raise PlanStepError("poll interval must be finite and nonnegative")
+    plan = validate_input(plan)
+    seen, keys = set(), set()
+    session_id = plan.get("session_id")
+    for step in plan["steps"]:
+        if step["id"] in seen:
+            raise PlanStepError("step ids must be unique")
+        if any(dep not in seen for dep in step.get("depends_on", [])):
+            raise PlanStepError("dependencies must name earlier steps")
+        seen.add(step["id"])
+        fields = step.get("summary", {}).get("fields", [])
+        if any(a != b and (a.startswith(b + ".") or b.startswith(a + ".")) for a in fields for b in fields):
+            raise PlanStepError("summary fields must not overlap")
+        if step.get("kind") == "log":
+            if step["key"] in keys:
+                raise PlanStepError("each log needs a unique explicit key stable across retries")
+            keys.add(step["key"])
+        args = step.get("argv", []) + step.get("args", [])
+        if args[:1] == ["__seal_submit__"]:
+            raise PlanStepError("internal executor commands cannot be supplied in a plan")
+        if any(a == "--root" or a.startswith("--root=") for a in args):
+            raise PlanStepError("step root overrides are forbidden")
+        command = (step.get("argv") or [step.get("use", "")])[0]
+        if session_id is None and (step.get("kind") == "log" or step.get("write") or command in ("capability", "cli.capability")):
+            raise PlanStepError("log/gateway plans require an explicit session_id stable across retries", SESSION_REQUIRED)
+        if session_id is not None and any(a == "--session-id" or a.startswith("--session-id=") for a in args):
+            raise PlanStepError("step session overrides are forbidden; use plan session_id")
+    return plan["steps"]
+
+
+def compile_plan(steps: list[PlanStep], index: PlanIndex, admit: Callable[[list[str]], tuple[str, bool]], session_id: str | None) -> list[CompiledStep]:
+    writers = {"capability", *index.get("write_verbs", [])}
+    compiled = []
+    for step in steps:
+        direct = (step.get("argv") or [step.get("use", "")])[0]
+        if session_id is None and direct in writers and not step.get("describe"):
+            raise PlanStepError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
+        try:
+            argv = step_argv(step, index, session_id)
+            command, feed = ("__seal_submit__", False) if argv[0] == "__seal_submit__" else admit(argv)
+            writer = command in writers or step.get("kind") == "log" or step.get("write", False)
+            if writer and session_id is None:
+                raise PlanStepError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
+            entry = REGISTRY.get(index["verb_to_operation"].get(command) or "")
+            cache = entry.cache if entry is not None else CacheProfile.NONE
+            reusable = not writer and cache != CacheProfile.NONE
+            if cache == CacheProfile.MANIFEST_BRIEF and ("--brief" not in argv or feed):
+                reusable = False
+            compiled.append(CompiledStep(id=step["id"], argv=tuple(argv), dependencies=tuple(step.get("depends_on", [])),
+                writer=bool(writer), submitting=command in ("capability", "__seal_submit__"), reusable=reusable,
+                ready_timeout_s=float(step.get("ready_timeout_s", 10)), preflight=step.get("preflight", False),
+                scope=tuple(step.get("writes", [])), presentation=step))
+        except PlanStepError as exc:
+            compiled.append(CompiledStep(id=step["id"], argv=(), admission_error={"code":exc.code,"retryable":False,"message":str(exc)}))
+    return compiled
 
 
 def field(payload: object, name: str) -> object:
@@ -41,7 +112,7 @@ def field(payload: object, name: str) -> object:
 def finite(value: str) -> float:
     number = float(value)
     if not math.isfinite(number):
-        raise ValueError("nonfinite numeric step output")
+        raise PlanStepError("nonfinite numeric step output", INVALID_STEP_OUTPUT)
     return number
 
 
@@ -85,6 +156,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             row.update(status="error", error={"code": ARTIFACT_FAILED,
                        "retryable": False, "message": str(exc)})
             uncertain = True  # report storage failure blocks further writes too
+            store.reconcile(row)
         rows.append(row)
         results[step.id] = row
         error = row.get("error")
@@ -94,6 +166,16 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             uncertain = True
         if row["status"] != "ok" and controls.on_error == "stop":
             stopped = stopped or step.id
+
+    def correct(row: dict[str, object]) -> None:
+        nonlocal uncertain
+        try:
+            store.correct(row)
+        except OSError as exc:
+            row.update(status="error", error={"code": ARTIFACT_FAILED,
+                       "retryable": False, "message": str(exc)})
+            uncertain = True
+            store.reconcile(row)
 
     def consume(step: CompiledStep, raw: RawOutcome, begin: float,
                 ready_ms: int = 0) -> dict[str, object]:
@@ -108,7 +190,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             except json.JSONDecodeError:
                 payload = raw.stdout  # established human-output support
             except ValueError as exc:
-                raise ValueError("INVALID_STEP_OUTPUT: " + str(exc)) from exc
+                raise PlanStepError(str(exc), INVALID_STEP_OUTPUT) from exc
             snapshot = field(payload, "snapshot_after")
             receipt = field(payload, "receipt_path")
             if snapshot and receipt:
@@ -135,7 +217,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             encoded = port.summarize(step, payload)
             row.update(output=json.loads(encoded), out_bytes=len(encoded.encode("utf-8")))
         except (OSError, ValueError, TypeError) as exc:
-            code = INVALID_STEP_OUTPUT if str(exc).startswith(INVALID_STEP_OUTPUT) else getattr(exc, "code", STEP_FAILED)
+            code = getattr(exc, "code", STEP_FAILED)
             row.update(status="error", error={"code": code, "retryable": False, "message": str(exc)})
         except Exception as exc:
             # Adapter refusals remain step-scoped and retain any committed receipt.
@@ -185,38 +267,42 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             session = ReadSession(root) if port.epoch(root) else None
             begin_rows = len(rows)
             try:
-                if controls.read_workers > 1 and len(wave) > 1 and all(s.parallel_safe for s in wave):
-                    # Coordinator holds no lock while waiting for child processes.
-                    outputs = port.parallel(wave, controls.read_workers, remaining())
-                    for item, raw in zip(wave, outputs, strict=True):
-                        retain(item, consume(item, raw, time.monotonic()))
+                scope = session.activate(lambda: fresh_manifest_and_repo(root), timeout_s=remaining()) if session is not None else nullcontext()
+                with scope:
+                    for item in wave:
                         ancestors[item.id] = set()
-                else:
-                    scope = session.activate(lambda: fresh_manifest_and_repo(root)) if session is not None else nullcontext()
-                    with scope:
-                        for item in wave:
-                            ancestors[item.id] = set()
-                            if stopped or remaining() <= 0:
-                                retain(item, fail_row(item, "skipped" if stopped else "deadline",
-                                                     PLAN_STOPPED if stopped else DEADLINE_EXPIRED))
-                                continue
-                            begin = time.monotonic()
-                            key = item.argv
-                            cached = session.get(key) if session is not None else None
-                            raw = cached if isinstance(cached, RawOutcome) else port.execute(item, remaining())
-                            row = consume(item, raw, begin)
-                            if session is not None and row["status"] == "ok" and not cached:
-                                session.put(key, raw)
-                            retain(item, row)
-                        if session is not None and not session.unchanged():
-                            for row in rows[begin_rows:]:
-                                row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
-                                           "retryable": True, "message": "inputs changed during read epoch"})
-                                row.pop("output", None)
-                            stopped = stopped or (wave[0].id if controls.on_error == "stop" else None)
+                        if stopped or remaining() <= 0:
+                            retain(item, fail_row(item, "skipped" if stopped else "deadline",
+                                                 PLAN_STOPPED if stopped else DEADLINE_EXPIRED))
+                            continue
+                        begin = time.monotonic()
+                        key = item.argv
+                        cached = session.get(key) if session is not None else None
+                        raw = cached if isinstance(cached, RawOutcome) else port.execute(item, remaining())
+                        row = consume(item, raw, begin)
+                        if session is not None and row["status"] == "ok" and not cached:
+                            session.put(key, raw)
+                        retain(item, row)
+                if session is not None and not session.unchanged():
+                    for row in rows[begin_rows:]:
+                        row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
+                                   "retryable": True, "message": "inputs changed during read epoch"})
+                        row.pop("output", None)
+                        correct(row)
+                    stopped = stopped or (wave[0].id if controls.on_error == "stop" else None)
             except Exception as exc:
+                # A failed epoch close cannot attest the already emitted reads.
+                for row in rows[begin_rows:]:
+                    if row["status"] == "ok":
+                        row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
+                            "retryable": True, "message": "read epoch did not complete"})
+                        row.pop("output", None)
+                        correct(row)
+                if controls.on_error == "stop":
+                    stopped = stopped or wave[0].id
                 for item in wave[len(rows) - begin_rows:]:
-                    retain(item, fail_row(item, "error", getattr(exc, "code", STEP_FAILED), message=str(exc)))
+                    retain(item, fail_row(item, "deadline" if remaining() <= 0 else "error",
+                        DEADLINE_EXPIRED if remaining() <= 0 else getattr(exc, "code", STEP_FAILED), message=str(exc)))
             finally:
                 if session is not None:
                     memo_hits += session.hits
@@ -231,7 +317,14 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
         if required:
             until = min(deadline, time.monotonic() + step.ready_timeout_s)
             while True:
-                ready, reason = port.ready(required, list(writes.values()), step.submitting)
+                try:
+                    with lock_wait_budget(remaining()):
+                        ready, reason = port.ready(required, list(writes.values()), step.submitting)
+                except Exception as exc:
+                    expired = remaining() <= 0
+                    retain(step, fail_row(step, "deadline" if expired else "error",
+                        DEADLINE_EXPIRED if expired else getattr(exc, "code", STEP_FAILED), message=str(exc)))
+                    break
                 if ready:
                     break
                 if time.monotonic() >= until:
@@ -249,7 +342,8 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                 index += 1
                 continue
         try:
-            error = port.preflight(step) if step.preflight else None
+            with lock_wait_budget(remaining()):
+                error = port.preflight(step) if step.preflight else None
             if error:
                 retain(step, {**fail_row(step, "blocked", PREFLIGHT_FAILED), "error": error})
             elif remaining() <= 0:
@@ -257,13 +351,16 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             else:
                 retain(step, consume(step, port.execute(step, remaining()), begin, ready_ms))
         except Exception as exc:
-            row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
+            expired = remaining() <= 0
+            row = fail_row(step, "deadline" if expired else "error",
+                           DEADLINE_EXPIRED if expired else getattr(exc, "code", STEP_FAILED), message=str(exc))
             # Dispatch may have crossed the commit boundary before transport failed.
             if step.writer:
                 row["commit_certainty"] = "uncertain"
             retain(step, row)
         index += 1
 
+    resource_info = port.resources()
     report: dict[str, object] = {"schema_version": 2, "experimental": True,
         "session_id": controls.session_id, "on_error": controls.on_error, "steps": rows,
         "plan_sha256": store.plan_digest, "plan_artifact": "plan.json",
@@ -274,11 +371,12 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             "deadline_overshoot_ms": max(0, round((time.monotonic() - deadline) * 1000)),
             "raw_bytes": sum(cast(int, r.get("raw_bytes", 0)) for r in rows),
             "out_bytes": sum(cast(int, r.get("out_bytes", 0)) for r in rows),
-            "process_count": processes, "memo_hits": memo_hits, "shared_model_loads": model_loads, "model_loads": (load_counter[0] if load_counter else 0) + port.resources().get("worker_model_loads", 0),
-            "resources": port.resources()}}
+            "process_count": processes + resource_info.get("unreported_processes", 0), "memo_hits": memo_hits, "shared_model_loads": model_loads, "model_loads": (load_counter[0] if load_counter else 0),
+            "resources": resource_info}}
     report["full_report"] = str(store.full_path)
     try:
         from learning_os.app.agent_reporting import write_full_report
+        store.flush_pending()
         store.sync()
         full = write_full_report(store.path, report)
     except OSError as exc:
@@ -289,5 +387,6 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             if row["status"] == "ok":
                 row["status"] = "error"
                 row["error"] = {"code": ARTIFACT_FAILED, "retryable": False}
+                correct(row)
         cast(dict[str, object], report["totals"])["ok"] = 0
     return bound_report(report, controls.report_max_bytes, str(full))

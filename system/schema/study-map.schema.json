@@ -76,13 +76,14 @@
       "then": {
         "properties": {
           "stages": {
+            "type": "array",
             "items": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/curriculumStage"}
           }
         }
       },
       "else": {
         "properties": {
-          "stages": {"items": {"$ref": "#/$defs/legacyStage"}}
+          "stages": {"type": "array", "items": {"$ref": "#/$defs/legacyStage"}}
         }
       }
     }
@@ -93,7 +94,7 @@
       "allOf": [{"if": {"required": ["angle_review"]}, "then": {"anyOf": [{"required": ["route_id"]}, {"required": ["material_ref"]}]}}],
       "required": ["kind"],
       "additionalProperties": false,
-      "anyOf": [{"required": ["label"]}, {"required": ["material_ref"], "properties": {"material_ref": {"properties": {"inherit": {"contains": {"const": "label"}}}}}}],
+      "anyOf": [{"required": ["label"]}, {"required": ["material_ref"], "properties": {"material_ref": {"type": "object", "properties": {"inherit": {"type": "array", "contains": {"const": "label"}}}}}}],
       "properties": {
         "material_ref": {"type": "object", "additionalProperties": false, "required": ["route_id", "inherit"], "properties": {"route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "inherit": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["label", "source_id", "locator", "angle", "angle_detail", "url", "vault_path"]}}}},
         "id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},

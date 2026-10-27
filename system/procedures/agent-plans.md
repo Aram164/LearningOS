@@ -48,10 +48,14 @@ schema=2 ok=2/2
 $ $H/los-assert-receipt --last --capability capture.create
 ```
 
-The default worker count is one. Opt in to two through four workers only for
-measured workloads; process startup can dominate small plans. Read waves stop at
-every write or unknown-effect operation. `deadline_s` stops admission and
-cancellable reads, while an admitted commit is allowed to finish.
+Plans execute serially. Legacy `read_workers` values 1 through 4 remain accepted
+and all execute with one worker; no worker processes are created. Read epochs
+stop at every write or unknown-effect operation. `deadline_s` stops new steps,
+bounds lock waits and subprocess calls by the remaining time, and reports a
+timed-out write as uncertain. An in-process handler that has acquired its lock
+can finish its work; the deadline does not interrupt its commit. Explicit
+`schema_version: 1` is refused with a migration message; omitted versions
+default to version 2.
 Only operations explicitly declaring `read` effects in the executing Core are
 reads. Derived writes, canonical writes (including `session-end`), and unknown effects
 require a plan `session_id` and cannot run after an unresolved write, for both
@@ -61,6 +65,13 @@ A receipt establishes commitment; an explicit gateway refusal can establish no
 commit. A porcelain error's generic `commit: none` cannot prove that it had no
 side effects. Without reliable evidence, later writes are skipped even under
 `on_error: continue`; independent reads can still run.
+Dependency readiness is receipt-based: a dependent step waits until every
+write it depends on has a verified transaction receipt and the current
+projection — freshly verified against canonical state, not merely the stored
+publication — names that receipt's snapshot. A successful derived write that
+produces no transaction receipt therefore cannot satisfy a dependent step;
+the dependent step stays blocked rather than treating success as readiness.
+That restriction is deliberate: only receipted writes anchor dependencies.
 
 `report_max_bytes` caps the entire stdout report. The `full_report` pointer
 leads to a private report outside canonical data, with the approved plan, sealed

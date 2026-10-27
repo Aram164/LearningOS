@@ -28,7 +28,7 @@ from learning_os.app.gateway import read_structured_file as _read_structured_fil
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 from learning_os.app.proposal import Result, TransactionProposal
-from learning_os.app.registry import OperationEffects, register
+from learning_os.app.registry import CacheProfile, OperationEffects, register
 from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
@@ -339,7 +339,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ)
+@register("project.inspect", kind="query", cache=CacheProfile.MANIFEST, effects=OperationEffects.READ)
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):

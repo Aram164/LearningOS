@@ -76,6 +76,18 @@ checks:
     since: approved
     approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
       possible'
+  # Non-canonical writes: an immutable envelope copy inside a temporary
+  # directory, and retention deleting disposable report directories that
+  # are required to live outside the data root. Neither touches canonical
+  # LearningOS files.
+  - signature: tools/learning_os/adapters/agent_runner.py::_session_bound_envelope::write_bytes
+    count: 1
+    since: approved
+    approved_by: 'Aram 2026-10-27: take over fixing the found issues'
+  - signature: tools/learning_os/app/agent_reporting.py::prune_reports::shutil.rmtree
+    count: 1
+    since: approved
+    approved_by: 'Aram 2026-10-27: take over fixing the found issues'
   A3-prose:
   - signature: tools/learning_os/domain/plan_import.py::inventory_block::method::```
     count: 1

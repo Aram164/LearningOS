@@ -185,6 +185,7 @@ def generate(
     workflow_run_id: str,
     workflow_run_attempt: str,
     live_install_scope: str,
+    system_check_passed: bool = False,
 ) -> dict:
     """Build one schema-validated receipt from the current, already-built pair.
 
@@ -270,7 +271,10 @@ def generate(
         "bundle_sha256": build_info["bundle_sha256"],
         "stylesheet_sha256": build_info["stylesheet_sha256"],
         "shipped_asset_sha256": shipped_asset_sha256,
-        "system_check_passed": True,
+        # Caller-asserted, never self-proven: the receipt is an
+        # artifact-integrity record. Hosted CI acceptance is the
+        # successful workflow run named below, checked separately.
+        "system_check_passed": bool(system_check_passed),
         "stress_scope": "not-run-materials-unprovisioned",
         "live_install_scope": live_install_scope,
         "workflow_run_id": str(workflow_run_id),
@@ -355,6 +359,7 @@ def _cli_generate(args: argparse.Namespace) -> int:
             workflow_run_id=args.workflow_run_id,
             workflow_run_attempt=args.workflow_run_attempt,
             live_install_scope=args.live_install_scope,
+            system_check_passed=args.system_check_passed,
         )
     except ReleasePairReceiptError as exc:
         print(f"release-pair-receipt: {exc}", file=sys.stderr)
@@ -402,6 +407,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--live-install-scope", required=True,
         help="whether the paired gate ran the live_install tests or deselected them: "
              "not-run-live-install-deselected (CI) or full (the live installation)")
+    generate_parser.add_argument(
+        "--system-check-passed", action="store_true",
+        help="assert that the caller's own system check passed; the receipt "
+             "records the assertion, it does not prove hosted CI success")
     generate_parser.add_argument("--out", required=True)
     generate_parser.set_defaults(func=_cli_generate)
 

@@ -195,9 +195,9 @@ contracts:
 
   - declaration: system/contracts/review-consolidation.yaml
     governs: >-
-      The finding/caller adoption register for the systemwide review
-      consolidation: every finding names an owner, affected callers,
-      regression tests and a disposition. Metadata only, not learner state.
+      The historical finding/caller adoption record for the review merged in
+      PR #59. Its schema and evidence references remain checked for integrity;
+      it grants no current operational or installation authority.
     enforced_by: test
     checker: tests.test_review_consolidation
     test: tests/test_review_consolidation.py

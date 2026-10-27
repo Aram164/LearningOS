@@ -25,11 +25,11 @@ def capture_tree(root: Path) -> dict[str, str]:
         if base.is_symlink() or not base.is_dir():
             continue
         for dirpath, dirnames, filenames in os.walk(base, followlinks=False):
-            dirnames[:] = [
+            dirnames[:] = sorted(
                 d for d in dirnames
                 if not Path(dirpath, d).is_symlink()
-            ]
-            for name in filenames:
+            )
+            for name in sorted(filenames):
                 full = Path(dirpath, name)
                 if full.is_symlink() or not full.is_file():
                     continue

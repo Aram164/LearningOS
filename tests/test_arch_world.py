@@ -277,15 +277,16 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     baseline = _git(clone, "rev-parse", "HEAD").stdout.strip()
     assert not (REPO_ROOT / "tests" / "architecture"
                 / "contract-transitions.yaml").exists()
-    old_schema = clone / "system" / "contracts" / "manifest-v15.schema.json"
-    text = old_schema.read_text(encoding="utf-8")
-    text = text.replace("manifest-v15.schema.json", "manifest-v16.schema.json")
-    text = text.replace("atomic manifest v15", "atomic manifest v16")
-    old_const = '"contract_version": {\n          "const": 15\n        }'
-    assert text.count(old_const) == 1
-    text = text.replace(old_const, '"contract_version": {\n          "const": 16\n        }')
-    (clone / "system" / "contracts" / "manifest-v16.schema.json").write_text(
-        text, encoding="utf-8")
+    import yaml
+
+    contract = yaml.safe_load((clone / "system/contracts/manifest-contract.yaml").read_text())
+    old_version = contract["contract_version"]
+    new_version = old_version + 1
+    schema = json.loads((clone / contract["schema_path"]).read_text())
+    schema["$id"] = schema["$id"].replace(f"manifest-v{old_version}", f"manifest-v{new_version}")
+    schema["title"] = f"LearningOS atomic manifest v{new_version}"
+    schema["$defs"]["generated"]["properties"]["contract_version"]["const"] = new_version
+    (clone / f"system/contracts/manifest-v{new_version}.schema.json").write_text(json.dumps(schema))
     bumped = subprocess.run(
         [sys.executable, str(clone / "tools" / "manifest_contract.py"),
          "--bump", "--note", "S07 test: contract version bump"],
@@ -293,7 +294,7 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     )
     assert bumped.returncode == 0, bumped.stderr[-2000:]
     _git(clone, "add", "-A")
-    _git(clone, "commit", "-qm", "S07 test: bump the manifest contract to v16")
+    _git(clone, "commit", "-qm", f"S07 test: bump the manifest contract to v{new_version}")
     candidate = _git(clone, "rev-parse", "HEAD").stdout.strip()
     proc = _compare(clone, world["dir"], baseline, candidate,
                     _materials_copy(world, tmp_path), tmp_path / "runs")
@@ -301,10 +302,10 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     report = json.loads(proc.stdout)
     assert report["identical"] is False
     assert "contract:contract_version" in report["differences"]
-    assert report["contract"]["baseline_version"] == 15
+    assert report["contract"]["baseline_version"] == old_version
     # The candidate's own contract bytes survived tree construction: its
     # stamped version is the bumped one, and its metadata is self-consistent.
-    assert report["candidate"]["contract_version"] == 16
+    assert report["candidate"]["contract_version"] == new_version
     assert report["candidate"]["checks"] == {
         "contract_version": True, "schema_sha256": True, "snapshot_id": True}
     assert report["semantic"]["equal"] is True

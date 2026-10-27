@@ -13,7 +13,7 @@ from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
-from learning_os.app.registry import OperationEffects, register
+from learning_os.app.registry import CacheProfile, OperationEffects, register
 from learning_os.app.validation_service import status_issues
 from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
 from learning_os.derive.projection import adoption_counts, exam_spine
@@ -356,7 +356,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("operator.bootstrap", kind="query", parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief", effects=OperationEffects.READ)
+@register("operator.bootstrap", kind="query", cache=CacheProfile.MANIFEST_BRIEF, effects=OperationEffects.READ)
 def bootstrap(ctx: OpContext, req: dict) -> Result:
     """Serve the operator bootstrap: full, brief, or compact pages."""
     if req.get("brief"):
@@ -720,7 +720,7 @@ def _human_intelligence_scan(payload, view) -> str:
     return "\n".join(lines)
 
 
-@register("intelligence.scan", kind="tool", human=_human_intelligence_scan, parallel_safe=True, memo_profile="manifest-brief", read_session_profile="manifest-brief", effects=OperationEffects.READ)
+@register("intelligence.scan", kind="tool", human=_human_intelligence_scan, cache=CacheProfile.MANIFEST_BRIEF, effects=OperationEffects.READ)
 def intelligence_scan(ctx: OpContext, req: dict) -> Result:
     """Run one observation loop: observe, interpret, propose.
 
@@ -893,7 +893,7 @@ def _human_capabilities(payload, view) -> str:
          "  every successful canonical write has one receipt"])
 
 
-@register("capabilities.read", kind="tool", human=_human_capabilities, parallel_safe=True, memo_profile="catalogue", read_session_profile="catalogue", effects=OperationEffects.READ)
+@register("capabilities.read", kind="tool", human=_human_capabilities, cache=CacheProfile.CATALOGUE, effects=OperationEffects.READ)
 def capabilities(ctx: OpContext, req: dict) -> Result:
     """Serve the machine discovery/read catalogue, in full or in part.
 

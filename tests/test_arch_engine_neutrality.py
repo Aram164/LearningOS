@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import contextvars
 import json
+import re
 import sys
 import threading
 from pathlib import Path
@@ -26,7 +27,27 @@ BASELINE_PATH = (
 
 
 def _load_baseline() -> dict[str, dict]:
-    return json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+    # Every original digest comparison remains exact. Separating the pool
+    # keeps contract-byte updates out of thousands of repeated effect rows.
+    hashes = json.loads(BASELINE_PATH.with_name("engine-baseline-hashes.json")
+                        .read_text(encoding="utf-8"))
+    used = set()
+
+    def expand(value):
+        if isinstance(value, str) and value.startswith("@digest/"):
+            used.add(value)
+            digest = hashes[value]
+            assert re.fullmatch(r"(?:sha256:)?[0-9a-f]{64}", digest)
+            return digest
+        if isinstance(value, dict):
+            return {key: expand(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [expand(item) for item in value]
+        return value
+
+    result = expand(json.loads(BASELINE_PATH.read_text(encoding="utf-8")))
+    assert used == hashes.keys(), "unused or missing engine digest evidence"
+    return result
 
 
 @pytest.mark.parametrize("case", arch_engine_cases.CASE_NAMES)

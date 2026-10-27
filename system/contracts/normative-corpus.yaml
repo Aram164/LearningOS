@@ -205,12 +205,12 @@ documents:
     audience: developer
     applies_to: []
     class: reference
-    status: current
-    authority: informative
+    status: frozen
+    authority: historical
     owner: system-map
     summary: >-
-      Informative owner/caller adoption table for the review consolidation
-      register; the binding contracts remain OPERATOR.md and component pages.
+      Historical owner/caller adoption record for the consolidation merged in
+      PR #59; it grants no current behavior, installation or process authority.
 
   - path: system/developer/C4.md
     audience: developer

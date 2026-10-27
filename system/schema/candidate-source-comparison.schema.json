@@ -47,7 +47,7 @@
         },
         "allOf": [{
           "if": {"properties": {"review_status": {"const": "deep-reviewed"}}, "required": ["review_status"]},
-          "then": {"required": ["contribution", "assumptions", "notation", "exercise_value", "best_for", "limitations", "evidence"], "properties": {"evidence": {"minItems": 1}}},
+          "then": {"required": ["contribution", "assumptions", "notation", "exercise_value", "best_for", "limitations", "evidence"], "properties": {"evidence": {"type": "array", "minItems": 1}}},
           "else": {"required": ["reason"], "not": {"anyOf": [{"required": ["contribution"]}, {"required": ["assumptions"]}, {"required": ["notation"]}, {"required": ["exercise_value"]}, {"required": ["best_for"]}, {"required": ["limitations"]}]}}
         }]
       }
@@ -66,7 +66,7 @@
           "concept_ids": {
             "allOf": [
               {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/conceptIds"},
-              {"minItems": 1}
+              {"type": "array", "minItems": 1}
             ]
           },
           "evidence": {

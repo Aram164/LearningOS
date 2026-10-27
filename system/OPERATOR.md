@@ -94,8 +94,8 @@ same thing; `capabilities governance-question --json` answers what binds that
 task. `capabilities --compact --json` names every command the gateway has,
 with the task each one starts.
 
-For multi-step agent work (several dependent reads/writes), use the
-declared runner `tools/agent_run.py PLAN --root ROOT` (see
+For multi-step agent work (several dependent reads/writes), agents may use the
+experimental runner `tools/agent_run.py PLAN --root ROOT` (see
 [agent plans](procedures/agent-plans.md)); a single focused read remains a
 direct `los` call below.
 

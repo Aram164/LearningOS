@@ -533,7 +533,7 @@ def _run(parser, argv: list[str]) -> dict:
                 namespace = parser.parse_args(argv)
             except SystemExit as exc:
                 code = exc.code if isinstance(exc.code, int) else 2
-                stderr = stderr_buf.getvalue()
+                stderr = arch_cli_describe.normalize_usage(stderr_buf.getvalue())
                 first = stderr.strip().splitlines()[0] if stderr.strip() else ""
                 return {"error": {"exit": code, "first_line": first,
                                   "stderr": stderr},
@@ -637,10 +637,18 @@ def _normalize_claim_surface_observation(parser, argv, recorded):
         prefix, separator, body = result["error"]["stderr"].partition("los goal: error:")
         assert separator and prefix.startswith("usage: los goal")
         action = next(action for action in parser._actions if isinstance(action, argparse._SubParsersAction))
-        usage = action.choices[command].format_usage()
+        usage = arch_cli_describe.normalize_usage(action.choices[command].format_usage())
         result["error"]["stderr"] = usage + separator + body
         result["error"]["first_line"] = usage.strip().splitlines()[0]
     return result
+
+
+def test_usage_recording_preserves_diagnostic_body():
+    body = "los: error: invalid choice: 'bad'\n  exact diagnostic detail\n"
+    assert arch_cli_describe.normalize_usage(
+        "usage: los [-h]\n           {old,new}\n\n" + body
+    ) == "usage: los [-h]\n\n" + body
+    assert arch_cli_describe.normalize_usage(body) == body
 
 
 @pytest.mark.parametrize("argv,field,value", [

@@ -360,6 +360,15 @@ approvals:
   # command. Aram told the session to execute that plan on 2026-10-23 and then
   # approved landing its changes ("approved do as you see fit").
   - {key: "tools.seal_envelope.py", change: changed, plan_ref: "AGENT-COST-2026-10-23 D1", pre_approved_by: "Aram 2026-10-23: told the session to execute the agent-cost plan, then 'approved do as you see fit' for landing it"}
-  - {change: added, key: request_schemas.projection.observe.schema.json, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
-  - {change: added, key: cli.projection-observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
-  - {change: added, key: catalog.commands.projection.observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
+  # New explicit approval of retaining the public command. This replaces the
+  # earlier interpreted wording; it does not assert an approval on 2026-10-26.
+  # Answer to: "Do you approve retaining projection-observe as a public CLI command now?"
+  - {change: added, key: request_schemas.projection.observe.schema.json, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
+  - {change: added, key: cli.projection-observe, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
+  - {change: added, key: catalog.commands.projection.observe, plan_ref: Improvement list item 45, pre_approved_by: 'Aram 2026-10-27: Approve retaining it now'}
+  # Improvement item 8 added explicit session/lock invocation controls to
+  # OpContext. Authorized by Aram's instruction to implement the improvement
+  # list; this records implementation authorization, not merge approval.
+  # Section 15 exact-head review of this protected file remains Aram's.
+  - {change: added, key: opcontext.session_id, plan_ref: Improvement list item 8, pre_approved_by: 'Aram 2026-10-27: authorized implementing the improvement list (do all fixes that improve the system from the list)'}
+  - {change: added, key: opcontext.lock_timeout_s, plan_ref: Improvement list item 8, pre_approved_by: 'Aram 2026-10-27: authorized implementing the improvement list (do all fixes that improve the system from the list)'}

@@ -144,6 +144,7 @@
   ],
   "rest-2": [
    "tests/test_abilities.py",
+   "tests/test_agent_reporting.py",
    "tests/test_ai_actions.py",
    "tests/test_arch_caches.py",
    "tests/test_arch_cli_parity.py",

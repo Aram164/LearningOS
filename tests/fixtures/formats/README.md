@@ -109,3 +109,7 @@ The project family is the only one whose records already carry their own
 `system/contracts/data-contract.yaml`.
 
 `v25` freezes the optional runtime target, bound activity suitability review, named task dependency, solution exposure, and explicitly unmet observation condition. Its example digests are deliberately stale: the shape remains readable without pretending that an old review qualifies a current assessment. Earlier fixtures remain untouched.
+
+`v62` records explicit array types in source-comparison refinement clauses.
+It preserves the already-required array shape; its data is a byte-for-byte copy
+of the frozen `v46` compatibility snapshot. No earlier fixture was regenerated.

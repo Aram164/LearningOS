@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 61
-schema_fingerprint: sha256:9caec3ee7c1dccd7450fd8f19ce1c4216a0edbdd2d7fab836193bc26b64393da
+contract_version: 62
+schema_fingerprint: sha256:24099ce4a7fd3c0eb8d53c715ab90ba4e8f2b368b3b43985dd0a35fe6a9f3485
 record_schemas: 36
 history:
 - version: 1
@@ -446,3 +446,9 @@ history:
     unchanged, requiring no migration.
   migration: null
   fixture: tests/fixtures/formats/v46/
+- version: 62
+  adopted: '2026-10-27'
+  note: Explicit types on existing array/object refinement constraints for strict
+    consumers; existing record shapes remain valid
+  migration: null
+  fixture: tests/fixtures/formats/v62/

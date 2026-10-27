@@ -88,6 +88,7 @@ def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
 def test_members_are_exactly_the_spec_list():
     assert [f.name for f in dataclasses.fields(OpContext)] == [
         "root", "operation", "channel", "invocation", "gateway",
+        "session_id", "lock_timeout_s",
     ]
     public = {name for name, member in vars(OpContext).items()
               if not name.startswith("_") and callable(member)}

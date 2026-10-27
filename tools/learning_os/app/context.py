@@ -24,6 +24,8 @@ class OpContext:
     channel: str                       # "cli" | "ui" | "operator" | "codex" | "system-task"
     invocation: str                    # "query" | "command" | "check" | "replay" | "porcelain"
     gateway: GatewayRequestContext | None
+    session_id: str | None = None
+    lock_timeout_s: float | None = None
 
     def repo(self) -> Repo:
         """The loaded repository, loaded once and cached on the context."""

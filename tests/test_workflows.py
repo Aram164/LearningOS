@@ -70,9 +70,14 @@ def test_ordinary_ci_runs_every_gate_stage():
         "tools/validate.py --no-report",
         "tools/warning_baseline.py --check",
         "npm run check",
-        "--collect-only",
+        "tools/check_shard_completeness.py",
     ):
         assert stage in runs, f"validate.yml lost gate stage: {stage}"
+    # The release gate must run the same shared completeness proof, so the
+    # two workflows cannot drift back into separate implementations.
+    release_runs = "\n".join(_all_run_steps(_load(RELEASE_PAIR)))
+    assert "tools/check_shard_completeness.py" in release_runs, (
+        "release-pair.yml lost the shared completeness proof")
     # A lesser target must never stand in for the full gate.
     assert "make check\n" not in runs
 
@@ -96,18 +101,25 @@ def test_ordinary_ci_permissions_are_read_only():
     assert doc.get("permissions") == {"contents": "read"}
 
 
-def test_ordinary_ci_does_not_claim_immutable_pairing():
-    """Branch-based CI is useful but mutable — it must never look like the
-    exact-pair guarantee release-pair.yml exists to provide.
-    """
+def test_ordinary_ci_uses_the_exact_declared_consumer_revision():
+    """Branch movement must not change which UI is tested with this Core."""
     text = VALIDATE.read_text(encoding="utf-8")
-    # No literal 40-character commit SHA is pinned anywhere in the ordinary
-    # workflow; the UI side is always resolved by branch name at run time.
-    assert not re.search(rf"\b{HEX40}\b", text.lower()), (
-        "ordinary CI must resolve the UI by branch, never by a pinned commit"
-    )
+    pin = (ROOT / ".github/ui-revision.txt").read_text().strip()
+    assert re.fullmatch(HEX40, pin)
+    assert ".github/ui-revision.txt" in text
+    assert "git ls-remote" not in text
+    assert "REQUESTED_REF" not in text
+    assert 'test "$(git rev-parse HEAD)" = "$DECLARED_UI_SHA"' in text
     assert "workflow_dispatch" in text  # still triggerable, not release-only
-    assert "consumer-ref" in text  # the same-branch-or-main resolution step
+    assert "consumer-ref" in text
+
+
+def test_pr_ci_is_not_duplicated_by_branch_pushes():
+    doc = _load(VALIDATE)
+    assert _triggers(doc)["push"]["branches"] == ["main"]
+    assert "pull_request" in _triggers(doc)
+    assert "github.event.pull_request.number" in doc["concurrency"]["group"]
+    assert doc["concurrency"]["cancel-in-progress"] == "${{ github.event_name == 'pull_request' }}"
 
 
 def test_ordinary_ci_does_not_run_full_stress():

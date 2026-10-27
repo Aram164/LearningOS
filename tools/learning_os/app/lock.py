@@ -31,17 +31,26 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
 
 
 #: Environment override for the operator-lock wait. `los --lock-timeout`
-#: sets this for the process; in-process callers set it directly. Unset or
+#: accepts this at process boundaries; in-process callers use lock_wait_budget. Unset or
 #: malformed means wait as long as the holder needs, announced on stderr.
 LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
 
-#: Cancellable read workers set this so they defer canonical recovery (D09):
-#: they must report recovery-required instead of reconciling transactions.
-LOS_DEFER_RECOVERY_ENV = "LOS_WORKER_DEFER_RECOVERY"
+# A scoped absolute budget bounds every nested lock acquisition without
+# changing the process environment. Subprocess boundaries still accept the env.
+_LOCK_DEADLINE: contextvars.ContextVar[float | None] = contextvars.ContextVar("learningos_lock_deadline", default=None)
 
 
-def defer_recovery() -> bool:
-    return os.environ.get(LOS_DEFER_RECOVERY_ENV) == "1"
+@contextlib.contextmanager
+def lock_wait_budget(timeout_s: float | None):
+    current = _LOCK_DEADLINE.get()
+    deadline = time.monotonic() + max(0.0, timeout_s) if timeout_s is not None else current
+    if current is not None and deadline is not None:
+        deadline = min(current, deadline)
+    token = _LOCK_DEADLINE.set(deadline)
+    try:
+        yield
+    finally:
+        _LOCK_DEADLINE.reset(token)
 
 
 #: Poll interval while a lock timeout is armed. The default (unbounded)
@@ -51,16 +60,16 @@ _LOCK_POLL_INTERVAL_S = 0.05
 
 def _lock_timeout_seconds() -> float | None:
     """The configured lock wait bound, or None for an unbounded announced wait."""
-    raw = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
-    if raw is None or not raw.strip():
-        return None
+    deadline = _LOCK_DEADLINE.get()
+    scoped = max(0.0, deadline - time.monotonic()) if deadline is not None else None
     try:
-        value = float(raw)
+        configured = float(os.environ.get(LOS_LOCK_TIMEOUT_ENV, ""))
+        if not math.isfinite(configured):
+            return scoped
     except ValueError:
-        return None
-    if not math.isfinite(value):
-        return None
-    return max(0.0, value)
+        return scoped
+    configured = max(0.0, configured)
+    return configured if scoped is None else min(configured, scoped)
 
 
 def _read_holder(lock_path: Path) -> str | None:
@@ -190,8 +199,6 @@ def escalate_operator_lock(root: Path) -> bool:
     # Invalidate re-entrancy before dropping SH. If acquisition, holder
     # publication, or recovery fails, an outer caller that catches the
     # exception must never mistake this scope for a still-held read lock.
-    if defer_recovery():
-        raise WriteRefused("recovery-required: lock escalation deferred in worker mode")
     _HELD_OPERATOR_LOCKS.set(tuple(
         (key, "released" if key == root_key else held_mode, held_handle)
         for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
@@ -210,7 +217,7 @@ def escalate_operator_lock(root: Path) -> bool:
 
 
 @contextlib.contextmanager
-def operator_lock(root: Path, *, shared: bool = False):
+def _operator_lock(root: Path, *, shared: bool = False):
     """Cross-process lock for every read and write/generation transaction.
 
     Writes take it exclusive, as before. Reads that only serve a provably
@@ -229,8 +236,6 @@ def operator_lock(root: Path, *, shared: bool = False):
     wait announcement and `--lock-timeout` semantics are identical for
     both modes, and re-entrancy is unchanged.
     """
-    if defer_recovery() and not shared:
-        raise WriteRefused("recovery-required: exclusive operation deferred in worker mode")
     root_key = str(root.resolve())
     entry = _held_entry(root_key)
     if entry is not None:
@@ -260,12 +265,15 @@ def operator_lock(root: Path, *, shared: bool = False):
             _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
         try:
             if shared and _has_armed_inflight(root):
-                if defer_recovery():
-                    raise WriteRefused(
-                        "recovery-required: a published crash journal awaits "
-                        "foreground recovery; worker deferred")
                 escalate_operator_lock(root)
             yield
         finally:
             _HELD_OPERATOR_LOCKS.reset(context_token)
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+@contextlib.contextmanager
+def operator_lock(root: Path, *, shared: bool = False, timeout_s: float | None = None):
+    """Acquire the ordinary recovering lock within the caller's wait budget."""
+    with lock_wait_budget(timeout_s), _operator_lock(root, shared=shared):
+        yield

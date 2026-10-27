@@ -9,6 +9,7 @@ of the ledger sink; every importer was updated in the same commit.
 from __future__ import annotations
 
 import contextlib
+import contextvars
 import datetime as _dt
 import hashlib
 import json
@@ -211,18 +212,31 @@ def _is_member(value: object, choices: frozenset) -> bool:
         return False
 
 
+_INVOCATION_SESSION: contextvars.ContextVar[str | None] = contextvars.ContextVar("learningos_invocation_session", default=None)
+
+
+@contextlib.contextmanager
+def invocation_session(session_id: str | None):
+    """Bind the in-process caller's session without modifying environment."""
+    token = _INVOCATION_SESSION.set(session_id)
+    try:
+        yield
+    finally:
+        _INVOCATION_SESSION.reset(token)
+
+
 def resolve_session_identity(*, channel: str | None = None,
                               explicit: str | None = None
                               ) -> tuple[str, str]:
     """The session identity every ledger operation resolves, and its source.
 
     Resolution order: an explicit id (the `--session-id` flag), then the
-    sealed gateway envelope's `session_id`, then the `LOS_SESSION_ID`
-    environment, then the gateway channel — so two actors that name
+    sealed gateway envelope's `session_id`, then the scoped invocation session,
+    then the `LOS_SESSION_ID` environment, then the gateway channel — two actors that name
     nothing still land in separate ledgers by channel (`channel:ui` vs
     `channel:operator`), while one named session shares a single ledger
     whatever channel its writes used. The source is one of `explicit`,
-    `envelope`, `environment`, or `channel`.
+    `envelope`, `invocation`, `environment`, or `channel`.
     """
     if explicit is not None and explicit.strip():
         return explicit.strip(), "explicit"
@@ -231,6 +245,9 @@ def resolve_session_identity(*, channel: str | None = None,
         sealed = (request.session_id or "").strip()
         if sealed:
             return sealed, "envelope"
+    scoped = _INVOCATION_SESSION.get()
+    if scoped is not None and scoped.strip():
+        return scoped.strip(), "invocation"
     env = os.environ.get(SESSION_ID_ENV, "").strip()
     if env:
         return env, "environment"

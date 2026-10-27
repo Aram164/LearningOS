@@ -17,6 +17,7 @@ schema_version: 1
 
 tasks:
   - id: discover-capabilities
+    entry_verb: capabilities
     task: Discover capabilities
     entry_read: '`capabilities --compact --json`, then `capabilities NAME --json`'
     procedures:
@@ -26,6 +27,7 @@ tasks:
       - system/OPERATOR.md
 
   - id: log-a-line
+    entry_verb: capture
     task: Log a line (`log:`)
     entry_read: '`capabilities capture.create --json`, or `capabilities stage.note.write --json` for an identified stage'
     procedures:
@@ -39,6 +41,7 @@ tasks:
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
   - id: record-stage-progress
+    entry_verb: stage-progress
     task: Record stage progress or end a session
     entry_read: '`capabilities stage.progress.update --json`'
     procedures:
@@ -52,6 +55,7 @@ tasks:
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
   - id: create-or-revise-a-durable-note
+    entry_verb: note-create
     task: Create or revise a durable note
     entry_read: '`capabilities note.create --json`, or `capabilities note.revise --json` for an existing note'
     procedures:
@@ -65,6 +69,7 @@ tasks:
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
   - id: save-source-analyses
+    entry_verb: note-analysis-save-batch
     task: Save source analyses
     entry_read: '`capabilities note.analysis.save_batch --json`'
     procedures:
@@ -78,6 +83,7 @@ tasks:
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
   - id: edit-a-known-material-route
+    entry_verb: plan-edit-context
     task: Edit a known material route
     entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`'
     procedures:
@@ -89,6 +95,7 @@ tasks:
       - system/ARCHITECTURE.md#14a-module-first-curriculum-model
 
   - id: edit-a-known-stage
+    entry_verb: plan-edit-context
     task: Edit a known stage
     entry_read: '`plan-edit-context UNIT_ID --stage-id STAGE_ID`'
     procedures:
@@ -100,6 +107,7 @@ tasks:
       - system/ARCHITECTURE.md#14a-module-first-curriculum-model
 
   - id: unit-coverage-and-unknown-ids
+    entry_verb: plan-edit-context
     task: Unit coverage, source completeness, or unknown IDs
     entry_read: '`plan-edit-context UNIT_ID --brief`'
     procedures:
@@ -111,6 +119,7 @@ tasks:
       - system/WORKFLOWS.md#26-source-routing-and-feedback
 
   - id: open-work-or-priority-question
+    entry_verb: bootstrap
     task: Open work or priority question
     entry_read: '`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination'
     procedures:
@@ -122,6 +131,7 @@ tasks:
       - system/CLAUDE.md
 
   - id: known-record-or-stage-note
+    entry_verb: inspect
     task: Known record or stage note
     entry_read: '`inspect ID`, including a batch of known IDs'
     procedures:
@@ -134,6 +144,7 @@ tasks:
       - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
 
   - id: note-body-or-saved-reasoning
+    entry_verb: note-read
     task: Note body or saved reasoning
     entry_read: '`note-read NOTE_ID`'
     procedures:
@@ -144,6 +155,7 @@ tasks:
       - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
 
   - id: material-or-concept-explanation
+    entry_verb: material-context
     task: Material or concept explanation
     entry_read: '`material-context`, then an exact `material-span` when needed'
     procedures:
@@ -154,6 +166,7 @@ tasks:
       - system/WORKFLOWS.md#26-source-routing-and-feedback
 
   - id: resume-recorded-study
+    entry_verb: resume
     task: Resume recorded study
     entry_read: '`resume` or `resume --study`'
     procedures:
@@ -165,6 +178,7 @@ tasks:
       - system/CLAUDE.md
 
   - id: changes-awaiting-a-decision
+    entry_verb: intelligence-scan
     task: Changes awaiting a decision
     entry_read: '`intelligence-scan --brief --json`'
     procedures:
@@ -175,6 +189,7 @@ tasks:
       - system/WORKFLOWS.md#30-review-exact-goal-decisions-together
 
   - id: ability-evidence
+    entry_verb: ability-context
     task: Ability evidence
     entry_read: '`ability-context` horizon, then a known ability'
     procedures:
@@ -185,6 +200,7 @@ tasks:
       - system/WORKFLOWS.md#8-record-evidence
 
   - id: governance-question
+    entry_verb: semantic
     task: Governance question
     entry_read: '`semantic --list`, then `semantic PREDICATE --input k=v`'
     procedures:
@@ -195,6 +211,7 @@ tasks:
       - system/SEMANTIC-CONTRACT.md
 
   - id: process-a-lecture
+    entry_verb: module-plan-import
     task: Process a lecture (23)
     entry_read: '`capabilities module.plan.import --json`, then `plan-edit-context UNIT_ID --brief`'
     procedures:
@@ -208,6 +225,7 @@ tasks:
       - system/WORKFLOWS.md#6-add-or-evaluate-a-source
 
   - id: untranscribable-workflows
+    entry_verb: null
     task: Turn the semester (24), promote a Master's module (27)
     entry_read: none — stop and ask
     procedures: []

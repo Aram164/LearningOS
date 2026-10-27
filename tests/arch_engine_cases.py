@@ -81,7 +81,7 @@ class _Normalizer:
             return {
                 (self.norm_str(k) if isinstance(k, str) else k):
                 self.norm_obj(v)
-                for k, v in obj.items()
+                for k, v in sorted(obj.items())
             }
         if isinstance(obj, (list, tuple)):
             return [self.norm_obj(v) for v in obj]
@@ -129,6 +129,15 @@ def _build_root(tmp_path: Path, name: str) -> Path:
         # build_mini_repo deliberately omits host-local attachment policy.
         if target.is_file():
             target.write_bytes(data)
+    # PR #59 extended the original oracle with these contracts. Retain those
+    # exact input bytes too; current contracts are exercised by current cases.
+    inputs = json.loads((Path(__file__).parent / "architecture" /
+                         "engine-contract-inputs.json").read_text())
+    for target in (root / "system/contracts").rglob("*"):
+        if target.is_file() and target.relative_to(root).as_posix() not in inputs["inventory"]:
+            target.unlink()
+    for relpath, text in inputs["files"].items():
+        (root / relpath).write_text(text, encoding="utf-8")
     return root
 
 
@@ -154,11 +163,11 @@ def _capture_journal(root: Path, normalizer: _Normalizer) -> dict:
     if inflight.is_dir() and not inflight.is_symlink():
         for dirpath, dirnames, filenames in os.walk(
                 inflight, followlinks=False):
-            dirnames[:] = [
+            dirnames[:] = sorted(
                 d for d in dirnames
                 if not Path(dirpath, d).is_symlink()
-            ]
-            for name in filenames:
+            )
+            for name in sorted(filenames):
                 full = Path(dirpath, name)
                 if full.is_symlink() or not full.is_file():
                     continue

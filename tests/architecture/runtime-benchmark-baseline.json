@@ -1,0 +1,77 @@
+{
+  "environment": {
+    "machine": "arm64",
+    "python": "3.14.4",
+    "python_loader": false,
+    "system": "Darwin"
+  },
+  "measurement_source": {
+    "dirty": true,
+    "fixture_builders_sha256": {
+      "conftest.py": "5e5fd470b75e3beb59b3ac2c350931bd93a2b463b9aaab1275c1f3e43e47023c",
+      "repo_builders.py": "7397f93cd0317ac3ba6fff92ceb0f28c7e9dd67aeb61ee6af28787abc4605746"
+    },
+    "head": "d4b9054b70924cf17f10a8b6db65bbe2b054602e",
+    "producer_sha256": "f757c7abd0ff9b9588ebd59862731cdd0cfb0dd4cda698d00f5ded0ebb70a462"
+  },
+  "median_seconds": {
+    "generate_loaded_repo": 0.09294054203201085,
+    "load": 0.0024079999420791864,
+    "total": 0.24572929192800075,
+    "validate_loaded_repo": 0.1502347500063479
+  },
+  "sample_seconds": [
+    {
+      "generate_loaded_repo": 0.09294054203201085,
+      "load": 0.0024079999420791864,
+      "total": 0.24731670902110636,
+      "validate_loaded_repo": 0.15196816704701632
+    },
+    {
+      "generate_loaded_repo": 0.09312320896424353,
+      "load": 0.0023713329574093223,
+      "total": 0.24572929192800075,
+      "validate_loaded_repo": 0.1502347500063479
+    },
+    {
+      "generate_loaded_repo": 0.09053074999246746,
+      "load": 0.0025986250257119536,
+      "total": 0.24248108395840973,
+      "validate_loaded_repo": 0.1493517089402303
+    }
+  ],
+  "schema_version": 1,
+  "semantic": {
+    "issues": [
+      "W RESOURCE-SCOPE-UNBOUND: study map 'study-map-demo-l01' stage 'stage-demo' teaches source-demo-book at '\u00a71' \u2014 the unit's source disposition is recorded, but no route for this unit matches this source and locator; bind the resource to a declared route or review the missing route [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]",
+      "W RESOURCE-SCOPE-UNBOUND: study map 'study-map-demo-l01' stage 'stage-demo' teaches source-demo-book at 'Appendix A' \u2014 the unit's source disposition is recorded, but no route for this unit matches this source and locator; bind the resource to a declared route or review the missing route [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]",
+      "W RESOURCE-SCOPE-UNBOUND: study map 'study-map-demo-l01' stage 'stage-demo' teaches source-demo-book at '' \u2014 the unit's source disposition is recorded, but no route for this unit matches this source and locator; bind the resource to a declared route or review the missing route [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]",
+      "W MATERIALS-MANIFEST: no records/materials-manifest.yaml \u2014 the external materials tree has no durable inventory, so data loss there is undetectable; build it with `.venv/bin/python tools/materials_manifest.py --build` [records/]"
+    ],
+    "output_bytes": 33492,
+    "output_sha256": {
+      "backlinks.json": "0dedc0a57ee53fd0a20376292c06830010312a987bedc68fc3ae0a4c24a56311",
+      "concept-canvas.canvas": "82447b86e9785d8d0c44840666207a972aca7e46c6e95e03f81c323d0721796c",
+      "concept-index.md": "9cedc886558aa14c8df290b61bc5923bca8113ca2e6bcb2a09915b763731f8dc",
+      "concept-map.md": "1b86564633cbf0577536399ce0053edabef5be0cd1c973258704ce2633d05458",
+      "coordination-view.md": "2bf35d1cbde4e1f9944e2b48874e62fab631cbdef7dd254fcbbe6b757086149a",
+      "dependency-report.md": "13f3eba7e554ee161f6bb4ca783a90c1aa58d8abe54a8c54cc93bd6413f3c9d8",
+      "domain-atlas.md": "d3ef0469a3ce9b71d891118a9fc0101542d73d32f08b443b22e9523fb9d80985",
+      "learner-interpretations.json": "9be0eea0bb4c72ac66ac063687cbce2977a5dcde233c6cc9d6d1d73455f8e065",
+      "learner-interpretations.md": "44d79a72d9ce1bc13120a394a0fa9b491d934edd3fd68b812464b5210ab60ae2",
+      "learning-requirements.json": "ebb6e8a94d81c013116d9ca4000ee8b7ee7fe82978df949266ec429b28aa2378",
+      "learning-requirements.md": "d88943232f8c50b50b6f9f8ecea722660aaa4855c58d3b0da8a9fcb67bc5bb21",
+      "library.md": "93f7346ac6a7a784182b22d938ae93dce26d7a6ebe0705ffc5e87d16e1d97dbd",
+      "manifest.identity.json": "5a04072239c1221ab8bfa101757737fcf675451d2d90006717ffe391926135ee",
+      "manifest.json": "bd13750eee5185ce397d646251ed8dafa75a7899b99aa85a8cb2bac46cf7a693",
+      "module-view.md": "8d887b64caa853c2f9e28fea11363a072779c4d707d4946d6972b45ff8797ad0",
+      "nebula.md": "0f9d575ab6f57e817efd5fbde8e9da58e4e21822087af5910ad34e2f9a24311a",
+      "reading-room.md": "2cef013b54002c73654a777f22635ce44825eafd7dfbeae5ef12dd5e6e766c6e",
+      "reports/health.md": "f7fccf69442148e9a5f364d6f3c285df95eadcb6eda5663314e40819103202c8",
+      "source-index.md": "1f0a084349304c6b337ca88da8e3d029743d30b4d8d38e929b4db8b778c55a5e",
+      "study-plans.md": "db9cc95429221fb3c8356f82844f7e5e80f38795521ad13c29e2b7851451ba39"
+    }
+  },
+  "warmup_excluded": 1,
+  "workload": "synthetic-demo-v1"
+}
