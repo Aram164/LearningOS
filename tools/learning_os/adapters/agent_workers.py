@@ -51,7 +51,7 @@ def _worker_run(connection: Channel, root_text: str, tasks: list[tuple[int, list
                 begin = time.monotonic()
                 args = parser.parse_args(["--root", root_text, *argv])
                 entry = REGISTRY.get(getattr(args, "_operation", ""))
-                if Path(args.root).resolve() != root or entry is None or not entry.parallel_safe or entry.kind not in ("query", "tool"):
+                if Path(args.root).resolve() != root or entry is None or not entry.parallel_safe or entry.kind not in ("query", "tool") or getattr(args, "feed", None):
                     raise ValueError("operation is not admitted as a parallel read")
                 outcome = invoke_outcome(args)
                 results.append((ordinal, (outcome.exit_code, outcome.stdout, outcome.stderr), round((time.monotonic() - begin) * 1000)))

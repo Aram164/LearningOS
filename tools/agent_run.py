@@ -647,7 +647,8 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                 entry = REGISTRY.get(operation)
                 profile = entry.memo_profile if entry is not None else "none"
                 reusable = not injected and not writer and profile != "none"
-                if profile == "manifest-brief" and "--brief" not in argv:
+                if profile == "manifest-brief" and ("--brief" not in argv or
+                        (not injected and getattr(namespace, "feed", None))):
                     reusable = False
                 compiled.append(CompiledStep(
                     id=step["id"], argv=tuple(argv), dependencies=tuple(step.get("depends_on", [])),

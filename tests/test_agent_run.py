@@ -677,3 +677,15 @@ def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
     monkeypatch.setattr(verb_catalogue, 'build_verb_catalogue', unnecessary)
     report = _run({'steps': [{'id': 'read', 'argv': ['inspect', 'note-demo']}]}, mini_repo)
     assert report['totals']['ok'] == 1, report
+
+
+def test_external_feed_reads_are_neither_memoized_nor_parallel(mini_repo, tmp_path):
+    feed = tmp_path / 'external-feed.json'
+    feed.write_text('{}')
+    report = _run({'read_workers': 4, 'steps': [
+        {'id': str(i), 'argv': ['intelligence-scan', '--brief', '--json', '--fe', str(feed)]}
+        for i in range(2)]}, mini_repo)
+    assert report['totals']['ok'] == 2, report
+    assert report['totals']['memo_hits'] == 0
+    assert report['totals']['process_count'] == 1
+    assert report['totals']['model_loads'] == 2
