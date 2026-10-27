@@ -228,3 +228,36 @@ propose the honest three-way call for each — **promote, keep gestating, or
 prune**. Deleting a garden note needs no heavyweight approval (it was never
 canonical), but always name which notes you are removing. The tiebreaker is
 unchanged: reduce organizational burden rather than create it.
+
+---
+
+## 15. Human review before protected merges
+
+Aram's decision on 2026-10-27: "Add human-review policy now; leave PRs for me."
+This is an agent operating rule. It does not claim that GitHub can distinguish a
+human from an agent using the same approval-capable account credential.
+
+A PR changing any of these paths requires Aram's explicit review before merge:
+
+- `AGENTS.md`;
+- `tests/architecture/surface-approvals.yaml`;
+- `system/OPERATOR.md` or this policy;
+- `system/contracts/**`;
+- `tools/hooks/**`.
+
+Present the proposed change and verification for its exact head commit. A broad
+implementation request, a green check, or an agent's own review is not that
+approval. A subsequent substantive change requires renewed review. Agents must
+not manufacture approval, approve their own gate, or change review controls to
+clear a merge. Record actual human approval without rewriting its wording or
+claiming an earlier approval that was not established.
+
+Roles still come from the current task, as `AGENTS.md` requires. An implementation
+assignment permits preparing and updating reviewable PRs, including authorized
+overnight work; it does not create a standing merge role. Overnight PR updates
+follow the same review boundary. The 2026-10-27 improvement campaign leaves
+its PRs for Aram to merge.
+
+Independent GitHub enforcement would require a separate agent identity and
+appropriately limited credentials. That provisioning was not selected here;
+do not present the operating rule as an independently enforced GitHub setting.
