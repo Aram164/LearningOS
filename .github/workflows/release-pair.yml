@@ -42,6 +42,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-pair-${{ github.event.inputs.core_sha }}-${{ github.event.inputs.ui_sha }}
+  cancel-in-progress: true
+
 run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
 
 
@@ -78,14 +82,14 @@ jobs:
           echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
 
       - name: Check out Core at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: repository
           ref: ${{ steps.inputs.outputs.core_sha }}
           fetch-depth: 0
 
       - name: Check out UI at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Aram164/learningos-obsidian-ui
           path: obsidian-ui
@@ -114,10 +118,10 @@ jobs:
           test -z "$(git -C obsidian-ui status --porcelain)" \
             || { echo "UI checkout is not clean" >&2; exit 1; }
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14.4"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # The documented project environment is the repository venv: parser
@@ -204,7 +208,7 @@ jobs:
 
       - name: Upload this shard's JUnit results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: junit-${{ matrix.shard }}
           path: junit-out/
@@ -220,7 +224,7 @@ jobs:
       # their per-test tmp dirs must never enter the population.
       - name: Upload this leg's witness population
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: population-${{ matrix.shard }}
           path: |
@@ -269,12 +273,12 @@ jobs:
           echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
 
       - name: Check out Core at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: repository
           ref: ${{ steps.inputs.outputs.core_sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14.4"
       - name: Install Core development dependencies
@@ -302,7 +306,7 @@ jobs:
           echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
 
       - name: Download the witness population
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: population-*
           path: population-in
@@ -473,7 +477,7 @@ jobs:
 
       - name: Upload this shard's JUnit results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: junit-${{ matrix.shard }}
           path: junit-out/
@@ -505,14 +509,14 @@ jobs:
           echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
 
       - name: Check out Core at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: repository
           ref: ${{ steps.inputs.outputs.core_sha }}
           fetch-depth: 0
 
       - name: Check out UI at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Aram164/learningos-obsidian-ui
           path: obsidian-ui
@@ -540,14 +544,14 @@ jobs:
           fi
           test -z "$(git -C obsidian-ui status --porcelain)" \
             || { echo "UI checkout is not clean" >&2; exit 1; }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # The UI check's contract:check-production step imports the real
       # learning_os package from the sibling Core checkout (PYTHON, .venv,
       # python3, python are probed, in that order) — the same project venv
       # the paired gate builds before its own npm run check.
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14.4"
       - name: Install Core development dependencies
@@ -593,24 +597,24 @@ jobs:
           echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
 
       - name: Check out Core at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: repository
           ref: ${{ steps.inputs.outputs.core_sha }}
           fetch-depth: 0
 
       - name: Check out UI at the exact SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Aram164/learningos-obsidian-ui
           path: obsidian-ui
           ref: ${{ steps.inputs.outputs.ui_sha }}
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14.4"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Install Core development dependencies
@@ -622,7 +626,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Download every shard's JUnit results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: junit-*
           merge-multiple: true
@@ -734,7 +738,7 @@ jobs:
             --artifact-dir ../release-pair-artifact
 
       - name: Upload learningos-pair-<core-12>-<ui-12>
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "learningos-pair-${{ steps.inputs.outputs.core_sha_short }}-${{ steps.inputs.outputs.ui_sha_short }}"
           path: release-pair-artifact

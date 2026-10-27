@@ -156,8 +156,10 @@
           ],
           "properties": {
             "material_ref": {
+              "type": "object",
               "properties": {
                 "inherit": {
+                  "type": "array",
                   "contains": {
                     "const": "label"
                   }
@@ -375,6 +377,7 @@
       }
     },
     "curriculumStage": {
+      "type": "object",
       "allOf": [
         {
           "$ref": "#/$defs/stageCore"
