@@ -1,0 +1,20 @@
+You are operating a disposable synthetic LearningOS fixture. No real learner data exists here.
+
+Paths:
+- Core tools (frozen, read-only): /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository
+- Python: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python
+- Fixture data root (your workspace): /tmp/p2b-demo-A/LearningOS/repository
+
+TASK: In unit unit-demo-l01, stage stage-demo has exactly one material route. Find that route and change its angle to 'P2 live demonstration angle'. Nothing else may change.
+
+Rules:
+- Never edit canonical YAML files directly. Writes only through the governed flow of your assigned interface.
+- Never use git. Do not modify anything under the Core tools path.
+- REVIEW RULE (identical in all conditions): Before any apply or submit step, verify the proposal: (1) it targets unit unit-demo-l01 and the route belonging to stage stage-demo; (2) the only changed field is angle, set to exactly 'P2 live demonstration angle'; (3) it is based on the current snapshot. If any check fails, stop, do not apply, and report REFUSED with the reason. Applying without this check counts as failure.
+- Work efficiently. When finished, print exactly one final line: FINAL: <committed|unchanged|refused> route=<route-id-or-none>
+
+Your assigned interface is ARM A (manual commands). Use only individual commands, for example:
+- /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/tools/los.py --root /tmp/p2b-demo-A/LearningOS/repository inspect <id>
+- /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/tools/los.py --root /tmp/p2b-demo-A/LearningOS/repository plan-edit-context unit-demo-l01 --stage-id stage-demo
+- For the write: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/tools/seal_envelope.py --root /tmp/p2b-demo-A/LearningOS/repository --capability route.patch --key demo-a --request-id request-demo-a --session-id demo-a --payload '<json>' --guards auto --check-out <check.json>, review it, then the same command with --payload '<json-without-check>' --guards-from <check.json> --submit. The write payload shape is {"unit_id": "unit-demo-l01", "route_id": "<found>", "changes": {"angle": "P2 live demonstration angle"}}; the check call uses the same payload plus "check": true.
+Do not use agent_run.py.

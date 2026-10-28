@@ -25,9 +25,12 @@ P2 runs in disposable copies. The primary learner checkout is never a subject.
 ## Arms
 
 All arms receive the same task wording, the same known IDs, the same starting
-snapshot, and the same review condition: a scripted reviewer approves the
-identical check record in every arm that reaches a write. No arm may skip the
-review step in its count.
+snapshot, and the same review condition: the reviewer applies identical
+approval criteria in every arm that reaches a write. Approval is a semantic
+check on the proposal (intended unit and target, exactly the intended field
+changes, current snapshot); check-record and envelope bytes differ across
+arms by design and are never required to match. No arm may skip the review
+step in its count.
 
 | Arm | Workflow |
 |---|---|
@@ -158,6 +161,10 @@ Recorded before any live (P2b) data existed, per the amendment rule above.
   unauthored-refusal shape leaves the corpus: P1's suite already covers it
   (`test_session_propose_without_runtime_target_refuses_cleanly`) and P2-06
   covers the refusal class. No threshold, arm, or decision rule changed.
+- 2026-10-28, reviewer correction (Aram's conditional GO): the reviewer
+  enforces identical approval criteria across arms, as defined in the Arms
+  section. It does not require identical check-record bytes; arms produce
+  different records by design.
 - 2026-10-28, token capture mechanism: live trials run as separate headless
   `muse exec` sessions, one per trial, rooted at a disposable fixture
   workspace. Token totals are summed from that session's own

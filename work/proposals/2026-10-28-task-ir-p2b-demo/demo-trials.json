@@ -1,0 +1,30 @@
+{
+ "scenario": "P2-07",
+ "core": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository",
+ "arms": {
+  "A": {
+   "trial_dir": "/tmp/p2b-demo-A",
+   "root": "/tmp/p2b-demo-A/LearningOS/repository",
+   "route_id_expected": "route-b2f1f80014860a929a3af0bc",
+   "fingerprint_before": "cd4e16ecdafac337f8b3dcd5af8ac4578d2fd1bef52c9b4650255b145aa6f104",
+   "session_id": "b7d07d59-4492-4875-b8fe-bde480ef626c",
+   "prompt_sha256": "bc6a6d472e05a7e5971b4072fa393df36fdde54c027c1efc8c927a944332ac74"
+  },
+  "B": {
+   "trial_dir": "/tmp/p2b-demo-B",
+   "root": "/tmp/p2b-demo-B/LearningOS/repository",
+   "route_id_expected": "route-b2f1f80014860a929a3af0bc",
+   "fingerprint_before": "cd4e16ecdafac337f8b3dcd5af8ac4578d2fd1bef52c9b4650255b145aa6f104",
+   "session_id": "e96d7668-261a-44be-b71e-2a56228ab14f",
+   "prompt_sha256": "144eee002db749bef43e4e20613967bc8d50904fdb1b9547c088a8d7640d0cc9"
+  },
+  "C": {
+   "trial_dir": "/tmp/p2b-demo-C",
+   "root": "/tmp/p2b-demo-C/LearningOS/repository",
+   "route_id_expected": "route-b2f1f80014860a929a3af0bc",
+   "fingerprint_before": "cd4e16ecdafac337f8b3dcd5af8ac4578d2fd1bef52c9b4650255b145aa6f104",
+   "session_id": "7d7167a7-69e5-42e0-9166-7b52da153294",
+   "prompt_sha256": "32884d2bf672b9f5462320c999590d836b3067ad47c0092efac6aab7c6965017"
+  }
+ }
+}
