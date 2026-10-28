@@ -1,0 +1,180 @@
+{
+  "manual_run": {
+    "id": 40777259003,
+    "url": "https://github.com/Aram164/LearningOS/actions/runs/40777259003",
+    "event": "workflow_dispatch",
+    "workflow_definition_sha": "d3d3b3510349f84cee2d7aca1b8601330409539d",
+    "requested_core_sha": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+    "requested_ui_sha": "5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+    "overall_status_at_inspection": "in_progress",
+    "acceptance": "pending full gate and independent pair-receipt verification"
+  },
+  "inspected_log": {
+    "job_id": 123129655963,
+    "url": "https://github.com/Aram164/LearningOS/actions/runs/40777259003/job/123129655963",
+    "checkout_lines": [
+      "2026-10-28T22:05:47.1528408Z   CORE_SHA_INPUT: d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:47.1528847Z   UI_SHA_INPUT: 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+      "2026-10-28T22:05:47.1773604Z   ref: d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:49.0880716Z d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:49.0983969Z [command]/usr/bin/git checkout --progress --force d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:49.4306055Z HEAD is now at d32d2cf Measure initial plan change proportionality on disposable fixtures",
+      "2026-10-28T22:05:49.4427652Z d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:49.4592376Z   ref: 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+      "2026-10-28T22:05:50.4088099Z 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+      "2026-10-28T22:05:50.4245615Z [command]/usr/bin/git checkout --progress --force 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+      "2026-10-28T22:05:50.4652984Z HEAD is now at 5a6bbee Merge pull request #6 from Aram164/codex/systemwide-review-consolidation-20261026",
+      "2026-10-28T22:05:50.4743177Z 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+      "2026-10-28T22:05:50.4873623Z   EXPECTED_CORE_SHA: d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "2026-10-28T22:05:50.4873830Z   EXPECTED_UI_SHA: 5a6bbeebc0b8a4dbfa1977bb8d4c223541023348"
+    ]
+  },
+  "identity_steps": [
+    {
+      "job_id": 123129655963,
+      "name": "ui-check",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "job_id": 123129656306,
+      "name": "pytest-shards (rest-1)",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "job_id": 123129656363,
+      "name": "pytest-shards (rest-2)",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "job_id": 123129656482,
+      "name": "pytest-shards (rest-0)",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "job_id": 123129656588,
+      "name": "pytest-shards (witness-0)",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "job_id": 123129656668,
+      "name": "pytest-shards (witness-1)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Check out Core at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out UI at the exact SHA",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify each checkout is exactly the requested commit and clean",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "push_run": {
+    "id": 40777197051,
+    "url": "https://github.com/Aram164/LearningOS/actions/runs/40777197051",
+    "event": "push",
+    "head_sha": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+    "status_at_inspection": "in_progress"
+  },
+  "interpretation": "The manual workflow's head_sha identifies the workflow-definition revision; its explicit checkout inputs and execution evidence identify the tested pair. No completed hosted acceptance is claimed."
+}

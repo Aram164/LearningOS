@@ -1,0 +1,10 @@
+{
+  "tested_commit": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+  "tested_tree": "fa011474d58b0958a2e94df8b1669fc968588185",
+  "clean_before_run": true,
+  "clean_after_run": true,
+  "source_hashes_verified": true,
+  "structural_results_match_initial": true,
+  "command": ".venv/bin/python workbench/agility-experiment/baseline.py --output ../baseline-clean-d32d2cf8.json",
+  "scope": "First increment reproduced before any review-incorporation edits; later documentation commits do not change the tested commit."
+}
