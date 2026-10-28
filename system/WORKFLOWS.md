@@ -788,7 +788,14 @@ commit's own check. A retry is the same call under the same key: the kept
 envelope replays the original receipt, while another payload, channel or
 session under that key is refused as `IDEMPOTENCY_CONFLICT`. A write that
 needs review first is two calls: `--guards auto --check-out REC`, then
-`--guards-from REC --submit`.
+`--guards-from REC --submit`. Use a fresh, attempt-specific `REC` outside
+the repository. Print the record in the same invocation as the check
+(append `&& cat REC` to the check command, so a failed check keeps its
+failure status and no stale record is shown), inspect the proposed change,
+exact target, and guards in that result, and only then submit in a separate
+invocation. If the printed record is truncated or incomplete, do not
+submit. Never chain check and submit in one invocation, and never treat a
+successful check exit as approval.
 
 **Sealing helper.** Without `--submit`, `--guards auto` emits the sealed
 envelope above (to stdout, or `--out` a scratch path — never inside the

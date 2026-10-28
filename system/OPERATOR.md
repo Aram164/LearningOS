@@ -304,7 +304,14 @@ of these writes goes through a GatewayEnvelopeV2 (WORKFLOWS §25c), sealed and
 submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
 NAME --payload JSON --key KEY --submit`. It binds any file the payload names
 to its bytes; a write that needs review first is `--guards auto --check-out
-REC`, then `--guards-from REC --submit`.
+REC`, then `--guards-from REC --submit`. Use a fresh, attempt-specific
+`REC` outside the repository. Print the record in the same invocation as
+the check (append `&& cat REC`, so a failed check keeps its failure status
+and no stale record is shown), inspect the proposed change, target, and
+guards in that result, and only then submit in a separate invocation. If
+the printed record is truncated or incomplete, do not submit. Never chain
+check and submit in one invocation, and never treat a successful check
+exit as approval.
 When Aram starts a message with `log:`, treat the following text as an explicit
 request to capture it verbatim. If the stage was explicitly identified in the
 current conversation, append it to that stage's working note through
@@ -321,10 +328,12 @@ drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
 Read the applicable platform adapter, then what `capabilities TASK --json`
 returns for the task before acting: its `read` carries the procedure and the
 binding sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md` that
-scope the task, and a section it cut names where the rest is. Open a whole
-document only through that pointer, or when the task crosses an ownership or
-workflow boundary its scope does not cover. Consult `system/PHILOSOPHY.md` for
-unresolved intent. All binding rules still apply. A routine lookup does not
+scope the task, and a section it cut names where the rest is. Run that entry
+read first; do not precede it with directory listings, `--help` probes, or
+source-file exploration unless it fails or the task needs more than it
+declares. Open a whole document only through that pointer, or when the task
+crosses an ownership or workflow boundary its scope does not cover. Consult
+`system/PHILOSOPHY.md` for unresolved intent. All binding rules still apply. A routine lookup does not
 require loading every schema, historical review, or unrelated workflow into
 context.
 

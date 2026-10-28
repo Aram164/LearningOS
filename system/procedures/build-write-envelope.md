@@ -27,8 +27,15 @@ A payload that names a file in a byte-bound field (`file`, `body_file`,
 `…_sha256` to the file's current bytes and says so on stderr. A write that
 needs review first is two calls. `--guards auto --check-out REC` writes the
 check record: every validation error, any new warning signature, and the
-planned writes. After the review, `--guards-from REC --submit` applies
-exactly what was reviewed, and refuses if the file or the tree changed since.
+planned writes. Use a fresh, attempt-specific `REC` outside the
+repository. Print the record in the same invocation as the check (append
+`&& cat REC` to the check command, so a failed check keeps its failure
+status and no stale record is shown) and inspect the proposed change, exact
+target, and guards in that result. If the printed record is truncated or
+incomplete, do not submit. After the review, in a separate invocation,
+`--guards-from REC --submit` applies exactly what was reviewed, and refuses
+if the file or the tree changed since. Never chain check and submit in one
+invocation, and never treat a successful check exit as approval.
 
 ## Build the fixture
 
