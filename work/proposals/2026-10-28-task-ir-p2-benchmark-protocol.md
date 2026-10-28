@@ -145,3 +145,25 @@ chosen in advance, not significance claims.
 `plan.compose`, new operations, new approval or transaction machinery, UI
 changes, learner data, merging or closing PR #71/#64, and any production
 readiness claim.
+
+## Amendments
+
+Recorded before any live (P2b) data existed, per the amendment rule above.
+
+- 2026-10-28, corpus completion: P2-04 is implemented with a multi-route
+  fixture extension (a second source and route in the synthetic source map;
+  unit-level discovery then returns two routes). P2-05 now uses an authored
+  `runtime_target` on the fixture stage, so it exercises a successful
+  `runtime-session-v1` proposal as a headline scenario. The earlier
+  unauthored-refusal shape leaves the corpus: P1's suite already covers it
+  (`test_session_propose_without_runtime_target_refuses_cleanly`) and P2-06
+  covers the refusal class. No threshold, arm, or decision rule changed.
+- 2026-10-28, token capture mechanism: live trials run as separate headless
+  `muse exec` sessions, one per trial, rooted at a disposable fixture
+  workspace. Token totals are summed from that session's own
+  `session.jsonl`: one usage record per `model_completed` event
+  (`input_tokens`, `output_tokens`, `cached_tokens`, `cache_read_tokens`,
+  `cache_write_tokens`, `reasoning_tokens`), deduplicated by event identity.
+  Verified against a live session log on 2026-10-28; a naive sum over every
+  usage-shaped node double-counts, and per-call `input_tokens` includes the
+  cached share, which is therefore reported separately, never added twice.
