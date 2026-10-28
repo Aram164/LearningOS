@@ -1,0 +1,25 @@
+{
+  "bundle_sha256": "sha256:1eadaa3807c5c3fff803514fdc217adff1e8cf7f161ab6d32370da93dadc44ad",
+  "core_branch": "HEAD",
+  "core_sha": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+  "data_contract_version": 61,
+  "live_install_scope": "not-run-live-install-deselected",
+  "manifest_contract_schema_sha256": "sha256:c487c6ed2e05c05425c6b41bd291e566b16a7e1ee3af667ae00763608d7e121f",
+  "manifest_contract_version": 15,
+  "runtime_source_fingerprint": "sha256:e01a004e8eead8f5113a94d0c6b24b02927af11895d04962f0cdc2be822f02fd",
+  "schema_version": 1,
+  "shipped_asset_sha256": {
+    "build-info.json": "sha256:09172c5652721dddb8ce57b51ba9a51dbd276b43bff8100e7576908fb9aef715",
+    "main.js": "sha256:1eadaa3807c5c3fff803514fdc217adff1e8cf7f161ab6d32370da93dadc44ad",
+    "manifest.json": "sha256:972d09e5cba8b6e1b3c2a81acdd034b61eeef81bda64ff013eeaacdbc02df9b1",
+    "styles.css": "sha256:b7e94bc6f4cb3d4170803810d1cefdaf6cca771360beb6553e0854eb7cca499a"
+  },
+  "stress_scope": "not-run-materials-unprovisioned",
+  "stylesheet_sha256": "sha256:b7e94bc6f4cb3d4170803810d1cefdaf6cca771360beb6553e0854eb7cca499a",
+  "system_check_passed": true,
+  "type": "release-pair-receipt",
+  "ui_branch": "HEAD",
+  "ui_sha": "5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+  "workflow_run_attempt": "1",
+  "workflow_run_id": "40777259003"
+}

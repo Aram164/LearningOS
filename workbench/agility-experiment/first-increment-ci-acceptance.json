@@ -1,0 +1,31 @@
+{
+  "branch_run": {
+    "id": 40779280991,
+    "core_sha": "873a77613dc237cd638b25d345f9f01ffcd44748",
+    "ui_sha_from_completed_ui_job": "5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+    "ui_job_id": 123136527524,
+    "conclusion": "success",
+    "url": "https://github.com/Aram164/LearningOS/actions/runs/40779280991"
+  },
+  "exact_pair_run": {
+    "id": 40777259003,
+    "workflow_definition_sha": "d3d3b3510349f84cee2d7aca1b8601330409539d",
+    "core_sha": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+    "ui_sha": "5a6bbeebc0b8a4dbfa1977bb8d4c223541023348",
+    "conclusion": "success",
+    "artifact_id": 12857791502,
+    "artifact_name": "learningos-pair-d32d2cf8c25d-5a6bbeebc0b8",
+    "zip_sha256": "5c1ca2921156481fe855736dab8080eeca38f8d66e4f23a14f6928b2adc7f077",
+    "zip_digest_matches_github": true,
+    "receipt_sha256": "sha256:0b89c6eb105c13fa75f11cb4a0580a897ccbe3035d15fbb7418894a0f303be99",
+    "independent_receipt_verification": {
+      "ok": true,
+      "action": "verify",
+      "core_sha": "d32d2cf8c25d3115740939962cbd1e0c7b3e152b",
+      "ui_sha": "5a6bbeebc0b8a4dbfa1977bb8d4c223541023348"
+    },
+    "url": "https://github.com/Aram164/LearningOS/actions/runs/40777259003"
+  },
+  "wait_method": "One-shot Bash gh run watch --exit-status --interval 60; both CI_END watch_exit=0; CI_WATCH_FINISHED result=0",
+  "scope": "Hosted acceptance of the named commits only; no installed-vault or future-commit claim."
+}

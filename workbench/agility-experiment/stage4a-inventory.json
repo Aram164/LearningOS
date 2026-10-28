@@ -1,0 +1,917 @@
+{
+  "stage": "4A",
+  "mode": "read-only inventory and dry-run specification",
+  "source_commit": "873a77613dc237cd638b25d345f9f01ffcd44748",
+  "canonical_files_written": 0,
+  "source_data_contract": 61,
+  "inventory_tool_sha256": "sha256:1e947db3df4f2e5f92543c65192507545d28bf1332779f5cc447e41ffa649c4e",
+  "counts": {
+    "active_project_records": 1,
+    "top_level_fields": 22,
+    "mapped_leaf_values": 71,
+    "workstream_nodes": 7,
+    "decisions": 2,
+    "relationships": 3,
+    "mapped_relationship_leaf_values": 22,
+    "file_references": 3,
+    "units": 2,
+    "existing_study_maps": 1
+  },
+  "source_sha256": {
+    "curriculum/modules/module-project-bachelor-thesis/module.yaml": "sha256:9d47bb9b3ed9666ba63c7df9b44b030de45aaa6ebdd172ff7301fab491e74190",
+    "curriculum/modules/module-project-bachelor-thesis/source-map.yaml": "sha256:20a9f09afa7c28e5bafb8d84022da851e2159d279b6560546b6f615b617a56f6",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-experiments/unit.yaml": "sha256:6f9a74ac513925f8a816f66ec969416ea579b94a3b94d53d0327454e175fc9af",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/stages/stage-01-research-landscape-and-question-framing/notes.md": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/study-map.yaml": "sha256:73feee0a83590af3a4bfd87fc134aed3bf57c8d4752cfec4c19d60badf2e0572",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/unit.yaml": "sha256:cdc6dafc98fd0cd6810829070e8bfd0cff86c2bade0801bbb090916444c39762",
+    "curriculum/programs/program-bachelors.yaml": "sha256:316a1843ae1cc4386603e0cece4ab88d5866fdd73300015f3dab4766d8e04b3d",
+    "curriculum/programs/program-thesis-projects.yaml": "sha256:73492a1d8428eba754d19043e4a049a629b32c839f42dd5e1a705c29cb1cec21",
+    "curriculum/resume.yaml": null,
+    "knowledge/notes/machine-learning/note-bachelor-thesis-medical-mle-exploration.md": "sha256:d5a30a14c1284c69a5de05395748f8d978e911a4f47fe9f0d15f7a6eefcdc9d1",
+    "operations/transactions/idempotency.yaml": "sha256:e9a569366d6f790bbe482de31416319483a88a09bfb82743f0319f53d026f059",
+    "operations/transactions/revisions.yaml": "sha256:15c33646d34f812db60816cf04b7c9bad8272027d3b57cdfaa88abdfa531228d",
+    "projects/aliases.yaml": "sha256:0fbdf9d89cd0818e2f916b781a01435898c7d6fab12117de0674c211681c4c58",
+    "projects/registry/project-bachelor-thesis.yaml": "sha256:3944a149b6e111b21c58834d916e86cadf4b1d1c50d934a88fa6b561099c477f",
+    "projects/relations/project-relations.yaml": "sha256:36b712e00696d6566a9ce5d0d99d123283cc3d51c37ccf05b9f392712ff00fe2",
+    "system/contracts/data-contract.yaml": "sha256:97e5976c26a2924d73aa9b6a3b4c1a908590d35c01c0b594077811c925a74f9b",
+    "work/active/workspace-thesis-mle-medical/CONTEXT.md": "sha256:050720a096daa399bcbb8ee5e1f06c86d6f05393b8e5968b53033ad4905c86dc",
+    "work/active/workspace-thesis-mle-medical/inputs/original-thesis-brief.md": "sha256:61f1bcdfc21eaf17492059588443d40495fcca98ea2b2bbe9db7d8b4d2bba2c2",
+    "work/active/workspace-thesis-mle-medical/outputs/thesis-landscape-and-plan.md": "sha256:df0b971a99156b1bc8758e2458c4b42acd75b9bf1b1c9e1f461067ae0188e717"
+  },
+  "field_ownership": [
+    {
+      "source_pointer": "/boundaries/confidentiality",
+      "source_value_sha256": "sha256:24ed65044b6346a4e6fa04ef1f480bc8ff128f36eeafa6ab5d1ab3804997d28f",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Access boundaries"
+    },
+    {
+      "source_pointer": "/boundaries/external_code_access",
+      "source_value_sha256": "sha256:70ab47ec8fbd75027e36d5fae28639b51de6e7265220723cc99156dca295fcc5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Access boundaries"
+    },
+    {
+      "source_pointer": "/boundaries/notes",
+      "source_value_sha256": "sha256:52c9e583bc18156ceccc4efa5e9fb6a1b5fa91766bf76956a704d87e9e4fd48a",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Access boundaries"
+    },
+    {
+      "source_pointer": "/decisions/0/id",
+      "source_value_sha256": "sha256:3d7cee770aa83f992d99a3817d5b5fb41446180afb5279521306740a214cce04",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/0/status",
+      "source_value_sha256": "sha256:35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/0/summary",
+      "source_value_sha256": "sha256:6e19c875a2a899c3c53b8c99ed1a6b0f2ca664ab31cf4c8f6107a2f6d42dfeea",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/0/title",
+      "source_value_sha256": "sha256:dd1f8331f553cdbe66f1d0912bb4b4d2bb6ae36cae52407becc05ce4abf6f55a",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/1/id",
+      "source_value_sha256": "sha256:579b94fbe6951b5e672e41068dd8403d67ec5e67c56328e76b12f51bc4978031",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/1/status",
+      "source_value_sha256": "sha256:35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/1/summary",
+      "source_value_sha256": "sha256:103c513b0880cebdf3e62f50c31c8a06a5365aff8641df4c531f7d6138cd7dba",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/decisions/1/title",
+      "source_value_sha256": "sha256:e9f0c8daada085599f79cd2122de5ee4a7304cb69df53c8819e26b02bcaee1bb",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research decisions"
+    },
+    {
+      "source_pointer": "/files/0/kind",
+      "source_value_sha256": "sha256:48aed2374cea5f3bbbee1c8742439be758dcc1e999e0e3f0e03c1ee80e3565a0",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/0/label",
+      "source_value_sha256": "sha256:e0a0ce400f31032c5f0c93fd0c801776bf7fc593c07cb17ee89b4abc24f9f1b5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/0/path",
+      "source_value_sha256": "sha256:f433704702e24606c172dee7b63b4b1b916763ca1c7e97ebed33d5a545f223c3",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/1/kind",
+      "source_value_sha256": "sha256:4bbb1f9446ff0829909d2fa9e71d95f6c7df7e30ac16ddf96e9a6b429d6b3ebf",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/1/label",
+      "source_value_sha256": "sha256:515082334d5550a4f504e3c3b868b72166ad3b3f8e97a11a2ecb332eb246931c",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/1/path",
+      "source_value_sha256": "sha256:f47a377314c63c20a7f36cc4ec1b3ded4cc799ad38a3d7296f4b3f0c0a4f87b0",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/2/kind",
+      "source_value_sha256": "sha256:4bbb1f9446ff0829909d2fa9e71d95f6c7df7e30ac16ddf96e9a6b429d6b3ebf",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/2/label",
+      "source_value_sha256": "sha256:8d422d6fc830d1d5d059000a4a7177e43e5b9d86191dae352723e62c45622d38",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/files/2/path",
+      "source_value_sha256": "sha256:6748428df5cb5d58524b2b38bb65a93819928577242e4070ba0959c88a377483",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables"
+    },
+    {
+      "source_pointer": "/id",
+      "source_value_sha256": "sha256:62d27d0f8612d675255183d463e5bc081cb228723eb501a23a31c00e4ca04d85",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:id; old Project ID redirects to Module"
+    },
+    {
+      "source_pointer": "/linked_module_ids/0",
+      "source_value_sha256": "sha256:1a13999ac69cd7b2a579bb6ed0c547eade5841133d71ca064b0d7d6209cdce23",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:related_module_ids; relationship explanations stay in workspace"
+    },
+    {
+      "source_pointer": "/linked_module_ids/1",
+      "source_value_sha256": "sha256:c051523c5192016a3e2fadd50959b482e211852a37a39105cd1f34df201bf622",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:related_module_ids; relationship explanations stay in workspace"
+    },
+    {
+      "source_pointer": "/migrated_at",
+      "source_value_sha256": "sha256:3d92c2dfbb64766c5bd68d886243837bcc4b481762f5ab95643d4154a9ad04f2",
+      "destination": "migration/backups/projects-to-modules-v62/ (original bytes and field map)"
+    },
+    {
+      "source_pointer": "/migrated_from",
+      "source_value_sha256": "sha256:7ff3eb16df587d09067ece70fa700788e571d259f60f8715bb6893db124a23c0",
+      "destination": "migration/backups/projects-to-modules-v62/ (original bytes and field map)"
+    },
+    {
+      "source_pointer": "/migration",
+      "source_value_sha256": "sha256:a62626e3084c37b009cdcca9370cf797ad9d26a7d78cdd6dca7981a72965ed26",
+      "destination": "migration/backups/projects-to-modules-v62/ (original bytes and field map)"
+    },
+    {
+      "source_pointer": "/milestone_ids/0",
+      "source_value_sha256": "sha256:865bd049f7b7f883e2728dce5a421c885e9f386639882a8554d3949428970d14",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Milestone identity map; existing Unit IDs remain unchanged"
+    },
+    {
+      "source_pointer": "/milestone_ids/1",
+      "source_value_sha256": "sha256:dc38609f90b910d603111e34a39bc0b1e8b4c86ff0bb0cdb5dd24538f38c899f",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Milestone identity map; existing Unit IDs remain unchanged"
+    },
+    {
+      "source_pointer": "/objective",
+      "source_value_sha256": "sha256:a79b05c32ef7aae98c99a31007e2aade3748c1d905019f626a8c20c7446095ff",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research context (verbatim retained scope; existing Objective prose preserved)"
+    },
+    {
+      "source_pointer": "/project_type",
+      "source_value_sha256": "sha256:2fd46d812685a0c4e017b5e35e91cc92a58998465071553359841aff1fd3f7f5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research context (thesis classification; no new entity)"
+    },
+    {
+      "source_pointer": "/revision",
+      "source_value_sha256": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "destination": "Existing Project revision history/receipts remain literal; new Module revision remains its own token"
+    },
+    {
+      "source_pointer": "/root_uri",
+      "source_value_sha256": "sha256:3949995984f487a8b598f1675703df9ba9be4009a9dc975aae2147a5b6019f3d",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Access boundaries"
+    },
+    {
+      "source_pointer": "/schema_version",
+      "source_value_sha256": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "destination": "migration/backups/projects-to-modules-v62/ (original bytes and field map)"
+    },
+    {
+      "source_pointer": "/source_sha256",
+      "source_value_sha256": "sha256:4a58d62c7bfb85a3d42bc0be1a40462a46258c519398c5d63383625ffd8e2aae",
+      "destination": "migration/backups/projects-to-modules-v62/ (original bytes and field map)"
+    },
+    {
+      "source_pointer": "/status",
+      "source_value_sha256": "sha256:db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:status (active remains active; no completion inferred)"
+    },
+    {
+      "source_pointer": "/structure/kind",
+      "source_value_sha256": "sha256:6752b4073c2992f9a0f9c7f0c3badf2bbb69eecd50c9ac9673f8c4a314755f67",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/0/id",
+      "source_value_sha256": "sha256:d122ad3235295550063953c97c7d87f76746a570067d85f792fb5190d8bc55ac",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/0/kind",
+      "source_value_sha256": "sha256:0d9f50d8178cb7c5b044c4dce43f1a35c44697ac03e70407e2dda2324fa92f56",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/0/status",
+      "source_value_sha256": "sha256:db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/0/title",
+      "source_value_sha256": "sha256:d3c3be5c869ee5946fc0f1a026fcfb9b1acb7906485fbdf0092f03487594db56",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/1/id",
+      "source_value_sha256": "sha256:bdeab34f998872632d9d05c9e3b4370ead6adaea1a37272d68674704f0d372d1",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/1/kind",
+      "source_value_sha256": "sha256:0d9f50d8178cb7c5b044c4dce43f1a35c44697ac03e70407e2dda2324fa92f56",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/1/status",
+      "source_value_sha256": "sha256:db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/children/1/title",
+      "source_value_sha256": "sha256:5711f0b11475468bc06765210f825b69d5f26cae4bea77ecd0d147cdb269e1c5",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/id",
+      "source_value_sha256": "sha256:16016ed5b6720722dce429f0d04c5bf86602424ef2c062a5fa49235706de3efd",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/kind",
+      "source_value_sha256": "sha256:83dfab9d9cd85bdd8d902b3ee44fcde4f82f7ec7fc2921b3651f4cf2c252406b",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/status",
+      "source_value_sha256": "sha256:db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/0/title",
+      "source_value_sha256": "sha256:85d746040e49ab7f17b75b69e216bba6c9e89c19a557ec9d8ca2f0ccea007db3",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/0/id",
+      "source_value_sha256": "sha256:748ae8df153c124b7fb21a899196f277e91e20274c10f1ebf0ce91a9f1c84579",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/0/kind",
+      "source_value_sha256": "sha256:0d9f50d8178cb7c5b044c4dce43f1a35c44697ac03e70407e2dda2324fa92f56",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/0/status",
+      "source_value_sha256": "sha256:05ad072baae0b1e93afd052919622063b32b852dd55c9495c77a16487b1fa639",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/0/title",
+      "source_value_sha256": "sha256:e7b9dd2f9bcbbd7969ab9fc3205c0571a1fd848ae26befc8dc7c55eaae114a6a",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/1/id",
+      "source_value_sha256": "sha256:a740e3cabe73af9cf485369535717efb6d202a4b9ca6761ee9b31d7606a6a54c",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/1/kind",
+      "source_value_sha256": "sha256:0d9f50d8178cb7c5b044c4dce43f1a35c44697ac03e70407e2dda2324fa92f56",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/1/status",
+      "source_value_sha256": "sha256:05ad072baae0b1e93afd052919622063b32b852dd55c9495c77a16487b1fa639",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/children/1/title",
+      "source_value_sha256": "sha256:e05c3a31a07ca110567a97102dbee47f541dec4a3c1141890bd95c7bd9f3faf2",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/id",
+      "source_value_sha256": "sha256:c5cefc19557736566c519148d51a8bc2fa7ffd663847f2bd31e0b680e97836b7",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/kind",
+      "source_value_sha256": "sha256:3c97785f0ef96c81fc0ca738625e0e3efb8f981a1dd7f93f95627f6740cc4938",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/status",
+      "source_value_sha256": "sha256:05ad072baae0b1e93afd052919622063b32b852dd55c9495c77a16487b1fa639",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/children/0/title",
+      "source_value_sha256": "sha256:d3cd403f3826b4793c1c50b130b9b81ae400bf3a75910647cca9b465a505b4f0",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/id",
+      "source_value_sha256": "sha256:66e024551636abd120a5b2eaeccb7f8c83a995270238eda2005a279732f32ce8",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/kind",
+      "source_value_sha256": "sha256:83dfab9d9cd85bdd8d902b3ee44fcde4f82f7ec7fc2921b3651f4cf2c252406b",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/status",
+      "source_value_sha256": "sha256:05ad072baae0b1e93afd052919622063b32b852dd55c9495c77a16487b1fa639",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/structure/nodes/1/title",
+      "source_value_sha256": "sha256:4fb3b25651cf3ab54f10ddfaa4f9a7e3653982f381766accfabe12a4a7637d40",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Research workstreams (parallel/nested structure and stable anchors)"
+    },
+    {
+      "source_pointer": "/thematic_group_ids/0",
+      "source_value_sha256": "sha256:a07ce290868406cd14e1e4cd1a23f59e261979c0a5539ffb8fbea5c5b80ac6e9",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:thematic_group_ids (preserve existing union, no inferred tags)"
+    },
+    {
+      "source_pointer": "/thematic_group_ids/1",
+      "source_value_sha256": "sha256:031b8895aee561ef53b56f32ba274df113d3bceee7afa8843595ad5ba352f91c",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:thematic_group_ids (preserve existing union, no inferred tags)"
+    },
+    {
+      "source_pointer": "/title",
+      "source_value_sha256": "sha256:85bd4e1196b2ff573411f86a02f4a9acfc097b9c038f4b6bae4f46d38614dce6",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:title"
+    },
+    {
+      "source_pointer": "/type",
+      "source_value_sha256": "sha256:471cacee86a419f75111098ba664eeb1e7db51b9436a9821c23851df5ed52c15",
+      "destination": "Module entity; original Project type retained in migration history"
+    },
+    {
+      "source_pointer": "/unit_ids/0",
+      "source_value_sha256": "sha256:01846df74f8b350faf301f62fbd55e01832d0034786d110b6a7e8788f05a830d",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:unit_order (identical existing IDs and order)"
+    },
+    {
+      "source_pointer": "/unit_ids/1",
+      "source_value_sha256": "sha256:4e7032688b0ad4d966eec34e9d52afe4361c3fd567191ae753ba501b109cc196",
+      "destination": "curriculum/modules/module-project-bachelor-thesis/module.yaml:unit_order (identical existing IDs and order)"
+    },
+    {
+      "source_pointer": "/workspace_ids/0",
+      "source_value_sha256": "sha256:e651bff8fe9886775fb96225e5eace1494c644b1a44b45eb2d588d97dec35e06",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md:module_ids (existing owning workspace)"
+    }
+  ],
+  "relationship_field_ownership": [
+    {
+      "source_pointer": "/0/id",
+      "source_value_sha256": "sha256:c1a8de686cb15b60dcab775bb6fbbc18fe6a3ca8faa88bd6e8c3624f8ee9d033",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/from_project_id",
+      "source_value_sha256": "sha256:62d27d0f8612d675255183d463e5bc081cb228723eb501a23a31c00e4ca04d85",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/to_id",
+      "source_value_sha256": "sha256:c051523c5192016a3e2fadd50959b482e211852a37a39105cd1f34df201bf622",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/to_type",
+      "source_value_sha256": "sha256:51b03279c071bc2e55a377745fdd442c9eedc700152b19366572fa8f76d76017",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/relation_type",
+      "source_value_sha256": "sha256:04e15c4e4d3a27326dab4c91a1c28da16309def34afb9d919793ba900185a0fd",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/reason",
+      "source_value_sha256": "sha256:87f29f9f436a38802176dd66e924495929ad3f4a636e528de1b1d0c82bafadeb",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/0/contribution",
+      "source_value_sha256": "sha256:b72c5add6b0b8d2c3addb636119a0ef34620c005a000765b0042aac253d707f0",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/id",
+      "source_value_sha256": "sha256:06c1f6faa5de875efc00182314fb8c2fca2f3e2b45af0898e0fb5e77e2c067b8",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/from_project_id",
+      "source_value_sha256": "sha256:62d27d0f8612d675255183d463e5bc081cb228723eb501a23a31c00e4ca04d85",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/to_id",
+      "source_value_sha256": "sha256:626bd7c00fd7f04266df8c7f54d125919e56343450e5a1f4bc8ac2e5d2cce649",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/to_type",
+      "source_value_sha256": "sha256:b0f2bd63df9249c5c6b997e7e9580e838d8b96f84f6307d7a5c0aac9df63b31e",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/relation_type",
+      "source_value_sha256": "sha256:396e3cd6e2b52898c8de40c21c5fcb55b16e01e04bba974f9c12b4b7f56329c9",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/reason",
+      "source_value_sha256": "sha256:be2f21c6ce3fbc55969d5820743f2b6abee2cf35f63de42df19d4473b97389f3",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/1/contribution",
+      "source_value_sha256": "sha256:f5b82eb1596bbd6a154d80f8f514f0fdddb98235b7a987cf8e552dc2509c1aeb",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/id",
+      "source_value_sha256": "sha256:60e938df5e3bbb3cbf19d1f50cd8f551d3488679ef2cfbe5d4d28ad527a1e728",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/from_project_id",
+      "source_value_sha256": "sha256:62d27d0f8612d675255183d463e5bc081cb228723eb501a23a31c00e4ca04d85",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/to_id",
+      "source_value_sha256": "sha256:ae0459fd9ed232c8042860ffc12a156109bfed9af54700a9b35223c8c3805d9c",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/to_type",
+      "source_value_sha256": "sha256:bfdde6f5651ac5e4e6711f3c2836d5f8c5c4b381a50eb87c51d990b7eb36501b",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/relation_type",
+      "source_value_sha256": "sha256:a5819895c05400faf7253f8fc1a2feb4f06554cf7cb084ee7f4f356625ebbacd",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/reason",
+      "source_value_sha256": "sha256:3aa8ce53834b3efc3f80a380ade3c8f7eb615ceea5fef8a198d2ff438ae401ec",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/contribution",
+      "source_value_sha256": "sha256:246221747ead6419afcde835fc34135132d1606908d08c7fac997b11460a7699",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    },
+    {
+      "source_pointer": "/2/path",
+      "source_value_sha256": "sha256:f47a377314c63c20a7f36cc4ec1b3ded4cc799ad38a3d7296f4b3f0c0a4f87b0",
+      "destination": "work/active/workspace-thesis-mle-medical/CONTEXT.md#Materials and deliverables (verbatim reasons/contributions and stable IDs)"
+    }
+  ],
+  "expected_revisions": {
+    "module-project-bachelor-thesis": 1,
+    "project-bachelor-thesis": 2,
+    "workspace-thesis-mle-medical": 2
+  },
+  "legacy_owner_redirects": {
+    "project-bachelor-thesis": "module-project-bachelor-thesis",
+    "workstream-thesis-landscape": "workspace-thesis-mle-medical",
+    "step-thesis-scope": "workspace-thesis-mle-medical",
+    "step-thesis-survey": "workspace-thesis-mle-medical",
+    "workstream-thesis-experiments": "workspace-thesis-mle-medical",
+    "step-map-thesis-baseline": "workspace-thesis-mle-medical",
+    "step-thesis-aide-baseline": "workspace-thesis-mle-medical",
+    "step-thesis-optimization": "workspace-thesis-mle-medical",
+    "decision-thesis-scope-boundary": "workspace-thesis-mle-medical",
+    "decision-thesis-compute-budget": "workspace-thesis-mle-medical",
+    "relationship-thesis-amls": "workspace-thesis-mle-medical",
+    "relationship-thesis-project-toolbox": "workspace-thesis-mle-medical",
+    "relationship-thesis-landscape-plan": "workspace-thesis-mle-medical",
+    "milestone-thesis-scope": "unit-thesis-landscape",
+    "milestone-thesis-baseline": "unit-thesis-experiments"
+  },
+  "remove_reverse_alias": {
+    "module-project-bachelor-thesis": "project-bachelor-thesis"
+  },
+  "academic_decision": {
+    "module_kind": "project (unchanged in consolidation)",
+    "area_id": "program-bachelors",
+    "existing_academic_facts": {},
+    "unknowns": [
+      "registration",
+      "institution",
+      "semester",
+      "credits",
+      "grade"
+    ],
+    "rule": "No academic facts inferred; research progress is not awarded degree credit. Preserve future supplied facts on the same Module owner."
+  },
+  "proposed_record_edits": [
+    "curriculum/modules/module-project-bachelor-thesis/module.yaml",
+    "work/active/workspace-thesis-mle-medical/CONTEXT.md",
+    "projects/aliases.yaml",
+    "projects/relations/project-relations.yaml"
+  ],
+  "proposed_retirement": "projects/registry/project-bachelor-thesis.yaml",
+  "required_code_before_apply": [
+    "bounded alias schema/validation/projection owner targets",
+    "guarded, receipt-producing migration in fixtures",
+    "Core/UI ordinary-Module visibility and historical navigation",
+    "Open workspace context action and active content access tests"
+  ],
+  "preserve_verbatim": [
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/unit.yaml",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-experiments/unit.yaml",
+    "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/study-map.yaml",
+    "curriculum/resume.yaml",
+    "historical transaction receipts and revision identities",
+    "existing workspace body"
+  ],
+  "references": [
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 6,
+      "ids": [
+        "decision-thesis-scope-boundary"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 10,
+      "ids": [
+        "decision-thesis-compute-budget"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 24,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 29,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 32,
+      "ids": [
+        "milestone-thesis-scope"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 33,
+      "ids": [
+        "milestone-thesis-baseline"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 51,
+      "ids": [
+        "step-thesis-scope"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 55,
+      "ids": [
+        "step-thesis-survey"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 59,
+      "ids": [
+        "workstream-thesis-landscape"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 65,
+      "ids": [
+        "step-thesis-aide-baseline"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 69,
+      "ids": [
+        "step-thesis-optimization"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 73,
+      "ids": [
+        "step-map-thesis-baseline"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/registry/project-bachelor-thesis.yaml",
+      "line": 77,
+      "ids": [
+        "workstream-thesis-experiments"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 2,
+      "ids": [
+        "relationship-thesis-amls"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 3,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 9,
+      "ids": [
+        "relationship-thesis-project-toolbox"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 10,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 16,
+      "ids": [
+        "relationship-thesis-landscape-plan"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/relations/project-relations.yaml",
+      "line": 17,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "projects/aliases.yaml",
+      "line": 2,
+      "ids": [
+        "module-project-bachelor-thesis",
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "operations/transactions/revisions.yaml",
+      "line": 59,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/revisions.yaml",
+      "line": 116,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20261023-015647-001.yaml",
+      "line": 10,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20261023-015647-001.yaml",
+      "line": 12,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20261023-015647-001.yaml",
+      "line": 16,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/idempotency.yaml",
+      "line": 3929,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20260806-060502-001.yaml",
+      "line": 11,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20260806-060502-001.yaml",
+      "line": 17,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20260806-060502-001.yaml",
+      "line": 24,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20260806-060502-001.yaml",
+      "line": 36,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "operations/transactions/transaction-20260806-060502-001.yaml",
+      "line": 50,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "historical evidence; do not rewrite"
+    },
+    {
+      "path": "work/COORDINATION.md",
+      "line": 10,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "work/COORDINATION.md",
+      "line": 26,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/source-map.yaml",
+      "line": 2,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/module.yaml",
+      "line": 1,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/module.yaml",
+      "line": 18,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-experiments/unit.yaml",
+      "line": 3,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/unit.yaml",
+      "line": 3,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/study-map.yaml",
+      "line": 28,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "work/active/workspace-thesis-mle-medical/CONTEXT.md",
+      "line": 10,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "work/active/workspace-thesis-mle-medical/CONTEXT.md",
+      "line": 14,
+      "ids": [
+        "project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "work/active/workspace-thesis-mle-medical/CONTEXT.md",
+      "line": 79,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    },
+    {
+      "path": "work/active/workspace-thesis-mle-medical/CONTEXT.md",
+      "line": 93,
+      "ids": [
+        "module-project-bachelor-thesis"
+      ],
+      "handling": "inspect in bounded migration; preserve owned Units/maps and prose"
+    }
+  ],
+  "acceptance_limit": "Not an applicable migration or approval; no schema/record/UI changes. 4B/4C remain gated."
+}
