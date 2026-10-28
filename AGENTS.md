@@ -13,6 +13,11 @@ Read one capability, command or task with `.venv/bin/python tools/los.py
 capabilities NAME --json`; NAME may be a capability id, a CLI command, or a task id.
 Do not recursively scan the repository or
 sibling code repositories such as `Stratum/` to infer application state.
+When operating learner records, run the named entry read first. Do not
+precede it with directory listings, `--help` probes, or whole-document
+reads unless that entry fails or the task crosses the scope it declares.
+Code, architecture, contract, test and documentation changes still start
+at `system/DEVELOPER.md` and inspect code as that route requires.
 
 No agent has a standing role here: Aram assigns planning, reviewing and
 implementing per task. Workspace-wide guidance for plans and reviews is in
