@@ -282,10 +282,22 @@ already stale by the time the import quotes it. A draft that is scratch rather
 than a reviewed record belongs outside the repository (`LearningOS/workbench/`),
 where it moves nothing.
 
-The package must contain `plan_contract.version: 2`,
-`plan_contract.plan_template_version: 1`, the repository-relative coverage-audit
-path, all six completeness checks set to `true`, and an `intentional_reorders`
-list (normally empty). Every supplied `study_map` must also declare
+The contract version belongs to the mutation path, not to the learning-plan
+template version:
+
+| Mutation path | Required package contract |
+|---|---|
+| `module.plan.import`, full package or compact `unit_revisions[]` | `plan_contract.version: 2`; `intentional_reorders` is normally empty |
+| `unit.plan.revise`, one existing unit | `plan_contract.version: 1`; use the compact single-unit example in [Revise an existing plan](procedures/revise-an-existing-plan.md) |
+| `unit.map.import`, standalone study map | No `plan_contract` wrapper; submit the study-map record and the command's declared review controls |
+| `route.patch`, descriptive fields on one route | No `plan_contract` wrapper; use its declared changes payload |
+
+Both package contracts require `plan_contract.plan_template_version: 1`, the
+repository-relative coverage-audit path and all six completeness checks set to
+`true`. They are different input shapes: changing a single-unit package to
+version 2 does not make it a module package. The executable single-unit and
+module examples are in [Revise an existing plan](procedures/revise-an-existing-plan.md).
+Every supplied `study_map` must also declare
 `plan_template_version: 1` and sequential stage numbers. These are truth claims:
 do not set one until its audit work is complete.
 

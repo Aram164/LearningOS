@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: module plan contract failed; no canonical files were written\n- plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)\n",
+  "stderr": "los: module plan contract failed; no canonical files were written\n- plan_contract.version must be 2 for module.plan.import (full packages and compact unit_revisions; see system/PLAN-CREATION-SOP.md#gate-3--build-the-package-from-the-canonical-template); version 1 belongs to unit.plan.revise\n",
   "stdout": "",
   "stdout_json": null
 }

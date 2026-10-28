@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: module plan contract failed; no canonical files were written\\n- plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)\",\"retryable\":false,\"details\":{}}}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: module plan contract failed; no canonical files were written\\n- plan_contract.version must be 2 for module.plan.import (full packages and compact unit_revisions; see system/PLAN-CREATION-SOP.md#gate-3--build-the-package-from-the-canonical-template); version 1 belongs to unit.plan.revise\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "module.plan.import",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "los: module plan contract failed; no canonical files were written\n- plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)",
+      "message": "los: module plan contract failed; no canonical files were written\n- plan_contract.version must be 2 for module.plan.import (full packages and compact unit_revisions; see system/PLAN-CREATION-SOP.md#gate-3--build-the-package-from-the-canonical-template); version 1 belongs to unit.plan.revise",
       "retryable": false
     },
     "idempotency_key": "KEY2",

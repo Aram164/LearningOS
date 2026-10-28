@@ -383,6 +383,52 @@ def test_compact_revision_checks_one_lecture(mini_repo, tmp_path):
     assert report["expected_revisions"] == {"module-demo": 0}
 
 
+@pytest.mark.parametrize("command,version,accepted", [
+    ("unit-plan-revise", 1, True),
+    ("unit-plan-revise", 2, False),
+    ("module-plan-import", 2, True),
+    ("module-plan-import", 1, False),
+])
+def test_package_contract_version_matches_its_mutation_path(
+    mini_repo, tmp_path, command, version, accepted,
+):
+    """The documented package versions pass; crossing them refuses, read-only."""
+    from repo_builders import run_los, write_yaml
+
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    _compact_setup(mini_repo)
+    revision = _compact_revision(mini_repo, route_changes={"update": [{
+        "route_id": "route-demo-book",
+        "fields": {"angle": "A reviewed explanation for this lecture."},
+    }]})
+    revision["plan_contract"]["version"] = version
+    target = "unit-demo-l01"
+    if command == "module-plan-import":
+        revision = {
+            "module_id": "module-demo",
+            "plan_contract": revision["plan_contract"],
+            "unit_revisions": [{
+                "unit_id": target, "route_changes": revision["route_changes"],
+            }],
+        }
+        target = "module-demo"
+    draft = tmp_path / "version-example.yaml"
+    write_yaml(draft, revision)
+    before = canonical_fingerprint(mini_repo)
+    result = run_los(mini_repo, command, target, "--file", str(draft), "--check")
+    assert canonical_fingerprint(mini_repo) == before
+    assert (result.returncode == 0) is accepted, result.stdout + result.stderr
+    if accepted:
+        assert json.loads(result.stdout)["canonical_files_written"] == 0
+    else:
+        expected = 1 if command == "unit-plan-revise" else 2
+        diagnostic = result.stdout + result.stderr
+        assert f"plan_contract.version must be {expected}" in diagnostic
+        assert "unit.plan.revise" in diagnostic
+        assert "module.plan.import" in diagnostic
+
+
 def test_missing_dossier_does_not_require_replacement_for_route_addition(
     mini_repo, tmp_path,
 ):

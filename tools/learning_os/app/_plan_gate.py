@@ -771,7 +771,12 @@ def module_plan_contract_problems(root: Path, package: dict) -> list[str]:
     problems: list[str] = []
     contract = package.get("plan_contract")
     if not isinstance(contract, dict) or contract.get("version") != 2:
-        return ["plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)"]
+        return [
+            "plan_contract.version must be 2 for module.plan.import "
+            "(full packages and compact unit_revisions; see "
+            "system/PLAN-CREATION-SOP.md#gate-3--build-the-package-from-the-canonical-template); "
+            "version 1 belongs to unit.plan.revise"
+        ]
     problems.extend(coverage_audit_problems(root, contract))
     problems.extend(_ack_shape_problems(package.get("acknowledgments", [])))
     intentional_reorders = contract.get("intentional_reorders", [])

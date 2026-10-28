@@ -265,7 +265,11 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
         problems.append("revision unit_id does not match the requested unit")
     contract = revision.get("plan_contract")
     if not isinstance(contract, dict) or contract.get("version") != 1:
-        problems.append("plan_contract.version must be 1 (see system/PLAN-CREATION-SOP.md)")
+        problems.append(
+            "plan_contract.version must be 1 for unit.plan.revise "
+            "(see system/procedures/revise-an-existing-plan.md); "
+            "version 2 belongs to module.plan.import"
+        )
     else:
         problems.extend(_coverage_audit_problems(root, contract))
     changes = revision.get("route_changes", {})
