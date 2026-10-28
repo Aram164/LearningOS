@@ -64,14 +64,37 @@ class ChecksProjects:
                             self.warn("PROJECT-FILE",
                                       f"project '{project_id}' file does not exist: '{path}'", where)
 
-        for old_id, project_id in r.project_aliases.items():
+        canonical = {**dict.fromkeys(r.projects, "project"),
+                     **dict.fromkeys(r.units, "unit"),
+                     **dict.fromkeys(r.workspaces, "workspace"),
+                     **{key: "module" for key, row in r.modules.items()
+                        if not row.get("compatibility_only")}}
+        shadowed = set(canonical)
+
+        def remember_identities(value):
+            if isinstance(value, dict):
+                if isinstance(value.get("id"), str):
+                    shadowed.add(value["id"])
+                for child in value.values():
+                    remember_identities(child)
+            elif isinstance(value, list):
+                for child in value:
+                    remember_identities(child)
+
+        for project in r.projects.values():
+            remember_identities(project.data)
+        remember_identities(r.project_relations)
+        for old_id, target_id in r.project_aliases.items():
             where = self._rel(r.project_aliases_path) if r.project_aliases_path else "projects/aliases.yaml"
-            if project_id not in r.projects:
+            if target_id not in canonical:
                 self.err("REF-PROJECT",
-                         f"project alias '{old_id}' targets unknown project '{project_id}'", where)
-            if old_id in r.projects:
+                         f"compatibility alias '{old_id}' targets unknown canonical owner '{target_id}'", where)
+            if old_id == target_id or target_id in r.project_aliases:
                 self.err("PROJECT-ALIAS",
-                         f"project alias '{old_id}' shadows a canonical project", where)
+                         f"compatibility alias '{old_id}' must be a direct owner redirect", where)
+            if old_id in shadowed:
+                self.err("PROJECT-ALIAS",
+                         f"compatibility alias '{old_id}' shadows a canonical owner", where)
 
         resolvers = {
             "module": lambda value: value in r.modules and not r.modules[value].get("compatibility_only"),

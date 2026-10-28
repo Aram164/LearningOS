@@ -44,6 +44,7 @@ ENTRYPOINTS = (
     "library_reconciliation.py",
     "los.py",
     "manifest_contract.py",
+    "migrations/projects_to_modules_v62.py",
     "material_text.py",
     "material_toc.py",
     "material_summarize.py",
@@ -79,9 +80,6 @@ PACKAGE_ROOTS: Mapping[str, str] = {
 # one-shot migration executed directly by the operator (never imported) is
 # listed here instead, with its lifecycle bound, until it retires the same way.
 UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
-    "learning_os.store.contracts.migration_lifecycle": (
-        "shared migration lifecycle; runtime wiring retired by PLAN D13 (ADR-018)"
-    ),
     "migrations.summaries_to_notes_v1": (
         "one-shot summary migration, directly executed (through v35)"
     ),
@@ -287,7 +285,7 @@ def analyse(
         if not path.is_file():
             configuration_errors.append(f"declared entrypoint is missing: {relative}")
             continue
-        module = path.stem
+        module = ".".join(Path(relative).with_suffix("").parts)
         modules[module] = path
         root_modules.append(module)
 

@@ -363,3 +363,5 @@ approvals:
   - {change: added, key: request_schemas.projection.observe.schema.json, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
   - {change: added, key: cli.projection-observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
   - {change: added, key: catalog.commands.projection.observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
+
+  - {key: "catalog.domain_capabilities.migration.projects-to-modules-v62", change: added, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 9 / Stage 4B", pre_approved_by: "Aram 2026-10-29: go ahead with Stage 4B migration and safety tests under the accepted Stage 4A authority decision"}

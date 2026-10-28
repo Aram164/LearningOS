@@ -46,7 +46,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 15
+contract_version: 16
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -103,8 +103,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v15.schema.json
-schema_sha256: sha256:c487c6ed2e05c05425c6b41bd291e566b16a7e1ee3af667ae00763608d7e121f
+schema_path: system/contracts/manifest-v16.schema.json
+schema_sha256: sha256:b417ce7295711108d0825901907536f83dd11e8e579e311252647dd3421cadad
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -195,7 +195,11 @@ history:
   mirrored_in_ui: contracts/manifest-v14.lock.json
 - version: 15
   adopted: '2026-09-23'
-  note: 'projected sources carry bounded discovery provenance (or null) and
-    examination: evaluated, the count of current approved assessment routes,
-    and metadata_placed (two-pass intake Library badge and agent source read)'
+  note: 'projected sources carry bounded discovery provenance (or null) and examination:
+    evaluated, the count of current approved assessment routes, and metadata_placed
+    (two-pass intake Library badge and agent source read)'
   mirrored_in_ui: contracts/manifest-v15.lock.json
+- version: 16
+  adopted: '2026-10-29'
+  note: Compatibility aliases may resolve to canonical Module, Unit or workspace owners
+  mirrored_in_ui: contracts/manifest-v16.lock.json

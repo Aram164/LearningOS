@@ -259,6 +259,7 @@ GROUPS: dict[str, list[str]] = {
         "test_job_quarantine_collapse.py",
         "test_legacy_exit_review.py",
         "test_migration_lifecycle.py",
+        "test_projects_to_modules_migration.py",
         "test_route_identity_migration.py",
         "test_summaries_migration.py",
     ],

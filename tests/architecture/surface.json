@@ -429,6 +429,7 @@
   "domain_capabilities": [
    "garden.add-transcription",
    "garden.update",
+   "migration.projects-to-modules-v62",
    "relationship.create",
    "unit.material-synthesis.publish"
   ],

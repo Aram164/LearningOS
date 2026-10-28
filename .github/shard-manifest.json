@@ -120,10 +120,14 @@
    "tests/test_plan_edit_brief.py",
    "tests/test_plan_inventory.py",
    "tests/test_policy_query.py",
+   "tests/test_projection_readiness.py",
+   "tests/test_projects_to_modules_migration.py",
+   "tests/test_read_session.py",
    "tests/test_related.py",
    "tests/test_render.py",
    "tests/test_resource_integrity.py",
    "tests/test_resume_dossier.py",
+   "tests/test_review_consolidation.py",
    "tests/test_runtime_review.py",
    "tests/test_seal_guards_auto.py",
    "tests/test_search_hints.py",
@@ -137,10 +141,7 @@
    "tests/test_transactions.py",
    "tests/test_verbatim_anchor_admission.py",
    "tests/test_warning_baseline.py",
-   "tests/test_write_scopes.py",
-   "tests/test_projection_readiness.py",
-   "tests/test_read_session.py",
-   "tests/test_review_consolidation.py"
+   "tests/test_write_scopes.py"
   ],
   "rest-2": [
    "tests/test_abilities.py",

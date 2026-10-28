@@ -41,7 +41,7 @@ Reproduce from a clean experimental Core checkout: `.venv/bin/python workbench/a
 ## Files affected in later increments
 
 - `tools/migrations/projects_to_modules_v62.py` (new): prepare, review and apply the bounded migration through the existing transaction service, dry-run by default and tied to the supported data generation.
-- `tools/learning_os/app/handlers/project_migration.py` (new) and `system/contracts/capabilities.yaml`: keep transaction invocation in the application layer and declare only the one-shot migration's exact write scopes; retain ordinary gateway admission unchanged.
+- `tools/learning_os/app/project_migration.py` (new) and `system/contracts/capabilities.yaml`: keep transaction invocation in the application layer and declare only the one-shot migration's exact write scopes; retain ordinary gateway admission unchanged.
 - `system/schema/project-aliases.schema.json`, `tools/learning_os/derive/validation/projects.py`, `tools/learning_os/derive/projection/projection/records_projects.py`: admit direct owner redirects and validate their actual target types; preserve old fixture compatibility.
 - `tools/learning_os/app/handlers/platform.py`, `tools/learning_os/app/handlers/reads.py`: prove historical inspect/related calls resolve the new canonical owner rather than the retired Project.
 - `curriculum/modules/module-project-bachelor-thesis/module.yaml`, the thesis workspace `CONTEXT.md`, and the three active `projects/` data files named in the inventory: apply only the reviewed ownership/alias changes and original-byte retirement.

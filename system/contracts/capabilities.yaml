@@ -1076,6 +1076,24 @@ forbidden:
 - repository.write-arbitrary
 - artifact.delete
 domain_capabilities:
+  migration.projects-to-modules-v62:
+    writes:
+    - projects/registry/project-bachelor-thesis.yaml
+    - projects/aliases.yaml
+    - projects/relations/project-relations.yaml
+    - curriculum/modules/module-project-bachelor-thesis/module.yaml
+    - work/active/workspace-thesis-mle-medical/CONTEXT.md
+    - operations/migrations/projects-to-modules-v62/committed.json
+    - operations/migrations/projects-to-modules-v62/evidence.json
+    - operations/migrations/projects-to-modules-v62/before/projects/registry/project-bachelor-thesis.yaml
+    - operations/migrations/projects-to-modules-v62/before/projects/aliases.yaml
+    - operations/migrations/projects-to-modules-v62/before/projects/relations/project-relations.yaml
+    - operations/migrations/projects-to-modules-v62/before/curriculum/modules/module-project-bachelor-thesis/module.yaml
+    - operations/migrations/projects-to-modules-v62/before/work/active/workspace-thesis-mle-medical/CONTEXT.md
+    invariants:
+    - one-shot-through-data-contract-v62
+    - exact-reviewed-plan-snapshot-and-revisions
+    - original-byte-backups-and-shared-transaction-recovery
   garden.add-transcription:
     writes:
     - knowledge/garden/transcriptions/
