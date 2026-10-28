@@ -1,0 +1,22 @@
+{
+ "scenario": "P2-07",
+ "prompt_version": 2,
+ "arms": {
+  "B": {
+   "trial_dir": "/tmp/p2b-screen-B",
+   "root": "/tmp/p2b-screen-B/LearningOS/repository",
+   "route_id_expected": "route-b2f1f80014860a929a3af0bc",
+   "fingerprint_before": "cd4e16ecdafac337f8b3dcd5af8ac4578d2fd1bef52c9b4650255b145aa6f104",
+   "session_id": "8e2be60a-3e71-40c3-96f1-54c871b7edb4",
+   "prompt_sha256": "aa53aa0ecb889ae4485b1518532ec4c525358502bb1161e14b430da181616031"
+  },
+  "C": {
+   "trial_dir": "/tmp/p2b-screen-C",
+   "root": "/tmp/p2b-screen-C/LearningOS/repository",
+   "route_id_expected": "route-b2f1f80014860a929a3af0bc",
+   "fingerprint_before": "cd4e16ecdafac337f8b3dcd5af8ac4578d2fd1bef52c9b4650255b145aa6f104",
+   "session_id": "45ebb3ed-0b8c-4671-9fa0-270f10c26ccc",
+   "prompt_sha256": "e559e20324537997f7c03cbd305d31e2cffa5308da1be7abe6a5b8e9afae8107"
+  }
+ }
+}

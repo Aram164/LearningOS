@@ -1,0 +1,31 @@
+You are operating a disposable synthetic LearningOS fixture. No real learner data exists here.
+
+Paths:
+- Core tools (frozen, read-only): /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository
+- Python: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python
+- Fixture data root (your workspace): /tmp/p2b-screen-B/LearningOS/repository
+- Scratch directory for your own files: /tmp/p2b-screen-B/scratch (create it if needed). Put every file you create there, except the fixture's own governed outputs.
+
+Fixture orientation: the data root contains curriculum/modules/module-demo/ (source-map.yaml and units/), sources/, operations/, and generated/. The Core tools live outside the fixture; do not explore their directory.
+
+TASK: In unit unit-demo-l01, stage stage-demo has exactly one material route. Find that route and change its angle to 'P2 live demonstration angle'. Nothing else may change.
+
+Rules:
+- Never edit canonical YAML files directly. Writes only through the governed flow of your assigned interface.
+- Never use git. Do not modify anything under the Core tools path.
+- REVIEW RULE (identical in all conditions): Before any apply or submit step, verify the proposal: (1) it targets unit unit-demo-l01 and the route belonging to stage stage-demo; (2) the only changed field is angle, set to exactly 'P2 live demonstration angle'; (3) it is based on the current snapshot. If any check fails, stop, do not apply, and report REFUSED with the reason. Applying without this check counts as failure.
+- Work efficiently. When finished, print exactly one final line: FINAL: <committed|unchanged|refused> route=<route-id-or-none>
+
+Your assigned interface is ARM B (plan runner for reads, seal flow for the write).
+
+Step 1: write this plan to /tmp/p2b-screen-B/scratch/plan.json, filling nothing in:
+{"schema_version": 2, "session_id": "screen-b", "on_error": "stop", "steps": [{"id": "find", "argv": ["plan-edit-context", "unit-demo-l01", "--stage-id", "stage-demo"], "summary": {"max_items": 20, "max_bytes": 8000}}]}
+Run: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/tools/agent_run.py /tmp/p2b-screen-B/scratch/plan.json --root /tmp/p2b-screen-B/LearningOS/repository
+The route id is in the step output.
+
+Step 2: check. Run:
+/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/.venv/bin/python /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/task-ir-p1-experiment/repository/tools/seal_envelope.py --root /tmp/p2b-screen-B/LearningOS/repository --capability route.patch --key screen-b --request-id request-screen-b --session-id screen-b --payload '{"unit_id": "unit-demo-l01", "route_id": "<route-id-from-step-1>", "changes": {"angle": "P2 live demonstration angle"}, "check": true}' --guards auto --check-out /tmp/p2b-screen-B/scratch/check.json
+Read the check record and apply the REVIEW RULE.
+
+Step 3: submit. Run the same seal command with the payload without "check": true, with --guards-from /tmp/p2b-screen-B/scratch/check.json --submit instead of --check-out.
+Do not use the --task mode of agent_run.py.

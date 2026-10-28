@@ -174,3 +174,14 @@ Recorded before any live (P2b) data existed, per the amendment rule above.
   Verified against a live session log on 2026-10-28; a naive sum over every
   usage-shaped node double-counts, and per-call `input_tokens` includes the
   cached share, which is therefore reported separately, never added twice.
+- 2026-10-28, screening revision (Aram's revised authorization): the
+  108-session campaign is withdrawn. P2b proceeds sequentially: offline
+  analysis, then one matched B/C screening pair on P2-07 with normalized
+  prompts (prompt v2), under a 1M cumulative input-token pause threshold
+  for the pair. Arm A is not rerun; it does not answer the B-versus-C
+  decision. Expansion beyond the pair requires a plausible C benefit in
+  the pair plus separate approval. A negative pair is recorded as a
+  negative screening result, not a statistically conclusive rejection.
+  Prompt v2 equalizes scaffolding between B and C (exact artifact
+  template, fixture orientation, scratch location); the frozen demo
+  prompts remain the record of the demonstration sessions.
