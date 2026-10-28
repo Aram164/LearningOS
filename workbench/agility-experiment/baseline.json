@@ -1,0 +1,180 @@
+{
+  "scope": "scripted synthetic fixtures; warm development environment; no model calls",
+  "review": "scripted exact-content review; does not measure human review quality",
+  "core_base": "498dce5699f969235515303d1885ed032b34746b",
+  "python": "3.14.4",
+  "source_sha256": {
+    "workbench/agility-experiment/baseline.py": "80cf7a192029a3c8d64606ef25e2d02037d122c67bf9d477efe93d44ade5cf2c",
+    "tests/conftest.py": "5e5fd470b75e3beb59b3ac2c350931bd93a2b463b9aaab1275c1f3e43e47023c",
+    "tests/repo_builders.py": "7397f93cd0317ac3ba6fff92ceb0f28c7e9dd67aeb61ee6af28787abc4605746",
+    "tools/learning_os/app/handlers/plan.py": "dd137d660e5c46a7ec7ff6f38f877b7270707b2d8eaac5e6e8c9d2e91831af94",
+    "tools/learning_os/app/handlers/maps.py": "0cf0e0ccc371a111b8a3bff62059756819ec1157dfdd6b8f29241df78bae2729",
+    "tools/learning_os/app/_plan_gate.py": "37f2b0fe5c092646ca2536f328f83c6d69800a781c30cafe722bab9ba3a017ad"
+  },
+  "scenarios": [
+    {
+      "scenario": "append-resource",
+      "existing_stages": 1,
+      "input_bytes": 768,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "module-plan-import",
+          "seconds": 0.41214470798149705,
+          "stdout_bytes": 2979
+        },
+        {
+          "command": "module-plan-import",
+          "seconds": 0.6552368749398738,
+          "stdout_bytes": 834
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3254682089900598,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "eedc3ba09df962ed889d24bc2d6a109642f401af6523cbc3ea3479bc85e43589"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 2,
+      "input_bytes": 1672,
+      "existing_stage_records_reproduced": 2,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.19325162505265325,
+          "stdout_bytes": 1039
+        },
+        {
+          "command": "capability",
+          "seconds": 0.6418381670955569,
+          "stdout_bytes": 1456
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 1,
+      "validation_seconds": 0.17245270789135247,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "d11f33e1d8b74f6c27b3e21f4de604471ee208f17b9e7243cd84c17fca98b94d"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 10,
+      "input_bytes": 7285,
+      "existing_stage_records_reproduced": 10,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.2131478750379756,
+          "stdout_bytes": 1402
+        },
+        {
+          "command": "capability",
+          "seconds": 0.6716519589535892,
+          "stdout_bytes": 1819
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 1,
+      "validation_seconds": 0.18352862494066358,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "b3f580e0b01dfae55591b5e113d1767c62d4cd0977ece974e64464daa00f9f42"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 50,
+      "input_bytes": 35525,
+      "existing_stage_records_reproduced": 50,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.2702199169434607,
+          "stdout_bytes": 3322
+        },
+        {
+          "command": "capability",
+          "seconds": 0.7989032499026507,
+          "stdout_bytes": 3739
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 1,
+      "validation_seconds": 0.20484187500551343,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "6b368b00ad75546777e4e6a9f7686c859eac3881af68be34ceeff95f25f593f4"
+    },
+    {
+      "scenario": "add-unit",
+      "existing_stages": 1,
+      "input_bytes": 3464,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 1,
+      "commands": [
+        {
+          "command": "module-plan-import",
+          "seconds": 0.44631995807867497,
+          "stdout_bytes": 4731
+        },
+        {
+          "command": "module-plan-import",
+          "seconds": 0.73302041599527,
+          "stdout_bytes": 896
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3173063750145957,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/module.yaml",
+        "curriculum/modules/module-demo/source-map.yaml",
+        "curriculum/modules/module-demo/units/unit-demo-l02/stages/stage-demo-l02/notes.md",
+        "curriculum/modules/module-demo/units/unit-demo-l02/study-map.yaml",
+        "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "3a8ae2bff1b2a74f93f912b26ea68af2de0f402e0ffe0075125fd28719174365"
+    }
+  ]
+}
