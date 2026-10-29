@@ -46,3 +46,24 @@ Issue #73 records the observed capability boundary. No actual learner Unit,
 today's durable plan, live Obsidian installation, production migration, merge,
 paid trial or subagent was used. Aram's latest instruction is to push Stage 6
 and immediately begin Stage 7; that supersedes the earlier stop-after-6 step.
+
+## Review corrections
+
+The supplied Stage 6 review identified an open-modal lifetime gap, numeric-rank
+friction and ambiguous progress scope. The built disposable fixture reproduced
+reactivation from an already checked modal after End session. The repair binds
+modal checks and activation to the Unit view's sequence lifetime generation;
+reset/end/close/Unit change and a new accepted choice invalidate older reviews.
+Eight pending-preview/activation combinations across end, close, reset and
+switch-away/back now refuse. Existing changed-input/modal-close checks remain.
+
+The form now keeps an ordered stable-ID array and inclusion set, with Move
+before controls. Tests demonstrate one move action putting the last stage first
+on both 10- and 50-stage inputs, preserving all other relative order and sending
+only the final array to the existing Core read. The rail separately labels
+sitting completion and full-plan completion. The full UI check passes after
+these corrections. Core contracts and prerequisite authority are unchanged.
+
+Idle-screen date expiry remains a documented limitation: validity is checked
+on read/render/use rather than through a midnight redraw scheduler. These fixes
+still do not claim live installation or final Stage 8 hosted acceptance.

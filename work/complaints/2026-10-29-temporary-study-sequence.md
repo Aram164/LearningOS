@@ -16,3 +16,11 @@ No real learner plan or production installation was exercised.
 
 Tracking issue: https://github.com/Aram164/LearningOS/issues/73. This is an
 experimental implementation record, not final campaign or production acceptance.
+
+The user-supplied code review was incorporated before Stage 7 profiling. Its
+open-modal/End-session risk reproduced in a built fixture, then failed to
+reactivate after the lifetime-generation repair. Pending preview/activation
+checks across end/close/reset/switch-back pass. Numeric ranks were replaced by
+one-action relative movement on 10/50-stage forms; progress labels now separate
+the sitting from the full plan. Full UI checks pass. Date expiry still updates
+an idle display on the next read/render, as explicitly documented.

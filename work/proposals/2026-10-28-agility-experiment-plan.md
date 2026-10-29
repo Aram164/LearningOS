@@ -205,3 +205,31 @@ Register the new Unit lookup in the existing A5 suggestion oracle (`tests/test_a
 ## Stage 6 outcome and continuation
 
 Stage 6 implementation and focused owning checks are complete; see [the outcome](2026-10-29-agility-stage6-outcome.md) and issue #73. The new read and memory-only UI selection preserve the durable plan and explicitly limit prerequisite checking to authored mappings. Aram then instructed: start Stage 7 immediately after this push. This supersedes the Stage 6 plan's earlier stop-before-7 step; Stage 8's final combined acceptance is still separate.
+
+## Stage 7 — measurement pass (2026-10-29)
+
+### Understanding
+
+Stage 6 is pushed at Core `aa3b7ee` / UI `7688b1c`; Aram requested immediate Stage 7 work after that push. Measure remaining command, validation and material-verification costs before selecting an optimization. Preserve exact reviewed bytes, independent apply checks, snapshots, revisions, warnings, receipts and stale-material refusal; no paid model trials or speculative cache infrastructure.
+
+### Initial decisions and files
+
+- **Decision:** add `workbench/agility-experiment/efficiency.py`, using only temporary synthetic repositories created by the retained baseline/test builders. Measure fresh-process cold/warm `status` and offline validation, focused/brief/full plan context output, structured-inventory preflight/apply, and standalone material checksum time/Python allocation. Pin observation time and measured source hashes; collect validation calls, repository loads, inventory enumerations, material opens/bytes, stdout bytes, wall time and canonical preservation. Cold means a fresh process/absent disposable validation node, not flushed OS disk caches.
+- **Decision:** keep `workbench/agility-experiment/stage5-clean-aaa0632.json` as the comparison oracle for input bytes, command count, validation count and preservation. Do not reinterpret its warm local timings as production latency or token/cost evidence.
+- **ASSUMPTION:** the verified whole-file `Path.read_bytes()` in `store/materials/resolution.py::sha256_file` may produce meaningful transient allocation for larger source files. The measurement pass will prove or reject that before any production edit. Existing per-build checksum reuse and the separate reviewed-apply material verification remain required.
+- **Decision:** use existing `tests/test_runtime_efficiency.py`, `tests/test_plan_inventory.py`, `tests/test_validation_cache.py` and owning material tests if a measured optimization is selected. No new persistent cache, service, CLI verb, schema or UI feature is planned.
+
+Checkable steps: run and retain the pre-change measurements; record the selected change and reason from those results; implement only that change with output-equivalence and invalidation/refusal tests; rerun the same measurements and retained preservation benchmark; record the outcome and commit/push Stage 7. Risks are stale material, altered digests, dropped validations or misleading performance claims; unchanged digest/output assertions, material-change/membership refusal cases and exact operation counts expose them. Full combined hosted/artifact acceptance stays Stage 8. Actual learner changes, paid trials, unrelated cleanup, merge, installation and production migration remain out of scope.
+
+## Stage 6 review corrections before Stage 7 profiling
+
+Aram supplied the review attachment `11150982-27ee-4148-95fc-5e28851327f6/Pasted text.txt` after the Stage 7 measurement plan was recorded. Source inspection confirms that `TemporaryStudySequence.clear()` clears only the active value: it does not invalidate an already checked modal, and `shell.ts` checks Unit identity rather than a view/sitting lifetime. Add a disposable regression before repairing that path.
+
+1. **Decision:** give the existing view-owned sequence store a monotonic lifetime generation. Clear/reset, Unit switch, view close and End session already route through `clear()`; advancing the generation there invalidates open/pending modals too. Capture this token on modal open and check it before/after every async read and immediately before activation. A successful new choice also advances it so an older modal cannot replace that choice. This adds no persistent entity or authority mechanism.
+2. **Decision:** replace numeric rank inputs in `src/features/unit/sequence.ts` with an ordered stable-ID array, inclusion set and per-row Move before control. Moving the last of 10/50 stages before the first is one move action; no unchanged row needs renumbering. Core still receives the final ordered subset and owns prerequisites.
+3. **Decision:** show separate sitting and full-plan completion counts. `src/features/learning-route.ts` will allow its existing `titleMeta` presentation to carry two lines; `src/features/unit/shell.ts` supplies counts from the temporary subset and full producer-owned map, and labels the progress scope correctly.
+4. **Decision:** preserve the documented date-expiry-on-read/render behavior. Idle-screen automatic midnight redraw remains an explicit minor limitation; no scheduler is introduced during this focused repair.
+
+Affected files are the sequence feature, Unit shell, shared learning-route presentation, existing UI module/dashboard tests, this plan and the Stage 6 outcome/complaint evidence. Core contracts and derivation remain unchanged. Checkable sequence: reproduce the open-modal/End-session path; repair lifetime and controls; test pending preview and activation across end/close/reset/Unit-switch-back, 10/50-stage proportional movement and distinct progress scopes; run full UI check and owning Core preservation/validation checks; commit/push the corrections, then resume Stage 7 measurements. No actual learner state or installation is involved.
+
+The sitting/full-plan counts use two lines within the existing narrow rail. Add a scoped presentation class in `src/styles/23-unit-surface.css` only for that two-line metadata; ordinary rail rendering retains its existing span layout. The original End-session regression reproduced the P1 defect in the built fixture bundle before the fix and passes with the lifetime token.
