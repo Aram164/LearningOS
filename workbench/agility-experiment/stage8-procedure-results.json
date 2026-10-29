@@ -1,0 +1,192 @@
+[
+  {
+    "transcript": "add-a-concept.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "add-concept-relation.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "add-or-evaluate-a-source.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "agent-plans.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "back-up-and-restore.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "bootstrap-order.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "build-write-envelope.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "capture-routing.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "capture-temporary-material.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "carry-work-across-semesters.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "close-a-module.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "complete-and-archive-a-workspace.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "create-durable-note.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "deprecate-or-supersede.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "end-a-session.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "generate-indexes-reports.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "ingest-a-handwritten-note.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "maintain-crosswalk.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "mismatch-archive-probe.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "move-or-rename-a-note.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "process-a-lecture.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "process-inbox.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "read-an-operation.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "record-evidence.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "record-module-event.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "retrieval-behavior.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "review-a-note.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "review-a-stage-material-angle.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "review-exact-goal-decisions-together.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "revise-an-existing-plan.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "save-a-batch-of-source-analyses.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "shelving-session-closure.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "source-routing-and-feedback.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "start-a-module.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "start-a-workspace.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "start-here.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "unit-workflow.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  },
+  {
+    "transcript": "update-coordination.md",
+    "exit": 0,
+    "audit_and_render_checks": "passed"
+  }
+]

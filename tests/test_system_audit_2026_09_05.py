@@ -433,7 +433,6 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     from learning_os.derive.projection import build_manifest
     from learning_os.derive.routes import deterministic_route_id
     from learning_os.store.loader import load_repo
-    from learning_os.store.materials import resolution as materials_resolution
 
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)
@@ -504,20 +503,23 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     )
 
     loads: list[str] = []
-    hashed: list[bytes] = []
+    material_reads: list[Path] = []
     real_load = material_synthesis.load_repo
-    real_hash = materials_resolution.sha256_bytes
+    real_open = Path.open
+    shared_deck = (materials / "lecture-01.pdf").resolve()
 
     def counted_load(root, *args, **kwargs):
         loads.append(str(root))
         return real_load(root, *args, **kwargs)
 
-    def counted_hash(value: bytes) -> str:
-        hashed.append(value)
-        return real_hash(value)
+    def counted_open(path, *args, **kwargs):
+        mode = kwargs.get("mode", args[0] if args else "r")
+        if "r" in mode and path.resolve() == shared_deck:
+            material_reads.append(shared_deck)
+        return real_open(path, *args, **kwargs)
 
     monkeypatch.setattr(material_synthesis, "load_repo", counted_load)
-    monkeypatch.setattr(materials_resolution, "sha256_bytes", counted_hash)
+    monkeypatch.setattr(Path, "open", counted_open)
 
     repo = load_repo(mini_repo)
     manifest = build_manifest(repo, "T1")
@@ -525,8 +527,15 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     assert manifest["unit_material_syntheses"], "the dossier is projected"
     assert loads == [], \
         "projection passes its loaded repository in; the service reloads nothing"
-    assert hashed.count(b"one shared deck") == 1, \
-        "one file is hashed once per build, however many routes reach it"
+    assert material_reads == [shared_deck], \
+        "one material read per build, however many routes reach the file"
+    material_reads.clear()
+    shared_deck.write_bytes(b"the shared deck changed between builds")
+    # A Repo owns one read's derivation caches; a later read loads a new Repo.
+    refreshed = build_manifest(load_repo(mini_repo), "T2")
+    assert material_reads == [shared_deck], "a new build must reobserve material bytes"
+    assert refreshed["unit_material_syntheses"] != manifest["unit_material_syntheses"], \
+        "changed material must invalidate the approved dossier"
 
 
 # ------------------------------------------------- F14 operator runbooks

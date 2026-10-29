@@ -1,0 +1,70 @@
+[
+  {
+    "operation": "ai-action.delivery.apply",
+    "case": "apply-garden-shelve",
+    "historical_inputs_reproduce_recording": true,
+    "changed_inputs": [
+      "system/contracts/capabilities.yaml",
+      "system/schema/requests/study.sequence.schema.json",
+      "system/schema/study-sequence.schema.json"
+    ],
+    "changed_recording_fields": [
+      "/steps/2/receipts/0/writes/3/sha256_after",
+      "/steps/2/receipts/0/writes/3/sha256_before",
+      "/steps/2/stdout",
+      "/steps/2/stdout_json/result/receipt/writes/3/sha256_after",
+      "/steps/2/stdout_json/result/receipt/writes/3/sha256_before"
+    ],
+    "request_snapshot_before": "sha256:b562c19e1d7e40874ae32666fb2979fc9724e338adcceb9a4522e7ed389854a2",
+    "request_snapshot_after": "sha256:0bcda9f4404aaf5200640439764604d8d0a782dac39f065ef6b29bf98d2f4646",
+    "request_only_snapshot_changed": true
+  },
+  {
+    "operation": "ai-action.delivery.apply",
+    "case": "exact-replay",
+    "historical_inputs_reproduce_recording": true,
+    "changed_inputs": [
+      "system/contracts/capabilities.yaml",
+      "system/schema/requests/study.sequence.schema.json",
+      "system/schema/study-sequence.schema.json"
+    ],
+    "changed_recording_fields": [
+      "/steps/2/receipts/0/writes/3/sha256_after",
+      "/steps/2/receipts/0/writes/3/sha256_before",
+      "/steps/2/stdout",
+      "/steps/2/stdout_json/result/receipt/writes/3/sha256_after",
+      "/steps/2/stdout_json/result/receipt/writes/3/sha256_before"
+    ],
+    "request_snapshot_before": "sha256:b562c19e1d7e40874ae32666fb2979fc9724e338adcceb9a4522e7ed389854a2",
+    "request_snapshot_after": "sha256:0bcda9f4404aaf5200640439764604d8d0a782dac39f065ef6b29bf98d2f4646",
+    "request_only_snapshot_changed": true
+  },
+  {
+    "operation": "lineage.restamp",
+    "case": "check-all",
+    "historical_inputs_reproduce_recording": true,
+    "changed_inputs": [
+      "system/contracts/capabilities.yaml",
+      "system/schema/requests/study.sequence.schema.json",
+      "system/schema/study-sequence.schema.json"
+    ],
+    "changed_recording_fields": [
+      "/stdout",
+      "/stdout_json/result/claims/covers:route-b2f1f80014860a929a3af0bc/judgment_commit"
+    ]
+  },
+  {
+    "operation": "lineage.restamp",
+    "case": "check-all-cli",
+    "historical_inputs_reproduce_recording": true,
+    "changed_inputs": [
+      "system/contracts/capabilities.yaml",
+      "system/schema/requests/study.sequence.schema.json",
+      "system/schema/study-sequence.schema.json"
+    ],
+    "changed_recording_fields": [
+      "/stdout",
+      "/stdout_json/claims/covers:route-b2f1f80014860a929a3af0bc/judgment_commit"
+    ]
+  }
+]

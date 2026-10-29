@@ -91,3 +91,7 @@ fixture's absent/present validation node, not flushed disk caches. Output contex
 hashes match exactly; other command hashes contain snapshot/receipt/runtime
 fields and are not asserted equal across fixtures. Python allocation is not
 process RSS, and instrumented local times do not establish production latency.
+
+## Stage 8 repair evidence
+
+The [repair plan](../../work/proposals/2026-10-29-agility-stage8-repair.md) records the six initial CI failures and the additionally exposed catalogue-count expectation. [Contract-input differential proof](stage8-fixture-input-proof.json) reproduces the old scenario recordings with only the three historical/current contract-input differences. [All 38 procedure results](stage8-procedure-results.json), [audit/efficiency tests](stage8-hash-regressions.log) and [affected scenario tests](stage8-scenario-regressions.log) retain focused verification. The final full hosted run and exact-pair artifact evidence live beside the source checkout in the campaign's `stage8-repair/` directory, preserving the tested source SHA.
