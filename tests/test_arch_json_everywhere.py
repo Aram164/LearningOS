@@ -420,8 +420,10 @@ def test_no_b_handler_reads_the_json_flag():
 def _assert_new_json_command_is_approved(sub: str, fname: str, live: dict) -> None:
     """A command born with JSON is an approved addition, not a D16 conversion."""
     operation = fname.removesuffix(".schema.json")
+    catalog = yaml.safe_load((ROOT / "system/contracts/capabilities.yaml").read_text())
+    section = "queries" if operation in catalog.get("queries", {}) else "commands"
     required = {f"cli.{sub}", f"request_schemas.{fname}",
-                f"catalog.commands.{operation}"}
+                f"catalog.{section}.{operation}"}
     entries = yaml.safe_load(APPROVALS_PATH.read_text())["approvals"]
     approved = {row["key"]: row for row in entries
                 if row.get("change") == "added" and row.get("key") in required}

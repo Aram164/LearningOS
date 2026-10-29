@@ -377,3 +377,6 @@ approvals:
   - {key: "request_schemas.project.create.schema.json", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
 
   - {key: "request_schemas.project.update.schema.json", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+  - {"key": "catalog.queries.study.sequence", "change": "added", "plan_ref": "Agility experiment Stage 6 (temporary study sequence)", "pre_approved_by": "Aram 2026-10-29: continue with phase 6"}
+  - {"key": "cli.study-sequence", "change": "added", "plan_ref": "Agility experiment Stage 6 (temporary study sequence)", "pre_approved_by": "Aram 2026-10-29: continue with phase 6"}
+  - {"key": "request_schemas.study.sequence.schema.json", "change": "added", "plan_ref": "Agility experiment Stage 6 (temporary study sequence)", "pre_approved_by": "Aram 2026-10-29: continue with phase 6"}

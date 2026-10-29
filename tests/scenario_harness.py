@@ -1105,6 +1105,10 @@ def normalize(recording: dict, root: str | Path, *, fixture_snapshot: str | None
     # D16 stderr rule, last. A no-op until S14 introduces the prefix.
     for step in _single_steps(recording):
         step["stderr"] = _D16_RE.sub("los: ", step.get("stderr", ""))
+        # Stage 6 adds one approved read verb. Old usage recordings retain
+        # their bytes; normalize exactly that extra root choice, no behavior.
+        if "usage: los" in step["stderr"] or "choose from" in step["stderr"]:
+            step["stderr"] = step["stderr"].replace(",study-sequence", "").replace(", 'study-sequence'", "").replace(", study-sequence", "")
     return recording
 
 

@@ -1,0 +1,41 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"unit_id\":\"unit-demo-l01\",\"study_map_id\":\"study-map-demo-l01\",\"canonical_current_stage\":\"stage-demo\",\"durable_stage_ids\":[\"stage-demo\",\"stage-demo-pending\"],\"stages\":[{\"id\":\"stage-demo-pending\",\"title\":\"Apply expected value\",\"status\":\"pending\"}],\"omitted_stage_ids\":[\"stage-demo\"],\"prerequisite_edges\":[],\"limitations\":[\"Only authored knowledge-node prerequisites are checked; this sequence grants no readiness or mastery.\",\"Prerequisite node knowledge-demo-outcomes has no mapped stage; its satisfaction is unchecked.\"],\"contract\":\"study-sequence-v1\",\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"valid_on_date\":\"2026-10-01\",\"timezone\":\"Europe/Berlin\",\"lifetime\":\"unit-view-and-snapshot\",\"canonical_files_written\":0}\n",
+  "stdout_json": {
+    "canonical_current_stage": "stage-demo",
+    "canonical_files_written": 0,
+    "contract": "study-sequence-v1",
+    "durable_stage_ids": [
+      "stage-demo",
+      "stage-demo-pending"
+    ],
+    "lifetime": "unit-view-and-snapshot",
+    "limitations": [
+      "Only authored knowledge-node prerequisites are checked; this sequence grants no readiness or mastery.",
+      "Prerequisite node knowledge-demo-outcomes has no mapped stage; its satisfaction is unchecked."
+    ],
+    "omitted_stage_ids": [
+      "stage-demo"
+    ],
+    "prerequisite_edges": [],
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
+    "stages": [
+      {
+        "id": "stage-demo-pending",
+        "status": "pending",
+        "title": "Apply expected value"
+      }
+    ],
+    "study_map_id": "study-map-demo-l01",
+    "timezone": "Europe/Berlin",
+    "unit_id": "unit-demo-l01",
+    "valid_on_date": "2026-10-01"
+  }
+}

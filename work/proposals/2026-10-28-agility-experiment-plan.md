@@ -153,3 +153,55 @@ Refusal witness verification found that `rich_world` deliberately carries a lega
 ## Stage 5 implementation outcome
 
 Stage 5 implementation and focused preservation/refusal/UI verification are complete; see [the outcome record](2026-10-29-agility-stage5-outcome.md) for the exact scope, Unit-authoring boundary and measured comparison. The original learner checkout remains unchanged. Aram's latest instruction limits this continuation to this milestone, so do not start Stages 6–8. Keep milestone branch CI distinct from Stage 8's final combined exact-pair/artifact acceptance.
+
+## Stage 6 — temporary Unit study sequence (2026-10-29)
+
+### Understanding
+
+Aram requested continuation with Stage 6 after stopping at the Stage 5 milestone. A learner may choose a temporary ordered subset of one Unit's existing stages, while the authored study map, progress, notes, resources and global resume pointer remain unchanged. The adjustment is a navigation aid for the current sitting, never evidence of mastery or a replacement learning plan.
+
+### Decisions and reasons
+
+1. **Decision:** add one read-only `study.sequence` query, not a writer or persistent Session. The existing `runtime.session` owns one evidence requirement and its resource-level intervention/assessment compiler (`derive/projection/session_compiler.py`); forcing ordinary Unit stages into that packet would invent requirement/evidence semantics for stages without `runtime_target`. Reuse `derive/learning_runtime.py`, the existing read handler, request-schema machinery and snapshot guards.
+2. **Decision:** the request names one Unit and an ordered, nonempty, duplicate-free subset of its current map's stable stage IDs. No new stage/resource, cross-Unit join, metadata edit, status change or inferred prerequisite is permitted. Preserve the full authored plan and expose omitted stages explicitly in the review.
+3. **Decision:** enforce transitive `unit.knowledge_map.nodes[].builds_on` through each stage's authored `knowledge_node_id`. Every mapped prerequisite stage must precede a selected dependent unless that prerequisite stage already records `complete`; completion is only recorded study activity, not mastery. Missing stage mappings are explicitly reported as unchecked scope; they are never silently converted into readiness or inferred edges. Cycles in a selected node's prerequisite ancestry refuse. An open `required-now` detour blocks adjustment, preserving its existing required repair/return flow.
+4. **Decision:** store an accepted sequence only in its Unit view's memory. It expires on snapshot change/stale projection, Unit change, view close, plugin restart, End session request, explicit reset, or a change of calendar day in Europe/Berlin. Date validity is checked on every read/use; no background service or saved settings are introduced. The Core result names its date/timezone and snapshot, and the UI checks them before accepting or rendering it.
+5. **Decision:** Check displays Core's exact ordered stages, omissions, prerequisite edges and limitations; Use for this sitting rechecks the same snapshot with Core before activation. Changed controls, late replies, a closed modal or stale projection invalidate the review. This is read-only preview/selection, not a new approval or transaction framework. Regular progress/note actions retain their existing gateway and invalidate the adjustment when the snapshot changes.
+6. **Decision:** Stage 6 uses focused local owning checks; Stage 8 retains the full combined exact-pair/artifact gate. Intermediate Stage 6 commits may suppress automatic full push workflows with GitHub's commit-message skip marker to avoid the redundant whole-suite wait already observed in Stage 5; hooks, snapshot/write guards and final acceptance requirements remain intact, and no verified-pair stamp is created. Stage 5 branch run `40862888841` has now completed successfully with all 11 jobs; this does not establish Stage 6 or Stage 8 acceptance.
+
+### Files affected
+
+- `tools/learning_os/derive/learning_runtime.py`: derive the temporary sequence and explicit dependency constraints without writing.
+- `tools/learning_os/app/handlers/reads.py`: expose a guarded read and refuse snapshot movement before/after computation.
+- `system/schema/requests/study.sequence.schema.json` (new), `system/schema/study-sequence.schema.json` (new), and `system/contracts/capabilities.yaml`: declare the narrow read and artifact result; both schemas are artifacts, so no stored format or manifest bump is required.
+- `tests/test_session_compiler.py`: verify order/subset, transitive prerequisites, completed-action exception, cycles, required detours, malformed/cross-Unit IDs, snapshot expiry and byte-for-byte canonical preservation.
+- `tests/scenarios/cases/study.sequence.yaml` and matching recordings (new): witness the query's success/refusal sites; surface/ID inventories are updated only for this declared addition.
+- Sibling UI `src/features/unit/sequence.ts` (new), `src/features/unit/ports.ts`, `src/views/unit-view.ts`, `src/features/unit/shell.ts`: own the memory-only selection, exact review, lifecycle expiry and visible reset.
+- Sibling UI `src/gateway-client.ts` and `src/main.ts`: call the public read and clear temporary choices when ending a sitting.
+- Existing sibling UI direct-module and dashboard fixture tests: verify no gateway write, no persistence, exact review, late-response invalidation and expiry.
+- `system/ARCHITECTURE.md`: document the temporary projection beside the existing runtime boundary.
+
+### Checkable steps
+
+1. Implement and schema-check Core derivation/query; exercise disposable Unit fixtures and compare canonical fingerprints and receipt/revision absence before/after.
+2. Implement UI review and in-memory lifecycle; verify order, omissions, reset, end/close/day/snapshot expiry and changed/late review refusal in fixtures.
+3. Run owning runtime, request/catalogue/scenario/surface/ID tests, full UI check, Ruff, import/map/reachability checks and zero-error/no-new-warning validation.
+4. Retain the Stage 6 outcome, commit/push its bounded pair, and stop before Stage 7.
+
+### Risks and verification
+
+Wrong dependency direction or transitive omission would admit a dependent before required work; explicit chain/cycle and completed-stage tests prove the decision. An expired/late review could replace a fresh view; snapshot/day/generation and lifecycle tests must reject it. Accidental persistence would alter a canonical fingerprint, receipt/revision ledger or saved UI settings; tests assert all remain unchanged when selecting/resetting the temporary sequence. Owning commands are `.venv/bin/python -m pytest -q tests/test_session_compiler.py`, the scoped query scenarios and architecture/schema checks, sibling `npm run check`, `tools/validate.py --compact`, `tools/warning_baseline.py --check`, `tools/system_map.py --check`, and `git diff --check`.
+
+### Out of scope
+
+Actual learner/day-plan edits, durable reordering, new requirement/evidence semantics, persistent Session records, mastery/readiness inference, global cross-Unit scheduling, paid trials, Stage 7 optimization, Stage 8 final acceptance, merge, installation and production migration. No subagents.
+
+Additional verified owning path: `tools/learning_os/adapters/cli_parser.py::_SUBCOMMAND_ORDER` declares the primary verb order. Add `study-sequence` there and update the exact surface approvals/inventories for this addition. Historical CLI corpus bytes remain frozen; any compatibility normalization must remove only this newly added choice from old help comparisons, retaining all old behavior checks.
+
+The new read changes generated capability tables in `README.md` and `system/AI-ACTIONS.md`; regenerate those owned blocks with `tools/doc_blocks.py --write`. `tests/arch_surface.py` owns the exact catalog/CLI/request-schema snapshot and single-use approvals; record only this Stage 6 addition. The UI adds one reachable feature module, so the backup fixture's declared entry count may need an owning expectation update; verify the measured result before changing it.
+
+Register the new Unit lookup in the existing A5 suggestion oracle (`tests/test_arch_suggestions.py`) with a marked success base and its actual typed NotFound anchor; do not baseline a new exception. Refresh only the eight discovered stale backup/discovery recordings (four backup manifests, two capability listings and two full bootstraps) through their harness. Those failures reflect the two new artifact schemas and declared query; checksum/restore and historical corpus assertions remain intact.
+
+## Stage 6 outcome and continuation
+
+Stage 6 implementation and focused owning checks are complete; see [the outcome](2026-10-29-agility-stage6-outcome.md) and issue #73. The new read and memory-only UI selection preserve the durable plan and explicitly limit prerequisite checking to authored mappings. Aram then instructed: start Stage 7 immediately after this push. This supersedes the Stage 6 plan's earlier stop-before-7 step; Stage 8's final combined acceptance is still separate.

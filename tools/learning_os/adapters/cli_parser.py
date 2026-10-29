@@ -103,6 +103,7 @@ _SUBCOMMAND_ORDER = (
     "note-revise",
     "note-evidence",
     "runtime-session",
+    "study-sequence",
     "observation-append",
     "stage-result",
     "ability-observation-append",

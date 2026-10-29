@@ -28,6 +28,17 @@ queries:
     - one exact registered route yields common source identity, locator, type, availability, and observed digest
     - local extraction is on demand and bounded; remote sources are never fetched implicitly
     - unreadable or changed bytes remain explicit and no semantic judgment is inferred
+  study.sequence:
+    handler: study_sequence
+    cli_command: study-sequence
+    kind: porcelain
+    result: study-sequence-v1
+    schema: system/schema/study-sequence.schema.json
+    invariants:
+    - read-only ordered subset of one current Unit study map, bound to its snapshot and Europe/Berlin date
+    - authored transitive prerequisite stage links remain ordered unless already recorded complete; no mastery inference
+    - open required-now detours refuse; unmapped prerequisite scope stays explicit
+    - view-owned temporary navigation only; no canonical plan, progress, resume or session write
   runtime.session:
     handler: runtime_session
     result: runtime-session-v1

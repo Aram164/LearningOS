@@ -591,6 +591,18 @@ proposal, as declared in `system/contracts/capabilities.yaml` and
 stored canonical session entity; learner evidence and stage state retain their
 existing owners.
 
+The `study.sequence` query previews an ordered subset of one Unit's existing
+stages under the current snapshot. It enforces authored transitive knowledge-node
+prerequisite links through stage mappings, allows an already completed study
+activity to be omitted without inferring mastery, and reports missing mappings
+explicitly. Open required-now detours keep their existing repair/return flow.
+Obsidian stores an accepted choice only in the current Unit view's memory:
+closing/changing the view, requesting End session, a changed/stale snapshot or
+a changed Europe/Berlin calendar day expires it. Check and Use are read-only;
+the durable map, lifecycle, notes, attachments, feedback and global resume
+pointer remain owned by their existing records and gateways. A reset shows the
+full authored plan. Neither the override nor its omissions are stored as progress.
+
 Source relationships have four distinct owners:
 
 1. the global source record owns identity, location, authorship and contextual

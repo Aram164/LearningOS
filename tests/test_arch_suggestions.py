@@ -1217,6 +1217,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
 
 
 
+    ("study.sequence", "/properties/unit_id"):
+        ("study.sequence.unknown-unit", "unknown-unit"),
     ("plan.edit-context", "/properties/unit_id"):
         ("plan.edit-context.unknown-unit", "unknown-unit"),
     ("plan.edit-context", "/properties/route_id"):
@@ -1362,6 +1364,7 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
 
 
 
+    ("study.sequence", "/properties/unit_id"): ("template", "unit"),
     ("plan.edit-context", "/properties/unit_id"): ("template", "unit"),
     ("plan.edit-context", "/properties/route_id"):
         ("legacy",
@@ -1424,6 +1427,7 @@ _CLI_SEQUENCE_POINTERS = frozenset({
 #: same (cd) oracle as the sequence anchors; the anchor's own argv
 #: is the last step and there are no prerequisites to replay.
 _CLI_REFUSED_POINTERS = frozenset({
+    ("study.sequence", "/properties/unit_id"),
     ("dossier.read", "/properties/unit_id"),
     ("note.content", "/properties/note_id"),
 

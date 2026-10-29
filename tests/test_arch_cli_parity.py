@@ -37,6 +37,15 @@ def _retired_choice_text(text: str) -> str:
         "project-create, project-update, ", "")
 
 
+def _without_stage6_choice(actual: dict) -> dict:
+    """Only the approved added verb is absent from frozen historical errors."""
+    actual = copy.deepcopy(actual)
+    for key, value in actual.get("error", {}).items():
+        if isinstance(value, str) and ("usage: los" in value or "choose from" in value):
+            actual["error"][key] = value.replace(",study-sequence", "").replace(", 'study-sequence'", "").replace(", study-sequence", "")
+    return actual
+
+
 def _current_recorded_errors(recorded: dict) -> dict:
     recorded = copy.deepcopy(recorded)
     if "error" in recorded:
@@ -466,6 +475,9 @@ def test_generated_parser_matches_baseline_structure():
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     live = _normalize_describe(arch_cli_describe.describe(los.build_parser()))
     expected = _normalize_describe(baseline)
+    assert "study-sequence" in live["subparsers"]
+    live["order"].remove("study-sequence")
+    live["subparsers"].pop("study-sequence")
     expected["order"] = [name for name in expected["order"] if name not in RETIRED_PROJECT_COMMANDS]
     for name in RETIRED_PROJECT_COMMANDS:
         expected["subparsers"].pop(name)
@@ -595,7 +607,7 @@ def test_corpus_parity():
             baseline = next(row["result"] for row in corpus["cases"]
                             if row["argv"] == argv[:1] and "namespace" in row["result"])
             recorded = copy.deepcopy(baseline)
-        actual = _run(parser, argv)
+        actual = _without_stage6_choice(_run(parser, argv))
         retired = _retired_command(argv)
         if retired:
             _assert_retired_refusal(actual, retired)
@@ -704,7 +716,7 @@ def test_actual_old_source_supplement_parity():
                 namespace = _normalize_registered_namespace(namespace, handler)
             recorded["namespace"] = namespace
         recorded = _normalize_claim_surface_observation(parser, row["argv"], recorded)
-        actual = _run(parser, row["argv"])
+        actual = _without_stage6_choice(_run(parser, row["argv"]))
         retired = _retired_command(row["argv"])
         if retired:
             _assert_retired_refusal(actual, retired)

@@ -1,0 +1,36 @@
+operation: study.sequence
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: durable-order
+    a5_base: true
+    kind: success
+    transport: cli
+    argv: [study-sequence, unit-demo-l01]
+    expect: {site: null}
+  - id: temporary-subset
+    kind: success
+    transport: cli
+    argv: [study-sequence, unit-demo-l01, --stage-ids-json, '["stage-demo-pending"]']
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [study-sequence, unit-missing]
+    expect: {site: study.sequence.unknown-unit}
+  - id: missing-map
+    kind: refusal
+    transport: cli
+    argv: [study-sequence, unit-demo-l02]
+    expect: {site: study.sequence.bad-input}
+  - id: duplicate-ids
+    kind: refusal
+    transport: cli
+    argv: [study-sequence, unit-demo-l01, --stage-ids-json, '["stage-demo","stage-demo"]']
+    expect: {site: study.sequence.bad-input}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [study-sequence, unit-demo-l01, --expected-snapshot, 'sha256:0000000000000000000000000000000000000000000000000000000000000000']
+    expect: {site: study.sequence.stale-snapshot}
+untriggered: []

@@ -344,3 +344,82 @@ def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[
         return stamp if isinstance(stamp, str) else ""
 
     return sorted(live, key=_when, reverse=True)
+
+
+def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dict:
+    """Derive one ordered subset, enforcing only authored prerequisite links.
+
+    This is a read model. It neither changes stage lifecycle nor infers mastery
+    from a completed study activity. Its caller binds the result to a snapshot.
+    """
+    unit = repo.units.get(unit_id)
+    if unit is None:
+        raise RuntimeInputError(f"unknown unit: {unit_id}")
+    study_map = repo.study_maps.get(unit.data.get("current_study_map"))
+    if study_map is None or study_map.unit_id != unit_id:
+        raise RuntimeInputError("unit has no current study map belonging to this Unit")
+    stages = study_map.data.get("stages", [])
+    by_id = {row["id"]: row for row in stages}
+    if len(by_id) != len(stages):
+        raise RuntimeInputError("ambiguous stage IDs in current study map")
+    if stage_ids is None:
+        stage_ids = list(by_id)
+    if not isinstance(stage_ids, list) or not stage_ids or any(not isinstance(sid, str) for sid in stage_ids):
+        raise RuntimeInputError("stage IDs must be a nonempty ordered list of strings")
+    if len(stage_ids) != len(set(stage_ids)) or any(sid not in by_id for sid in stage_ids):
+        raise RuntimeInputError("stage IDs must be distinct existing stages of this Unit")
+    if any(row.get("status") == "open" and row.get("classification") == "required-now"
+           for row in study_map.data.get("detours", [])):
+        raise RuntimeInputError("an open required-now detour must retain its repair and return flow")
+    nodes = {row["id"]: row for row in (unit.data.get("knowledge_map") or {}).get("nodes", [])}
+    stages_by_node: dict[str, list[dict]] = {}
+    for stage in stages:
+        if stage.get("knowledge_node_id"):
+            stages_by_node.setdefault(stage["knowledge_node_id"], []).append(stage)
+    positions = {sid: i for i, sid in enumerate(stage_ids)}
+    edges: set[tuple[str, str]] = set()
+    notes = {"Only authored knowledge-node prerequisites are checked; this sequence grants no readiness or mastery."}
+    def ancestors(start: str) -> set[str]:
+        visiting: set[str] = set()
+        visited: set[str] = set()
+        stack = [(start, False)]
+        while stack:
+            nid, finished = stack.pop()
+            if finished:
+                visiting.remove(nid)
+                visited.add(nid)
+                continue
+            if nid in visiting:
+                raise RuntimeInputError("cycle in selected stage's authored prerequisite ancestry")
+            if nid in visited:
+                continue
+            if nid not in nodes:
+                raise RuntimeInputError(f"unknown prerequisite knowledge node: {nid}")
+            visiting.add(nid)
+            stack.append((nid, True))
+            stack.extend((dependency, False) for dependency in nodes[nid].get("builds_on", []))
+        return visited - {start}
+
+    for sid in stage_ids:
+        node_id = by_id[sid].get("knowledge_node_id")
+        if not node_id:
+            notes.add(f"No prerequisite stage mapping is authored for {sid}.")
+            continue
+        for dependency in sorted(ancestors(node_id)):
+            mapped = stages_by_node.get(dependency, [])
+            if not mapped:
+                notes.add(f"Prerequisite node {dependency} has no mapped stage; its satisfaction is unchecked.")
+            for prerequisite in mapped:
+                pid = prerequisite["id"]
+                edges.add((pid, sid))
+                if prerequisite.get("status") != "complete" and (pid not in positions or positions[pid] >= positions[sid]):
+                    raise RuntimeInputError(f"prerequisite stage {pid} must precede {sid} or already record complete")
+    return {
+        "unit_id": unit_id, "study_map_id": study_map.id,
+        "canonical_current_stage": study_map.data.get("current_stage"),
+        "durable_stage_ids": list(by_id),
+        "stages": [{"id": sid, "title": by_id[sid]["title"], "status": by_id[sid]["status"]} for sid in stage_ids],
+        "omitted_stage_ids": [sid for sid in by_id if sid not in positions],
+        "prerequisite_edges": [{"prerequisite_stage_id": a, "dependent_stage_id": b} for a, b in sorted(edges)],
+        "limitations": sorted(notes),
+    }

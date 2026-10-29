@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path, PurePosixPath
+from zoneinfo import ZoneInfo
 
 from learning_os import __version__
 from learning_os.app.context import OpContext
@@ -15,7 +16,11 @@ from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
 from learning_os.app.registry import OperationEffects, register
 from learning_os.app.validation_service import status_issues
-from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
+from learning_os.derive.learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    temporary_study_sequence,
+)
 from learning_os.derive.projection import adoption_counts, exam_spine
 from learning_os.derive.projection.atlas import ATLAS_DOMAINS
 from learning_os.derive.projection.learner_interpreter import (
@@ -1387,3 +1392,32 @@ def module_list(ctx: OpContext, req: dict) -> Result:
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req["status"]]
     return Result(rows)
+
+
+@register("study.sequence", kind="porcelain", effects=OperationEffects.READ)
+def study_sequence(ctx: OpContext, req: dict) -> Result:
+    """Preview a temporary Unit-stage order without creating a session record."""
+    try:
+        before = ctx.snapshot_id()
+        if req.get("expected_snapshot") and req["expected_snapshot"] != before:
+            raise StaleSnapshot("snapshot changed; reload before choosing a temporary sequence",
+                                site="study.sequence.stale-snapshot")
+        ids = json.loads(req["stage_ids_json"]) if req.get("stage_ids_json") is not None else None
+        if req.get("stage_ids_json") is not None and ids is None:
+            raise RuntimeInputError("stage IDs must be an ordered list, not null")
+        repo = ctx.repo()
+        if req["unit_id"] not in repo.units:
+            raise NotFound("unit", req["unit_id"], repo.units,
+                           site="study.sequence.unknown-unit", exit_code=2)
+        result = temporary_study_sequence(repo, req["unit_id"], ids)
+        from learning_os.store import observations
+        result.update(contract="study-sequence-v1", snapshot_id=before,
+                      valid_on_date=observations.now().astimezone(ZoneInfo("Europe/Berlin")).date().isoformat(),
+                      timezone="Europe/Berlin", lifetime="unit-view-and-snapshot", canonical_files_written=0)
+        validate_contract(ctx.root, "study-sequence.schema.json", result)
+        if before != _snapshot(ctx.root):
+            raise StaleSnapshot("snapshot changed during sequence preview; retry",
+                                site="study.sequence.stale-snapshot")
+        return Result(result)
+    except (RuntimeInputError, ContractValidationError, json.JSONDecodeError, OSError) as exc:
+        raise WriteRefused(str(exc), site="study.sequence.bad-input", prefixed=True, exit_code=2) from exc

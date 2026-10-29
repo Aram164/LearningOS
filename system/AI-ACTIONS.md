@@ -119,7 +119,7 @@ operations:
 | `system/contracts/capabilities.yaml` | the write scope each domain capability may touch |
 
 <!-- los:generated name=capability-count -->
-48 write capabilities, 20 queries
+48 write capabilities, 21 queries
 <!-- /los:generated -->
 
 All three are read by the core. The interface renders a projection of them and

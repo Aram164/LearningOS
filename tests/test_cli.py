@@ -652,7 +652,7 @@ def test_production_bindings_and_baseline_stay_frozen(repo_root):
     import los
     from learning_os.store.contracts.payloads import subparsers
 
-    assert len(subparsers(los.build_parser())) == 93
+    assert len(subparsers(los.build_parser())) == 94
     baseline = json.loads(
         (repo_root / "tests/architecture/cli-parity-baseline.json")
         .read_text(encoding="utf-8"))

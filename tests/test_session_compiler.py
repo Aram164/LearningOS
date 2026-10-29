@@ -1283,3 +1283,143 @@ def test_overnight_prerequisite_repair_keeps_remaining_mixed_intervention(runtim
         "prerequisite_repairs": {"standardization": "route-demo-0"}})
     assert session["plan_status"] == "ready"
     assert [step["resource_id"] for step in session["steps"]] == ["route-demo-0", "route-demo-2", "route-demo-1"]
+
+
+@pytest.fixture
+def sequence_root(runtime_root):
+    unit_path = runtime_root / 'curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml'
+    unit = yaml.safe_load(unit_path.read_text())
+    unit['knowledge_map'] = {'nodes': [
+        {'id': 'knowledge-seq-a', 'title': 'A', 'summary': 'Foundation', 'builds_on': [], 'concept_ids': []},
+        {'id': 'knowledge-seq-b', 'title': 'B', 'summary': 'Extension', 'builds_on': ['knowledge-seq-a'], 'concept_ids': []},
+        {'id': 'knowledge-seq-c', 'title': 'C', 'summary': 'Independent', 'builds_on': [], 'concept_ids': []},
+    ]}
+    write_yaml(unit_path, unit)
+    path = unit_path.parent / 'study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    first = data['stages'][0]
+    data['stages'] = []
+    for i, key in enumerate(('a', 'b', 'c'), 1):
+        stage = copy.deepcopy(first)
+        stage.update(id=f'stage-seq-{key}', title=key.upper(), number=i,
+                     knowledge_node_id=f'knowledge-seq-{key}', status='pending')
+        stage.pop('runtime_target', None)
+        stage.pop('runtime_review', None)
+        stage['working_note'] = str(unit_path.parent.relative_to(runtime_root) / f'stages/stage-seq-{key}/notes.md')
+        note = runtime_root / stage['working_note']
+        note.parent.mkdir(parents=True, exist_ok=True)
+        note.write_text(f'Learner wording {key}.\n')
+        data['stages'].append(stage)
+    data['current_stage'] = 'stage-seq-a'
+    write_yaml(path, data)
+    return runtime_root
+
+
+def test_temporary_sequence_reorders_independent_stages_without_canonical_writes(sequence_root):
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    before = canonical_fingerprint(sequence_root)
+    result = run_los(sequence_root, 'study-sequence', 'unit-demo-l01', '--stage-ids-json',
+                     json.dumps(['stage-seq-c', 'stage-seq-a', 'stage-seq-b']))
+    assert result.returncode == 0, result.stderr
+    packet = json.loads(result.stdout)
+    assert [s['id'] for s in packet['stages']] == ['stage-seq-c', 'stage-seq-a', 'stage-seq-b']
+    assert packet['durable_stage_ids'] == ['stage-seq-a', 'stage-seq-b', 'stage-seq-c']
+    assert packet['canonical_current_stage'] == 'stage-seq-a'
+    assert packet['canonical_files_written'] == 0
+    assert packet['timezone'] == 'Europe/Berlin'
+    assert packet['lifetime'] == 'unit-view-and-snapshot'
+    assert canonical_fingerprint(sequence_root) == before
+    assert not list((sequence_root / 'operations/transactions').glob('transaction-*.yaml'))
+
+
+@pytest.mark.parametrize('ids', [[], ['missing'], ['stage-seq-a', 'stage-seq-a'], ['stage-seq-b'],
+                              ['stage-seq-b', 'stage-seq-a'], [False], {'stage': 'stage-seq-a'}, None])
+def test_temporary_sequence_refuses_bad_ids_and_prerequisite_omission(sequence_root, ids):
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    before = canonical_fingerprint(sequence_root)
+    result = run_los(sequence_root, 'study-sequence', 'unit-demo-l01', '--stage-ids-json', json.dumps(ids))
+    assert result.returncode != 0
+    assert canonical_fingerprint(sequence_root) == before
+
+
+def test_temporary_sequence_allows_independent_omission_and_completed_prerequisite(sequence_root):
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    data['stages'][0]['status'] = 'complete'
+    write_yaml(path, data)
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-b'])
+    assert packet['omitted_stage_ids'] == ['stage-seq-a', 'stage-seq-c']
+    assert packet['stages'][0]['status'] == 'pending'
+    assert any('no readiness or mastery' in note for note in packet['limitations'])
+
+
+def test_temporary_sequence_transitive_edges_cycles_and_required_detours(sequence_root):
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    unit_path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml'
+    unit = yaml.safe_load(unit_path.read_text())
+    unit['knowledge_map']['nodes'][2]['builds_on'] = ['knowledge-seq-b']
+    write_yaml(unit_path, unit)
+    with pytest.raises(RuntimeInputError, match='prerequisite stage'):
+        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-c'])
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-a', 'stage-seq-b', 'stage-seq-c'])
+    assert {'prerequisite_stage_id': 'stage-seq-a', 'dependent_stage_id': 'stage-seq-c'} in packet['prerequisite_edges']
+    unit['knowledge_map']['nodes'][0]['builds_on'] = ['knowledge-seq-c']
+    write_yaml(unit_path, unit)
+    with pytest.raises(RuntimeInputError, match='cycle'):
+        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-a'])
+    unit['knowledge_map']['nodes'][0]['builds_on'] = []
+    write_yaml(unit_path, unit)
+    path = unit_path.parent / 'study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    data['detours'] = [{'id': 'detour-seq', 'title': 'Repair', 'status': 'open', 'classification': 'required-now',
+                        'spawned_by_stage': 'stage-seq-a', 'return_to_stage': 'stage-seq-a'}]
+    write_yaml(path, data)
+    with pytest.raises(RuntimeInputError, match='required-now detour'):
+        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-a'])
+
+
+def test_temporary_sequence_snapshot_change_refuses_without_writing(sequence_root):
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    first = run_los(sequence_root, 'study-sequence', 'unit-demo-l01')
+    assert first.returncode == 0, first.stderr
+    snapshot = json.loads(first.stdout)['snapshot_id']
+    note = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-seq-a/notes.md'
+    note.write_text('New learner wording.\n')
+    before = canonical_fingerprint(sequence_root)
+    refused = run_los(sequence_root, 'study-sequence', 'unit-demo-l01', '--expected-snapshot', snapshot)
+    assert refused.returncode == 3
+    assert canonical_fingerprint(sequence_root) == before
+
+
+def test_temporary_sequence_mid_read_change_refuses_without_writing(sequence_root, monkeypatch):
+    from types import SimpleNamespace
+
+    from learning_os.app.handlers import reads
+    from learning_os.domain.failures import StaleSnapshot
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    before = canonical_fingerprint(sequence_root)
+    snapshot = "sha256:" + before
+    ctx = SimpleNamespace(root=sequence_root, repo=lambda: load_repo(sequence_root), snapshot_id=lambda: snapshot)
+    monkeypatch.setattr(reads, '_snapshot', lambda _root: 'sha256:' + '0' * 64)
+    with pytest.raises(StaleSnapshot, match='during sequence preview'):
+        reads.study_sequence(ctx, {'unit_id': 'unit-demo-l01', 'stage_ids_json': None, 'expected_snapshot': snapshot})
+    assert canonical_fingerprint(sequence_root) == before
+
+
+def test_temporary_sequence_reports_unmapped_prerequisite_scope(sequence_root):
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    data['stages'][0].pop('knowledge_node_id')
+    write_yaml(path, data)
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-b'])
+    assert packet['prerequisite_edges'] == []
+    assert any('knowledge-seq-a has no mapped stage' in note for note in packet['limitations'])

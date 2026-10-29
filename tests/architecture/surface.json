@@ -500,6 +500,10 @@
    "semantic.query": {
     "cli_command": null,
     "handler": "semantic"
+   },
+   "study.sequence": {
+    "cli_command": "study-sequence",
+    "handler": "study_sequence"
    }
   }
  },
@@ -8310,6 +8314,72 @@
     "type": null
    }
   ],
+  "study-sequence": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_ids_json",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--stage-ids-json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "unit-list": [
    {
     "action": "store_true",
@@ -9353,6 +9423,7 @@
   "stage.note.write.schema.json": "83f18cb5fb35af4a4674021a33f343d013b0252f00deaad8874415ae9beeb0fc",
   "stage.progress.update.schema.json": "50f7d840666f6c5db501fe23c239bf7ce20d7883e0b9d2888bbb44b954c61c2f",
   "status.read.schema.json": "3583d0fb76db5a39f2c7818a9844eb5b8ac1471ad409788db38fb4e6590d3ff2",
+  "study.sequence.schema.json": "0b704bc9aff10f2f2d2453208d96f780bd62d7eeeca157675140cc5566443a05",
   "unit.list.schema.json": "28ed9af83321e0b9e995e9964b7bafeb83dd173fd54dac9b6cbfee6268745478",
   "unit.map.import.schema.json": "3420133d42337c0de70c49e5a0a67fe94623b1ae214fd050147d9adaf1a9a697",
   "unit.material-synthesis.publish.schema.json": "7a48b189959f817278122775987799e65751f6f39b120351d1017000ab01a247",

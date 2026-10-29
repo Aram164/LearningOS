@@ -481,3 +481,7 @@ fields:
   pointer: /properties/workspace_id
   kind: workspace
   lookup: true
+- operation: study.sequence
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
