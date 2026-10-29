@@ -142,13 +142,18 @@ def _template_root() -> Path:
 
 
 def _build_fixture(name: str, container: Path) -> Path:
-    if name != "rich_world":
+    if name not in {"rich_world", "rich_world_warning_debt"}:
         raise ValueError(f"unknown scenario fixture: {name}")
     # The world spans the repository root and its sibling materials tree
     # (the fixture book lives there), so the copy unit is LearningOS/.
     template = _template_root()
     shutil.copytree(template.parent, Path(container) / "LearningOS")
-    return Path(container) / "LearningOS" / "repository"
+    root = Path(container) / "LearningOS" / "repository"
+    if name == "rich_world_warning_debt":
+        target = root / "projects/registry/project-scenario-new.yaml"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((TESTS_DIR / "fixtures/unbaselined-project.yaml").read_bytes())
+    return root
 
 
 def _git(root: Path, *args: str, env: dict | None = None) -> None:

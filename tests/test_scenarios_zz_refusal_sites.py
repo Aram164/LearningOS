@@ -2926,50 +2926,6 @@ def _prove_material_context_read_failed(mini_repo: Path, tmp_path: Path,
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
-def _prove_project_create_unknown_project(mini_repo: Path, tmp_path: Path,
-                                          monkeypatch) -> None:
-    """The update-only arm fires for create (R-A9-2).
-
-    The create handler hardcodes its own capability, so no case
-    input reaches the update-only arm; the proof drives the shared
-    writer with the update capability by direct injection and
-    asserts the witness line, the class and the exit.
-    """
-    import learning_os.app.handlers.platform as platform
-    from learning_os.app.outcomes import exit_for
-    from learning_os.domain.failures import NotFound
-
-    ctx = _a9_world("project.create", "create-project", tmp_path)
-    root = ctx.root
-    real_write = platform._project_write
-
-    def as_update(root, data, *, capability, operation):
-        return real_write(root, data, capability="project.update",
-                          operation=operation)
-
-    monkeypatch.setattr(platform, "_project_write", as_update)
-    outcome, lines = _a9_run_gateway(
-        root, "project.create",
-        {"project": {"schema_version": 1, "id": "project-scenario-new",
-                     "type": "project", "title": "Scenario project",
-                     "project_type": "software", "status": "active",
-                     "root_uri": "project://scenario",
-                     "objective": "Characterize project creation.",
-                     "milestone_ids": [], "linked_module_ids": [],
-                     "unit_ids": [], "workspace_ids": [],
-                     "thematic_group_ids": [],
-                     "boundaries": {"confidentiality": "private",
-                                    "external_code_access": "approved"}}},
-        ["project-scenario-new"], "a9-proof-create-unknown-project",
-        tmp_path, monkeypatch)
-    assert outcome.ok is False
-    assert outcome.exit_code == 2
-    assert lines == [{"operation": "project.create", "kind": "failure",
-                      "site": "project.create.unknown-project",
-                      "class": "NotFound", "exit_code": None}]
-    assert exit_for(NotFound("project", "project-scenario-new", []),
-                    "gateway.dispatch") == 2
-
 _PROOF_FNS.update({
     'dossier.read.unreadable-records': _prove_dossier_unreadable_records,
     'dossier.read.no-source-map': _prove_dossier_no_source_map,
@@ -2997,7 +2953,6 @@ _PROOF_FNS.update({
     'material.span.placement-source-mismatch': _prove_span_placement_mismatch,
     'material.span.read-failed': _prove_span_read_failed,
     'material.context.read-failed': _prove_material_context_read_failed,
-    'project.create.unknown-project': _prove_project_create_unknown_project,
 })
 
 

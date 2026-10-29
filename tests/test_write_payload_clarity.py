@@ -227,10 +227,6 @@ def _record_top_level(repo_root, path):
 
 def test_full_record_shapes_derive_from_their_record_schemas(repo_root):
     cases = [
-        ("project.create", "project", "system/schema/project.schema.json",
-         {"schema_version"}),
-        ("project.update", "project", "system/schema/project.schema.json",
-         {"schema_version"}),
         ("module.plan.import", "promotion",
          "system/schema/master-planning-promotion.schema.json", set()),
         ("masters-planning.catalog.update", "record",
@@ -573,7 +569,7 @@ def test_generated_payloads_carry_no_transport_annotations(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 50
+    assert len(schemas) == 48
     for name, schema in schemas.items():
         assert list(_transport_keys(schema)) == [], name
     assert "x-los-id-kind" not in schemas["unit.note.append"][

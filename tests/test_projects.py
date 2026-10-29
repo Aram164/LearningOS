@@ -10,34 +10,41 @@ import pytest
 pytestmark = pytest.mark.full_repo
 
 
-def test_bachelor_thesis_is_a_first_class_project(real_manifest):
-    data = real_manifest
-    assert [row["id"] for row in data["projects"]] == ["project-bachelor-thesis"]
-    assert "module-project-bachelor-thesis" not in {row["id"] for row in data["modules"]}
-    assert data["project_aliases"]["module-project-bachelor-thesis"] == "project-bachelor-thesis"
-    project = data["projects"][0]
-    thesis_units = {row["id"]: row for row in data["units"] if row["id"].startswith("unit-thesis-")}
-    assert thesis_units
-    assert all(row.get("project_ids") == ["project-bachelor-thesis"] for row in thesis_units.values())
-    assert project["structure"]["kind"] == "parallel"
-    assert any(
-        child.get("kind") == "step-map"
-        for node in project["structure"]["nodes"]
-        for child in node.get("children", [])
-    )
-    assert "%" not in json.dumps(project)
-    assert len(data["project_relationships"]) == 3
-    assert all(row.get("contribution") for row in data["project_relationships"])
+@pytest.mark.parametrize("kind,status,compatibility,expected", [
+    ("academic", "enrolled", False, True),
+    ("project", "active", False, True),
+    ("project", "planned", False, True),
+    ("project", "completed", False, False),
+    ("project", "archived", False, False),
+    ("project", "dropped", False, False),
+    ("project", "active", True, False),
+    ("boundary", "active", False, False),
+    ("skill", "active", False, False),
+])
+def test_ordinary_module_listing_preserves_its_exclusions(kind, status, compatibility, expected):
+    from learning_os.derive.semesters import is_listed
+    assert is_listed({"kind": kind, "status": status, "compatibility_only": compatibility}) is expected
 
 
-def test_project_cli_resolves_compatibility_alias(repo_root: Path):
-    result = subprocess.run(
-        [sys.executable, str(repo_root / "tools/los.py"), "inspect", "module-project-bachelor-thesis"],
-        cwd=repo_root, text=True, capture_output=True, check=True,
-    )
-    payload = json.loads(result.stdout)
-    assert payload["id"] == "project-bachelor-thesis"
-    assert payload["resolved_from"] == "module-project-bachelor-thesis"
+def test_bachelor_thesis_is_an_ordinary_module(real_manifest):
+    assert real_manifest["projects"] == []
+    assert real_manifest["project_relationships"] == []
+    module = next(row for row in real_manifest["modules"] if row["id"] == "module-project-bachelor-thesis")
+    assert module["kind"] == "project" and module["area_id"] == "program-bachelors"
+    assert real_manifest["project_aliases"]["project-bachelor-thesis"] == module["id"]
+    assert module["unit_order"] == ["unit-thesis-landscape", "unit-thesis-experiments"]
+    assert all(not row.get("project_ids") for row in real_manifest["units"])
+
+
+def test_project_cli_resolves_to_the_canonical_module(repo_root: Path):
+    for identity in ["project-bachelor-thesis", "module-project-bachelor-thesis"]:
+        result = subprocess.run(
+            [sys.executable, str(repo_root / "tools/los.py"), "inspect", identity],
+            cwd=repo_root, text=True, capture_output=True, check=True,
+        )
+        payload = json.loads(result.stdout)
+        assert payload["id"] == "module-project-bachelor-thesis"
+        assert payload.get("resolved_from") == (identity if identity.startswith("project-") else None)
 
 
 def test_project_migration_is_retired_on_current_contract(repo_root: Path):

@@ -365,3 +365,15 @@ approvals:
   - {change: added, key: catalog.commands.projection.observe, plan_ref: Systemwide consolidation PLAN D07 / Step 3, pre_approved_by: 'Aram 2026-10-26: if not you finish the job to its end; finish up (execution of the supplied plan including projection.observe)'}
 
   - {key: "catalog.domain_capabilities.migration.projects-to-modules-v62", change: added, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 9 / Stage 4B", pre_approved_by: "Aram 2026-10-29: go ahead with Stage 4B migration and safety tests under the accepted Stage 4A authority decision"}
+
+  - {key: "catalog.commands.project.create", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+
+  - {key: "catalog.commands.project.update", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+
+  - {key: "cli.project-create", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+
+  - {key: "cli.project-update", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+
+  - {key: "request_schemas.project.create.schema.json", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}
+
+  - {key: "request_schemas.project.update.schema.json", change: removed, plan_ref: "work/proposals/2026-10-28-thesis-module-stage4a.md decision 8 / Stage 4C", pre_approved_by: "Aram 2026-10-29: Verify the Stage 4C work and fix it if needed; keep working without further questions"}

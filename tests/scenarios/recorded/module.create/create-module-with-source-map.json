@@ -149,7 +149,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"module_id\":\"module-scenario-create-2\",\"files_written\":2,\"module_listing\":{\"listed\":true,\"rule\":\"open academic modules: kind=academic and status not in (completed, archived, dropped)\",\"kind\":\"academic\",\"status\":\"enrolled\",\"semester\":\"wise-2026\",\"program_id\":\"program-bachelors\",\"current_semester\":{\"id\":\"semester-sose-2026\",\"title\":\"SoSe 2026\"},\"semester_matches_current\":false,\"note\":\"the module's semester ('wise-2026') differs from the current semester ('semester-sose-2026'); the module list is not gated by the semester, so the module is still listed\"},\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"module-scenario-create-2\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.create\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"module_id\":\"module-scenario-create-2\",\"files_written\":2,\"module_listing\":{\"listed\":true,\"rule\":\"open learning modules: kind in (academic, project) and not compatibility_only and status not in (completed, archived, dropped)\",\"kind\":\"academic\",\"status\":\"enrolled\",\"semester\":\"wise-2026\",\"program_id\":\"program-bachelors\",\"current_semester\":{\"id\":\"semester-sose-2026\",\"title\":\"SoSe 2026\"},\"semester_matches_current\":false,\"note\":\"the module's semester ('wise-2026') differs from the current semester ('semester-sose-2026'); the module list is not gated by the semester, so the module is still listed\"},\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"module-scenario-create-2\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
   "stdout_json": {
     "capability": "module.create",
     "error": null,
@@ -174,7 +174,7 @@
         "listed": true,
         "note": "the module's semester ('wise-2026') differs from the current semester ('semester-sose-2026'); the module list is not gated by the semester, so the module is still listed",
         "program_id": "program-bachelors",
-        "rule": "open academic modules: kind=academic and status not in (completed, archived, dropped)",
+        "rule": "open learning modules: kind in (academic, project) and not compatibility_only and status not in (completed, archived, dropped)",
         "semester": "wise-2026",
         "semester_matches_current": false,
         "status": "enrolled"

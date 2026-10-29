@@ -183,10 +183,16 @@ def test_historical_revisions_remain_literal_and_related_resolves_owner(thesis):
         "schema_version": 1, "type": "artifact-revision-ledger",
         "revisions": {migration.PROJECT: 2, migration.MODULE: 1, migration.WORKSPACE: 2}})
     # A real historical receipt, whose Project artifact identity must not be aliased.
+    catalogue_path = thesis / "system/contracts/capabilities.yaml"
+    current_catalogue = catalogue_path.read_bytes()
+    catalogue = yaml.safe_load(current_catalogue)
+    catalogue["domain_capabilities"]["project.update"] = {"writes": ["projects/registry/*"]}
+    write_yaml(catalogue_path, catalogue)
     previous = TransactionService(thesis).commit(
         capability="project.update",
         writes={thesis / migration.PROJECT_PATH: (thesis / migration.PROJECT_PATH).read_bytes()},
         artifact_ids=[migration.PROJECT], expected_revisions={migration.PROJECT: 2})
+    catalogue_path.write_bytes(current_catalogue)
     previous_bytes = previous.receipt_path.read_bytes()
     report = migration.prepare(thesis)
     result = commit(thesis, report)

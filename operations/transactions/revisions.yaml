@@ -56,7 +56,7 @@ revisions:
   module-job-polars: 3
   module-job-python-engineering: 1
   module-job-rust-engineering: 1
-  module-project-bachelor-thesis: 1
+  module-project-bachelor-thesis: 2
   note-06-random-variables-pp005-008: 1
   note-06-random-variables-pp009-013: 1
   note-06-random-variables-pp015-023: 1
@@ -113,7 +113,7 @@ revisions:
   program-job: 1
   program-job-boundary: 1
   program-thesis-projects: 1
-  project-bachelor-thesis: 2
+  project-bachelor-thesis: 3
   source-3b1b-neural-networks: 1
   source-aide-paper: 1
   source-aide-reference: 1
@@ -402,4 +402,4 @@ revisions:
   unit-m2-sad-l13: 12
   unit-m2-sad-l14: 16
   unit-m2-sad-l15: 17
-  workspace-thesis-mle-medical: 2
+  workspace-thesis-mle-medical: 3

@@ -5,7 +5,7 @@ title: Scenario project
 project_type: software
 status: active
 root_uri: project://scenario
-objective: Characterize project creation from a file.
+objective: Characterize warning admission.
 milestone_ids: []
 linked_module_ids: []
 unit_ids: []

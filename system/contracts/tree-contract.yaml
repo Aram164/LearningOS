@@ -107,12 +107,12 @@ directories:
 
   - path: projects
     owner: projects
-    purpose: first-class Projects — registry and relations
+    purpose: historical Project records and direct owner aliases
     children:
       - path: projects/registry
-        purpose: one record per project
+        purpose: one record per historical project
       - path: projects/relations
-        purpose: project-to-record relations, authored not inferred
+        purpose: historical project-to-record relations
 
   - path: operations
     owner: operations

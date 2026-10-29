@@ -68,30 +68,9 @@ cases:
   expect:
     site: route.patch.no-changes
 - id: valid-plan-hits-warning-gate
+  fixture: rich_world_warning_debt
   kind: sequence
   steps:
-  - transport: gateway
-    operation: project.create
-    request:
-      project:
-        schema_version: 1
-        id: project-scenario-new
-        type: project
-        title: Scenario project
-        project_type: software
-        status: active
-        root_uri: project://scenario
-        objective: Characterize project creation.
-        milestone_ids: []
-        linked_module_ids: []
-        unit_ids: []
-        workspace_ids: []
-        thematic_group_ids: []
-        boundaries:
-          confidentiality: private
-          external_code_access: approved
-    artifact_ids:
-    - project-scenario-new
   - transport: gateway
     request:
       unit_id: unit-demo-l01

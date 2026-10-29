@@ -1,0 +1,23 @@
+relations:
+- id: relationship-thesis-amls
+  from_project_id: project-bachelor-thesis
+  to_id: module-hu-amls
+  to_type: module
+  relation_type: informs
+  reason: Advanced ML Systems is the closest active module to the thesis systems questions.
+  contribution: Provides systems vocabulary, evaluation discipline, and reference methods for the experiments.
+- id: relationship-thesis-project-toolbox
+  from_project_id: project-bachelor-thesis
+  to_id: project-toolbox
+  to_type: topic-pack
+  relation_type: uses
+  reason: The Project Toolbox is the narrow working shelf chosen for this project.
+  contribution: Keeps implementation and experiment-support materials in a deliberate working order.
+- id: relationship-thesis-landscape-plan
+  from_project_id: project-bachelor-thesis
+  to_id: file-thesis-landscape-plan
+  to_type: file
+  relation_type: produces
+  reason: This is the project-owned planning output for the current thesis scope.
+  contribution: Stores the evidence landscape, bounded experiment design, and unresolved decisions.
+  path: work/active/workspace-thesis-mle-medical/outputs/thesis-landscape-and-plan.md

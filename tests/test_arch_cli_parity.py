@@ -26,6 +26,35 @@ REQUESTS_DIR = ROOT / "system/schema/requests"
 
 FIX = "Generated parser drifted from the recorded CLI surface (PLAN D2)."
 
+# Stage 4C deliberately retires exactly these two authoring verbs. Preserve the
+# old corpus bytes and keep parity for every remaining verb and argument.
+RETIRED_PROJECT_COMMANDS = {"project-create", "project-update"}
+
+
+def _retired_choice_text(text: str) -> str:
+    return text.replace("project-create,project-update,", "").replace(
+        "'project-create', 'project-update', ", "").replace(
+        "project-create, project-update, ", "")
+
+
+def _current_recorded_errors(recorded: dict) -> dict:
+    recorded = copy.deepcopy(recorded)
+    if "error" in recorded:
+        for key, value in recorded["error"].items():
+            if isinstance(value, str):
+                recorded["error"][key] = _retired_choice_text(value)
+    return recorded
+
+
+def _retired_command(argv: list[str]) -> str | None:
+    return next((value for value in argv if value in RETIRED_PROJECT_COMMANDS), None)
+
+
+def _assert_retired_refusal(actual: dict, command: str) -> None:
+    assert actual.get("error", {}).get("exit") == 2
+    assert f"invalid choice: '{command}'" in actual["error"]["stderr"]
+
+
 
 def test_cli_operations_lists_every_cli_primary():
     data = yaml.safe_load(CLI_OPS_PATH.read_text(encoding="utf-8"))
@@ -204,8 +233,6 @@ BF_HELP_PAIRS: dict[str, set[str]] = {
     "note-analysis-save": {"analysis", "expected_snapshot"},
     "note-analysis-save-batch": {"expected_snapshot"},
     "note-create": {"expected_snapshot", "note"},
-    "project-create": {"expected_snapshot"},
-    "project-update": {"expected_snapshot", "project_id"},
     "shelving-apply": {"approve", "expected_snapshot", "selected", "unit_id"},
     "shelving-prepare": {"expected_snapshot", "summary", "unit_id"},
     "source-intake": {"approve", "expected_snapshot", "record"},
@@ -280,8 +307,6 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "note-analysis-save": "note.analysis.save",
     "note-analysis-save-batch": "note.analysis.save_batch",
     "note-create": "note.create",
-    "project-create": "project.create",
-    "project-update": "project.update",
     "shelving-apply": "review.apply",
     "shelving-prepare": "review.prepare",
     "source-intake": "source.intake.record",
@@ -441,6 +466,9 @@ def test_generated_parser_matches_baseline_structure():
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     live = _normalize_describe(arch_cli_describe.describe(los.build_parser()))
     expected = _normalize_describe(baseline)
+    expected["order"] = [name for name in expected["order"] if name not in RETIRED_PROJECT_COMMANDS]
+    for name in RETIRED_PROJECT_COMMANDS:
+        expected["subparsers"].pop(name)
     # Future registered subcommands (none yet) normalize per (u) item 2.
     for name, sub in expected.get("subparsers", {}).items():
         handler = _handler_for_subcommand(name)
@@ -503,7 +531,7 @@ def test_bf_help_normalization_touches_only_the_listed_pairs():
     assert sorted(changed) == sorted(
         (sub, dest) for sub, dests in BF_HELP_PAIRS.items()
         for dest in dests), changed
-    assert len(changed) == 12 + 83 + 122, changed  # pilot 12 + wave 1 (bi) 6 + final wave (cc)
+    assert len(changed) == 12 + 83 + 122 - 3, changed  # pilot 12 + wave 1 (bi) 6 + final wave (cc)
     # Control: a baseline whose listed help is already a real string —
     # not the placeholder's None — must fail normalization.
     poisoned = copy.deepcopy(baseline)
@@ -568,6 +596,11 @@ def test_corpus_parity():
                             if row["argv"] == argv[:1] and "namespace" in row["result"])
             recorded = copy.deepcopy(baseline)
         actual = _run(parser, argv)
+        retired = _retired_command(argv)
+        if retired:
+            _assert_retired_refusal(actual, retired)
+            continue
+        recorded = _current_recorded_errors(recorded)
         # Registered-subcommand normalization (none yet; see unit test).
         subcommand = recorded.get("namespace", {}).get("command")
         if subcommand is not None and "namespace" in recorded:
@@ -671,4 +704,9 @@ def test_actual_old_source_supplement_parity():
                 namespace = _normalize_registered_namespace(namespace, handler)
             recorded["namespace"] = namespace
         recorded = _normalize_claim_surface_observation(parser, row["argv"], recorded)
-        assert _run(parser, row["argv"]) == recorded, row["source"]
+        actual = _run(parser, row["argv"])
+        retired = _retired_command(row["argv"])
+        if retired:
+            _assert_retired_refusal(actual, retired)
+        else:
+            assert actual == _current_recorded_errors(recorded), row["source"]

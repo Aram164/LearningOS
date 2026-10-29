@@ -1203,8 +1203,6 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("review.apply.unknown-unit", "unknown-unit"),
     ("module.materials.compact", "/properties/module_id"):
         ("module.materials.compact.unknown-module", "unknown-module"),
-    ("project.update", "/properties/project_id"):
-        ("project.update.id-mismatch", "id-mismatch"),
     # SPEC (cn) item 1: the refused CLI anchors. The gateway
     # operations served through the same CLI command witness the
     # CLI operation's site, as their cases declare.
@@ -1354,9 +1352,6 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("review.apply", "/properties/unit_id"): ("prefixed", "unit"),
     ("module.materials.compact", "/properties/module_id"):
         ("legacy-verbatim", "module source map not found: {miss}"),
-    ("project.update", "/properties/project_id"):
-        ("legacy-verbatim",
-         "project file id does not match command project_id"),
     # SPEC (cn) item 1: the refused CLI complaints. The CLI renders
     # the message part; the oracle adds the (cd) 2 suggestion lines.
     ("dossier.read", "/properties/unit_id"): ("template", "unit"),

@@ -1,2 +1,16 @@
 aliases:
-  module-project-bachelor-thesis: project-bachelor-thesis
+  project-bachelor-thesis: module-project-bachelor-thesis
+  milestone-thesis-scope: unit-thesis-landscape
+  milestone-thesis-baseline: unit-thesis-experiments
+  workstream-thesis-landscape: workspace-thesis-mle-medical
+  step-thesis-scope: workspace-thesis-mle-medical
+  step-thesis-survey: workspace-thesis-mle-medical
+  workstream-thesis-experiments: workspace-thesis-mle-medical
+  step-map-thesis-baseline: workspace-thesis-mle-medical
+  step-thesis-aide-baseline: workspace-thesis-mle-medical
+  step-thesis-optimization: workspace-thesis-mle-medical
+  decision-thesis-scope-boundary: workspace-thesis-mle-medical
+  decision-thesis-compute-budget: workspace-thesis-mle-medical
+  relationship-thesis-amls: workspace-thesis-mle-medical
+  relationship-thesis-project-toolbox: workspace-thesis-mle-medical
+  relationship-thesis-landscape-plan: workspace-thesis-mle-medical

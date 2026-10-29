@@ -32,7 +32,7 @@ CLOSED_MODULE_STATUSES = ("completed", "archived", "dropped")
 
 #: The rule, in the words the interface uses for it.
 LISTING_RULE = (
-    "open academic modules: kind=academic and status not in "
+    "open learning modules: kind in (academic, project) and not compatibility_only and status not in "
     "(completed, archived, dropped)"
 )
 
@@ -63,13 +63,15 @@ def _semester_rows(program_data: Record | None) -> list[Record]:
 
 
 def is_listed(module: Record) -> bool:
-    """Whether a module record belongs in the listed open academic modules.
+    """Whether a module record belongs in the listed open learning modules.
 
-    Pure over the record's own fields: the kind and the status. Nothing
-    else decides membership — not the semester, not the thematic group, not
-    the source usage.
+    Pure over the record's own fields: kind, compatibility_only, and status.
+    Nothing else decides membership — not the semester, not the thematic group,
+    not the source usage.
     """
-    if module.get("kind") != "academic":
+    if module.get("compatibility_only"):
+        return False
+    if module.get("kind") not in ("academic", "project"):
         return False
     return _text(module.get("status")) not in CLOSED_MODULE_STATUSES
 
@@ -136,9 +138,11 @@ def module_listing(repo: Repo, module: Record) -> dict[str, object]:
             _text(module_semester) or None,
         )
     if not listed:
+        kind = module.get("kind")
+        adj = "academic" if kind == "academic" else "learning"
         facts["note"] = (
-            f"this module is not an open academic module (kind="
-            f"{module.get('kind')!r}, status={module.get('status')!r}), "
+            f"this module is not an open {adj} module (kind="
+            f"{kind!r}, status={module.get('status')!r}), "
             "so the module list does not show it"
         )
     elif not facts["semester_matches_current"] and current is not None:

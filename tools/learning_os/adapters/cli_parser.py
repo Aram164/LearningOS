@@ -61,8 +61,6 @@ _SUBCOMMAND_ORDER = (
     "module-list",
     "unit-list",
     "project-list",
-    "project-create",
-    "project-update",
     "capability",
     "validate",
     "generate",

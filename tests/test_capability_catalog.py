@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from gateway_helpers import approved_v2_call, file_sha256
+from gateway_helpers import approved_v2_call
 
 from learning_os.store.contracts.capability_catalog import (
     CapabilityCatalogError,
@@ -87,7 +87,6 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
 
     import los
     from learning_os.adapters.capability import _FILE_INPUTS_V2
-    from learning_os.app.handlers import platform as platform_handlers
     from learning_os.app.registry import REGISTRY
     from learning_os.store.contracts.payloads import subparsers
 
@@ -101,8 +100,6 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
         else:
             handler = parsers[definitions[name].cli_command].get_default("func")
         source = inspect.getsource(handler)
-        if name in {"project.create", "project.update"}:
-            source += inspect.getsource(platform_handlers._project_record)
         assert (
             "_read_content_bound_file" in source
             or "_read_structured_file" in source
@@ -180,41 +177,14 @@ def _project(project_id: str) -> dict:
     }
 
 
-def test_project_capability_envelope_round_trips(mini_repo: Path):
+def test_retired_project_envelope_cannot_create_a_record(mini_repo: Path):
+    from learning_os.store.fingerprint import snapshot
+    before = snapshot(mini_repo)
     result = approved_v2_call(
-        mini_repo,
-        capability="project.create",
+        mini_repo, capability="project.create",
         payload={"project": _project("project-envelope-demo")},
-        artifact_ids=["project-envelope-demo"],
-        idempotency_key="project-create-round-trip-001",
+        artifact_ids=["project-envelope-demo"], idempotency_key="retired-project-create",
     )
-    assert result.returncode == 0, result.stderr
-    response = json.loads(result.stdout)
-    assert response["schema_version"] == 2
-    assert response["request_id"] == "request-project-create-round-trip-001"
-    assert response["capability"] == "project.create"
-    assert response["ok"] is True
-    assert response["transaction_id"]
-    assert response["receipt_path"].startswith("operations/transactions/")
-    assert (mini_repo / "projects/registry/project-envelope-demo.yaml").is_file()
-
-
-def test_project_file_capability_consumes_the_approved_bytes(
-    mini_repo: Path, tmp_path: Path
-):
-    import yaml
-
-    source = tmp_path / "project-file-demo.yaml"
-    source.write_text(
-        yaml.safe_dump(_project("project-file-demo"), sort_keys=False),
-        encoding="utf-8",
-    )
-    result = approved_v2_call(
-        mini_repo,
-        capability="project.create",
-        payload={"file": str(source), "file_sha256": file_sha256(source)},
-        artifact_ids=["project-file-demo"],
-        idempotency_key="project-file-create-001",
-    )
-    assert result.returncode == 0, result.stderr
-    assert (mini_repo / "projects/registry/project-file-demo.yaml").is_file()
+    assert result.returncode != 0
+    assert snapshot(mini_repo) == before
+    assert not (mini_repo / "projects/registry/project-envelope-demo.yaml").exists()

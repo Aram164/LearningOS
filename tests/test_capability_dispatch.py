@@ -101,7 +101,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     from learning_os.store.contracts.payloads import all_payload_schemas
 
     published = sorted((repo_root / SCHEMA_DIR).glob("*.schema.json"))
-    assert len(published) == 50
+    assert len(published) == 48
     before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
               for path in published}
     work = tmp_path / "repo"
@@ -116,7 +116,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     corrupted_path.write_text(json.dumps(corrupted), encoding="utf-8")
     drifted = all_payload_schemas(
         work, command_definitions(work), payload_records=resolve_all(work))
-    assert len(drifted) == 50
+    assert len(drifted) == 48
     on_disk = json.loads(
         (repo_root / SCHEMA_DIR / "capture.create.schema.json").read_text(
             encoding="utf-8"))
@@ -273,45 +273,17 @@ def test_the_gateway_has_no_capability_special_cases(repo_root: Path):
 
 
 @pytest.mark.parametrize("name", ["project.create", "project.update"])
-def test_project_payload_shape_is_declared(repo_root: Path, name: str):
-    """The inline object the gateway accepts is in the schema, not just the code."""
-    schema = json.loads((repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
-    project = schema["properties"]["project"]
-    record = json.loads((repo_root / "system/schema/project.schema.json").read_text(encoding="utf-8"))
-    assert project["type"] == "object"
-    assert project["additionalProperties"] is False
-    assert set(project["properties"]) == set(record["properties"])
-    # Every stored required field except the one the handler defaults itself.
-    assert set(project["required"]) == set(record["required"]) - {"schema_version"}
-    assert schema["oneOf"] == [{"required": ["file"]}, {"required": ["project"]}], (
-        "exactly one record source must be required, and the schema must say so"
-    )
-
-
-def test_project_create_without_a_record_source_is_refused(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, capability="project.create",
-                             payload={}, key="dispatch-project-no-source-001")
+def test_retired_project_authoring_refuses_before_mutation(repo_root: Path, tmp_path: Path, name: str):
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.fingerprint import snapshot
+    assert name not in command_definitions(repo_root)
+    before = snapshot(repo_root)
+    result = _run_capability(repo_root, tmp_path, capability=name,
+                             payload={"project": {"id": "project-retired"}},
+                             key="retired-project-authoring")
     assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
-
-
-def test_project_create_rejects_an_undeclared_field(repo_root: Path, tmp_path: Path):
-    """The regression proper: payload validation must not be skipped here."""
-    result = _run_capability(repo_root, tmp_path, capability="project.create",
-                             payload={"project": {"id": "project-x", "type": "project"},
-                                      "not_a_real_field": "x"},
-                             key="dispatch-project-extra-field-001")
-    assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
-
-
-def test_project_create_refuses_both_record_sources_at_once(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, capability="project.create",
-                             payload={"file": "somewhere.yaml",
-                                      "project": {"id": "project-x", "type": "project"}},
-                             key="dispatch-project-two-sources-001")
-    assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
+    assert json.loads(result.stdout)["ok"] is False
+    assert snapshot(repo_root) == before
 
 
 def test_generated_schemas_carry_parser_help_text(repo_root: Path):

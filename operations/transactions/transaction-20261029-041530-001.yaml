@@ -1,0 +1,76 @@
+schema_version: 1
+id: transaction-20261029-041530-001
+type: transaction-receipt
+status: committed
+capability: migration.projects-to-modules-v62
+committed_at: '2026-10-29T04:15:30+01:00'
+snapshot_before: sha256:fbb3f85a80202bde7ca8ed47afba71fe72ea7496c52d62eb0b80fb717681e02f
+snapshot_after: sha256:8bdd537b18004b5b51e59b9350dd78191e0234a76629e8d8edc79f0248e800f7
+expected_revisions:
+  project-bachelor-thesis: 2
+  module-project-bachelor-thesis: 1
+  workspace-thesis-mle-medical: 2
+artifact_revisions:
+  module-project-bachelor-thesis:
+    before: 1
+    after: 2
+  project-bachelor-thesis:
+    before: 2
+    after: 3
+  workspace-thesis-mle-medical:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-project-bachelor-thesis/module.yaml
+  sha256_before: 9d47bb9b3ed9666ba63c7df9b44b030de45aaa6ebdd172ff7301fab491e74190
+  sha256_after: 8b22094e20a3a269eeb761a03c6022838c33e119de8c0edc6f7d26bd62dee08f
+  created: false
+- path: operations/migrations/projects-to-modules-v62/before/curriculum/modules/module-project-bachelor-thesis/module.yaml
+  sha256_before: null
+  sha256_after: 9d47bb9b3ed9666ba63c7df9b44b030de45aaa6ebdd172ff7301fab491e74190
+  created: true
+- path: operations/migrations/projects-to-modules-v62/before/projects/aliases.yaml
+  sha256_before: null
+  sha256_after: 0fbdf9d89cd0818e2f916b781a01435898c7d6fab12117de0674c211681c4c58
+  created: true
+- path: operations/migrations/projects-to-modules-v62/before/projects/registry/project-bachelor-thesis.yaml
+  sha256_before: null
+  sha256_after: 3944a149b6e111b21c58834d916e86cadf4b1d1c50d934a88fa6b561099c477f
+  created: true
+- path: operations/migrations/projects-to-modules-v62/before/projects/relations/project-relations.yaml
+  sha256_before: null
+  sha256_after: 36b712e00696d6566a9ce5d0d99d123283cc3d51c37ccf05b9f392712ff00fe2
+  created: true
+- path: operations/migrations/projects-to-modules-v62/before/work/active/workspace-thesis-mle-medical/CONTEXT.md
+  sha256_before: null
+  sha256_after: 050720a096daa399bcbb8ee5e1f06c86d6f05393b8e5968b53033ad4905c86dc
+  created: true
+- path: operations/migrations/projects-to-modules-v62/committed.json
+  sha256_before: null
+  sha256_after: 63bd5a364564b265e4f75aebcc07534731086f8f2e2a457817dbd192f513e3d9
+  created: true
+- path: operations/migrations/projects-to-modules-v62/evidence.json
+  sha256_before: null
+  sha256_after: 0b6e65cfc4e62e3b11d422823e6711691626f6cb7836e768688e1f48391f652c
+  created: true
+- path: projects/aliases.yaml
+  sha256_before: 0fbdf9d89cd0818e2f916b781a01435898c7d6fab12117de0674c211681c4c58
+  sha256_after: 1638d50c339d7ba7f025315a6ad2fb780b90d5f2b605c8b42463da04c01c22b9
+  created: false
+- path: projects/registry/project-bachelor-thesis.yaml
+  sha256_before: 3944a149b6e111b21c58834d916e86cadf4b1d1c50d934a88fa6b561099c477f
+  sha256_after: null
+  created: false
+- path: projects/relations/project-relations.yaml
+  sha256_before: 36b712e00696d6566a9ce5d0d99d123283cc3d51c37ccf05b9f392712ff00fe2
+  sha256_after: c03b8bc4aa3ad13877bb34b5aee4bfaeeaeb664b2718c6ddefe017fee7de98ba
+  created: false
+- path: work/active/workspace-thesis-mle-medical/CONTEXT.md
+  sha256_before: 050720a096daa399bcbb8ee5e1f06c86d6f05393b8e5968b53033ad4905c86dc
+  sha256_after: 2c2f17c4ac0855e9171771ae59693b5f122f6725eb051dfbc5b509e25685ea47
+  created: false
+metadata:
+  migration: projects-to-modules-v62
+  plan_sha256: a7649c13c2d4dc5ae1c4b897041b56ccd6c115e93a0f15057f4e2b996b13fc29
+  data_roots_sha256: sha256:aa52179a42fbd85864331f9b25f607c4d5ba2793f266a367cd6226ad76e4ba10
+  fingerprint_definition: 2

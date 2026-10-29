@@ -274,22 +274,6 @@
      "curriculum/programs/**"
     ]
    },
-   "project.create": {
-    "admission": null,
-    "cli_command": "project-create",
-    "handler": "project_create",
-    "writes": [
-     "projects/registry/*"
-    ]
-   },
-   "project.update": {
-    "admission": null,
-    "cli_command": "project-update",
-    "handler": "project_update",
-    "writes": [
-     "projects/registry/*"
-    ]
-   },
    "review.apply": {
     "admission": "direct-user-gesture",
     "cli_command": "shelving-apply",
@@ -6506,100 +6490,6 @@
     "type": null
    }
   ],
-  "project-create": [
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file_sha256",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file-sha256"
-    ],
-    "required": false,
-    "type": "sha256_value"
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "project",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--project"
-    ],
-    "required": false,
-    "type": "json_object"
-   }
-  ],
   "project-list": [
    {
     "action": "help",
@@ -6640,111 +6530,6 @@
     ],
     "required": false,
     "type": null
-   }
-  ],
-  "project-update": [
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "project_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file_sha256",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file-sha256"
-    ],
-    "required": false,
-    "type": "sha256_value"
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "project",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--project"
-    ],
-    "required": false,
-    "type": "json_object"
    }
   ],
   "projection-observe": [
@@ -9548,10 +9333,8 @@
   "plan.template.schema.json": "1c532b6ed114dbfd914a206019055da000eaf2d356d299fa28146d0c1dba5bf7",
   "program.list.schema.json": "1c6989676b267ba1c4b5d70c58c5099a4a2af841211d8e01af6574c59c80b365",
   "program.semester.update.schema.json": "fc100aa9cbfce8c13ac5a4f288d22e4bdff17ee1237bfbd382b14db832857526",
-  "project.create.schema.json": "5c997ab044e343104516dec512e8f385fc943c2b5a40cd415903e322a7fc25d3",
   "project.inspect.schema.json": "e402d151940ad6ef46140bf7f6367bb78b804dde9f03cb77d46ce8711002314b",
   "project.list.schema.json": "21515ab76275ae9c009f014e72b2ed5ebc4546467b8ae65e839b01a1d9011c04",
-  "project.update.schema.json": "80bb64f356b256f86abb9d4e29a189025af70b9e71b4e70332c571c41db85956",
   "projection.generate.schema.json": "b2fc48a34025bf4306eca85ccafe93e81692a9b865b354d150c5c8cb776d08ce",
   "projection.observe.schema.json": "6c846a118a81d9bbb7f8153007542f3587b50ef90ee23b80cd0d59e837c8abe6",
   "related.read.schema.json": "bed0d80d693eaa35143226b0da7849f1c0e2620fdb17216e86842b06c0ce994e",

@@ -121,13 +121,18 @@ def _build_root(tmp_path: Path, name: str) -> Path:
     historical = historical_files("074f4717e14527798752de84b3c9c4e88348b658")
     # Freeze the inventory as well as bytes: later schemas are not inputs
     # to this historical oracle. Current-contract scenarios run separately.
-    for target in (root / "system/schema").rglob("*.schema.json"):
+    schema_inputs = list((root / "system/schema").rglob("*.schema.json"))
+    schema_inputs += list((root / "system/contracts").glob("manifest-v*.schema.json"))
+    for target in schema_inputs:
         if target.relative_to(root).as_posix() not in historical:
             target.unlink()
     for relpath, data in historical.items():
         target = root / relpath
         # build_mini_repo deliberately omits host-local attachment policy.
-        if target.is_file():
+        if relpath == "system/contracts/local-attachments.yaml":
+            continue
+        if target.is_file() or relpath.startswith("system/schema/"):
+            target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
     return root
 

@@ -191,9 +191,9 @@ repository/
 ├── sources/               the source registry and its collections
 │   ├── registry/          partitioned source records
 │   └── collections/       shelves and topic packs
-├── projects/              first-class Projects — registry and relations
-│   ├── registry/          one record per project
-│   └── relations/         project-to-record relations, authored not inferred
+├── projects/              historical Project records and direct owner aliases
+│   ├── registry/          one record per historical project
+│   └── relations/         historical project-to-record relations
 ├── operations/            the transaction ledger and everything the gateway writes
 │   ├── transactions/      one receipt per applied transaction
 │   ├── gateway-requests/  request envelopes
@@ -551,8 +551,9 @@ IDs are lowercase, ASCII, hyphen-separated, stable after creation, unique within
 
 ## 14A. Module-first curriculum model
 
-The default active program is the current Bachelor's. Skills,
-Thesis/Projects, and Job are active non-semester areas. Job learning uses
+The default active program is the current Bachelor's. The thesis is an ordinary
+Module under that program, retaining `kind: project` without inferred academic
+facts. Skills and Job use non-semester areas. Job learning uses
 ordinary modules under `program-job`; its badge or section is presentation, not
 a data boundary. Master's Planning is prospective and operationally
 quarantined. Archive preserves completed semesters and work.
@@ -746,12 +747,17 @@ Canonical mutations use the governed transaction boundary; interfaces never inve
 write paths. Implementation, rollback and receipt guarantees:
 [transactions component](developer/components/transactions.md).
 
-## First-class Projects
+## Historical Project compatibility
 
-Projects live under `projects/registry/` and are independent from curriculum
-modules. A project may have no fixed structure, a linear structure, parallel
-workstreams, or nested steps. Project relationships are explicit records under
-`projects/relations/`; aliases preserve old deep links during compatibility
-gates. The manifest projection declared in `system/contracts/manifest-contract.yaml`
-exposes Projects together with
-Core-owned Review and Garden state. Producer/consumer change mechanics: [projection component](developer/components/projection.md).
+Thesis and project work use ordinary curriculum Modules and Units. Operational
+research scope, parallel workstreams, decisions, materials and boundaries belong
+in their existing workspace context; they do not redefine study-map ordering or
+academic facts. The separate Projects interface and its authoring capabilities
+are retired.
+
+Historical records under `projects/registry/` and `projects/relations/` remain
+readable. Direct aliases in `projects/aliases.yaml` preserve old identities by
+resolving to canonical Module, Unit or workspace owners. The manifest retains
+its historical Project collections for read compatibility; the migrated thesis
+has no active Project record. Producer/consumer change mechanics:
+[projection component](developer/components/projection.md).
