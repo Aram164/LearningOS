@@ -838,3 +838,101 @@ def test_resources_append_apply_refuses_edited_and_stale_state(mini_repo, tmp_pa
     assert "STALE_SNAPSHOT" in refused.stdout
     assert canonical_fingerprint(mini_repo) == before
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_compact_unit_addition_never_reproduces_old_routes_or_maps(mini_repo, tmp_path):
+    from learning_os.store.fingerprint import canonical_fingerprint
+    from learning_os.store.loader import load_repo
+
+    _two_units(mini_repo)
+    base = mini_repo / 'curriculum/modules/module-demo'
+    old_files = {p: p.read_bytes() for p in (base / 'units').rglob('*') if p.is_file()}
+    repo = load_repo(mini_repo)
+    unit = copy.deepcopy(repo.units['unit-demo-l02'].data)
+    unit.update(id='unit-demo-l03', title='Third lecture')
+    study = copy.deepcopy(repo.study_maps['study-map-demo-l02'].authored_data)
+    study.update(id='study-map-demo-l03', unit_id='unit-demo-l03', current_stage='stage-demo-l03')
+    stage = study['stages'][0]
+    stage.update(id='stage-demo-l03', working_note='curriculum/modules/module-demo/units/unit-demo-l03/stages/stage-demo-l03/notes.md')
+    route = copy.deepcopy(repo.module_source_maps['module-demo']['sources'][0]['unit_routes'][0])
+    route.update(id='route-demo-book-l03', unit_id='unit-demo-l03', locator='lecture-01.pdf, PDF p. 1')
+    stage['knowledge_node_id'] = route['covers'][0]
+    stage['resources'] = [{'id': 'resource-third', 'kind': 'read', 'scope_triage': 'required-now',
+                           'material_ref': {'route_id': route['id'], 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}}]
+    revision = _revision(mini_repo)
+    revision.pop('unit_revisions')
+    revision['unit_additions'] = [{'unit': unit, 'study_map': study,
+                                  'routes': [{'source_id': 'source-demo-book', 'route': route}]}]
+    revision['claim_evidence'] = [{'claim_id': 'covers:' + route['id'], 'evidence': [{
+        'kind': 'quote', 'ref': 'material://source-demo-book/lecture-01.pdf', 'page': 1, 'text': SLICED_LECTURE_TEXT}]}]
+    draft = tmp_path / 'addition.yaml'
+    write_yaml(draft, revision)
+    before = canonical_fingerprint(mini_repo)
+    checked = run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft), '--check')
+    assert checked.returncode == 0, checked.stderr
+    assert canonical_fingerprint(mini_repo) == before
+    report = json.loads(checked.stdout)
+    review = tmp_path / 'review.json'
+    review.write_text(checked.stdout)
+    result = run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft),
+                     '--review-report', str(review), '--apply-reviewed-sha256', report['reviewed_file_sha256'])
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert all(path.read_bytes() == data for path, data in old_files.items())
+    assert load_repo(mini_repo).modules['module-demo']['unit_order'] == ['unit-demo-l01', 'unit-demo-l02', 'unit-demo-l03']
+    assert len(list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))) == 1
+    # Reusing the new ID is rejected without mutation or a second receipt.
+    before = canonical_fingerprint(mini_repo)
+    assert run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft), '--check').returncode != 0
+    assert canonical_fingerprint(mini_repo) == before
+
+
+def test_compact_unit_move_keeps_maps_and_every_non_order_field(mini_repo, tmp_path):
+    from learning_os.store.fingerprint import canonical_fingerprint
+    from learning_os.store.loader import load_repo
+
+    _two_units(mini_repo)
+    repo = load_repo(mini_repo)
+    maps = {sm.path: sm.path.read_bytes() for sm in repo.study_maps.values()}
+    revision = {'module_id': 'module-demo', 'plan_contract': _revision(mini_repo)['plan_contract'],
+                'unit_move': {'unit_id': 'unit-demo-l02', 'before_id': 'unit-demo-l01', 'reason': 'Reviewed lecture order.'}}
+    draft = tmp_path / 'move.yaml'
+    write_yaml(draft, revision)
+    checked = run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft), '--check')
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    assert set(report['expected_write_paths']) == {
+        'curriculum/modules/module-demo/module.yaml',
+        'curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml',
+        'curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml'}
+    review = tmp_path / 'review.json'
+    review.write_text(checked.stdout)
+    result = run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft),
+                     '--review-report', str(review), '--apply-reviewed-sha256', report['reviewed_file_sha256'])
+    assert result.returncode == 0, result.stderr
+    after = load_repo(mini_repo)
+    assert after.modules['module-demo']['unit_order'] == ['unit-demo-l02', 'unit-demo-l01']
+    for uid, old in repo.units.items():
+        assert {k: v for k, v in old.data.items() if k != 'order'} == {k: v for k, v in after.units[uid].data.items() if k != 'order'}
+    assert all(path.read_bytes() == data for path, data in maps.items())
+    assert len(list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))) == 1
+    before = canonical_fingerprint(mini_repo)
+    assert run_los(mini_repo, 'module-plan-import', 'module-demo', '--file', str(draft), '--check').returncode != 0
+    assert canonical_fingerprint(mini_repo) == before
+
+
+def test_compact_unit_move_rejects_bad_scope_and_anchors(mini_repo):
+    from learning_os.domain.plan_import import assemble_compact_module_revision
+    from learning_os.store.loader import load_repo
+
+    _two_units(mini_repo)
+    repo = load_repo(mini_repo)
+    for move in (
+        {'unit_id': 'unit-demo-l02', 'before_id': 'unit-demo-l02', 'reason': 'Fixture'},
+        {'unit_id': 'unit-demo-l02', 'before_id': 'missing', 'reason': 'Fixture'},
+        {'unit_id': 'unit-demo-l02', 'before_id': 'unit-demo-l01', 'after_id': 'unit-demo-l01', 'reason': 'Fixture'},
+        {'unit_id': 'unit-demo-l02', 'before_id': 'unit-demo-l01', 'reason': ''},
+        {'unit_id': 'missing', 'before_id': 'unit-demo-l01', 'reason': 'Fixture'},
+    ):
+        result, problems = assemble_compact_module_revision(repo, 'module-demo', {
+            'module_id': 'module-demo', 'plan_contract': _revision(mini_repo)['plan_contract'], 'unit_move': move})
+        assert result is None and problems, move

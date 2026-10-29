@@ -641,3 +641,41 @@ changes must remain untouched.
 | Applying against stale state | The real import requires `--expected-snapshot`. |
 | A compatibility migration recreated old units after planning | Post-import migration dry-run must be idempotent. |
 | A combined lecture range hid missing individual coverage | One ordinary lecture equals one unit knowledge/material map; synthesis is auxiliary. |
+
+### Proportional structural edits (experimental agility branch)
+
+For one existing study map, `unit.map.import` also accepts a small external file
+with exactly `unit_id` and `structural_edit`. The latter names a nonblank `reason`
+and exactly one operation:
+
+- `stage_move`: `stage_id` and exactly one `before_id` or `after_id` stage anchor.
+- `resource_move`: `stage_id`, `resource_id` and exactly one resource anchor.
+- `resource_insert`: `stage_id`, one new `resource` object with a fresh stable ID,
+  and exactly one resource anchor in that stage.
+
+Use the normal `unit-map-import UNIT --file FILE --replace --check` preflight.
+Review the full resulting order and changed resource fields, then apply the same
+file digest, snapshot and revisions through `unit.map.import`. The reason lives
+in the bound file; do not combine structural files with reset, retire or reorder
+flags. Core derives unchanged authored records, preserves shared material
+references and learner state, and renumbers stages after movement. Resources
+move only within their owning stage. Missing/ambiguous IDs, collisions,
+self-placement and no-op moves refuse. The Obsidian **Adjust study plan** dialog
+uses this same check and explicit reviewed application; changing any control
+withdraws its review. Temporary intent files are retained for exact interrupted
+request recovery and contain no copied learner notes or unchanged plan records.
+
+Compact `module.plan.import` files may name `unit_additions` or `unit_move`
+instead of reconstructing `source_map` or every existing Unit. Each addition
+contains a new `unit`, its new `study_map`, and `routes` containing only
+`{source_id, route}` additions to existing joined sources; optional `before_id`
+or `after_id` places it among Units, otherwise it appends. `unit_move` contains
+an existing `unit_id`, nonblank `reason` and exactly one Unit anchor. Core derives
+the final module order and numeric Unit orders, and binds the reason to the
+existing intentional-reorder contract. Existing maps and learner fields remain
+unchanged. The existing v2 plan contract, coverage audit, claim evidence,
+no-new-warning gate and saved `--check` report remain mandatory; use the ordinary
+`--review-report REPORT --apply-reviewed-sha256 SHA` shortcut after exact review.
+The report includes resulting Unit order and exact file diffs. Unit additions
+and ordering remain operator-reviewed; module-import gesture admission is
+unchanged. These controls never modify today's sequence temporarily.

@@ -1,0 +1,1 @@
+{"unit_id": "unit-demo-l01", "structural_edit": {"reason": "Fixture review", "resource_insert": {"stage_id": "stage-demo", "before_id": "resource-demo-book-ch01", "resource": {"id": "resource-fixture-new", "kind": "read", "label": "Unavailable fixture source", "source_id": "source-missing", "scope_triage": "helpful-now"}}}}

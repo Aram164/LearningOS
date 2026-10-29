@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: compact module revision failed; no canonical files were written\\n- unit_revisions must be a non-empty list\",\"retryable\":false,\"details\":{}}}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: compact module revision failed; no canonical files were written\\n- give unit_revisions, unit_additions or unit_move\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "module.plan.import",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "los: compact module revision failed; no canonical files were written\n- unit_revisions must be a non-empty list",
+      "message": "los: compact module revision failed; no canonical files were written\n- give unit_revisions, unit_additions or unit_move",
       "retryable": false
     },
     "idempotency_key": "KEY2",

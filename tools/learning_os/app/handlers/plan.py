@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import difflib
 import hashlib
 import json
 import os
@@ -485,7 +486,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
 def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                          package, minimal_writes=False, review_input=None,
                          capability_override=None, report_out=None,
-                         report_out_draft=None) -> Result:
+                         report_out_draft=None, structural_review=False) -> Result:
     root = ctx.root
     package_sha = f"sha256:{hashlib.sha256(package_bytes).hexdigest()}"
     synthesis_entries, _ = _synthesis_entries(module_id, package)
@@ -729,6 +730,17 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             str(p.relative_to(root)) for p in writes
         } | ({LEDGER_RELATIVE} if lineage_will_change else set()))
         result["claim_anchors"] = anchor_report(claim_evidence)
+        if structural_review:
+            result["structural_changes"] = {
+                "unit_order_before": list(module.get("unit_order", [])),
+                "unit_order_after": list(module_data.get("unit_order", [])),
+                "files": [{"path": str(path.relative_to(root)), "diff": "".join(
+                    difflib.unified_diff(
+                        path.read_text(encoding="utf-8").splitlines(keepends=True) if path.exists() else [],
+                        content.splitlines(keepends=True), fromfile=str(path.relative_to(root)),
+                        tofile=str(path.relative_to(root))))}
+                    for path, content in sorted(writes.items())],
+            }
         result["expected_write_sha256"] = {
             str(p.relative_to(root)): hashlib.sha256(content.encode("utf-8")).hexdigest()
             for p, content in writes.items()}
@@ -852,6 +864,7 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
         package_bytes=assembled,
         package=assembled_package,
         minimal_writes=True,
+        structural_review=bool(revision.get("unit_additions") or revision.get("unit_move")),
         review_input=(reviewed_sha,
                       {"module_id": req["module_id"], "file": str(source),
                        "file_sha256": reviewed_sha}),
@@ -892,7 +905,7 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
             ctx, "module plan must be a mapping with the requested module_id",
             "wrong-module",
         )
-    if "unit_revisions" in package:
+    if {"unit_revisions", "unit_additions", "unit_move"} & set(package):
         return _compact_plan_import(ctx, req, root, _source, package_bytes, package)
     contract_problems = _module_plan_contract_problems(root, package)
     if contract_problems:

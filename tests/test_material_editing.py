@@ -313,3 +313,168 @@ def test_route_patch_check_reports_envelope_ready_apply_values(mini_repo):
                      "--changes", json.dumps(changes), *guard_args)
     assert direct.returncode != 0
     assert canonical_fingerprint(mini_repo) == before
+
+
+# Agility Stage 5: small intents must preserve every unchanged authored byte.
+def _structural_fixture(root):
+    import yaml
+    from repo_builders import _compact_setup
+
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+
+    _compact_setup(root)
+    path = root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    data['plan_template_version'] = 1
+    first = data['stages'][0]
+    first.update(number=1, exam_critical=False, concepts=[])
+    first['resources'][0]['id'] = 'resource-original'
+    second = copy.deepcopy(first['resources'][0])
+    second['id'] = 'resource-second'
+    first['resources'].append(second)
+    for resource in first['resources']:
+        preserved = {key: resource[key] for key in ('id', 'kind', 'scope_triage') if key in resource}
+        resource.clear()
+        resource.update(preserved, material_ref={'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']})
+    attachment = path.parent / 'stages/stage-demo/attachments/proof.txt'
+    attachment.parent.mkdir(parents=True, exist_ok=True)
+    attachment.write_text('Learner attachment.\n')
+    first['attachments'] = [{'path': str(attachment.relative_to(root)), 'label': 'Proof'}]
+    first['source_feedback'] = [{'source_id': 'source-demo-book', 'resource_id': 'resource-original', 'feedback': 'helpful', 'recorded': '2026-10-01', 'note': 'My wording.'}]
+    for number in (2, 3):
+        stage = copy.deepcopy(first)
+        stage.update(id=f'stage-{number}', number=number, status='pending')
+        stage['resources'] = []
+        stage['attachments'] = []
+        stage['source_feedback'] = []
+        stage['working_note'] = str(path.parent.relative_to(root) / f'stages/stage-{number}/notes.md')
+        note = root / stage['working_note']
+        note.parent.mkdir(parents=True)
+        note.write_text('Preserve this working note.\n')
+        data['stages'].append(stage)
+    write_yaml(path, data)
+    write_baseline(root, collect(root)[0], 'structural fixture')
+    return path, data
+
+
+@pytest.mark.parametrize('edit', [
+    {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo'}},
+    {'resource_move': {'stage_id': 'stage-demo', 'resource_id': 'resource-second', 'before_id': 'resource-original'}},
+    {'resource_insert': {'stage_id': 'stage-demo', 'after_id': 'resource-original', 'resource': {
+        'id': 'resource-new', 'kind': 'read', 'scope_triage': 'helpful-now',
+        'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}}}},
+])
+def test_structural_intent_exact_review_preserves_state_and_one_receipt(mini_repo, tmp_path, edit):
+    import yaml
+
+    from learning_os.domain.plan_import import apply_structural_edit
+
+    path, before = _structural_fixture(mini_repo)
+    edit = {'reason': 'Reviewed fixture sequence.', **edit}
+    draft = tmp_path / 'intent.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': edit}))
+    resume_before = (mini_repo / 'curriculum/resume.yaml').read_bytes()
+    initial = canonical_fingerprint(mini_repo)
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 0, check.stderr
+    review = json.loads(check.stdout)
+    assert review['canonical_files_written'] == 0
+    assert canonical_fingerprint(mini_repo) == initial
+    assert review['diff']['stages_after'] == [s['id'] for s in apply_structural_edit(before, edit)['stages']]
+    envelope = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft), 'file_sha256': review['file_sha256'], 'replace': True,
+    }, artifact_ids=list(review['expected_revisions']), idempotency_key='structural')
+    envelope['expected_snapshot'] = review['snapshot_id']
+    envelope['expected_revisions'] = review['expected_revisions']
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert yaml.safe_load(path.read_text()) == apply_structural_edit(before, edit)
+    assert (mini_repo / 'curriculum/resume.yaml').read_bytes() == resume_before
+    assert (path.parent / 'stages/stage-demo/attachments/proof.txt').read_text() == 'Learner attachment.\n'
+    assert len(list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))) == 1
+    # Exact replay cannot move the record a second time or append a receipt.
+    assert run_v2_capability(mini_repo, envelope).returncode == 0
+    assert len(list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))) == 1
+    for stage in before['stages']:
+        if stage['id'] != 'stage-demo':
+            assert (mini_repo / stage['working_note']).read_text() == 'Preserve this working note.\n'
+
+
+@pytest.mark.parametrize('drift', ['draft', 'snapshot', 'revision'])
+def test_structural_review_refuses_drift_without_writes(mini_repo, tmp_path, drift):
+    from learning_os.store.contracts.gateway import intent_sha256
+
+    path, before = _structural_fixture(mini_repo)
+    draft = tmp_path / 'intent.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Reviewed fixture.', 'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo'}}}))
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 0, check.stderr
+    review = json.loads(check.stdout)
+    envelope = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft), 'file_sha256': review['file_sha256'], 'replace': True,
+    }, artifact_ids=list(review['expected_revisions']), idempotency_key='stale-structural')
+    if drift == 'draft':
+        draft.write_text(draft.read_text() + ' ')
+    elif drift == 'snapshot':
+        (mini_repo / before['stages'][0]['working_note']).write_text('New learner work.')
+    else:
+        envelope['expected_revisions']['unit-demo-l01'] += 1
+        envelope['approval']['subject_sha256'] = intent_sha256(envelope)
+    initial = canonical_fingerprint(mini_repo)
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode != 0
+    assert canonical_fingerprint(mini_repo) == initial
+    assert path.read_text()
+    assert not list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))
+
+
+@pytest.mark.parametrize('edit', [
+    {}, {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-3'}},
+    {'stage_move': {'stage_id': 'stage-3', 'before_id': 'missing'}},
+    {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo', 'after_id': 'stage-2'}},
+    {'stage_move': {'stage_id': 'stage-2', 'after_id': 'stage-demo'}},
+    {'resource_move': {'stage_id': 'stage-demo', 'resource_id': 'missing', 'before_id': 'resource-original'}},
+    {'resource_insert': {'stage_id': 'stage-demo', 'before_id': 'resource-original', 'resource': {'id': 'resource-original'}}},
+    {'resource_insert': {'stage_id': 'stage-demo', 'before_id': 'resource-original', 'resource': {'id': 'resource-new'}}},
+    {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo', 'title': 'Unauthorized'}},
+])
+def test_structural_malformed_edits_fail_without_writes(mini_repo, tmp_path, edit):
+    _structural_fixture(mini_repo)
+    draft = tmp_path / 'intent.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {'reason': 'Fixture', **edit}}))
+    initial = canonical_fingerprint(mini_repo)
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode != 0
+    assert canonical_fingerprint(mini_repo) == initial
+
+
+def test_structural_apply_publication_failure_rolls_back_with_no_receipt(mini_repo, tmp_path, monkeypatch):
+    from learning_os.adapters.cli_parser import build_parser
+    from learning_os.app import commit, pipeline
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.diagnostics import tracer
+    from learning_os.store.diagnostics.store import bind_store
+
+    _structural_fixture(mini_repo)
+    draft = tmp_path / 'intent.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Reviewed fixture.', 'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo'}}}))
+    envelope = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft), 'file_sha256': file_sha256(draft), 'replace': True,
+    }, artifact_ids=['unit-demo-l01', 'study-map-demo-l01'], idempotency_key='structural-rollback')
+    before = canonical_fingerprint(mini_repo)
+
+    def fail_publication(_repo):
+        raise OSError('fixture publication failure after canonical writes')
+
+    monkeypatch.setattr(commit, '_publish_repo', fail_publication)
+    bind_store(mini_repo)
+    outcome = pipeline.run_gateway(mini_repo, envelope, requested='unit.map.import',
+                                   definitions=command_definitions(mini_repo),
+                                   attempt=tracer.begin_attempt({'capability': 'unit.map.import'}),
+                                   replay_only=False, parser_factory=build_parser)
+    assert outcome.exit_code != 0
+    assert canonical_fingerprint(mini_repo) == before
+    assert not list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))

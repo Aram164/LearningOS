@@ -368,14 +368,14 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
     """Expand reviewed unit deltas against one live snapshot for the existing import gate."""
     problems: list[str] = []
     allowed = {"module_id", "plan_contract", "unit_revisions", "source_joins",
-               "claim_evidence", "acknowledgments"}
+               "claim_evidence", "acknowledgments", "unit_additions", "unit_move"}
     if set(revision) - allowed:
         problems.append(f"compact module revision has unknown fields: {sorted(set(revision) - allowed)}")
     if module_id not in repo.modules:
         problems.append(not_found("module", module_id, repo.modules))
-    revisions = revision.get("unit_revisions")
-    if not isinstance(revisions, list) or not revisions:
-        problems.append("unit_revisions must be a non-empty list")
+    revisions = revision.get("unit_revisions", [])
+    if not isinstance(revisions, list) or not (revisions or revision.get("unit_additions") or revision.get("unit_move")):
+        problems.append("give unit_revisions, unit_additions or unit_move")
         return None, problems
     if problems:
         return None, problems
@@ -549,12 +549,82 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
                 and not patches and dossier is None:
             problems.append(f"{where} changes nothing")
         entries.append({"unit": copy.deepcopy(unit.data), "study_map": study_map})
+    additions = revision.get("unit_additions", [])
+    order = list(repo.modules[module_id].get("unit_order", []))
+    if not isinstance(additions, list):
+        problems.append("unit_additions must be a list")
+        additions = []
+    for addition in additions:
+        if not isinstance(addition, dict) or set(addition) - {"unit", "study_map", "routes", "before_id", "after_id"}:
+            problems.append("unit_additions allows unit, study_map, routes and relative placement")
+            continue
+        unit_data = copy.deepcopy(addition.get("unit"))
+        map_data = copy.deepcopy(addition.get("study_map"))
+        uid = unit_data.get("id") if isinstance(unit_data, dict) else None
+        if not isinstance(uid, str) or not uid or uid in repo.units or uid in seen_units \
+                or unit_data.get("module_id") != module_id:
+            problems.append("unit_additions needs a fresh unit ID belonging to the requested module")
+            continue
+        if not isinstance(map_data, dict) or map_data.get("unit_id") != uid \
+                or not isinstance(map_data.get("id"), str) or map_data["id"] in repo.study_maps:
+            problems.append("unit_additions needs a new study map belonging to its new unit")
+            continue
+        routes = addition.get("routes", [])
+        if not isinstance(routes, list):
+            problems.append("unit_additions.routes must be a list of source_id/route objects")
+            continue
+        source_map, _, route_problems = apply_unit_route_changes(source_map, module_id, uid, {"add": routes})
+        problems.extend(route_problems)
+        seen_units.add(uid)
+        unit_data["current_study_map"] = map_data.get("id")
+        entries.append({"unit": unit_data, "study_map": map_data})
+        placement = {key: addition[key] for key in ("before_id", "after_id") if key in addition}
+        if placement:
+            if len(placement) != 1 or next(iter(placement.values())) not in order:
+                problems.append("unit_additions needs exactly one existing placement anchor")
+                continue
+            key, anchor = next(iter(placement.items()))
+            order.insert(order.index(anchor) + (key == "after_id"), uid)
+        else:
+            order.append(uid)
+    move = revision.get("unit_move")
+    contract = copy.deepcopy(revision.get("plan_contract"))
+    if move is not None:
+        try:
+            if not isinstance(move, dict) or set(move) - {"unit_id", "reason", "before_id", "after_id"}:
+                raise ValueError("unit_move allows unit_id, reason and one relative placement")
+            if not isinstance(move.get("reason"), str) or not move["reason"].strip():
+                raise ValueError("unit_move needs a nonblank reason")
+            if not isinstance(move.get("unit_id"), str) or move["unit_id"] not in repo.units or repo.units[move["unit_id"]].module_id != module_id:
+                raise ValueError("unit_move targets an existing unit in this module")
+            order = [row["id"] for row in relative_placement(
+                [{"id": uid} for uid in order], move["unit_id"],
+                {key: move[key] for key in ("before_id", "after_id") if key in move})]
+            if not isinstance(contract, dict):
+                raise ValueError("unit_move requires the existing plan contract")
+            if not isinstance(contract.get("intentional_reorders", []), list):
+                raise ValueError("intentional_reorders must be a list")
+            contract.setdefault("intentional_reorders", []).append({
+                "target": "module-unit-order", "id": module_id, "reason": move["reason"]})
+        except ValueError as exc:
+            problems.append(str(exc))
+    if additions or move is not None:
+        by_unit = {entry["unit"]["id"]: entry for entry in entries}
+        for number, uid in enumerate(order, 1):
+            if uid not in by_unit:
+                if repo.units[uid].data.get("order") == number:
+                    continue
+                entry = {"unit": copy.deepcopy(repo.units[uid].data), "study_map": None}
+                entries.append(entry)
+                by_unit[uid] = entry
+            by_unit[uid]["unit"]["order"] = number
     if problems:
         return None, problems
     package = {
         "module_id": module_id,
-        "plan_contract": copy.deepcopy(revision.get("plan_contract")),
-        "module_patch": {}, "source_patches": [], "source_map": source_map,
+        "plan_contract": contract,
+        "module_patch": {"unit_order": order} if additions or move is not None else {},
+        "source_patches": [], "source_map": source_map,
         "units": entries, "material_syntheses": syntheses,
         "claim_evidence": copy.deepcopy(revision.get("claim_evidence", [])),
         "acknowledgments": copy.deepcopy(revision.get("acknowledgments", [])),
@@ -719,3 +789,80 @@ def minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
             elif uid not in ids:
                 ids.append(uid)
     return ids
+
+
+def relative_placement(rows: list[dict], record_id: str, placement: dict) -> list[dict]:
+    """Move one unambiguous stable ID relative to another; never mutate input."""
+    if set(placement) not in ({"before_id"}, {"after_id"}):
+        raise ValueError("placement needs exactly one before_id or after_id")
+    key, anchor = next(iter(placement.items()))
+    ids = [row.get("id") for row in rows]
+    if not isinstance(record_id, str) or ids.count(record_id) != 1:
+        raise ValueError(f"missing or ambiguous stable ID: {record_id}")
+    if not isinstance(anchor, str) or ids.count(anchor) != 1 or anchor == record_id:
+        raise ValueError(f"missing, ambiguous or self placement anchor: {anchor}")
+    result = copy.deepcopy(rows)
+    moved = result.pop(ids.index(record_id))
+    position = next(i for i, row in enumerate(result) if row.get("id") == anchor)
+    result.insert(position + (key == "after_id"), moved)
+    if result == rows:
+        raise ValueError("placement changes nothing")
+    return result
+
+
+def apply_structural_edit(current: dict, edit: dict) -> dict:
+    """Expand one bounded intent against authored data; preserve all other state."""
+    if not isinstance(edit, dict) or set(edit) - {"reason", "stage_move", "resource_move", "resource_insert"}:
+        raise ValueError("structural_edit allows reason and one stage_move, resource_move or resource_insert")
+    if not isinstance(edit.get("reason"), str) or not edit["reason"].strip():
+        raise ValueError("structural_edit needs a nonblank reason")
+    operations = set(edit) - {"reason"}
+    if len(operations) != 1:
+        raise ValueError("structural_edit needs exactly one operation")
+    kind = next(iter(operations))
+    op = edit[kind]
+    if not isinstance(op, dict):
+        raise ValueError("structural operation must be an object")
+    allowed = {"stage_id", "before_id", "after_id"}
+    if kind == "resource_move":
+        allowed.add("resource_id")
+    if kind == "resource_insert":
+        allowed.add("resource")
+    if set(op) - allowed or "stage_id" not in op:
+        raise ValueError("structural operation has unknown or missing fields")
+    placement = {key: op[key] for key in ("before_id", "after_id") if key in op}
+    result = copy.deepcopy(current)
+    stages = result.get("stages", [])
+    if kind == "stage_move":
+        result["stages"] = relative_placement(stages, op["stage_id"], placement)
+        for number, stage in enumerate(result["stages"], 1):
+            stage["number"] = number
+        return result
+    matches = [stage for stage in stages if stage.get("id") == op["stage_id"]]
+    if len(matches) != 1:
+        raise ValueError("resource operation needs one existing stage ID")
+    stage = matches[0]
+    resources = stage.get("resources", [])
+    if kind == "resource_move":
+        stage["resources"] = relative_placement(resources, op.get("resource_id"), placement)
+    else:
+        resource = op.get("resource")
+        if not isinstance(resource, dict) or not isinstance(resource.get("id"), str) or not resource["id"]:
+            raise ValueError("resource_insert needs a resource with a fresh stable ID")
+        if any(row.get("id") == resource["id"] for s in stages for row in s.get("resources", [])):
+            raise ValueError("resource_insert reuses an existing resource ID")
+        # Insert via the same anchor rules, including ambiguity and self checks.
+        augmented = [*resources, copy.deepcopy(resource)]
+        if set(placement) not in ({"before_id"}, {"after_id"}):
+            raise ValueError("placement needs exactly one before_id or after_id")
+        anchor = next(iter(placement.values()))
+        ids = [row.get("id") for row in resources]
+        if not isinstance(anchor, str) or ids.count(anchor) != 1:
+            raise ValueError("resource_insert needs one existing resource anchor")
+        # Appending after the last resource is valid, even though the helper's
+        # movement would be a no-op on the augmented list.
+        position = ids.index(anchor) + ("after_id" in placement)
+        augmented.pop()
+        augmented.insert(position, copy.deepcopy(resource))
+        stage["resources"] = augmented
+    return result

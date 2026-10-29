@@ -185,4 +185,15 @@ cases:
     - nope
     expect:
       site: unit.map.import.bad-expected-revision
+  - id: structural-invalid
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --check]
+    expect: {site: unit.map.import.structural-edit-invalid}
+  - id: structural-preflight
+    fixture: rich_world_structural
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --check]
+    expect: {site: unit.map.import.structural-preflight-failed}
 untriggered: []

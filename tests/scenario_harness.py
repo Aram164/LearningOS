@@ -142,7 +142,7 @@ def _template_root() -> Path:
 
 
 def _build_fixture(name: str, container: Path) -> Path:
-    if name not in {"rich_world", "rich_world_warning_debt"}:
+    if name not in {"rich_world", "rich_world_warning_debt", "rich_world_structural"}:
         raise ValueError(f"unknown scenario fixture: {name}")
     # The world spans the repository root and its sibling materials tree
     # (the fixture book lives there), so the copy unit is LearningOS/.
@@ -153,6 +153,11 @@ def _build_fixture(name: str, container: Path) -> Path:
         target = root / "projects/registry/project-scenario-new.yaml"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes((TESTS_DIR / "fixtures/unbaselined-project.yaml").read_bytes())
+    if name == "rich_world_structural":
+        # Only this variant starts with a current-template map. The historical
+        # rich world stays byte-identical for all existing characterizations.
+        target = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+        target.write_bytes((TESTS_DIR / "scenarios/files/unit.map.import/check-replace/map.yaml").read_bytes())
     return root
 
 

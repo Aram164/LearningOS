@@ -9,6 +9,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.app.check import check_proposal
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
@@ -16,6 +17,7 @@ from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
+from learning_os.domain.plan_import import apply_structural_edit
 from learning_os.domain.suggest import not_found
 from learning_os.store.codec import dump_study_map as _dump_study_map
 from learning_os.store.codec import dump_yaml as _dump_yaml
@@ -346,8 +348,6 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    data = _bind_runtime_reviews(data)
-
     current_map_id = unit.data.get("current_study_map")
     current_map = repo.study_maps.get(current_map_id) if current_map_id else None
     current_data = copy.deepcopy(current_map.data) if current_map is not None else None
@@ -355,6 +355,21 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     reset_reason = req.get("intentional_state_reset")
     retire_ids = list(req.get("retire_stage") or [])
     retire_reason = req.get("retire_reason")
+    structural = "structural_edit" in data
+    if structural:
+        try:
+            if set(data) != {"unit_id", "structural_edit"} or current_map is None:
+                raise ValueError("structural edit requires exactly unit_id and structural_edit on an existing map")
+            if reset_reason or retire_ids or retire_reason or reorder_reason:
+                raise ValueError("structural edit cannot combine replacement override flags")
+            edit = data["structural_edit"]
+            data = apply_structural_edit(current_map.authored_data or current_map.data, edit)
+            if "stage_move" in edit:
+                reorder_reason = edit["reason"]
+        except ValueError as exc:
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.structural-edit-invalid",
+                               prefixed=True, exit_code=2) from exc
+    data = _bind_runtime_reviews(data)
     diff: dict = {"replacement": current_data is not None}
 
     if current_data is None:
@@ -427,6 +442,8 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     if current_data is None or (reset_reason or "").strip():
         unit_data["status"] = "ready"
     diff["unit_status"] = unit_data["status"]
+    if structural:
+        diff["structural_reason"] = edit["reason"]
     diff.setdefault("stages_after", _stage_id_list(data))
     # Stage membership alone does not describe changed teaching content.
     # Show every changed authored field, including changes on surviving
@@ -456,6 +473,18 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             note = root / str(note_ref)
             if not note.exists():
                 writes[note] = ""
+    if structural and check_only:
+        # Preserve the same effective proposal at preflight and apply. This
+        # gate validates only a disposable shadow, never canonical files.
+        checked = check_proposal(ctx, TransactionProposal(
+            capability="unit.map.import", writes=writes,
+            artifact_ids=[unit.id, str(data["id"])],
+        ))
+        problems = [*checked["errors"], *checked["warnings_delta"]]
+        if problems:
+            raise WriteRefused("structural edit preflight failed: " + "; ".join(problems),
+                               site=f"{ctx.operation}.structural-preflight-failed",
+                               prefixed=True, exit_code=1)
     if check_only:
         return Result(
             {"ok": True, "mode": "check", "unit_id": req["unit_id"],

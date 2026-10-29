@@ -105,7 +105,7 @@ def execute(root: Path, argv: list[str], env: dict, rows: list) -> dict:
     return json.loads(result.stdout)
 
 
-def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
+def run_scenario(base: Path, name: str, stage_count: int = 1, *, proportional: bool = False) -> dict:
     root, study = prepare(base, stages=stage_count)
     contract = _plan_contract("work/active/workspace-demo/outputs/demo-coverage-audit.md")
     command, target = "module-plan-import", "module-demo"
@@ -169,6 +169,19 @@ def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
         }
         repeated_stages = 0
 
+    if proportional and name == "move-stage":
+        command, target, extra = "unit-map-import", "unit-demo-l01", ["--replace"]
+        package = {"unit_id": target, "structural_edit": {
+            "reason": reason, "stage_move": {"stage_id": "stage-demo-2", "before_id": "stage-demo"}}}
+        repeated_stages = 0
+    elif proportional and name == "add-unit":
+        entry = package["units"][0]
+        route = package["source_map"]["sources"][0]["unit_routes"][-1]
+        package = {"module_id": target, "plan_contract": contract,
+                   "unit_additions": [{**entry, "routes": [{"source_id": "source-demo-book", "route": route}]}],
+                   "claim_evidence": package["claim_evidence"]}
+        repeated_routes = 0
+
     draft = base / "draft.yaml"
     write_yaml(draft, package)
     before = owned_bytes(root)
@@ -196,7 +209,7 @@ def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
             "approval": {"kind": "direct-user-gesture", "subject_sha256": "sha256:" + "0" * 64},
             "payload": {"unit_id": target, "file": str(draft),
                         "file_sha256": check["file_sha256"], "replace": True,
-                        "intentional_reorder": reason},
+                        **({"intentional_reorder": reason} if not proportional else {})},
         }
         envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
         approved = base / "approved.json"
@@ -217,7 +230,11 @@ def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
         assert after_map == expected
         assert changed == [MAP]
     elif name == "move-stage":
-        assert after_map == package
+        expected = copy.deepcopy(study)
+        expected["stages"][0:2] = reversed(expected["stages"][0:2])
+        for number, stage in enumerate(expected["stages"], 1):
+            stage["number"] = number
+        assert after_map == expected
         assert changed == [MAP]
     else:
         assert after[MAP] == before[MAP]
@@ -230,6 +247,7 @@ def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
     validations = [json.loads(line) for line in validation_log.read_text().splitlines()] if validation_log.exists() else []
     return {
         "scenario": name, "existing_stages": stage_count,
+        "proportional_intent": proportional,
         "input_bytes": draft.stat().st_size,
         "existing_stage_records_reproduced": repeated_stages,
         "existing_route_records_reproduced": repeated_routes,
@@ -246,6 +264,7 @@ def run_scenario(base: Path, name: str, stage_count: int = 1) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--proportional", action="store_true", help="measure Stage 5 stable-ID edits instead of replacement drafts")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="los-agility-") as scratch:
         rows = []
@@ -253,7 +272,7 @@ def main() -> None:
                                   ("move-stage", 10), ("move-stage", 50), ("add-unit", 1)):
             base = Path(scratch) / f"{name}-{stage_count}"
             base.mkdir()
-            rows.append(run_scenario(base, name, stage_count))
+            rows.append(run_scenario(base, name, stage_count, proportional=args.proportional))
     result = {
         "scope": "scripted synthetic fixtures; warm development environment; no model calls",
         "review": "scripted exact-content review; does not measure human review quality",
@@ -263,7 +282,8 @@ def main() -> None:
             path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
             for path in ("workbench/agility-experiment/baseline.py", "tests/conftest.py",
                          "tests/repo_builders.py", "tools/learning_os/app/handlers/plan.py",
-                         "tools/learning_os/app/handlers/maps.py", "tools/learning_os/app/_plan_gate.py")
+                         "tools/learning_os/app/handlers/maps.py", "tools/learning_os/app/_plan_gate.py",
+                         "tools/learning_os/domain/plan_import.py")
         },
         "scenarios": rows,
     }
