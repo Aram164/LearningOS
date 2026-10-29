@@ -111,6 +111,10 @@ def _base() -> str:
 def _d16_approvals() -> tuple[dict[str, str], dict[str, str]]:
     """(cli.<sub> -> sub, request_schemas.<file> -> file) for PLAN D16."""
     data = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))
+    # Keep historical approvals as evidence; a later explicit removal retires
+    # their live CLI/schema obligation without changing the old approval bytes.
+    latest_changes = {entry["key"]: entry.get("change") for entry in data.get("approvals", [])}
+    retired = {key for key, change in latest_changes.items() if change == "removed"}
     cli: dict[str, str] = {}
     schemas: dict[str, str] = {}
     for entry in data.get("approvals", []):
@@ -119,6 +123,12 @@ def _d16_approvals() -> tuple[dict[str, str], dict[str, str]]:
         assert entry.get("change") == "changed", entry
         assert entry.get("pre_approved_by") == D16_APPROVED_BY, entry
         key = entry["key"]
+        current_key = key
+        if key.startswith("request_schemas."):
+            current_key = "request_schemas." + _current_schema_filename(
+                key[len("request_schemas."):])
+        if current_key in retired:
+            continue
         if key.startswith("cli."):
             cli[key] = key[len("cli."):]
         elif key.startswith("request_schemas."):
@@ -484,10 +494,14 @@ def test_json_flag_keeps_b_success_bytes_identical(mini_repo, tmp_path):
 
 
 def test_s13_base_marks_every_d16_approval_new():
-    """Amendment (bb) context 1: at accepted S13 all 53 approvals are new."""
+    """At S13 every live D16 approval is new; two writers retired later."""
+    historical = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
+    for prefix in ("cli.", "request_schemas."):
+        assert sum(entry.get("plan_ref") == D16_PLAN_REF
+                   and entry["key"].startswith(prefix) for entry in historical) == 53
     new_cli, new_schemas = _new_d16_approvals(S13_BASE)
-    assert len(new_cli) == 53, len(new_cli)
-    assert len(new_schemas) == 53, len(new_schemas)
+    assert len(new_cli) == 51, len(new_cli)
+    assert len(new_schemas) == 51, len(new_schemas)
     base_flat, live_flat = _surface_flats(S13_BASE)
     _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
     _assert_only_json_added_to_request_schemas(S13_BASE, new_schemas)

@@ -355,18 +355,6 @@ fields:
   pointer: /properties/stage_id
   kind: stage
   lookup: true
-- operation: project.create
-  pointer: /properties/file_sha256
-  kind: digest
-  lookup: false
-- operation: project.update
-  pointer: /properties/file_sha256
-  kind: digest
-  lookup: false
-- operation: project.update
-  pointer: /properties/project_id
-  kind: project
-  lookup: true
 - operation: review.apply
   pointer: /properties/unit_id
   kind: unit
