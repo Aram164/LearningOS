@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
+import tracemalloc
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 import yaml
@@ -210,3 +213,105 @@ def test_transaction_receipts_read_through_the_shared_yaml_loader(mini_repo):
     validator.check_transaction_receipts()
     reported = [i for i in validator.issues if i.code == "TRANSACTION-RECEIPT"]
     assert any("cannot parse receipt" in i.message for i in reported), reported
+
+
+@pytest.mark.parametrize("size", [0, 1, 262143, 262144, 262145, 1048593])
+def test_material_checksum_matches_binary_bytes_at_buffer_boundaries(tmp_path, size):
+    from learning_os.store.materials.resolution import sha256_file
+
+    data = (bytes(range(256)) * (size // 256 + 1))[:size]
+    path = tmp_path / "material.bin"
+    path.write_bytes(data)
+    expected = "sha256:" + hashlib.sha256(data).hexdigest()
+    assert sha256_file(path) == sha256_file(path, {}) == expected
+
+
+def test_material_checksum_uses_bounded_python_allocation(tmp_path):
+    from learning_os.store.materials.resolution import sha256_file
+
+    path = tmp_path / "large.bin"
+    block = bytes(range(256)) * 4096
+    expected = hashlib.sha256()
+    with path.open("wb") as stream:
+        for _ in range(8):
+            stream.write(block)
+            expected.update(block)
+    tracemalloc.start()
+    try:
+        actual = sha256_file(path)
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert actual == "sha256:" + expected.hexdigest()
+    assert peak < 1024 * 1024, f"checksum allocated {peak} bytes for an 8 MiB file"
+
+
+def test_material_checksum_reuses_only_its_build_cache(tmp_path, monkeypatch):
+    from learning_os.store.materials.resolution import sha256_file
+
+    path = tmp_path / "material.bin"
+    path.write_bytes(b"original")
+    (tmp_path / "sub").mkdir()
+    alias = tmp_path / "sub/../material.bin"
+    original_open = Path.open
+    opened = []
+
+    def tracked_open(target, *args, **kwargs):
+        opened.append(target)
+        return original_open(target, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", tracked_open)
+    cache = {}
+    original = sha256_file(path, cache)
+    assert sha256_file(alias, cache) == original
+    assert len(opened) == 1
+    path.write_bytes(b"changed")
+    opened.clear()
+    changed = "sha256:" + hashlib.sha256(b"changed").hexdigest()
+    assert sha256_file(alias, {}) == sha256_file(path) == changed
+    assert original != changed
+    assert len(opened) == 2
+
+
+def test_material_checksum_does_not_cache_failed_reads(tmp_path, monkeypatch):
+    from learning_os.store.materials.resolution import sha256_file
+
+    path = tmp_path / "material.bin"
+    path.write_bytes(b"readable after retry")
+    cache = {}
+
+    def unreadable(*args, **kwargs):
+        raise OSError("synthetic read failure")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(Path, "open", unreadable)
+        with pytest.raises(OSError, match="synthetic read failure"):
+            sha256_file(path, cache)
+    assert cache == {}
+    assert sha256_file(path, cache) == "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_brief_audit_reuses_repository_but_reobserves_materials(mini_repo, monkeypatch):
+    from repo_builders import _compact_setup
+
+    from learning_os.app.handlers.materials import _unit_audit
+    from learning_os.derive import material_synthesis
+
+    _compact_setup(mini_repo)
+    repo = load_repo(mini_repo)
+    unit = repo.units["unit-demo-l01"]
+    expected = _unit_audit(mini_repo, repo, unit)
+    assert expected["synthesis"]["fresh"] is True
+
+    def unnecessary_reload(*args, **kwargs):
+        raise AssertionError("the brief already has this repository snapshot")
+
+    monkeypatch.setattr(material_synthesis, "load_repo", unnecessary_reload)
+    assert _unit_audit(mini_repo, repo, unit) == expected
+    material = repo.materials_root / "source-demo-book/lecture-01.pdf"
+    material.write_bytes(material.read_bytes() + b"\nchanged material bytes\n")
+    stale = _unit_audit(mini_repo, repo, unit)
+    assert stale["synthesis"]["fresh"] is False
+    assert stale["synthesis"]["detail"]
+    material.unlink()
+    assert _unit_audit(mini_repo, repo, unit)["synthesis"]["fresh"] is False

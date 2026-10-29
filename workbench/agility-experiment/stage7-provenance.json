@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-29",
+  "python": "3.14.4",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "core_parent": "b72369651e1f9488b85697e04110eb99eb31c429",
+  "ui_head": "8e82f8a3311d05415edfb9b17c5517e652a3dd61",
+  "measurement_state": "before source hashes verified against core_parent; after source hashes pin two uncommitted production changes subsequently committed with this evidence; driver unchanged between passes",
+  "samples_per_pass": 3,
+  "checksum_repeats_per_sample": 3,
+  "material_bytes": 16777216,
+  "timing_limits": "instrumented fresh processes; OS caches not flushed; no end-to-end latency claim; retained after pass ran after other checks completed",
+  "allocations": "tracemalloc peak Python allocation, not process RSS",
+  "gates": {
+    "runtime_efficiency": "27 passed",
+    "owning_material_plan_cache_agent_tests": "174 passed; 1 unrelated procedure test deselected",
+    "ruff": "passed tools/tests and driver",
+    "mypy": "19 maintained source files passed",
+    "reachability": "288/288 classified; 10 historical allowlisted; architecture pass",
+    "system_map": "passed",
+    "import_linter": "3 contracts kept, 0 broken",
+    "validation": "0 errors; 970 visible warnings; managed baseline 964 across unchanged 32 signatures",
+    "proportional_preservation": "all 5 match Stage 5 structural fields and draft hashes"
+  },
+  "pre_repair_regressions": {
+    "bounded_python_allocation": "failed: 8388858 bytes for 8 MiB; threshold 1 MiB",
+    "brief_audit_reuses_repository": "failed: missing repo reuse made audit freshness false under reload refusal"
+  },
+  "protected_primary_sha256": {
+    "curriculum/modules/module-hu-icop/source-map.yaml": "b4108923409893e409de148dd3781237afc0bcd502992f7b8a24d3abddeb479d",
+    "curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/study-map.yaml": "cbf9d245acf462d52d5ad964117b2a305f3c765693f1b603e78e6330de2b306a",
+    "operations/transactions/idempotency.yaml": "03d20c887841f1670b2ca09c2406e31dd1ed456adcca919b2fa8e6f9e96aa25e",
+    "operations/transactions/lineage.yaml": "8c1ea698c63b0def5a5340ceffcab48b355eb8386891f27b12d6bf80bdb726b3",
+    "operations/transactions/revisions.yaml": "fefa2754561c6ef17b35a3ae87b13e31e15afbb3724d1a495413abac25cd661e",
+    "records/materials-manifest.yaml": "847adebcfa4cf64f5dbf4b2c613048b8040c4cb6517cc4d3ffb5d599d4e1be08",
+    "tools/hooks/pre-push": "4abeb871cef1487801185991e4563c0dc2b7c148a903386a759cb47f7960dd51"
+  },
+  "full_hosted_acceptance": "deferred to Stage 8; no verified-pair stamp"
+}

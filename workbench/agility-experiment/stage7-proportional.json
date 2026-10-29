@@ -1,0 +1,186 @@
+{
+  "scope": "scripted synthetic fixtures; warm development environment; no model calls",
+  "review": "scripted exact-content review; does not measure human review quality",
+  "core_base": "b72369651e1f9488b85697e04110eb99eb31c429",
+  "python": "3.14.4",
+  "source_sha256": {
+    "workbench/agility-experiment/baseline.py": "fe77b966c97ae41c1d4cb620cd7216dd3090c41fb33f1476f0ac0b35115c5a2b",
+    "tests/conftest.py": "5e5fd470b75e3beb59b3ac2c350931bd93a2b463b9aaab1275c1f3e43e47023c",
+    "tests/repo_builders.py": "7397f93cd0317ac3ba6fff92ceb0f28c7e9dd67aeb61ee6af28787abc4605746",
+    "tools/learning_os/app/handlers/plan.py": "6cadcd9de0acfc9bbfe373ecf19a3d27244f04f5b970083b83d9f9abc8842987",
+    "tools/learning_os/app/handlers/maps.py": "abd44f1c684a2a27a990a692209692a090f48144658c54ac7686a8bea66a4b54",
+    "tools/learning_os/app/_plan_gate.py": "37f2b0fe5c092646ca2536f328f83c6d69800a781c30cafe722bab9ba3a017ad",
+    "tools/learning_os/domain/plan_import.py": "ca794b049d3721d73ff04f0f43dc5a6dd94ee0f1965f83f1d35fc23ef40a012a"
+  },
+  "scenarios": [
+    {
+      "scenario": "append-resource",
+      "existing_stages": 1,
+      "proportional_intent": true,
+      "input_bytes": 768,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "module-plan-import",
+          "seconds": 0.4383691670373082,
+          "stdout_bytes": 2979
+        },
+        {
+          "command": "module-plan-import",
+          "seconds": 0.6442725419765338,
+          "stdout_bytes": 834
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3147154161706567,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "eedc3ba09df962ed889d24bc2d6a109642f401af6523cbc3ea3479bc85e43589"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 2,
+      "proportional_intent": true,
+      "input_bytes": 184,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.4403889999957755,
+          "stdout_bytes": 1128
+        },
+        {
+          "command": "capability",
+          "seconds": 0.617645708960481,
+          "stdout_bytes": 1545
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3178397079464048,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "9e75d6401afa87b10813124dc50bcc07f7888745472b14d36284d1084f89e14d"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 10,
+      "proportional_intent": true,
+      "input_bytes": 184,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.4179335000226274,
+          "stdout_bytes": 1491
+        },
+        {
+          "command": "capability",
+          "seconds": 0.6478037500055507,
+          "stdout_bytes": 1908
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3109080829890445,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "9e75d6401afa87b10813124dc50bcc07f7888745472b14d36284d1084f89e14d"
+    },
+    {
+      "scenario": "move-stage",
+      "existing_stages": 50,
+      "proportional_intent": true,
+      "input_bytes": 184,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "unit-map-import",
+          "seconds": 0.5190275000641122,
+          "stdout_bytes": 3411
+        },
+        {
+          "command": "capability",
+          "seconds": 0.7203017079737037,
+          "stdout_bytes": 3828
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.36010512500070035,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "9e75d6401afa87b10813124dc50bcc07f7888745472b14d36284d1084f89e14d"
+    },
+    {
+      "scenario": "add-unit",
+      "existing_stages": 1,
+      "proportional_intent": true,
+      "input_bytes": 2943,
+      "existing_stage_records_reproduced": 0,
+      "existing_route_records_reproduced": 0,
+      "commands": [
+        {
+          "command": "module-plan-import",
+          "seconds": 0.4480417089071125,
+          "stdout_bytes": 8068
+        },
+        {
+          "command": "module-plan-import",
+          "seconds": 0.6774444159818813,
+          "stdout_bytes": 896
+        }
+      ],
+      "command_count": 2,
+      "validation_runs": 2,
+      "validation_seconds": 0.3043293330119923,
+      "authored_files_changed": [
+        "curriculum/modules/module-demo/module.yaml",
+        "curriculum/modules/module-demo/source-map.yaml",
+        "curriculum/modules/module-demo/units/unit-demo-l02/stages/stage-demo-l02/notes.md",
+        "curriculum/modules/module-demo/units/unit-demo-l02/study-map.yaml",
+        "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml"
+      ],
+      "receipt_count": 1,
+      "preservation": "passed",
+      "preflight_writes": 0,
+      "model_decision_cycles": null,
+      "model_tokens": null,
+      "user_steps": null,
+      "draft_sha256": "99036f70fd92ce8eee525a2872c9a3ba9c33a96935d72fe5b432da3ddd788b5a"
+    }
+  ]
+}

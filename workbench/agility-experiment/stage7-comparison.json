@@ -1,0 +1,149 @@
+{
+  "scope": "disposable synthetic fixtures; instrumented fresh processes; OS disk caches not flushed; no model calls",
+  "before_peak_python_bytes": 16777466,
+  "after_peak_python_bytes": 394425,
+  "allocation_reduction_percent": 97.64907882990197,
+  "contexts_byte_identical": true,
+  "commands": [
+    {
+      "command": "status-cold",
+      "before_median_instrumented_seconds": 0.7756158330012113,
+      "after_median_instrumented_seconds": 0.7740057500777766,
+      "validation_runs": 1,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 667,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "status-warm",
+      "before_median_instrumented_seconds": 0.3262638329761103,
+      "after_median_instrumented_seconds": 0.3325399999739602,
+      "validation_runs": 0,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 667,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "status-no-validation",
+      "before_median_instrumented_seconds": 0.18229000002611428,
+      "after_median_instrumented_seconds": 0.18320604192558676,
+      "validation_runs": 0,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 647,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "validate-first",
+      "before_median_instrumented_seconds": 0.7560849169967696,
+      "after_median_instrumented_seconds": 0.7332405409542844,
+      "validation_runs": 1,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 94,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "validate-repeat",
+      "before_median_instrumented_seconds": 0.7443482920061797,
+      "after_median_instrumented_seconds": 0.7383445000741631,
+      "validation_runs": 1,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 94,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "context-full",
+      "before_median_instrumented_seconds": 0.29953600000590086,
+      "after_median_instrumented_seconds": 0.2892356669763103,
+      "validation_runs": 0,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 8246,
+      "context_stdout_identical": true
+    },
+    {
+      "command": "context-brief",
+      "before_median_instrumented_seconds": 0.3128820830024779,
+      "after_median_instrumented_seconds": 0.30291554203722626,
+      "validation_runs": 0,
+      "inventory_enumerations": 0,
+      "material_opens": 2,
+      "before_repository_loads": 2,
+      "after_repository_loads": 1,
+      "stdout_bytes": 5795,
+      "context_stdout_identical": true
+    },
+    {
+      "command": "context-stage",
+      "before_median_instrumented_seconds": 0.29311783297453076,
+      "after_median_instrumented_seconds": 0.28496995905879885,
+      "validation_runs": 0,
+      "inventory_enumerations": 0,
+      "material_opens": 0,
+      "before_repository_loads": 1,
+      "after_repository_loads": 1,
+      "stdout_bytes": 1284,
+      "context_stdout_identical": true
+    },
+    {
+      "command": "inventory-preflight",
+      "before_median_instrumented_seconds": 0.8613109580473974,
+      "after_median_instrumented_seconds": 0.8419916670536622,
+      "validation_runs": 1,
+      "inventory_enumerations": 3,
+      "material_opens": 19,
+      "before_repository_loads": 2,
+      "after_repository_loads": 2,
+      "stdout_bytes": 4619,
+      "context_stdout_identical": false
+    },
+    {
+      "command": "inventory-apply",
+      "before_median_instrumented_seconds": 1.347786583006382,
+      "after_median_instrumented_seconds": 1.3604224579175934,
+      "validation_runs": 1,
+      "inventory_enumerations": 4,
+      "material_opens": 25,
+      "before_repository_loads": 2,
+      "after_repository_loads": 2,
+      "stdout_bytes": 830,
+      "context_stdout_identical": false
+    }
+  ],
+  "proportional_scenarios_unchanged": 5,
+  "proportional_compared_fields": [
+    "scenario",
+    "existing_stages",
+    "input_bytes",
+    "existing_stage_records_reproduced",
+    "existing_route_records_reproduced",
+    "command_count",
+    "validation_runs",
+    "authored_files_changed",
+    "receipt_count",
+    "preservation",
+    "preflight_writes",
+    "draft_sha256"
+  ],
+  "production_files_changed": [
+    "tools/learning_os/store/materials/resolution.py",
+    "tools/learning_os/app/handlers/materials.py"
+  ],
+  "final_exact_pair_ci": false
+}

@@ -1,0 +1,9 @@
+W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf]
+W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part2.pdf]
+W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf]
+W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-distributions-handwritten/teil-02-part2.pdf]
+W ATTACH-LOCAL-ABSENT: local-only attachment is not on this machine (expected in a CI checkout or a fresh clone; the pin still records it) [knowledge/attachments/note-sad-hypothesis-testing-handwritten/teil-03.pdf]
+W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot — run `make views` [generated/manifest.json]
+0 error(s), 970 warning(s) — OK (2.9s); warning list: generated/reports/validation-report.md
+warning-baseline: 964 warning(s) across 32 signature(s); baseline 964 across 32 (recorded 2026-10-26)
+warning-baseline: OK — zero errors, no new warning signature.

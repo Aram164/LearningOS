@@ -233,3 +233,21 @@ Aram supplied the review attachment `11150982-27ee-4148-95fc-5e28851327f6/Pasted
 Affected files are the sequence feature, Unit shell, shared learning-route presentation, existing UI module/dashboard tests, this plan and the Stage 6 outcome/complaint evidence. Core contracts and derivation remain unchanged. Checkable sequence: reproduce the open-modal/End-session path; repair lifetime and controls; test pending preview and activation across end/close/reset/Unit-switch-back, 10/50-stage proportional movement and distinct progress scopes; run full UI check and owning Core preservation/validation checks; commit/push the corrections, then resume Stage 7 measurements. No actual learner state or installation is involved.
 
 The sitting/full-plan counts use two lines within the existing narrow rail. Add a scoped presentation class in `src/styles/23-unit-surface.css` only for that two-line metadata; ordinary rail rendering retains its existing span layout. The original End-session regression reproduced the P1 defect in the built fixture bundle before the fix and passes with the lifetime token.
+
+## Stage 7 — selected measured changes
+
+Three fresh disposable-fixture samples at Core `b723696` and UI `8e82f8a` are retained as `workbench/agility-experiment/stage7-before.json`. Nine checksum measurements of the same synthetic 16 MiB file have median peak Python allocation 16,777,466 bytes. Every brief context loads the repository twice; full and stage-focused context load it once. Cold/warm status validates once/zero times respectively; repeated explicit validation still validates once each time. Structured inventory preflight/apply enumerate three/four times and open material files 19/25 times; these are separate verification boundaries, not evidence that they can be removed.
+
+- **Decision:** stream `store/materials/resolution.py::sha256_file` through `hashlib.file_digest`, retaining the exact prefixed SHA-256 result, exception propagation and existing resolved-path per-build cache. Reason: a measured allocation proportional to the entire material is unnecessary for a checksum. `store/material_analysis.py::observe_local_material` already streams; leave it unchanged.
+- **Decision:** pass the existing repository to `validate_unit_material_synthesis` from `app/handlers/materials.py::_unit_audit`. Reason: the brief already owns that snapshot and the validator already supports repository reuse; parsing it again adds work without a separate freshness guarantee. Live material observation remains inside synthesis validation on every call.
+- **Decision:** add regression coverage to `tests/test_runtime_efficiency.py` for binary/chunk-boundary digest parity, bounded allocation, cache reuse/fresh-build invalidation/read failures, and audit output equivalence plus material-change detection without a repository reload. Run existing inventory, material, context and cache tests. Do not weaken validation or material enumeration to improve a benchmark.
+- **Decision:** retain raw before/after measurements, source hashes, comparison and reproduction instructions under `workbench/agility-experiment/`; retain the outcome and two distinct observed inefficiencies under `work/proposals/` and `work/complaints/`. Re-run the same three-sample profile and proportional preservation driver. Python allocation is not process RSS; instrumented local timing is not UI latency or model cost.
+
+Checkable acceptance: identical digests and audit payloads, fresh detection after material changes, one brief repository load, checksum peak below 1 MiB, unchanged validation/enumeration/open counts elsewhere, and all existing preservation/refusal checks passing. No schema/data/manifest version change or new persistent cache is needed.
+
+Stage 7's selected changes and focused verification are complete; see
+[the outcome](2026-10-29-agility-stage7-outcome.md). Raw source-pinned profiles
+show checksum peak allocation 16,777,466 → 394,425 bytes and brief repository
+loads 2 → 1, with context output and safety-check counts preserved. All five
+Stage 5 proportional scenarios still match. Stage 8 hosted exact-pair acceptance
+remains separate; stop after the authorized Stage 7 publication.

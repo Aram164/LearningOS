@@ -1,0 +1,507 @@
+{
+  "scope": "disposable synthetic fixtures; instrumented fresh processes; OS disk caches not flushed; no model calls",
+  "core_head": "b72369651e1f9488b85697e04110eb99eb31c429",
+  "source_sha256": {
+    "workbench/agility-experiment/efficiency.py": "90668a6fa34f0cac89b6d137923aa6c1d07c0b95e0ecfb6493469dae06b0a3f6",
+    "tools/learning_os/store/materials/resolution.py": "cd0e8cb9cdbdbe48cad5ad01c9842f4fc1e1365db9680a454f8e0f762ccba100",
+    "tools/learning_os/app/_plan_gate.py": "37f2b0fe5c092646ca2536f328f83c6d69800a781c30cafe722bab9ba3a017ad",
+    "tools/learning_os/app/handlers/plan.py": "6cadcd9de0acfc9bbfe373ecf19a3d27244f04f5b970083b83d9f9abc8842987",
+    "tools/learning_os/app/handlers/materials.py": "e8f91ab19e1b99acefaa5a4b064eccd822f59effc880c11240e95b212a2f1c27",
+    "tools/learning_os/derive/material_synthesis.py": "862788b61bceaf2efbccbb6a8a9aa3834e6ce49cf65f17f0fc78f2e2781dcb49",
+    "tools/learning_os/store/material_analysis.py": "9c681387e5571ce5de571e2fa5ddc33b667c3a1e5bb2c207020de5dd635e5e43",
+    "tools/learning_os/store/validation_cache.py": "4a9fdfd6a27410827997d3c74389a7bb4fd391d7a647496fd089cef04e41fa2a"
+  },
+  "samples": [
+    {
+      "commands": [
+        {
+          "name": "status-cold",
+          "instrumented_seconds": 0.7726303749950603,
+          "stdout_bytes": 667,
+          "stdout_sha256": "bb596bcd48afa25ae645b57337523c1341248ef8fc65e970b4ea1f8df3cf0fae",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-warm",
+          "instrumented_seconds": 0.3325399999739602,
+          "stdout_bytes": 667,
+          "stdout_sha256": "bb596bcd48afa25ae645b57337523c1341248ef8fc65e970b4ea1f8df3cf0fae",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-no-validation",
+          "instrumented_seconds": 0.18540012498851866,
+          "stdout_bytes": 647,
+          "stdout_sha256": "62471b1fc3d32611c72842da293bffd9f216ede4f26a7cf13ee7b1b9f094c7df",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-first",
+          "instrumented_seconds": 0.7289666660362855,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-repeat",
+          "instrumented_seconds": 0.7383445000741631,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-full",
+          "instrumented_seconds": 0.28936262510251254,
+          "stdout_bytes": 8246,
+          "stdout_sha256": "9cf9d9d4c4526bd41e2e30cdafa60fe033ab3227a621d05ecb04f1aed52c368b",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-brief",
+          "instrumented_seconds": 0.3074714579852298,
+          "stdout_bytes": 5795,
+          "stdout_sha256": "8a33ea60795cd0c36cf13077744aef53b55e1c92f23f93c3f3af16ed8c0f1ec4",
+          "inventory_enumerations": 0,
+          "material_opens": {
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 2,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-stage",
+          "instrumented_seconds": 0.28496995905879885,
+          "stdout_bytes": 1284,
+          "stdout_sha256": "fe8972efe60c789ee618945857e1a3773173be27d0538e6cb479f787065193a5",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "inventory-preflight",
+          "instrumented_seconds": 0.8402254169341177,
+          "stdout_bytes": 4619,
+          "stdout_sha256": "ebb2dfae61081999247adfa1870de4cf5753f9ea96d822826a9807fa558203b2",
+          "inventory_enumerations": 3,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 6,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 6,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 6,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        },
+        {
+          "name": "inventory-apply",
+          "instrumented_seconds": 1.3604224579175934,
+          "stdout_bytes": 830,
+          "stdout_sha256": "2041211dfafd18dd4f98f417f751eb5253c2e9d14081284884035f7b21a02191",
+          "inventory_enumerations": 4,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 8,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 8,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 8,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        }
+      ],
+      "checksum": [
+        {
+          "seconds": 0.005831624963320792,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.005947583937086165,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.005764916073530912,
+          "peak_python_bytes": 394425
+        }
+      ],
+      "material_bytes": 16777216,
+      "draft_bytes": 526,
+      "preflight_writes": 0,
+      "receipt_count": 1,
+      "canonical_preservation": "passed",
+      "status_cold_warm_identical": true
+    },
+    {
+      "commands": [
+        {
+          "name": "status-cold",
+          "instrumented_seconds": 0.7749733339296654,
+          "stdout_bytes": 667,
+          "stdout_sha256": "5e4bbc87a213d9ce2a526cc2df5c7ba902bec885d507623b9f211eecf84ad7f9",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-warm",
+          "instrumented_seconds": 0.3340213749324903,
+          "stdout_bytes": 667,
+          "stdout_sha256": "5e4bbc87a213d9ce2a526cc2df5c7ba902bec885d507623b9f211eecf84ad7f9",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-no-validation",
+          "instrumented_seconds": 0.18315175001043826,
+          "stdout_bytes": 647,
+          "stdout_sha256": "cfd761774ba9bd578771c0bfebae872d9e934a2ab4c6e4e145f0deb9d7b0dc68",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-first",
+          "instrumented_seconds": 0.7476075420854613,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-repeat",
+          "instrumented_seconds": 0.7432327909627929,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-full",
+          "instrumented_seconds": 0.2892356669763103,
+          "stdout_bytes": 8246,
+          "stdout_sha256": "9cf9d9d4c4526bd41e2e30cdafa60fe033ab3227a621d05ecb04f1aed52c368b",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-brief",
+          "instrumented_seconds": 0.29902899998705834,
+          "stdout_bytes": 5795,
+          "stdout_sha256": "8a33ea60795cd0c36cf13077744aef53b55e1c92f23f93c3f3af16ed8c0f1ec4",
+          "inventory_enumerations": 0,
+          "material_opens": {
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 2,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-stage",
+          "instrumented_seconds": 0.2848456660285592,
+          "stdout_bytes": 1284,
+          "stdout_sha256": "fe8972efe60c789ee618945857e1a3773173be27d0538e6cb479f787065193a5",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "inventory-preflight",
+          "instrumented_seconds": 0.8449635839788243,
+          "stdout_bytes": 4619,
+          "stdout_sha256": "c79fecb311c3236fb99f30a5cac8b2615107e4dfa79e0dd3d51a9467b9eb95c1",
+          "inventory_enumerations": 3,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 6,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 6,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 6,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        },
+        {
+          "name": "inventory-apply",
+          "instrumented_seconds": 1.367675582994707,
+          "stdout_bytes": 830,
+          "stdout_sha256": "d881c409f1164144a367603b2f14d10362f8ddaa1c5d965c161df41805ff6179",
+          "inventory_enumerations": 4,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 8,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 8,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 8,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        }
+      ],
+      "checksum": [
+        {
+          "seconds": 0.005826207925565541,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.00573954195715487,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.005733999889343977,
+          "peak_python_bytes": 394425
+        }
+      ],
+      "material_bytes": 16777216,
+      "draft_bytes": 526,
+      "preflight_writes": 0,
+      "receipt_count": 1,
+      "canonical_preservation": "passed",
+      "status_cold_warm_identical": true
+    },
+    {
+      "commands": [
+        {
+          "name": "status-cold",
+          "instrumented_seconds": 0.7740057500777766,
+          "stdout_bytes": 667,
+          "stdout_sha256": "7ee45f2aa6edf58f6c441a58782bf6c6bf44d934ea0cc20698d0ab6563a113ef",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-warm",
+          "instrumented_seconds": 0.32750470901373774,
+          "stdout_bytes": 667,
+          "stdout_sha256": "7ee45f2aa6edf58f6c441a58782bf6c6bf44d934ea0cc20698d0ab6563a113ef",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "status-no-validation",
+          "instrumented_seconds": 0.18320604192558676,
+          "stdout_bytes": 647,
+          "stdout_sha256": "ce652da66bc7e644707642334a87756c886e763b74b3db5deac4602eba64f6b4",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-first",
+          "instrumented_seconds": 0.7332405409542844,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "validate-repeat",
+          "instrumented_seconds": 0.7272783749504015,
+          "stdout_bytes": 94,
+          "stdout_sha256": "b803d6cbed34bb8ac12a3d3dd539947bac4651cc7933c57a6297f08af3874f73",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 1,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-full",
+          "instrumented_seconds": 0.2845571250654757,
+          "stdout_bytes": 8246,
+          "stdout_sha256": "9cf9d9d4c4526bd41e2e30cdafa60fe033ab3227a621d05ecb04f1aed52c368b",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-brief",
+          "instrumented_seconds": 0.30291554203722626,
+          "stdout_bytes": 5795,
+          "stdout_sha256": "8a33ea60795cd0c36cf13077744aef53b55e1c92f23f93c3f3af16ed8c0f1ec4",
+          "inventory_enumerations": 0,
+          "material_opens": {
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 2,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "context-stage",
+          "instrumented_seconds": 0.28634179092478007,
+          "stdout_bytes": 1284,
+          "stdout_sha256": "fe8972efe60c789ee618945857e1a3773173be27d0538e6cb479f787065193a5",
+          "inventory_enumerations": 0,
+          "material_opens": {},
+          "validation_runs": 0,
+          "repository_loads": 1
+        },
+        {
+          "name": "inventory-preflight",
+          "instrumented_seconds": 0.8419916670536622,
+          "stdout_bytes": 4619,
+          "stdout_sha256": "9104797d27ae7448ea07bda6fe538aeff8276d40e3f2a90e7e21a85671d66286",
+          "inventory_enumerations": 3,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 6,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 6,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 6,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        },
+        {
+          "name": "inventory-apply",
+          "instrumented_seconds": 1.3430109999608248,
+          "stdout_bytes": 830,
+          "stdout_sha256": "da179aeb09ce09f8096645d7b23293e609ad725ea22167d694f169de9f33e921",
+          "inventory_enumerations": 4,
+          "material_opens": {
+            "inventory-demo/deck.pdf": {
+              "opens": 8,
+              "file_bytes": 10
+            },
+            "inventory-demo/large.bin": {
+              "opens": 8,
+              "file_bytes": 16777216
+            },
+            "inventory-demo/notes.txt": {
+              "opens": 8,
+              "file_bytes": 14
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "opens": 1,
+              "file_bytes": 658
+            }
+          },
+          "validation_runs": 1,
+          "repository_loads": 2
+        }
+      ],
+      "checksum": [
+        {
+          "seconds": 0.0058307909639552236,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.005767291993834078,
+          "peak_python_bytes": 394425
+        },
+        {
+          "seconds": 0.0064544579945504665,
+          "peak_python_bytes": 394425
+        }
+      ],
+      "material_bytes": 16777216,
+      "draft_bytes": 526,
+      "preflight_writes": 0,
+      "receipt_count": 1,
+      "canonical_preservation": "passed",
+      "status_cold_warm_identical": true
+    }
+  ],
+  "median_checksum_seconds": 0.005826207925565541,
+  "median_peak_python_bytes": 394425
+}

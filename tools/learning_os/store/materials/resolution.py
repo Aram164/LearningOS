@@ -439,13 +439,14 @@ def sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
     and never outlives it, so a file that changes between builds is still
     rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
     """
-    if cache is None:
-        return sha256_bytes(path.read_bytes())
-    key = Path(path).resolve()
-    checksum = cache.get(key)
+    key = Path(path).resolve() if cache is not None else path
+    checksum = cache.get(key) if cache is not None else None
     if checksum is None:
-        checksum = sha256_bytes(path.read_bytes())
-        cache[key] = checksum
+        # Materials can be large; hashing never needs a whole-file byte copy.
+        with path.open("rb") as stream:
+            checksum = "sha256:" + hashlib.file_digest(stream, "sha256").hexdigest()
+        if cache is not None:
+            cache[key] = checksum
     return checksum
 
 

@@ -319,7 +319,7 @@ def _unit_audit(root, repo, unit) -> dict:
     if synthesis["present"]:
         try:
             dossier = yaml.safe_load(destination.read_text(encoding="utf-8"))
-            validate_unit_material_synthesis(root, unit.id, dossier)
+            validate_unit_material_synthesis(root, unit.id, dossier, repo=repo)
             synthesis["fresh"] = True
         except Exception as exc:  # noqa: BLE001 - freshness is best-effort reporting
             synthesis["detail"] = str(exc)

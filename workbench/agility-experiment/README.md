@@ -67,3 +67,27 @@ model tokens, cost and human review quality remain unmeasured. Resource
 insertion/movement are verified by owning Core/UI tests, not timed by this
 retained comparison. Unit authoring remains on the operator-reviewed module
 import path. Stage 6 temporary sequence flexibility is not part of this result.
+
+## Stage 7 measured costs
+
+The [outcome](../../work/proposals/2026-10-29-agility-stage7-outcome.md)
+records the selected improvements and acceptance limits. Retained evidence:
+[before](stage7-before.json), [after](stage7-after.json),
+[comparison](stage7-comparison.json), [proportional preservation rerun](stage7-proportional.json),
+and [provenance/check results](stage7-provenance.json). Only the two production
+source hashes named by the comparison changed between profiles. The measured
+parent is `b723696`; the raw hashes distinguish its before state from the after
+working changes. The same driver bytes produced both passes.
+
+```sh
+.venv/bin/python workbench/agility-experiment/efficiency.py --samples 3 --material-mib 16 --output /tmp/learningos-agility-efficiency.json
+.venv/bin/python workbench/agility-experiment/baseline.py --proportional --output /tmp/learningos-agility-proportional.json
+```
+
+Run the efficiency driver from the before revision (with this driver copied
+unchanged) or after revision to reproduce that side. Both drivers create only
+disposable synthetic repositories. Cold/warm refers to a fresh process and the
+fixture's absent/present validation node, not flushed disk caches. Output context
+hashes match exactly; other command hashes contain snapshot/receipt/runtime
+fields and are not asserted equal across fixtures. Python allocation is not
+process RSS, and instrumented local times do not establish production latency.
