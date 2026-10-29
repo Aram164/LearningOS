@@ -8,10 +8,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Iterator
 from pathlib import Path
+from typing import cast
 
 import yaml
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
 from learning_os.app.lock import operator_lock
 from learning_os.derive.validation import validate
@@ -53,11 +55,11 @@ SECTIONS = {
 }
 
 
-def _json(value) -> str:
+def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2) + "\n"
 
 
-def plan_sha256(report: dict) -> str:
+def plan_sha256(report: dict[str, object]) -> str:
     """Identity of the complete review artifact, including proposed file bodies."""
     return hashlib.sha256(_json(report).encode()).hexdigest()
 
@@ -78,14 +80,14 @@ def _read(root: Path, relative: str) -> bytes:
     return _path(root, relative).read_bytes()
 
 
-def _yaml(root: Path, relative: str) -> dict:
+def _yaml(root: Path, relative: str) -> dict[str, object]:
     value = yaml.load(_read(root, relative), Loader=UniqueKeySafeLoader)
     if not isinstance(value, dict):
         raise WriteRefused(f"migration requires a mapping: {relative}")
     return value
 
 
-def _dump(value) -> str:
+def _dump(value: object) -> str:
     return yaml.safe_dump(value, sort_keys=False, allow_unicode=True)
 
 
@@ -103,7 +105,7 @@ def _validation_errors(root: Path) -> list[str]:
     return [*errors, *regressions]
 
 
-def _scalar_paths(value, prefix="") -> list[str]:
+def _scalar_paths(value: object, prefix: str = "") -> list[str]:
     if isinstance(value, dict):
         return [path for key, child in value.items()
                 for path in _scalar_paths(child, f"{prefix}/{key}")]
@@ -113,7 +115,7 @@ def _scalar_paths(value, prefix="") -> list[str]:
     return [prefix]
 
 
-def _ids(value):
+def _ids(value: object) -> Iterator[str]:
     if isinstance(value, dict):
         if isinstance(value.get("id"), str):
             yield value["id"]
@@ -124,7 +126,7 @@ def _ids(value):
             yield from _ids(child)
 
 
-def prepare(root: Path) -> dict:
+def prepare(root: Path) -> dict[str, object]:
     """Read-only draft; a snapshot race refuses rather than returning a torn plan."""
     root = root.resolve()
     _generation(root)
@@ -151,11 +153,11 @@ def prepare(root: Path) -> dict:
             or module.get("migrated_to") != PROJECT or module.get("kind") != "project"
             or module.get("area_id") != "program-thesis-projects"
             or ws.get("project_id") != PROJECT
-            or aliases.get("aliases", {}).get(MODULE) != PROJECT
+            or cast(dict[str, str], aliases.get("aliases", {})).get(MODULE) != PROJECT
             or project.get("workspace_ids") != [WORKSPACE]
             or project.get("unit_ids") != module.get("unit_order")
-            or set(project.get("milestone_ids", [])) != set(MILESTONES)
-            or set(module.get("unit_order", [])) != set(MILESTONES.values())):
+            or set(cast(list[str], project.get("milestone_ids", []))) != set(MILESTONES)
+            or set(cast(list[str], module.get("unit_order", []))) != set(MILESTONES.values())):
         raise WriteRefused("unexpected thesis ownership or milestone identity")
     # Existing Module fields are preserved wholesale, including supplied academic facts.
     updated = dict(module)
@@ -164,7 +166,7 @@ def prepare(root: Path) -> dict:
         updated.pop(key, None)
     for field, additions in (("related_module_ids", project.get("linked_module_ids", [])),
                              ("thematic_group_ids", project.get("thematic_group_ids", []))):
-        updated[field] = list(dict.fromkeys([*updated.get(field, []), *additions]))
+        updated[field] = list(dict.fromkeys([*cast(list[str], updated.get(field, [])), *cast(list[str], additions)]))
     updated_ws = dict(ws)
     updated_ws.pop("project_id")
     updated_ws["program_ids"] = list(dict.fromkeys(
@@ -172,13 +174,13 @@ def prepare(root: Path) -> dict:
         for item in ws.get("program_ids", [])))
     if "program-bachelors" not in updated_ws["program_ids"]:
         updated_ws["program_ids"].append("program-bachelors")
-    owned_relations = [row for row in relations["relations"] if row["from_project_id"] == PROJECT]
+    owned_relations = [row for row in cast(list[dict[str, object]], relations["relations"]) if row["from_project_id"] == PROJECT]
     redirects = {PROJECT: MODULE, **MILESTONES}
     for legacy in _ids([project.get("structure"), project.get("decisions"), owned_relations]):
         if legacy in redirects:
             raise WriteRefused(f"duplicate legacy identity: {legacy}")
         redirects[legacy] = WORKSPACE
-    updated_aliases = dict(aliases["aliases"])
+    updated_aliases = dict(cast(dict[str, str], aliases["aliases"]))
     del updated_aliases[MODULE]
     for legacy, owner in redirects.items():
         if legacy in updated_aliases and updated_aliases[legacy] != owner:
@@ -205,7 +207,7 @@ def prepare(root: Path) -> dict:
         MODULE_PATH: _dump(updated),
         WORKSPACE_PATH: "---\n" + _dump(updated_ws) + "---\n" + body + appended,
         ALIASES_PATH: _dump({"aliases": updated_aliases}),
-        RELATIONS_PATH: _dump({"relations": [row for row in relations["relations"]
+        RELATIONS_PATH: _dump({"relations": [row for row in cast(list[dict[str, object]], relations["relations"])
                                             if row["from_project_id"] != PROJECT]}),
     }
     pins = set(SOURCES) | {"curriculum/resume.yaml", "work/COORDINATION.md",
@@ -215,7 +217,7 @@ def prepare(root: Path) -> dict:
     module_dir = _path(root, str(Path(MODULE_PATH).parent))
     pins.update(path.relative_to(root).as_posix() for path in module_dir.rglob("*")
                 if path.is_file() or path.is_symlink())
-    for row in project.get("files", []):
+    for row in cast(list[dict[str, str]], project.get("files", [])):
         relative = row["path"]
         _read(root, relative)  # No external URI traversal or missing deliverable.
         pins.add(relative)
@@ -239,7 +241,7 @@ def prepare(root: Path) -> dict:
             "field_map": field_map}
 
 
-def _completed(root: Path, reviewed_sha256: str) -> dict | None:
+def _completed(root: Path, reviewed_sha256: str) -> dict[str, object] | None:
     if not _path(root, MARKER).exists():
         return None
     marker_bytes = _read(root, MARKER)
@@ -256,9 +258,9 @@ def _completed(root: Path, reviewed_sha256: str) -> dict | None:
         raise WriteRefused("migration receipt is invalid")
     if (receipt.get("id") != txid or receipt.get("status") != "committed"
             or receipt.get("capability") != AUTHORITY
-            or receipt.get("metadata", {}).get("plan_sha256") != reviewed_sha256):
+            or cast(dict[str, object], receipt.get("metadata", {})).get("plan_sha256") != reviewed_sha256):
         raise WriteRefused("migration marker lacks its committed receipt")
-    rows = {row["path"]: row for row in receipt["writes"]}
+    rows = {cast(str, row["path"]): row for row in cast(list[dict[str, object]], receipt["writes"])}
     if rows.get(MARKER, {}).get("sha256_after") != hashlib.sha256(marker_bytes).hexdigest():
         raise WriteRefused("migration marker does not match receipt")
     for relative, row in rows.items():
@@ -269,7 +271,7 @@ def _completed(root: Path, reviewed_sha256: str) -> dict | None:
     return {"replayed": True, "transaction_id": txid, "receipt_path": receipt_relative}
 
 
-def apply(root: Path, report: dict, *, reviewed_sha256: str) -> dict:
+def apply(root: Path, report: dict[str, object], *, reviewed_sha256: str) -> dict[str, object]:
     """Apply only an exact reviewed plan, under the normal lock/recovery boundary."""
     root = root.resolve()
     _generation(root)
@@ -281,14 +283,14 @@ def apply(root: Path, report: dict, *, reviewed_sha256: str) -> dict:
             return completed
         if prepare(root) != report:
             raise WriteRefused("migration source, snapshot or revisions changed; prepare again")
-        writes = {_path(root, relative): content for relative, content in report["writes"].items()}
+        writes = {_path(root, relative): content for relative, content in cast(dict[str, str], report["writes"]).items()}
         marker_path = _path(root, MARKER)
         result = TransactionService(root).commit(
             capability=AUTHORITY, writes=writes,
-            deletes=[_path(root, relative) for relative in report["deletes"]],
-            artifact_ids=report["expected_revisions"],
-            expected_revisions=report["expected_revisions"],
-            expected_snapshot=report["snapshot"],
+            deletes=[_path(root, relative) for relative in cast(list[str], report["deletes"])],
+            artifact_ids=cast(dict[str, int], report["expected_revisions"]),
+            expected_revisions=cast(dict[str, int], report["expected_revisions"]),
+            expected_snapshot=cast(str, report["snapshot"]),
             validate_state=lambda: _validation_errors(root),
             metadata={"migration": MIGRATION, "plan_sha256": reviewed_sha256},
             transaction_writes=lambda txid: {marker_path: _json({
