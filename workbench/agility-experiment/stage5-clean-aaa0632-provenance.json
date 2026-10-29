@@ -1,0 +1,8 @@
+{
+  "core_sha": "aaa06326d4cd178155bcd2dc12c8824d0626fed1",
+  "core_tree": "7fd37bf4d9d0520dddcb351171b96d6d28584e4b",
+  "ui_sha": "ab08bddf6b8e22bf6eb26380c059f8747ba4b559",
+  "clean_before_and_after_benchmark": true,
+  "source_hashes_verified": true,
+  "all_preservation_and_receipt_oracles_passed": true
+}

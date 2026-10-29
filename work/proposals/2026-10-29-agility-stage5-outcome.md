@@ -64,3 +64,10 @@ combined exact-pair campaign acceptance belongs to Stage 8. Automatic branch CI
 is separate evidence and will be followed to completion after this milestone's
 push. No merge, installation, live Obsidian acceptance, paid-model trial or
 production-vault migration is claimed.
+
+Clean reproduction completed at Core `aaa0632` / UI `ab08bdd`, with every
+measured source hash checked and the Core tree clean before/after the run.
+`workbench/agility-experiment/stage5-clean-aaa0632.json` and its provenance
+retain the exact revisions and confirm all five oracles. The repeated structural
+results match the initial Stage 5 run. The seven original-checkout protected
+hashes were rechecked unchanged before publication.

@@ -43,3 +43,27 @@ From the experimental Core checkout, using its existing development environment:
 ```
 
 The output records its source hashes, Python version, package hashes, measured command outputs/times, validation counts and authored files changed. All canonical mutations happen inside temporary fixtures.
+
+## Stage 5 comparison
+
+The clean Stage 5 implementation at Core `aaa0632` / UI `ab08bdd` was reproduced
+with `--proportional`; source hashes and a clean Core tree were checked before
+and after the run. See [results](stage5-clean-aaa0632.json) and
+[provenance](stage5-clean-aaa0632-provenance.json).
+
+| Change | Existing stages | Original draft bytes | Stage 5 draft bytes | Existing records reproduced |
+|---|---:|---:|---:|---:|
+| Move one stage | 2 | 1,672 | 184 | 0 |
+| Move one stage | 10 | 7,285 | 184 | 0 |
+| Move one stage | 50 | 35,525 | 184 | 0 |
+| Add one Unit | 1 | 3,464 | 2,943 | 0 |
+| Append one resource | 1 | 768 | 768 | 0 |
+
+All five runs passed no-write preflight, preservation and one-receipt oracles.
+Stage movement now validates the resulting shadow at preflight and therefore
+uses two full validations rather than the original path's one. The improvement
+is constant-size authored intent; timings remain warm local observations and
+model tokens, cost and human review quality remain unmeasured. Resource
+insertion/movement are verified by owning Core/UI tests, not timed by this
+retained comparison. Unit authoring remains on the operator-reviewed module
+import path. Stage 6 temporary sequence flexibility is not part of this result.
