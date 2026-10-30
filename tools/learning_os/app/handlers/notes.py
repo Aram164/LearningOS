@@ -688,16 +688,23 @@ def _matched_stages(study_map: dict, words: list[str]) -> list[dict]:
     return []
 
 
+#: Search match tiers, strongest first, as capabilities.yaml documents them.
+_MATCH_EXACT = 0
+_MATCH_TITLE = 1
+_MATCH_ID = 2
+_MATCH_OTHER = 3
+
+
 def _match_strength(rec: dict, query: str, words: list[str], stages: list[dict]) -> int:
-    """0 exact title or id, 1 every word in a title, 2 in the id, 3 anywhere else."""
+    """Strongest tier first: exact title or id, every word in a title, in the id, elsewhere."""
     title = str(rec.get("title") or "").lower()
     record_id = str(rec.get("id") or "").lower()
     if query in (title, record_id):
-        return 0
+        return _MATCH_EXACT
     if all(word in title for word in words) or any(
             all(word in str(row["title"] or "").lower() for word in words) for row in stages):
-        return 1
-    return 2 if all(word in record_id for word in words) else 3
+        return _MATCH_TITLE
+    return _MATCH_ID if all(word in record_id for word in words) else _MATCH_OTHER
 
 
 def _metadata_matches(root: Path, req, snapshot: str) -> tuple[list[dict], list[str], list[int]]:

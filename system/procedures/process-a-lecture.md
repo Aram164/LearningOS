@@ -83,7 +83,7 @@ $ los search "linearity"
 
 ```scrut
 $ los search "expected value" | $LOS_REPO/.venv/bin/python -c 'import json,sys; print([r["id"] for r in json.load(sys.stdin)])'
-['note-demo', 'note-demo-analysis', 'concept-expected-value', 'source-demo-book', 'workspace-demo', 'workspace-second', 'unit-demo-l01', 'unit-demo-l02', 'study-map-demo-l01', 'source-map-demo']
+['unit-demo-l01', 'concept-expected-value', 'note-demo-analysis', 'study-map-demo-l01', 'unit-demo-l02', 'workspace-demo', 'workspace-second', 'note-demo', 'source-demo-book', 'source-map-demo']
 ```
 
 The recall is re-covered: `unit-demo-l01` already teaches it, so the new
