@@ -178,6 +178,13 @@ Reference: [plan-creation SOP](../PLAN-CREATION-SOP.md).
    `resources_append` list on a stage patch: reviewed new placements with
    fresh resource ids go after the existing authored rows without copying
    them. Full-array `fields.resources` stays for intentional replacement.
+   For one unit's existing study map, `unit-map-import UNIT_ID --file … --replace
+   --check` also takes a small file holding only `unit_id` and one
+   `structural_edit`, so nothing unchanged is copied: `resource_insert` places a
+   new resource next to an identified row, and `resource_append` puts it last in
+   a stage without an anchor, including a stage whose rows carry no IDs (SOP,
+   "Proportional structural edits"). Replace the whole map only for a broader
+   revision.
    Applying a changed replacement dossier records its prospective freshness
    lineage alongside any route-covers lineage in the same transaction.
 4. **Apply through the gateway**, never by writing the canonical file directly

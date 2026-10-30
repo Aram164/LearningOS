@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+from pathlib import Path
 
 import pytest
 from gateway_helpers import (
@@ -13,7 +14,13 @@ from gateway_helpers import (
     file_sha256,
     run_v2_capability,
 )
-from repo_builders import material_fixture, run_los, write_minimal_pdf, write_yaml
+from repo_builders import (
+    _structural_fixture,
+    material_fixture,
+    run_los,
+    write_minimal_pdf,
+    write_yaml,
+)
 
 from learning_os.app.handlers.maps import unit_map_import
 from learning_os.app.handlers.routes import compaction_plan, route_patch_plan
@@ -24,6 +31,7 @@ from learning_os.domain.material_refs import (
     expand_map,
     preserve_map_refs,
 )
+from learning_os.store.contracts.gateway import intent_sha256
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 
@@ -316,53 +324,14 @@ def test_route_patch_check_reports_envelope_ready_apply_values(mini_repo):
 
 
 # Agility Stage 5: small intents must preserve every unchanged authored byte.
-def _structural_fixture(root):
-    import yaml
-    from repo_builders import _compact_setup
-
-    from learning_os.app.validation_service import collect
-    from learning_os.store.warning_baseline import write_baseline
-
-    _compact_setup(root)
-    path = root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
-    data = yaml.safe_load(path.read_text())
-    data['plan_template_version'] = 1
-    first = data['stages'][0]
-    first.update(number=1, exam_critical=False, concepts=[])
-    first['resources'][0]['id'] = 'resource-original'
-    second = copy.deepcopy(first['resources'][0])
-    second['id'] = 'resource-second'
-    first['resources'].append(second)
-    for resource in first['resources']:
-        preserved = {key: resource[key] for key in ('id', 'kind', 'scope_triage') if key in resource}
-        resource.clear()
-        resource.update(preserved, material_ref={'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']})
-    attachment = path.parent / 'stages/stage-demo/attachments/proof.txt'
-    attachment.parent.mkdir(parents=True, exist_ok=True)
-    attachment.write_text('Learner attachment.\n')
-    first['attachments'] = [{'path': str(attachment.relative_to(root)), 'label': 'Proof'}]
-    first['source_feedback'] = [{'source_id': 'source-demo-book', 'resource_id': 'resource-original', 'feedback': 'helpful', 'recorded': '2026-10-01', 'note': 'My wording.'}]
-    for number in (2, 3):
-        stage = copy.deepcopy(first)
-        stage.update(id=f'stage-{number}', number=number, status='pending')
-        stage['resources'] = []
-        stage['attachments'] = []
-        stage['source_feedback'] = []
-        stage['working_note'] = str(path.parent.relative_to(root) / f'stages/stage-{number}/notes.md')
-        note = root / stage['working_note']
-        note.parent.mkdir(parents=True)
-        note.write_text('Preserve this working note.\n')
-        data['stages'].append(stage)
-    write_yaml(path, data)
-    write_baseline(root, collect(root)[0], 'structural fixture')
-    return path, data
-
-
 @pytest.mark.parametrize('edit', [
     {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo'}},
     {'resource_move': {'stage_id': 'stage-demo', 'resource_id': 'resource-second', 'before_id': 'resource-original'}},
     {'resource_insert': {'stage_id': 'stage-demo', 'after_id': 'resource-original', 'resource': {
         'id': 'resource-new', 'kind': 'read', 'scope_triage': 'helpful-now',
+        'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}}}},
+    {'resource_append': {'stage_id': 'stage-demo', 'resource': {
+        'id': 'resource-new-appended', 'kind': 'read', 'scope_triage': 'helpful-now',
         'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}}}},
 ])
 def test_structural_intent_exact_review_preserves_state_and_one_receipt(mini_repo, tmp_path, edit):
@@ -439,6 +408,12 @@ def test_structural_review_refuses_drift_without_writes(mini_repo, tmp_path, dri
     {'resource_insert': {'stage_id': 'stage-demo', 'before_id': 'resource-original', 'resource': {'id': 'resource-original'}}},
     {'resource_insert': {'stage_id': 'stage-demo', 'before_id': 'resource-original', 'resource': {'id': 'resource-new'}}},
     {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-demo', 'title': 'Unauthorized'}},
+    {'resource_append': {'stage_id': 'missing-stage', 'resource': {'id': 'res-1', 'kind': 'read', 'material_ref': {'route_id': 'route-demo-book'}}}},
+    {'resource_append': {'stage_id': 'stage-demo', 'resource': {'id': 'resource-original', 'kind': 'read', 'material_ref': {'route_id': 'route-demo-book'}}}},
+    {'resource_append': {'stage_id': 'stage-demo', 'resource': {'id': '', 'kind': 'read', 'material_ref': {'route_id': 'route-demo-book'}}}},
+    {'resource_append': {'stage_id': 'stage-demo', 'resource': 'not-a-dict'}},
+    {'resource_append': {'stage_id': 'stage-demo', 'before_id': 'resource-original', 'resource': {'id': 'res-1'}}},
+    {'resource_append': {'stage_id': 'stage-demo'}},
 ])
 def test_structural_malformed_edits_fail_without_writes(mini_repo, tmp_path, edit):
     _structural_fixture(mini_repo)
@@ -478,3 +453,291 @@ def test_structural_apply_publication_failure_rolls_back_with_no_receipt(mini_re
     assert outcome.exit_code != 0
     assert canonical_fingerprint(mini_repo) == before
     assert not list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))
+
+
+def test_resource_append_empty_and_idless_stages_and_channel_refusal(mini_repo, tmp_path):
+    import yaml
+    from repo_builders import write_yaml
+
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+
+    path, before = _structural_fixture(mini_repo)
+    # Stage 3 is given an un-ID'd resource
+    stage3 = next(s for s in before['stages'] if s['id'] == 'stage-3')
+    stage3['resources'] = [{
+        'kind': 'read',
+        'scope_triage': 'helpful-now',
+        'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+    }]
+    write_yaml(path, before)
+    write_baseline(mini_repo, collect(mini_repo)[0], 'idless fixture baseline')
+
+    # 1. Append to empty stage (stage-2)
+    draft_empty = tmp_path / 'append-empty.json'
+    draft_empty.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Append to empty stage.',
+        'resource_append': {
+            'stage_id': 'stage-2',
+            'resource': {
+                'id': 'resource-appended-to-empty',
+                'kind': 'read',
+                'scope_triage': 'helpful-now',
+                'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+            }
+        }
+    }}))
+    check_empty = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft_empty), '--replace', '--check')
+    assert check_empty.returncode == 0, check_empty.stderr
+    review_empty = json.loads(check_empty.stdout)
+    assert review_empty['canonical_files_written'] == 0
+
+    envelope_empty = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft_empty), 'file_sha256': review_empty['file_sha256'], 'replace': True,
+    }, artifact_ids=list(review_empty['expected_revisions']), idempotency_key='append-to-empty')
+    envelope_empty['expected_snapshot'] = review_empty['snapshot_id']
+    envelope_empty['expected_revisions'] = review_empty['expected_revisions']
+    res_empty = run_v2_capability(mini_repo, envelope_empty)
+    assert res_empty.returncode == 0, res_empty.stdout + res_empty.stderr
+    map_after_1 = yaml.safe_load(path.read_text())
+    assert len(map_after_1['stages'][1]['resources']) == 1
+    assert map_after_1['stages'][1]['resources'][0]['id'] == 'resource-appended-to-empty'
+
+    # 2. Append to ID-less stage (stage-3)
+    draft_idless = tmp_path / 'append-idless.json'
+    draft_idless.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Append to legacy ID-less stage.',
+        'resource_append': {
+            'stage_id': 'stage-3',
+            'resource': {
+                'id': 'resource-appended-to-idless',
+                'kind': 'read',
+                'scope_triage': 'helpful-now',
+                'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+            }
+        }
+    }}))
+    check_idless = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft_idless), '--replace', '--check')
+    assert check_idless.returncode == 0, check_idless.stderr
+    review_idless = json.loads(check_idless.stdout)
+
+    envelope_idless = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft_idless), 'file_sha256': review_idless['file_sha256'], 'replace': True,
+    }, artifact_ids=list(review_idless['expected_revisions']), idempotency_key='append-to-idless')
+    envelope_idless['expected_snapshot'] = review_idless['snapshot_id']
+    envelope_idless['expected_revisions'] = review_idless['expected_revisions']
+
+    # Test direct CLI application without GatewayEnvelopeV2 is refused (exit code 2)
+    cli_direct = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft_idless), '--replace')
+    assert cli_direct.returncode == 2
+    assert 'canonical writes must use GatewayEnvelopeV2' in cli_direct.stderr
+
+    # Test wrong channel in envelope is refused
+    wrong_channel_envelope = copy.deepcopy(envelope_idless)
+    wrong_channel_envelope['channel'] = 'invalid-channel'
+    wrong_channel_envelope['idempotency_key'] = 'wrong-channel'
+    res_wrong_channel = run_v2_capability(mini_repo, wrong_channel_envelope)
+    assert res_wrong_channel.returncode != 0
+
+    # Valid gateway application succeeds
+    res_idless = run_v2_capability(mini_repo, envelope_idless)
+    assert res_idless.returncode == 0, res_idless.stdout + res_idless.stderr
+    map_after_2 = yaml.safe_load(path.read_text())
+    assert len(map_after_2['stages'][2]['resources']) == 2
+    # First row still has no ID and was preserved untouched
+    assert 'id' not in map_after_2['stages'][2]['resources'][0]
+    # Second row is the newly appended resource
+    assert map_after_2['stages'][2]['resources'][1]['id'] == 'resource-appended-to-idless'
+
+    # Idempotent replay: running identical envelope again produces exit 0 and does not duplicate
+    res_replay = run_v2_capability(mini_repo, envelope_idless)
+    assert res_replay.returncode == 0
+    map_after_replay = yaml.safe_load(path.read_text())
+    assert len(map_after_replay['stages'][2]['resources']) == 2
+
+
+def test_unit_map_import_warning_delta_consistency_between_replacement_and_append(mini_repo, tmp_path):
+    import yaml
+    from repo_builders import SLICED_LECTURE_TEXT, write_minimal_pdf, write_yaml
+
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+
+    path, before = _structural_fixture(mini_repo)
+
+    # Set stage-demo to map to knowledge-demo-expectation
+    before['stages'][0]['knowledge_node_id'] = 'knowledge-demo-expectation'
+    write_yaml(path, before)
+
+    # Create second minimal pdf material
+    mat = mini_repo.parent / 'materials/source-demo-book/lecture-02.pdf'
+    write_minimal_pdf(mat, [SLICED_LECTURE_TEXT])
+
+    # Add a route in source-map that does NOT cover knowledge-demo-expectation
+    source_map_path = mini_repo / 'curriculum/modules/module-demo/source-map.yaml'
+    source_map = yaml.safe_load(source_map_path.read_text())
+    source_map['sources'][0]['unit_routes'].append({
+        'id': 'route-demo-other-node',
+        'unit_id': 'unit-demo-l01',
+        'covers': ['knowledge-demo-outcomes'],
+        'title': 'Other node route',
+        'format': 'book',
+        'angle': 'Different topic.',
+        'angle_detail': 'Detailed explanation of unrelated topic.',
+        'locator': 'lecture-02.pdf',
+        'depth': 'derivation',
+        'scope': 'current',
+    })
+    write_yaml(source_map_path, source_map)
+    write_baseline(mini_repo, collect(mini_repo)[0], 'baseline with new route')
+
+    # 1. Structural append WITHOUT node_scaffold_note introduces RESOURCE-NODE-ORPHAN
+    orphan_append_draft = tmp_path / 'orphan-append.json'
+    orphan_append_draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Orphan append without scaffold note.',
+        'resource_append': {
+            'stage_id': 'stage-demo',
+            'resource': {
+                'id': 'resource-orphan-append',
+                'kind': 'read',
+                'scope_triage': 'helpful-now',
+                'material_ref': {'route_id': 'route-demo-other-node', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+            }
+        }
+    }}))
+    check_append = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(orphan_append_draft), '--replace', '--check')
+    assert check_append.returncode == 1
+    assert 'RESOURCE-NODE-ORPHAN' in check_append.stderr
+
+    # 2. Full map replacement WITHOUT node_scaffold_note introduces the exact same RESOURCE-NODE-ORPHAN
+    orphan_replacement_map = copy.deepcopy(before)
+    orphan_replacement_map['stages'][0]['resources'].append({
+        'id': 'resource-orphan-replace',
+        'kind': 'read',
+        'scope_triage': 'helpful-now',
+        'material_ref': {'route_id': 'route-demo-other-node', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+    })
+    orphan_replace_draft = tmp_path / 'orphan-replace.yaml'
+    write_yaml(orphan_replace_draft, orphan_replacement_map)
+    check_replace = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(orphan_replace_draft), '--replace', '--check')
+    assert check_replace.returncode == 1
+    assert 'RESOURCE-NODE-ORPHAN' in check_replace.stderr
+
+    # 3. Adding node_scaffold_note makes BOTH preflights pass cleanly
+    justified_append_draft = tmp_path / 'justified-append.json'
+    justified_append_draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Justified scaffold append.',
+        'resource_append': {
+            'stage_id': 'stage-demo',
+            'resource': {
+                'id': 'resource-justified-append',
+                'kind': 'read',
+                'scope_triage': 'helpful-now',
+                'node_scaffold_note': 'Deliberate groundwork for future concept contrast.',
+                'material_ref': {'route_id': 'route-demo-other-node', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+            }
+        }
+    }}))
+    check_justified_append = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(justified_append_draft), '--replace', '--check')
+    assert check_justified_append.returncode == 0, check_justified_append.stderr
+
+    justified_replacement_map = copy.deepcopy(before)
+    justified_replacement_map['stages'][0]['resources'].append({
+        'id': 'resource-justified-replace',
+        'kind': 'read',
+        'scope_triage': 'helpful-now',
+        'node_scaffold_note': 'Deliberate groundwork for future concept contrast.',
+        'material_ref': {'route_id': 'route-demo-other-node', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}
+    })
+    justified_replace_draft = tmp_path / 'justified-replace.yaml'
+    write_yaml(justified_replace_draft, justified_replacement_map)
+    check_justified_replace = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(justified_replace_draft), '--replace', '--check')
+    assert check_justified_replace.returncode == 0, check_justified_replace.stderr
+
+    # 4. Attempting to commit an orphan without scaffold justification rolls back
+    review_raw = json.loads(check_justified_append.stdout)
+    envelope_bad = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(orphan_append_draft), 'file_sha256': file_sha256(orphan_append_draft), 'replace': True,
+    }, artifact_ids=list(review_raw['expected_revisions']), idempotency_key='bad-commit-orphan')
+    envelope_bad['expected_snapshot'] = review_raw['snapshot_id']
+    envelope_bad['expected_revisions'] = review_raw['expected_revisions']
+    before_commit = canonical_fingerprint(mini_repo)
+    commit_res = run_v2_capability(mini_repo, envelope_bad)
+    assert commit_res.returncode != 0
+    assert canonical_fingerprint(mini_repo) == before_commit
+
+
+@pytest.mark.parametrize('form', ['compact', 'full'])
+def test_warning_growth_refuses_at_preflight_and_apply_in_either_form(mini_repo, tmp_path, form):
+    """A warning outside the RESOURCE-* family: the form of an edit cannot decide it."""
+    _, before = _structural_fixture(mini_repo)
+    resource = {
+        'id': 'resource-diverging', 'kind': 'read', 'scope_triage': 'helpful-now',
+        'angle': 'An angle its route does not carry.',
+        'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle_detail']},
+    }
+    if form == 'compact':
+        proposal = {'unit_id': 'unit-demo-l01', 'structural_edit': {
+            'reason': 'Diverging angle.',
+            'resource_append': {'stage_id': 'stage-demo', 'resource': resource},
+        }}
+    else:
+        proposal = copy.deepcopy(before)
+        proposal['stages'][0]['resources'].append(resource)
+    draft = tmp_path / 'draft.json'
+    draft.write_text(json.dumps(proposal))
+
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 1
+    assert 'W NEW-OR-GROWN-WARNING: ANGLE-DIVERGES-FROM-ROUTE' in check.stderr
+
+    untouched = canonical_fingerprint(mini_repo)
+    applied = approved_v2_call(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft), 'file_sha256': file_sha256(draft), 'replace': True,
+    }, artifact_ids=['unit-demo-l01', before['id']], idempotency_key=f'diverging-{form}')
+    assert applied.returncode != 0
+    assert 'ANGLE-DIVERGES-FROM-ROUTE' in applied.stdout + applied.stderr
+    assert canonical_fingerprint(mini_repo) == untouched
+
+
+def test_first_map_preflight_reports_the_errors_apply_would_refuse(mini_repo, tmp_path):
+    """A first map keeps its errors-only gate, and preflight now applies it too."""
+    import yaml
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    first = Path(__file__).parent / 'scenarios/files/unit.map.import/first-import/map.yaml'
+    proposal = yaml.safe_load(first.read_text())
+    proposal['stages'][0]['resources'] = [{
+        'id': 'resource-unknown', 'kind': 'read', 'label': 'Unknown', 'source_id': 'source-missing',
+        'locator': 'p. 1', 'scope_triage': 'helpful-now',
+    }]
+    draft = tmp_path / 'first.yaml'
+    write_yaml(draft, proposal)
+
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l02', '--file', str(draft), '--check')
+    assert check.returncode == 1
+    assert 'E REF-SOURCE' in check.stderr
+
+
+def test_operator_channel_cannot_present_a_learner_gesture_for_a_compact_edit(mini_repo, tmp_path):
+    _, before = _structural_fixture(mini_repo)
+    draft = tmp_path / 'append.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Claimed gesture.',
+        'resource_append': {'stage_id': 'stage-demo', 'resource': {
+            'id': 'resource-claimed', 'kind': 'read', 'scope_triage': 'helpful-now',
+            'material_ref': {'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']},
+        }},
+    }}))
+    envelope = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft), 'file_sha256': file_sha256(draft), 'replace': True,
+    }, artifact_ids=['unit-demo-l01', before['id']], idempotency_key='claimed-gesture')
+    envelope['approval'] = {'kind': 'direct-user-gesture', 'subject_sha256': envelope['approval']['subject_sha256']}
+    envelope['approval']['subject_sha256'] = intent_sha256(envelope)
+
+    untouched = canonical_fingerprint(mini_repo)
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode != 0
+    assert 'authorized by a reviewed action in the LearningOS app' in refused.stdout + refused.stderr
+    assert canonical_fingerprint(mini_repo) == untouched

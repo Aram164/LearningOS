@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: structural edit preflight failed: E REF-SOURCE: study map 'study-map-demo-l01' references unknown source 'source-missing' [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]; RESOURCE-SCOPE-UNBOUND at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 4 → 5; STAGE-NODE-UNLINKED at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 1 → 2\n",
+  "stderr": "los: structural edit preflight failed: E REF-SOURCE: study map 'study-map-demo-l01' references unknown source 'source-missing' [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]; W NEW-OR-GROWN-WARNING: RESOURCE-SCOPE-UNBOUND at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 4 → 5 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\n",
   "stdout": "",
   "stdout_json": null
 }

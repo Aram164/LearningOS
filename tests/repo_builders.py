@@ -6,12 +6,13 @@ from a test module — so renaming or splitting the biggest test file would have
 broken the whole suite. They are pure builders/drivers with no assertions, so
 they live here now; behaviour is unchanged. The unit-revision fixture stack
 (`_sliced_unit`, `_valid_dossier`, `_audit`, `_plan_contract`,
-`_compact_setup`, `_compact_revision`) moved here for the same reason when a
+`_compact_setup`, `_compact_revision`, `_structural_fixture`) moved here for the same reason when a
 second suite needed the same fixtures.
 """
 
 from __future__ import annotations
 
+import copy
 import datetime
 import hashlib
 import shutil
@@ -643,6 +644,42 @@ def _compact_setup(mini_repo: Path):
     _audit(mini_repo)
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     return good
+
+
+def _structural_fixture(root):
+    _compact_setup(root)
+    path = root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(path.read_text())
+    data['plan_template_version'] = 1
+    first = data['stages'][0]
+    first.update(number=1, exam_critical=False, concepts=[])
+    first['resources'][0]['id'] = 'resource-original'
+    second = copy.deepcopy(first['resources'][0])
+    second['id'] = 'resource-second'
+    first['resources'].append(second)
+    for resource in first['resources']:
+        preserved = {key: resource[key] for key in ('id', 'kind', 'scope_triage') if key in resource}
+        resource.clear()
+        resource.update(preserved, material_ref={'route_id': 'route-demo-book', 'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']})
+    attachment = path.parent / 'stages/stage-demo/attachments/proof.txt'
+    attachment.parent.mkdir(parents=True, exist_ok=True)
+    attachment.write_text('Learner attachment.\n')
+    first['attachments'] = [{'path': str(attachment.relative_to(root)), 'label': 'Proof'}]
+    first['source_feedback'] = [{'source_id': 'source-demo-book', 'resource_id': 'resource-original', 'feedback': 'helpful', 'recorded': '2026-10-01', 'note': 'My wording.'}]
+    for number in (2, 3):
+        stage = copy.deepcopy(first)
+        stage.update(id=f'stage-{number}', number=number, status='pending')
+        stage['resources'] = []
+        stage['attachments'] = []
+        stage['source_feedback'] = []
+        stage['working_note'] = str(path.parent.relative_to(root) / f'stages/stage-{number}/notes.md')
+        note = root / stage['working_note']
+        note.parent.mkdir(parents=True)
+        note.write_text('Preserve this working note.\n')
+        data['stages'].append(stage)
+    write_yaml(path, data)
+    write_baseline(root, collect(root)[0], 'structural fixture')
+    return path, data
 
 
 def copy_real_contracts(source_root: Path, target_root: Path) -> None:

@@ -652,6 +652,8 @@ commands:
     invariants:
     - bounded to one unit
     - external map files are bound to their exact bytes by SHA-256 before use
+    - takes a full map or one compact structural_edit (stage_move, resource_move, anchored resource_insert, anchor-free resource_append)
+    - editing an existing map in either form refuses any new or grown warning signature at preflight and at apply; a first map refuses validation errors only
   unit.note.append:
     handler: unit_note
     cli_command: unit-note

@@ -5,10 +5,12 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import yaml
 
+from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app.check import check_proposal
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
@@ -473,19 +475,35 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             note = root / str(note_ref)
             if not note.exists():
                 writes[note] = ""
-    if structural and check_only:
-        # Preserve the same effective proposal at preflight and apply. This
-        # gate validates only a disposable shadow, never canonical files.
-        checked = check_proposal(ctx, TransactionProposal(
-            capability="unit.map.import", writes=writes,
-            artifact_ids=[unit.id, str(data["id"])],
-        ))
-        problems = [*checked["errors"], *checked["warnings_delta"]]
-        if problems:
-            raise WriteRefused("structural edit preflight failed: " + "; ".join(problems),
-                               site=f"{ctx.operation}.structural-preflight-failed",
-                               prefixed=True, exit_code=1)
+    # One proposal and one gate at preflight and at apply. Editing an existing
+    # map cannot add warning debt in either form, compact or full, so neither
+    # form bypasses the other. A first map has no compact form; it keeps the
+    # errors-only commit gate.
+    validate_extra = _plan_apply_gate(root)[0] if current_data is not None else None
+    proposal = TransactionProposal(
+        capability="unit.map.import",
+        writes=writes,
+        artifact_ids=[req["unit_id"], str(data.get("id") or f"study-map:{req['unit_id']}")],
+        validate_extra=validate_extra,
+    )
     if check_only:
+        # This validates only a disposable shadow, never canonical files.
+        checked = check_proposal(ctx, proposal)
+        if checked["errors"]:
+            problems = "; ".join(checked["errors"])
+            if structural:
+                raise WriteRefused(
+                    "structural edit preflight failed: " + problems,
+                    site=f"{ctx.operation}.structural-preflight-failed",
+                    prefixed=True,
+                    exit_code=1,
+                )
+            raise WriteRefused(
+                "study map preflight failed: " + problems,
+                site=f"{ctx.operation}.preflight-failed",
+                prefixed=True,
+                exit_code=1,
+            )
         return Result(
             {"ok": True, "mode": "check", "unit_id": req["unit_id"],
              "study_map_id": data.get("id"),
@@ -498,7 +516,6 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                  for key in [req["unit_id"], str(data["id"])]
              },
              "diff": diff},
-
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -515,13 +532,5 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
 
     return Result(
         ResponsePayload({"ok": True}, finish_unit_map_import({}), confirmation='merge'),
-        proposal=TransactionProposal(
-            capability="unit.map.import",
-            writes=writes,
-            artifact_ids=[req["unit_id"], str(data.get("id") or f"study-map:{req['unit_id']}")],
-            expected_revisions=expected_revisions,
-        ),
-
-
-
+        proposal=replace(proposal, expected_revisions=expected_revisions),
     )

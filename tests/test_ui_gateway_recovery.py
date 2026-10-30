@@ -41,6 +41,15 @@ pytestmark = [
 ]
 
 
+#: The first stage's rows before the harness appends to it (`_structural_fixture`).
+STRUCTURAL_FIXTURE_RESOURCE_IDS = (
+    "resource-original",
+    "resource-demo-book-appendix",
+    None,
+    "resource-second",
+)
+
+
 def _run_harness(repo_root: Path, mini_repo: Path) -> dict:
     result = subprocess.run(
         [
@@ -84,8 +93,10 @@ def recovery_run(repo_root: Path, tmp_path_factory) -> tuple[dict, Path]:
     described in exactly one place.
     """
     from conftest import build_mini_repo
+    from repo_builders import _structural_fixture
 
     mini = build_mini_repo(tmp_path_factory.mktemp("ui-recovery"))
+    _structural_fixture(mini)
     return _run_harness(repo_root, mini), mini
 
 
@@ -155,6 +166,25 @@ def test_a_committed_file_capture_replays_without_rereading_its_source(recovery_
     )
     assert scenario["replayed"] is True
     assert (mini / scenario["receipt_path"]).is_file()
+
+
+def test_an_interrupted_compact_append_replays_into_one_placement(recovery_run):
+    """The learner's reviewed click, through the real client, against real Core."""
+    results, mini = recovery_run
+    scenario = results["compactAppendReplay"]
+    assert scenario["attempts"] == 2, "one interruption earns exactly one replay"
+    assert scenario["identical"] is True
+    assert scenario["replayed"] is True
+    assert scenario["approval_kind"] == "direct-user-gesture"
+    receipt = _receipt(mini, scenario)
+    assert receipt["id"] == scenario["transaction_id"]
+    assert receipt["request"]["channel"] == "ui"
+    study_map = yaml.safe_load(
+        (mini / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml")
+        .read_text(encoding="utf-8"))
+    assert [row.get("id") for row in study_map["stages"][0]["resources"]] == [
+        *STRUCTURAL_FIXTURE_RESOURCE_IDS, "resource-ui-interrupted-append",
+    ], "the existing rows keep their order and the replay adds nothing"
 
 
 def test_every_replay_produces_exactly_one_receipt_and_one_ledger_entry(recovery_run):

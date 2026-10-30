@@ -38,6 +38,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-demo-pending
+  knowledge_node_id: knowledge-demo-expectation
   number: 2
   title: Apply expected value
   status: pending

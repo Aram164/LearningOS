@@ -810,10 +810,18 @@ def relative_placement(rows: list[dict], record_id: str, placement: dict) -> lis
     return result
 
 
+_STRUCTURAL_OPERATION_FIELDS = {
+    "stage_move": {"stage_id", "before_id", "after_id"},
+    "resource_move": {"stage_id", "resource_id", "before_id", "after_id"},
+    "resource_insert": {"stage_id", "resource", "before_id", "after_id"},
+    "resource_append": {"stage_id", "resource"},
+}
+
+
 def apply_structural_edit(current: dict, edit: dict) -> dict:
     """Expand one bounded intent against authored data; preserve all other state."""
-    if not isinstance(edit, dict) or set(edit) - {"reason", "stage_move", "resource_move", "resource_insert"}:
-        raise ValueError("structural_edit allows reason and one stage_move, resource_move or resource_insert")
+    if not isinstance(edit, dict) or set(edit) - {"reason", *_STRUCTURAL_OPERATION_FIELDS}:
+        raise ValueError("structural_edit allows reason and one stage_move, resource_move, resource_insert or resource_append")
     if not isinstance(edit.get("reason"), str) or not edit["reason"].strip():
         raise ValueError("structural_edit needs a nonblank reason")
     operations = set(edit) - {"reason"}
@@ -823,12 +831,7 @@ def apply_structural_edit(current: dict, edit: dict) -> dict:
     op = edit[kind]
     if not isinstance(op, dict):
         raise ValueError("structural operation must be an object")
-    allowed = {"stage_id", "before_id", "after_id"}
-    if kind == "resource_move":
-        allowed.add("resource_id")
-    if kind == "resource_insert":
-        allowed.add("resource")
-    if set(op) - allowed or "stage_id" not in op:
+    if set(op) - _STRUCTURAL_OPERATION_FIELDS[kind] or "stage_id" not in op:
         raise ValueError("structural operation has unknown or missing fields")
     placement = {key: op[key] for key in ("before_id", "after_id") if key in op}
     result = copy.deepcopy(current)
@@ -845,12 +848,16 @@ def apply_structural_edit(current: dict, edit: dict) -> dict:
     resources = stage.get("resources", [])
     if kind == "resource_move":
         stage["resources"] = relative_placement(resources, op.get("resource_id"), placement)
+        return result
+    resource = op.get("resource")
+    if not isinstance(resource, dict) or not isinstance(resource.get("id"), str) or not resource["id"]:
+        raise ValueError(f"{kind} needs a resource with a fresh stable ID")
+    if any(row.get("id") == resource["id"] for s in stages for row in s.get("resources", [])):
+        raise ValueError(f"{kind} reuses an existing resource ID")
+    if kind == "resource_append":
+        # No anchor: unidentified legacy rows stay as they are, ahead of it.
+        stage["resources"] = [*resources, copy.deepcopy(resource)]
     else:
-        resource = op.get("resource")
-        if not isinstance(resource, dict) or not isinstance(resource.get("id"), str) or not resource["id"]:
-            raise ValueError("resource_insert needs a resource with a fresh stable ID")
-        if any(row.get("id") == resource["id"] for s in stages for row in s.get("resources", [])):
-            raise ValueError("resource_insert reuses an existing resource ID")
         # Insert via the same anchor rules, including ambiguity and self checks.
         augmented = [*resources, copy.deepcopy(resource)]
         if set(placement) not in ({"before_id"}, {"after_id"}):

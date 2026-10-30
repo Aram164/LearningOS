@@ -12,7 +12,7 @@ cases:
   - id: replace
     kind: success
     transport: gateway
-    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true}
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:d2824f1192fbd11e79a50767ad0114a452ea23941d50a8d1f53424508386fa71", replace: true}
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
     expect: {site: null}
   - id: check-first
@@ -24,7 +24,7 @@ cases:
   - id: check-replace
     kind: success
     transport: gateway
-    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true, check: true}
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:d2824f1192fbd11e79a50767ad0114a452ea23941d50a8d1f53424508386fa71", replace: true, check: true}
     artifact_ids: []
     expect: {site: null}
   - id: check-cli

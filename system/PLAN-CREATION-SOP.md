@@ -642,7 +642,7 @@ changes must remain untouched.
 | A compatibility migration recreated old units after planning | Post-import migration dry-run must be idempotent. |
 | A combined lecture range hid missing individual coverage | One ordinary lecture equals one unit knowledge/material map; synthesis is auxiliary. |
 
-### Proportional structural edits (experimental agility branch)
+### Proportional structural edits
 
 For one existing study map, `unit.map.import` also accepts a small external file
 with exactly `unit_id` and `structural_edit`. The latter names a nonblank `reason`
@@ -652,6 +652,20 @@ and exactly one operation:
 - `resource_move`: `stage_id`, `resource_id` and exactly one resource anchor.
 - `resource_insert`: `stage_id`, one new `resource` object with a fresh stable ID,
   and exactly one resource anchor in that stage.
+- `resource_append`: `stage_id` and one new `resource` object with a fresh stable ID.
+  It goes last in the stage and needs no anchor, so it also works on an empty stage
+  and on a stage whose existing rows carry no IDs.
+
+Use `resource_insert` when the position matters and `resource_append` when it does
+not, or when the stage has no identified row to anchor on. A route ID is not an
+anchor, because one route can be placed more than once. A placement that
+deliberately sits on a node its route does not cover records why in
+`node_scaffold_note`; the reviewer reads that reason, so it must be true of the
+material. Replace the whole map only for a broader revision.
+
+Editing an existing map refuses any new or grown warning signature at preflight
+and at apply, compact or full, so neither form escapes what the other enforces. A
+first map has no compact form and refuses validation errors only.
 
 Use the normal `unit-map-import UNIT --file FILE --replace --check` preflight.
 Review the full resulting order and changed resource fields, then apply the same

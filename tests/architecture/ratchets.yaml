@@ -258,6 +258,10 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
+  - signature: unit.map.import::validate_extra
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-30: attach the no-new-warning policy to unit.map.import through the existing validation callback mechanism (validate_extra)"
   - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::validate_extra
     count: 1
     since: approved
