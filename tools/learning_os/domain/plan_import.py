@@ -813,9 +813,22 @@ def relative_placement(rows: list[dict], record_id: str, placement: dict) -> lis
 _STRUCTURAL_OPERATION_FIELDS = {
     "stage_move": {"stage_id", "before_id", "after_id"},
     "resource_move": {"stage_id", "resource_id", "before_id", "after_id"},
-    "resource_insert": {"stage_id", "resource", "before_id", "after_id"},
-    "resource_append": {"stage_id", "resource"},
+    "resource_insert": {"stage_id", "resource", "before_id", "after_id", "runtime_review"},
+    "resource_append": {"stage_id", "resource", "runtime_review"},
 }
+
+
+def _renewed_runtime_review(stage: dict, review: object) -> dict:
+    """A new row changes what a runtime review covered, so its edit may renew it.
+
+    Carries no fingerprint: the import binds one to the stage it writes.
+    """
+    if "runtime_review" not in stage:
+        raise ValueError("this stage has no runtime_review to renew")
+    if not isinstance(review, dict) or set(review) != {"reviewed_by", "reviewed_on"} or not all(
+            isinstance(value, str) and value.strip() for value in review.values()):
+        raise ValueError("runtime_review needs exactly reviewed_by and reviewed_on")
+    return dict(review)
 
 
 def apply_structural_edit(current: dict, edit: dict) -> dict:
@@ -872,4 +885,6 @@ def apply_structural_edit(current: dict, edit: dict) -> dict:
         augmented.pop()
         augmented.insert(position, copy.deepcopy(resource))
         stage["resources"] = augmented
+    if "runtime_review" in op:
+        stage["runtime_review"] = _renewed_runtime_review(stage, op["runtime_review"])
     return result

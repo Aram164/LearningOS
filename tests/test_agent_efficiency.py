@@ -69,7 +69,7 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
     assert "procedures/bootstrap-order.md" in bootstrap_section
     assert "capabilities --compact --json" in " ".join(bootstrap_order.split())
     assert "bootstrap --brief" in " ".join(bootstrap_order.split())
-    assert "[OPERATOR-POLICY.md](OPERATOR-POLICY.md)" in claude
+    assert "[system/OPERATOR-POLICY.md](OPERATOR-POLICY.md)" in claude
     assert ".venv/bin/python tools/validate.py --compact" in policy
     assert ".venv/bin/python tools/warning_baseline.py --check" in policy
 

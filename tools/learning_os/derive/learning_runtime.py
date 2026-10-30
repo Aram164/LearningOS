@@ -347,7 +347,7 @@ def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[
 
 
 def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dict:
-    """Derive one ordered subset, enforcing only authored prerequisite links.
+    """Derive one ordered subset, enforcing only authored prerequisite nodes.
 
     This is a read model. It neither changes stage lifecycle nor infers mastery
     from a completed study activity. Its caller binds the result to a snapshot.
@@ -377,6 +377,7 @@ def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dic
         if stage.get("knowledge_node_id"):
             stages_by_node.setdefault(stage["knowledge_node_id"], []).append(stage)
     positions = {sid: i for i, sid in enumerate(stage_ids)}
+    authored = {row["id"]: i for i, row in enumerate(stages)}
     edges: set[tuple[str, str]] = set()
     notes = {"Only authored knowledge-node prerequisites are checked; this sequence grants no readiness or mastery."}
     def ancestors(start: str) -> set[str]:
@@ -409,11 +410,25 @@ def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dic
             mapped = stages_by_node.get(dependency, [])
             if not mapped:
                 notes.add(f"Prerequisite node {dependency} has no mapped stage; its satisfaction is unchecked.")
-            for prerequisite in mapped:
-                pid = prerequisite["id"]
-                edges.add((pid, sid))
-                if prerequisite.get("status") != "complete" and (pid not in positions or positions[pid] >= positions[sid]):
-                    raise RuntimeInputError(f"prerequisite stage {pid} must precede {sid} or already record complete")
+                continue
+            if not any(authored[row["id"]] < authored[sid] for row in mapped):
+                # The map itself teaches this stage first: mock one, repair, mock two.
+                notes.add(f"{sid} is authored before every stage of prerequisite node {dependency}; that link is not enforced for it.")
+                continue
+            # A prerequisite names a concept, not every stage that revisits it.
+            # Iterative maps repeat a node, so one of its stages, already
+            # complete or placed earlier, satisfies it.
+            satisfied = [row["id"] for row in mapped
+                         if row.get("status") == "complete"
+                         or (row["id"] in positions and positions[row["id"]] < positions[sid])]
+            if not satisfied:
+                if len(mapped) == 1:
+                    raise RuntimeInputError(f"prerequisite stage {mapped[0]['id']} must precede {sid} or already record complete")
+                options = ", ".join(row["id"] for row in mapped)
+                raise RuntimeInputError(f"one of the prerequisite stages {options} must precede {sid} or already record complete")
+            if len(mapped) > 1:
+                notes.add(f"Prerequisite node {dependency} has several stages; one placed earlier or already complete satisfies it.")
+            edges.update((pid, sid) for pid in satisfied)
     return {
         "unit_id": unit_id, "study_map_id": study_map.id,
         "canonical_current_stage": study_map.data.get("current_stage"),

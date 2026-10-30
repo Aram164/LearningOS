@@ -116,7 +116,8 @@ rule as current, which is indistinguishable from the rule being wrong.
 - **E** No file under `generated/` is tracked by Git.
 - **E** COORDINATION.md contains no ISO date equal to any partitioned academic
   module attempt date (exam-date duplication), and no `status:` restatements of
-  workspace state.
+  workspace state. A date written as `archived YYYY-MM-DD` dates a workspace move
+  and does not count.
 - **W** A `role: crosswalk` note contains Markdown tables whose headers match evaluation vocabulary (strengths/weaknesses/level/best-for) — judgments belong in source records.
 - **E** Academic module attempt dates are chronologically ordered per module;
   `grade` only on `passed` attempts or completed modules; `result: registered`
@@ -219,7 +220,8 @@ stage id + `runtime_target` + sorted `(route_id, affordance)` pairs).
 An imported map (`unit-map-import`, `module-plan-import`, a unit plan
 revision) may declare a review without its fingerprint: the import fills it
 from the stage it writes. A fingerprint already written is kept, so a stale
-review stays stale until someone re-reviews it.
+review stays stale until someone re-reviews it. A compact `resource_insert` or
+`resource_append` renews one by naming `runtime_review` in the operation.
 
 Warnings, never errors: the invariant is being introduced into existing
 authored state. `reviewed_by` is a declared attestation, not authenticated

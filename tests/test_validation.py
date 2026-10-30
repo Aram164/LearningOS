@@ -335,6 +335,18 @@ def test_exam_date_duplication_in_coordination_is_error(mini_repo):
     assert "records/modules.yaml" not in errors[0].message
 
 
+def test_an_archive_date_that_matches_an_attempt_is_not_an_exam_copy(mini_repo):
+    """Real data: recording an AML sitting was refused because a workspace was
+    archived on the same calendar day (blind trial, 30 October 2026)."""
+    date = next(str(attempt["date"]) for module in load_repo(mini_repo).modules.values()
+                for attempt in module.get("attempts", []) or [] if attempt.get("date"))
+    f = mini_repo / "work" / "COORDINATION.md"
+    f.write_text(f.read_text() + f"\n- Workspace archived {date} (`archive/workspaces/2026/`).\n")
+    assert "COORD-EXAM-DATE" not in codes(run(mini_repo), "E")
+    f.write_text(f.read_text() + f"\n- The sitting moved to {date}.\n")
+    assert "COORD-EXAM-DATE" in codes(run(mini_repo), "E")
+
+
 def test_generated_reference_in_canonical_file_is_error(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     note.write_text(note.read_text() + "\nSee generated/concept-index.md for the list.\n")
