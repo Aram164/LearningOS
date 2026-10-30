@@ -214,15 +214,17 @@ Skills and projects use modules and units without false academic metadata.
     to an open one are always allowed; closing one is his alone.
 18. Workflow 23 (process a lecture) runs its executable transcript when the
     lecture's scope authority — the slides as taught — exists in the
-    materials tree (workflow 6a), and the plan pass stays review-gated: run
-    the procedure up to and including the `module-plan-import … --check`
-    preflight, show Aram the package and the check result, and apply only on
-    his yes — a green check is not approval (an agent-run plan pass once
-    broadcast wrong locators onto six routes and the validator scored it
-    perfect). Without the deck, stop and ask: never scope a lecture from
-    textbook chapter titles, keyword matches, or a source the module never
-    adopted. Workflows 24 (turn the semester) and 27 (promote a future
-    Master's module) still have **no executable transcript**, and the scope
+    materials tree (workflow 6a). Run the procedure up to and including the
+    `module-plan-import … --check` preflight, show the package and the check
+    result, then apply on the green check — no separate human yes is required
+    (Aram removed the wait-for-approval gate on 2026-10-31; it existed because
+    an agent-run plan pass once broadcast wrong locators onto six routes and
+    the validator scored it perfect. The safeguards stay: the snapshot-guarded
+    gateway apply records an append-only receipt, so every applied package
+    remains visible and revertible). Without the deck, stop and ask: never
+    scope a lecture from textbook chapter titles, keyword matches, or a source
+    the module never adopted. Workflows 24 (turn the semester) and 27 (promote
+    a future Master's module) still have **no executable transcript**, and the scope
     authority each needs does not exist in a checkout: a real term boundary
     with human judgments, a program that has actually begun. When a task
     reaches one of them, stop and ask, and do not stand in for the human
