@@ -1,13 +1,17 @@
 """Pure binding types and resolution: every branch, no repository (S12).
 
 The slot declarations (S13) are additionally checked against real handler
-output on the rich_world fixture.
+output on the rich_world fixture, and the binding admission grammar (S14)
+against the real runner on a mini repository.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
+from pathlib import Path
 
 import pytest
+from repo_builders import add_curriculum
 
 from learning_os.domain.agent_bindings import (
     BindingError,
@@ -22,6 +26,11 @@ from learning_os.domain.codes import (
     BINDING_VALUE_INVALID,
 )
 from learning_os.domain.ids import is_valid
+
+ROOT = Path(__file__).resolve().parents[1]
+_spec = importlib.util.spec_from_file_location("agent_run_bindings", ROOT / "tools/agent_run.py")
+agent_run = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(agent_run)
 
 
 def _record_slot(**overrides):
@@ -241,3 +250,193 @@ def test_catalog_carries_slots_and_plan_example(mini_repo):
         for slot in row["slots"]:
             assert slot["name"] in REGISTRY[row["operation"]].output_slots
 
+
+
+# ---------------------------------------------------------------------------
+# S14 admission grammar (S17 adversarial cases 01-13). Each asserts the
+# refusal code or reason, and where the case demands it, that no step ran.
+
+def _v3_plan(steps, session="s"):
+    return {"schema_version": 3, "session_id": session, "steps": steps}
+
+
+def _code_of(report, index):
+    return report["steps"][index]["error"]["code"]
+
+
+def test_adversarial_01_unknown_plan_field_refuses_before_any_step(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {"schema_version": 3, "read_worker": 2,
+            "steps": [{"id": "a", "use": "inspect", "args": ["note-demo"]}]}
+    with pytest.raises(agent_run.AgentRunError, match="unknown plan fields"):
+        agent_run.run_plan(plan, mini_repo)
+
+
+def test_adversarial_02_unknown_step_field_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {"steps": [{"id": "a", "use": "inspect", "args": ["note-demo"], "effect": "read"}]}
+    with pytest.raises(agent_run.AgentRunError, match="unknown step fields"):
+        agent_run.run_plan(plan, mini_repo)
+
+
+def test_adversarial_03_unknown_reference_field_refuses_binding_invalid(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo"]},
+        {"id": "b", "use": "inspect", "bind": {"id": {"path": "$.results[0].id"}}},
+    ])
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(plan, mini_repo)
+    assert excinfo.value.code == "BINDING_INVALID"
+
+
+def test_adversarial_04_bind_under_schema_2_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {"schema_version": 2, "steps": [
+        {"id": "a", "use": "search", "args": ["demo"]},
+        {"id": "b", "use": "inspect", "bind": {"id": {"from": "a", "slot": "record"}}},
+    ]}
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(plan, mini_repo)
+    assert excinfo.value.code == "BINDING_INVALID"
+    assert "schema_version 3" in str(excinfo.value)
+
+
+def test_adversarial_05_write_target_refuses_and_runs_nothing(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo"]},
+        {"id": "b", "use": "unit-map-import",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}}},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert report["totals"]["ok"] == 0
+    assert all(row["status"] in ("error", "skipped") for row in report["steps"])
+
+
+def test_adversarial_06_capability_target_refuses_and_runs_nothing(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo"]},
+        {"id": "b", "use": "capability",
+         "bind": {"text": {"from": "a", "slot": "record", "where": {"type": "unit"}}}},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert report["totals"]["ok"] == 0
+
+
+def test_adversarial_07_write_source_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    write_hinted = _v3_plan([
+        {"id": "w", "use": "inspect", "args": ["note-demo"], "write": True},
+        {"id": "b", "use": "plan-edit-context", "args": ["--brief"],
+         "bind": {"unit_id": {"from": "w", "slot": "unit"}}},
+    ])
+    report = agent_run.run_plan(write_hinted, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert report["totals"]["ok"] == 0
+    log_source = _v3_plan([
+        {"id": "w", "kind": "log", "text": "alpha fixture log", "key": "adv-07"},
+        {"id": "b", "use": "plan-edit-context", "args": ["--brief"],
+         "bind": {"unit_id": {"from": "w", "slot": "unit"}}},
+    ])
+    report = agent_run.run_plan(log_source, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_adversarial_08_content_or_page_source_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    for flag in ("--content", "--page"):
+        plan = _v3_plan([
+            {"id": "a", "use": "search", "args": ["demo", flag]},
+            {"id": "b", "use": "plan-edit-context", "args": ["--brief"],
+             "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}}},
+        ])
+        report = agent_run.run_plan(plan, mini_repo)
+        assert _code_of(report, 1) == "BINDING_INVALID", flag
+        assert report["totals"]["ok"] == 0
+
+
+def test_adversarial_09_declared_effect_field_is_unknown(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {"steps": [{"id": "w", "use": "capture", "args": ["alpha fixture log"],
+                       "effect": "read"}]}
+    with pytest.raises(agent_run.AgentRunError, match="unknown step fields"):
+        agent_run.run_plan(plan, mini_repo)
+
+
+def test_adversarial_10_stage_slot_on_unit_param_refuses_at_admission(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "matched_stage"}}, "args": []},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert report["totals"]["ok"] == 0
+
+
+def test_adversarial_11_undeclared_slot_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "no_such_slot"}}, "args": []},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert "no_such_slot" in report["steps"][1]["error"]["message"]
+
+
+def test_adversarial_12_where_on_undeclared_column_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"path": "x"}}},
+         "args": []},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert _code_of(report, 1) == "BINDING_INVALID"
+    assert report["totals"]["ok"] == 0
+
+
+def test_adversarial_13_forward_and_self_reference_refuse(mini_repo):
+    add_curriculum(mini_repo)
+    forward = _v3_plan([
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}},
+         "args": []},
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+    ])
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(forward, mini_repo)
+    assert excinfo.value.code == "BINDING_INVALID"
+    self_ref = _v3_plan([
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "b", "slot": "record", "where": {"type": "unit"}}},
+         "args": []},
+    ])
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(self_ref, mini_repo)
+    assert excinfo.value.code == "BINDING_INVALID"
+
+
+def test_bound_step_admits_with_placeholders_and_dependencies(mini_repo):
+    """Admission compiles and shape-validates the bound argv; before the S15
+    runtime the placeholder reaches the handler, which refuses it as a step."""
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context", "args": ["--brief"],
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}}},
+    ])
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["steps"][0]["status"] == "ok", report
+    ctx_row = report["steps"][1]
+    assert ctx_row["status"] == "error"
+    assert ctx_row["error"]["code"] not in ("BINDING_INVALID", "PLAN_INVALID"), ctx_row

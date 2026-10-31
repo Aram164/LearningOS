@@ -31,6 +31,7 @@ class CompiledStep:
     ready_timeout_s: float = 10.0
     preflight: bool = False
     scope: tuple[str, ...] = ()
+    bindings: tuple = ()
     presentation: object = None
     admission_error: dict[str, object] | None = None
 
