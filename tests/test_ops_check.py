@@ -158,8 +158,9 @@ def test_guards_from_capability_mismatch_refuses(mini_repo: Path, tmp_path: Path
                    payload={"text": "x"}, key="guards-from-008",
                    extra=["--guards-from", str(record)])
     assert sealed.returncode == 2
-    assert sealed.stderr == ("seal_envelope: --guards-from record is for capability "
-                             "'capture.create', not 'garden.seed.create'\n")
+    assert sealed.stderr == ("seal_envelope: --capability 'garden.seed.create' "
+                             "differs from the reviewed record's capability "
+                             "'capture.create'\n")
 
 
 def test_guards_from_payload_mismatch_refuses(mini_repo: Path, tmp_path: Path):
@@ -169,8 +170,8 @@ def test_guards_from_payload_mismatch_refuses(mini_repo: Path, tmp_path: Path):
                    payload={"text": "x"}, key="guards-from-009",
                    extra=["--guards-from", str(record)])
     assert sealed.returncode == 2
-    assert sealed.stderr == ("seal_envelope: --guards-from record payload differs "
-                             "from the sealing payload\n")
+    assert sealed.stderr == ("seal_envelope: --payload differs from the reviewed "
+                             "record's payload\n")
 
 
 def test_guards_from_missing_file_refuses(mini_repo: Path, tmp_path: Path):
@@ -429,7 +430,7 @@ def test_registered_journey_applies_with_exactly_two_validations(
     applied = tmp_path / "applied.json"
     code = _seal_in_process(
         mini_repo, applied, capability=TEST_OP, payload={},
-        key="journey-003",
+        key="journey-002",
         extra=["--guards-from", str(record_path)])
     assert code == 0, capsys.readouterr().err
     assert len(calls) == 1, "sealing from a record validates nothing"
