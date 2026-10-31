@@ -43,6 +43,7 @@ from learning_os.store.materials.resolution import (
     sha256_file,
 )
 from learning_os.store.materials.slices import SliceResolutionError
+from learning_os.store.materials.slices import parse_locator_page_ranges
 from learning_os.store.materials.slices import read_part as _read_part
 from learning_os.store.materials.slices import route_material_files as _route_material_files
 from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
@@ -761,6 +762,17 @@ def material_span(ctx: OpContext, req: dict) -> Result:
                            site=f"{ctx.operation}.unknown-route")
         route, placement_flags = _placement_route(
             ctx, repo, unit, source_map, routes, matches[0], req)
+        explicit_pages: list[tuple[int, int]] | None = None
+        pages_text = req.get("pages")
+        if pages_text is not None:
+            parsed = parse_locator_page_ranges(
+                pages_text.strip()) if isinstance(pages_text, str) else []
+            if not parsed:
+                raise WriteRefused(
+                    '--pages needs explicit PDF page ranges in the locator house '
+                    'style, e.g. "pdf pp. 21-26"; it replaces the route locator\'s '
+                    "page selection for this call")
+            explicit_pages = parsed
         source = repo.sources.get(route.get("source_id"), {})
         projected = project_material_resource(repo, route)
         files = resolve_route_material_files(repo, route)
@@ -816,7 +828,8 @@ def material_span(ctx: OpContext, req: dict) -> Result:
             }
             if req.get("extract"):
                 try:
-                    part = _read_part(route["id"], resolved, route.get("locator", ""))
+                    part = _read_part(route["id"], resolved, route.get("locator", ""),
+                                      pages=explicit_pages)
                     if sha256_file(path) != entry["file_sha256"]:
                         raise SliceResolutionError(route["id"], "file changed during inspection")
                     excerpt = part.text[:MAX_EXCERPT]

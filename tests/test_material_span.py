@@ -56,6 +56,98 @@ def test_local_span_is_observed_and_extraction_is_on_demand(mini_repo: Path):
     assert span["file_sha256"] == data["spans"][0]["file_sha256"]
 
 
+def _thirty_page_deck(root: Path) -> str:
+    """A 30-page local deck whose relevant section sits on page 25."""
+    add_curriculum(root)
+    _add_material_overview(root)
+    source_path = root / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    material = root.parent / "materials/demo/lecture-01.pdf"
+    texts = [f"filler page {n}" for n in range(1, 31)]
+    texts[24] = "TARGET-25 expectation example"
+    write_minimal_pdf(material, texts)
+    return _route(root)
+
+
+def test_pages_flag_reads_past_the_default_twenty_page_bound(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    bounded = run_los(mini_repo, "material-span", "unit-demo-l01",
+                      route_id, "--extract")
+    assert bounded.returncode == 0, bounded.stderr
+    default_span = json.loads(bounded.stdout)["spans"][0]
+    assert default_span["extraction"] == "truncated"
+    assert default_span["pages"] == list(range(1, 21))
+    assert "TARGET-25" not in default_span["excerpt"]
+    explicit = run_los(mini_repo, "material-span", "unit-demo-l01",
+                       route_id, "--extract", "--pages", "pdf pp. 21-26")
+    assert explicit.returncode == 0, explicit.stderr
+    span = json.loads(explicit.stdout)["spans"][0]
+    assert span["extraction"] == "complete"
+    assert span["pages"] == list(range(21, 27))
+    assert span["page_total"] == 30
+    assert "TARGET-25" in span["excerpt"]
+    # The binding fields are identical to the default span's: same bytes,
+    # same recorded digest, same canonical binding block.
+    assert span["file_sha256"] == default_span["file_sha256"]
+    assert span["binding"] == default_span["binding"]
+
+
+def test_pages_flag_keeps_the_cap_and_the_out_of_range_refusal(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    capped = run_los(mini_repo, "material-span", "unit-demo-l01",
+                     route_id, "--extract", "--pages", "pp. 1-25")
+    assert capped.returncode == 0, capped.stderr
+    span = json.loads(capped.stdout)["spans"][0]
+    assert span["extraction"] == "range-truncated"
+    assert span["pages"] == list(range(1, 21))
+    beyond = run_los(mini_repo, "material-span", "unit-demo-l01",
+                     route_id, "--extract", "--pages", "pp. 31-40")
+    assert beyond.returncode == 0, beyond.stderr
+    span = json.loads(beyond.stdout)["spans"][0]
+    assert span["extraction"] == "unreadable"
+    assert "outside this 30-page file" in span["reason"]
+
+
+def test_pages_flag_refuses_blank_and_unparseable_values(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    for value in ("", "21-26"):
+        refused = run_los(mini_repo, "material-span", "unit-demo-l01",
+                          route_id, "--extract", "--pages", value)
+        assert refused.returncode == 2, refused.stdout
+        assert "--pages" in refused.stderr
+
+
+def test_pages_digest_recheck_still_refuses_changed_bytes(mini_repo, monkeypatch):
+    """A file swapped mid-call is refused on the --pages path too (in process:
+    the re-check compares the entry digest against a fresh hash of the bytes)."""
+    import argparse
+
+    import learning_os.app.handlers.materials as materials_handler
+    from learning_os.app.pipeline import run_cli
+
+    route_id = _thirty_page_deck(mini_repo)
+    real_sha256_file = materials_handler.sha256_file
+    calls = {"n": 0}
+
+    def flaky(path):
+        calls["n"] += 1
+        if calls["n"] >= 2:
+            return "sha256:" + "ff" * 32
+        return real_sha256_file(path)
+
+    monkeypatch.setattr(materials_handler, "sha256_file", flaky)
+    outcome = run_cli(mini_repo, "material.span", argparse.Namespace(
+        root=str(mini_repo), unit_id="unit-demo-l01", route_id=route_id,
+        stage_id=None, resource_index=None, extract=True,
+        pages="pdf pp. 21-26", expected_snapshot=None))
+    assert outcome.exit_code == 0, outcome.stderr
+    span = json.loads(outcome.stdout)["spans"][0]
+    assert span["extraction"] == "unreadable"
+    assert "file changed during inspection" in span["reason"]
+
+
 def test_markdown_span_reports_physical_lines_of_displayed_excerpt(mini_repo: Path):
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)

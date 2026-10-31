@@ -137,6 +137,27 @@
         "envelope_owned": false
       }
     },
+    "pages": {
+      "type": "string",
+      "description": "with --extract on a PDF: explicit page ranges in the locator house style (e.g. \"pdf pp. 21-26\"); replaces the route locator's page selection for this call, still capped at 20 pages per call",
+      "x-los-cli": {
+        "flags": [
+          "--pages"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "PAGES",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "expected_snapshot": {
       "type": "string",
       "description": "optimistic concurrency token from manifest _generated.snapshot_id",

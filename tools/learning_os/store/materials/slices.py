@@ -328,7 +328,16 @@ def _select_pages(total: int, requested: list[tuple[int, int]]) -> tuple[tuple[i
     return tuple(wanted), "complete"
 
 
-def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str) -> SlicePart:
+def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str,
+                   pages: list[tuple[int, int]] | None = None) -> SlicePart:
+    """Extract one bounded PDF part.
+
+    ``pages`` carries explicit operator-requested ranges (the ``--pages``
+    request field, already parsed from the locator house style). When given
+    it REPLACES the locator-derived selection for this call; when absent the
+    selection comes from the locator exactly as before. Either way
+    ``_select_pages`` caps the selection at ``MAX_SLICE_PAGES``.
+    """
     try:
         content = path.read_bytes()
         reader = pdf_reader(content)
@@ -336,8 +345,9 @@ def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str) -
     except Exception as exc:
         raise SliceResolutionError(
             route_id, f"its file cannot be parsed as PDF: {exc}") from exc
-    pages, status = _select_pages(total, parse_locator_page_ranges(locator))
-    return _pdf_part_for_pages(route_id, material_uri, reader, total, pages, status,
+    requested = parse_locator_page_ranges(locator) if pages is None else pages
+    selected, status = _select_pages(total, requested)
+    return _pdf_part_for_pages(route_id, material_uri, reader, total, selected, status,
                                sha256_bytes(content))
 
 
@@ -380,14 +390,23 @@ def _read_text_part(route_id: str, material_uri: str, path: Path) -> SlicePart:
                      file_sha256=sha256_file(path))
 
 
-def read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str) -> SlicePart:
+def read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str,
+              *, pages: list[tuple[int, int]] | None = None) -> SlicePart:
+    """Read one resolved file as a bounded part.
+
+    ``pages`` is the explicit operator-requested PDF page selection (parsed
+    ``--pages`` ranges); it replaces the locator-derived selection for PDF
+    parts and is ignored for plain-text parts, which have no pages. Absent
+    ``pages`` keeps the locator-only behavior.
+    """
     suffix = resolved.path.suffix.lower()
     if suffix == ".pdf":
         try:
             locator = locator_for_material(locator, resolved.material_uri)
         except ValueError as exc:
             raise SliceResolutionError(route_id, str(exc)) from exc
-        return _read_pdf_part(route_id, resolved.material_uri, resolved.path, locator)
+        return _read_pdf_part(route_id, resolved.material_uri, resolved.path, locator,
+                              pages=pages)
     if suffix in READABLE_TEXT_SUFFIXES:
         return _read_text_part(route_id, resolved.material_uri, resolved.path)
     raise SliceResolutionError(

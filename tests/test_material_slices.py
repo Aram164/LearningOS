@@ -297,6 +297,57 @@ def test_slice_range_truncates_beyond_cap_with_status(mini_repo):
     assert part.status == "range-truncated"
 
 
+def test_explicit_pages_replace_the_locator_selection(mini_repo):
+    pages = [f"content line {n}" for n in range(1, 31)]
+    locator = "book.pdf, pdf pp. 2-4"
+    route = _route("route-demo-explicit", locator)
+    _add_sliced_unit(mini_repo, [route], {"book.pdf": pages})
+    resolved = resolve_route_material_files(load_repo(mini_repo), route)[0]
+    part = material_slices._read_pdf_part(
+        "route-demo-explicit", resolved.material_uri, resolved.path, locator,
+        pages=[(21, 26)])
+    # Explicit operator pages replace the locator's 2-4 — never a silent union.
+    assert part.pages == tuple(range(21, 27))
+    assert part.status == "complete"
+    assert "content line 21" in part.text
+    assert "content line 4" not in part.text
+
+
+def test_explicit_pages_keep_the_per_call_cap(mini_repo):
+    pages = [f"content line {n}" for n in range(1, 31)]
+    route = _route("route-demo-explicit-cap", "book.pdf")
+    _add_sliced_unit(mini_repo, [route], {"book.pdf": pages})
+    resolved = resolve_route_material_files(load_repo(mini_repo), route)[0]
+    part = material_slices._read_pdf_part(
+        "route-demo-explicit-cap", resolved.material_uri, resolved.path,
+        "book.pdf", pages=[(1, 30)])
+    assert part.pages == tuple(range(1, MAX_SLICE_PAGES + 1))
+    assert part.status == "range-truncated"
+
+
+def test_explicit_pages_out_of_range_refuse(mini_repo):
+    pages = [f"content line {n}" for n in range(1, 31)]
+    route = _route("route-demo-explicit-oob", "book.pdf")
+    _add_sliced_unit(mini_repo, [route], {"book.pdf": pages})
+    resolved = resolve_route_material_files(load_repo(mini_repo), route)[0]
+    with pytest.raises(SliceResolutionError, match="outside this 30-page file"):
+        material_slices._read_pdf_part(
+            "route-demo-explicit-oob", resolved.material_uri, resolved.path,
+            "book.pdf", pages=[(31, 40)])
+
+
+def test_without_explicit_pages_the_locator_selection_is_unchanged(mini_repo):
+    pages = [f"content line {n}" for n in range(1, 11)]
+    locator = "book.pdf, pdf pp. 2-4"
+    route = _route("route-demo-locator-default", locator)
+    _add_sliced_unit(mini_repo, [route], {"book.pdf": pages})
+    resolved = resolve_route_material_files(load_repo(mini_repo), route)[0]
+    part = material_slices._read_pdf_part(
+        "route-demo-locator-default", resolved.material_uri, resolved.path, locator)
+    assert part.pages == (2, 3, 4)
+    assert part.status == "complete"
+
+
 def test_non_mandatory_routes_get_no_slice(mini_repo):
     routes = [
         _route("route-demo-current", "current.pdf"),

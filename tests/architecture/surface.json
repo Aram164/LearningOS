@@ -4154,6 +4154,19 @@
     "action": "store",
     "choices": null,
     "default_repr": "None",
+    "dest": "pages",
+    "metavar": "PAGES",
+    "nargs": null,
+    "option_strings": [
+     "--pages"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
     "dest": "resource_index",
     "metavar": null,
     "nargs": null,
@@ -9392,7 +9405,7 @@
   "masters-planning.comparison.publish.schema.json": "f5829d2b7e99a965092bc41b6028e483a88aa108a002250321de4efbc78c6358",
   "masters-planning.dashboard.schema.json": "12d94e731b549690282ab6baec772a0409fb9badb7aabe7b167967d3f484c35f",
   "material.context.schema.json": "bd0d7e1155045d0b225dceea79cf75ffc65757333620699a5875789ab951cd3a",
-  "material.span.schema.json": "15d21bba4426afe334cbd26a5337e60625137beb518e743d044f0960101c6ecd",
+  "material.span.schema.json": "036b9e1d5d2191eea5da618bf4d413c37f437a4174071bb6b1c6e69fc85d5e1a",
   "module.attempt.record.schema.json": "def44a95750a94e5fa986aa5eda0922daccf56be5e41651b6cbc29d0a1af0c56",
   "module.create.schema.json": "02b73b8c4600f234426dfb360dd9d3a2676a71d6c7ee55a7f6c8cbceb6b6b18f",
   "module.list.schema.json": "e0bdb5628bffe00d0d37b004de890566a5faf8616aae657fd0421631731fddd8",
