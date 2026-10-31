@@ -498,6 +498,48 @@ def _expand_log_step(step: dict, session_id=None) -> list[str]:
             *(["--session-id=" + session_id] if session_id is not None else [])]
 
 
+def _resolve_bound_argv(root, index, step, payloads):
+    """Resolve one bound step's refs against retained payloads (PLAN S15).
+
+    Renders the final argv exactly as admission's compile did, with resolved
+    values in place of placeholders. Raises BindingError on any refusal.
+    """
+    from learning_os.app.registry import REGISTRY
+    from learning_os.domain.agent_bindings import resolve as resolve_ref
+    from learning_os.store.contracts.requests import request_schema
+
+    verb = step.argv[0]
+    operation = index.get("verb_to_operation", {}).get(verb)
+    entry = REGISTRY.get(operation)
+    try:
+        schema = request_schema(root, operation)
+    except (OSError, ValueError) as exc:
+        from learning_os.domain.agent_bindings import BindingError
+
+        raise BindingError(BINDING_INVALID, f"bound target schema unavailable: {exc}") from exc
+    props = schema.get("properties", {})
+    groups: dict[str, list] = {}
+    params: list[str] = []
+    for ref in step.bindings:
+        if ref.param not in groups:
+            groups[ref.param] = []
+            params.append(ref.param)
+        kind = (ref.target_kind
+                or (entry.binding_params.get(ref.param) if entry is not None else None)
+                or props.get(ref.param, {}).get("x-los-id-kind") or "*")
+        groups[ref.param].append(resolve_ref(ref, payloads.get(ref.source), kind))
+    values: dict[str, object] = {}
+    for param in params:
+        spec = props.get(param, {})
+        kind = spec.get("x-los-id-kind") or (entry.binding_params.get(param) if entry is not None else None) or ""
+        resolved = groups[param]
+        values[param] = resolved if kind.endswith("[]") else resolved[0]
+    argv = _bound_argv(list(step.presentation.get("args", [])), params, schema, values)
+    if props.get("json") is not None and "--json" not in argv:
+        argv.append("--json")
+    return [step.argv[0], *argv], values
+
+
 def _validate_plan(plan, poll_s: float) -> list[dict]:
     if len(_json(plan).encode("utf-8")) > 1048576:
         raise AgentRunError("plan input exceeds 1 MiB")
@@ -665,12 +707,12 @@ def _bound_value(value):
     return json.dumps(value) if isinstance(value, list) else value
 
 
-def _bound_argv(args: list[str], bind: dict, schema: dict, values: dict) -> list[str]:
+def _bound_argv(args: list[str], params, schema: dict, values: dict) -> list[str]:
     """Render a bound step's argv: positionals in x-los-cli.position order,
     then the step's own args, then flags (PLAN S14)."""
     props = schema.get("properties", {})
     positionals = []
-    for param in bind:
+    for param in params:
         cli = props.get(param, {}).get("x-los-cli", {})
         position = cli.get("position")
         if position is not None:
@@ -680,7 +722,7 @@ def _bound_argv(args: list[str], bind: dict, schema: dict, values: dict) -> list
     for _, param in positionals:
         argv.append(_bound_value(values[param]))
     argv.extend(args)
-    for param in bind:
+    for param in params:
         cli = props.get(param, {}).get("x-los-cli", {})
         if cli.get("position") is not None:
             continue
@@ -745,7 +787,8 @@ def _compile_bindings(root, index, step, bind, compiled, compiled_index):
                     raise AgentRunError(
                         f"literal for {param!r} is not a valid {item_kind} id", BINDING_INVALID)
                 refs.append(CompiledRef(param=param, source=None, slot_name=None,
-                                             slot=None, where={}, literal=literal))
+                                        slot=None, where={}, literal=literal,
+                                        target_kind=kind))
                 resolved.append(literal)
                 continue
             position = compiled_index.get(source_id)
@@ -805,10 +848,10 @@ def _compile_bindings(root, index, step, bind, compiled, compiled_index):
                 source_argv.append("--json")
                 compiled[position] = dataclasses.replace(source_step, argv=tuple(source_argv))
             refs.append(CompiledRef(param=param, source=source_id, slot_name=slot_name,
-                                         slot=slot, where=dict(where)))
+                                    slot=slot, where=dict(where), target_kind=kind))
             resolved.append("id-placeholder" if item_kind == "*" else f"{item_kind}-placeholder")
         values[param] = resolved if list_kind else resolved[0]
-    argv = _bound_argv(list(step.get("args", [])), bind, target_schema, values)
+    argv = _bound_argv(list(step.get("args", [])), list(bind), target_schema, values)
     if props.get("json") is not None and "--json" not in argv:
         argv.append("--json")
     return tuple(refs), argv, tuple(sources)
@@ -961,6 +1004,13 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
 
             def epoch(self, selected_root):
                 return not injected
+
+            def bind_argv(self, step, payloads):
+                return _resolve_bound_argv(root, index, step, payloads)
+
+            def validate_bound(self, bound_step):
+                if not injected:
+                    actual.validate(list(bound_step.argv))
 
             def resources(self):
                 import resource

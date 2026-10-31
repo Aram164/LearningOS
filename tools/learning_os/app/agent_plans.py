@@ -1,6 +1,7 @@
 """Admit, schedule and settle bounded plans through an injected adapter port."""
 from __future__ import annotations
 
+import dataclasses
 import json
 import math
 import time
@@ -11,6 +12,7 @@ from typing import cast
 from learning_os.app.agent_reporting import ReportStore, bound_report
 from learning_os.app.projection import fresh_manifest_and_repo
 from learning_os.app.read_session import ReadSession
+from learning_os.domain.agent_bindings import BindingError
 from learning_os.domain.agent_plans import CompiledStep, Executor, PlanControls, RawOutcome
 from learning_os.domain.codes import (
     ARTIFACT_FAILED,
@@ -61,6 +63,8 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
     rows: list[dict[str, object]] = []
     results: dict[str, dict[str, object]] = {}
     writes: dict[str, object] = {}
+    payloads: dict[str, object] = {}
+    needed_sources = {ref.source for step in steps for ref in step.bindings if ref.source}
     ancestors: dict[str, set[str]] = {}
     stopped: str | None = None
     uncertain = False
@@ -134,6 +138,8 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                 row["validation"] = validation[-1]
             encoded = port.summarize(step, payload)
             row.update(output=json.loads(encoded), out_bytes=len(encoded.encode("utf-8")))
+            if step.id in needed_sources and row["status"] == "ok":
+                payloads[step.id] = payload
         except (OSError, ValueError, TypeError) as exc:
             code = INVALID_STEP_OUTPUT if str(exc).startswith(INVALID_STEP_OUTPUT) else getattr(exc, "code", STEP_FAILED)
             row.update(status="error", error={"code": code, "retryable": False, "message": str(exc)})
@@ -178,7 +184,8 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
         # Only contiguous eligible reads share an epoch. Never prefetch across a write.
         wave: list[CompiledStep] = []
         for candidate in steps[index:]:
-            if candidate.writer or not candidate.reusable or candidate.dependencies or candidate.preflight:
+            if candidate.writer or not candidate.reusable or candidate.dependencies or candidate.preflight \
+                    or candidate.bindings:
                 break
             wave.append(candidate)
         if wave:
@@ -249,13 +256,28 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                 index += 1
                 continue
         try:
-            error = port.preflight(step) if step.preflight else None
+            run_step = step
+            bound: dict[str, object] | None = None
+            if step.bindings:
+                # Resolve immediately before execution (PLAN S15): the
+                # placeholders never reach a handler.
+                argv, bound = port.bind_argv(step, payloads)
+                run_step = dataclasses.replace(step, argv=tuple(argv))
+                port.validate_bound(run_step)
+            error = port.preflight(run_step) if step.preflight else None
             if error:
                 retain(step, {**fail_row(step, "blocked", PREFLIGHT_FAILED), "error": error})
             elif remaining() <= 0:
                 retain(step, fail_row(step, "deadline", DEADLINE_EXPIRED))
             else:
-                retain(step, consume(step, port.execute(step, remaining()), begin, ready_ms))
+                row = consume(run_step, port.execute(run_step, remaining()), begin, ready_ms)
+                if bound is not None:
+                    row["bound"] = bound
+                retain(step, row)
+        except BindingError as exc:
+            row = fail_row(step, "error", exc.code)
+            row["error"] = {**exc.as_dict(), "retryable": False}
+            retain(step, row)
         except Exception as exc:
             row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
             # Dispatch may have crossed the commit boundary before transport failed.

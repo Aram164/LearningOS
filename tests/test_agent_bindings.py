@@ -427,8 +427,8 @@ def test_adversarial_13_forward_and_self_reference_refuse(mini_repo):
 
 
 def test_bound_step_admits_with_placeholders_and_dependencies(mini_repo):
-    """Admission compiles and shape-validates the bound argv; before the S15
-    runtime the placeholder reaches the handler, which refuses it as a step."""
+    """Admission compiles and shape-validates the bound argv; at run time the
+    binding resolves (S15), so the append chain runs end to end."""
     add_curriculum(mini_repo)
     plan = _v3_plan([
         {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
@@ -438,5 +438,83 @@ def test_bound_step_admits_with_placeholders_and_dependencies(mini_repo):
     report = agent_run.run_plan(plan, mini_repo)
     assert report["steps"][0]["status"] == "ok", report
     ctx_row = report["steps"][1]
-    assert ctx_row["status"] == "error"
-    assert ctx_row["error"]["code"] not in ("BINDING_INVALID", "PLAN_INVALID"), ctx_row
+    assert ctx_row["status"] == "ok", ctx_row
+    assert ctx_row["bound"] == {"unit_id": "unit-demo-l01"}
+
+
+# ---------------------------------------------------------------------------
+# S15 runtime resolution: a bound chain runs and matches typed direct calls.
+
+def _direct_payload(root, argv):
+    from learning_os.adapters.cli import invoke_outcome
+    from learning_os.adapters.cli_parser import build_parser
+
+    namespace = build_parser().parse_args(["--root", str(root), *argv])
+    outcome = invoke_outcome(namespace)
+    assert outcome.exit_code == 0, (argv, outcome.stdout, outcome.stderr)
+    return json.loads(outcome.stdout)
+
+
+def _without_snapshot(payload):
+    if isinstance(payload, dict):
+        return {k: v for k, v in payload.items() if k != "snapshot_id"}
+    return payload
+
+
+def test_seq_chain_binding_matches_typed_direct_call(mini_repo):
+    """The seq chain from offline/chains.json, instantiated on the fixture's
+    one mapped unit: stage refs resolve against the search's rows and the
+    study-sequence payload equals the typed direct call's."""
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    plan = {"schema_version": 3, "steps": [
+        {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
+        {"id": "order", "use": "study-sequence",
+         "bind": {"unit_id": {"literal": "unit-demo-l01"},
+                  "stage_ids_json": [
+                      {"from": "a", "slot": "matched_stage",
+                       "where": {"title": "Derive expected value"}},
+                      {"from": "a", "slot": "matched_stage",
+                       "where": {"title": "Apply expected value"}},
+                  ]},
+         "args": []},
+    ]}
+    report = agent_run.run_plan(plan, mini_repo)
+    row = report["steps"][1]
+    assert row["status"] == "ok", report
+    assert row["bound"] == {"unit_id": "unit-demo-l01",
+                            "stage_ids_json": ["stage-demo", "stage-demo-pending"]}
+    direct = _direct_payload(
+        mini_repo, ["study-sequence", "unit-demo-l01",
+                    "--stage-ids-json", '["stage-demo","stage-demo-pending"]', "--json"])
+    assert _without_snapshot(row["output"]) == _without_snapshot(direct), row
+
+
+@pytest.mark.parametrize("where,code", [
+    ({"unit_id": "unit-demo-nope"}, "BINDING_EMPTY"),
+    ({"unit_id": "unit-demo-l01"}, "BINDING_CARDINALITY"),
+])
+def test_zero_and_two_row_bindings_refuse_and_block_dependents(mini_repo, where, code):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    plan = {"schema_version": 3, "on_error": "continue", "steps": [
+        {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
+        {"id": "order", "use": "study-sequence",
+         "bind": {"unit_id": {"literal": "unit-demo-l01"},
+                  "stage_ids_json": [{"from": "a", "slot": "matched_stage",
+                                      "where": where}]},
+         "args": []},
+        {"id": "after", "use": "inspect", "args": ["note-demo"], "depends_on": ["order"]},
+    ]}
+    report = agent_run.run_plan(plan, mini_repo)
+    error = report["steps"][1]["error"]
+    assert error["code"] == code
+    assert report["steps"][1]["status"] == "error"
+    assert report["steps"][2]["status"] == "blocked"
+    assert report["steps"][2]["error"]["code"] == "DEPENDENCY_FAILED"
+    if code == "BINDING_CARDINALITY":
+        candidates = error["candidates"]
+        assert 2 <= len(candidates) <= 5
+        assert all(set(candidate) == {"id", "title"} for candidate in candidates)

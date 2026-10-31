@@ -41,7 +41,11 @@ class OutputSlot:
 
 @dataclass(frozen=True)
 class CompiledRef:
-    """One admission-compiled binding: either a source reference or a literal."""
+    """One admission-compiled binding: either a source reference or a literal.
+
+    ``target_kind`` is the bound target param's declared kind, recorded at
+    admission so run-time resolution needs no schema lookup for it.
+    """
 
     param: str
     source: str | None = None
@@ -49,6 +53,7 @@ class CompiledRef:
     slot: OutputSlot | None = None
     where: Mapping[str, object] = field(default_factory=dict)
     literal: object = None
+    target_kind: str = ""
 
 
 class BindingError(Exception):
