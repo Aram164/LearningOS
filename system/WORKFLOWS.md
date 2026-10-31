@@ -789,7 +789,8 @@ envelope replays the original receipt, while another payload, channel or
 session under that key is refused as `IDEMPOTENCY_CONFLICT`. A write that
 needs review first is two calls: `--guards auto --check-out REC`, then
 `--guards-from REC --submit`. Use a fresh, attempt-specific `REC` outside
-the repository. Print the record in the same invocation as the check
+the repository, or under the checkout's gitignored `.venv/` scratch when
+the harness confines writes to the checkout. Print the record in the same invocation as the check
 (append `&& cat REC` to the check command, so a failed check keeps its
 failure status and no stale record is shown), inspect the proposed change,
 exact target, and guards in that result, and only then submit in a separate

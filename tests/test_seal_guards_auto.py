@@ -973,6 +973,51 @@ def test_legacy_record_without_a_key_takes_an_explicit_key(
     assert len(_receipts(mini_repo)) == 1
 
 
+# A repo-confined agent can hold reviewed records and sealed envelopes only
+# inside its checkout, so the gitignored .venv/ scratch is the one in-repo
+# location both --check-out and --out accept (fingerprint-invisible: the
+# canonical fingerprint skips dot-prefixed path components).
+def test_venv_scratch_accepts_the_reviewed_flow_end_to_end(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    scratch = mini_repo / ".venv/tmp"
+    scratch.mkdir(parents=True)
+    before = canonical_fingerprint(mini_repo)
+    record = scratch / "review.json"
+    reviewed = _seal(mini_repo, scratch / "sealed.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="venv-scratch-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    assert canonical_fingerprint(mini_repo) == before
+    applied = _one_call(mini_repo, capability="stage.attachment.add",
+                        payload=payload, key="venv-scratch-001",
+                        extra=["--guards-from", str(record)])
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    assert len(_receipts(mini_repo)) == 1
+
+
+def test_in_repo_scratch_outside_venv_is_refused_for_both_flags(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    for flag in ("--out", "--check-out"):
+        for target in (mini_repo / "work/probe.json", mini_repo / "probe.json"):
+            refused = _seal(mini_repo, tmp_path / "unused.json",
+                            capability="stage.attachment.add", payload=payload,
+                            key=f"scratch-guard-{flag.strip('-')}",
+                            extra=[flag, str(target)])
+            assert refused.returncode == 2, (flag, target, refused.stderr)
+            assert ".venv" in refused.stderr
+    assert not (mini_repo / "work/probe.json").exists()
+    assert not (mini_repo / "probe.json").exists()
+    assert _receipts(mini_repo) == []
+
+
 # Two callers can use one key, by accident: agents copy documented example
 # keys. Each attempt is sealed into a file of its own, and only the attempt
 # that committed becomes the key's retry file, so neither a refused attempt

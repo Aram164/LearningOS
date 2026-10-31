@@ -115,6 +115,26 @@ def _bind_file_digests(root: Path, capability: str, payload: dict,
     return bound
 
 
+def _scratch_path_problem(root: Path, raw: str, flag: str) -> str | None:
+    """The refusal for an in-repo write target that is not the .venv scratch.
+
+    The documented review flow holds records and envelopes "outside the
+    repository"; an agent whose harness confines writes to the checkout can
+    use the checkout's gitignored ``.venv/`` — dot-prefixed components are
+    invisible to the canonical fingerprint and to Git, so scratch there can
+    never move the snapshot or enter the canonical tree.
+    """
+    target = Path(raw).resolve()
+    if not (target == root or root in target.parents):
+        return None
+    venv = root / ".venv"
+    if target == venv or venv in target.parents:
+        return None
+    return (f"seal_envelope: refusing to write {flag} inside the repository; "
+            "point it outside the repository or at the checkout's gitignored "
+            ".venv/ scratch")
+
+
 def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
     """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
 
@@ -419,6 +439,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     if check_out is not None:
         sealing = {name: value for name, value in payload.items()
                    if name != "check"}
+        Path(check_out).parent.mkdir(parents=True, exist_ok=True)
         Path(check_out).write_text(
             json.dumps({**record, "payload": sealing,
                         "idempotency_key": key}, indent=2,
@@ -817,12 +838,12 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
-    if args.out:
-        target = Path(args.out).resolve()
-        if target == root or root in target.parents:
-            print("seal_envelope: refusing to write the envelope inside the "
-                  "repository; point --out at scratch", file=sys.stderr)
-            return 2
+    for flag, raw in (("--out", args.out), ("--check-out", args.check_out)):
+        if raw:
+            problem = _scratch_path_problem(root, raw, flag)
+            if problem:
+                print(problem, file=sys.stderr)
+                return 2
     payload = _bind_file_digests(root, args.capability, payload,
                                  force=derived_payload)
 
@@ -894,6 +915,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     text = json.dumps(envelope, indent=2, sort_keys=True, ensure_ascii=False)
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(text + "\n", encoding="utf-8")
     else:
         print(text)

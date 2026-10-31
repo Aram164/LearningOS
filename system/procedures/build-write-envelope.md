@@ -28,7 +28,8 @@ A payload that names a file in a byte-bound field (`file`, `body_file`,
 needs review first is two calls. `--guards auto --check-out REC` writes the
 check record: every validation error, any new warning signature, and the
 planned writes. Use a fresh, attempt-specific `REC` outside the
-repository. Print the record in the same invocation as the check (append
+repository, or under the checkout's gitignored `.venv/` scratch when the
+harness confines writes to the checkout. Print the record in the same invocation as the check (append
 `&& cat REC` to the check command, so a failed check keeps its failure
 status and no stale record is shown) and inspect the proposed change, exact
 target, and guards in that result. If the printed record is truncated or

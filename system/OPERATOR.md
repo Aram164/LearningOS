@@ -315,7 +315,8 @@ submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
 NAME --payload JSON --key KEY --submit`. It binds any file the payload names
 to its bytes; a write that needs review first is `--guards auto --check-out
 REC`, then `--guards-from REC --submit`. Use a fresh, attempt-specific
-`REC` outside the repository. Print the record in the same invocation as
+`REC` outside the repository, or under the checkout's gitignored `.venv/`
+scratch when the harness confines writes to the checkout. Print the record in the same invocation as
 the check (append `&& cat REC`, so a failed check keeps its failure status
 and no stale record is shown), inspect the proposed change, target, and
 guards in that result, and only then submit in a separate invocation. If
