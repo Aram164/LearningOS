@@ -1,5 +1,11 @@
-"""Pure binding types and resolution: every branch, no repository (S12)."""
+"""Pure binding types and resolution: every branch, no repository (S12).
+
+The slot declarations (S13) are additionally checked against real handler
+output on the rich_world fixture.
+"""
 from __future__ import annotations
+
+import json
 
 import pytest
 
@@ -15,6 +21,7 @@ from learning_os.domain.codes import (
     BINDING_EMPTY,
     BINDING_VALUE_INVALID,
 )
+from learning_os.domain.ids import is_valid
 
 
 def _record_slot(**overrides):
@@ -149,3 +156,88 @@ def test_binding_error_carries_code_message_candidates():
                                "candidates": [{"id": "a", "title": "A"}]}
     plain = BindingError(BINDING_EMPTY, "none")
     assert plain.as_dict() == {"code": BINDING_EMPTY, "message": "none"}
+
+
+def _read_payload(root, argv):
+    from learning_os.adapters.cli import invoke_outcome
+    from learning_os.adapters.cli_parser import build_parser
+
+    namespace = build_parser().parse_args(["--root", str(root), *argv])
+    outcome = invoke_outcome(namespace)
+    assert outcome.exit_code == 0, (argv, outcome.stdout, outcome.stderr)
+    return json.loads(outcome.stdout)
+
+
+def test_declared_slots_hold_real_output(mini_repo):
+    """Every declared slot yields rows of its declared shape on rich_world."""
+    from scenario_fixtures import rich_world
+
+    from learning_os.app.registry import REGISTRY
+
+    rich_world(mini_repo)
+    search = _read_payload(mini_repo, ["search", "expected value", "--type", "unit", "--json"])
+    stage_payload = _read_payload(mini_repo, ["inspect", "stage-demo", "--json"])
+    unit_payload = _read_payload(mini_repo, ["inspect", "unit-demo-l01", "--json"])
+    units = _read_payload(mini_repo, ["unit-list", "--module-id", "module-demo", "--json"])
+    modules = _read_payload(mini_repo, ["module-list", "--json"])
+    brief = _read_payload(mini_repo, ["plan-edit-context", "unit-demo-l01", "--brief", "--json"])
+    cases = [
+        ("note.search", "record", search),
+        ("note.search", "matched_stage", search),
+        ("unit.list", "unit", units),
+        ("module.list", "module", modules),
+        ("project.inspect", "module", stage_payload),
+        ("project.inspect", "unit", stage_payload),
+        ("project.inspect", "ultimate_reference", unit_payload),
+        ("plan.edit-context", "unit", brief),
+        ("plan.edit-context", "module", brief),
+        ("plan.edit-context", "stage", brief),
+        ("plan.edit-context", "route", brief),
+    ]
+    for operation, name, payload in cases:
+        slot = REGISTRY[operation].output_slots[name]
+        rows = rows_of(payload, slot)
+        assert rows, (operation, name)
+        for row in rows:
+            if slot.value_key is not None:
+                assert isinstance(row, dict) and isinstance(row.get(slot.value_key), str), \
+                    (operation, name, row)
+                kind = slot.kind if slot.kind is not None else row.get(slot.kind_column)
+                assert is_valid(kind, row[slot.value_key]), (operation, name, row)
+            else:
+                assert isinstance(row, str) and is_valid(slot.kind, row), \
+                    (operation, name, row)
+
+
+def test_binding_params_declare_the_non_id_kind_params():
+    from learning_os.app.registry import REGISTRY
+
+    assert REGISTRY["project.inspect"].binding_params == {"id": "*"}
+    assert REGISTRY["study.sequence"].binding_params == {"stage_ids_json": "stage[]"}
+    assert REGISTRY["note.search"].binding_params == {}
+
+
+def test_catalog_carries_slots_and_plan_example(mini_repo):
+    from learning_os.adapters.cli_parser import build_parser
+    from learning_os.app.agent_catalog import READ_VERBS, build_catalog
+    from learning_os.app.registry import REGISTRY
+
+    choices = build_parser()._subparsers._group_actions[0].choices  # noqa: SLF001
+    verb_to_operation = {name: getattr(sub, "_defaults", {}).get("_operation")
+                         for name, sub in choices.items()}
+    catalog = build_catalog(mini_repo, verb_to_operation)
+    assert catalog["plan_example"]["schema_version"] == 3
+    assert catalog["plan_example"]["steps"][1]["bind"]["unit_id"]["slot"] == "record"
+    by_verb = {row["verb"]: row for row in catalog["reads"]}
+    assert [row["verb"] for row in catalog["reads"]] == list(READ_VERBS)
+    search_row = by_verb["search"]
+    assert search_row["slots"] == [
+        {"name": "record", "kind": None, "columns": ["id", "type", "title", "status"],
+         "kind_column": "type"},
+        {"name": "matched_stage", "kind": "stage", "columns": ["id", "title", "unit_id"]},
+    ]
+    assert by_verb["inspect"]["slots"][0]["name"] == "module"
+    for row in catalog["reads"]:
+        for slot in row["slots"]:
+            assert slot["name"] in REGISTRY[row["operation"]].output_slots
+

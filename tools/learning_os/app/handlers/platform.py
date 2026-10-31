@@ -27,6 +27,7 @@ from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
 from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
+from learning_os.domain.agent_bindings import OutputSlot
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.store.codec import dump_yaml as _dump_yaml
@@ -335,7 +336,13 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ)
+@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ,
+          output_slots={
+              "module": OutputSlot(path=("module_id",), kind="module"),
+              "unit": OutputSlot(path=("unit_id",), kind="unit"),
+              "ultimate_reference": OutputSlot(path=("artifacts", "ultimate_reference"), kind="note"),
+          },
+          binding_params={"id": "*"})
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):

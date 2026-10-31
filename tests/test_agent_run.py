@@ -279,7 +279,8 @@ def test_read_catalog_is_bounded_and_lists_only_reads(mini_repo):
     for row in catalog["reads"]:
         entry = REGISTRY[row["operation"]]
         assert entry.effects == OperationEffects.READ or entry.read_when is not None
-        assert row["slots"] == []
+        # S13: the catalog's slots mirror the registry's declared output slots.
+        assert [slot["name"] for slot in row["slots"]] == list(entry.output_slots)
         assert all({"name"} <= set(param) for param in row["params"])
     assert len(agent_run._json(catalog).encode("utf-8")) <= 12000
 

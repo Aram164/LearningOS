@@ -40,6 +40,7 @@ from learning_os.derive.semantics.scan import observe_goal_ledger
 from learning_os.derive.semantics.session_counts import FeedError, feed_scan_kwargs
 from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
 from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
+from learning_os.domain.agent_bindings import OutputSlot
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.store.contracts.capability_catalog import load_capability_catalog
@@ -1363,7 +1364,11 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("unit.list", kind="query", effects=OperationEffects.READ)
+@register("unit.list", kind="query", effects=OperationEffects.READ,
+          output_slots={
+              "unit": OutputSlot(path=("*",), kind="unit", value_key="id",
+                                 columns=("id", "kind", "title", "status")),
+          })
 def unit_list(ctx: OpContext, req: dict) -> Result:
     """List units, optionally filtered; compact serves the summary page."""
     root = ctx.root
@@ -1381,7 +1386,11 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
     return Result(_filtered_units(manifest, req, ctx.operation))
 
 
-@register("module.list", kind="query", effects=OperationEffects.READ)
+@register("module.list", kind="query", effects=OperationEffects.READ,
+          output_slots={
+              "module": OutputSlot(path=("*",), kind="module", value_key="id",
+                                   columns=("id", "title", "status")),
+          })
 def module_list(ctx: OpContext, req: dict) -> Result:
     """List modules with optional program/status filters."""
     root = ctx.root
@@ -1394,7 +1403,8 @@ def module_list(ctx: OpContext, req: dict) -> Result:
     return Result(rows)
 
 
-@register("study.sequence", kind="porcelain", effects=OperationEffects.READ)
+@register("study.sequence", kind="porcelain", effects=OperationEffects.READ,
+          binding_params={"stage_ids_json": "stage[]"})
 def study_sequence(ctx: OpContext, req: dict) -> Result:
     """Preview a temporary Unit-stage order without creating a session record."""
     try:

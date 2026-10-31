@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result
+from learning_os.domain.agent_bindings import OutputSlot
 
 
 class OperationEffects(StrEnum):
@@ -37,6 +38,11 @@ class Operation:
     # Core declares a mode of this operation that only reads; a plan can never
     # claim this. The registered effect stays authoritative for every mode.
     read_when: Callable[[object], bool] | None = None
+    # Binding surface (D3, D5): declared output slots are the only binding
+    # sources; binding_params declares target params beyond x-los-id-kind.
+    # An operation with no slots can never be a binding source.
+    output_slots: Mapping[str, OutputSlot] = field(default_factory=dict)
+    binding_params: Mapping[str, str] = field(default_factory=dict)
 
 
 REGISTRY: dict[str, Operation] = {}
@@ -53,6 +59,8 @@ def register(
     read_session_profile: str = "none",
     effects: OperationEffects = OperationEffects.UNKNOWN,
     read_when: Callable[[object], bool] | None = None,
+    output_slots: Mapping[str, OutputSlot] | None = None,
+    binding_params: Mapping[str, str] | None = None,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
 
@@ -63,6 +71,7 @@ def register(
             parallel_safe=parallel_safe, memo_profile=memo_profile,
             read_session_profile=read_session_profile,
             effects=OperationEffects(effects), read_when=read_when,
+            output_slots=output_slots or {}, binding_params=binding_params or {},
         )
         return fn
 

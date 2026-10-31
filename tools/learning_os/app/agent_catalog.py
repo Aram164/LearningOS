@@ -30,6 +30,19 @@ RULES = (
 
 _SKIPPED_PARAMS = ("json", "expected_snapshot")
 
+# The append chain from the campaign's frozen chains.json, as a schema 3 plan
+# (PLAN S13): one search, then one dependent read with two bound params.
+PLAN_EXAMPLE = {
+    "schema_version": 3,
+    "steps": [
+        {"id": "a", "use": "search", "args": ["{q_a}", "--type", "unit", "--json"]},
+        {"id": "ctx", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}},
+                  "stage_id": {"from": "a", "slot": "matched_stage"}},
+         "args": []},
+    ],
+}
+
 
 def _param_rows(root: Path, operation: str) -> list[dict]:
     schema = request_schema(root, operation)
@@ -57,6 +70,17 @@ def _param_rows(root: Path, operation: str) -> list[dict]:
     return rows
 
 
+def _slot_rows(operation: str) -> list[dict]:
+    entry = REGISTRY[operation]
+    rows: list[dict] = []
+    for name, slot in entry.output_slots.items():
+        row: dict = {"name": name, "kind": slot.kind, "columns": list(slot.columns)}
+        if slot.kind_column is not None:
+            row["kind_column"] = slot.kind_column
+        rows.append(row)
+    return rows
+
+
 def build_catalog(root, verb_to_operation: dict) -> dict:
     """Build the read catalog for ``root``; refuse any listed verb that writes."""
     root = Path(root)
@@ -70,5 +94,7 @@ def build_catalog(root, verb_to_operation: dict) -> dict:
                 f"read catalog refuses verb {verb!r} (operation {operation!r}): "
                 "not a declared read")
         reads.append({"verb": verb, "operation": operation,
-                      "params": _param_rows(root, operation), "slots": []})
-    return {"contract": "agent-read-catalog-v1", "rules": list(RULES), "reads": reads}
+                      "params": _param_rows(root, operation),
+                      "slots": _slot_rows(operation)})
+    return {"contract": "agent-read-catalog-v1", "rules": list(RULES), "reads": reads,
+            "plan_example": PLAN_EXAMPLE}

@@ -24,6 +24,7 @@ from learning_os.derive.material_synthesis import material_synthesis_freshness
 from learning_os.derive.semantics.claim_status import claims_summary, observe_claims_with_audits
 from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
 from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
+from learning_os.domain.agent_bindings import OutputSlot
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.material_refs import (
     MATERIAL_FIELDS,
@@ -547,7 +548,13 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
     }
 
 
-@register("plan.edit-context", kind="query", effects=OperationEffects.READ)
+@register("plan.edit-context", kind="query", effects=OperationEffects.READ,
+          output_slots={
+              "unit": OutputSlot(path=("unit_id",), kind="unit"),
+              "module": OutputSlot(path=("module_id",), kind="module"),
+              "stage": OutputSlot(path=("inventory", "stage_ids", "*"), kind="stage"),
+              "route": OutputSlot(path=("inventory", "route_ids", "*"), kind="route"),
+          })
 def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     """Assemble one unit's edit context: map, routes, selections, audit."""
     root = ctx.root

@@ -23,6 +23,7 @@ from learning_os.derive.garden import garden_id
 from learning_os.derive.search.index import NoteBlob, build_registry
 from learning_os.derive.search.model import POSTINGS_NODE_ID
 from learning_os.derive.search.query import candidates
+from learning_os.domain.agent_bindings import OutputSlot
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.suggest import expansion, not_found, suggest
@@ -1087,7 +1088,15 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
 
 
 @register("note.search", kind="query", effects=OperationEffects.DERIVED_WRITE,
-          read_when=lambda args: not getattr(args, "content", False))
+          read_when=lambda args: not getattr(args, "content", False),
+          output_slots={
+              "record": OutputSlot(path=("*",), kind=None, value_key="id",
+                                   columns=("id", "type", "title", "status"),
+                                   kind_column="type"),
+              "matched_stage": OutputSlot(path=("*", "matched_stages", "*"), kind="stage",
+                                          value_key="id", columns=("id", "title", "unit_id"),
+                                          parent_columns={"unit_id": "id"}),
+          })
 def search(ctx: OpContext, req: dict) -> Result:
     """Search records, garden seeds, and inbox filenames; empty query lists rows."""
     if req["type"] is not None and req["type"] not in VALID_RECORD_TYPES:
