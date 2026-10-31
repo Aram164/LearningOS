@@ -24,16 +24,32 @@ def _c1_packet() -> dict:
 
 
 def _before_approved_c1_cli(key: str, live: list) -> list:
-    """Undo only the exact later C1 addition for historical D16 comparisons."""
-    if key not in {"cli.goal", "cli.route-patch"}:
-        return live
-    change = _c1_packet()["changes"][key]
-    assert live == change["after"], key
-    return change["before"]
+    """Undo only the exact later approved additions for historical D16 comparisons.
+
+    Besides the C1 packet's two rows, the A11-approved --report-out flag of
+    2026-10-31 (workbench/system-fixes-2026-10-31/PLAN.md FX-4, approval line
+    in tests/architecture/surface-approvals.yaml) is undone exactly.
+    """
+    if key in {"cli.goal", "cli.route-patch"}:
+        change = _c1_packet()["changes"][key]
+        assert live == change["after"], key
+        return change["before"]
+    if key == "cli.module-plan-import":
+        unwound = [action for action in live if action.get("dest") != "report_out"]
+        assert len(unwound) == len(live) - 1, key
+        return unwound
+    return live
 
 
 def _before_approved_c1_schema(operation: str, raw: bytes) -> dict:
     """Require approved live bytes before comparing earlier schema migrations."""
+    if operation == "module.plan.import":
+        # The S13 proof predates the A11-approved --report-out field (FX-4,
+        # approval recorded 2026-10-31); undo exactly that property.
+        live = json.loads(raw)
+        approved = live.get("properties", {}).pop("report_out", None)
+        assert approved is not None, operation
+        return live
     if operation not in {"goal.decide", "route.patch"}:
         return json.loads(raw)
     packet = _c1_packet()

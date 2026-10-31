@@ -496,7 +496,14 @@ def test_json_flag_keeps_b_success_bytes_identical(mini_repo, tmp_path):
 
 
 def test_s13_base_marks_every_d16_approval_new():
-    """At S13 every live D16 approval is new; two writers retired later."""
+    """At S13 every live D16 approval is new; two writers retired later.
+
+    Later approved surface additions (the C1 packet's cli.goal/cli.route-patch
+    rows; the A11-approved --report-out of 2026-10-31) are undone by the
+    helpers before the historical comparison, so the proof keeps meaning
+    exactly what it meant at acceptance: the D16 batch itself added only
+    --json.
+    """
     historical = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
     for prefix in ("cli.", "request_schemas."):
         assert sum(entry.get("plan_ref") == D16_PLAN_REF
@@ -506,6 +513,11 @@ def test_s13_base_marks_every_d16_approval_new():
     assert len(new_schemas) == 51, len(new_schemas)
     base_flat, live_flat = _surface_flats(S13_BASE)
     _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
+    _assert_only_json_added_to_request_schemas(S13_BASE, new_schemas)
+    _assert_every_subcommand_is_a_b_or_c(S13_BASE, new_cli)
+    cli, _ = _d16_approvals()
+    _assert_b_subcommands_accept_json_with_only_that_delta(cli)
+    _assert_no_b_handler_reads_the_json_flag(cli)
     _assert_only_json_added_to_request_schemas(S13_BASE, new_schemas)
     _assert_every_subcommand_is_a_b_or_c(S13_BASE, new_cli)
     cli, _ = _d16_approvals()
