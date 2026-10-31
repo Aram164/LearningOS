@@ -128,6 +128,7 @@ GROUPS: dict[str, list[str]] = {
     "gateway": [
         "test_agent_efficiency.py",
         "test_agent_run.py",
+        "test_agent_bindings.py",
         "test_projection_readiness.py",
         "test_read_session.py",
         "test_review_consolidation.py",

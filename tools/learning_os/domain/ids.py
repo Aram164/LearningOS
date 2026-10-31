@@ -61,6 +61,10 @@ _GENERIC_PREFIXES = (
     "knowledge",
 )
 
+# Public read-only view for consumers that must accept "any generic id"
+# without importing a private name (OD15).
+GENERIC_KINDS: tuple[str, ...] = _GENERIC_PREFIXES
+
 KINDS: Mapping[str, IdKind] = {
     **{
         prefix: IdKind(prefix, _generic_pattern(prefix))
