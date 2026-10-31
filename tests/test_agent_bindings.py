@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -491,15 +492,8 @@ def test_seq_chain_binding_matches_typed_direct_call(mini_repo):
     assert _without_snapshot(row["output"]) == _without_snapshot(direct), row
 
 
-@pytest.mark.parametrize("where,code", [
-    ({"unit_id": "unit-demo-nope"}, "BINDING_EMPTY"),
-    ({"unit_id": "unit-demo-l01"}, "BINDING_CARDINALITY"),
-])
-def test_zero_and_two_row_bindings_refuse_and_block_dependents(mini_repo, where, code):
-    from scenario_fixtures import rich_world
-
-    rich_world(mini_repo)
-    plan = {"schema_version": 3, "on_error": "continue", "steps": [
+def _row_case_plan(where):
+    return {"schema_version": 3, "on_error": "continue", "steps": [
         {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
         {"id": "order", "use": "study-sequence",
          "bind": {"unit_id": {"literal": "unit-demo-l01"},
@@ -508,16 +502,30 @@ def test_zero_and_two_row_bindings_refuse_and_block_dependents(mini_repo, where,
          "args": []},
         {"id": "after", "use": "inspect", "args": ["note-demo"], "depends_on": ["order"]},
     ]}
-    report = agent_run.run_plan(plan, mini_repo)
+
+
+def test_adversarial_14_zero_rows_binding_empty_dependents_blocked(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    report = agent_run.run_plan(_row_case_plan({"unit_id": "unit-demo-nope"}), mini_repo)
     error = report["steps"][1]["error"]
-    assert error["code"] == code
+    assert error["code"] == "BINDING_EMPTY"
     assert report["steps"][1]["status"] == "error"
     assert report["steps"][2]["status"] == "blocked"
     assert report["steps"][2]["error"]["code"] == "DEPENDENCY_FAILED"
-    if code == "BINDING_CARDINALITY":
-        candidates = error["candidates"]
-        assert 2 <= len(candidates) <= 5
-        assert all(set(candidate) == {"id", "title"} for candidate in candidates)
+
+
+def test_adversarial_15_two_rows_binding_cardinality_candidates_capped(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    report = agent_run.run_plan(_row_case_plan({"unit_id": "unit-demo-l01"}), mini_repo)
+    error = report["steps"][1]["error"]
+    assert error["code"] == "BINDING_CARDINALITY"
+    candidates = error["candidates"]
+    assert 2 <= len(candidates) <= 5
+    assert all(set(candidate) == {"id", "title"} for candidate in candidates)
 
 
 # ---------------------------------------------------------------------------
@@ -575,7 +583,7 @@ def test_snapshot_one_reduces_model_loads(mini_repo):
     assert with_one < without, (without, with_one)
 
 
-def test_snapshot_one_refuses_write_plans_at_admission(mini_repo):
+def test_adversarial_20_snapshot_one_with_write_step_refuses(mini_repo):
     add_curriculum(mini_repo)
     plan = {"schema_version": 3, "snapshot": "one", "session_id": "s", "steps": [
         {"id": "w", "kind": "log", "text": "alpha fixture log", "key": "adv-d"},
@@ -586,3 +594,207 @@ def test_snapshot_one_refuses_write_plans_at_admission(mini_repo):
     assert excinfo.value.code == "PLAN_INVALID"
     assert "snapshot" in str(excinfo.value)
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_adversarial_16_source_payload_root_injection_never_executes_target(mini_repo):
+    """A source payload value like --root=/etc is not an id; the target never runs."""
+    add_curriculum(mini_repo)
+    calls = []
+
+    def executor(argv, root):
+        calls.append(argv[0])
+        payload = [{"id": "--root=/etc", "type": "unit", "title": "T"}]
+        return 0, json.dumps(payload if argv[0] == "search" else {"id": "x"}), ""
+
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}},
+         "args": ["--brief"]},
+    ])
+    report = agent_run.run_plan(plan, mini_repo, executor=executor, index={"verbs": ["search", "plan-edit-context", "inspect"], "verb_to_operation": {"search": "note.search", "plan-edit-context": "plan.edit-context", "inspect": "project.inspect"}, "task_to_use": {}})
+    assert report["steps"][1]["error"]["code"] == "BINDING_VALUE_INVALID"
+    assert "plan-edit-context" not in calls
+
+
+def test_adversarial_17_source_payload_wrong_kind_refuses(mini_repo):
+    add_curriculum(mini_repo)
+
+    def executor(argv, root):
+        payload = [{"id": "stage-x", "type": "unit", "title": "T"}]
+        return 0, json.dumps(payload if argv[0] == "search" else {"id": "x"}), ""
+
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}},
+         "args": ["--brief"]},
+    ])
+    report = agent_run.run_plan(plan, mini_repo, executor=executor, index={"verbs": ["search", "plan-edit-context", "inspect"], "verb_to_operation": {"search": "note.search", "plan-edit-context": "plan.edit-context", "inspect": "project.inspect"}, "task_to_use": {}})
+    assert report["steps"][1]["error"]["code"] == "BINDING_VALUE_INVALID"
+
+
+def test_adversarial_18_root_override_in_bound_args_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context", "args": ["--root", "/tmp"],
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}}},
+    ])
+    with pytest.raises(agent_run.AgentRunError, match="root overrides"):
+        agent_run.run_plan(plan, mini_repo)
+
+
+def test_adversarial_19_failed_source_blocks_bound_dependent(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {**_v3_plan([
+        {"id": "a", "use": "inspect", "args": ["no-such-record"]},
+        {"id": "b", "use": "plan-edit-context", "args": ["--brief"],
+         "bind": {"unit_id": {"from": "a", "slot": "unit"}}},
+    ]), "on_error": "continue"}
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["steps"][0]["status"] == "error"
+    assert report["steps"][1]["status"] == "blocked"
+    assert report["steps"][1]["error"]["code"] == "DEPENDENCY_FAILED"
+    assert "output" not in report["steps"][1]
+
+
+def test_adversarial_21_canonical_change_mid_plan_marks_all_rows(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    state = {"calls": 0}
+
+    def executor(argv, root):
+        state["calls"] += 1
+        if state["calls"] == 2:
+            note = root / "knowledge/notes/mathematics/note-demo.md"
+            note.write_text(note.read_text() + "\n\nchanged mid plan\n")
+        from learning_os.adapters.cli import invoke_outcome
+        from learning_os.adapters.cli_parser import build_parser
+
+        namespace = build_parser().parse_args(["--root", str(root), *argv])
+        outcome = invoke_outcome(namespace)
+        return outcome.exit_code, outcome.stdout, outcome.stderr
+
+    plan = {"schema_version": 3, "snapshot": "one", "steps": [
+        {"id": "s1", "use": "inspect", "args": ["note-demo", "--json"]},
+        {"id": "s2", "use": "inspect", "args": ["stage-demo", "--json"]},
+    ]}
+    report = agent_run.run_plan(plan, mini_repo, executor=executor)
+    assert report["totals"]["ok"] == 0, report
+    for row in report["steps"]:
+        assert row["status"] == "error"
+        assert row["error"]["code"] == "SNAPSHOT_CONFLICT"
+        assert row["error"]["retryable"] is True
+        assert "output" not in row
+
+
+def test_adversarial_22_stale_sealed_write_refuses_and_leaves_no_receipt(mini_repo):
+    import subprocess
+
+    add_curriculum(mini_repo)
+    record = mini_repo.parent.parent / "adv-22-record.json"
+    payload = json.dumps({"text": "adversarial 22"})
+
+    def seal(*args):
+        return subprocess.run(
+            [sys.executable, str(ROOT / "tools/seal_envelope.py"), "--root", str(mini_repo), *args],
+            capture_output=True, text=True, timeout=120)
+
+    checked = seal("--capability", "capture.create", "--payload", payload, "--key", "adv-22",
+                   "--guards", "auto", "--check-out", str(record))
+    assert checked.returncode == 0, checked.stdout + checked.stderr
+    assert record.exists()
+    # Read at S1 happened with the check; now a canonical file changes.
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text() + "\n\nchanged after S1\n")
+    submitted = seal("--capability", "capture.create", "--payload", payload, "--key", "adv-22",
+                     "--guards-from", str(record), "--submit")
+    assert submitted.returncode != 0
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_adversarial_23_bound_read_only_plan_leaves_fingerprint_unchanged(mini_repo):
+    from learning_os.store.fingerprint import canonical_fingerprint
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    before = canonical_fingerprint(mini_repo)
+    plan = {"schema_version": 3, "steps": [
+        {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
+        {"id": "order", "use": "study-sequence",
+         "bind": {"unit_id": {"literal": "unit-demo-l01"},
+                  "stage_ids_json": [
+                      {"from": "a", "slot": "matched_stage",
+                       "where": {"title": "Derive expected value"}},
+                      {"from": "a", "slot": "matched_stage",
+                       "where": {"title": "Apply expected value"}},
+                  ]},
+         "args": []},
+    ]}
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["totals"]["ok"] == 2, report
+    assert canonical_fingerprint(mini_repo) == before
+
+
+def test_adversarial_24_oversized_candidates_stay_within_report_budget(mini_repo):
+    add_curriculum(mini_repo)
+    rows = [{"id": f"unit-long-{i}", "type": "unit", "title": "T" * 2000} for i in range(7)]
+
+    def executor(argv, root):
+        return 0, json.dumps(rows if argv[0] == "search" else {"id": "x"}), ""
+
+    plan = _v3_plan([
+        {"id": "a", "use": "search", "args": ["demo", "--type", "unit"]},
+        {"id": "b", "use": "plan-edit-context",
+         "bind": {"unit_id": {"from": "a", "slot": "record", "where": {"type": "unit"}}},
+         "args": ["--brief"]},
+    ])
+    report = agent_run.run_plan({**plan, "report_max_bytes": 4096}, mini_repo, executor=executor,
+                                index={"verbs": ["search", "plan-edit-context", "inspect"], "verb_to_operation": {"search": "note.search", "plan-edit-context": "plan.edit-context", "inspect": "project.inspect"}, "task_to_use": {}})
+    encoded = agent_run._json(report)
+    assert len(encoded.encode("utf-8")) + 1 <= 4096
+    assert report.get("output_omitted") is True
+    codes = json.dumps(report)
+    assert "BINDING_CARDINALITY" in codes
+
+
+def test_adversarial_25_write_verbs_frozen_at_base(mini_repo):
+    index = agent_run.build_index(mini_repo, agent_run._cli_executor_factory(mini_repo),
+                                  resolve_tasks=False)
+    assert sorted(index["write_verbs"]) == [
+        "ability-candidate-append", "ability-observation-append", "ai-action-append-slices",
+        "ai-action-apply-delivery", "ai-action-import-delivery", "ai-action-prepare",
+        "atlas-question-save", "backup-manifest", "backup-verify", "capability", "capture",
+        "collection-create", "collection-entry-revise", "concept-relations-change",
+        "coordination-section-revise", "detour-create", "detour-resolve", "dossier",
+        "garden-seed-create", "generate", "goal", "inbox-resolve",
+        "legacy-archive-lock-publish", "lineage-restamp", "masters-planning-catalog-update",
+        "masters-planning-comparison-publish", "module-attempt", "module-create",
+        "module-materials-compact", "module-plan-import", "module-sitting",
+        "note-analysis-prepare", "note-analysis-save", "note-analysis-save-batch",
+        "note-create", "note-evidence", "note-revise", "observation-append", "observe",
+        "path-attach", "path-note", "path-progress", "program-semester-update", "route-patch",
+        "search", "session-end", "shelving-apply", "shelving-prepare", "source-feedback",
+        "source-intake", "source-revise", "stage-attach", "stage-note", "stage-progress",
+        "stage-result", "status", "unit-map-import", "unit-material-synthesis-publish",
+        "unit-note", "unit-plan-revise", "unit-source-selection", "validate",
+        "workspace-next-action",
+    ]
+
+
+def test_adversarial_26_catalog_refuses_faked_write(mini_repo):
+    import dataclasses
+
+    from learning_os.app.agent_catalog import build_catalog
+    from learning_os.app.registry import REGISTRY, OperationEffects
+
+    entry = REGISTRY["project.inspect"]
+    REGISTRY["project.inspect"] = dataclasses.replace(entry, effects=OperationEffects.CANONICAL_WRITE)
+    try:
+        index = agent_run.build_index(mini_repo, agent_run._cli_executor_factory(mini_repo), resolve_tasks=False)
+        with pytest.raises(ValueError, match="project.inspect"):
+            build_catalog(mini_repo, index["verb_to_operation"])
+    finally:
+        REGISTRY["project.inspect"] = entry
