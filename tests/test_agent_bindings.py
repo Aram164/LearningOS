@@ -716,8 +716,9 @@ def test_adversarial_22_stale_sealed_write_refuses_and_leaves_no_receipt(mini_re
 
 
 def test_adversarial_23_bound_read_only_plan_leaves_fingerprint_unchanged(mini_repo):
-    from learning_os.store.fingerprint import canonical_fingerprint
     from scenario_fixtures import rich_world
+
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     rich_world(mini_repo)
     before = canonical_fingerprint(mini_repo)
@@ -798,3 +799,90 @@ def test_adversarial_26_catalog_refuses_faked_write(mini_repo):
             build_catalog(mini_repo, index["verb_to_operation"])
     finally:
         REGISTRY["project.inspect"] = entry
+
+
+# ---------------------------------------------------------------------------
+# Amendment 1: defects the first suite missed, and the grammar corners merged
+# into one check. Each must refuse with the code, or run, not crash.
+
+def _seq_plan(stage_refs, unit=None):
+    return {"schema_version": 3, "steps": [
+        {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
+        {"id": "order", "use": "study-sequence",
+         "bind": {"unit_id": unit or {"literal": "unit-demo-l01"}, "stage_ids_json": stage_refs},
+         "args": []},
+    ]}
+
+
+def test_literal_inside_a_list_binding_resolves(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    report = agent_run.run_plan(_seq_plan([
+        {"literal": "stage-demo"},
+        {"from": "a", "slot": "matched_stage", "where": {"title": "Apply expected value"}},
+    ]), mini_repo)
+    assert report["steps"][1]["status"] == "ok", report
+    assert report["steps"][1]["bound"]["stage_ids_json"] == ["stage-demo", "stage-demo-pending"]
+
+
+def test_literal_on_an_any_kind_target_resolves(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    plan = {"schema_version": 3, "steps": [
+        {"id": "s", "use": "inspect", "bind": {"id": {"literal": "stage-demo"}}, "args": []}]}
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["steps"][0]["status"] == "ok", report
+    assert report["steps"][0]["bound"] == {"id": "stage-demo"}
+
+
+def test_adversarial_27_snapshot_under_an_older_schema_refuses(mini_repo):
+    plan = {"schema_version": 2, "snapshot": "one", "steps": [
+        {"id": "s", "use": "inspect", "args": ["note-demo"]}]}
+    with pytest.raises(agent_run.AgentRunError, match="schema_version 3"):
+        agent_run.run_plan(plan, mini_repo)
+
+
+@pytest.mark.parametrize("stage_refs", [
+    [{"from": "a", "slot": "matched_stage", "literal": "stage-demo"}],
+    [{"literal": "stage-demo", "where": {"title": "x"}}],
+    [{"from": "a"}],
+    [{"slot": "matched_stage"}],
+    [{"from": ["a"], "slot": "matched_stage"}],
+    [{"from": "a", "slot": ["matched_stage"]}],
+    ["stage-demo"],
+])
+def test_adversarial_28_malformed_references_refuse_before_any_step(mini_repo, stage_refs):
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(_seq_plan(stage_refs), mini_repo)
+    assert excinfo.value.code == "BINDING_INVALID"
+
+
+@pytest.mark.parametrize("stage_refs", [
+    [],
+    {"from": "a", "slot": "matched_stage"},
+    [{"literal": "unit-demo-l01"}],
+    [{"from": "a", "slot": "matched_stage", "where": ["title"]}],
+])
+def test_adversarial_29_wrong_binding_shapes_refuse_at_admission(mini_repo, stage_refs):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    report = agent_run.run_plan(_seq_plan(stage_refs), mini_repo)
+    assert report["steps"][1]["error"]["code"] == "BINDING_INVALID", report
+    assert report["steps"][0]["status"] != "ok"
+
+
+def test_adversarial_30_missing_required_positional_refuses_at_admission(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    plan = {"schema_version": 3, "steps": [
+        {"id": "a", "use": "search", "args": ["expected value", "--type", "unit"]},
+        {"id": "order", "use": "study-sequence",
+         "bind": {"stage_ids_json": [{"from": "a", "slot": "matched_stage"}]}, "args": []},
+    ]}
+    report = agent_run.run_plan(plan, mini_repo)
+    assert report["steps"][1]["error"]["code"] == "BINDING_INVALID", report
+    assert "unit_id" in report["steps"][1]["error"]["message"]
