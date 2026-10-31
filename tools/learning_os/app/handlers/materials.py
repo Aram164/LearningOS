@@ -42,8 +42,7 @@ from learning_os.store.materials.resolution import (
     resolve_route_material_files,
     sha256_file,
 )
-from learning_os.store.materials.slices import SliceResolutionError
-from learning_os.store.materials.slices import parse_locator_page_ranges
+from learning_os.store.materials.slices import SliceResolutionError, parse_locator_page_ranges
 from learning_os.store.materials.slices import read_part as _read_part
 from learning_os.store.materials.slices import route_material_files as _route_material_files
 from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
