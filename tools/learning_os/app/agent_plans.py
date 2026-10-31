@@ -162,128 +162,143 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                 row["error"] = step.admission_error
             retain(step, row)
     index = len(steps) if invalid is not None else 0
-    while index < len(steps):
-        step = steps[index]
-        ancestors[step.id] = set(step.dependencies).union(
-            *(ancestors[d] for d in step.dependencies))
-        if stopped is not None or (uncertain and step.writer):
-            retain(step, fail_row(step, "skipped", PLAN_STOPPED, failed_step=stopped,
-                                  reason="unresolved write or report storage" if uncertain else "stop policy"))
-            index += 1
-            continue
-        if remaining() <= 0:
-            retain(step, fail_row(step, "deadline", DEADLINE_EXPIRED))
-            index += 1
-            continue
-        failed = next((d for d in step.dependencies if results[d]["status"] != "ok"), None)
-        if failed:
-            retain(step, fail_row(step, "blocked", DEPENDENCY_FAILED, dependency=failed))
-            index += 1
-            continue
+    d_session = ReadSession(root) if controls.snapshot_one else None
+    d_scope = d_session.activate(lambda: fresh_manifest_and_repo(root)) if d_session is not None else nullcontext()
+    try:
+        with d_scope:
+            while index < len(steps):
+                step = steps[index]
+                ancestors[step.id] = set(step.dependencies).union(
+                    *(ancestors[d] for d in step.dependencies))
+                if stopped is not None or (uncertain and step.writer):
+                    retain(step, fail_row(step, "skipped", PLAN_STOPPED, failed_step=stopped,
+                                          reason="unresolved write or report storage" if uncertain else "stop policy"))
+                    index += 1
+                    continue
+                if remaining() <= 0:
+                    retain(step, fail_row(step, "deadline", DEADLINE_EXPIRED))
+                    index += 1
+                    continue
+                failed = next((d for d in step.dependencies if results[d]["status"] != "ok"), None)
+                if failed:
+                    retain(step, fail_row(step, "blocked", DEPENDENCY_FAILED, dependency=failed))
+                    index += 1
+                    continue
 
-        # Only contiguous eligible reads share an epoch. Never prefetch across a write.
-        wave: list[CompiledStep] = []
-        for candidate in steps[index:]:
-            if candidate.writer or not candidate.reusable or candidate.dependencies or candidate.preflight \
-                    or candidate.bindings:
-                break
-            wave.append(candidate)
-        if wave:
-            session = ReadSession(root) if port.epoch(root) else None
-            begin_rows = len(rows)
-            try:
-                if controls.read_workers > 1 and len(wave) > 1 and all(s.parallel_safe for s in wave):
-                    # Coordinator holds no lock while waiting for child processes.
-                    outputs = port.parallel(wave, controls.read_workers, remaining())
-                    for item, raw in zip(wave, outputs, strict=True):
-                        retain(item, consume(item, raw, time.monotonic()))
-                        ancestors[item.id] = set()
-                else:
-                    scope = session.activate(lambda: fresh_manifest_and_repo(root)) if session is not None else nullcontext()
-                    with scope:
-                        for item in wave:
-                            ancestors[item.id] = set()
-                            if stopped or remaining() <= 0:
-                                retain(item, fail_row(item, "skipped" if stopped else "deadline",
-                                                     PLAN_STOPPED if stopped else DEADLINE_EXPIRED))
-                                continue
-                            begin = time.monotonic()
-                            key = item.argv
-                            cached = session.get(key) if session is not None else None
-                            raw = cached if isinstance(cached, RawOutcome) else port.execute(item, remaining())
-                            row = consume(item, raw, begin)
-                            if session is not None and row["status"] == "ok" and not cached:
-                                session.put(key, raw)
-                            retain(item, row)
-                        if session is not None and not session.unchanged():
-                            for row in rows[begin_rows:]:
-                                row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
-                                           "retryable": True, "message": "inputs changed during read epoch"})
-                                row.pop("output", None)
-                            stopped = stopped or (wave[0].id if controls.on_error == "stop" else None)
-            except Exception as exc:
-                for item in wave[len(rows) - begin_rows:]:
-                    retain(item, fail_row(item, "error", getattr(exc, "code", STEP_FAILED), message=str(exc)))
-            finally:
-                if session is not None:
-                    memo_hits += session.hits
-                    model_loads += session.loads
-                    session.close()
-            index += len(wave)
-            continue
+                # Only contiguous eligible reads share an epoch. Never prefetch across a write.
+                wave: list[CompiledStep] = []
+                for candidate in steps[index:]:
+                    if candidate.writer or not candidate.reusable or candidate.dependencies or candidate.preflight \
+                            or candidate.bindings or controls.snapshot_one:
+                        break
+                    wave.append(candidate)
+                if wave:
+                    session = ReadSession(root) if port.epoch(root) else None
+                    begin_rows = len(rows)
+                    try:
+                        if controls.read_workers > 1 and len(wave) > 1 and all(s.parallel_safe for s in wave):
+                            # Coordinator holds no lock while waiting for child processes.
+                            outputs = port.parallel(wave, controls.read_workers, remaining())
+                            for item, raw in zip(wave, outputs, strict=True):
+                                retain(item, consume(item, raw, time.monotonic()))
+                                ancestors[item.id] = set()
+                        else:
+                            scope = session.activate(lambda: fresh_manifest_and_repo(root)) if session is not None else nullcontext()
+                            with scope:
+                                for item in wave:
+                                    ancestors[item.id] = set()
+                                    if stopped or remaining() <= 0:
+                                        retain(item, fail_row(item, "skipped" if stopped else "deadline",
+                                                             PLAN_STOPPED if stopped else DEADLINE_EXPIRED))
+                                        continue
+                                    begin = time.monotonic()
+                                    key = item.argv
+                                    cached = session.get(key) if session is not None else None
+                                    raw = cached if isinstance(cached, RawOutcome) else port.execute(item, remaining())
+                                    row = consume(item, raw, begin)
+                                    if session is not None and row["status"] == "ok" and not cached:
+                                        session.put(key, raw)
+                                    retain(item, row)
+                                if session is not None and not session.unchanged():
+                                    for row in rows[begin_rows:]:
+                                        row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
+                                                   "retryable": True, "message": "inputs changed during read epoch"})
+                                        row.pop("output", None)
+                                    stopped = stopped or (wave[0].id if controls.on_error == "stop" else None)
+                    except Exception as exc:
+                        for item in wave[len(rows) - begin_rows:]:
+                            retain(item, fail_row(item, "error", getattr(exc, "code", STEP_FAILED), message=str(exc)))
+                    finally:
+                        if session is not None:
+                            memo_hits += session.hits
+                            model_loads += session.loads
+                            session.close()
+                    index += len(wave)
+                    continue
 
-        begin = time.monotonic()
-        required = [writes[d] for d in writes if d in ancestors[step.id]]
-        ready_ms = 0
-        if required:
-            until = min(deadline, time.monotonic() + step.ready_timeout_s)
-            while True:
-                ready, reason = port.ready(required, list(writes.values()), step.submitting)
-                if ready:
-                    break
-                if time.monotonic() >= until:
-                    expired = remaining() <= 0
-                    conflict = reason == "projection-not-current"
-                    row = fail_row(step, "deadline" if expired else "not_ready",
-                                   DEADLINE_EXPIRED if expired else SNAPSHOT_CONFLICT if conflict else NOT_READY,
-                                   reason=reason, dependencies=list(ancestors[step.id]))
-                    cast(dict[str, object], row["error"])["retryable"] = not expired and not conflict
+                begin = time.monotonic()
+                required = [writes[d] for d in writes if d in ancestors[step.id]]
+                ready_ms = 0
+                if required:
+                    until = min(deadline, time.monotonic() + step.ready_timeout_s)
+                    while True:
+                        ready, reason = port.ready(required, list(writes.values()), step.submitting)
+                        if ready:
+                            break
+                        if time.monotonic() >= until:
+                            expired = remaining() <= 0
+                            conflict = reason == "projection-not-current"
+                            row = fail_row(step, "deadline" if expired else "not_ready",
+                                           DEADLINE_EXPIRED if expired else SNAPSHOT_CONFLICT if conflict else NOT_READY,
+                                           reason=reason, dependencies=list(ancestors[step.id]))
+                            cast(dict[str, object], row["error"])["retryable"] = not expired and not conflict
+                            retain(step, row)
+                            break
+                        time.sleep(min(poll_s, max(0.0, until - time.monotonic())))
+                    ready_ms = round((time.monotonic() - begin) * 1000)
+                    if step.id in results:
+                        index += 1
+                        continue
+                try:
+                    run_step = step
+                    bound: dict[str, object] | None = None
+                    if step.bindings:
+                        # Resolve immediately before execution (PLAN S15): the
+                        # placeholders never reach a handler.
+                        argv, bound = bind_argv(step.argv, step.bindings, payloads)
+                        run_step = dataclasses.replace(step, argv=tuple(argv))
+                        port.validate_bound(run_step)
+                    error = port.preflight(run_step) if step.preflight else None
+                    if error:
+                        retain(step, {**fail_row(step, "blocked", PREFLIGHT_FAILED), "error": error})
+                    elif remaining() <= 0:
+                        retain(step, fail_row(step, "deadline", DEADLINE_EXPIRED))
+                    else:
+                        row = consume(run_step, port.execute(run_step, remaining()), begin, ready_ms)
+                        if bound is not None:
+                            row["bound"] = bound
+                        retain(step, row)
+                except BindingError as exc:
+                    retain(step, {**fail_row(step, "error", exc.code), "error": {**exc.as_dict(), "retryable": False}})
+                except Exception as exc:
+                    row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
+                    # Dispatch may have crossed the commit boundary before transport failed.
+                    if step.writer:
+                        row["commit_certainty"] = "uncertain"
                     retain(step, row)
-                    break
-                time.sleep(min(poll_s, max(0.0, until - time.monotonic())))
-            ready_ms = round((time.monotonic() - begin) * 1000)
-            if step.id in results:
                 index += 1
-                continue
-        try:
-            run_step = step
-            bound: dict[str, object] | None = None
-            if step.bindings:
-                # Resolve immediately before execution (PLAN S15): the
-                # placeholders never reach a handler.
-                argv, bound = bind_argv(step.argv, step.bindings, payloads)
-                run_step = dataclasses.replace(step, argv=tuple(argv))
-                port.validate_bound(run_step)
-            error = port.preflight(run_step) if step.preflight else None
-            if error:
-                retain(step, {**fail_row(step, "blocked", PREFLIGHT_FAILED), "error": error})
-            elif remaining() <= 0:
-                retain(step, fail_row(step, "deadline", DEADLINE_EXPIRED))
-            else:
-                row = consume(run_step, port.execute(run_step, remaining()), begin, ready_ms)
-                if bound is not None:
-                    row["bound"] = bound
-                retain(step, row)
-        except BindingError as exc:
-            retain(step, {**fail_row(step, "error", exc.code), "error": {**exc.as_dict(), "retryable": False}})
-        except Exception as exc:
-            row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
-            # Dispatch may have crossed the commit boundary before transport failed.
-            if step.writer:
-                row["commit_certainty"] = "uncertain"
-            retain(step, row)
-        index += 1
 
+    finally:
+        if d_session is not None:
+            memo_hits += d_session.hits
+            model_loads += d_session.loads
+            if not d_session.unchanged():
+                for row in rows:
+                    row.update(status="error",
+                               error={"code": SNAPSHOT_CONFLICT, "retryable": True,
+                                      "message": "inputs changed during read epoch"})
+                    row.pop("output", None)
+            d_session.close()
     report: dict[str, object] = {"schema_version": 2, "experimental": True,
         "session_id": controls.session_id, "on_error": controls.on_error, "steps": rows,
         "plan_sha256": store.plan_digest, "plan_artifact": "plan.json",

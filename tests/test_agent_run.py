@@ -274,6 +274,7 @@ def test_read_catalog_is_bounded_and_lists_only_reads(mini_repo):
         "Everything listed here only reads and cannot change a record.",
         "One read: .venv/bin/los VERB ARGS. Several reads in one call: pass a plan on stdin to .venv/bin/python tools/agent_run.py - --root .",
         "Before any write, read system/OPERATOR.md. Writes go through tools/seal_envelope.py.",
+        'Add "snapshot": "one" to make every read in a plan see the same state, or refuse.',
     ]
     assert [row["verb"] for row in catalog["reads"]] == list(READ_VERBS)
     for row in catalog["reads"]:

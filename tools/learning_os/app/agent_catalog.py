@@ -26,6 +26,7 @@ RULES = (
     "One read: .venv/bin/los VERB ARGS. Several reads in one call: pass a plan "
     "on stdin to .venv/bin/python tools/agent_run.py - --root .",
     "Before any write, read system/OPERATOR.md. Writes go through tools/seal_envelope.py.",
+    'Add "snapshot": "one" to make every read in a plan see the same state, or refuse.',
 )
 
 _SKIPPED_PARAMS = ("json", "expected_snapshot")

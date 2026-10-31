@@ -60,6 +60,7 @@ from learning_os.domain.codes import (
     DISCOVERY_FAILED,
     INVALID_REQUEST,
     INVALID_STEP_OUTPUT,
+    PLAN_INVALID,
     PREFLIGHT_FAILED,
     REPORT_BUDGET_TOO_SMALL,
     ROOT_MISMATCH,
@@ -524,7 +525,7 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
         raise AgentRunError("poll interval must be finite and nonnegative")
     if isinstance(plan, dict):
         unknown = set(plan) - {"steps", "session_id", "on_error", "schema_version",
-                               "read_workers", "deadline_s", "report_max_bytes"}
+                               "read_workers", "deadline_s", "report_max_bytes", "snapshot"}
         if unknown:
             raise AgentRunError(f"unknown plan fields: {sorted(unknown)}")
         try:
@@ -859,7 +860,10 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
         store.inputs(plan, list(actual.envelope_bytes.values()) if not injected else [])
         controls = PlanControls(read_workers=plan.get("read_workers", 1),
             deadline_s=float(plan.get("deadline_s", 120)), report_max_bytes=budget,
-            on_error=plan.get("on_error", "stop"), session_id=session_id)
+            on_error=plan.get("on_error", "stop"), session_id=session_id,
+            snapshot_one=plan.get("snapshot") == "one")
+        if controls.snapshot_one and any(step.writer for step in compiled):
+            raise AgentRunError('snapshot: "one" refuses plans with write steps', PLAN_INVALID)
         return execute_plan(compiled, root, Port(), controls, store, started, poll_s)
 
 

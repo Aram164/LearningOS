@@ -17,6 +17,7 @@ class PlanControls:
     report_max_bytes: int = 65536
     on_error: str = "stop"
     session_id: str | None = None
+    snapshot_one: bool = False
 
 
 @dataclass(frozen=True)

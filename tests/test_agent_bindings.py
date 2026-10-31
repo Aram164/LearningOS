@@ -518,3 +518,71 @@ def test_zero_and_two_row_bindings_refuse_and_block_dependents(mini_repo, where,
         candidates = error["candidates"]
         assert 2 <= len(candidates) <= 5
         assert all(set(candidate) == {"id", "title"} for candidate in candidates)
+
+
+# ---------------------------------------------------------------------------
+# S16 Arm D: one snapshot for the whole plan.
+
+_D_READS = [
+    {"id": "s1", "use": "inspect", "args": ["stage-demo", "--json"]},
+    {"id": "s2", "use": "plan-edit-context", "args": ["unit-demo-l01", "--brief", "--json"]},
+    {"id": "s3", "use": "unit-list", "args": ["--module-id", "module-demo", "--json"]},
+]
+
+
+def test_snapshot_one_equivalence_with_direct_calls(mini_repo, tmp_path):
+    """Every step's raw stdout under snapshot:one equals its direct-call stdout."""
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    report_dir = tmp_path / "reports"
+    plan = {"schema_version": 3, "snapshot": "one", "steps": _D_READS}
+    report = agent_run.run_plan(plan, mini_repo, report_dir=report_dir)
+    assert report["totals"]["ok"] == 3, report
+    raw = {}
+    raw_path = Path(report["full_report"]).parent / "raw-steps.jsonl"
+    for item in (json.loads(line) for line in raw_path.read_text().splitlines() if line):
+        raw[item["index"]] = item["stdout"]
+    assert len(raw) == 3
+    for index, step in enumerate(_D_READS):
+        argv = [step["use"], *step["args"]]
+        direct = _read_payload_direct(mini_repo, argv)
+        assert raw[index] == direct, step["id"]
+
+
+def _read_payload_direct(root, argv):
+    from learning_os.adapters.cli import invoke_outcome
+    from learning_os.adapters.cli_parser import build_parser
+
+    namespace = build_parser().parse_args(["--root", str(root), *argv])
+    outcome = invoke_outcome(namespace)
+    assert outcome.exit_code == 0, (argv, outcome.stdout, outcome.stderr)
+    return outcome.stdout
+
+
+def test_snapshot_one_reduces_model_loads(mini_repo):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    # plan-edit-context holds no memo profile, so without snapshot:one each
+    # call loads the model separately; inspect would wave and share anyway.
+    plan = {"schema_version": 3, "steps": [
+        {"id": "s1", "use": "plan-edit-context", "args": ["unit-demo-l01", "--brief", "--json"]},
+        {"id": "s2", "use": "plan-edit-context", "args": ["unit-demo-l01", "--brief", "--json"]},
+    ]}
+    without = agent_run.run_plan(dict(plan), mini_repo)["totals"]["model_loads"]
+    with_one = agent_run.run_plan({**plan, "snapshot": "one"}, mini_repo)["totals"]["model_loads"]
+    assert with_one < without, (without, with_one)
+
+
+def test_snapshot_one_refuses_write_plans_at_admission(mini_repo):
+    add_curriculum(mini_repo)
+    plan = {"schema_version": 3, "snapshot": "one", "session_id": "s", "steps": [
+        {"id": "w", "kind": "log", "text": "alpha fixture log", "key": "adv-d"},
+        {"id": "r", "use": "inspect", "args": ["note-demo"], "depends_on": ["w"]},
+    ]}
+    with pytest.raises(agent_run.AgentRunError) as excinfo:
+        agent_run.run_plan(plan, mini_repo)
+    assert excinfo.value.code == "PLAN_INVALID"
+    assert "snapshot" in str(excinfo.value)
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
