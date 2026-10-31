@@ -849,6 +849,21 @@
         },
         {
           "option_strings": [
+            "--pages"
+          ],
+          "dest": "pages",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "with --extract on a PDF: explicit page ranges in the locator house style (e.g. \"pdf pp. 21-26\"); replaces the route locator's page selection for this call, still capped at 20 pages per call",
+          "metavar": "PAGES",
+          "action": "store"
+        },
+        {
+          "option_strings": [
             "--expected-snapshot"
           ],
           "dest": "expected_snapshot",
@@ -6108,6 +6123,21 @@
           "required": false,
           "help": "saved --check JSON; required for reviewed apply and exact retries",
           "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--report-out"
+          ],
+          "dest": "report_out",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "with --check: save the complete check report as UTF-8 JSON outside the repository and print a compact review summary without the sealed envelope instead",
+          "metavar": "PATH",
           "action": "store"
         },
         {

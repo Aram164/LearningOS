@@ -392,6 +392,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -725,6 +726,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -1314,6 +1316,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -1361,6 +1364,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -1406,6 +1410,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -1543,6 +1548,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -4269,6 +4275,7 @@
      "stage_id": "X",
      "resource_index": null,
      "extract": false,
+     "pages": null,
      "expected_snapshot": null,
      "func": "learning_os.commands.material_span.cmd_material_span"
     },
@@ -4303,6 +4310,7 @@
      "stage_id": "Y2",
      "resource_index": null,
      "extract": false,
+     "pages": null,
      "expected_snapshot": null,
      "func": "learning_os.commands.material_span.cmd_material_span"
     },
@@ -4327,7 +4335,7 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         unit_id route_id\nlos material-span: error: argument --resource-index: invalid int value: 'notanint'\n",
+     "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--pages PAGES]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         unit_id route_id\nlos material-span: error: argument --resource-index: invalid int value: 'notanint'\n",
      "first_line": "usage: los material-span [-h] [--json] [--stage STAGE_ID]"
     },
     "stdout": ""
@@ -4607,7 +4615,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT]\n                              [--report-out PATH] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4647,6 +4655,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
@@ -4674,7 +4683,7 @@
     "error": {
      "exit": 2,
      "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT]\n                              [--report-out PATH] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -8472,6 +8481,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": "-",
+     "report_out": null,
      "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
