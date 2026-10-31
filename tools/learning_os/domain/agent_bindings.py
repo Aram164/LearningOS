@@ -9,7 +9,7 @@ is not exactly one well-formed id, and never guesses a row.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 
 from learning_os.domain.codes import (
@@ -59,14 +59,14 @@ class CompiledRef:
 
 
 class BindingError(Exception):
-    def __init__(self, code: str, message: str, candidates=()):
+    def __init__(self, code: str, message: str, candidates: Iterable[dict[str, object]] = ()):
         super().__init__(message)
         self.code = code
         self.message = message
         self.candidates = tuple(candidates)
 
-    def as_dict(self) -> dict:
-        payload = {"code": self.code, "message": self.message}
+    def as_dict(self) -> dict[str, object]:
+        payload: dict[str, object] = {"code": self.code, "message": self.message}
         if self.candidates:
             payload["candidates"] = list(self.candidates)
         return payload
@@ -80,11 +80,11 @@ def valid_for(kind: str, value: object) -> bool:
     return is_valid(kind, value)
 
 
-def rows_of(payload: object, slot: OutputSlot) -> list:
+def rows_of(payload: object, slot: OutputSlot) -> list[object]:
     """Return the slot's rows from ``payload``; ``[]`` when the shape differs."""
-    current: list[tuple[object, dict]] = [(payload, {})]
+    current: list[tuple[object, dict[str, object]]] = [(payload, {})]
     for key in slot.path:
-        following: list[tuple[object, dict]] = []
+        following: list[tuple[object, dict[str, object]]] = []
         for node, inherited in current:
             if key == "*":
                 if isinstance(node, list):
@@ -98,7 +98,7 @@ def rows_of(payload: object, slot: OutputSlot) -> list:
             for node, inherited in current]
 
 
-def _candidate(row: object) -> dict:
+def _candidate(row: object) -> dict[str, object]:
     if isinstance(row, dict):
         return {"id": row.get("id"), "title": row.get("title")}
     return {"id": row, "title": None}
@@ -119,25 +119,27 @@ def resolve(ref: CompiledRef, payload: object, target_kind: str) -> str:
             f"binding {ref.param!r}: {len(rows)} matching rows in slot {ref.slot_name!r}; name one row with where",
             candidates=[_candidate(row) for row in rows[:_CANDIDATE_LIMIT]])
     value = rows[0]
-    kind = target_kind
+    kind: object = target_kind
     if slot is not None:
         if slot.value_key is not None:
             value = value.get(slot.value_key) if isinstance(value, dict) else None
         if target_kind != "*":
             kind = (ref.where.get(slot.kind_column) if slot.kind_column else slot.kind) or target_kind
-    if not isinstance(value, str) or not valid_for(kind, value):
+    if not isinstance(value, str) or not isinstance(kind, str) or not valid_for(kind, value):
         raise BindingError(BINDING_VALUE_INVALID, f"binding {ref.param!r}: value is not a valid {kind} id")
     return value
 
 
-def bind_argv(argv, refs, payloads: Mapping) -> tuple[list, dict]:
+def bind_argv(argv: Iterable[str], refs: Iterable[CompiledRef],
+              payloads: Mapping[str, object]) -> tuple[list[str], dict[str, object]]:
     """Resolve ``refs`` and put each value at its compiled place in ``argv``."""
-    final, bound = list(argv), {}
+    final: list[str] = list(argv)
+    bound: dict[str, object] = {}
     for ref in refs:
-        value = resolve(ref, payloads.get(ref.source), ref.target_kind)
+        value = resolve(ref, payloads.get(ref.source or ""), ref.target_kind)
         if ref.target_kind.endswith("[]"):
-            bound.setdefault(ref.param, []).append(value)
-            final[ref.position] = json.dumps(bound[ref.param])
+            stacked = [*(vals if isinstance(vals := bound.get(ref.param), list) else []), value]
+            bound[ref.param], final[ref.position] = stacked, json.dumps(stacked)
         else:
             bound[ref.param] = final[ref.position] = value
     return final, bound

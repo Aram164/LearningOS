@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
+from learning_os.domain.agent_bindings import CompiledRef
+
 COMMIT_NONE = "none"
 COMMIT_COMMITTED = "committed"
 COMMIT_UNCERTAIN = "uncertain"
@@ -32,7 +34,7 @@ class CompiledStep:
     ready_timeout_s: float = 10.0
     preflight: bool = False
     scope: tuple[str, ...] = ()
-    bindings: tuple = ()
+    bindings: tuple[CompiledRef, ...] = ()
     presentation: object = None
     admission_error: dict[str, object] | None = None
 

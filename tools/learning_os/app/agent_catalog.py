@@ -45,9 +45,9 @@ PLAN_EXAMPLE = {
 }
 
 
-def _param_rows(root: Path, operation: str) -> list[dict]:
+def _param_rows(root: Path, operation: str) -> list[dict[str, object]]:
     schema = request_schema(root, operation)
-    rows: list[dict] = []
+    rows: list[dict[str, object]] = []
     for name, spec in schema.get("properties", {}).items():
         cli = spec.get("x-los-cli", {})
         if name in _SKIPPED_PARAMS or cli.get("transport_only"):
@@ -58,25 +58,25 @@ def _param_rows(root: Path, operation: str) -> list[dict]:
     return rows
 
 
-def _slot_rows(operation: str) -> list[dict]:
+def _slot_rows(operation: str) -> list[dict[str, object]]:
     entry = REGISTRY[operation]
-    rows: list[dict] = []
+    rows: list[dict[str, object]] = []
     for name, slot in entry.output_slots.items():
-        row: dict = {"name": name, "kind": slot.kind, "columns": list(slot.columns)}
+        row: dict[str, object] = {"name": name, "kind": slot.kind, "columns": list(slot.columns)}
         if slot.kind_column is not None:
             row["kind_column"] = slot.kind_column
         rows.append(row)
     return rows
 
 
-def build_catalog(root, verb_to_operation: dict) -> dict:
+def build_catalog(root: Path, verb_to_operation: dict[str, str]) -> dict[str, object]:
     """Build the read catalog for ``root``; refuse any listed verb that writes."""
-    reads: list[dict] = []
+    reads: list[dict[str, object]] = []
     for verb in READ_VERBS:
         operation = verb_to_operation.get(verb)
-        entry = REGISTRY.get(operation)
-        if entry is None or not (entry.effects == OperationEffects.READ
-                                 or entry.read_when is not None):
+        entry = REGISTRY.get(operation) if operation is not None else None
+        if operation is None or entry is None or not (
+                entry.effects == OperationEffects.READ or entry.read_when is not None):
             raise ValueError(
                 f"read catalog refuses verb {verb!r} (operation {operation!r}): "
                 "not a declared read")

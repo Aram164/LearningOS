@@ -75,8 +75,10 @@ files = [
   "tools/learning_os/app/projection_readiness.py",
   "tools/learning_os/app/agent_reporting.py",
   "tools/learning_os/app/agent_plans.py",
+  "tools/learning_os/app/agent_catalog.py",
   "tools/learning_os/app/project_migration.py",
   "tools/learning_os/adapters/agent_workers.py",
+  "tools/learning_os/domain/agent_bindings.py",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).
