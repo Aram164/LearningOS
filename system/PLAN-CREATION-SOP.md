@@ -656,6 +656,12 @@ and exactly one operation:
   It goes last in the stage and needs no anchor, so it also works on an empty stage
   and on a stage whose existing rows carry no IDs.
 
+A runtime review covers a stage's resources, so a new row on a stage with a
+`runtime_review` makes it stale and the preflight refuses. Re-review the stage, then
+add `runtime_review` with `reviewed_by` and `reviewed_on` to the `resource_insert` or
+`resource_append`. The import binds its fingerprint. Never update the warning
+baseline for this.
+
 Use `resource_insert` when the position matters and `resource_append` when it does
 not, or when the stage has no identified row to anchor on. A route ID is not an
 anchor, because one route can be placed more than once. A placement that
@@ -668,6 +674,8 @@ and at apply, compact or full, so neither form escapes what the other enforces. 
 first map has no compact form and refuses validation errors only.
 
 Use the normal `unit-map-import UNIT --file FILE --replace --check` preflight.
+Its `diff.resource_changes` names each stage's added and removed rows ahead of the
+exact arrays in `diff.content_changes`, so read it even when you cut a long review.
 Review the full resulting order and changed resource fields, then apply the same
 file digest, snapshot and revisions through `unit.map.import`. The reason lives
 in the bound file; do not combine structural files with reset, retire or reorder

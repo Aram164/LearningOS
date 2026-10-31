@@ -82,7 +82,7 @@ documents:
 
   - path: system/OPERATOR.md
     audience: both
-    applies_to: [discover-capabilities, log-a-line, record-stage-progress, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, governance-question, process-a-lecture, untranscribable-workflows]
+    applies_to: [discover-capabilities, log-a-line, record-stage-progress, record-a-reported-result, temporary-study-order, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, governance-question, process-a-lecture, untranscribable-workflows]
     class: contract
     status: current
     authority: binding
@@ -137,7 +137,7 @@ documents:
 
   - path: system/WORKFLOWS.md
     audience: operator
-    applies_to: [log-a-line, record-stage-progress, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, process-a-lecture, untranscribable-workflows]
+    applies_to: [log-a-line, record-stage-progress, record-a-reported-result, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, process-a-lecture, untranscribable-workflows]
     class: procedure
     status: current
     authority: binding

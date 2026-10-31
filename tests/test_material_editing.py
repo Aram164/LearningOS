@@ -399,6 +399,28 @@ def test_structural_review_refuses_drift_without_writes(mini_repo, tmp_path, dri
     assert not list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))
 
 
+def test_structural_review_names_the_added_row_ahead_of_the_exact_arrays(mini_repo, tmp_path):
+    _structural_fixture(mini_repo)
+    draft = tmp_path / 'intent.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Reviewed fixture sequence.',
+        'resource_append': {'stage_id': 'stage-demo', 'resource': {
+            'id': 'resource-new-appended', 'kind': 'read', 'scope_triage': 'helpful-now',
+            'material_ref': {'route_id': 'route-demo-book',
+                             'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']}}}}}))
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 0, check.stderr
+    diff = json.loads(check.stdout)['diff']
+    change = diff['resource_changes'][0]
+    assert change['stage_id'] == 'stage-demo'
+    assert change['after_count'] == change['before_count'] + 1
+    assert [row['id'] for row in change['added']] == ['resource-new-appended']
+    assert change['removed'] == [] and change['reordered'] is False
+    assert list(diff).index('resource_changes') < list(diff).index('content_changes')
+    exact = next(row for row in diff['content_changes'] if row['field'] == 'resources')
+    assert len(exact['after']) == len(exact['before']) + 1
+
+
 @pytest.mark.parametrize('edit', [
     {}, {'stage_move': {'stage_id': 'stage-3', 'before_id': 'stage-3'}},
     {'stage_move': {'stage_id': 'stage-3', 'before_id': 'missing'}},

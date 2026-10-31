@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from learning_os.domain.validation import (
+    ARCHIVED_DATE_RE,
     COORDINATION_SECTIONS,
     GENERATED_DIRECTORIES,
     ISO_DATE_RE,
@@ -215,12 +216,13 @@ class ChecksRegistries:
                     if att.get("date"):
                         attempt_dates.add(str(att["date"]))
             body = r.coordination.body
-            for date in ISO_DATE_RE.findall(body):
+            for date in ISO_DATE_RE.findall(ARCHIVED_DATE_RE.sub("", body)):
                 if date in attempt_dates:
                     self.err("COORD-EXAM-DATE",
                              f"COORDINATION.md contains ISO date {date} equal to an attempt date "
                              "in a module's module.yaml (exam dates are owned by each "
-                             "module's module.yaml)",
+                             "module's module.yaml); point at that record, or reword a date "
+                             "that is not an exam fact, through coordination.section.revise",
                              "work/COORDINATION.md")
             if re.search(r"^\s*status\s*:", body, re.MULTILINE | re.IGNORECASE):
                 self.err("COORD-STATUS",

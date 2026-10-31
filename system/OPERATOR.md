@@ -72,6 +72,8 @@ always names its file. Fix the defect; do not route around the guard.
 | Discover capabilities | `capabilities --compact --json`, then `capabilities NAME --json` | [Discover and expand](procedures/start-here.md#discover-the-capability-index) |
 | Log a line (`log:`) | `capabilities capture.create --json`, or `capabilities stage.note.write --json` for an identified stage | [Log to the stage](procedures/capture-routing.md#a-logged-line-for-an-identified-stage-is-one-stage-note-write), [log to the inbox](procedures/capture-routing.md#a-logged-line-with-no-stage-is-one-inbox-capture) |
 | Record stage progress or end a session | `capabilities stage.progress.update --json` | [Read the stage-progress payload](procedures/end-a-session.md#read-the-stage-progress-payload-contract), [review the session](procedures/end-a-session.md#step-3-review-the-session) |
+| Record a result the learner reports | `capabilities learner.stage-result.append --json`, or `capabilities learner.observation.append --json` when the stage has a requirement | [Record without credit](procedures/record-evidence.md#the-untargeted-ledger-needs-an-envelope), [record against a requirement](procedures/record-evidence.md#the-direct-path-needs-no-envelope) |
+| Temporary study order for one Unit | `study-sequence UNIT_ID --stage-ids-json JSON_LIST` | [Preview a temporary order](procedures/start-here.md#preview-a-temporary-study-order) |
 | Create or revise a durable note | `capabilities note.create --json`, or `capabilities note.revise --json` for an existing note | [Search for an existing note first](procedures/create-durable-note.md#search-for-an-existing-note-with-the-same-purpose), [the creation payload](procedures/create-durable-note.md#seal-the-creation-with-derived-guards) |
 | Save source analyses | `capabilities note.analysis.save_batch --json` | [Draft one batch](procedures/save-a-batch-of-source-analyses.md#draft-the-first-batch-two-notes-one-drafts-file), [prepare it](procedures/save-a-batch-of-source-analyses.md#prepare-the-first-batch) |
 | Edit a known material route | `plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B` | [Revise a plan](procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context) |
@@ -123,6 +125,10 @@ Skills and projects use modules and units without false academic metadata.
 1. Never edit `generated/`; change authored input, validate, and regenerate.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
+   A plan change whose content you chose, such as which resource or which stage,
+   is one of these: show the learner the exact `--check` result and apply it on
+   their yes. A change the learner dictated exactly, such as moving one named
+   stage after another, needs no second yes.
 3. `semestercontext/Stratum/` is an external sibling code repository, not
    LearningOS data. LearningOS never indexes, validates, migrates, or manages
    it. An agent may inspect relevant paths when the current task explicitly
@@ -208,15 +214,17 @@ Skills and projects use modules and units without false academic metadata.
     to an open one are always allowed; closing one is his alone.
 18. Workflow 23 (process a lecture) runs its executable transcript when the
     lecture's scope authority — the slides as taught — exists in the
-    materials tree (workflow 6a), and the plan pass stays review-gated: run
-    the procedure up to and including the `module-plan-import … --check`
-    preflight, show Aram the package and the check result, and apply only on
-    his yes — a green check is not approval (an agent-run plan pass once
-    broadcast wrong locators onto six routes and the validator scored it
-    perfect). Without the deck, stop and ask: never scope a lecture from
-    textbook chapter titles, keyword matches, or a source the module never
-    adopted. Workflows 24 (turn the semester) and 27 (promote a future
-    Master's module) still have **no executable transcript**, and the scope
+    materials tree (workflow 6a). Run the procedure up to and including the
+    `module-plan-import … --check` preflight, show the package and the check
+    result, then apply on the green check — no separate human yes is required
+    (Aram removed the wait-for-approval gate on 2026-10-31; it existed because
+    an agent-run plan pass once broadcast wrong locators onto six routes and
+    the validator scored it perfect. The safeguards stay: the snapshot-guarded
+    gateway apply records an append-only receipt, so every applied package
+    remains visible and revertible). Without the deck, stop and ask: never
+    scope a lecture from textbook chapter titles, keyword matches, or a source
+    the module never adopted. Workflows 24 (turn the semester) and 27 (promote
+    a future Master's module) still have **no executable transcript**, and the scope
     authority each needs does not exist in a checkout: a real term boundary
     with human judgments, a program that has actually begun. When a task
     reaches one of them, stop and ask, and do not stand in for the human

@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ISO_DATE_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
+#: "archived 2026-09-30" dates a workspace move, even when a sitting fell on that day.
+ARCHIVED_DATE_RE = re.compile(r"\barchived\s+\d{4}-\d{2}-\d{2}\b", re.IGNORECASE)
 # Where an inline link's destination starts; the destination itself is read
 # by `markdown_link_targets`, because a title, angle brackets or balanced
 # parentheses are beyond what one regex captures correctly.

@@ -126,6 +126,30 @@ def _relative_order_changed(before: list[str], after: list[str]) -> bool:
         != [record_id for record_id in after if record_id in shared]
     )
 
+def _resource_changes(before_stages: dict, effective: dict) -> list[dict]:
+    """Name what changed in each stage's resources, ahead of the exact arrays.
+
+    One appended row otherwise sits inside two long arrays: a reader has to
+    compare them, and an operator that cuts a long review never reaches the row.
+    The exact before and after stay in ``content_changes``.
+    """
+    changes = []
+    for stage in effective.get("stages", []):
+        before = before_stages.get(stage["id"])
+        if before is None or before.get("resources") == stage.get("resources"):
+            continue
+        old, new = before.get("resources") or [], stage.get("resources") or []
+        changes.append({
+            "stage_id": stage["id"],
+            "before_count": len(old),
+            "after_count": len(new),
+            "added": [row for row in new if row not in old],
+            "removed": [row for row in old if row not in new],
+            "reordered": [row for row in old if row in new] != [row for row in new if row in old],
+        })
+    return changes
+
+
 def _stage_evidence(root: Path, stage: dict) -> dict:
     """What a stage would take with it if it disappeared from the map."""
     note_ref = str(stage.get("working_note") or "")
@@ -451,6 +475,9 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     # Show every changed authored field, including changes on surviving
     # stages, before a UI user approves these exact bytes.
     before_stages = {s["id"]: s for s in (current_data or {}).get("stages", [])}
+    resource_changes = _resource_changes(before_stages, effective)
+    if resource_changes:
+        diff["resource_changes"] = resource_changes
     content_changes = []
     for stage in effective.get("stages", []):
         before = before_stages.get(stage["id"], {})
@@ -492,6 +519,10 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         if checked["errors"]:
             problems = "; ".join(checked["errors"])
             if structural:
+                if "RUNTIME-REVIEW-STALE" in problems:
+                    problems += ("; a new row changes what this stage's runtime review covered: "
+                                 "re-review the stage, then add runtime_review with reviewed_by "
+                                 "and reviewed_on to the operation")
                 raise WriteRefused(
                     "structural edit preflight failed: " + problems,
                     site=f"{ctx.operation}.structural-preflight-failed",

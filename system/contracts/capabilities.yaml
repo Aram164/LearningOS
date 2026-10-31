@@ -36,7 +36,7 @@ queries:
     schema: system/schema/study-sequence.schema.json
     invariants:
     - read-only ordered subset of one current Unit study map, bound to its snapshot and Europe/Berlin date
-    - authored transitive prerequisite stage links remain ordered unless already recorded complete; no mastery inference
+    - an authored transitive prerequisite node needs one of its stages placed earlier or already recorded complete, unless the map itself teaches the selected stage first; no mastery inference
     - open required-now detours refuse; unmapped prerequisite scope stays explicit
     - view-owned temporary navigation only; no canonical plan, progress, resume or session write
   runtime.session:
@@ -98,6 +98,7 @@ queries:
     invariants:
     - content mode searches complete registered durable notes and returns bounded line snippets
     - content mode requires a nonempty query; empty-query listing is the CLI metadata search, not this capability
+    - metadata search returns the strongest match first (exact title or id, then every word in a title, then in the id, then elsewhere) and names matching stages on Unit and study-map rows
   material.context:
     handler: material_context
     cli_command: material-context
@@ -654,6 +655,8 @@ commands:
     - external map files are bound to their exact bytes by SHA-256 before use
     - takes a full map or one compact structural_edit (stage_move, resource_move, anchored resource_insert, anchor-free resource_append)
     - editing an existing map in either form refuses any new or grown warning signature at preflight and at apply; a first map refuses validation errors only
+    - the review names each stage's added and removed resource rows in diff.resource_changes, ahead of the exact arrays in diff.content_changes
+    - resource_insert and resource_append may renew an existing runtime_review with reviewed_by and reviewed_on; the import binds its fingerprint
   unit.note.append:
     handler: unit_note
     cli_command: unit-note

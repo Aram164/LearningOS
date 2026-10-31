@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"metadata-search-page\",\"items\":[{\"id\":\"note-demo-analysis\",\"type\":\"note\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"status\":null,\"state\":null,\"deprecated\":null}],\"total\":15,\"offset\":1,\"returned\":1,\"next_offset\":2,\"has_more\":true,\"expand\":{\"next\":\"search demo --page --limit 1 --offset 2 --expected-snapshot <FIXTURE_SNAPSHOT>\"}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"metadata-search-page\",\"items\":[{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"status\":\"active\",\"state\":null,\"deprecated\":null}],\"total\":15,\"offset\":1,\"returned\":1,\"next_offset\":2,\"has_more\":true,\"expand\":{\"next\":\"search demo --page --limit 1 --offset 2 --expected-snapshot <FIXTURE_SNAPSHOT>\"}}\n",
   "stdout_json": {
     "contract": "metadata-search-page",
     "expand": {
@@ -17,12 +17,12 @@
     "items": [
       {
         "deprecated": null,
-        "id": "note-demo-analysis",
-        "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+        "id": "workspace-demo",
+        "path": "work/active/workspace-demo/CONTEXT.md",
         "state": null,
-        "status": null,
-        "title": "Expected value — analysis of Demo Book §1",
-        "type": "note"
+        "status": "active",
+        "title": "Demo workspace",
+        "type": "workspace"
       }
     ],
     "next_offset": 2,

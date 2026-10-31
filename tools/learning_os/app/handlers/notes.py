@@ -671,11 +671,50 @@ def _array_window(req) -> tuple[int, int]:
     return offset, limit
 
 
+#: Within one match strength: where a learner acts first, then what they read.
+_SEARCH_TYPE_ORDER = {kind: rank for rank, kind in enumerate(
+    ("unit", "concept", "module", "workspace", "note", "source"))}
+_MATCHED_STAGE_LIMIT = 5
+
+
+def _matched_stages(study_map: dict, words: list[str]) -> list[dict]:
+    """Stages of one map whose title, or failing that objective, holds every word."""
+    stages = [row for row in study_map.get("stages") or [] if isinstance(row, dict)]
+    for field in ("title", "objective"):
+        hits = [{"id": row.get("id"), "title": row.get("title")} for row in stages
+                if all(word in str(row.get(field) or "").lower() for word in words)]
+        if hits:
+            return hits[:_MATCHED_STAGE_LIMIT]
+    return []
+
+
+#: Search match tiers, strongest first, as capabilities.yaml documents them.
+_MATCH_EXACT = 0
+_MATCH_TITLE = 1
+_MATCH_ID = 2
+_MATCH_OTHER = 3
+
+
+def _match_strength(rec: dict, query: str, words: list[str], stages: list[dict]) -> int:
+    """Strongest tier first: exact title or id, every word in a title, in the id, elsewhere."""
+    title = str(rec.get("title") or "").lower()
+    record_id = str(rec.get("id") or "").lower()
+    if query in (title, record_id):
+        return _MATCH_EXACT
+    if all(word in title for word in words) or any(
+            all(word in str(row["title"] or "").lower() for word in words) for row in stages):
+        return _MATCH_TITLE
+    return _MATCH_ID if all(word in record_id for word in words) else _MATCH_OTHER
+
+
 def _metadata_matches(root: Path, req, snapshot: str) -> tuple[list[dict], list[str], list[int]]:
-    """Literal-AND metadata matches in deterministic manifest order.
+    """Literal-AND metadata matches, strongest first, stable within a strength.
 
     Shared by the legacy array response and the opt-in page packet, so the
-    two cannot disagree about what matches. An inbox listing failure refuses
+    two cannot disagree about what matches. An operator that cuts output keeps
+    the head, so the head must hold the record named after the query. A Unit or
+    study map also names its matching stages, because search has no stage rows.
+    An empty query lists rows in manifest order. An inbox listing failure refuses
     here: discovery must not silently omit drops. The caller's snapshot is
     shared with the manifest read so one search hashes once, not twice.
     """
@@ -689,7 +728,10 @@ def _metadata_matches(root: Path, req, snapshot: str) -> tuple[list[dict], list[
             rows.extend(_inbox_search_rows(root))
         except OSError as exc:
             raise WriteRefused(f"cannot list work/inbox: {exc}") from exc
-    matches = []
+    stages_by_unit = {rec.get("unit_id"): _matched_stages(rec, words) for rec in rows
+                      if rec.get("type") == "study-map"} if words else {}
+    query = " ".join(words)
+    ranked = []
     hits = [0] * len(words)
     for rec in rows:
         if req["type"] and rec.get("type") != req["type"]:
@@ -700,8 +742,18 @@ def _metadata_matches(root: Path, req, snapshot: str) -> tuple[list[dict], list[
             if hit:
                 hits[index] += 1
         if all(found):
-            matches.append(_discovery_row(rec))
-    return matches, words, hits
+            row = _discovery_row(rec)
+            kind = rec.get("type")
+            stages = []
+            if kind in ("unit", "study-map"):
+                stages = stages_by_unit.get(rec.get("id") if kind == "unit" else rec.get("unit_id")) or []
+            if stages:
+                row["matched_stages"] = stages
+            ranked.append(((_match_strength(rec, query, words, stages),
+                            _SEARCH_TYPE_ORDER.get(kind, len(_SEARCH_TYPE_ORDER))), row))
+    if words:
+        ranked.sort(key=lambda item: item[0])
+    return [row for _, row in ranked], words, hits
 
 
 def _metadata_next_command(req, limit: int, next_offset: int, snapshot: str) -> str:

@@ -7,16 +7,16 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "los: showing 1 of 15 matches; continue with --offset 2, or use --page for totals and a snapshot-bound continuation\n",
-  "stdout": "[{\"id\":\"note-demo-analysis\",\"type\":\"note\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"status\":null,\"state\":null,\"deprecated\":null}]\n",
+  "stdout": "[{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"status\":\"active\",\"state\":null,\"deprecated\":null}]\n",
   "stdout_json": [
     {
       "deprecated": null,
-      "id": "note-demo-analysis",
-      "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+      "id": "workspace-demo",
+      "path": "work/active/workspace-demo/CONTEXT.md",
       "state": null,
-      "status": null,
-      "title": "Expected value — analysis of Demo Book §1",
-      "type": "note"
+      "status": "active",
+      "title": "Demo workspace",
+      "type": "workspace"
     }
   ]
 }

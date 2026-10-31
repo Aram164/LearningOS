@@ -9,12 +9,19 @@ prove attestation plus an unchanged payload — never pedagogical correctness.
 from __future__ import annotations
 
 import copy
+import json
 from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_cli, file_sha256
-from repo_builders import _add_material_overview, add_curriculum, write_yaml
+from gateway_helpers import approved_v2_cli, approved_v2_envelope, file_sha256, run_v2_capability
+from repo_builders import (
+    _add_material_overview,
+    _structural_fixture,
+    add_curriculum,
+    run_los,
+    write_yaml,
+)
 
 from learning_os.derive.learning_runtime import bind_runtime_reviews, runtime_review_fingerprint
 from learning_os.derive.validation import validate
@@ -191,3 +198,80 @@ def test_unit_map_import_binds_a_declared_review(mini_repo, tmp_path):
     assert proc.returncode == 0, proc.stderr
     stored = load_repo(mini_repo).study_maps["study-map-demo-l02"].data["stages"][0]
     assert stored["runtime_review"]["fingerprint"] == runtime_review_fingerprint(stored)
+
+
+def _reviewed_structural_stage(root: Path) -> tuple[Path, dict]:
+    """A valid current map whose stage carries a review, plus a route to place."""
+    path, data = _structural_fixture(root)
+    stage = next(row for row in data["stages"] if row["id"] == "stage-demo")
+    stage["concepts"] = ["concept-expected-value"]
+    stage["runtime_target"] = copy.deepcopy(TARGET)
+    stage["runtime_review"] = _review_block(stage)
+    write_yaml(path, data)
+    return path, stage
+
+
+def _append_intent(tmp_path: Path, **extra) -> Path:
+    draft = tmp_path / "intent.json"
+    draft.write_text(json.dumps({"unit_id": "unit-demo-l01", "structural_edit": {
+        "reason": "Add one reviewed reading.",
+        "resource_append": {"stage_id": "stage-demo", **extra, "resource": {
+            "id": "resource-new-appended", "kind": "read", "scope_triage": "helpful-now",
+            "material_ref": {"route_id": "route-demo-book",
+                             "inherit": ["label", "source_id", "locator", "angle", "angle_detail"]}}}}}))
+    return draft
+
+
+def _check(root: Path, draft: Path):
+    return run_los(root, "unit-map-import", "unit-demo-l01", "--file", str(draft), "--replace", "--check")
+
+
+def test_a_new_row_on_a_reviewed_stage_refuses_and_names_the_renewal(mini_repo, tmp_path):
+    _reviewed_structural_stage(mini_repo)
+    check = _check(mini_repo, _append_intent(tmp_path))
+    assert check.returncode != 0
+    assert "RUNTIME-REVIEW-STALE" in check.stderr
+    assert "add runtime_review with reviewed_by and reviewed_on" in check.stderr
+
+
+def test_a_compact_edit_renews_the_review_it_invalidated(mini_repo, tmp_path):
+    path, before = _reviewed_structural_stage(mini_repo)
+    draft = _append_intent(tmp_path, runtime_review={"reviewed_by": "Aram", "reviewed_on": "2026-10-30"})
+    check = _check(mini_repo, draft)
+    assert check.returncode == 0, check.stderr
+    review = json.loads(check.stdout)
+    change = review["diff"]["resource_changes"][0]
+    assert [row["id"] for row in change["added"]] == ["resource-new-appended"]
+    envelope = approved_v2_envelope(mini_repo, capability="unit.map.import", payload={
+        "unit_id": "unit-demo-l01", "file": str(draft), "file_sha256": review["file_sha256"], "replace": True,
+    }, artifact_ids=list(review["expected_revisions"]), idempotency_key="renew-review")
+    envelope["expected_snapshot"] = review["snapshot_id"]
+    envelope["expected_revisions"] = review["expected_revisions"]
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode == 0, result.stdout + result.stderr
+    after = next(row for row in yaml.safe_load(path.read_text())["stages"] if row["id"] == "stage-demo")
+    assert after["resources"][:len(before["resources"])] == before["resources"]
+    assert after["runtime_review"]["reviewed_on"] == "2026-10-30"
+    assert after["runtime_review"]["fingerprint"] == runtime_review_fingerprint(after)
+    assert _codes(mini_repo, "RUNTIME-REVIEW-STALE") == []
+
+
+@pytest.mark.parametrize("review", [
+    {"reviewed_by": "Aram"},
+    {"reviewed_by": " ", "reviewed_on": "2026-10-30"},
+    {"reviewed_by": "Aram", "reviewed_on": "2026-10-30", "fingerprint": "sha256:0"},
+    "Aram",
+])
+def test_a_malformed_renewal_refuses(mini_repo, tmp_path, review):
+    _reviewed_structural_stage(mini_repo)
+    check = _check(mini_repo, _append_intent(tmp_path, runtime_review=review))
+    assert check.returncode != 0
+    assert "reviewed_by and reviewed_on" in check.stderr
+
+
+def test_a_stage_without_a_review_has_nothing_to_renew(mini_repo, tmp_path):
+    _structural_fixture(mini_repo)
+    check = _check(mini_repo, _append_intent(
+        tmp_path, runtime_review={"reviewed_by": "Aram", "reviewed_on": "2026-10-30"}))
+    assert check.returncode != 0
+    assert "no runtime_review to renew" in check.stderr

@@ -17,8 +17,8 @@ zero canonical writes; the learner's material choice is recorded through
 its own write footprint. The deck and the plan are gated separately: this
 transcript runs against a deck that exists in the materials tree — with no
 as-taught deck, the operator stops and asks — and in production the import
-applies only after Aram has seen the package and its check result
-(OPERATOR.md boundary 18).
+applies on the green check once the package and its check result have been
+shown (OPERATOR.md boundary 18).
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from the
 `LOS_REPO` environment variable the test sets.
 
@@ -83,7 +83,7 @@ $ los search "linearity"
 
 ```scrut
 $ los search "expected value" | $LOS_REPO/.venv/bin/python -c 'import json,sys; print([r["id"] for r in json.load(sys.stdin)])'
-['note-demo', 'note-demo-analysis', 'concept-expected-value', 'source-demo-book', 'workspace-demo', 'workspace-second', 'unit-demo-l01', 'unit-demo-l02', 'study-map-demo-l01', 'source-map-demo']
+['unit-demo-l01', 'concept-expected-value', 'note-demo-analysis', 'study-map-demo-l01', 'unit-demo-l02', 'workspace-demo', 'workspace-second', 'note-demo', 'source-demo-book', 'source-map-demo']
 ```
 
 The recall is re-covered: `unit-demo-l01` already teaches it, so the new
@@ -235,7 +235,7 @@ complete final source map — the existing book routes reproduced exactly. The
 claim evidence quotes the deck's own pages, so the covers claim is anchored
 to verified bytes. The CLI preflights it with zero canonical writes
 (`los module-plan-import --check`, on the package file and its exact
-bytes), and in production the apply waits for Aram's yes.
+bytes), and in production the apply proceeds on the green check.
 
 ```scrut
 $ cat > "$TMPDIR/lecture-03-package.yaml" <<'EOF'

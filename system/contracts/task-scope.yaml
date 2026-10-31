@@ -51,6 +51,27 @@ tasks:
       - system/WORKFLOWS.md#22-end-a-session
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
+  - id: record-a-reported-result
+    task: Record a result the learner reports
+    entry_read: '`capabilities learner.stage-result.append --json`, or `capabilities learner.observation.append --json` when the stage has a requirement'
+    procedures:
+      - label: Record without credit
+        target: system/procedures/record-evidence.md#the-untargeted-ledger-needs-an-envelope
+      - label: record against a requirement
+        target: system/procedures/record-evidence.md#the-direct-path-needs-no-envelope
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#8-record-evidence
+
+  - id: temporary-study-order
+    task: Temporary study order for one Unit
+    entry_read: '`study-sequence UNIT_ID --stage-ids-json JSON_LIST`'
+    procedures:
+      - label: Preview a temporary order
+        target: system/procedures/start-here.md#preview-a-temporary-study-order
+    scope:
+      - system/OPERATOR.md
+
   - id: create-or-revise-a-durable-note
     task: Create or revise a durable note
     entry_read: '`capabilities note.create --json`, or `capabilities note.revise --json` for an existing note'

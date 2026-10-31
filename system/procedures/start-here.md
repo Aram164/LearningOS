@@ -355,6 +355,16 @@ $ A=$(sha256sum curriculum/resume.yaml) && los resume --study > /dev/null && B=$
 pointer-stable
 ```
 
+## Preview a temporary study order
+
+`study-sequence` previews an ordered subset of one Unit's stages for today. It
+writes nothing and moves nothing: not the plan, progress or the resume pointer.
+
+```scrut
+$ los study-sequence unit-demo-l01 --stage-ids-json '["stage-demo-pending"]' | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(",".join(s["id"] for s in d["stages"]), d["canonical_files_written"])'
+stage-demo-pending 0
+```
+
 ## Read one ability through the bounded horizon
 
 ```scrut

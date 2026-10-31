@@ -1357,6 +1357,80 @@ def test_temporary_sequence_allows_independent_omission_and_completed_prerequisi
     assert any('no readiness or mastery' in note for note in packet['limitations'])
 
 
+def _repeat_node_map(sequence_root):
+    """An iterative map: mock one (node c), repair (node b), mock two (node c), c builds on b."""
+    unit_path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml'
+    unit = yaml.safe_load(unit_path.read_text())
+    nodes = unit['knowledge_map']['nodes']
+    nodes[0]['builds_on'], nodes[1]['builds_on'], nodes[2]['builds_on'] = [], [nodes[0]['id']], [nodes[1]['id']]
+    write_yaml(unit_path, unit)
+    map_path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(map_path.read_text())
+    first, repair, last = data['stages'][:3]
+    first['knowledge_node_id'], repair['knowledge_node_id'], last['knowledge_node_id'] = (
+        nodes[2]['id'], nodes[1]['id'], nodes[2]['id'])
+    write_yaml(map_path, data)
+    return first['id'], repair['id'], last['id']
+
+
+def test_temporary_sequence_accepts_the_authored_order_of_an_iterative_map(sequence_root):
+    """A map's own order is never refused: mock two is not a prerequisite of repairing mock one."""
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    first, repair, last = _repeat_node_map(sequence_root)
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', None)
+    assert [s['id'] for s in packet['stages'][:3]] == [first, repair, last]
+    assert any(first in note and 'not enforced' in note for note in packet['limitations'])
+
+
+def test_temporary_sequence_still_enforces_a_prerequisite_the_map_teaches_first(sequence_root):
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    first, repair, last = _repeat_node_map(sequence_root)
+    with pytest.raises(RuntimeInputError, match=f'prerequisite stage {repair} must precede {last}'):
+        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [last])
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [repair, last])
+    assert {'prerequisite_stage_id': repair, 'dependent_stage_id': last} in packet['prerequisite_edges']
+
+
+def test_temporary_sequence_one_stage_of_a_repeated_prerequisite_node_satisfies_it(sequence_root):
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    unit_path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml'
+    unit = yaml.safe_load(unit_path.read_text())
+    nodes = unit['knowledge_map']['nodes']
+    nodes[0]['builds_on'], nodes[1]['builds_on'], nodes[2]['builds_on'] = [], [], [nodes[0]['id']]
+    write_yaml(unit_path, unit)
+    map_path = sequence_root / 'curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml'
+    data = yaml.safe_load(map_path.read_text())
+    one, two, dependent = data['stages'][:3]
+    one['knowledge_node_id'], two['knowledge_node_id'], dependent['knowledge_node_id'] = (
+        nodes[0]['id'], nodes[0]['id'], nodes[2]['id'])
+    write_yaml(map_path, data)
+    with pytest.raises(RuntimeInputError, match=f'one of the prerequisite stages {one["id"]}, {two["id"]}'):
+        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [dependent['id']])
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [two['id'], dependent['id']])
+    assert packet['prerequisite_edges'] == [
+        {'prerequisite_stage_id': two['id'], 'dependent_stage_id': dependent['id']}]
+    assert any('one placed earlier' in note for note in packet['limitations'])
+
+
+@pytest.mark.full_repo
+def test_every_real_study_map_accepts_its_own_authored_order():
+    from learning_os.derive.learning_runtime import temporary_study_sequence
+
+    repo = load_repo(Path(__file__).resolve().parents[1])
+    refused = {}
+    for unit_id, unit in repo.units.items():
+        if not unit.data.get('current_study_map'):
+            continue
+        try:
+            temporary_study_sequence(repo, unit_id, None)
+        except RuntimeInputError as exc:
+            refused[unit_id] = str(exc)
+    assert refused == {}
+
+
 def test_temporary_sequence_transitive_edges_cycles_and_required_detours(sequence_root):
     from learning_os.derive.learning_runtime import temporary_study_sequence
 
