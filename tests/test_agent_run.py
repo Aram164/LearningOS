@@ -258,6 +258,67 @@ def test_metadata_search_and_page_change_no_file(mini_repo):
     assert _file_listing(mini_repo) == before
 
 
+def _catalog(root):
+    index = agent_run.build_index(root, agent_run._cli_executor_factory(root), resolve_tasks=False)
+    from learning_os.app.agent_catalog import build_catalog
+    return build_catalog(root, index["verb_to_operation"])
+
+
+def test_read_catalog_is_bounded_and_lists_only_reads(mini_repo):
+    from learning_os.app.agent_catalog import READ_VERBS
+    from learning_os.app.registry import REGISTRY, OperationEffects
+
+    catalog = _catalog(mini_repo)
+    assert catalog["contract"] == "agent-read-catalog-v1"
+    assert catalog["rules"] == [
+        "Everything listed here only reads and cannot change a record.",
+        "One read: .venv/bin/los VERB ARGS. Several reads in one call: pass a plan on stdin to .venv/bin/python tools/agent_run.py - --root .",
+        "Before any write, read system/OPERATOR.md. Writes go through tools/seal_envelope.py.",
+    ]
+    assert [row["verb"] for row in catalog["reads"]] == list(READ_VERBS)
+    for row in catalog["reads"]:
+        entry = REGISTRY[row["operation"]]
+        assert entry.effects == OperationEffects.READ or entry.read_when is not None
+        assert row["slots"] == []
+        assert all({"name"} <= set(param) for param in row["params"])
+    assert len(agent_run._json(catalog).encode("utf-8")) <= 12000
+
+
+def test_catalog_refuses_when_a_listed_verb_can_write(mini_repo):
+    import dataclasses
+
+    from learning_os.app.agent_catalog import build_catalog
+    from learning_os.app.registry import REGISTRY, OperationEffects
+
+    entry = REGISTRY["project.inspect"]
+    REGISTRY["project.inspect"] = dataclasses.replace(entry, effects=OperationEffects.CANONICAL_WRITE)
+    try:
+        index = agent_run.build_index(mini_repo, agent_run._cli_executor_factory(mini_repo), resolve_tasks=False)
+        with pytest.raises(ValueError, match="project.inspect"):
+            build_catalog(mini_repo, index["verb_to_operation"])
+    finally:
+        REGISTRY["project.inspect"] = entry
+
+
+def test_catalog_flag_prints_json_and_exits_zero(mini_repo):
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools/agent_run.py"), "--catalog", "--root", str(mini_repo)],
+        capture_output=True, text=True, timeout=120)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    catalog = json.loads(proc.stdout)
+    assert catalog["contract"] == "agent-read-catalog-v1"
+    assert any(row["verb"] == "search" for row in catalog["reads"])
+
+
+def test_plan_can_be_read_from_stdin(mini_repo):
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools/agent_run.py"), "-", "--root", str(mini_repo)],
+        input=json.dumps({"steps": [{"id": "r", "use": "inspect", "args": ["note-demo"]}]}),
+        capture_output=True, text=True, timeout=120)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert json.loads(proc.stdout)["steps"][0]["output"]["id"] == "note-demo"
+
+
 @pytest.mark.parametrize("args", [["--root", "/tmp"], ["--root=/tmp"]])
 def test_root_override_refuses_entire_plan(tmp_path, args):
     with pytest.raises(agent_run.AgentRunError, match="root overrides"):

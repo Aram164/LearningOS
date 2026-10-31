@@ -744,7 +744,9 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("plan", nargs="?", help="plan JSON file")
+    parser.add_argument("plan", nargs="?", help="plan JSON file, or - for stdin")
+    parser.add_argument("--catalog", action="store_true",
+                        help="print the read catalog as JSON and exit")
     parser.add_argument("--expand-report", help="verify and expand a finalized full report")
     parser.add_argument("--step", help="expand only this step (with --expand-report)")
     parser.add_argument("--root", default=None, help="selected data root (default: tool repository)")
@@ -758,6 +760,11 @@ def main() -> int:
     args = build_parser().parse_args()
     root = Path(args.root).resolve() if args.root else TOOLS.parent
     try:
+        if args.catalog:
+            from learning_os.app.agent_catalog import build_catalog
+            index = build_index(root, _cli_executor_factory(root), resolve_tasks=False)
+            print(_json(build_catalog(root, index["verb_to_operation"])))
+            return 0
         if args.expand_report:
             from learning_os.app.agent_reporting import expand_report
             if args.plan:
@@ -766,9 +773,15 @@ def main() -> int:
             return 0
         if not args.plan or args.step:
             raise AgentRunError("a plan is required; --step needs --expand-report")
-        if Path(args.plan).stat().st_size > 1048576:
-            raise AgentRunError("plan input exceeds 1 MiB")
-        report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8"), parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
+        if args.plan == "-":
+            plan_text = sys.stdin.read(1048577)
+            if len(plan_text.encode("utf-8")) > 1048576:
+                raise AgentRunError("plan input exceeds 1 MiB")
+            report = run_plan(json.loads(plan_text, parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
+        else:
+            if Path(args.plan).stat().st_size > 1048576:
+                raise AgentRunError("plan input exceeds 1 MiB")
+            report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8"), parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
     except (OSError, ValueError, KeyError, TypeError, AgentRunError) as exc:
         print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))

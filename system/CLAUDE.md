@@ -12,6 +12,9 @@ built.
 
 - **Change code, architecture, contracts, tests or documentation:** read
   [system/DEVELOPER.md](DEVELOPER.md), then the owning component and task references.
+- **Answer a question without changing anything:** run .venv/bin/python
+  tools/agent_run.py --catalog --root . and use what it lists. Reads cannot
+  change a record.
 - **Operate learner records:** read [system/OPERATOR.md](OPERATOR.md) and use its task
   entry read. Open [system/OPERATOR-POLICY.md](OPERATOR-POLICY.md) when the task raises
   a question about permissions, note handling, ambiguity, Garden or migration.

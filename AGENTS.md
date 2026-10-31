@@ -5,7 +5,10 @@ For code, architecture, contracts, tests or documentation changes, start with
 the operator route below. Audience selects reading order, never an exemption
 from relevant binding rules.
 
-Read and obey [`system/OPERATOR.md`](system/OPERATOR.md). Discover capabilities
+To answer a question without changing anything, run
+.venv/bin/python tools/agent_run.py --catalog --root . and use what it lists;
+reads cannot change a record, so they need nothing else read first. Before any
+write, read and obey [`system/OPERATOR.md`](system/OPERATOR.md). Discover capabilities
 with `.venv/bin/python tools/los.py capabilities --compact --json`; start with the entry
 read OPERATOR.md names for the task — a named route or stage starts with its
 focused `plan-edit-context` read, an open question with `bootstrap --brief`.
