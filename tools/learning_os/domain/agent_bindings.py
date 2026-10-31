@@ -8,6 +8,7 @@ is not exactly one well-formed id, and never guesses a row.
 """
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
@@ -43,8 +44,8 @@ class OutputSlot:
 class CompiledRef:
     """One admission-compiled binding: either a source reference or a literal.
 
-    ``target_kind`` is the bound target param's declared kind, recorded at
-    admission so run-time resolution needs no schema lookup for it.
+    ``target_kind`` is the bound target param's declared kind and ``position``
+    its place in the compiled argv, so run time needs no schema lookup.
     """
 
     param: str
@@ -54,6 +55,7 @@ class CompiledRef:
     where: Mapping[str, object] = field(default_factory=dict)
     literal: object = None
     target_kind: str = ""
+    position: int = 0
 
 
 class BindingError(Exception):
@@ -70,32 +72,30 @@ class BindingError(Exception):
         return payload
 
 
+def valid_for(kind: str, value: object) -> bool:
+    """Is ``value`` an id of this target kind? ``*`` is any generic id; ``x[]`` holds x."""
+    kind = kind.removesuffix("[]")
+    if kind == "*":
+        return any(is_valid(generic, value) for generic in GENERIC_KINDS)
+    return is_valid(kind, value)
+
+
 def rows_of(payload: object, slot: OutputSlot) -> list:
     """Return the slot's rows from ``payload``; ``[]`` when the shape differs."""
     current: list[tuple[object, dict]] = [(payload, {})]
     for key in slot.path:
-        nxt: list[tuple[object, dict]] = []
+        following: list[tuple[object, dict]] = []
         for node, inherited in current:
             if key == "*":
                 if isinstance(node, list):
-                    nxt.extend((item, inherited) for item in node)
+                    following.extend((item, inherited) for item in node)
             elif isinstance(node, dict) and key in node:
-                child_inherited = inherited
-                if slot.parent_columns:
-                    copied = {row_key: node[parent_key]
-                              for row_key, parent_key in slot.parent_columns.items()
-                              if parent_key in node}
-                    if copied:
-                        child_inherited = {**inherited, **copied}
-                nxt.append((node[key], child_inherited))
-        current = nxt
-    rows: list = []
-    for node, inherited in current:
-        if isinstance(node, dict) and inherited:
-            rows.append({**inherited, **node})
-        else:
-            rows.append(node)
-    return rows
+                copied = {row_key: node[parent_key] for row_key, parent_key in slot.parent_columns.items()
+                          if parent_key in node}
+                following.append((node[key], {**inherited, **copied}))
+        current = following
+    return [{**inherited, **node} if isinstance(node, dict) and inherited else node
+            for node, inherited in current]
 
 
 def _candidate(row: object) -> dict:
@@ -104,47 +104,40 @@ def _candidate(row: object) -> dict:
     return {"id": row, "title": None}
 
 
-def _value_ok(value: str, target_kind: str, source_kind: str | None) -> bool:
-    if target_kind == "*":
-        return any(is_valid(prefix, value) for prefix in GENERIC_KINDS)
-    kind = source_kind if source_kind is not None else target_kind
-    return is_valid(kind, value)
-
-
 def resolve(ref: CompiledRef, payload: object, target_kind: str) -> str:
     """Resolve one compiled binding to exactly one id, or refuse (D3)."""
-    if ref.source is None:
-        value = ref.literal
-        if not isinstance(value, str) or not _value_ok(value, target_kind, None):
-            raise BindingError(
-                BINDING_VALUE_INVALID,
-                f"binding {ref.param!r}: literal is not a valid {target_kind} id")
-        return value
-    rows = rows_of(payload, ref.slot)
-    if ref.where:
-        rows = [row for row in rows
-                if isinstance(row, dict)
-                and all(row.get(key) == value for key, value in ref.where.items())]
+    slot = ref.slot
+    rows = [ref.literal] if slot is None else [
+        row for row in rows_of(payload, slot)
+        if not ref.where or (isinstance(row, dict)
+                             and all(row.get(key) == value for key, value in ref.where.items()))]
     if not rows:
-        raise BindingError(
-            BINDING_EMPTY,
-            f"binding {ref.param!r}: no matching rows in slot {ref.slot_name!r}")
+        raise BindingError(BINDING_EMPTY, f"binding {ref.param!r}: no matching rows in slot {ref.slot_name!r}")
     if len(rows) > 1:
         raise BindingError(
             BINDING_CARDINALITY,
-            f"binding {ref.param!r}: {len(rows)} matching rows in slot "
-            f"{ref.slot_name!r}; name one row with where",
+            f"binding {ref.param!r}: {len(rows)} matching rows in slot {ref.slot_name!r}; name one row with where",
             candidates=[_candidate(row) for row in rows[:_CANDIDATE_LIMIT]])
-    row = rows[0]
-    value = row.get(ref.slot.value_key) if ref.slot.value_key is not None else row
-    kind = None
-    if ref.slot.kind_column is not None:
-        kind = ref.where.get(ref.slot.kind_column)
-    elif ref.slot.kind is not None:
-        kind = ref.slot.kind
-    if not isinstance(value, str) or not _value_ok(value, target_kind, kind):
-        raise BindingError(
-            BINDING_VALUE_INVALID,
-            f"binding {ref.param!r}: resolved value is not a valid "
-            f"{kind or target_kind} id")
+    value = rows[0]
+    kind = target_kind
+    if slot is not None:
+        if slot.value_key is not None:
+            value = value.get(slot.value_key) if isinstance(value, dict) else None
+        if target_kind != "*":
+            kind = (ref.where.get(slot.kind_column) if slot.kind_column else slot.kind) or target_kind
+    if not isinstance(value, str) or not valid_for(kind, value):
+        raise BindingError(BINDING_VALUE_INVALID, f"binding {ref.param!r}: value is not a valid {kind} id")
     return value
+
+
+def bind_argv(argv, refs, payloads: Mapping) -> tuple[list, dict]:
+    """Resolve ``refs`` and put each value at its compiled place in ``argv``."""
+    final, bound = list(argv), {}
+    for ref in refs:
+        value = resolve(ref, payloads.get(ref.source), ref.target_kind)
+        if ref.target_kind.endswith("[]"):
+            bound.setdefault(ref.param, []).append(value)
+            final[ref.position] = json.dumps(bound[ref.param])
+        else:
+            bound[ref.param] = final[ref.position] = value
+    return final, bound

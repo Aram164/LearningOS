@@ -12,7 +12,7 @@ from typing import cast
 from learning_os.app.agent_reporting import ReportStore, bound_report
 from learning_os.app.projection import fresh_manifest_and_repo
 from learning_os.app.read_session import ReadSession
-from learning_os.domain.agent_bindings import BindingError
+from learning_os.domain.agent_bindings import BindingError, bind_argv
 from learning_os.domain.agent_plans import CompiledStep, Executor, PlanControls, RawOutcome
 from learning_os.domain.codes import (
     ARTIFACT_FAILED,
@@ -261,7 +261,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             if step.bindings:
                 # Resolve immediately before execution (PLAN S15): the
                 # placeholders never reach a handler.
-                argv, bound = port.bind_argv(step, payloads)
+                argv, bound = bind_argv(step.argv, step.bindings, payloads)
                 run_step = dataclasses.replace(step, argv=tuple(argv))
                 port.validate_bound(run_step)
             error = port.preflight(run_step) if step.preflight else None
@@ -275,9 +275,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                     row["bound"] = bound
                 retain(step, row)
         except BindingError as exc:
-            row = fail_row(step, "error", exc.code)
-            row["error"] = {**exc.as_dict(), "retryable": False}
-            retain(step, row)
+            retain(step, {**fail_row(step, "error", exc.code), "error": {**exc.as_dict(), "retryable": False}})
         except Exception as exc:
             row = fail_row(step, "error", getattr(exc, "code", STEP_FAILED), message=str(exc))
             # Dispatch may have crossed the commit boundary before transport failed.

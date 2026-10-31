@@ -37,6 +37,7 @@ Exit codes: 0 all steps succeeded; 3 a step failed/was blocked; 2 invalid plan.
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import fnmatch
 import io
 import json
@@ -52,7 +53,8 @@ from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from learning_os.app.projection_readiness import observe as _observe_projection
-from learning_os.domain.agent_bindings import CompiledRef
+from learning_os.app.registry import REGISTRY, OperationEffects
+from learning_os.domain.agent_bindings import CompiledRef, valid_for
 from learning_os.domain.codes import (
     BINDING_INVALID,
     DISCOVERY_FAILED,
@@ -65,7 +67,9 @@ from learning_os.domain.codes import (
     SESSION_REQUIRED,
     VALIDATION_FAILED,
 )
+from learning_os.domain.ids import KINDS
 from learning_os.store.contracts.agent_plans import parse_controls
+from learning_os.store.contracts.requests import request_schema
 
 TOOLS = Path(__file__).resolve().parent
 
@@ -82,8 +86,6 @@ def _declared_read(namespace) -> bool:
     Core owns the declaration; the plan can never claim it. The registered
     effect stays the write barrier for every other mode of the operation.
     """
-    from learning_os.app.registry import REGISTRY
-
     entry = REGISTRY.get(getattr(namespace, "_operation", None))
     return entry is not None and entry.read_when is not None and bool(entry.read_when(namespace))
 
@@ -498,46 +500,21 @@ def _expand_log_step(step: dict, session_id=None) -> list[str]:
             *(["--session-id=" + session_id] if session_id is not None else [])]
 
 
-def _resolve_bound_argv(root, index, step, payloads):
-    """Resolve one bound step's refs against retained payloads (PLAN S15).
-
-    Renders the final argv exactly as admission's compile did, with resolved
-    values in place of placeholders. Raises BindingError on any refusal.
-    """
-    from learning_os.app.registry import REGISTRY
-    from learning_os.domain.agent_bindings import resolve as resolve_ref
-    from learning_os.store.contracts.requests import request_schema
-
-    verb = step.argv[0]
-    operation = index.get("verb_to_operation", {}).get(verb)
-    entry = REGISTRY.get(operation)
-    try:
-        schema = request_schema(root, operation)
-    except (OSError, ValueError) as exc:
-        from learning_os.domain.agent_bindings import BindingError
-
-        raise BindingError(BINDING_INVALID, f"bound target schema unavailable: {exc}") from exc
-    props = schema.get("properties", {})
-    groups: dict[str, list] = {}
-    params: list[str] = []
-    for ref in step.bindings:
-        if ref.param not in groups:
-            groups[ref.param] = []
-            params.append(ref.param)
-        kind = (ref.target_kind
-                or (entry.binding_params.get(ref.param) if entry is not None else None)
-                or props.get(ref.param, {}).get("x-los-id-kind") or "*")
-        groups[ref.param].append(resolve_ref(ref, payloads.get(ref.source), kind))
-    values: dict[str, object] = {}
-    for param in params:
-        spec = props.get(param, {})
-        kind = spec.get("x-los-id-kind") or (entry.binding_params.get(param) if entry is not None else None) or ""
-        resolved = groups[param]
-        values[param] = resolved if kind.endswith("[]") else resolved[0]
-    argv = _bound_argv(list(step.presentation.get("args", [])), params, schema, values)
-    if props.get("json") is not None and "--json" not in argv:
-        argv.append("--json")
-    return [step.argv[0], *argv], values
+def _check_bind_shape(step: dict, version: int, seen: set) -> None:
+    """The binding grammar that needs no registry (PLAN S14); `seen` holds earlier ids only."""
+    if version < 3:
+        raise AgentRunError("bind requires schema_version 3", BINDING_INVALID)
+    if {"argv", "kind", "describe"} & set(step) or not isinstance(step.get("use"), str):
+        raise AgentRunError("bind steps take use and no argv, kind or describe", BINDING_INVALID)
+    if not isinstance(step["bind"], dict) or not step["bind"]:
+        raise AgentRunError("bind must be a non-empty object", BINDING_INVALID)
+    for param, value in step["bind"].items():
+        for ref in value if isinstance(value, list) else [value]:
+            if not isinstance(ref, dict) or not (set(ref) == {"literal"} or (
+                    set(ref) <= {"from", "slot", "where"} and isinstance(ref.get("slot"), str)
+                    and isinstance(ref.get("from"), str) and ref["from"] in seen)):
+                raise AgentRunError(f"binding for {param!r} must be {{literal}} or {{from, slot, where}} "
+                                    "with from naming an earlier step", BINDING_INVALID)
 
 
 def _validate_plan(plan, poll_s: float) -> list[dict]:
@@ -547,7 +524,7 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
         raise AgentRunError("poll interval must be finite and nonnegative")
     if isinstance(plan, dict):
         unknown = set(plan) - {"steps", "session_id", "on_error", "schema_version",
-                               "read_workers", "deadline_s", "report_max_bytes", "snapshot"}
+                               "read_workers", "deadline_s", "report_max_bytes"}
         if unknown:
             raise AgentRunError(f"unknown plan fields: {sorted(unknown)}")
         try:
@@ -582,42 +559,7 @@ def _validate_plan(plan, poll_s: float) -> list[dict]:
         if "argv" in step and ("use" in step or "args" in step):
             raise AgentRunError("argv and use/args are mutually exclusive")
         if "bind" in step:
-            # Structural binding grammar (PLAN S14): the registry-aware checks
-            # live in the compile loop. `seen` still holds earlier ids only,
-            # so a self or forward reference refuses here.
-            if version < 3:
-                raise AgentRunError("bind requires schema_version 3", BINDING_INVALID)
-            if "argv" in step or "kind" in step or "describe" in step \
-                    or not isinstance(step.get("use"), str):
-                raise AgentRunError("bind steps take use and no argv, kind or describe", BINDING_INVALID)
-            bound = step["bind"]
-            if not isinstance(bound, dict) or not bound:
-                raise AgentRunError("bind must be a non-empty object", BINDING_INVALID)
-            for param, value in bound.items():
-                if not isinstance(param, str) or not param:
-                    raise AgentRunError("bind params must be nonempty strings", BINDING_INVALID)
-                if not isinstance(value, (dict, list)):
-                    raise AgentRunError(f"binding for {param!r} must be an object or list", BINDING_INVALID)
-                for ref in (value if isinstance(value, list) else [value]):
-                    if not isinstance(ref, dict):
-                        raise AgentRunError(
-                            f"binding reference for {param!r} must be an object", BINDING_INVALID)
-                    if set(ref) - {"from", "slot", "where", "literal"}:
-                        raise AgentRunError(
-                            f"binding reference for {param!r} has unknown fields", BINDING_INVALID)
-                    source = ref.get("from")
-                    if source is not None and (not isinstance(source, str) or source not in seen):
-                        raise AgentRunError(
-                            f"binding from must name an earlier step: {source!r}", BINDING_INVALID)
-                    if source is None and "literal" not in ref:
-                        raise AgentRunError(
-                            f"binding reference for {param!r} needs from or literal", BINDING_INVALID)
-                    if source is not None and "literal" in ref:
-                        raise AgentRunError(
-                            f"binding reference for {param!r} cannot take both from and literal", BINDING_INVALID)
-                    if source is None and ("slot" in ref or "where" in ref):
-                        raise AgentRunError(
-                            f"literal binding for {param!r} takes no slot or where", BINDING_INVALID)
+            _check_bind_shape(step, version, seen)
         deps = step.get("depends_on", [])
         if not isinstance(deps, list) or any(not isinstance(d, str) or d not in seen for d in deps):
             raise AgentRunError("dependencies must name earlier steps")
@@ -692,169 +634,91 @@ def _step_argv(step: dict, index: dict, session_id=None) -> list[str]:
     return argv
 
 
-def _bound_param_kind(step: dict, param: str, schema: dict, entry) -> str:
-    """The declared kind of a bound target param, or an admission refusal."""
-    spec = schema.get("properties", {}).get(param)
-    if not isinstance(spec, dict):
-        raise AgentRunError(f"bound param {param!r} is unknown to {step['use']!r}", BINDING_INVALID)
-    kind = spec.get("x-los-id-kind") or entry.binding_params.get(param)
-    if not kind:
-        raise AgentRunError(f"bound param {param!r} declares no id kind", BINDING_INVALID)
-    return kind
+def _with_json(schema: dict, argv: list) -> list:
+    """Bindings read JSON, so add --json where the request schema has it (PLAN S14)."""
+    return [*argv, "--json"] if "json" in schema.get("properties", {}) and "--json" not in argv else argv
 
 
-def _bound_value(value):
-    return json.dumps(value) if isinstance(value, list) else value
+def _bound_argv(args: list, props: dict, stubs: dict) -> tuple[list, dict]:
+    """A bound step's argv and each param's place in it: positionals in
+    x-los-cli.position order, then the step's own args, then flags (PLAN S14)."""
+    cli = {param: props[param].get("x-los-cli", {}) for param in stubs}
+    ordered = sorted((spec["position"], param) for param, spec in cli.items()
+                     if spec.get("position") is not None)
+    argv = [stubs[param] for _, param in ordered] + list(args)
+    places = {param: at for at, (_, param) in enumerate(ordered)}
+    for param, spec in cli.items():
+        if param not in places:
+            if not spec.get("flags"):
+                raise AgentRunError(f"bound param {param!r} has no positional or flag form", BINDING_INVALID)
+            argv += [spec["flags"][0], stubs[param]]
+            places[param] = len(argv) - 1
+    return argv, places
 
 
-def _bound_argv(args: list[str], params, schema: dict, values: dict) -> list[str]:
-    """Render a bound step's argv: positionals in x-los-cli.position order,
-    then the step's own args, then flags (PLAN S14)."""
+def _compile_ref(root, index, compiled, param, kind, spec) -> CompiledRef:
+    """Admission-compile one binding reference (PLAN S14), or refuse BINDING_INVALID."""
+    if "literal" in spec:
+        if not valid_for(kind, spec["literal"]):
+            raise AgentRunError(f"literal for {param!r} is not a valid {kind} id", BINDING_INVALID)
+        return CompiledRef(param=param, literal=spec["literal"], target_kind=kind)
+    name = spec["slot"]
+    # A source that failed admission has no argv, so it is no source.
+    at = {item.id: place for place, item in enumerate(compiled) if item.argv}.get(spec["from"])
+    if at is None:
+        raise AgentRunError(f"binding source {spec['from']!r} is not an earlier step", BINDING_INVALID)
+    source = compiled[at]
+    operation = index.get("verb_to_operation", {}).get(source.argv[0])
+    entry = REGISTRY.get(operation)
+    if source.writer:
+        raise AgentRunError(f"binding source {spec['from']!r} ({operation}) is a write", BINDING_INVALID)
+    slot = entry.output_slots.get(name) if entry is not None else None
+    if slot is None:
+        raise AgentRunError(f"operation {operation!r} declares no slot {name!r}", BINDING_INVALID)
+    where = spec.get("where") or {}
+    if not isinstance(where, dict) or (where and slot.value_key is None) or set(where) - set(slot.columns):
+        raise AgentRunError(f"where for {param!r} must name columns of {name!r}: {list(slot.columns)}",
+                            BINDING_INVALID)
+    slot_kind = where.get(slot.kind_column) if slot.kind_column else slot.kind
+    if slot.kind_column and str(slot_kind) not in KINDS:
+        raise AgentRunError(f"slot {name!r} needs where[{slot.kind_column!r}] naming an id kind", BINDING_INVALID)
+    if kind.removesuffix("[]") not in ("*", slot_kind):
+        raise AgentRunError(f"slot kind {slot_kind!r} differs from param kind {kind!r}", BINDING_INVALID)
+    if any(arg in ("--content", "--page") or arg.startswith(("--content=", "--page=")) for arg in source.argv):
+        raise AgentRunError(f"binding source {spec['from']!r} reads content or pages; it yields no binding rows",
+                            BINDING_INVALID)
+    compiled[at] = dataclasses.replace(source, argv=tuple(_with_json(request_schema(root, operation), list(source.argv))))
+    return CompiledRef(param=param, source=spec["from"], slot_name=name, slot=slot, where=dict(where), target_kind=kind)
+
+
+def _compile_bindings(root, index, step, compiled) -> tuple[tuple, list]:
+    """Admission-compile one bound step (PLAN S14): its refs, and its argv with
+    placeholders where run time puts the resolved values."""
+    verb = resolve_use(step["use"], index)
+    operation = index.get("verb_to_operation", {}).get(verb)
+    entry = REGISTRY.get(operation)
+    if entry is None or (entry.effects != OperationEffects.READ and entry.read_when is None):
+        raise AgentRunError(f"a bound target must be a read: {verb!r}", BINDING_INVALID)
+    schema = request_schema(root, operation)
     props = schema.get("properties", {})
-    positionals = []
-    for param in params:
-        cli = props.get(param, {}).get("x-los-cli", {})
-        position = cli.get("position")
-        if position is not None:
-            positionals.append((position, param))
-    positionals.sort()
-    argv: list[str] = []
-    for _, param in positionals:
-        argv.append(_bound_value(values[param]))
-    argv.extend(args)
-    for param in params:
-        cli = props.get(param, {}).get("x-los-cli", {})
-        if cli.get("position") is not None:
-            continue
-        flags = cli.get("flags") or []
-        if not flags:
-            raise AgentRunError(f"bound param {param!r} has no positional or flag form", BINDING_INVALID)
-        argv.extend([flags[0], _bound_value(values[param])])
-    return argv
-
-
-def _compile_bindings(root, index, step, bind, compiled, compiled_index):
-    """Admission-compile one bound step (PLAN S14): refs, argv, sources.
-
-    Refusals needing the registry or a request schema raise
-    AgentRunError(message, BINDING_INVALID) and become admission errors.
-    """
-    import dataclasses
-
-    from learning_os.app.registry import REGISTRY
-    from learning_os.domain.ids import KINDS, is_valid
-    from learning_os.store.contracts.requests import request_schema
-
-    target_verb = resolve_use(step["use"], index)
-    target_operation = index.get("verb_to_operation", {}).get(target_verb)
-    target_entry = REGISTRY.get(target_operation)
-    if target_entry is None:
-        raise AgentRunError(f"bound target has no operation: {target_verb!r}", BINDING_INVALID)
-    try:
-        target_schema = request_schema(root, target_operation)
-    except (OSError, ValueError) as exc:
-        raise AgentRunError(f"bound target schema unavailable: {exc}", BINDING_INVALID) from exc
-    props = target_schema.get("properties", {})
-    for required in target_schema.get("required", []):
-        cli = props.get(required, {}).get("x-los-cli", {})
-        if cli.get("position") is not None and required not in bind:
-            raise AgentRunError(
-                f"required positional {required!r} is neither bound nor literal", BINDING_INVALID)
-    refs: list = []
-    values: dict[str, object] = {}
-    sources: list[str] = []
-    for param, bound in bind.items():
-        kind = _bound_param_kind(step, param, target_schema, target_entry)
-        list_kind = kind.endswith("[]")
-        item_kind = kind[:-2] if list_kind else kind
-        if isinstance(bound, list):
-            if not list_kind:
-                raise AgentRunError(f"param {param!r} takes one binding, not a list", BINDING_INVALID)
-            if not bound:
-                raise AgentRunError(f"binding for {param!r} is empty", BINDING_INVALID)
-            ref_specs = bound
-        else:
-            if list_kind:
-                raise AgentRunError(
-                    f"param {param!r} of kind {kind} takes a list of references", BINDING_INVALID)
-            ref_specs = [bound]
-        resolved: list[str] = []
-        for ref_spec in ref_specs:
-            source_id = ref_spec.get("from")
-            if source_id is None:
-                literal = ref_spec.get("literal")
-                if not isinstance(literal, str) or not is_valid(item_kind, literal):
-                    raise AgentRunError(
-                        f"literal for {param!r} is not a valid {item_kind} id", BINDING_INVALID)
-                refs.append(CompiledRef(param=param, source=None, slot_name=None,
-                                        slot=None, where={}, literal=literal,
-                                        target_kind=kind))
-                resolved.append(literal)
-                continue
-            position = compiled_index.get(source_id)
-            if position is None:
-                raise AgentRunError(f"binding source {source_id!r} is not an earlier step", BINDING_INVALID)
-            source_step = compiled[position]
-            source_verb = source_step.argv[0]
-            source_operation = index.get("verb_to_operation", {}).get(source_verb)
-            source_entry = REGISTRY.get(source_operation)
-            if source_entry is None:
-                raise AgentRunError(f"binding source {source_id!r} has no operation", BINDING_INVALID)
-            if source_step.writer:
-                raise AgentRunError(
-                    f"binding source {source_id!r} ({source_operation}) is a write", BINDING_INVALID)
-            slot_name = ref_spec.get("slot")
-            slot = source_entry.output_slots.get(slot_name)
-            if slot is None:
-                raise AgentRunError(
-                    f"operation {source_operation!r} declares no slot {slot_name!r}", BINDING_INVALID)
-            where = ref_spec.get("where") or {}
-            if not isinstance(where, dict):
-                raise AgentRunError(f"where for {param!r} must be an object", BINDING_INVALID)
-            if where and slot.value_key is None:
-                raise AgentRunError(
-                    f"slot {slot_name!r} holds scalars; where cannot filter it", BINDING_INVALID)
-            for key in where:
-                if key not in slot.columns:
-                    raise AgentRunError(
-                        f"where key {key!r} is not a declared column of {slot_name!r}", BINDING_INVALID)
-            if slot.kind_column is not None:
-                static_kind = where.get(slot.kind_column)
-                if static_kind is None:
-                    raise AgentRunError(
-                        f"slot {slot_name!r} needs where[{slot.kind_column!r}]", BINDING_INVALID)
-                if static_kind not in KINDS:
-                    raise AgentRunError(
-                        f"where[{slot.kind_column!r}] = {static_kind!r} is not an id kind", BINDING_INVALID)
-                if item_kind not in ("*", static_kind):
-                    raise AgentRunError(
-                        f"slot kind {static_kind!r} differs from param kind {item_kind!r}", BINDING_INVALID)
-            elif slot.kind is not None and item_kind not in ("*", slot.kind):
-                raise AgentRunError(
-                    f"slot kind {slot.kind!r} differs from param kind {item_kind!r}", BINDING_INVALID)
-            source_argv = list(source_step.argv)
-            if any(arg == "--content" or arg == "--page" or arg.startswith("--content=")
-                   or arg.startswith("--page=") for arg in source_argv):
-                raise AgentRunError(
-                    f"binding source {source_id!r} reads content or pages; it yields no binding rows",
-                    BINDING_INVALID)
-            if source_id not in sources:
-                sources.append(source_id)
-            try:
-                source_schema = request_schema(root, source_operation)
-            except (OSError, ValueError) as exc:
-                raise AgentRunError(f"source schema unavailable: {exc}", BINDING_INVALID) from exc
-            if source_schema.get("properties", {}).get("json") is not None and "--json" not in source_argv:
-                source_argv.append("--json")
-                compiled[position] = dataclasses.replace(source_step, argv=tuple(source_argv))
-            refs.append(CompiledRef(param=param, source=source_id, slot_name=slot_name,
-                                    slot=slot, where=dict(where), target_kind=kind))
-            resolved.append("id-placeholder" if item_kind == "*" else f"{item_kind}-placeholder")
-        values[param] = resolved if list_kind else resolved[0]
-    argv = _bound_argv(list(step.get("args", [])), list(bind), target_schema, values)
-    if props.get("json") is not None and "--json" not in argv:
-        argv.append("--json")
-    return tuple(refs), argv, tuple(sources)
+    for name in schema.get("required", []):
+        if name not in step["bind"] and props.get(name, {}).get("x-los-cli", {}).get("position") is not None:
+            raise AgentRunError(f"required positional {name!r} is neither bound nor literal", BINDING_INVALID)
+    refs, stubs = [], {}
+    for param, bound in step["bind"].items():
+        kind = props.get(param, {}).get("x-los-id-kind") or entry.binding_params.get(param)
+        if param not in props or not kind:
+            raise AgentRunError(f"bound param {param!r} of {verb!r} is unknown or declares no id kind", BINDING_INVALID)
+        many = kind.endswith("[]")
+        if many != isinstance(bound, list) or bound == []:
+            raise AgentRunError(f"param {param!r} of kind {kind} takes "
+                                f"{'a non-empty list of references' if many else 'one reference'}", BINDING_INVALID)
+        refs += [_compile_ref(root, index, compiled, param, kind, spec) for spec in (bound if many else [bound])]
+        stub = "id-placeholder" if kind == "*" else f"{kind.removesuffix('[]')}-placeholder"
+        stubs[param] = json.dumps([stub]) if many else stub
+    argv, places = _bound_argv(step.get("args", []), props, stubs)
+    return (tuple(dataclasses.replace(ref, position=places[ref.param] + 1) for ref in refs),
+            _with_json(schema, [verb, *argv]))
 
 
 def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
@@ -863,7 +727,6 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
     from learning_os.app.agent_plans import execute_plan
     from learning_os.app.agent_reporting import ReportStore, minimum_ledger_bytes
     from learning_os.app.projection_readiness import dependency_ready
-    from learning_os.app.registry import REGISTRY
     from learning_os.app.validation_service import diagnostic_report
     from learning_os.domain.agent_plans import CompiledStep, PlanControls, RawOutcome
 
@@ -880,7 +743,6 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                               for s in steps) or injected)
         writers.update(index.get("write_verbs", []))
         compiled = []
-        compiled_index: dict[str, int] = {}
         for step in steps:
             direct = (step.get("argv") or [step.get("use")])[0]
             namespace = None
@@ -891,30 +753,12 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                     and not (early_entry is not None and early_entry.read_when is not None):
                 raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
             try:
-                bind = step.get("bind")
                 argv = _step_argv(step, index, session_id)
                 command = argv[0] if argv else ""
                 bindings: tuple = ()
-                extra_sources: tuple = ()
-                if bind is not None:
-                    # Admission compiles the bound argv (positionals from
-                    # x-los-cli.position, then args, then flags); the raw
-                    # argv is a template, not a runnable step.
-                    bindings, bound_argv, extra_sources = _compile_bindings(
-                        root, index, step, bind, compiled, compiled_index)
-                    argv = [command, *bound_argv]
-                    # A non-read_when write refuses before any shape check:
-                    # no write can receive a bound value (D2).
-                    pre_entry = REGISTRY.get(index.get("verb_to_operation", {}).get(command))
-                    if (command in writers or step.get("kind") == "log"
-                            or step.get("write", False)) and not (
-                            pre_entry is not None and pre_entry.read_when is not None):
-                        raise AgentRunError(
-                            "a bound target must be a read after the declared effects", BINDING_INVALID)
-                    if not injected:
-                        namespace = actual.validate(argv)
-                        command = namespace.command
-                elif not injected and command != "__seal_submit__":
+                if "bind" in step:
+                    bindings, argv = _compile_bindings(root, index, step, compiled)
+                if not injected and command != "__seal_submit__":
                     namespace = actual.validate(argv)
                     command = namespace.command
                     # Check all static envelope/session bindings before the first mutation.
@@ -923,7 +767,7 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                             actual.envelope_bytes[tuple(argv)] = Path(namespace.payload_file).read_bytes()
                 writer = (command in writers and not (namespace is not None and _declared_read(namespace))) \
                     or step.get("kind") == "log" or step.get("write", False)
-                if bind is not None and writer:
+                if bindings and writer:
                     raise AgentRunError("a bound target must be a read after the declared effects", BINDING_INVALID)
                 if writer and session_id is None:
                     raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
@@ -934,17 +778,15 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                 if profile == "manifest-brief" and ("--brief" not in argv or
                         (not injected and getattr(namespace, "feed", None))):
                     reusable = False
-                dependencies = list(step.get("depends_on", []))
-                dependencies.extend(source for source in extra_sources if source not in dependencies)
                 compiled.append(CompiledStep(
-                    id=step["id"], argv=tuple(argv), dependencies=tuple(dependencies),
+                    id=step["id"], argv=tuple(argv),
+                    dependencies=tuple(dict.fromkeys([*step.get("depends_on", []), *(ref.source for ref in bindings if ref.source)])),
                     bindings=bindings,
                     writer=bool(writer), submitting=command in ("capability", "__seal_submit__"),
                     reusable=reusable, parallel_safe=bool(reusable and entry.parallel_safe),
                     ready_timeout_s=float(step.get("ready_timeout_s", 10)),
                     preflight=step.get("preflight", False), scope=tuple(step.get("writes", [])),
                     presentation=step))
-                compiled_index[step["id"]] = len(compiled) - 1
             except AgentRunError as exc:
                 compiled.append(CompiledStep(id=step["id"], argv=(),
                     admission_error={"code": exc.code, "retryable": False, "message": str(exc)}))
@@ -1005,9 +847,6 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
             def epoch(self, selected_root):
                 return not injected
 
-            def bind_argv(self, step, payloads):
-                return _resolve_bound_argv(root, index, step, payloads)
-
             def validate_bound(self, bound_step):
                 if not injected:
                     actual.validate(list(bound_step.argv))
@@ -1055,15 +894,12 @@ def main() -> int:
             return 0
         if not args.plan or args.step:
             raise AgentRunError("a plan is required; --step needs --expand-report")
-        if args.plan == "-":
-            plan_text = sys.stdin.read(1048577)
-            if len(plan_text.encode("utf-8")) > 1048576:
-                raise AgentRunError("plan input exceeds 1 MiB")
-            report = run_plan(json.loads(plan_text, parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
-        else:
-            if Path(args.plan).stat().st_size > 1048576:
-                raise AgentRunError("plan input exceeds 1 MiB")
-            report = run_plan(json.loads(Path(args.plan).read_text(encoding="utf-8"), parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
+        if args.plan != "-" and Path(args.plan).stat().st_size > 1048576:
+            raise AgentRunError("plan input exceeds 1 MiB")
+        plan_text = sys.stdin.read(1048577) if args.plan == "-" else Path(args.plan).read_text(encoding="utf-8")
+        if len(plan_text.encode("utf-8")) > 1048576:
+            raise AgentRunError("plan input exceeds 1 MiB")
+        report = run_plan(json.loads(plan_text, parse_float=_finite_number, parse_constant=_finite_number), root, poll_s=args.poll_s, report_dir=args.report_dir)
     except (OSError, ValueError, KeyError, TypeError, AgentRunError) as exc:
         print(_json({"error": {"code": getattr(exc, "code", INVALID_REQUEST),
                                "message": str(exc), "retryable": False}}))

@@ -46,27 +46,14 @@ PLAN_EXAMPLE = {
 
 def _param_rows(root: Path, operation: str) -> list[dict]:
     schema = request_schema(root, operation)
-    required = set(schema.get("required", []))
     rows: list[dict] = []
     for name, spec in schema.get("properties", {}).items():
-        if name in _SKIPPED_PARAMS:
-            continue
         cli = spec.get("x-los-cli", {})
-        if cli.get("transport_only"):
+        if name in _SKIPPED_PARAMS or cli.get("transport_only"):
             continue
-        row: dict = {"name": name}
-        position = cli.get("position")
-        if position is not None:
-            row["position"] = position
-        flags = cli.get("flags") or []
-        if flags:
-            row["flags"] = flags
-        kind = spec.get("x-los-id-kind")
-        if kind is not None:
-            row["kind"] = kind
-        if name in required:
-            row["required"] = True
-        rows.append(row)
+        row = {"name": name, "position": cli.get("position"), "flags": cli.get("flags") or None,
+               "kind": spec.get("x-los-id-kind"), "required": name in schema.get("required", []) or None}
+        rows.append({key: value for key, value in row.items() if value is not None})
     return rows
 
 
@@ -83,7 +70,6 @@ def _slot_rows(operation: str) -> list[dict]:
 
 def build_catalog(root, verb_to_operation: dict) -> dict:
     """Build the read catalog for ``root``; refuse any listed verb that writes."""
-    root = Path(root)
     reads: list[dict] = []
     for verb in READ_VERBS:
         operation = verb_to_operation.get(verb)

@@ -7,7 +7,7 @@ import math
 def parse_controls(plan: dict[str, object]) -> dict[str, object]:
     """Validate optional plan controls; reject bools/nonfinite/misspellings."""
     allowed = {"steps", "session_id", "on_error", "schema_version",
-               "read_workers", "deadline_s", "report_max_bytes", "snapshot"}
+               "read_workers", "deadline_s", "report_max_bytes"}
     unknown = set(plan) - allowed
     # Per-step fields are validated by the runner; only plan-level unknowns
     # that look like misspelled controls are refused here by caller.
@@ -24,8 +24,5 @@ def parse_controls(plan: dict[str, object]) -> dict[str, object]:
     version = plan.get("schema_version", 1)
     if isinstance(version, bool) or not isinstance(version, int) or version not in (1, 2, 3):
         raise ValueError("unsupported plan schema_version")
-    snapshot = plan.get("snapshot")
-    if snapshot is not None and snapshot != "one":
-        raise ValueError('snapshot must be the string "one"')
     return {"read_workers": workers, "deadline_s": float(deadline),
             "report_max_bytes": budget, "unknown_plan_fields": sorted(unknown)}
