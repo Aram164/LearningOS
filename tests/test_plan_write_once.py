@@ -409,7 +409,7 @@ def test_route_patch_reviewed_journey_validates_exactly_twice(
             "--out", str(out), *extra])
 
     assert seal(tmp_path / "checked.json", {**payload, "check": True},
-                "journey-route-check", "--guards", "auto",
+                "journey-route-001", "--guards", "auto",
                 "--check-out", str(record)) == 0, capsys.readouterr().err
     assert len(runs) == 1, "exactly one validate per check"
     checked = json.loads(record.read_text(encoding="utf-8"))
@@ -418,7 +418,7 @@ def test_route_patch_reviewed_journey_validates_exactly_twice(
     assert checked["payload"] == payload
 
     applied = tmp_path / "applied.json"
-    assert seal(applied, payload, "journey-route-apply",
+    assert seal(applied, payload, "journey-route-001",
                 "--guards-from", str(record)) == 0, capsys.readouterr().err
     assert len(runs) == 1, "sealing from a record validates nothing"
     envelope = json.loads(applied.read_text(encoding="utf-8"))
