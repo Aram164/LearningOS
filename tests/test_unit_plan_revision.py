@@ -685,6 +685,7 @@ def test_verify_envelope_mode_admits_a_sealed_unit_map_import(
         mini_repo, tmp_path):
     """The sealed envelope is the evidence: the apply never produced a report."""
     from repo_builders import add_curriculum
+
     from learning_os.store.session_ledger import sealed_request_path
 
     add_curriculum(mini_repo)
@@ -703,6 +704,7 @@ def test_verify_envelope_mode_admits_a_sealed_unit_map_import(
 
 def test_verify_envelope_mode_refuses_another_unit(mini_repo, tmp_path):
     from repo_builders import add_curriculum
+
     from learning_os.store.session_ledger import sealed_request_path
 
     add_curriculum(mini_repo)
@@ -721,6 +723,7 @@ def test_verify_envelope_mode_refuses_another_unit(mini_repo, tmp_path):
 
 def test_verify_envelope_mode_refuses_a_non_plan_capability(mini_repo):
     from repo_builders import add_curriculum
+
     from learning_os.store.session_ledger import sealed_request_path
 
     add_curriculum(mini_repo)
@@ -738,6 +741,7 @@ def test_verify_envelope_mode_refuses_a_non_plan_capability(mini_repo):
 def test_verify_envelope_mode_reports_drift_as_committed_but_failed(
         mini_repo, tmp_path):
     from repo_builders import add_curriculum
+
     from learning_os.store.session_ledger import sealed_request_path
 
     add_curriculum(mini_repo)
