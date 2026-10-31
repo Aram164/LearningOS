@@ -214,6 +214,50 @@ def test_real_cli_root_without_implementation_copy(mini_repo, tmp_path):
     assert json.loads(proc.stdout)["steps"][0]["output"]["id"] == "note-demo"
 
 
+def test_metadata_search_plan_runs_without_session(mini_repo):
+    """Core-declared read mode: metadata search needs no plan session (S10)."""
+    add_curriculum(mini_repo)
+    report = agent_run.run_plan(
+        {"steps": [{"id": "s", "use": "search", "args": ["demo"]}]}, mini_repo)
+    assert report["steps"][0]["status"] == "ok", report
+
+
+def test_content_search_still_requires_session(mini_repo):
+    add_curriculum(mini_repo)
+    report = agent_run.run_plan(
+        {"steps": [{"id": "s", "use": "search", "args": ["demo", "--content"]}]}, mini_repo)
+    assert report["steps"][0]["status"] == "error", report
+    assert report["steps"][0]["error"]["code"] == "SESSION_REQUIRED"
+
+
+def test_dependent_read_after_metadata_search_reaches_ok(mini_repo):
+    """Today the dependent read is SNAPSHOT_CONFLICT: a derived write never receipts."""
+    add_curriculum(mini_repo)
+    report = agent_run.run_plan({"steps": [
+        {"id": "s", "use": "search", "args": ["demo"]},
+        {"id": "ctx", "use": "plan-edit-context", "args": ["unit-demo-l01", "--brief"],
+         "depends_on": ["s"]},
+    ]}, mini_repo)
+    assert report["steps"][0]["status"] == "ok", report
+    assert report["steps"][1]["status"] == "ok", report
+
+
+def _file_listing(root: Path):
+    return sorted((str(p.relative_to(root)), p.lstat().st_mtime_ns, p.lstat().st_size)
+                  for p in root.rglob("*") if p.is_file())
+
+
+def test_metadata_search_and_page_change_no_file(mini_repo):
+    add_curriculum(mini_repo)
+    before = _file_listing(mini_repo)
+    report = agent_run.run_plan({"steps": [
+        {"id": "s1", "use": "search", "args": ["demo"]},
+        {"id": "s2", "use": "search", "args": ["demo", "--page"]},
+    ]}, mini_repo)
+    assert report["totals"]["ok"] == 2, report
+    assert _file_listing(mini_repo) == before
+
+
 @pytest.mark.parametrize("args", [["--root", "/tmp"], ["--root=/tmp"]])
 def test_root_override_refuses_entire_plan(tmp_path, args):
     with pytest.raises(agent_run.AgentRunError, match="root overrides"):

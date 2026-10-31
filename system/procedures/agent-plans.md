@@ -56,6 +56,10 @@ Only operations explicitly declaring `read` effects in the executing Core are
 reads. Derived writes, canonical writes (including `session-end`), and unknown effects
 require a plan `session_id` and cannot run after an unresolved write, for both
 `argv` and `use` steps. Describing an operation remains a read.
+An operation may additionally declare one Core-owned read mode (`read_when`):
+when the parsed step's arguments satisfy it, that mode runs as a read with no
+plan `session_id`, while the registered effect stays the write barrier for
+every other mode and a plan can never claim the mode itself.
 Every dispatched write starts with uncertain commit status, including porcelain.
 A receipt establishes commitment; an explicit gateway refusal can establish no
 commit. A porcelain error's generic `commit: none` cannot prove that it had no

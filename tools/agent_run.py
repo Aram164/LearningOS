@@ -74,6 +74,18 @@ class AgentRunError(Exception):
         self.code = code
 
 
+def _declared_read(namespace) -> bool:
+    """True when this parsed step's operation declares a read mode holding for it.
+
+    Core owns the declaration; the plan can never claim it. The registered
+    effect stays the write barrier for every other mode of the operation.
+    """
+    from learning_os.app.registry import REGISTRY
+
+    entry = REGISTRY.get(getattr(namespace, "_operation", None))
+    return entry is not None and entry.read_when is not None and bool(entry.read_when(namespace))
+
+
 def _json(value) -> str:
     try:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
@@ -432,7 +444,7 @@ def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
             raise AgentRunError("parsed step root differs from selected root", ROOT_MISMATCH)
         if session_id is not None and getattr(namespace, "session_id", None) not in (None, session_id):
             raise AgentRunError("parsed step session differs from plan", SESSION_MISMATCH)
-        if session_id is None and namespace.command in writers:
+        if session_id is None and namespace.command in writers and not _declared_read(namespace):
             raise AgentRunError("parsed write command requires a plan session_id", SESSION_REQUIRED)
         return namespace
 
@@ -623,7 +635,12 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
         compiled = []
         for step in steps:
             direct = (step.get("argv") or [step.get("use")])[0]
-            if session_id is None and direct in writers and not step.get("describe"):
+            namespace = None
+            # A Core-declared read mode skips this coarse verb check; the parsed
+            # check in validate() decides mode by mode.
+            early_entry = REGISTRY.get(index.get("verb_to_operation", {}).get(direct))
+            if session_id is None and direct in writers and not step.get("describe") \
+                    and not (early_entry is not None and early_entry.read_when is not None):
                 raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
             try:
                 argv = _step_argv(step, index, session_id)
@@ -635,7 +652,8 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                     with _session_bound_envelope(namespace, session_id):
                         if command == "capability":
                             actual.envelope_bytes[tuple(argv)] = Path(namespace.payload_file).read_bytes()
-                writer = command in writers or step.get("kind") == "log" or step.get("write", False)
+                writer = (command in writers and not (namespace is not None and _declared_read(namespace))) \
+                    or step.get("kind") == "log" or step.get("write", False)
                 if writer and session_id is None:
                     raise AgentRunError("write plans require an explicit session_id stable across retries", SESSION_REQUIRED)
                 operation = index.get("verb_to_operation", {}).get(command)

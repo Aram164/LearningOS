@@ -34,6 +34,9 @@ class Operation:
     # Invocation kind controls dispatch/locking, not effects. A new operation
     # is a write barrier until its owner explicitly declares a read.
     effects: OperationEffects = OperationEffects.UNKNOWN
+    # Core declares a mode of this operation that only reads; a plan can never
+    # claim this. The registered effect stays authoritative for every mode.
+    read_when: Callable[[object], bool] | None = None
 
 
 REGISTRY: dict[str, Operation] = {}
@@ -49,6 +52,7 @@ def register(
     memo_profile: str = "none",
     read_session_profile: str = "none",
     effects: OperationEffects = OperationEffects.UNKNOWN,
+    read_when: Callable[[object], bool] | None = None,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
 
@@ -58,7 +62,7 @@ def register(
             human=human, render_check=render_check,
             parallel_safe=parallel_safe, memo_profile=memo_profile,
             read_session_profile=read_session_profile,
-            effects=OperationEffects(effects),
+            effects=OperationEffects(effects), read_when=read_when,
         )
         return fn
 

@@ -55,6 +55,10 @@ The one-shot `app/project_migration.py` controller implements OPERATOR boundary 
   optional report, cache, staging and export output; `CANONICAL_WRITE` includes
   canonical records and Git/session mutations. The default is `UNKNOWN`, a
   write barrier. This scheduling metadata grants no write authority.
+  A `read_when` predicate on the registration admits exactly one Core-declared
+  argument mode of a non-read operation as a read, checked against the parsed
+  step; the registered effect stays the barrier for every other mode, and no
+  plan can claim the mode itself.
 
 Admission lives in `system/contracts/capabilities.yaml`; `app/admission.py` constants
 `GESTURE_ALLOWLIST` and `UI_REVIEWED_ALLOWLIST` enforce it. The UI mirrors

@@ -1086,7 +1086,8 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("note.search", kind="query", effects=OperationEffects.DERIVED_WRITE)
+@register("note.search", kind="query", effects=OperationEffects.DERIVED_WRITE,
+          read_when=lambda args: not getattr(args, "content", False))
 def search(ctx: OpContext, req: dict) -> Result:
     """Search records, garden seeds, and inbox filenames; empty query lists rows."""
     if req["type"] is not None and req["type"] not in VALID_RECORD_TYPES:
