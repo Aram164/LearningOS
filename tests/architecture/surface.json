@@ -9457,7 +9457,7 @@
     "option_strings": [
      "--capability"
     ],
-    "required": true,
+    "required": false,
     "type": null
    },
    {
@@ -9538,7 +9538,7 @@
     "option_strings": [
      "--key"
     ],
-    "required": true,
+    "required": false,
     "type": null
    },
    {
@@ -9564,7 +9564,7 @@
     "option_strings": [
      "--payload"
     ],
-    "required": true,
+    "required": false,
     "type": null
    },
    {

@@ -839,7 +839,7 @@ def test_reviewed_write_is_two_calls_and_applies_the_reviewed_bytes(
     changed = _one_call(mini_repo, capability="stage.attachment.add", payload=payload,
                         key="reviewed-two-call-001", extra=["--guards-from", str(record)])
     assert changed.returncode == 2
-    assert "record payload differs from the sealing payload" in changed.stderr
+    assert "--payload differs from the reviewed record's payload" in changed.stderr
     assert _receipts(mini_repo) == []
     source.write_text("reviewed attachment bytes", encoding="utf-8")
     applied = _one_call(mini_repo, capability="stage.attachment.add", payload=payload,
@@ -867,6 +867,110 @@ def test_reviewed_write_refuses_a_tree_that_moved_since_the_review(
                       key="reviewed-stale-001", extra=["--guards-from", str(record)])
     assert stale.returncode != 0
     assert json.loads(stale.stdout)["error"]["code"] == "STALE_SNAPSHOT"
+
+
+# The reviewed write's second call is documented as bare `--guards-from REC
+# --submit` (issue #86): the reviewed record carries the capability, the
+# payload and the idempotency key, so the seal derives all three from it and
+# refuses an explicit flag that contradicts the reviewed intent.
+def _bare_submit(root: Path, record: Path, extra: list[str] | None = None):
+    command = [sys.executable, str(SEAL), "--root", str(root),
+               "--guards-from", str(record), "--submit"]
+    command.extend(extra or [])
+    return subprocess.run(command, capture_output=True, text=True, timeout=120)
+
+
+def test_bare_guards_from_submit_applies_the_reviewed_write(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="bare-guards-from-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    stored = json.loads(record.read_text(encoding="utf-8"))
+    assert stored["idempotency_key"] == "bare-guards-from-001"
+    applied = _bare_submit(mini_repo, record)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    assert json.loads(applied.stdout)["ok"] is True
+    assert len(_receipts(mini_repo)) == 1
+    replay = _bare_submit(mini_repo, record)
+    assert json.loads(replay.stdout)["replayed"] is True
+
+
+def test_bare_guards_from_still_refuses_bytes_nobody_reviewed(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="bare-drift-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    Path(payload["file"]).write_text("bytes nobody reviewed", encoding="utf-8")
+    changed = _bare_submit(mini_repo, record)
+    assert changed.returncode == 2
+    assert "record payload differs from the sealing payload" in changed.stderr
+    assert _receipts(mini_repo) == []
+
+
+def test_guards_from_refuses_an_explicit_flag_that_contradicts_the_record(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="contradiction-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    other = _bare_submit(mini_repo, record,
+                         extra=["--capability", "capture.create"])
+    assert other.returncode == 2
+    assert "--capability" in other.stderr
+    assert "differs from the reviewed record" in other.stderr
+    wrong_payload = _bare_submit(
+        mini_repo, record,
+        extra=["--payload", json.dumps({"text": "a different write"})])
+    assert wrong_payload.returncode == 2
+    assert "--payload" in wrong_payload.stderr
+    assert "differs from the reviewed record" in wrong_payload.stderr
+    wrong_key = _bare_submit(mini_repo, record, extra=["--key", "other-key-001"])
+    assert wrong_key.returncode == 2
+    assert "--key" in wrong_key.stderr
+    assert "differs from the reviewed record" in wrong_key.stderr
+    assert _receipts(mini_repo) == []
+
+
+def test_legacy_record_without_a_key_takes_an_explicit_key(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="legacy-record-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    legacy = json.loads(record.read_text(encoding="utf-8"))
+    legacy.pop("idempotency_key")
+    record.write_text(json.dumps(legacy), encoding="utf-8")
+    bare = _bare_submit(mini_repo, record)
+    assert bare.returncode == 2
+    assert "--key" in bare.stderr
+    explicit = _one_call(mini_repo, capability="stage.attachment.add",
+                         payload=payload, key="legacy-record-001",
+                         extra=["--guards-from", str(record)])
+    assert explicit.returncode == 0, explicit.stdout + explicit.stderr
+    assert json.loads(explicit.stdout)["ok"] is True
+    assert len(_receipts(mini_repo)) == 1
 
 
 # Two callers can use one key, by accident: agents copy documented example

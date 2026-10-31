@@ -77,7 +77,8 @@ def _load_payload(spec: str) -> dict:
     return payload
 
 
-def _bind_file_digests(root: Path, capability: str, payload: dict) -> dict:
+def _bind_file_digests(root: Path, capability: str, payload: dict,
+                       force: bool = False) -> dict:
     """Fill ``X_sha256`` for every file the payload names in a byte-bound field ``X``.
 
     A gateway write binds an external file to its exact bytes
@@ -87,7 +88,10 @@ def _bind_file_digests(root: Path, capability: str, payload: dict) -> dict:
     is the sealing operator, so hashing the bytes here binds exactly what its
     own ``sha256sum`` would (agent-cost D3). A digest the caller supplies is
     kept. A check record keeps the filled payload, so a file that changes
-    after review no longer matches its ``--guards-from`` record.
+    after review no longer matches its ``--guards-from`` record. With
+    ``force`` — a payload derived from a record — every digest is recomputed
+    from the current bytes, so the derivation cannot replay a reviewed digest
+    for bytes that have since changed.
     """
     from learning_os.store.contracts.requests import request_schema
 
@@ -99,7 +103,8 @@ def _bind_file_digests(root: Path, capability: str, payload: dict) -> dict:
     for name in sorted(properties):
         field = name.removesuffix("_sha256")
         value = payload.get(field)
-        if field == name or field not in properties or name in payload \
+        if field == name or field not in properties \
+                or (name in payload and not force) \
                 or not isinstance(value, str) or value == "-":
             continue
         source = Path(value).expanduser().resolve()
@@ -415,7 +420,8 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         sealing = {name: value for name, value in payload.items()
                    if name != "check"}
         Path(check_out).write_text(
-            json.dumps({**record, "payload": sealing}, indent=2,
+            json.dumps({**record, "payload": sealing,
+                        "idempotency_key": key}, indent=2,
                        sort_keys=True, ensure_ascii=False) + "\n",
             encoding="utf-8")
     if record["ok"] is not True:
@@ -631,10 +637,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
                         help="repository root (default: the checkout holding tools/)")
-    parser.add_argument("--capability", required=True, help="capability name")
-    parser.add_argument("--payload", required=True,
-                        help="payload JSON, or @PATH to a JSON file")
-    parser.add_argument("--key", required=True, help="idempotency key")
+    parser.add_argument("--capability", default=None,
+                        help="capability name (required unless derived from a "
+                             "--guards-from record)")
+    parser.add_argument("--payload", default=None,
+                        help="payload JSON, or @PATH to a JSON file (required "
+                             "unless derived from a --guards-from record)")
+    parser.add_argument("--key", default=None,
+                        help="idempotency key (required unless the --guards-from "
+                             "record carries it)")
     parser.add_argument("--request-id", default=None,
                         help="request id (default: a fresh request-<key>-<random> "
                              "per run, as §25c step 4 asks; to retry, resubmit the "
@@ -741,6 +752,64 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
+
+    # The reviewed record carries the identity the submit applies (issue
+    # #86): with --guards-from, derive capability, payload and key from it,
+    # and refuse an explicit flag that contradicts what was reviewed.
+    record = None
+    derived_payload = False
+    explicit_payload_given = args.payload is not None
+    if args.guards_from:
+        try:
+            record = json.loads(Path(args.guards_from).read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            print(f"seal_envelope: {exc}", file=sys.stderr)
+            return 2
+        if not isinstance(record, dict) or record.get("schema") != 1:
+            print("seal_envelope: --guards-from record schema must be 1",
+                  file=sys.stderr)
+            return 2
+        if (args.capability is not None
+                and args.capability != record.get("capability")):
+            print(f"seal_envelope: --capability {args.capability!r} differs "
+                  f"from the reviewed record's capability "
+                  f"{record.get('capability')!r}", file=sys.stderr)
+            return 2
+        if (args.key is not None and record.get("idempotency_key") is not None
+                and args.key != record["idempotency_key"]):
+            print(f"seal_envelope: --key {args.key!r} differs from the "
+                  f"reviewed record's idempotency key "
+                  f"{record['idempotency_key']!r}", file=sys.stderr)
+            return 2
+        if args.capability is None:
+            if record.get("capability") is None:
+                print("seal_envelope: the reviewed record names no capability; "
+                      "pass --capability", file=sys.stderr)
+                return 2
+            args.capability = record["capability"]
+        if args.payload is None:
+            if record.get("payload") is None:
+                print("seal_envelope: the reviewed record carries no payload; "
+                      "pass --payload", file=sys.stderr)
+                return 2
+            args.payload = json.dumps(record["payload"], ensure_ascii=False)
+            derived_payload = True
+        if args.key is None:
+            if record.get("idempotency_key") is None:
+                print("seal_envelope: the reviewed record predates the "
+                      "idempotency key; pass --key", file=sys.stderr)
+                return 2
+            args.key = record["idempotency_key"]
+    else:
+        missing = [flag for flag, value in (
+            ("--capability", args.capability), ("--payload", args.payload),
+            ("--key", args.key)) if value is None]
+        if missing:
+            print(f"seal_envelope: {' and '.join(missing)} required (a "
+                  "--guards-from record can supply all three)", file=sys.stderr)
+            return 2
+    explicit_payload = args.payload if (args.guards_from and explicit_payload_given) else None
+
     try:
         payload = _load_payload(args.payload)
     except (ValueError, OSError) as exc:
@@ -754,7 +823,18 @@ def main(argv: list[str] | None = None) -> int:
             print("seal_envelope: refusing to write the envelope inside the "
                   "repository; point --out at scratch", file=sys.stderr)
             return 2
-    payload = _bind_file_digests(root, args.capability, payload)
+    payload = _bind_file_digests(root, args.capability, payload,
+                                 force=derived_payload)
+
+    if explicit_payload is not None:
+        # Binding may add digest fields, so the restated payload is compared
+        # after binding: anything still different is not what was reviewed.
+        if (json.dumps({k: v for k, v in payload.items() if k != "check"},
+                       sort_keys=True)
+                != json.dumps(record.get("payload"), sort_keys=True)):
+            print("seal_envelope: --payload differs from the reviewed "
+                  "record's payload", file=sys.stderr)
+            return 2
 
     if args.submit:
         return _submit(root, args, payload, sealed_session)
