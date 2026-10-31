@@ -347,10 +347,13 @@ def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[
 
 
 def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dict:
-    """Derive one ordered subset, enforcing only authored prerequisite nodes.
+    """Derive one ordered subset, checking only authored prerequisite nodes.
 
-    This is a read model. It neither changes stage lifecycle nor infers mastery
-    from a completed study activity. Its caller binds the result to a snapshot.
+    A prerequisite the map itself teaches first but the order skips is a
+    WARNING in `limitations`, not a refusal; every other input problem still
+    refuses. This is a read model. It neither changes stage lifecycle nor
+    infers mastery from a completed study activity. Its caller binds the
+    result to a snapshot.
     """
     unit = repo.units.get(unit_id)
     if unit is None:
@@ -422,10 +425,14 @@ def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dic
                          if row.get("status") == "complete"
                          or (row["id"] in positions and positions[row["id"]] < positions[sid])]
             if not satisfied:
+                # Aram 2026-10-31: a temporary order that skips a prerequisite
+                # the map itself teaches first is warned about, not refused —
+                # the warning rides in `limitations` like every other note.
                 if len(mapped) == 1:
-                    raise RuntimeInputError(f"prerequisite stage {mapped[0]['id']} must precede {sid} or already record complete")
-                options = ", ".join(row["id"] for row in mapped)
-                raise RuntimeInputError(f"one of the prerequisite stages {options} must precede {sid} or already record complete")
+                    notes.add(f"WARNING: prerequisite stage {mapped[0]['id']} must precede {sid} or already record complete; the order proceeds anyway")
+                else:
+                    options = ", ".join(row["id"] for row in mapped)
+                    notes.add(f"WARNING: one of the prerequisite stages {options} must precede {sid} or already record complete; the order proceeds anyway")
             if len(mapped) > 1:
                 notes.add(f"Prerequisite node {dependency} has several stages; one placed earlier or already complete satisfies it.")
             edges.update((pid, sid) for pid in satisfied)

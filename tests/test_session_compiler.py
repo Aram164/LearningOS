@@ -1333,8 +1333,8 @@ def test_temporary_sequence_reorders_independent_stages_without_canonical_writes
     assert not list((sequence_root / 'operations/transactions').glob('transaction-*.yaml'))
 
 
-@pytest.mark.parametrize('ids', [[], ['missing'], ['stage-seq-a', 'stage-seq-a'], ['stage-seq-b'],
-                              ['stage-seq-b', 'stage-seq-a'], [False], {'stage': 'stage-seq-a'}, None])
+@pytest.mark.parametrize('ids', [[], ['missing'], ['stage-seq-a', 'stage-seq-a'],
+                              [False], {'stage': 'stage-seq-a'}, None])
 def test_temporary_sequence_refuses_bad_ids_and_prerequisite_omission(sequence_root, ids):
     from learning_os.store.fingerprint import canonical_fingerprint
 
@@ -1342,6 +1342,23 @@ def test_temporary_sequence_refuses_bad_ids_and_prerequisite_omission(sequence_r
     result = run_los(sequence_root, 'study-sequence', 'unit-demo-l01', '--stage-ids-json', json.dumps(ids))
     assert result.returncode != 0
     assert canonical_fingerprint(sequence_root) == before
+
+
+def test_temporary_sequence_warning_is_visible_in_the_result(sequence_root):
+    """The prerequisite warning rides the study-sequence-v1 result through the
+    CLI (contract validation included) and writes nothing canonical."""
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    before = canonical_fingerprint(sequence_root)
+    result = run_los(sequence_root, 'study-sequence', 'unit-demo-l01', '--stage-ids-json',
+                     json.dumps(['stage-seq-b', 'stage-seq-a']))
+    assert result.returncode == 0, result.stderr
+    packet = json.loads(result.stdout)
+    assert [s['id'] for s in packet['stages']] == ['stage-seq-b', 'stage-seq-a']
+    assert any('stage-seq-a' in note and 'WARNING' in note
+               for note in packet['limitations'])
+    assert canonical_fingerprint(sequence_root) == before
+    assert not list((sequence_root / 'operations/transactions').glob('transaction-*.yaml'))
 
 
 def test_temporary_sequence_allows_independent_omission_and_completed_prerequisite(sequence_root):
@@ -1383,14 +1400,18 @@ def test_temporary_sequence_accepts_the_authored_order_of_an_iterative_map(seque
     assert any(first in note and 'not enforced' in note for note in packet['limitations'])
 
 
-def test_temporary_sequence_still_enforces_a_prerequisite_the_map_teaches_first(sequence_root):
+def test_temporary_sequence_warns_on_a_prerequisite_the_map_teaches_first(sequence_root):
+    """Aram 2026-10-31: warn, not refuse — the map teaches the prerequisite,
+    so a temporary order that skips it proceeds with a visible warning."""
     from learning_os.derive.learning_runtime import temporary_study_sequence
 
     first, repair, last = _repeat_node_map(sequence_root)
-    with pytest.raises(RuntimeInputError, match=f'prerequisite stage {repair} must precede {last}'):
-        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [last])
+    packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [last])
+    assert [s['id'] for s in packet['stages']] == [last]
+    assert any(repair in note and 'WARNING' in note for note in packet['limitations'])
     packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [repair, last])
     assert {'prerequisite_stage_id': repair, 'dependent_stage_id': last} in packet['prerequisite_edges']
+    assert not any('WARNING' in note for note in packet['limitations'])
 
 
 def test_temporary_sequence_one_stage_of_a_repeated_prerequisite_node_satisfies_it(sequence_root):
@@ -1407,8 +1428,9 @@ def test_temporary_sequence_one_stage_of_a_repeated_prerequisite_node_satisfies_
     one['knowledge_node_id'], two['knowledge_node_id'], dependent['knowledge_node_id'] = (
         nodes[0]['id'], nodes[0]['id'], nodes[2]['id'])
     write_yaml(map_path, data)
-    with pytest.raises(RuntimeInputError, match=f'one of the prerequisite stages {one["id"]}, {two["id"]}'):
-        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [dependent['id']])
+    warned = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [dependent['id']])
+    assert [s['id'] for s in warned['stages']] == [dependent['id']]
+    assert any(one['id'] in note and 'WARNING' in note for note in warned['limitations'])
     packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', [two['id'], dependent['id']])
     assert packet['prerequisite_edges'] == [
         {'prerequisite_stage_id': two['id'], 'dependent_stage_id': dependent['id']}]
@@ -1438,8 +1460,8 @@ def test_temporary_sequence_transitive_edges_cycles_and_required_detours(sequenc
     unit = yaml.safe_load(unit_path.read_text())
     unit['knowledge_map']['nodes'][2]['builds_on'] = ['knowledge-seq-b']
     write_yaml(unit_path, unit)
-    with pytest.raises(RuntimeInputError, match='prerequisite stage'):
-        temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-c'])
+    skipped = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-c'])
+    assert any('WARNING' in note and 'stage-seq-a' in note for note in skipped['limitations'])
     packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-a', 'stage-seq-b', 'stage-seq-c'])
     assert {'prerequisite_stage_id': 'stage-seq-a', 'dependent_stage_id': 'stage-seq-c'} in packet['prerequisite_edges']
     unit['knowledge_map']['nodes'][0]['builds_on'] = ['knowledge-seq-c']
