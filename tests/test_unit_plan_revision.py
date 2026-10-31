@@ -643,6 +643,146 @@ def test_verify_plan_receipt_checks_projection(mini_repo, tmp_path):
     assert verify.returncode == 0, verify.stderr
 
 
+def _seal_one(root: Path, *, capability: str, payload: dict, key: str):
+    seal = Path(__file__).resolve().parents[1] / "tools" / "seal_envelope.py"
+    import subprocess
+    import sys
+    return subprocess.run(
+        [sys.executable, str(seal), "--root", str(root),
+         "--capability", capability, "--payload", json.dumps(payload),
+         "--key", key, "--submit"],
+        text=True, capture_output=True, timeout=120)
+
+
+def _verify(root: Path, *extra: str):
+    import subprocess
+    import sys
+    script = Path(__file__).resolve().parents[1] / "tools" / "verify_plan_receipt.py"
+    return subprocess.run(
+        [sys.executable, str(script), "--root", str(root), *extra],
+        text=True, capture_output=True, timeout=120)
+
+
+def _map_with_one_more_resource(root: Path) -> Path:
+    """A v1-conformant map gaining one route-bound resource row."""
+    import yaml
+    from repo_builders import _structural_fixture
+    map_path, _data = _structural_fixture(root)
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    data["stages"][0]["resources"].append(
+        {"id": "resource-demo-book-ch02", "kind": "read",
+         "scope_triage": "required-now",
+         "material_ref": {"route_id": "route-demo-book",
+                          "inherit": ["label", "source_id", "locator",
+                                      "angle", "angle_detail"]}})
+    map_path.write_text(
+        yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
+        encoding="utf-8")
+    return map_path
+
+
+def test_verify_envelope_mode_admits_a_sealed_unit_map_import(
+        mini_repo, tmp_path):
+    """The sealed envelope is the evidence: the apply never produced a report."""
+    from repo_builders import add_curriculum
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    edited = _map_with_one_more_resource(mini_repo)
+    applied = _seal_one(mini_repo, capability="unit.map.import",
+                        payload={"unit_id": "unit-demo-l01",
+                                 "file": str(edited), "replace": True},
+                        key="verify-envelope-map-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    envelope = sealed_request_path(mini_repo, "verify-envelope-map-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 0, verify.stdout + verify.stderr
+    assert "state: committed-and-verified" in verify.stdout
+
+
+def test_verify_envelope_mode_refuses_another_unit(mini_repo, tmp_path):
+    from repo_builders import add_curriculum
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    edited = _map_with_one_more_resource(mini_repo)
+    applied = _seal_one(mini_repo, capability="unit.map.import",
+                        payload={"unit_id": "unit-demo-l01",
+                                 "file": str(edited), "replace": True},
+                        key="verify-envelope-unit-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    envelope = sealed_request_path(mini_repo, "verify-envelope-unit-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-other")
+    assert verify.returncode == 2
+    assert "state: invalid-evidence" in verify.stdout
+
+
+def test_verify_envelope_mode_refuses_a_non_plan_capability(mini_repo):
+    from repo_builders import add_curriculum
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    applied = _seal_one(mini_repo, capability="capture.create",
+                        payload={"text": "not a plan revision"},
+                        key="verify-envelope-cap-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    envelope = sealed_request_path(mini_repo, "verify-envelope-cap-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 2
+    assert "not for a supported plan revision" in verify.stderr
+
+
+def test_verify_envelope_mode_reports_drift_as_committed_but_failed(
+        mini_repo, tmp_path):
+    from repo_builders import add_curriculum
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    edited = _map_with_one_more_resource(mini_repo)
+    applied = _seal_one(mini_repo, capability="unit.map.import",
+                        payload={"unit_id": "unit-demo-l01",
+                                 "file": str(edited), "replace": True},
+                        key="verify-envelope-drift-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    map_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    map_path.write_text(map_path.read_text(encoding="utf-8") + "\n# drifted\n",
+                        encoding="utf-8")
+    envelope = sealed_request_path(mini_repo, "verify-envelope-drift-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 1
+    assert "state: committed-but-verification-failed" in verify.stdout
+    assert "receipt write changed after commit" in verify.stderr
+
+
+def test_verify_envelope_mode_refuses_an_envelope_that_never_committed(
+        mini_repo, tmp_path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    seal = Path(__file__).resolve().parents[1] / "tools" / "seal_envelope.py"
+    import subprocess
+    import sys
+    edited = _map_with_one_more_resource(mini_repo)
+    envelope = tmp_path / "never-submitted.json"
+    sealed = subprocess.run(
+        [sys.executable, str(seal), "--root", str(mini_repo),
+         "--capability", "unit.map.import",
+         "--payload", json.dumps({"unit_id": "unit-demo-l01",
+                                  "file": str(edited), "replace": True}),
+         "--key", "verify-envelope-never-001", "--guards", "auto",
+         "--out", str(envelope)],
+        text=True, capture_output=True, timeout=120)
+    assert sealed.returncode == 0, sealed.stderr
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 3
+    assert "state: not-applied-or-stale-preflight" in verify.stdout
+
+
 def _acceptance_locator(rid):
     return "lecture-01.pdf" if rid == "route-demo-book" else f"lecture-01.pdf, PDF p. 1, {rid} worked example"
 

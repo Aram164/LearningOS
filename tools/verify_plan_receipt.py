@@ -30,6 +30,24 @@ Usage:
         --report /tmp/unit-revise-check.json \
         [--receipt operations/transactions/transaction-....yaml] \
         [--expect-artifacts module-x,unit-y]
+
+Envelope mode verifies applies that never produced a preflight report —
+a unit.map.import (whole or compact structural edit) submitted through
+``seal_envelope.py --submit``, whose reviewed evidence is the sealed
+GatewayEnvelopeV2 the seal retains for the idempotency key, not a saved
+--check JSON:
+
+    .venv/bin/python tools/verify_plan_receipt.py \
+        --unit unit-aml-l09 \
+        --envelope /path/to/sealed-request.json \
+        [--receipt operations/transactions/transaction-....yaml]
+
+The envelope must name the target unit in its payload; its replay resolves
+the committed receipt through the idempotency ledger exactly as report mode
+does, and every post-commit check (final bytes, snapshot_after, generated
+manifest, live projection) runs unchanged. A map-import apply may have
+written only inside the target unit's directory or the shared transaction
+ledgers; anything else is a verification failure.
 """
 
 from __future__ import annotations
@@ -92,9 +110,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", required=False, default=None,
                         help="expected receipt; when omitted the receipt is "
-                             "resolved from the report through the ledger")
+                             "resolved from the evidence through the ledger")
     parser.add_argument("--unit", required=True)
-    parser.add_argument("--report", required=True)
+    evidence = parser.add_mutually_exclusive_group(required=True)
+    evidence.add_argument("--report", required=False, default=None,
+                          help="a saved successful --check JSON with its "
+                               "gateway_envelope")
+    evidence.add_argument("--envelope", required=False, default=None,
+                          help="the sealed GatewayEnvelopeV2 that submitted "
+                               "the write (seal_envelope.py keeps it for the "
+                               "idempotency key); for applies that never "
+                               "produced a preflight report — unit.map.import "
+                               "and unit.plan.revise")
     parser.add_argument("--expect-artifacts", default=None)
     parser.add_argument("--root", default=None)
     return parser
@@ -133,25 +160,41 @@ def verify(root: Path, args) -> int:
     if args.receipt:
         named_receipt = (root / args.receipt).resolve() \
             if not Path(args.receipt).is_absolute() else Path(args.receipt)
-    report = _read_structured_file(args.report)
-    if report.get("ok") is not True or report.get("mode") != "check":
-        raise ValueError("not a successful preflight report")
-    envelope = report.get("gateway_envelope")
-    if not isinstance(envelope, dict):
-        raise ValueError("report has no gateway envelope")
-    _validate_capability_envelope(root, envelope, kind="request")
-    capability = envelope["capability"]
-    if capability not in {"unit.plan.revise", "module.plan.import"} \
-            or report.get("capability") != capability:
-        raise ValueError("report is not for a supported plan revision")
-    _validate_payload(root, capability, envelope["payload"])
-    if envelope["expected_snapshot"] != report.get("expected_snapshot") \
-            or envelope["expected_revisions"] != report.get("expected_revisions"):
-        raise ValueError("report guards differ from its approved request")
-    if args.unit not in report.get("units", {}):
-        raise ValueError("target unit was not reviewed in this report")
-    if capability == "unit.plan.revise" and envelope["payload"].get("unit_id") != args.unit:
-        raise ValueError("request targets another unit")
+    report = None
+    if args.envelope:
+        # The sealed envelope that submitted the write: the receipt resolves
+        # from the request identity that actually committed, so this mode
+        # verifies applies that never produced a preflight report.
+        envelope = _read_structured_file(args.envelope)
+        if envelope.get("schema_version") != 2:
+            raise ValueError("evidence is not a GatewayEnvelopeV2 request")
+        _validate_capability_envelope(root, envelope, kind="request")
+        capability = envelope.get("capability")
+        if capability not in {"unit.map.import", "unit.plan.revise"}:
+            raise ValueError("envelope is not for a supported plan revision")
+        _validate_payload(root, capability, envelope["payload"])
+        if envelope["payload"].get("unit_id") != args.unit:
+            raise ValueError("request targets another unit")
+    else:
+        report = _read_structured_file(args.report)
+        if report.get("ok") is not True or report.get("mode") != "check":
+            raise ValueError("not a successful preflight report")
+        envelope = report.get("gateway_envelope")
+        if not isinstance(envelope, dict):
+            raise ValueError("report has no gateway envelope")
+        _validate_capability_envelope(root, envelope, kind="request")
+        capability = envelope["capability"]
+        if capability not in {"unit.plan.revise", "module.plan.import"} \
+                or report.get("capability") != capability:
+            raise ValueError("report is not for a supported plan revision")
+        _validate_payload(root, capability, envelope["payload"])
+        if envelope["expected_snapshot"] != report.get("expected_snapshot") \
+                or envelope["expected_revisions"] != report.get("expected_revisions"):
+            raise ValueError("report guards differ from its approved request")
+        if args.unit not in report.get("units", {}):
+            raise ValueError("target unit was not reviewed in this report")
+        if capability == "unit.plan.revise" and envelope["payload"].get("unit_id") != args.unit:
+            raise ValueError("request targets another unit")
     # Reuse the production verifier: schema, approval, idempotency ledger,
     # revision ledger, safe paths, authority scopes and final bytes. Request
     # and receipt identity resolve here, from the report alone — the caller
@@ -171,28 +214,44 @@ def verify(root: Path, args) -> int:
     if named_receipt is not None and receipt_path != named_receipt.resolve():
         raise ValueError("receipt is not the committed transaction for this exact reviewed request")
     receipt = replay.receipt
-    if receipt["snapshot_before"] != report["expected_snapshot"]:
+    expected_snapshot = report["expected_snapshot"] if report is not None \
+        else envelope["expected_snapshot"]
+    if receipt["snapshot_before"] != expected_snapshot:
         raise ValueError("receipt was applied against a different reviewed snapshot")
-    expected = report["expected_revisions"]
+    expected = report["expected_revisions"] if report is not None \
+        else envelope["expected_revisions"]
     if set(receipt["artifact_revisions"]) != set(expected) \
-            or set(report.get("commit_artifact_ids", [])) != set(expected):
+            or (report is not None
+                and set(report.get("commit_artifact_ids", [])) != set(expected)):
         raise ValueError("receipt artifact set does not match the preflight")
     for aid, revision in expected.items():
         if receipt["artifact_revisions"][aid] != {"before": revision, "after": revision + 1}:
             raise ValueError(f"unexpected revision change for {aid}")
     service_paths = {"operations/transactions/revisions.yaml", "operations/transactions/idempotency.yaml"}
     written_paths = {row["path"] for row in receipt["writes"]} - service_paths
-    if written_paths != set(report.get("expected_write_paths", [])):
-        raise ValueError("receipt writes do not match the preflight")
-    receipt_hashes = {row["path"]: row["sha256_after"] for row in receipt["writes"]}
-    expected_hashes = report.get("expected_write_sha256")
-    ledger_only = (written_paths == {"operations/transactions/lineage.yaml"}
-                   and set(expected) == {"file:operations/transactions/lineage.yaml"}
-                   and receipt.get("capability") in {"unit.plan.revise", "module.plan.import"})
-    if not isinstance(expected_hashes, dict) or (not expected_hashes and not ledger_only) \
-            or set(expected_hashes) != written_paths - {"operations/transactions/lineage.yaml"} \
-            or any(receipt_hashes.get(path) != digest for path, digest in expected_hashes.items()):
-        raise ValueError("receipt final bytes do not match the preflight")
+    if report is not None:
+        if written_paths != set(report.get("expected_write_paths", [])):
+            raise ValueError("receipt writes do not match the preflight")
+    else:
+        # No preflight write list exists; the receipt's own writes are the
+        # fact under test. A map-import apply may write only inside the
+        # target unit's directory or the shared transaction ledgers.
+        outside = [path for path in sorted(written_paths)
+                   if not path.startswith("operations/transactions/")
+                   and f"/units/{args.unit}/" not in path]
+        if outside:
+            failures.append("receipt writes outside the target unit: "
+                            + ", ".join(outside))
+    if report is not None:
+        receipt_hashes = {row["path"]: row["sha256_after"] for row in receipt["writes"]}
+        expected_hashes = report.get("expected_write_sha256")
+        ledger_only = (written_paths == {"operations/transactions/lineage.yaml"}
+                       and set(expected) == {"file:operations/transactions/lineage.yaml"}
+                       and receipt.get("capability") in {"unit.plan.revise", "module.plan.import"})
+        if not isinstance(expected_hashes, dict) or (not expected_hashes and not ledger_only) \
+                or set(expected_hashes) != written_paths - {"operations/transactions/lineage.yaml"} \
+                or any(receipt_hashes.get(path) != digest for path, digest in expected_hashes.items()):
+            raise ValueError("receipt final bytes do not match the preflight")
 
     for row in receipt.get("writes", []) or []:
         if not isinstance(row, dict):
@@ -231,49 +290,59 @@ def verify(root: Path, args) -> int:
                 failures.append(f"target unit does not resolve in the manifest: {args.unit}")
 
     repo = load_repo(root)
-    live_map = ((repo.module_source_maps or {}).get(report.get("module_id", "")) or {})
-    rows = [r for s in live_map.get("sources", []) or [] if isinstance(s, dict)
-            for r in s.get("unit_routes", []) or [] if isinstance(r, dict) and r.get("id")]
-    if len(rows) != report.get("route_counts", {}).get("after"):
-        failures.append("live route count does not match the preflight report")
-    unit_rows = report["units"][args.unit]
-    live_unit_rows = [r for r in rows if r.get("unit_id") == args.unit]
-    live_placements = sum(
-        len(s.get("resources", []) or [])
-        for sm in repo.study_maps.values() if sm.unit_id == args.unit
-        for s in (sm.data.get("stages", []) or []) if isinstance(s, dict))
-    if len(live_unit_rows) != unit_rows.get("routes_after"):
-        failures.append("live unit route count does not match the report")
-    if live_placements != unit_rows.get("placements_after"):
-        failures.append("live placement count does not match the report")
+    if report is not None:
+        live_map = ((repo.module_source_maps or {}).get(report.get("module_id", "")) or {})
+        rows = [r for s in live_map.get("sources", []) or [] if isinstance(s, dict)
+                for r in s.get("unit_routes", []) or [] if isinstance(r, dict) and r.get("id")]
+        if len(rows) != report.get("route_counts", {}).get("after"):
+            failures.append("live route count does not match the preflight report")
+        unit_rows = report["units"][args.unit]
+        live_unit_rows = [r for r in rows if r.get("unit_id") == args.unit]
+        live_placements = sum(
+            len(s.get("resources", []) or [])
+            for sm in repo.study_maps.values() if sm.unit_id == args.unit
+            for s in (sm.data.get("stages", []) or []) if isinstance(s, dict))
+        if len(live_unit_rows) != unit_rows.get("routes_after"):
+            failures.append("live unit route count does not match the report")
+        if live_placements != unit_rows.get("placements_after"):
+            failures.append("live placement count does not match the report")
 
     try:
         destination = synthesis_destination(root, args.unit)
     except MaterialSynthesisError as exc:
         raise ValueError(f"cannot resolve synthesis destination: {exc}") from exc
-    synthesis = report.get("synthesis", {}).get(args.unit)
-    if synthesis is None:
-        # The preflight records a disposition only for units whose dossier path
-        # already resolved, so a unit the reviewed import creates has none. Its
-        # expectation then comes from the committed receipt: a dossier may exist
-        # after the commit only if this request wrote it (and must then be fresh).
-        try:
-            dossier_rel = destination.resolve().relative_to(root.resolve()).as_posix()
-        except ValueError:
-            dossier_rel = None
-        wrote = dossier_rel in {row.get("path") for row in receipt.get("writes", []) or []
-                                if isinstance(row, dict)}
-        synthesis = {"before": {"present": False}, "after": {"replaced": wrote, "fresh": wrote}}
-    if not isinstance(synthesis, dict):
-        raise ValueError("report has an invalid synthesis disposition")
-    before, after = synthesis.get("before"), synthesis.get("after")
-    if not isinstance(before, dict) or not isinstance(after, dict) \
-            or type(before.get("present")) is not bool \
-            or type(after.get("replaced")) is not bool \
-            or type(after.get("fresh")) is not bool:
-        raise ValueError("report has an invalid synthesis disposition")
-    expected_dossier = before["present"] or after["replaced"]
-    if expected_dossier and not destination.is_file():
+    if report is None and capability == "unit.map.import":
+        # A map import never writes a synthesis dossier, so its existence is
+        # not attributable to this apply: whatever material synthesis left
+        # there stands, and no dossier expectation is checked.
+        expected_dossier = None
+        after = None
+    else:
+        synthesis = report.get("synthesis", {}).get(args.unit) if report is not None else None
+        if synthesis is None:
+            # The preflight records a disposition only for units whose dossier path
+            # already resolved, so a unit the reviewed import creates has none. Its
+            # expectation then comes from the committed receipt: a dossier may exist
+            # after the commit only if this request wrote it (and must then be fresh).
+            try:
+                dossier_rel = destination.resolve().relative_to(root.resolve()).as_posix()
+            except ValueError:
+                dossier_rel = None
+            wrote = dossier_rel in {row.get("path") for row in receipt.get("writes", []) or []
+                                    if isinstance(row, dict)}
+            synthesis = {"before": {"present": False}, "after": {"replaced": wrote, "fresh": wrote}}
+        if not isinstance(synthesis, dict):
+            raise ValueError("report has an invalid synthesis disposition")
+        before, after = synthesis.get("before"), synthesis.get("after")
+        if not isinstance(before, dict) or not isinstance(after, dict) \
+                or type(before.get("present")) is not bool \
+                or type(after.get("replaced")) is not bool \
+                or type(after.get("fresh")) is not bool:
+            raise ValueError("report has an invalid synthesis disposition")
+        expected_dossier = before["present"] or after["replaced"]
+    if expected_dossier is None:
+        pass
+    elif expected_dossier and not destination.is_file():
         failures.append(f"expected synthesis dossier is missing: {args.unit}")
     elif not expected_dossier and destination.exists():
         failures.append(f"unexpected synthesis dossier for the target unit: {args.unit}")
