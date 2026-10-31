@@ -868,6 +868,8 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
         review_input=(reviewed_sha,
                       {"module_id": req["module_id"], "file": str(source),
                        "file_sha256": reviewed_sha}),
+        report_out=req.get("report_out"),
+        report_out_draft=str(source),
     )
 
 
@@ -945,6 +947,8 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
         source=_source,
         package_bytes=package_bytes,
         package=package,
+        report_out=req.get("report_out"),
+        report_out_draft=str(_source),
     )
 
 

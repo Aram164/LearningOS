@@ -271,6 +271,27 @@
         "envelope_owned": true
       }
     },
+    "report_out": {
+      "type": "string",
+      "description": "with --check: save the complete check report as UTF-8 JSON outside the repository and print a compact review summary without the sealed envelope instead",
+      "x-los-cli": {
+        "flags": [
+          "--report-out"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "PATH",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",

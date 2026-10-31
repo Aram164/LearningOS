@@ -508,6 +508,32 @@ cases:
   - --check
   expect:
     site: module.plan.import.bad-file
+- id: report-inside-repo
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --check
+  - --report-out
+  - work/report.json
+  expect:
+    site: module.plan.import.report-out-failed
+- id: report-overwrite
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --check
+  - --report-out
+  - <CASEDATA>/report.json
+  expect:
+    site: module.plan.import.report-out-failed
 - id: a9-reviewed-bytes-changed
   kind: refusal
   transport: cli
@@ -566,9 +592,6 @@ untriggered:
   reason: fixture-inexpressible
   proof: _prove_helper_plan_backstop
 - site: module.plan.import.validation-crash
-  reason: fixture-inexpressible
-  proof: _prove_helper_plan_backstop
-- site: module.plan.import.report-out-failed
   reason: fixture-inexpressible
   proof: _prove_helper_plan_backstop
 - site: module.plan.import.promotion-hash-mismatch

@@ -4719,6 +4719,19 @@
     "action": "store",
     "choices": null,
     "default_repr": "None",
+    "dest": "report_out",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--report-out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
     "dest": "review_report",
     "metavar": null,
     "nargs": null,
@@ -9384,7 +9397,7 @@
   "module.create.schema.json": "02b73b8c4600f234426dfb360dd9d3a2676a71d6c7ee55a7f6c8cbceb6b6b18f",
   "module.list.schema.json": "e0bdb5628bffe00d0d37b004de890566a5faf8616aae657fd0421631731fddd8",
   "module.materials.compact.schema.json": "1bdd0efeb2eed2eae79448ddd0e2f2ae5d763dd7469b08980b16ad5527dd61be",
-  "module.plan.import.schema.json": "19fea12cc4989f43d8ace4d82bb778e41aa87452b98e2eaa2777f70ba322f9e6",
+  "module.plan.import.schema.json": "16e476519ed079b87acdf8f62584725e6a7514c6f1bd78f7ef38b58428a1bfe9",
   "module.sitting.update.schema.json": "853ee3c8cb75a6c3de8a83f65ee306495f105b242ac2d3118e6ca56428e05076",
   "note.analysis.prepare.schema.json": "c0bba25db6730422ce1c9bf7fc5e30ae272b397dbc1c3dff0e231166437feb4e",
   "note.analysis.save.schema.json": "4a4242ac01aaa407dcba358910b72f80dae8bd9aa76f2bc0e649f99a4cc96f81",

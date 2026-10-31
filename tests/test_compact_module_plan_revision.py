@@ -156,6 +156,65 @@ def test_compact_batch_reviews_and_commits_both_units_atomically(mini_repo, tmp_
         assert verified.returncode == 0, verified.stderr
 
 
+def test_report_out_saves_complete_report_with_compact_stdout(mini_repo, tmp_path):
+    """module-plan-import --report-out saves the bare-check bytes (the complete
+    report, sealed envelope included) and stdout keeps the review only — the
+    same semantics unit-plan-revise already pins."""
+    _two_units(mini_repo)
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, _revision(mini_repo))
+    bare = run_los(mini_repo, "module-plan-import", "module-demo",
+                   "--file", str(draft), "--check")
+    assert bare.returncode == 0, bare.stderr
+    saved_path = tmp_path / "check.json"
+    proc = run_los(mini_repo, "module-plan-import", "module-demo",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(saved_path))
+    assert proc.returncode == 0, proc.stderr
+    saved_bytes = saved_path.read_bytes()
+    saved = json.loads(saved_bytes)
+    bare_report = json.loads(bare.stdout)
+    # Fresh per-run envelope identity is the only difference between the
+    # saved report and the bare check stdout.
+    for report in (bare_report, saved):
+        assert report["gateway_envelope"].pop("request_id").startswith("request-")
+        assert report["gateway_envelope"].pop("idempotency_key")
+    assert saved == bare_report
+    assert saved["gateway_envelope"]["capability"] == "module.plan.import"
+    compact = json.loads(proc.stdout)
+    assert "gateway_envelope" not in compact
+    pointer = compact.pop("saved_report")
+    assert pointer["path"] == str(saved_path.resolve())
+    assert pointer["sha256"] == "sha256:" + hashlib.sha256(saved_bytes).hexdigest()
+    assert pointer["bytes"] == len(saved_bytes)
+    assert compact == {key: value for key, value in saved.items()
+                       if key != "gateway_envelope"}
+    assert compact["canonical_files_written"] == 0
+    assert compact["reviewed_file_sha256"]
+    assert compact["expected_snapshot"]
+
+
+def test_report_out_refuses_endangering_targets(mini_repo, tmp_path):
+    """--report-out refuses a target inside the repository and an existing
+    target; refusals come from the shared `_report_out_target_problem`."""
+    _two_units(mini_repo)
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, _revision(mini_repo))
+    inside = run_los(mini_repo, "module-plan-import", "module-demo",
+                     "--file", str(draft), "--check",
+                     "--report-out", str(mini_repo / "work" / "report.json"))
+    assert inside.returncode == 2, inside.stdout
+    assert "must be outside the repository" in inside.stderr
+    assert not (mini_repo / "work" / "report.json").exists()
+    existing = tmp_path / "check.json"
+    existing.write_text("{}\n", encoding="utf-8")
+    overwrite = run_los(mini_repo, "module-plan-import", "module-demo",
+                        "--file", str(draft), "--check",
+                        "--report-out", str(existing))
+    assert overwrite.returncode == 2, overwrite.stdout
+    assert "refusing to overwrite" in overwrite.stderr
+
+
 def test_receipt_verification_without_a_synthesis_disposition(mini_repo, tmp_path):
     """A preflight records no synthesis disposition for a unit whose dossier path
     did not resolve before the import (a unit the import creates). Verification
