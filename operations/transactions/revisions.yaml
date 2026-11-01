@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 4
+  file:operations/transactions/lineage.yaml: 5
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -49,7 +49,7 @@ revisions:
   module-hu-algo2: 2
   module-hu-aml: 14
   module-hu-betriebssysteme: 1
-  module-hu-icop: 1
+  module-hu-icop: 2
   module-hu-m2-statistik-analysis: 62
   module-job-engineering-tools: 1
   module-job-git: 1
@@ -361,7 +361,7 @@ revisions:
   unit-aml-l10: 8
   unit-aml-l11: 7
   unit-bs-os-structure: 1
-  unit-icop-l01-linear-programming: 1
+  unit-icop-l01-linear-programming: 2
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 2
   unit-job-polars-aggregation-windows: 2

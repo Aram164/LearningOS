@@ -88,9 +88,10 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Practises turning a production model and mixed-sign variables into equivalent LP forms.
+    angle_detail: E1–E2 ask for explicit recovery maps, slack variables and sign restrictions. Attempt
+      them before the separated solutions to check whether you can formulate and transform a fresh problem.
+      These are original study exercises, rather than official HU questions.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-forms/notes.md
   attachments: []
@@ -195,9 +196,11 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Tests whether you can distinguish an optimal point, an optimal face and an unbounded feasible
+      region.
+    angle_detail: E3 changes the objective on one polygon and asks for the local-to-global proof and boundedness
+      counterexamples. It exposes the difference between seeing a picture and justifying what it implies.
+      Original questions with a separate solution guide.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-geometry/notes.md
   attachments: []
@@ -329,9 +332,10 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Tests basis enumeration and the proof mechanism linking independent support columns to vertices.
+    angle_detail: E4 asks you to compute candidate basic solutions, detect degeneracy and explain the
+      vertex theorem’s assumptions. Use it to check both the algebra and the support-perturbation argument
+      after the lecture proof. Original questions; solutions follow separately.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-bases/notes.md
   attachments: []
@@ -462,9 +466,10 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Carries the production example through two fully justified simplex pivots.
+    angle_detail: E5 asks for inverse-basis calculations, reduced costs, the ratio test and the final
+      objective bound. Reusing the model lets you compare geometry, basis changes and cost improvement
+      directly. Attempt the calculation before opening its detailed original solution.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-pivots/notes.md
   attachments: []
@@ -624,9 +629,10 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Contrasts a feasible system with an infeasible one through explicit Phase-I calculations.
+    angle_detail: E6 asks for an auxiliary objective and the proof that zero artificial cost is equivalent
+      to original feasibility. E10(c) separately tests why cheap pivots do not imply a short run. Original
+      practice with worked answers after the questions.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-phase-one/notes.md
   attachments: []
@@ -786,9 +792,11 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Asks you to derive the optimal-basis dual certificate and justify its feasibility from reduced
+      costs.
+    angle_detail: E7 links yᵀ=c_BᵀA_B⁻¹ to the standard-form dual; E9 checks how weak and strong duality
+      constrain possible outcomes. Use these original questions to distinguish verifying a bound from
+      proving an optimal partner exists. Consult the separate solutions afterwards.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-standard-duality/notes.md
   attachments: []
@@ -892,9 +900,11 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Challenges memorized dual rules with a mixed-sign model and a pair that is infeasible on both
+      sides.
+    angle_detail: E7 requires deriving multiplier signs and a dual equality from the primal’s actual constraints;
+      E9 tests the status table and an infeasibility certificate. The original counterexamples make incorrect
+      implications visible. Solutions are separated from the prompts.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-general-duality/notes.md
   attachments: []
@@ -999,9 +1009,11 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Uses slackness to find an optimizer and then refutes the false converse that a tight row needs
+      a positive multiplier.
+    angle_detail: E8 reuses the production model, changes its objective and asks for the gap decomposition.
+      It checks feasibility, both families of products and the direction of every implication. These original
+      questions have a separate worked solution.
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-slackness/notes.md
   attachments: []
@@ -1107,18 +1119,24 @@ stages:
     label: Original ICOP LP drill bank and separated answer guide
     vault_path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
     locator: 'note-icop-l01-exercise-bank: Questions (attempt before Answers)'
-    angle: Extra original tasks provide another attempt when the course task reveals a gap.
-    angle_detail: Operator-authored study input grounded in the HU deck, not an official course worksheet
-      and not evidence of learner performance. Answers appear in a separate section.
+    angle: Checks transfer through an inscribed-ball LP, an almost-integrality proof and a complexity
+      argument.
+    angle_detail: E10 combines new modeling with the support-perturbation technique and a distinction
+      between pivot cost and pivot count. Use it after the chapter to find ideas you can repeat but cannot
+      yet adapt. Original practice with separated solutions; the timed mock provides a different test
+      of spoken explanation.
     scope_triage: reference-only
   - id: resource-icop-l01-oral-mock
     kind: reference
     label: 30-minute ICOP LP oral self-test
     vault_path: knowledge/notes/algorithms/note-icop-l01-mock-exam.md
     locator: 'note-icop-l01-mock-exam: Exam first; answer guide afterwards'
-    angle: A timed spoken rehearsal tests definitions, proof ideas and algorithm explanations together.
-    angle_detail: Operator-authored rehearsal designed against organization slide 16; actual exam difficulty
-      is unknown. Use the answers after the attempt and record assistance honestly.
+    angle: Rehearses a 30-minute spoken chain from formulation through a pivot and dual certificate to
+      proof and failure cases.
+    angle_detail: Five timed questions use a fresh production model and require justified calculations,
+      the vertex argument and Phase-I reasoning. Optional follow-ups probe signs, degeneracy and transfer.
+      A separated marking guide helps identify gaps after the attempt. This is an original rehearsal aligned
+      to the stated oral format, not a prediction of actual exam questions.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/stages/stage-icop-l01-oral-review/notes.md
   attachments: []

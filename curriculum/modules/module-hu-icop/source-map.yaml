@@ -13,11 +13,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Model an LP and translate its forms
     format: course-material
-    angle: Course notation and the actual shortest-path modeling task fix the meaning of each formulation.
-    angle_detail: Read the deck framing on pages 1-5; work pages 6-23. Kratsch canonical means min c^T
-      x with Ax<=b and x>=0; standard means Ax=b and x>=0. Do not carry names across textbooks without
-      checking the equations. Read the indicated physical PDF pages; the complete deck remains the scope
-      authority.
+    angle: Builds the language of LPs, then shows how sign changes, variable splitting and slack variables
+      connect different formulations.
+    angle_detail: The chapter moves from optimization and feasibility to matrix notation and the course’s
+      canonical and standard forms. The shortest-path exercise makes you supply the model yourself. Use
+      this for the exact HU conventions and for explaining why each transformation preserves solutions;
+      Shor and Cornell supply concrete models to compare with it.
     covers:
     - knowledge-icop-l01-forms
     depth: course-aligned
@@ -28,11 +29,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — See constraints and objectives geometrically
     format: course-material
-    angle: Course geometric definitions and segment arguments connect local and global LP optimality.
-    angle_detail: Recall the existing convexity idea through note-aml-l06-gradient-descent §7; add the
-      LP-specific proof and polyhedral structure here. Convexity does not imply a unique optimizer; do
-      not assume uniqueness when an objective is constant along a face. Read the indicated physical PDF
-      pages; the complete deck remains the scope authority.
+    angle: Explains why linear constraints form a convex polyhedron and why sliding an objective hyperplane
+      reveals global optima.
+    angle_detail: Halfspaces lead to convexity, local-to-global optimality, supporting hyperplanes, faces
+      and vertices. The emphasis is the argument behind the picture, including why a nonzero objective
+      excludes an interior optimum. Cornell L2 supplies a drawn numerical example; return here to state
+      the geometric definitions and prove the claims.
     covers:
     - knowledge-icop-l01-geometry
     depth: course-aligned
@@ -43,11 +45,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Connect vertices, extreme points and feasible bases
     format: course-material
-    angle: Course proofs establish the vertex/extreme-point/BFS equivalence and support reduction.
-    angle_detail: 'Distinguish independent support columns from a full m-column basis; a degenerate BFS
-      may have fewer than m positive coordinates. Answer the question on slide 55: standard-form nonempty
-      feasible polyhedra have vertices; arbitrary LP polyhedra need not. Read the indicated physical PDF
-      pages; the complete deck remains the scope authority.'
+    angle: 'Turns a geometric corner into an algebraic object: independent support columns and a basic
+      feasible solution.'
+    angle_detail: The vertex/extreme-point/BFS equivalence and support-reduction proof explain why finitely
+      many candidate bases suffice for a finite optimum. Gaussian elimination then makes those candidates
+      computable. This is the proof spine; Cornell L3 repairs the linear algebra and L4 shows bases in
+      use. Keep the nonnegative standard-form setting of the vertex theorem explicit.
     covers:
     - knowledge-icop-l01-bases
     depth: course-aligned
@@ -58,10 +61,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Derive and carry out a simplex pivot
     format: course-material
-    angle: Course matrix derivation connects reduced costs and the ratio test to a feasible edge move.
-    angle_detail: Use the matrix derivation first; Blum §8.2 PDF pages 244-245 is optional tableau support.
-      Carry one small LP forward into the duality sessions instead of starting a new numerical example
-      every time. Read the indicated physical PDF pages; the complete deck remains the scope authority.
+    angle: 'Derives a simplex move from the current basis: reduced costs choose a direction and the ratio
+      test preserves feasibility.'
+    angle_detail: The matrix identities explain both stopping with an optimum and following an improving
+      unbounded ray. Basis exchange connects the calculation to moving along an edge. Use Cornell L4–5
+      to see the arithmetic unfold and Blum for tableau updates. The deck’s strict-improvement argument
+      assumes nondegeneracy; a changed basis need not otherwise mean a changed point.
     covers:
     - knowledge-icop-l01-pivots
     depth: course-aligned
@@ -72,11 +77,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Find a starting basis and handle failure cases
     format: course-material
-    angle: Course auxiliary-LP construction and bit-cost discussion handle the missing starting basis.
-    angle_detail: Revisit slide 67 before applying nondegeneracy claims; explain the zero artificial-variable
-      cleanup or redundant-row case. Klee-Minty and the Hirsch discussion are context on slides 90-91.
-      Detailed smoothed analysis and interior-point papers remain deferred. Read the indicated physical
-      PDF pages; the complete deck remains the scope authority.
+    angle: Constructs a starting feasible basis with an auxiliary LP, then separates feasibility, arithmetic
+      cost and pivot-count complexity.
+    angle_detail: Artificial variables give a trivial initial basis; an auxiliary optimum of zero recovers
+      feasibility, while a positive value proves infeasibility. The final pages discuss rational bit lengths
+      and exponentially long simplex runs. Blum fills in zero-artificial-variable cleanup and cycling;
+      Cornell L6–7 provides a worked alternative construction and the handoff to the original objective.
     covers:
     - knowledge-icop-l01-phase-one
     depth: course-aligned
@@ -87,10 +93,13 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Prove bounds and standard-form duality
     format: course-material
-    angle: Course optimal-basis certificate proves weak and strong duality in standard form.
-    angle_detail: Use Cornell L14 then L15 for examples and L16 for the simplex-to-duality connection.
-      Keep the optimal-basis/nonnegative-reduced-cost qualification when discussing degenerate solutions.
-      Read the indicated physical PDF pages; the complete deck remains the scope authority.
+    angle: Develops dual solutions as bounds, then extracts an equal-value certificate from a simplex
+      basis with nonnegative reduced costs.
+    angle_detail: For the equality-form minimization primal, dual multipliers are unrestricted and column
+      inequalities bound its costs from below. Weak duality validates any feasible certificate; the optimal-basis
+      construction supplies strong duality in the chapter’s simplex setting. Cornell L14–16 makes this
+      connection numerical. Check reduced costs when constructing the certificate, especially at a degenerate
+      optimum.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: course-aligned
@@ -101,11 +110,13 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Derive dual signs and diagnose primal-dual status
     format: course-material
-    angle: Course transformations derive general sign rules and the complete primal-dual status table.
-    angle_detail: Cornell L8 supports transformations; MIT Shor L13 is an optional second perspective.
-      Explain why an unbounded primal forces dual infeasibility, while primal infeasibility alone does
-      not force dual unboundedness. Read the indicated physical PDF pages; the complete deck remains the
-      scope authority.
+    angle: Derives dual signs from primal transformations and uses weak and strong duality to classify
+      possible primal–dual outcomes.
+    angle_detail: Slack variables explain multiplier signs; splitting a free variable explains the corresponding
+      dual equality. Dualizing twice recovers the original problem. The status table distinguishes finite
+      optima, unboundedness and infeasibility, and the shortest-path example reconnects duality to modeling.
+      Blum expands the transformations; Shor offers a different conceptual route. Infeasibility alone
+      does not determine the other side’s status.
     covers:
     - knowledge-icop-l01-general-duality
     depth: course-aligned
@@ -116,11 +127,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Use complementary slackness as an optimality certificate
     format: course-material
-    angle: Course gap decomposition proves the full complementary-slackness theorem.
-    angle_detail: Cornell L17 supplies examples; its packet does not prove the converse explicitly, so
-      complete the proof from Kratsch/Blum. Read the chapter summary on slide 125 and identify how modeling,
-      geometry, bases, simplex and dual certificates connect. Read the indicated physical PDF pages; the
-      complete deck remains the scope authority.
+    angle: Proves complementary slackness by expressing the primal–dual objective gap as a sum of nonnegative
+      products.
+    angle_detail: Zero gap becomes a precise link between positive variables and tight constraints, yielding
+      an optimality test for feasible pairs. Both directions of the theorem matter; tightness alone does
+      not imply a positive multiplier. Cornell L17 demonstrates how to recover the other optimizer, while
+      this section supplies the complete proof and the chapter’s closing conceptual summary.
     covers:
     - knowledge-icop-l01-slackness
     depth: course-aligned
@@ -131,13 +143,13 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Kratsch — Integrate the chapter and rehearse the oral exam
     format: course-material
-    angle: Course outlook and further exercises test transfer after the chapter; oral criteria come from
-      the organization deck.
-    angle_detail: Read organization slides 15-16 for the oral expectations; use your own blackboard notes
-      where available (organization slide 12 says the PDFs omit sketches). Slide 126 is an outlook only.
-      The further exercises on slides 128-129 provide practice; organization slide 16 does not make their
-      solutions exam content. Read the indicated physical PDF pages; the complete deck remains the scope
-      authority.
+    angle: Extends the chapter through new modeling and proof problems, alongside a short outlook on other
+      optimization methods.
+    angle_detail: The final exercises ask about an inscribed ball, almost-integral vertices, infeasibility
+      certificates and simplex tableaux. They expose whether you can transfer the chapter’s ideas beyond
+      familiar examples. Ellipsoid and interior-point methods appear as outlook topics. Use the organization
+      deck to set oral-exam expectations; the further-exercise solutions are not themselves specified
+      as exam content.
     covers:
     - knowledge-icop-l01-oral-review
     depth: course-aligned
@@ -148,10 +160,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: ICOP oral-exam expectations and missing board sketches
     format: course-material
-    angle: Defines the actual oral format and separates lecture exercises from further transfer exercises.
-    angle_detail: 'Organization slides 12 and 15-16: the PDF omits some blackboard sketches; exam is 30
-      minutes with definitions, facts, methods and main proof ideas. Further transfer-exercise solutions
-      are excluded from exam content.'
+    angle: 'Sets the target for preparation: definitions, results, methods and central proof ideas explained
+      in a 30-minute oral examination.'
+    angle_detail: These slides also explain that the PDFs omit some blackboard sketches and distinguish
+      lecture exercises from further transfer exercises. Use them to decide what you must be able to say
+      and reconstruct, then use the LP deck for the mathematics. They describe assessment expectations
+      rather than teaching LP techniques.
     covers:
     - knowledge-icop-l01-oral-review
     depth: orientation
@@ -170,11 +184,13 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Korte & Vygen — Chapter 3 overview after the LP chapter
     format: book
-    angle: An English polyhedral overview reconnects simplex and duality after completing Kratsch, as
-      slide 2 recommends.
-    angle_detail: Chapter 3 exposition is physical PDF pages 70-87, exercises 87-89 and references 89-90.
-      Its opening max{cx:Ax<=b} with unrestricted variables uses different conventions; translate the
-      equations explicitly. This is a reference after the chapter, not prerequisite reading.
+    angle: Condenses LP into a polyhedral theory connecting faces, simplex, duality, separation and convex-hull
+      descriptions.
+    angle_detail: The chapter adds a wider view through minimal faces, implementation and revised simplex,
+      Farkas-type alternatives, and polytopes as convex hulls of vertices. Read it after Kratsch to connect
+      results that the sessions develop separately. Its unrestricted-variable maximization convention
+      and dense proofs require translation; it is an English consolidation and extension, rather than
+      a slow first explanation.
     covers:
     - knowledge-icop-l01-oral-review
     - knowledge-icop-l01-geometry
@@ -195,10 +211,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Model an LP and translate its forms
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Connects LP notation to matching, maximum-flow and vertex-cover models before deriving the
+      course’s normal-form transformations.
+    angle_detail: The examples show what variables and constraints represent and where integrality is
+      an extra requirement. Free-variable splitting, slack variables and sign changes then lead to the
+      same canonical and standard forms used by Kratsch. Choose this when the deck’s transformations feel
+      formal but their modeling meaning is still unclear.
     covers:
     - knowledge-icop-l01-forms
     depth: derivation
@@ -209,10 +227,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — See constraints and objectives geometrically
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: 'Develops the geometric vocabulary in German: convex combinations, halfspaces, affine dimension,
+      supporting hyperplanes and faces.'
+    angle_detail: Figures and continuous prose link inequalities to polyhedra and distinguish vertices,
+      edges, facets and redundant constraints. This helps unpack the deck’s compressed terminology and
+      prepares the algebraic vertex characterization. Cornell L2 is the better companion for following
+      a concrete feasible-region drawing; Kratsch carries the local-to-global optimality argument.
     covers:
     - knowledge-icop-l01-geometry
     depth: derivation
@@ -223,10 +243,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Connect vertices, extreme points and feasible bases
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Explains the bridge from independent positive-support columns to feasible bases, then relates
+      vertices to recession directions.
+    angle_detail: Theorem 8.1 proves the support criterion; solving Bx_B=b turns it into basis enumeration.
+      Directions and the fundamental LP theorem explain the alternative between an optimal vertex and
+      decreasing cost along a ray. Read for a continuous derivation of the finite-search idea, keeping
+      the HU standard-form boundary explicit rather than extending the vertex claim to arbitrary polyhedra.
     covers:
     - knowledge-icop-l01-bases
     depth: derivation
@@ -237,10 +259,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Derive and carry out a simplex pivot
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Expands the simplex derivation into explicit coefficient updates and two tableau representations.
+    angle_detail: Starting from x_B=B⁻¹b−B⁻¹Nx_N, the text derives reduced costs, the ratio test, unboundedness
+      and the optimality criterion. It then shows how a pivot updates the equations and tableaux. Use
+      it to explain where the arithmetic rules come from after Cornell’s worked examples; the opening
+      development assumes a known feasible, nondegenerate basis.
     covers:
     - knowledge-icop-l01-pivots
     depth: derivation
@@ -251,10 +274,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Find a starting basis and handle failure cases
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Fills in Phase I’s implementation details, especially zero artificial basic variables, redundant
+      equations and degeneracy.
+    angle_detail: After the auxiliary objective reaches zero, artificial basis columns are pivoted out
+      or removed with a redundant row. The text then shows how zero-length pivots allow cycling and develops
+      a lexicographic rule to prevent it. This is the most useful written repair when the HU feasibility
+      argument leaves the transition to a usable Phase-II basis unclear.
     covers:
     - knowledge-icop-l01-phase-one
     depth: derivation
@@ -265,10 +290,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Prove bounds and standard-form duality
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Builds the dual from the same basis-cost identity used by simplex, making multipliers a consequence
+      of the algorithm.
+    angle_detail: The vector πᵀ=c_BᵀB⁻¹ converts the reduced-cost inequalities into dual feasibility,
+      while the common objective value supplies the optimality certificate. Weak and strong duality emerge
+      from this construction. Use the prose alongside Cornell L16’s row-operation example to connect the
+      symbolic formula to a calculation; verify nonnegative reduced costs for the chosen basis.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: derivation
@@ -279,10 +306,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Derive dual signs and diagnose primal-dual status
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Derives general dual rules by tracking the columns introduced by slack variables and free-variable
+      splitting.
+    angle_detail: The side-by-side primal–dual table follows from the transformations rather than a mnemonic.
+      A second transformation proves that the dual of the dual recovers the primal, and small examples
+      establish which status pairs can occur. Choose this when equality rows, unrestricted variables or
+      infeasibility make a memorized sign table unreliable.
     covers:
     - knowledge-icop-l01-general-duality
     depth: derivation
@@ -293,10 +322,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Use complementary slackness as an optimality certificate
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Stop before dual-simplex discussion
-      at the bottom of PDF page 255.
+    angle: Gives a compact complete proof that feasible primal–dual solutions are optimal exactly when
+      their complementary products vanish.
+    angle_detail: The proof separates row slack and column slack into nonnegative sums whose total equals
+      the objective gap. It explains why positive variables force tight partner constraints and why equality
+      rows contribute automatically. Use it to finish the argument after Cornell’s examples. Stop before
+      the dual-simplex development at the bottom of PDF page 255.
     covers:
     - knowledge-icop-l01-slackness
     depth: derivation
@@ -307,10 +338,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Blum — Integrate the chapter and rehearse the oral exam
     format: book
-    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
-    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
-      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
-      transitions; follow the topic heading named here.
+    angle: Combines formulation, simplex, dual construction and complementary slackness in exercises that
+      require a complete solution chain.
+    angle_detail: Exercise 8.15 uses mixed variable signs and constraint types; 8.16 asks you to solve
+      a primal, derive its dual and recover the dual solution through slackness. These expose gaps between
+      isolated techniques. Use them for untimed synthesis before the spoken mock exam; the page gives
+      problems rather than a worked answer guide.
     covers:
     - knowledge-icop-l01-oral-review
     depth: practice
@@ -353,11 +386,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Shor L12 — Introduction to Linear Programming
     format: video
-    angle: Diet and bake-sale models give concrete meaning to the variables and constraints before the
-      formal HU transformations.
-    angle_detail: Official description and transcript establish the introduction and forms. Watch once
-      as an opening explanation; then do the HU task. No duration, timestamp, full-video examination or
-      proof-equivalence claim is made.
+    angle: Introduces LP through diet and bake-sale models, giving variables, constraints and objective
+      values a concrete meaning.
+    angle_detail: Shor moves from those examples to standard and canonical forms and an introduction to
+      duality. This is a useful first encounter before the HU shortest-path task, especially if matrix
+      notation arrives before the modeling idea feels natural. Translate the actual equations when comparing
+      form names. The topic description is verified; no precise viewing segment is prescribed.
     covers:
     - knowledge-icop-l01-forms
     depth: orientation
@@ -368,10 +402,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Shor L13 — Duality in Linear Programming
     format: video
-    angle: An alternative duality explanation links arbitrary dual construction, slackness and a min-max
-      application.
-    angle_detail: Official description verifies these topics. Keep this reference-only unless the Cornell/HU
-      explanation leaves a specific gap; it is not an additional mandatory full lecture.
+    angle: Offers a physical interpretation of strong duality and connects LP certificates to König’s
+      matching theorem.
+    angle_detail: The lecture also covers duals of arbitrary LPs and complementary slackness. Its contribution
+      is a second conceptual route from sign rules to a combinatorial min–max result, beyond the HU simplex-basis
+      proof. Use it when you can manipulate the formulas but want to understand their broader meaning.
+      These topics are verified from the official lecture description.
     covers:
     - knowledge-icop-l01-standard-duality
     - knowledge-icop-l01-general-duality
@@ -391,10 +427,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L1 — Formulating a Linear Program and Excel's Solver
     format: video
-    angle: A second applied modeling example is available when Shor leaves an abstraction gap.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Models server allocation and advertising decisions, translating a practical objective and resource
+      limits into an LP.
+    angle_detail: The examples distinguish input data from decision variables, combine capacity inequalities
+      with demand equalities, and introduce indexed notation. Excel Solver makes the model executable.
+      Use this when formulating the problem is harder than manipulating an existing matrix; the software
+      demonstration is optional for the HU shortest-path modeling task.
     covers:
     - knowledge-icop-l01-forms
     depth: intuition
@@ -406,13 +444,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L1 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_1.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Keeps the server and advertising formulations in a compact written form so you can check what
+      every coefficient means.
+    angle_detail: Use the completed handwritten calculations to reconstruct variables, resource limits
+      and indexed constraints without following the video’s pace. The value is the translation from a
+      story to equations; it does not replace the course’s proof that normal-form transformations preserve
+      the represented problem.
     covers:
     - knowledge-icop-l01-forms
     depth: course-aligned
@@ -423,10 +460,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L2 — Geometry of Linear Programming
     format: video
-    angle: Worked two-variable pictures connect algebraic constraints with objective movement.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Builds a feasible polygon for a CPU-and-memory allocation problem, then moves revenue lines
+      until they touch its optimum.
+    angle_detail: The worked picture connects each inequality to a halfplane, explains a nonbinding resource
+      constraint, and changes the objective to reveal an entire optimal edge. Choose it when the geometric
+      vocabulary is familiar but you cannot yet see what the equations do. Kratsch supplies the general
+      convexity and local-to-global proofs.
     covers:
     - knowledge-icop-l01-geometry
     depth: intuition
@@ -437,13 +476,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L2 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_2.pdf, physical PDF pages 1-5. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Collects the feasible-region sketches and objective-line calculations for the CPU-and-memory
+      example.
+    angle_detail: Trace which side of each line is feasible, identify the optimal intersection and compare
+      the changed objective with multiple optima. These drawings make it easier to reconstruct the geometric
+      argument on paper after watching, while the HU deck remains the source for general definitions and
+      proofs.
     covers:
     - knowledge-icop-l01-geometry
     depth: course-aligned
@@ -454,11 +492,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L3 — Useful Linear Algebra Concepts
     format: video
-    angle: A targeted linear-algebra refresher prepares basis calculations without assigning a whole textbook.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations. Full HU vertex/extreme-point/BFS
-      proof equivalence was not established for this external lecture.
+    angle: 'Refreshes the matrix operations needed for simplex: multiplication, inverses, linear systems
+      and elementary row operations.'
+    angle_detail: Examples show how row operations preserve an equation system and how an augmented identity
+      matrix produces an inverse. Use this if B⁻¹b or a tableau pivot is the obstacle. It prepares the
+      calculations; the HU proof connecting vertices, extreme points and basic feasible solutions still
+      needs separate study.
     covers:
     - knowledge-icop-l01-bases
     depth: intuition
@@ -469,14 +508,10 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L3 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_3.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations. Full HU vertex/extreme-point/BFS proof equivalence was not established for this external
-      lecture.
+    angle: Provides worked matrix and row-operation calculations to repair the algebra behind basis solutions.
+    angle_detail: Reproduce the inversion and equivalent-system steps, then return to solving A_Bx_B=b
+      in the HU session. The notes are useful for checking arithmetic and dimensions; they are not a substitute
+      for proving the vertex/extreme-point/BFS equivalence.
     covers:
     - knowledge-icop-l01-bases
     depth: course-aligned
@@ -487,11 +522,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L4 — Introduction to the Simplex Method
     format: video
-    angle: Row-operation examples turn the basis idea into a computable simplex step.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations. Full HU vertex/extreme-point/BFS
-      proof equivalence was not established for this external lecture.
+    angle: Introduces simplex by improving the CPU-and-memory model through elementary row operations
+      rather than starting with inverse-matrix formulas.
+    angle_detail: Slack variables expose a starting solution; objective coefficients suggest an entering
+      variable and nonnegativity gives the ratio test. Each pivot makes a new set of basic columns visible.
+      Choose this to see how an abstract basis becomes an actual calculation, then match its objective
+      row to Kratsch’s reduced-cost identity.
     covers:
     - knowledge-icop-l01-bases
     - knowledge-icop-l01-pivots
@@ -503,14 +539,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L4 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_4.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations. Full HU vertex/extreme-point/BFS proof equivalence was not established for this external
-      lecture.
+    angle: Shows the successive equation systems, basic variables and limiting ratios in the first complete
+      simplex example.
+    angle_detail: Cover the next system and recompute each row operation, checking feasibility and the
+      new objective value. This is the written bridge between Cornell’s numerical method and the HU matrix
+      derivation; it illustrates basic solutions without supplying the full HU geometric equivalence proof.
     covers:
     - knowledge-icop-l01-bases
     - knowledge-icop-l01-pivots
@@ -522,10 +555,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L5 — A Second Example on the Simplex Method
     format: video
-    angle: A second numerical pivot example lets you test whether you can follow the mechanics independently.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Works a second simplex example so the entering-variable, ratio-test and stopping decisions
+      recur on a different system.
+    angle_detail: The larger calculation tests whether you can track the basic variables and objective
+      row beyond the first familiar example. Use it after L4 by predicting each pivot before it is shown.
+      It adds computational fluency; the symbolic reason that nonnegative reduced costs certify optimality
+      comes from Kratsch or Blum.
     covers:
     - knowledge-icop-l01-pivots
     depth: intuition
@@ -536,13 +571,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L5 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_5.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Retains the second example’s successive pivots as a calculation you can reconstruct independently.
+    angle_detail: Use the intermediate systems to check your entering and leaving variables, row elimination
+      and final optimality decision. It is particularly useful when the first example is recognizable
+      but a fresh tableau still causes errors. Derive the general stopping criterion separately from the
+      HU basis identity.
     covers:
     - knowledge-icop-l01-pivots
     depth: course-aligned
@@ -553,10 +586,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L6 — Phase-1 Linear Program to Construct a Feasible Solution to a Linear Program
     format: video
-    angle: A complete Phase-I example builds an initial feasible solution instead of assuming one.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Constructs a feasible starting point by solving an auxiliary problem with one artificial variable.
+    angle_detail: The example begins with negative right-hand sides and minimizes the artificial variable
+      until the original constraints become feasible. This gives a concrete alternative to HU’s one-artificial-variable-per-equation
+      construction. Compare why zero auxiliary cost proves feasibility in both; follow L7 for the return
+      to the original objective.
     covers:
     - knowledge-icop-l01-phase-one
     depth: intuition
@@ -568,13 +602,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L6 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_6.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Records the single-artificial-variable construction and the pivots that drive its auxiliary
+      objective to zero.
+    angle_detail: Follow the initially infeasible slack solution into a feasible auxiliary system, then
+      check how zero artificial value yields an original feasible point. These worked equations help distinguish
+      the purpose of Phase I from objective optimization. The construction differs from the equality-form
+      auxiliary LP used by HU.
     covers:
     - knowledge-icop-l01-phase-one
     depth: course-aligned
@@ -586,10 +619,12 @@ sources:
     title: Cornell L7 — Solving a Linear Program Starting with the Feasible Solution from the Phase-1
       Linear Program
     format: video
-    angle: The continuation after Phase I shows how its feasible basis feeds the original objective.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: 'Shows the often-missed handoff from Phase I to Phase II: restore the original objective and
+      eliminate its basic-variable coefficients.'
+    angle_detail: A feasible constraint system is carried over from the auxiliary problem, but its old
+      objective cannot simply be reused. Row operations put the real objective into the current basis
+      before improvement continues. Choose this when Phase I makes sense but restarting simplex does not;
+      Blum treats remaining artificial basic variables and redundant rows.
     covers:
     - knowledge-icop-l01-phase-one
     depth: intuition
@@ -601,13 +636,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L7 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_7.pdf, physical PDF pages 1-10. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Works through rebuilding the original objective in the basis returned by Phase I, then continues
+      the pivots.
+    angle_detail: Compare the auxiliary and original objective rows while the feasible constraint system
+      is retained. Reconstructing the elimination explains why a feasible starting point alone is not
+      yet a ready tableau for the original objective. Use Blum for the separate cleanup case where a zero
+      artificial variable remains basic.
     covers:
     - knowledge-icop-l01-phase-one
     depth: course-aligned
@@ -618,10 +652,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L8 — Linear Programs in General Form
     format: video
-    angle: Explicit general-form conversions provide a second way to check sign and variable transformations.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Reduces general LPs to a common form by changing objectives, constraint directions and variable
+      representations.
+    angle_detail: Nonpositive variables are negated, free variables are split, and equality or inequality
+      rows are converted to the chosen convention. Use it to cross-check the mechanics of a transformation
+      and recover the original solution. It supports the later dual-sign derivation, but does not itself
+      develop the full general-duality theorem.
     covers:
     - knowledge-icop-l01-forms
     - knowledge-icop-l01-general-duality
@@ -633,13 +669,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L8 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_8.pdf, physical PDF pages 1-3. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Gives a short transformation reference for objective direction, mixed constraints and variable
+      signs.
+    angle_detail: Work through how a nonpositive or free variable changes every affected coefficient,
+      then compare the resulting equations with HU’s convention. This is a convenient check during modeling
+      and before dualizing a general LP; derive the corresponding multiplier restrictions from Kratsch
+      or Blum.
     covers:
     - knowledge-icop-l01-forms
     - knowledge-icop-l01-general-duality
@@ -651,10 +686,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L9 — Unbounded Linear Programs, Multiple Optima and Degeneracy
     format: video
-    angle: Separate examples distinguish unboundedness, multiple optima and degeneracy.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: 'Separates three different simplex phenomena through examples: an unbounded improving ray,
+      multiple optima and degenerate pivots.'
+    angle_detail: The objective row and ratio test distinguish unlimited improvement from zero-cost movement;
+      a zero basic variable explains a basis change without progress. Use this to diagnose what a calculation
+      means instead of treating every unusual pivot as failure. Blum supplies the lexicographic treatment
+      of cycling, while HU discusses pivot-count complexity.
     covers:
     - knowledge-icop-l01-phase-one
     depth: intuition
@@ -666,13 +703,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L9 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_9.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Places the unboundedness, alternative-optimum and degeneracy calculations side by side for
+      comparison.
+    angle_detail: Check which example has no finite step limit, which permits movement with unchanged
+      cost, and which changes the basis at the same point. The intermediate systems help keep geometric
+      unboundedness, zero reduced cost and zero basic value distinct. These examples diagnose behavior;
+      they do not provide a complete anti-cycling proof.
     covers:
     - knowledge-icop-l01-phase-one
     depth: course-aligned
@@ -683,10 +719,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L14 — Introduction to Duality
     format: video
-    angle: Constructing a dual from a model gives the certificate variables a concrete interpretation.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Motivates duality by asking how to bound the error of a feasible solution before optimization
+      has finished.
+    angle_detail: Weighted combinations of primal constraints produce upper bounds; choosing the tightest
+      such combination becomes another LP. This makes dual variables meaningful before the formal transposition
+      recipe. Choose it if a dual currently feels like an arbitrary second problem. L15 proves the bound
+      and L16 connects it to simplex.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: intuition
@@ -697,13 +735,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L14 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_14.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Builds upper bounds by multiplying and adding primal rows, then writes the best-bound problem
+      as the dual.
+    angle_detail: Reconstruct how each multiplier changes both objective coefficients and the bound’s
+      right-hand side. The calculation explains one dual variable per primal constraint more concretely
+      than a sign table. Use it to motivate the certificate, then translate its maximization convention
+      to HU’s standard-form minimization pair.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: course-aligned
@@ -714,10 +751,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L15 — Weak Duality
     format: video
-    angle: Numerical bounds make the direction of weak-duality inequalities checkable.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Proves weak duality as a chain of inequalities between feasible primal and dual objective values.
+    angle_detail: The worked argument shows exactly where feasibility and nonnegative coefficients enter,
+      then explains why equal feasible values certify both solutions. Use it to get the inequality direction
+      right and separate checking a certificate from finding one. The existence of an equal-value optimal
+      dual is the additional strong-duality question in L16.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: intuition
@@ -728,13 +766,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L15 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_15.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Writes out the weak-duality inequality and the equal-objective optimality argument for a numerical
+      primal–dual pair.
+    angle_detail: Annotate each inequality with the constraint or sign that justifies it. This helps catch
+      reversed bounds and omitted feasibility checks. It also clarifies the distinction between verifying
+      that two feasible points are optimal and proving that an optimal partner must exist.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: course-aligned
@@ -745,10 +781,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L16 — Strong Duality
     format: video
-    angle: The simplex-to-duality derivation connects reduced costs to an optimal dual solution.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations.
+    angle: Explains why the final simplex objective row already contains an optimal dual solution.
+    angle_detail: A worked primal is pivoted to optimality, then the final row is reconstructed as a combination
+      of the original rows. Its coefficients give dual multipliers, dual slacks and equal objective values.
+      Choose this to connect Kratsch’s yᵀ=c_BᵀA_B⁻¹ formula to ordinary elimination; the example makes
+      the certificate visible inside the algorithm.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: intuition
@@ -759,13 +796,10 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L16 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_16.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations.
+    angle: Displays the primal pivots and the row-combination calculation that recovers the dual optimum.
+    angle_detail: Track the coefficients of the original slack columns through the final objective row,
+      then check dual feasibility and equal costs explicitly. These equations are the numerical counterpart
+      of the HU optimal-basis certificate and a useful bridge between simplex mechanics and strong duality.
     covers:
     - knowledge-icop-l01-standard-duality
     depth: course-aligned
@@ -776,11 +810,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L17 — Complementary Slackness
     format: video
-    angle: Complementary-slackness calculations show how tight constraints identify an optimal partner.
-    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
-      Use the named video from the official course page, or the linked notes for a written alternative.
-      HU/Blum supply the exact course definitions and proof obligations. The course packet explicitly
-      leaves the converse proof unproved; do not stop the HU proof at the example.
+    angle: Uses complementary slackness to recover an optimal partner from a known primal solution.
+    angle_detail: 'Positive variables and nonzero multipliers force selected partner constraints tight,
+      reducing the search to a smaller equation system. The worked proof shows sufficiency by equality
+      of feasible objective values. Use the examples for calculation, then Kratsch or Blum for both directions
+      of the theorem: the Cornell packet leaves necessity unproved.'
     covers:
     - knowledge-icop-l01-slackness
     depth: intuition
@@ -791,14 +825,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Cornell L17 — handwritten notes
     format: course-material
-    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
-      pace.
-    angle_detail: Official lecture_17.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
-      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
-      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
-      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
-      obligations. The course packet explicitly leaves the converse proof unproved; do not stop the HU
-      proof at the example.
+    angle: Works the zero-product conditions into equations that determine an optimal dual partner.
+    angle_detail: The handwritten algebra shows how primal and dual feasibility plus vanishing products
+      force equal objectives. Use it to practice finding a certificate rather than only checking one.
+      For the complete if-and-only-if proof, return to the HU/Blum nonnegative-gap decomposition; the
+      companion packet does not explicitly prove the converse.
     covers:
     - knowledge-icop-l01-slackness
     depth: course-aligned
@@ -815,10 +846,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: 'Stanford CS261 L7 — Linear Programming: Introduction and Applications'
     format: video
-    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
-    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
-      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
-      video links from the course page.
+    angle: Shows the modeling reach of LP through flows, absolute-error regression and linear classification.
+    angle_detail: Auxiliary variables turn absolute values and hinge losses into linear constraints, connecting
+      optimization to familiar machine-learning models. The geometric opening explains feasibility and
+      corner solutions before the applications. Choose this for breadth and modeling transfer after the
+      HU basics. Content is checked against the instructor’s lecture notes; it does not supply the chapter’s
+      detailed simplex derivation.
     covers:
     - knowledge-icop-l01-forms
     - knowledge-icop-l01-geometry
@@ -830,10 +863,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Stanford CS261 L8 — Linear Programming Duality (Part 1)
     format: video
-    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
-    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
-      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
-      video links from the course page.
+    angle: Interprets the dual as the best bound obtainable by weighting constraints, then connects the
+      construction to maximum flow and cuts.
+    angle_detail: A small numerical LP motivates the recipe and weak duality before the flow example gives
+      the multipliers a combinatorial meaning. The notes also explain sign conventions for different forms.
+      Choose this when duality rules are usable but their interpretation is missing; the general strong-duality
+      and slackness discussion continues in L9.
     covers:
     - knowledge-icop-l01-standard-duality
     - knowledge-icop-l01-general-duality
@@ -845,10 +880,13 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Stanford CS261 L9 — Linear Programming Duality (Part 2)
     format: video
-    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
-    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
-      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
-      video links from the course page.
+    angle: Connects complementary slackness to the Hungarian algorithm and explains strong duality through
+      separating hyperplanes and Farkas’ lemma.
+    angle_detail: The physical picture treats dual multipliers as balancing constraint forces, while matching
+      turns the optimality conditions into an algorithmic invariant. This adds a geometric and combinatorial
+      perspective beyond HU’s simplex-basis proof. Use it for conceptual depth after the core certificates;
+      its separation argument introduces additional theory. Content is checked against the instructor’s
+      notes.
     covers:
     - knowledge-icop-l01-standard-duality
     - knowledge-icop-l01-slackness
@@ -860,10 +898,12 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: Stanford CS261 L10 — The Minimax Theorem & Algorithms for Linear Programming
     format: video
-    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
-    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
-      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
-      video links from the course page.
+    angle: Derives the minimax theorem for zero-sum games from LP duality and compares the main approaches
+      to solving LPs.
+    angle_detail: Mixed strategies become primal and dual programs with the same game value. The algorithm
+      survey contrasts simplex along the boundary, ellipsoid methods using separation, and interior-point
+      methods. Choose this after the chapter to see what strong duality achieves beyond certificates and
+      to contextualize HU’s outlook. The notes give a survey, not an additional required algorithm implementation.
     covers:
     - knowledge-icop-l01-oral-review
     depth: intuition
@@ -880,10 +920,11 @@ sources:
     unit_id: unit-icop-l01-linear-programming
     title: 'MIT 6.046J L15 — Linear Programming: LP, Reductions, Simplex'
     format: video
-    angle: An algorithms-focused alternative opening connects LP formulations, reductions and certificates.
-    angle_detail: Official lecture page resolves and lists the LP, reductions and simplex lecture. Keep
-      as an alternate explanation, not an additional compulsory introduction or a substitute for the local
-      simplex proof.
+    angle: Frames LP as an algorithms tool through formulations, reductions and an introduction to simplex.
+    angle_detail: This alternative opening is useful for connecting an optimization problem to a general
+      solver and for seeing simplex in an algorithms-course setting. The official lecture page confirms
+      its scope; a detailed proof-by-proof match with HU has not been established. Choose it as another
+      introduction when needed, then use Kratsch for the chapter’s exact definitions and derivations.
     covers:
     - knowledge-icop-l01-forms
     depth: orientation

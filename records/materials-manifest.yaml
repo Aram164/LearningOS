@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-10-21'
+captured: '2026-10-26'
 totals:
-  files: 1527
-  bytes: 2120057904
+  files: 1528
+  bytes: 2124146324
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -3923,6 +3923,9 @@ files:
   optimization/korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf:
     size: 8504258
     sha256: 529e982feea67c18fd8c2869191f42ec37932e7665aad9f2aca6abe18f9f5cbe
+  optimization/nemirovski/intro-to-linear-optimization-Nemirovski.pdf:
+    size: 4088420
+    sha256: 4298761ad4c451435092caade7d78016260970539711153cfacc3a83face18b8
   software/engineering/cs-classics-shelf/Clean Architecture A Craftsman Guide to Software Structure and Design.pdf:
     size: 8414896
     sha256: eb3885d72fdb7c27a6a3531b06d69ae71c90f4c9c7a0e79f517654bad402baf5

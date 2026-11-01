@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20261026-112545-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-10-26T11:25:45+01:00'
+snapshot_before: sha256:01c58ab125a97aafa7e0bdddc0b6cceff7054bd9afa6daf066db6831b79b16d7
+snapshot_after: sha256:01c58ab125a97aafa7e0bdddc0b6cceff7054bd9afa6daf066db6831b79b16d7
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 4
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 4
+    after: 5
+writes:
+- path: operations/transactions/lineage.yaml
+  sha256_before: 914f0126b97ca6847126482370642e3bb117138c34b1be14c03743cfbf064950
+  sha256_after: 8c1ea698c63b0def5a5340ceffcab48b355eb8386891f27b12d6bf80bdb726b3
+  created: false
+metadata:
+  data_roots_sha256: sha256:759868bafd57015fbbb6106b3bce0d809d245803d83dfc946982ca008a16e684
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-icop-l01-coverage-rejudge-20261026
+  idempotency_key: icop-l01-coverage-rejudge-20261026
+  intent_sha256: sha256:784f2f4674f8500a67ab77660f7ef8909a1e6f5252b180acdd7fb4d52d04ff44
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:784f2f4674f8500a67ab77660f7ef8909a1e6f5252b180acdd7fb4d52d04ff44

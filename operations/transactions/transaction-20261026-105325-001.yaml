@@ -1,0 +1,49 @@
+schema_version: 2
+id: transaction-20261026-105325-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-10-26T10:53:25+01:00'
+snapshot_before: sha256:127092301dbb12a760cdd526c189f5e5536a60fec428621ffbd66b30f453ac26
+snapshot_after: sha256:01c58ab125a97aafa7e0bdddc0b6cceff7054bd9afa6daf066db6831b79b16d7
+expected_revisions:
+  module-hu-icop: 1
+  unit-icop-l01-linear-programming: 1
+artifact_revisions:
+  module-hu-icop:
+    before: 1
+    after: 2
+  unit-icop-l01-linear-programming:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-icop/source-map.yaml
+  sha256_before: d60c598154fd259f6608a977c7d952d50ccc49dabf79a66500554ab0ad7c83a8
+  sha256_after: b4108923409893e409de148dd3781237afc0bcd502992f7b8a24d3abddeb479d
+  created: false
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/study-map.yaml
+  sha256_before: 321c47abf4eaf15f6aa12487dc33ebfae47c5d21bec3a9dc943a403bcdbc4a90
+  sha256_after: cbf9d245acf462d52d5ad964117b2a305f3c765693f1b603e78e6330de2b306a
+  created: false
+metadata:
+  data_roots_sha256: sha256:759868bafd57015fbbb6106b3bce0d809d245803d83dfc946982ca008a16e684
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-6bd5aa1b47474dfebdfe999a6a052de7
+  idempotency_key: reviewed-528791079a4d4a2ebdfed6f0ccc988e0
+  intent_sha256: sha256:f4940b3df0b9a3877197476e4adcf75836f05c40053b9a1965ce6cdb878e6f65
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:f4940b3df0b9a3877197476e4adcf75836f05c40053b9a1965ce6cdb878e6f65
