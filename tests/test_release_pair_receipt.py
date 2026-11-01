@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 import release_pair_receipt as rpr
+import yaml
 
 WORKFLOW_ENV = {
     "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
@@ -317,6 +318,12 @@ def test_verify_cross_checks_build_info_contract_version(clean_pair, tmp_path):
 
 
 # ---- workflow-policy: release-pair.yml -------------------------------------
+
+@pytest.mark.parametrize("workflow", ["validate.yml", "release-pair.yml"])
+def test_hosted_gates_pin_the_python_compatible_runner_image(workflow):
+    data = yaml.safe_load((rpr.ROOT / ".github/workflows" / workflow).read_text())
+    assert all(job["runs-on"] == "ubuntu-24.04" for job in data["jobs"].values())
+
 
 def test_release_pair_workflow_checks_out_both_repositories_at_exact_shas():
     text = (rpr.ROOT / ".github" / "workflows" / "release-pair.yml").read_text(encoding="utf-8")

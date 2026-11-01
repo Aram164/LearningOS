@@ -47,7 +47,7 @@ run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.e
 
 jobs:
   pytest-shards:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # The unsharded suite took 2h01m of pytest; legs are balanced to well
     # under 45 minutes, and a leg that hangs must die rather than queue.
     timeout-minutes: 45
@@ -240,7 +240,7 @@ jobs:
   # test_scenarios_zz_operational_owners.py runs whole in zz-0.
   zz-shards:
     needs: [pytest-shards]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     permissions:
       contents: read
@@ -483,7 +483,7 @@ jobs:
   # suites, and the real cross-process Gateway recovery harness against
   # this Core) — the same `npm run check` the local paired gate runs last.
   ui-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -566,7 +566,7 @@ jobs:
   # exactly the whole suite, the static gates pass, and every leg passed.
   gate:
     needs: [pytest-shards, zz-shards, ui-check]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
