@@ -868,6 +868,11 @@ def apply_structural_edit(current: dict, edit: dict) -> dict:
     if any(row.get("id") == resource["id"] for s in stages for row in s.get("resources", [])):
         raise ValueError(f"{kind} reuses an existing resource ID")
     if kind == "resource_append":
+        # A named append without an action/rank is a reference placement, not
+        # an inferred study obligation. Explicit learner fields always win.
+        resource = copy.deepcopy(resource)
+        resource.setdefault("kind", "reference")
+        resource.setdefault("scope_triage", "reference-only")
         # No anchor: unidentified legacy rows stay as they are, ahead of it.
         stage["resources"] = [*resources, copy.deepcopy(resource)]
     else:

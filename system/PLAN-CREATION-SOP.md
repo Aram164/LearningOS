@@ -656,6 +656,16 @@ and exactly one operation:
   It goes last in the stage and needs no anchor, so it also works on an empty stage
   and on a stage whose existing rows carry no IDs.
 
+For `resource_append` only, an omitted `kind` becomes `reference` and an
+omitted `scope_triage` becomes `reference-only`. Explicit values are never
+overwritten. These conservative defaults place the named material without
+inventing a required activity, affordance or evidence claim. The preflight
+shows the effective values in `diff.resource_changes[].added`; check and
+apply use the same defaults under the normal file, snapshot and revision
+guards. A learner naming the exact route, stage and append action has dictated
+that placement even when these two defaulted fields are omitted (OPERATOR
+boundary 2). Other content choices still need visible review.
+
 A runtime review covers a stage's resources, so a new row on a stage with a
 `runtime_review` makes it stale and the preflight refuses. Re-review the stage, then
 add `runtime_review` with `reviewed_by` and `reviewed_on` to the `resource_insert` or

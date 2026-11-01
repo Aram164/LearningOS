@@ -654,6 +654,7 @@ commands:
     - bounded to one unit
     - external map files are bound to their exact bytes by SHA-256 before use
     - takes a full map or one compact structural_edit (stage_move, resource_move, anchored resource_insert, anchor-free resource_append)
+    - resource_append defaults only omitted kind to reference and omitted scope_triage to reference-only; explicit fields remain unchanged and the effective values are shown in preflight
     - editing an existing map in either form refuses any new or grown warning signature at preflight and at apply; a first map refuses validation errors only
     - the review names each stage's added and removed resource rows in diff.resource_changes, ahead of the exact arrays in diff.content_changes
     - resource_insert and resource_append may renew an existing runtime_review with reviewed_by and reviewed_on; the import binds its fingerprint

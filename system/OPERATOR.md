@@ -128,7 +128,12 @@ Skills and projects use modules and units without false academic metadata.
    A plan change whose content you chose, such as which resource or which stage,
    is one of these: show the learner the exact `--check` result and apply it on
    their yes. A change the learner dictated exactly, such as moving one named
-   stage after another, needs no second yes.
+   stage after another, needs no second yes. For example, "append route-demo-book
+   to stage-demo" dictates the route, stage and last position. With the
+   contract-defined `resource_append` defaults, omitted `kind` is `reference`
+   and omitted `scope_triage` is `reference-only`; preflight shows both values.
+   This creates no required study activity. Any other content choice still
+   needs the learner's review; explicit kind or triage is preserved.
 3. `semestercontext/Stratum/` is an external sibling code repository, not
    LearningOS data. LearningOS never indexes, validates, migrates, or manages
    it. An agent may inspect relevant paths when the current task explicitly

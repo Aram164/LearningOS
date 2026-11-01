@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 from gateway_helpers import (
     approved_v2_call,
     approved_v2_cli,
@@ -419,6 +420,51 @@ def test_structural_review_names_the_added_row_ahead_of_the_exact_arrays(mini_re
     assert list(diff).index('resource_changes') < list(diff).index('content_changes')
     exact = next(row for row in diff['content_changes'] if row['field'] == 'resources')
     assert len(exact['after']) == len(exact['before']) + 1
+
+
+@pytest.mark.parametrize('explicit', [{}, {'kind': 'read', 'scope_triage': 'helpful-now'}])
+def test_resource_append_defaults_are_reviewed_and_preserve_explicit_values(
+    mini_repo, tmp_path, explicit,
+):
+    path, before = _structural_fixture(mini_repo)
+    resource = {
+        'id': 'resource-defaulted-append',
+        'material_ref': {'route_id': 'route-demo-book',
+                         'inherit': ['label', 'source_id', 'locator', 'angle', 'angle_detail']},
+        **explicit,
+    }
+    draft = tmp_path / 'defaulted-append.json'
+    draft.write_text(json.dumps({'unit_id': 'unit-demo-l01', 'structural_edit': {
+        'reason': 'Append the named route without creating a study obligation.',
+        'resource_append': {'stage_id': 'stage-demo', 'resource': resource}}}))
+    initial = canonical_fingerprint(mini_repo)
+    resume = (mini_repo / 'curriculum/resume.yaml').read_bytes()
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01',
+                    '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 0, check.stderr
+    review = json.loads(check.stdout)
+    assert review['canonical_files_written'] == 0
+    assert canonical_fingerprint(mini_repo) == initial
+    added = review['diff']['resource_changes'][0]['added']
+    assert len(added) == 1
+    assert added[0]['kind'] == explicit.get('kind', 'reference')
+    assert added[0]['scope_triage'] == explicit.get('scope_triage', 'reference-only')
+    envelope = approved_v2_envelope(mini_repo, capability='unit.map.import', payload={
+        'unit_id': 'unit-demo-l01', 'file': str(draft),
+        'file_sha256': review['file_sha256'], 'replace': True,
+    }, artifact_ids=list(review['expected_revisions']), idempotency_key='defaulted-append')
+    envelope['expected_snapshot'] = review['snapshot_id']
+    envelope['expected_revisions'] = review['expected_revisions']
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode == 0, result.stdout + result.stderr
+    after = yaml.safe_load(path.read_text())
+    old_stage = next(s for s in before['stages'] if s['id'] == 'stage-demo')
+    new_stage = next(s for s in after['stages'] if s['id'] == 'stage-demo')
+    assert new_stage['resources'][:-1] == old_stage['resources']
+    assert new_stage['resources'][-1]['kind'] == added[0]['kind']
+    assert new_stage['resources'][-1]['scope_triage'] == added[0]['scope_triage']
+    assert (mini_repo / 'curriculum/resume.yaml').read_bytes() == resume
+    assert len(list((mini_repo / 'operations/transactions').glob('transaction-*.yaml'))) == 1
 
 
 @pytest.mark.parametrize('edit', [
