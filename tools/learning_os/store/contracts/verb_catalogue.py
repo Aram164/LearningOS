@@ -25,6 +25,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from learning_os.store.contracts.capability_catalog import (
     CapabilityCatalogError,
@@ -140,7 +141,7 @@ class VerbCatalogue:
         return None
 
 
-def _invocation(data: dict, relative: str) -> dict[str, object]:
+def _invocation(data: dict[str, Any], relative: str) -> dict[str, object]:
     """Derive argument guidance from the same metadata that builds argparse."""
     command = data["x-los-cli-command"]
     arguments = []
@@ -171,7 +172,7 @@ def _invocation(data: dict, relative: str) -> dict[str, object]:
             "mutually_exclusive": command.get("mutually_exclusive", [])}
 
 
-def _request_operations(root: Path, invocations: dict | None = None) -> dict[str, str]:
+def _request_operations(root: Path, invocations: dict[str, dict[str, object]] | None = None) -> dict[str, str]:
     requests = root / REQUESTS_RELATIVE
     if not requests.is_dir():
         raise VerbCatalogueError([f"request-schema directory is missing: {REQUESTS_RELATIVE}"])
