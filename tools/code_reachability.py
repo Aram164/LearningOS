@@ -30,6 +30,7 @@ ENTRYPOINTS = (
     "build_materials_index.py",
     "build_materials_tree.py",
     "capture_world.py",
+    "check_shard_completeness.py",
     "code_reachability.py",
     "codex_obsidian.py",
     "compare_world.py",

@@ -6,7 +6,7 @@
         --core-sha <40 lowercase hex> --ui-sha <40 lowercase hex> \\
         --workflow-run-id <id> --workflow-run-attempt <n> \\
         --live-install-scope not-run-live-install-deselected|full \\
-        --out pair-receipt.json
+        --system-check-passed --out pair-receipt.json
 
     python tools/release_pair_receipt.py verify \\
         --receipt pair-receipt.json --artifact-dir <directory containing plugin/>
@@ -18,7 +18,9 @@ today proves nothing about whether the same Core SHA is still paired with the
 same UI SHA tomorrow. This receipt is the one artifact that can answer "were
 these two exact commits built and verified together" without re-running
 anything — a downloaded pair-receipt.json plus the four shipped files beside
-it is either internally consistent, or it is not. It is operational evidence,
+it is either internally consistent, or it is not. The check outcome is a caller
+assertion: independently verify the named workflow before accepting a release.
+It is operational evidence,
 never a canonical LearningOS entity: generating one changes no data-contract
 or manifest-contract version.
 """
@@ -185,6 +187,7 @@ def generate(
     workflow_run_id: str,
     workflow_run_attempt: str,
     live_install_scope: str,
+    system_check_passed: bool = False,
 ) -> dict:
     """Build one schema-validated receipt from the current, already-built pair.
 
@@ -193,6 +196,8 @@ def generate(
     build-info.json that disagrees with either SHA all raise before a receipt
     is produced.
     """
+    if system_check_passed is not True:
+        raise ReleasePairReceiptError("caller must explicitly assert that its system check passed")
     core_sha = _require_full_sha(core_sha, "core_sha")
     ui_sha = _require_full_sha(ui_sha, "ui_sha")
     if live_install_scope not in LIVE_INSTALL_SCOPES:
@@ -270,7 +275,8 @@ def generate(
         "bundle_sha256": build_info["bundle_sha256"],
         "stylesheet_sha256": build_info["stylesheet_sha256"],
         "shipped_asset_sha256": shipped_asset_sha256,
-        "system_check_passed": True,
+        # Caller assertion; hosted execution must be corroborated separately.
+        "system_check_passed": system_check_passed,
         "stress_scope": "not-run-materials-unprovisioned",
         "live_install_scope": live_install_scope,
         "workflow_run_id": str(workflow_run_id),
@@ -355,6 +361,7 @@ def _cli_generate(args: argparse.Namespace) -> int:
             workflow_run_id=args.workflow_run_id,
             workflow_run_attempt=args.workflow_run_attempt,
             live_install_scope=args.live_install_scope,
+            system_check_passed=args.system_check_passed,
         )
     except ReleasePairReceiptError as exc:
         print(f"release-pair-receipt: {exc}", file=sys.stderr)
@@ -402,6 +409,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--live-install-scope", required=True,
         help="whether the paired gate ran the live_install tests or deselected them: "
              "not-run-live-install-deselected (CI) or full (the live installation)")
+    generate_parser.add_argument(
+        "--system-check-passed", action="store_true",
+        help="record the caller assertion; verify the named hosted run separately")
     generate_parser.add_argument("--out", required=True)
     generate_parser.set_defaults(func=_cli_generate)
 

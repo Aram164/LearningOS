@@ -102,6 +102,7 @@ def _generate(pair: dict, **overrides) -> dict:
         "core_sha": pair["core_sha"], "ui_sha": pair["ui_sha"],
         "workflow_run_id": "123", "workflow_run_attempt": "1",
         "live_install_scope": "not-run-live-install-deselected",
+        "system_check_passed": True,
     }
     kwargs.update(overrides)
     return rpr.generate(**kwargs)
@@ -125,6 +126,11 @@ def test_dirty_ui_source_is_still_refused(clean_pair):
 
 
 # ---- generation --------------------------------------------------------
+
+def test_receipt_requires_a_caller_assertion_of_passed_checks(clean_pair):
+    with pytest.raises(rpr.ReleasePairReceiptError, match="caller"):
+        _generate(clean_pair, system_check_passed=False)
+
 
 def test_a_valid_exact_pair_generates_a_schema_valid_receipt(clean_pair):
     receipt = _generate(clean_pair)

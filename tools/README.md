@@ -94,3 +94,5 @@ contract is newer than the last generation it understands.
 When the current contract needs a data rewrite, add a new migration with a new
 identifier and supported-through declaration.  Do not revive or broaden a
 retired one.
+
+`check_shard_completeness.py` is a hosted-CI proof tool: it checks the manifest file partition, exact collected/executed test-ID multiplicities, and visible failures/skips. Both release workflows use its collision-refusing audit-log copy helper. It changes no learner state.

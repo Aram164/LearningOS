@@ -202,6 +202,7 @@
    "tests/test_search_values.py",
    "tests/test_semantic_contract.py",
    "tests/test_session_ledger.py",
+   "tests/test_shard_completeness.py",
    "tests/test_source_discovery.py",
    "tests/test_source_record_revise.py",
    "tests/test_study_map_obligation.py",
