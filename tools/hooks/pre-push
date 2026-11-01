@@ -148,15 +148,33 @@ for repo in "$core" "$ui"; do
     fi
 done
 
-# Guarded CI-bootstrap mode (D15): explicit, command-scoped, unverified.
-# Submits only the checked-out HEAD to one non-main, non-tag branch; never
-# creates a verified-pair stamp. Normal behavior is unchanged.
-if [ "${LOS_CI_BOOTSTRAP:-}" = "1" ]; then
+# Guarded CI submission: name the current branch explicitly and record intent
+# in the already-created commit. The hook never amends the SHA being checked.
+if [ -n "${LOS_CI_BOOTSTRAP:-}" ]; then
     if [ "$main_pushed" = "1" ]; then
         echo "pre-push: CI-bootstrap refuses protected refs (main/tag)" >&2; exit 1
     fi
     case "$refs" in *refs/tags/*) echo "pre-push: CI-bootstrap refuses tags" >&2; exit 1;; esac
-    echo "pre-push: CI-bootstrap submission of $HEAD_SHA (UNVERIFIED until hosted exact-pair gate succeeds)"
+    branch="$(git -C "$current" symbolic-ref --quiet --short HEAD || true)"
+    if [ -z "$branch" ] || [ "$LOS_CI_BOOTSTRAP" != "$branch" ]; then
+        echo "pre-push: LOS_CI_BOOTSTRAP must name the checked-out branch exactly (not 1)" >&2
+        exit 1
+    fi
+    set -f
+    # The four fields are Git's hook input, not shell commands.
+    # shellcheck disable=SC2086
+    set -- $refs
+    set +f
+    if [ "$#" -ne 4 ] || [ "$3" != "refs/heads/$branch" ]; then
+        echo "pre-push: CI-bootstrap submits exactly one ref to refs/heads/$branch" >&2
+        exit 1
+    fi
+    if ! git -C "$current" log -1 --format=%B | git interpret-trailers --parse \
+        | grep -Fqx "LOS-CI-Bootstrap: $branch"; then
+        echo "pre-push: commit must record the trailer LOS-CI-Bootstrap: $branch" >&2
+        exit 1
+    fi
+    echo "pre-push: CI-bootstrap branch=$branch sha=$HEAD_SHA (UNVERIFIED until hosted exact-pair gate succeeds)" >&2
     exit 0
 fi
 

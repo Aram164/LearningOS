@@ -615,17 +615,50 @@ def test_commit_check_preserves_affected_selection_contract(tmp_path, selection)
     assert (result.returncode != 0) == (selection == "failure"), result.stderr
 
 
+def _ci_bootstrap_intent(pair, *, trailer=True):
+    core = pair["core"]
+    subprocess.run(["git", "switch", "-qc", "feat"], cwd=core, check=True)
+    if trailer:
+        subprocess.run([
+            "git", "commit", "--allow-empty", "-qm",
+            "Submit this exact feature head to hosted CI.\n\nLOS-CI-Bootstrap: feat",
+        ], cwd=core, check=True)
+    return _head(core)
+
+
 def test_ci_bootstrap_accepts_clean_non_main_head(pair, monkeypatch):
-    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "1")
-    head = _head(pair["core"])
+    head = _ci_bootstrap_intent(pair)
+    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "feat")
     result = _run_hook(pair["core"], f"refs/heads/feat {head} refs/heads/feat {ZERO_SHA}\n")
     assert result.returncode == 0
-    assert "UNVERIFIED" in result.stdout
+    assert f"CI-bootstrap branch=feat sha={head}" in result.stderr
+    assert "UNVERIFIED" in result.stderr
     assert _invocations(pair["log"]) == []  # no local gate, no stamp
 
 
 def test_ci_bootstrap_refuses_main(pair, monkeypatch):
-    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "1")
-    head = _head(pair["core"])
+    head = _ci_bootstrap_intent(pair)
+    monkeypatch.setenv("LOS_CI_BOOTSTRAP", "feat")
     result = _run_hook(pair["core"], f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n")
     assert result.returncode == 1
+    assert "protected refs" in result.stderr
+
+
+@pytest.mark.parametrize("invalid", [
+    "boolean", "wrong-branch", "missing-trailer", "wrong-remote", "multiple-refs", "detached", "tag",
+])
+def test_ci_bootstrap_refuses_unbound_submission_intent(pair, monkeypatch, invalid):
+    head = _ci_bootstrap_intent(pair, trailer=invalid != "missing-trailer")
+    value = "1" if invalid == "boolean" else "other" if invalid == "wrong-branch" else "feat"
+    monkeypatch.setenv("LOS_CI_BOOTSTRAP", value)
+    remote = "refs/heads/other" if invalid == "wrong-remote" else "refs/heads/feat"
+    if invalid == "tag":
+        remote = "refs/tags/release"
+    if invalid == "detached":
+        subprocess.run(["git", "checkout", "--detach", "-q", head], cwd=pair["core"], check=True)
+    refs = f"refs/heads/feat {head} {remote} {ZERO_SHA}\n"
+    if invalid == "multiple-refs":
+        refs += f"refs/heads/feat {head} refs/heads/other {ZERO_SHA}\n"
+    result = _run_hook(pair["core"], refs)
+    assert result.returncode == 1
+    assert _invocations(pair["log"]) == []
