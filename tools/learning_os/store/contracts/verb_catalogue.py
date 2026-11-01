@@ -25,7 +25,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import cast
 
 from learning_os.store.contracts.capability_catalog import (
     CapabilityCatalogError,
@@ -141,20 +141,22 @@ class VerbCatalogue:
         return None
 
 
-def _invocation(data: dict[str, Any], relative: str) -> dict[str, object]:
+def _invocation(data: dict[str, object], relative: str) -> dict[str, object]:
     """Derive argument guidance from the same metadata that builds argparse."""
-    command = data["x-los-cli-command"]
-    arguments = []
-    usage = ["los", command["name"]]
-    for name, prop in data.get("properties", {}).items():
-        cli = prop.get("x-los-cli")
+    command = cast(dict[str, object], data["x-los-cli-command"])
+    arguments: list[dict[str, object]] = []
+    usage = ["los", cast(str, command["name"])]
+    properties = cast(dict[str, dict[str, object]], data.get("properties", {}))
+    for name, prop in properties.items():
+        cli = cast(dict[str, object] | None, prop.get("x-los-cli"))
         if cli is None:
             continue
-        flags = cli["flags"]
+        flags = cast(list[str], cli["flags"])
         token = flags[0] if flags else ""
         if cli["action"] not in ("store_true", "store_false", "count", "store_const", "append_const"):
-            metavar = cli.get("metavar") or name.upper()
-            value = " ".join(metavar) if isinstance(metavar, list) else metavar
+            metavar = cli.get("metavar")
+            value = (" ".join(cast(list[str], metavar)) if isinstance(metavar, list)
+                     else metavar if isinstance(metavar, str) else name.upper())
             if cli.get("nargs") in ("*", "+"):
                 value += " ..."
             elif cli.get("nargs") == "?" and flags:
