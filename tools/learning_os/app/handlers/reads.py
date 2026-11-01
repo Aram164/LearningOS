@@ -304,7 +304,9 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
              "recorded_options": _recorded_options(manifest),
              "recorded_options_note": (
                  "workspace next actions are recorded options, not current "
-                 "priorities; compare with current dates and state"
+                 "priorities and not a target selection for the current request; "
+                 "follow the learner's named module, unit or stage; "
+                 "compare with current dates and state"
              ),
              "counts": manifest.get("counts", {}),
              "owed_study_maps": owed,

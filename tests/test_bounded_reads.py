@@ -555,6 +555,25 @@ def test_brief_pointer_invalid_matches_missing(mini_repo):
     assert [opt["workspace_id"] for opt in data["recorded_options"]] == ["workspace-demo"]
 
 
+def test_brief_recorded_action_does_not_select_a_named_request_target(mini_repo):
+    """A stored action for L02 must not redirect a learner asking about L01."""
+    add_curriculum(mini_repo)
+    (mini_repo / "curriculum/resume.yaml").unlink()
+    context = mini_repo / "work/active/workspace-demo/CONTEXT.md"
+    context.write_text(context.read_text().replace(
+        "Do the demo thing.", "Continue unit-demo-l02."), encoding="utf-8")
+    response = run_los(mini_repo, "bootstrap", "--brief")
+    assert response.returncode == 0, response.stderr
+    data = json.loads(response.stdout)
+    assert data["pointer_state"] == "missing"
+    assert data["recorded_options"][0]["next_action"] == "Continue unit-demo-l02."
+    note = data["recorded_options_note"]
+    assert "not a target selection for the current request" in note
+    assert "learner's named module, unit or stage" in note
+    # Bootstrap has no prompt: it must explain the boundary, not invent a match.
+    assert "prompt_match" not in data
+
+
 def test_search_surfaces_garden_seeds_and_inbox_filenames(mini_repo):
     from learning_os.derive.garden import garden_id
 
