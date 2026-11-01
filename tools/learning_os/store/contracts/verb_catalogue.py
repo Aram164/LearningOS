@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from learning_os.store.contracts.capability_catalog import (
@@ -107,6 +107,7 @@ class VerbCatalogue:
     #: (name, task id) for every ``capabilities NAME`` an entry read expands:
     #: the task starts at NAME, so reading NAME is reading the task (#22).
     expansions: tuple[tuple[str, str], ...] = ()
+    invocations: dict[str, dict[str, object]] = field(default_factory=dict)
 
     def entered_at(self, *names: str | None) -> list[TaskRow]:
         """The tasks whose entry read is ``capabilities NAME`` for one of ``names``."""
@@ -139,7 +140,38 @@ class VerbCatalogue:
         return None
 
 
-def _request_operations(root: Path) -> dict[str, str]:
+def _invocation(data: dict, relative: str) -> dict[str, object]:
+    """Derive argument guidance from the same metadata that builds argparse."""
+    command = data["x-los-cli-command"]
+    arguments = []
+    usage = ["los", command["name"]]
+    for name, prop in data.get("properties", {}).items():
+        cli = prop.get("x-los-cli")
+        if cli is None:
+            continue
+        flags = cli["flags"]
+        token = flags[0] if flags else ""
+        if cli["action"] not in ("store_true", "store_false", "count", "store_const", "append_const"):
+            metavar = cli.get("metavar") or name.upper()
+            value = " ".join(metavar) if isinstance(metavar, list) else metavar
+            if cli.get("nargs") in ("*", "+"):
+                value += " ..."
+            elif cli.get("nargs") == "?" and flags:
+                value = "[" + value + "]"
+            token = (token + " " + value).strip()
+        if not cli["required"]:
+            token = "[" + token + "]"
+        usage.append(token)
+        arguments.append({"name": name, "flags": flags, "required": cli["required"],
+                          "action": cli["action"], "nargs": cli.get("nargs"),
+                          "choices": cli.get("choices"), "default": cli.get("default"),
+                          "description": prop.get("description")})
+    return {"command": command["name"], "schema_path": relative,
+            "usage": " ".join(usage), "arguments": arguments,
+            "mutually_exclusive": command.get("mutually_exclusive", [])}
+
+
+def _request_operations(root: Path, invocations: dict | None = None) -> dict[str, str]:
     requests = root / REQUESTS_RELATIVE
     if not requests.is_dir():
         raise VerbCatalogueError([f"request-schema directory is missing: {REQUESTS_RELATIVE}"])
@@ -157,6 +189,8 @@ def _request_operations(root: Path) -> dict[str, str]:
         if verb in operations:
             raise VerbCatalogueError([f"CLI command {verb!r} is declared twice"])
         operations[verb] = operation
+        if invocations is not None:
+            invocations[verb] = _invocation(data, f"{REQUESTS_RELATIVE}/{path.name}")
     if not operations:
         raise VerbCatalogueError(["no CLI command is declared by the request schemas"])
     return operations
@@ -199,7 +233,8 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
     except TaskScopeError as exc:
         raise VerbCatalogueError([str(exc)]) from exc
 
-    request_operations = _request_operations(root)
+    invocations: dict[str, dict[str, object]] = {}
+    request_operations = _request_operations(root, invocations)
     parser_commands = set(request_operations)
     queries, commands, internal = _catalog_capabilities(catalogue)
     public = {**queries, **commands}
@@ -321,5 +356,5 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
 
     if problems:
         raise VerbCatalogueError(problems)
-    return VerbCatalogue(verbs=tuple(rows), tasks=task_rows,
+    return VerbCatalogue(verbs=tuple(rows), tasks=task_rows, invocations=invocations,
                           warnings=tuple(warnings), expansions=tuple(expansions))

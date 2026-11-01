@@ -976,6 +976,7 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 payload["payload_schema_path"] = relative
                 payload["payload_schema"] = schema
         payload["verb"] = row.as_dict()
+        payload["invocation"] = catalogue.invocations[row.verb]
         payload["verbs"] = [row.as_dict()]
         payload["tasks"] = [
             catalogue.task(task_id).as_dict()

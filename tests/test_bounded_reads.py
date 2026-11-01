@@ -8,6 +8,34 @@ from repo_builders import add_curriculum, run_los, write_yaml
 from learning_os.store.loader import load_repo
 
 
+@pytest.mark.parametrize('command', ['material-span', 'material-context'])
+def test_focused_capability_exposes_the_same_arguments_as_the_parser(mini_repo, command):
+    import argparse
+
+    from learning_os.adapters.cli_parser import build_parser
+
+    response = run_los(mini_repo, 'capabilities', command, '--json')
+    assert response.returncode == 0, response.stderr
+    invocation = json.loads(response.stdout)['invocation']
+    parser = build_parser()
+    commands = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
+    actual = {a.dest: a for a in commands.choices[command]._actions if a.dest != 'help'}
+    assert invocation['command'] == command
+    assert invocation['usage'].startswith('los ' + command)
+    for argument in invocation['arguments']:
+        action = actual[argument['name']]
+        assert argument['flags'] == action.option_strings
+        assert argument['required'] == action.required
+        assert argument['description'] == action.help
+    by_name = {a['name']: a for a in invocation['arguments']}
+    if command == 'material-context':
+        assert by_name['query']['flags'] == []
+        assert 'with --unit' in by_name['include_related']['description']
+    else:
+        assert 'pdf pp. 21-26' in by_name['pages']['description']
+    assert [v['verb'] for v in json.loads(response.stdout)['verbs']] == [command]
+
+
 def test_note_segments_reconstruct_exact_bytes_and_refuse_stale_continuation(mini_repo):
     note = next(iter(load_repo(mini_repo).notes.values()))
     original = note.path.read_bytes().decode("utf-8")
