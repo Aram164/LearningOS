@@ -29,6 +29,13 @@ def thesis(mini_repo, repo_root):
     add_curriculum(root)
     frozen = repo_root / "tests/fixtures/migrations/projects-to-modules-v62"
     shutil.copytree(frozen, root, dirs_exist_ok=True)
+    # Exercise this retired migration in its supported disposable generation.
+    # Current schemas remain in use (v63 changes review-description metadata
+    # only); production must continue to refuse the migration on v63+.
+    contract_path = root / "system/contracts/data-contract.yaml"
+    contract = yaml.safe_load(contract_path.read_text())
+    contract["contract_version"] = 62
+    write_yaml(contract_path, contract)
     project = yaml.safe_load((root / migration.PROJECT_PATH).read_text())
     for module_id in project["linked_module_ids"]:
         write_yaml(root / f"curriculum/modules/{module_id}/module.yaml", {
@@ -281,6 +288,21 @@ def test_unknown_project_field_and_future_generation_refuse(thesis):
     write_yaml(path, contract)
     with pytest.raises(WriteRefused, match="retired"):
         commit(thesis, report)
+
+
+@pytest.mark.parametrize("version", [63, 64])
+def test_retired_generation_refuses_prepare_and_apply_without_changes(thesis, version):
+    report = migration.prepare(thesis)
+    path = thesis / "system/contracts/data-contract.yaml"
+    contract = yaml.safe_load(path.read_text())
+    contract["contract_version"] = version
+    write_yaml(path, contract)
+    before = file_bytes(thesis)
+    with pytest.raises(WriteRefused, match="retired"):
+        migration.prepare(thesis)
+    with pytest.raises(WriteRefused, match="retired"):
+        commit(thesis, report)
+    assert file_bytes(thesis) == before
 
 
 def test_validation_failure_rolls_back_all_changes(thesis, monkeypatch):
