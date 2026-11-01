@@ -313,7 +313,7 @@
           }
         },
         "runtime_review": {
-          "description": "Declared human-review attestation for this stage's runtime semantics (runtime_target plus resource affordances). Not authenticated proof of review; the transaction history proves when this metadata was written, not the cognitive act itself. The fingerprint binds the attestation to this exact stage payload (see tools/learning_os/learning_runtime.py).",
+          "description": "Declared review attestation by a human or agent who actually performed the review of this stage's runtime semantics (runtime_target plus resource affordances). Not authenticated proof of review; the transaction history proves when this metadata was written, not the cognitive act itself. The fingerprint binds the attestation to this exact stage payload (see tools/learning_os/derive/learning_runtime.py).",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -323,7 +323,7 @@
           ],
           "properties": {
             "reviewed_by": {
-              "description": "Declared reviewer identity — an attestation, not an authenticated fact.",
+              "description": "Declared truthful identity of the human or agent who performed the review. An agent must identify itself rather than attribute its review to Aram. An attestation, not an authenticated fact.",
               "type": "string",
               "pattern": "\\S"
             },

@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 62
-schema_fingerprint: sha256:8f0934a4af929bf5871fd736ced6337e83b68c345335291112176a229c5b2995
+contract_version: 63
+schema_fingerprint: sha256:a3ddb9a52b99794cba551c56fd10677357a7bffefb6d66e4b7025ae1d9d51795
 record_schemas: 36
 history:
 - version: 1
@@ -450,4 +450,10 @@ history:
   adopted: '2026-10-29'
   note: Direct legacy owner aliases for the bounded Projects to Modules migration
   migration: tools/migrations/projects_to_modules_v62.py
+  fixture: tests/fixtures/formats/v62/
+- version: 63
+  adopted: '2026-11-01'
+  note: Clarify truthful performed human or agent runtime-review attestation; stored
+    record shapes are unchanged
+  migration: null
   fixture: tests/fixtures/formats/v62/

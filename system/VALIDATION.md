@@ -223,6 +223,12 @@ from the stage it writes. A fingerprint already written is kept, so a stale
 review stays stale until someone re-reviews it. A compact `resource_insert` or
 `resource_append` renews one by naming `runtime_review` in the operation.
 
+A human or agent who actually performed the review may attest it. An agent
+uses its own truthful identity, never Aram's identity for an agent review.
+The same rule governs first-map declarations and renewed reviews; no review
+is claimed merely because the import can compute a fingerprint. Learner
+content review under OPERATOR boundary 2 remains a separate requirement.
+
 Warnings, never errors: the invariant is being introduced into existing
 authored state. `reviewed_by` is a declared attestation, not authenticated
 proof — the transaction history proves when the metadata was written, not the

@@ -171,6 +171,11 @@ Skills and projects use modules and units without false academic metadata.
     never block; see "What 'clean' means" above. A write submitted with
     `seal_envelope.py --submit` prints both from the commit's own validation
     on its `validation:` line; for that write, that line is the check.
+    A `runtime_review` may be performed and attested by a human or an agent.
+    Record the actual reviewer's identity and review date; an agent may attest
+    its own review only after performing it and must never attribute it to Aram.
+    This does not replace the learner's content review under boundary 2 or
+    relax the missing/stale-review warnings and warning-baseline gate.
 14. Source completeness is mandatory. Every learning source named by an
     authoritative template, bibliography, plan, or course artifact must remain
     reachable and be explicitly selected, reference-only, or deferred with a

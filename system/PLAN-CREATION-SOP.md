@@ -672,6 +672,17 @@ add `runtime_review` with `reviewed_by` and `reviewed_on` to the `resource_inser
 `resource_append`. The import binds its fingerprint. Never update the warning
 baseline for this.
 
+The reviewer may be a human or an agent who actually reviewed the stage's
+`runtime_target` and resource affordances. An agent may review its own draft,
+but records its own identity (including the model when relevant) and the actual
+review date; it never attributes that work to Aram. This applies to first maps
+as well as renewals. Declare `reviewed_by` and `reviewed_on` only after the
+review; the import can bind the fingerprint. If no review was performed,
+report the map as unreviewed and leave its missing/stale warning visible.
+Review attestation does not prove pedagogical validity or replace the learner's
+approval of content choices under OPERATOR boundary 2. Boundary 13 and the
+warning-baseline gate remain unchanged.
+
 Use `resource_insert` when the position matters and `resource_append` when it does
 not, or when the stage has no identified row to anchor on. A route ID is not an
 anchor, because one route can be placed more than once. A placement that

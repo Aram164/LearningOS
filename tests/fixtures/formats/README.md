@@ -109,3 +109,5 @@ The project family is the only one whose records already carry their own
 `system/contracts/data-contract.yaml`.
 
 `v25` freezes the optional runtime target, bound activity suitability review, named task dependency, solution exposure, and explicitly unmet observation condition. Its example digests are deliberately stale: the shape remains readable without pretending that an old review qualifies a current assessment. Earlier fixtures remain untouched.
+
+`v63` clarifies that a performed runtime review may truthfully name a human or an agent. The schema descriptions changed, so the contract fingerprint advances, but no stored field or validation shape changes. Its frozen data is byte-identical to v62; no earlier fixture is edited or regenerated. Agent identity preservation is exercised by tests/test_runtime_review.py.

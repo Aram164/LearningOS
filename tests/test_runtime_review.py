@@ -234,9 +234,10 @@ def test_a_new_row_on_a_reviewed_stage_refuses_and_names_the_renewal(mini_repo, 
     assert "add runtime_review with reviewed_by and reviewed_on" in check.stderr
 
 
-def test_a_compact_edit_renews_the_review_it_invalidated(mini_repo, tmp_path):
+@pytest.mark.parametrize("reviewer", ["Aram", "Agent: Codex (gpt-6.1-sol)"])
+def test_a_compact_edit_renews_the_review_it_invalidated(mini_repo, tmp_path, reviewer):
     path, before = _reviewed_structural_stage(mini_repo)
-    draft = _append_intent(tmp_path, runtime_review={"reviewed_by": "Aram", "reviewed_on": "2026-10-30"})
+    draft = _append_intent(tmp_path, runtime_review={"reviewed_by": reviewer, "reviewed_on": "2026-10-30"})
     check = _check(mini_repo, draft)
     assert check.returncode == 0, check.stderr
     review = json.loads(check.stdout)
@@ -251,9 +252,18 @@ def test_a_compact_edit_renews_the_review_it_invalidated(mini_repo, tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
     after = next(row for row in yaml.safe_load(path.read_text())["stages"] if row["id"] == "stage-demo")
     assert after["resources"][:len(before["resources"])] == before["resources"]
+    assert after["runtime_review"]["reviewed_by"] == reviewer
     assert after["runtime_review"]["reviewed_on"] == "2026-10-30"
     assert after["runtime_review"]["fingerprint"] == runtime_review_fingerprint(after)
     assert _codes(mini_repo, "RUNTIME-REVIEW-STALE") == []
+
+
+def test_runtime_review_contract_allows_truthful_performed_agent_review(repo_root):
+    schema = json.loads((repo_root / "system/schema/learning-plan.schema.json").read_text())
+    review = schema["$defs"]["stageCore"]["properties"]["runtime_review"]
+    assert "human or agent" in review["description"]
+    assert "actually performed" in review["description"]
+    assert "truthful" in review["properties"]["reviewed_by"]["description"]
 
 
 @pytest.mark.parametrize("review", [
