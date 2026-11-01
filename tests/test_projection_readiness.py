@@ -61,6 +61,16 @@ def test_settlement_mode_separates_completion_from_currency(mini_repo):
     assert out["write_completed"] is True and out["settled"] is False
 
 
+def test_dependency_readiness_rejects_unpublished_authored_changes(mini_repo):
+    receipt = capture(mini_repo, "dependency-current")
+    assert dependency_ready(mini_repo, [receipt], [receipt]) == (True, "ready")
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text() + "\nChanged after the receipt publication.\n")
+    ready, _ = dependency_ready(mini_repo, [receipt], [receipt])
+    assert not ready
+    assert receipt_completed(mini_repo, receipt['receipt_path'], receipt['snapshot_after'])
+
+
 def test_forged_receipt_is_not_completion(mini_repo):
     path = mini_repo / "operations/transactions/forged.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)

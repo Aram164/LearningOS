@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{},\"commands\":{\"stage.progress.update\":{\"handler\":\"stage_progress\",\"cli_command\":\"stage-progress\",\"kind\":\"command\",\"admission\":\"direct-user-gesture\",\"writes\":[\"curriculum/modules/**/units/**\",\"curriculum/resume.yaml\"],\"invariants\":[\"one active stage\",\"the resume pointer names the stage this action made current and commits in the same transaction\",\"other units keep their own active study maps\",\"an optional progress summary/next is recorded on the stage row with today's date\"]}},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"payload_schema_path\":\"system/schema/capabilities/stage.progress.update.schema.json\",\"payload_schema\":{\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"$id\":\"capabilities/stage.progress.update.schema.json\",\"title\":\"payload for capability stage.progress.update\",\"description\":\"Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.\",\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"stage_id\",\"status\",\"unit_id\"],\"properties\":{\"progress_next\":{\"type\":\"string\",\"description\":\"record what comes next (requires --progress-summary)\"},\"progress_summary\":{\"type\":\"string\",\"description\":\"record where work stopped (stored on the stage row, surfaced by resume)\"},\"stage_id\":{\"type\":\"string\",\"description\":\"stage of the unit's current study map to update\"},\"status\":{\"type\":\"string\",\"enum\":[\"active\",\"paused\",\"complete\",\"skipped\",\"revisit\"],\"description\":\"new status for the stage\"},\"unit_id\":{\"type\":\"string\",\"description\":\"unit whose stage to update\"}},\"dependentRequired\":{\"progress_next\":[\"progress_summary\"]}},\"verb\":{\"verb\":\"stage-progress\",\"operation\":\"stage.progress.update\",\"capability\":\"stage.progress.update\",\"kind\":\"command\",\"surface\":\"catalog\",\"writes\":true,\"tasks\":[\"record-stage-progress\"]},\"verbs\":[{\"verb\":\"stage-progress\",\"operation\":\"stage.progress.update\",\"capability\":\"stage.progress.update\",\"kind\":\"command\",\"surface\":\"catalog\",\"writes\":true,\"tasks\":[\"record-stage-progress\"]}],\"tasks\":[{\"id\":\"record-stage-progress\",\"task\":\"Record stage progress or end a session\",\"entry_read\":\"`capabilities stage.progress.update --json`\",\"procedures\":[\"system/procedures/end-a-session.md#read-the-stage-progress-payload-contract\",\"system/procedures/end-a-session.md#step-3-review-the-session\"],\"procedure_text\":null,\"scope\":[\"system/OPERATOR.md\",\"system/WORKFLOWS.md#22-end-a-session\",\"system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2\"]}],\"read\":[]}\n",
+  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{},\"commands\":{\"stage.progress.update\":{\"handler\":\"stage_progress\",\"cli_command\":\"stage-progress\",\"kind\":\"command\",\"admission\":\"direct-user-gesture\",\"writes\":[\"curriculum/modules/**/units/**\",\"curriculum/resume.yaml\"],\"invariants\":[\"one active stage\",\"the resume pointer names the stage this action made current and commits in the same transaction\",\"other units keep their own active study maps\",\"an optional progress summary/next is recorded on the stage row with today's date\"]}},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"payload_schema_path\":\"system/schema/capabilities/stage.progress.update.schema.json\",\"payload_schema\":{\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"$id\":\"capabilities/stage.progress.update.schema.json\",\"title\":\"payload for capability stage.progress.update\",\"description\":\"Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.\",\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"stage_id\",\"status\",\"unit_id\"],\"properties\":{\"progress_next\":{\"type\":\"string\",\"description\":\"record what comes next (requires --progress-summary)\"},\"progress_summary\":{\"type\":\"string\",\"description\":\"record where work stopped (stored on the stage row, surfaced by resume)\"},\"stage_id\":{\"type\":\"string\",\"description\":\"stage of the unit's current study map to update\"},\"status\":{\"type\":\"string\",\"enum\":[\"active\",\"paused\",\"complete\",\"skipped\",\"revisit\"],\"description\":\"new status for the stage\"},\"unit_id\":{\"type\":\"string\",\"description\":\"unit whose stage to update\"}},\"dependentRequired\":{\"progress_next\":[\"progress_summary\"]}},\"verb\":{\"verb\":\"stage-progress\",\"operation\":\"stage.progress.update\",\"capability\":\"stage.progress.update\",\"kind\":\"command\",\"surface\":\"catalog\",\"writes\":true,\"tasks\":[\"record-stage-progress\"]},\"invocation\":{\"command\":\"stage-progress\",\"schema_path\":\"system/schema/requests/stage.progress.update.schema.json\",\"usage\":\"los stage-progress UNIT_ID STAGE_ID STATUS [--progress-summary PROGRESS_SUMMARY] [--progress-next PROGRESS_NEXT] [--expected-snapshot EXPECTED_SNAPSHOT] [--expected-revision EXPECTED_REVISION] [--json]\",\"arguments\":[{\"name\":\"unit_id\",\"flags\":[],\"required\":true,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"unit whose stage to update\"},{\"name\":\"stage_id\",\"flags\":[],\"required\":true,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"stage of the unit's current study map to update\"},{\"name\":\"status\",\"flags\":[],\"required\":true,\"action\":\"store\",\"nargs\":null,\"choices\":[\"active\",\"paused\",\"complete\",\"skipped\",\"revisit\"],\"default\":null,\"description\":\"new status for the stage\"},{\"name\":\"progress_summary\",\"flags\":[\"--progress-summary\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"record where work stopped (stored on the stage row, surfaced by resume)\"},{\"name\":\"progress_next\",\"flags\":[\"--progress-next\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"record what comes next (requires --progress-summary)\"},{\"name\":\"expected_snapshot\",\"flags\":[\"--expected-snapshot\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"optimistic concurrency token from manifest _generated.snapshot_id\"},{\"name\":\"expected_revision\",\"flags\":[\"--expected-revision\"],\"required\":false,\"action\":\"append\",\"nargs\":null,\"choices\":null,\"default\":[],\"description\":\"artifact-level concurrency token <artifact-id>=<revision>; repeatable\"},{\"name\":\"json\",\"flags\":[\"--json\"],\"required\":false,\"action\":\"store_true\",\"nargs\":0,\"choices\":null,\"default\":false,\"description\":\"no-op: this command always prints JSON\"}],\"mutually_exclusive\":[]},\"verbs\":[{\"verb\":\"stage-progress\",\"operation\":\"stage.progress.update\",\"capability\":\"stage.progress.update\",\"kind\":\"command\",\"surface\":\"catalog\",\"writes\":true,\"tasks\":[\"record-stage-progress\"]}],\"tasks\":[{\"id\":\"record-stage-progress\",\"task\":\"Record stage progress or end a session\",\"entry_read\":\"`capabilities stage.progress.update --json`\",\"procedures\":[\"system/procedures/end-a-session.md#read-the-stage-progress-payload-contract\",\"system/procedures/end-a-session.md#step-3-review-the-session\"],\"procedure_text\":null,\"scope\":[\"system/OPERATOR.md\",\"system/WORKFLOWS.md#22-end-a-session\",\"system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2\"]}],\"read\":[]}\n",
   "stdout_json": {
     "capability_contract_version": 2,
     "cli_protocol": 6,
@@ -31,6 +31,110 @@
     },
     "contract_version": 2,
     "gateway": "tools/los.py",
+    "invocation": {
+      "arguments": [
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "unit whose stage to update",
+          "flags": [],
+          "name": "unit_id",
+          "nargs": null,
+          "required": true
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "stage of the unit's current study map to update",
+          "flags": [],
+          "name": "stage_id",
+          "nargs": null,
+          "required": true
+        },
+        {
+          "action": "store",
+          "choices": [
+            "active",
+            "paused",
+            "complete",
+            "skipped",
+            "revisit"
+          ],
+          "default": null,
+          "description": "new status for the stage",
+          "flags": [],
+          "name": "status",
+          "nargs": null,
+          "required": true
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "record where work stopped (stored on the stage row, surfaced by resume)",
+          "flags": [
+            "--progress-summary"
+          ],
+          "name": "progress_summary",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "record what comes next (requires --progress-summary)",
+          "flags": [
+            "--progress-next"
+          ],
+          "name": "progress_next",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+          "flags": [
+            "--expected-snapshot"
+          ],
+          "name": "expected_snapshot",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "append",
+          "choices": null,
+          "default": [],
+          "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+          "flags": [
+            "--expected-revision"
+          ],
+          "name": "expected_revision",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default": false,
+          "description": "no-op: this command always prints JSON",
+          "flags": [
+            "--json"
+          ],
+          "name": "json",
+          "nargs": 0,
+          "required": false
+        }
+      ],
+      "command": "stage-progress",
+      "mutually_exclusive": [],
+      "schema_path": "system/schema/requests/stage.progress.update.schema.json",
+      "usage": "los stage-progress UNIT_ID STAGE_ID STATUS [--progress-summary PROGRESS_SUMMARY] [--progress-next PROGRESS_NEXT] [--expected-snapshot EXPECTED_SNAPSHOT] [--expected-revision EXPECTED_REVISION] [--json]"
+    },
     "operator_contract": "system/OPERATOR.md",
     "payload_schema": {
       "$id": "capabilities/stage.progress.update.schema.json",

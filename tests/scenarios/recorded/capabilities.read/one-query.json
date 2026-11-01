@@ -7,13 +7,93 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{\"operator.bootstrap\":{\"handler\":\"bootstrap\",\"result\":\"bootstrap\",\"invariants\":[\"compact mode returns bounded summary pages with snapshot-bound continuation\",\"brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands\",\"full material routes remain available through inspect; no source or angle is removed\"]}},\"commands\":{},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"verb\":{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]},\"verbs\":[{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]}],\"tasks\":[{\"id\":\"open-work-or-priority-question\",\"task\":\"Open work or priority question\",\"entry_read\":\"`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination\",\"procedures\":[\"system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief\"],\"procedure_text\":null,\"scope\":[\"system/OPERATOR.md\",\"system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006\",\"system/CLAUDE.md\"]}]}\n",
+  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{\"operator.bootstrap\":{\"handler\":\"bootstrap\",\"result\":\"bootstrap\",\"invariants\":[\"compact mode returns bounded summary pages with snapshot-bound continuation\",\"brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands\",\"full material routes remain available through inspect; no source or angle is removed\"]}},\"commands\":{},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"verb\":{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]},\"invocation\":{\"command\":\"bootstrap\",\"schema_path\":\"system/schema/requests/operator.bootstrap.schema.json\",\"usage\":\"los bootstrap [--json] [--brief] [--compact] [--offset OFFSET] [--limit LIMIT] [--expected-snapshot EXPECTED_SNAPSHOT]\",\"arguments\":[{\"name\":\"json\",\"flags\":[\"--json\"],\"required\":false,\"action\":\"store_true\",\"nargs\":0,\"choices\":null,\"default\":false,\"description\":\"no-op: this command always prints JSON\"},{\"name\":\"brief\",\"flags\":[\"--brief\"],\"required\":false,\"action\":\"store_true\",\"nargs\":0,\"choices\":null,\"default\":false,\"description\":\"one-page session entry: guards, resume, owed work, deadlines, expands\"},{\"name\":\"compact\",\"flags\":[\"--compact\"],\"required\":false,\"action\":\"store_true\",\"nargs\":0,\"choices\":null,\"default\":false,\"description\":\"bounded startup summaries; details stay available through inspect\"},{\"name\":\"offset\",\"flags\":[\"--offset\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":0,\"description\":\"rows to skip before the compact page; a nonzero offset requires the previous response's expected snapshot\"},{\"name\":\"limit\",\"flags\":[\"--limit\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":20,\"description\":\"rows per compact page, between 1 and 50\"},{\"name\":\"expected_snapshot\",\"flags\":[\"--expected-snapshot\"],\"required\":false,\"action\":\"store\",\"nargs\":null,\"choices\":null,\"default\":null,\"description\":\"optimistic concurrency token from manifest _generated.snapshot_id\"}],\"mutually_exclusive\":[]},\"verbs\":[{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]}],\"tasks\":[{\"id\":\"open-work-or-priority-question\",\"task\":\"Open work or priority question\",\"entry_read\":\"`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination\",\"procedures\":[\"system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief\"],\"procedure_text\":null,\"scope\":[\"system/OPERATOR.md\",\"system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006\",\"system/CLAUDE.md\"]}]}\n",
   "stdout_json": {
     "capability_contract_version": 2,
     "cli_protocol": 6,
     "commands": {},
     "contract_version": 2,
     "gateway": "tools/los.py",
+    "invocation": {
+      "arguments": [
+        {
+          "action": "store_true",
+          "choices": null,
+          "default": false,
+          "description": "no-op: this command always prints JSON",
+          "flags": [
+            "--json"
+          ],
+          "name": "json",
+          "nargs": 0,
+          "required": false
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default": false,
+          "description": "one-page session entry: guards, resume, owed work, deadlines, expands",
+          "flags": [
+            "--brief"
+          ],
+          "name": "brief",
+          "nargs": 0,
+          "required": false
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default": false,
+          "description": "bounded startup summaries; details stay available through inspect",
+          "flags": [
+            "--compact"
+          ],
+          "name": "compact",
+          "nargs": 0,
+          "required": false
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": 0,
+          "description": "rows to skip before the compact page; a nonzero offset requires the previous response's expected snapshot",
+          "flags": [
+            "--offset"
+          ],
+          "name": "offset",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": 20,
+          "description": "rows per compact page, between 1 and 50",
+          "flags": [
+            "--limit"
+          ],
+          "name": "limit",
+          "nargs": null,
+          "required": false
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default": null,
+          "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+          "flags": [
+            "--expected-snapshot"
+          ],
+          "name": "expected_snapshot",
+          "nargs": null,
+          "required": false
+        }
+      ],
+      "command": "bootstrap",
+      "mutually_exclusive": [],
+      "schema_path": "system/schema/requests/operator.bootstrap.schema.json",
+      "usage": "los bootstrap [--json] [--brief] [--compact] [--offset OFFSET] [--limit LIMIT] [--expected-snapshot EXPECTED_SNAPSHOT]"
+    },
     "operator_contract": "system/OPERATOR.md",
     "projection": "generated/manifest.json",
     "queries": {
