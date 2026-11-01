@@ -70,11 +70,16 @@ def test_ordinary_ci_runs_every_gate_stage():
         "tools/validate.py --no-report",
         "tools/warning_baseline.py --check",
         "npm run check",
-        "--collect-only",
+        "tools/check_shard_completeness.py --junit-dir ../junit-in",
     ):
         assert stage in runs, f"validate.yml lost gate stage: {stage}"
     # A lesser target must never stand in for the full gate.
     assert "make check\n" not in runs
+    # Collection now belongs to the shared checker, invoked above. Its owning
+    # tests exercise identity equality, including duplicate-plus-omission.
+    checker = (ROOT / "tools/check_shard_completeness.py").read_text(encoding="utf-8")
+    assert '"--collect-only"' in checker
+    assert '"not live_install"' in checker
 
 
 def test_ordinary_ci_cannot_silently_omit_the_recovery_harness():
