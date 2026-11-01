@@ -84,6 +84,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
         except OSError as exc:
             row.update(status="error", error={"code": ARTIFACT_FAILED,
                        "retryable": False, "message": str(exc)})
+            store.reconcile(row)
             uncertain = True  # report storage failure blocks further writes too
         rows.append(row)
         results[step.id] = row
@@ -213,8 +214,20 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
                                 row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
                                            "retryable": True, "message": "inputs changed during read epoch"})
                                 row.pop("output", None)
+                                if not store.reconcile(row):
+                                    uncertain = True
                             stopped = stopped or (wave[0].id if controls.on_error == "stop" else None)
             except Exception as exc:
+                # A closing epoch failure cannot attest already emitted reads.
+                for row in rows[begin_rows:]:
+                    if row["status"] == "ok":
+                        row.update(status="error", error={"code": SNAPSHOT_CONFLICT,
+                                   "retryable": True, "message": "read epoch did not complete"})
+                        row.pop("output", None)
+                        if not store.reconcile(row):
+                            uncertain = True
+                if controls.on_error == "stop":
+                    stopped = stopped or wave[0].id
                 for item in wave[len(rows) - begin_rows:]:
                     retain(item, fail_row(item, "error", getattr(exc, "code", STEP_FAILED), message=str(exc)))
             finally:
@@ -279,6 +292,7 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
     report["full_report"] = str(store.full_path)
     try:
         from learning_os.app.agent_reporting import write_full_report
+        store.flush_pending()
         store.sync()
         full = write_full_report(store.path, report)
     except OSError as exc:
@@ -289,5 +303,6 @@ def _execute_plan(steps: list[CompiledStep], root: Path, port: Executor,
             if row["status"] == "ok":
                 row["status"] = "error"
                 row["error"] = {"code": ARTIFACT_FAILED, "retryable": False}
+                store.reconcile(row)
         cast(dict[str, object], report["totals"])["ok"] = 0
     return bound_report(report, controls.report_max_bytes, str(full))

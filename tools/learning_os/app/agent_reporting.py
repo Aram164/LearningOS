@@ -67,14 +67,27 @@ def bound_report(report: dict[str, object], max_bytes: int,
 
 class ReportStore:
     def __init__(self, root: Path, requested: Path | None = None):
-        if requested is not None and requested.resolve().is_relative_to(root.resolve()):
-            raise ValueError("full report directory must be outside the selected data root")
-        if requested is not None:
-            requested.mkdir(parents=True, exist_ok=True, mode=0o700)
-        self.path = Path(tempfile.mkdtemp(prefix="los-agent-plan-", dir=requested))
+        root = root.resolve()
+        parent = (requested if requested is not None else Path(tempfile.gettempdir())).absolute()
+        resolved = parent.resolve()
+        # One rule for explicit paths and TMPDIR defaults. The existing private
+        # .venv scratch boundary is permitted; canonical paths and links through
+        # that boundary are refused before creating anything.
+        if parent.is_relative_to(root) or resolved.is_relative_to(root):
+            scratch = root / ".venv"
+            if not parent.is_relative_to(scratch) or not resolved.is_relative_to(scratch):
+                raise ValueError("full report directory must be outside the data root or in its .venv scratch")
+            for component in (parent, *parent.parents):
+                if component == root:
+                    break
+                if component.is_symlink():
+                    raise ValueError("report scratch must not traverse symlinks")
+        resolved.mkdir(parents=True, exist_ok=True, mode=0o700)
+        self.path = Path(tempfile.mkdtemp(prefix="los-agent-plan-", dir=resolved))
         os.chmod(self.path, 0o700)
         self.full_path = self.path / "full-report.json"
         self.rows: list[dict[str, object]] = []
+        self._pending: dict[str, dict[str, object]] = {}
         self.plan_digest = ""
         # Probe before any mutation; the directory is also the emergency recovery index.
         for name in ("checkpoint.jsonl", "raw-steps.jsonl"):
@@ -98,13 +111,51 @@ class ReportStore:
         return f"raw-steps.jsonl#{index}", hashlib.sha256(body).hexdigest()
 
     def record(self, row: dict[str, object]) -> None:
-        self.rows.append(row)
+        stored = cast(dict[str, object], json.loads(encode(row)))
         with (self.path / "checkpoint.jsonl").open("ab") as stream:
-            stream.write(encode(row).encode("utf-8") + b"\n")
+            stream.write(encode(stored).encode("utf-8") + b"\n")
+        self.rows.append(stored)
         # Flush evidence before admitting another mutation. Read-only rows are
         # linear append I/O, then synced together at finalization.
         if row.get("commit_certainty") != "none" or row.get("status") != "ok":
             self.sync()
+
+    def correct(self, row: dict[str, object]) -> None:
+        """Append replacement evidence without erasing an earlier observation."""
+        index = next((i for i, old in enumerate(self.rows) if old["id"] == row["id"]), None)
+        if index is None:
+            raise ValueError("cannot correct an unrecorded step")
+        stored = cast(dict[str, object], json.loads(encode(row)))
+        old = self.rows[index]
+        if old.get("commit_certainty") == "committed" and (
+                stored.get("commit_certainty") != "committed" or stored.get("receipt") != old.get("receipt")):
+            raise ValueError("a checkpoint correction cannot erase committed receipt evidence")
+        event = {"event": "step-correction", "details_index": index, "row": stored}
+        with (self.path / "checkpoint.jsonl").open("ab") as stream:
+            stream.write(encode(event).encode("utf-8") + b"\n")
+        self.rows[index] = stored
+        self.sync()
+
+    @property
+    def checkpoint_consistent(self) -> bool:
+        return not self._pending
+
+    def reconcile(self, row: dict[str, object]) -> bool:
+        if not any(old["id"] == row["id"] for old in self.rows):
+            return False
+        try:
+            self.correct(row)
+        except OSError:
+            self._pending[str(row["id"])] = cast(dict[str, object], json.loads(encode(row)))
+            return False
+        self._pending.pop(str(row["id"]), None)
+        return True
+
+    def flush_pending(self) -> None:
+        for row in list(self._pending.values()):
+            self.reconcile(row)
+        if self._pending:
+            raise OSError("checkpoint reconciliation unresolved for steps: " + ", ".join(sorted(self._pending)))
 
     def sync(self) -> None:
         for name in ("raw-steps.jsonl", "checkpoint.jsonl"):

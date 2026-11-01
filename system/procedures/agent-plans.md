@@ -69,3 +69,11 @@ write, uncertainty or error and at finalization. Expand a finalized report with
 `tools/agent_run.py --expand-report PATH --step STEP_ID`; expansion verifies
 the report and raw-output digests. A checkpoint after storage failure is partial
 evidence and cannot be represented as a finalized report.
+
+`--report-dir` selects the private report's parent. Both an explicit parent and
+the default temporary parent must be outside the selected data root or inside
+its gitignored `.venv/` scratch directory; scratch paths traversing symlinks
+refuse before creation. Status changes after a checkpoint append are retained
+as append-only corrections, and unresolved correction storage blocks report
+finalization. Reports are retained; this runner does not automatically prune
+unfinished or completed evidence.

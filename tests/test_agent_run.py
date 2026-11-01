@@ -670,6 +670,94 @@ def test_artifact_failure_preserves_commit_and_blocks_later_writes(tmp_path, mon
     assert report['steps'][1]['status'] == 'error'  # record of the refusal also fails
 
 
+def test_sync_failure_after_append_keeps_checkpoint_and_final_outcome_consistent(tmp_path, monkeypatch):
+    from learning_os.app.agent_reporting import ReportStore
+
+    original = ReportStore.sync
+    calls = 0
+
+    def fail_once(store):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise OSError('injected sync failure after checkpoint append')
+        original(store)
+
+    monkeypatch.setattr(ReportStore, 'sync', fail_once)
+    receipt = _receipt(tmp_path)
+    report = _run({'steps': [{'id': 'write', 'argv': ['capture'], 'write': True}]},
+                  tmp_path, index=INDEX, executor=lambda *_: (0, json.dumps(receipt), ''))
+    row = report['steps'][0]
+    assert row['status'] == 'error' and row['commit_certainty'] == 'committed'
+    entries = [json.loads(line) for line in
+               (Path(report['full_report']).parent / 'checkpoint.jsonl').read_text().splitlines()]
+    latest = entries[0]
+    for entry in entries[1:]:
+        if entry.get('event') == 'step-correction':
+            latest = entry['row']
+    assert latest == row
+    assert latest['receipt'] == row['receipt']
+
+
+def test_explicit_and_default_confined_report_parent_follow_one_policy(tmp_path, monkeypatch):
+    import tempfile
+
+    from learning_os.app.agent_reporting import ReportStore
+
+    scratch = tmp_path / '.venv' / 'scratch'
+    scratch.mkdir(parents=True)
+    monkeypatch.setattr(tempfile, 'tempdir', str(scratch))
+    implicit = ReportStore(tmp_path)
+    explicit = ReportStore(tmp_path, scratch)
+    assert implicit.path.parent == explicit.path.parent == scratch
+
+
+@pytest.mark.parametrize('destination', ['work/reports', '.venv/link/reports'])
+def test_report_parent_refuses_canonical_and_symlinked_scratch_before_mutation(tmp_path, destination):
+    from learning_os.app.agent_reporting import ReportStore
+
+    (tmp_path / '.venv').mkdir()
+    (tmp_path / 'work').mkdir()
+    (tmp_path / '.venv/link').symlink_to(tmp_path / 'work', target_is_directory=True)
+    target = tmp_path / destination
+    with pytest.raises(ValueError):
+        ReportStore(tmp_path, target)
+    assert not target.exists()
+
+
+def test_checkpoint_correction_preserves_committed_evidence_and_pending_failure(tmp_path, monkeypatch):
+    from learning_os.app.agent_reporting import ReportStore
+
+    store = ReportStore(tmp_path)
+    row = {'id': 'write', 'status': 'ok', 'commit_certainty': 'committed',
+           'receipt': {'receipt_path': 'one.yaml'}}
+    store.record(row)
+    row['status'] = 'error'
+    assert store.rows[0]['status'] == 'ok'  # callers cannot mutate stored evidence
+    with pytest.raises(ValueError, match='cannot erase'):
+        store.correct({'id': 'write', 'status': 'error', 'commit_certainty': 'none'})
+    monkeypatch.setattr(store, 'sync', lambda: (_ for _ in ()).throw(OSError('persistent sync failure')))
+    assert not store.reconcile(row)
+    assert not store.checkpoint_consistent
+    with pytest.raises(OSError, match='reconciliation unresolved'):
+        store.flush_pending()
+    assert not store.full_path.exists()
+
+
+def test_read_epoch_close_failure_invalidates_already_emitted_reads(mini_repo, monkeypatch):
+    from learning_os.app.read_session import ReadSession
+
+    monkeypatch.setattr(ReadSession, 'unchanged', lambda _: (_ for _ in ()).throw(OSError('close failed')))
+    report = _run({'steps': [{'id': 'read', 'argv': ['bootstrap', '--brief']}]}, mini_repo)
+    row = report['steps'][0]
+    assert row['status'] == 'error' and row['error']['code'] == 'SNAPSHOT_CONFLICT'
+    assert 'output' not in row
+    entries = [json.loads(line) for line in
+               (Path(report['full_report']).parent / 'checkpoint.jsonl').read_text().splitlines()]
+    assert entries[-1]['event'] == 'step-correction'
+    assert entries[-1]['row'] == row
+
+
 def test_explicit_read_commands_need_no_task_catalogue(mini_repo, monkeypatch):
     from learning_os.store.contracts import verb_catalogue
     def unnecessary(*_):

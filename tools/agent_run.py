@@ -732,7 +732,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", default=None, help="selected data root (default: tool repository)")
     parser.add_argument("--poll-s", type=float, default=0.1)
     parser.add_argument("--report-dir", default=None,
-                        help="directory for the full report artifact (bounded stdout)")
+                        help="private report parent outside the data root or in its .venv scratch; TMPDIR follows the same rule")
     return parser
 
 
