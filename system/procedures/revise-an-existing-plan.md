@@ -178,6 +178,23 @@ Reference: [plan-creation SOP](../PLAN-CREATION-SOP.md).
    `resources_append` list on a stage patch: reviewed new placements with
    fresh resource ids go after the existing authored rows without copying
    them. Full-array `fields.resources` stays for intentional replacement.
+   One `--check` is also the evidence harvest: when a route-`covers` edge
+   changes, the report's `claims[].claim_evidence_scaffold` carries a
+   `candidate_excerpt` of the exact local text — fill the `quote` evidence
+   from that single preflight instead of re-reading the material by hand,
+   then seal (SOP, "Prospective lineage for changed covers edges").
+   A compact revision — `unit.plan.revise` for one unit, or one
+   `unit_revisions[]` entry for several — may also carry `unit_patch`
+   (only `title`, `scope` and `knowledge_map` of the existing `unit.yaml`),
+   `stage_patches`, `stage_additions` (full new stages placed after
+   `after_stage_id`, or first when it is null) and an explicit
+   `stage_order` permutation of the resulting stage ids. Stage numbers are
+   renumbered sequentially after additions and reorders. `stage_order`
+   that actually reorders surviving stages needs a matching
+   `study-map-stage-order` entry in `plan_contract.intentional_reorders`
+   (or `plan_contract.intentional_reorder` on `unit.plan.revise`); the
+   compact stage fields never combine with a full `study_map` replacement
+   on the same revision.
    For one unit's existing study map, `unit-map-import UNIT_ID --file … --replace
    --check` also takes a small file holding only `unit_id` and one
    `structural_edit`, so nothing unchanged is copied: `resource_insert` places a

@@ -15,7 +15,7 @@ Translate each operation family into read results or bounded write proposals.
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `ai-delivery`, `backup`, `contracts`, `derived-store`, `diagnostics`, `domain`, `learner-derivations`, `legacy-archive`, `loading`, `masters-planning`, `materials`, `operation-pipeline`, `package-root`, `plan-gate`, `projection`, `search`, `semantics`, `session-ledger`, `transactions`.
+Depends on: `ai-delivery`, `backup`, `contracts`, `derived-store`, `diagnostics`, `domain`, `learner-derivations`, `legacy-archive`, `loading`, `masters-planning`, `materials`, `operation-pipeline`, `package-root`, `plan-gate`, `projection`, `search`, `semantics`, `session-ledger`, `transactions`, `validation`.
 
 Used by: `operation-pipeline`.
 <!-- system-map:end -->

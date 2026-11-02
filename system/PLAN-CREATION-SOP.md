@@ -336,10 +336,20 @@ mapped lecture must use rich routes so the interface can explain the choice.
 Every route-`covers` edge the package creates, repairs, or removes names
 its admitted evidence in top-level `claim_evidence` (claim id, evidence
 entries, optional read revisions), or the import refuses before apply —
-including its no-write preflight. Evidence kinds: `route-locator`
-(substring of the recorded locator), `manifest` (materials-manifest path,
-digest bound by the gateway), `repo-file` (in-repo path, hashed by the
-gateway), `external` (http(s) URL plus its verification trail in `note`).
+including its no-write preflight. Evidence kinds: `quote` (the primary kind
+for a positive claim about local readable material: `ref` naming the
+material URI, the verbatim `text` from the local bytes, and its place —
+`page` with optional `page_end` for a PDF, or `window` for text formats),
+`route-locator` (substring of the recorded locator), `manifest`
+(materials-manifest path, digest bound by the gateway), `repo-file` (in-repo
+path, hashed by the gateway), `external` (http(s) URL plus its verification
+trail in `note`). A positive local claim is admitted by a verified `quote`;
+`route-locator` and `manifest` stand alone only as the explicit fallback
+for material that cannot be quoted (an unsupported format, or a cited PDF
+page without extractable text). Run `--check` once before sealing: each
+changed claim's `claim_evidence_scaffold.candidate_excerpt` in the report
+carries the exact local text to quote, so the excerpt is harvested from
+that single preflight rather than re-derived by hand.
 Declared read revisions must equal current ones. Prose-only edits and
 untouched routes carry no entry: lineage is prospective only, never
 backfill. The gateway persists the admitted records into
@@ -682,6 +692,14 @@ report the map as unreviewed and leave its missing/stale warning visible.
 Review attestation does not prove pedagogical validity or replace the learner's
 approval of content choices under OPERATOR boundary 2. Boundary 13 and the
 warning-baseline gate remain unchanged.
+
+An `angle_review` on a resource works the same way: declare `kind`,
+`reviewed_by`, `reviewed_on` and `rationale` (plus `evidence` for a
+correction), and the import binds `angle_review.fingerprint` when it is
+omitted — on `unit.map.import` and on plan imports alike, expanding any
+`material_ref` exactly as the loader does. A fingerprint already written
+is never overwritten; a stale one stays stale until the placement is
+reviewed again.
 
 Use `resource_insert` when the position matters and `resource_append` when it does
 not, or when the stage has no identified row to anchor on. A route ID is not an

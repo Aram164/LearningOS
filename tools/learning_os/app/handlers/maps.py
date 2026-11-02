@@ -17,6 +17,7 @@ from learning_os.app.gateway import read_content_bound_file as _read_content_bou
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
+from learning_os.derive.validation.plan_rigor import bind_angle_reviews as _bind_angle_reviews
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
 from learning_os.domain.plan_import import apply_structural_edit
@@ -413,6 +414,8 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(str(exc), site=f"{ctx.operation}.structural-edit-invalid",
                                prefixed=True, exit_code=2) from exc
     data = _bind_runtime_reviews(data)
+    data = _bind_angle_reviews(data, repo.module_source_maps.get(unit.module_id, {}),
+                               unit.module_id, unit.id)
     diff: dict = {"replacement": current_data is not None}
 
     if current_data is None:

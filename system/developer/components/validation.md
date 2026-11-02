@@ -17,7 +17,7 @@ Validate loaded records and repository contracts, preserving explicit error owne
 <!-- system-map:begin name=edges -->
 Depends on: `ai-action-store`, `contracts`, `derived-store`, `domain`, `evidence`, `learner-derivations`, `loading`, `materials`, `projection`, `semantics`, `session-ledger`, `transactions`.
 
-Used by: `ai-delivery`, `backup`, `learner-derivations`, `operation-pipeline`, `plan-gate`.
+Used by: `ai-delivery`, `backup`, `learner-derivations`, `operation-handlers`, `operation-pipeline`, `plan-gate`.
 <!-- system-map:end -->
 
 ## Invariants

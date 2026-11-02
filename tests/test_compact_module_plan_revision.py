@@ -995,3 +995,102 @@ def test_compact_unit_move_rejects_bad_scope_and_anchors(mini_repo):
         result, problems = assemble_compact_module_revision(repo, 'module-demo', {
             'module_id': 'module-demo', 'plan_contract': _revision(mini_repo)['plan_contract'], 'unit_move': move})
         assert result is None and problems, move
+
+
+# ------------------------------------------- compact unit/stage fields (D4)
+def _new_stage(stage_id="stage-demo-extra"):
+    return {
+        "id": stage_id, "title": "Extra stage",
+        "objective": "Practise the derivation.",
+        "knowledge_node_id": "knowledge-demo-expectation",
+        "concepts": [], "exam_critical": False, "scope_triage": "required-now",
+        "done_when": ["Show the working."], "resources": [],
+    }
+
+
+def _check_compact(mini_repo, tmp_path, revision, name="compact-fields.yaml"):
+    draft = tmp_path / name
+    write_yaml(draft, revision)
+    return run_los(mini_repo, "module-plan-import", "module-demo",
+                   "--file", str(draft), "--check")
+
+
+def test_compact_unit_patch_and_stage_addition(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    revision = _revision(mini_repo)
+    revision["unit_revisions"] = [{
+        "unit_id": "unit-demo-l02",
+        "unit_patch": {"knowledge_map": {
+            "summary": "Second lecture map.",
+            "nodes": [{"id": "knowledge-demo-expectation",
+                       "title": "Expectation",
+                       "summary": "A probability-weighted average."}]}},
+        "stage_additions": [{"after_stage_id": "stage-demo-l02",
+                             "stage": _new_stage()}],
+    }]
+    proc = _check_compact(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["canonical_files_written"] == 0
+
+
+def _give_first_unit_a_second_stage(mini_repo):
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    second = copy.deepcopy(data["stages"][0])
+    second.update(id="stage-demo-b", number=2, title="Second stage",
+                  status="pending", resources=[],
+                  knowledge_node_id="knowledge-demo-outcomes",
+                  working_note=("curriculum/modules/module-demo/units/unit-demo-l01/"
+                                "stages/stage-demo-b/notes.md"))
+    note = mini_repo / second["working_note"]
+    note.parent.mkdir(parents=True, exist_ok=True)
+    note.write_text("", encoding="utf-8")
+    data["stages"].append(second)
+    write_yaml(path, data)
+    write_baseline(mini_repo, collect(mini_repo)[0], "two-stage compact fixture")
+
+
+def test_compact_stage_order_with_declared_reorder(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    # Give the first unit a second stage on disk, then reverse the pair.
+    _give_first_unit_a_second_stage(mini_repo)
+    revision = _revision(mini_repo)
+    revision["plan_contract"]["intentional_reorders"] = [{
+        "target": "study-map-stage-order", "id": "study-map-demo-l01",
+        "reason": "Work the second stage first."}]
+    revision["unit_revisions"] = [{
+        "unit_id": "unit-demo-l01",
+        "stage_order": ["stage-demo-b", "stage-demo"],
+    }]
+    proc = _check_compact(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_compact_stage_order_without_declaration_is_refused(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _give_first_unit_a_second_stage(mini_repo)
+    revision = _revision(mini_repo)
+    revision["unit_revisions"] = [{
+        "unit_id": "unit-demo-l01",
+        "stage_order": ["stage-demo-b", "stage-demo"],
+    }]
+    proc = _check_compact(mini_repo, tmp_path, revision)
+    assert proc.returncode != 0
+    assert "reorders existing stages" in proc.stderr
+
+
+def test_report_out_allows_venv_scratch(mini_repo, tmp_path):
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    _two_units(mini_repo)
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, _revision(mini_repo))
+    before = canonical_fingerprint(mini_repo)
+    scratch = mini_repo / ".venv"
+    scratch.mkdir(exist_ok=True)
+    proc = run_los(mini_repo, "module-plan-import", "module-demo",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(scratch / "scratch-report.json"))
+    assert proc.returncode == 0, proc.stderr
+    assert (scratch / "scratch-report.json").is_file()
+    assert canonical_fingerprint(mini_repo) == before

@@ -16,6 +16,7 @@ it was deliberately removed.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
@@ -24,6 +25,7 @@ from collections import defaultdict
 from pathlib import PurePosixPath
 from typing import Literal
 
+from learning_os.domain.material_refs import MATERIAL_FIELDS, unit_routes
 from learning_os.domain.route_identity import route_with_identity
 from learning_os.store.loading.yamlio import LoaderError, load_yaml
 from learning_os.store.materials.resolution import (
@@ -52,6 +54,59 @@ def angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
     raw = json.dumps(payload, sort_keys=True, ensure_ascii=False,
                      separators=(",", ":")).encode("utf-8")
     return "sha256:" + hashlib.sha256(raw).hexdigest()
+
+
+def bind_angle_reviews(map_data: dict, source_map: dict | None,
+                       module_id: str, unit_id: str) -> dict:
+    """Fill the fingerprint of every ``angle_review`` that omits one.
+
+    Mirrors ``bind_runtime_reviews`` (agent-cost D3): the fingerprint is a
+    pure function of the route, stage and effective placement, so an author
+    who declares a review in an imported map gets the value they would have
+    computed for the placement they are importing. A ``material_ref`` row is
+    expanded on a temporary copy exactly as the loader expands it, so the
+    bound value is the one the validator recomputes. A fingerprint already
+    present is kept as written, stale or not. Returns a copy.
+    """
+    if not isinstance(map_data, dict) or not isinstance(map_data.get("stages"), list):
+        return map_data
+    if not isinstance(source_map, dict):
+        return map_data
+    routes = {str(route["id"]): route
+              for route in unit_routes(source_map, module_id, unit_id)}
+    if not routes:
+        return map_data
+    bound = copy.deepcopy(map_data)
+    for stage in bound.get("stages") or []:
+        if not isinstance(stage, dict):
+            continue
+        for resource in stage.get("resources") or []:
+            if not isinstance(resource, dict):
+                continue
+            review = resource.get("angle_review")
+            if not isinstance(review, dict) or "fingerprint" in review:
+                continue
+            route_id = resource.get("route_id")
+            ref = resource.get("material_ref")
+            if not isinstance(route_id, str) and isinstance(ref, dict):
+                route_id = ref.get("route_id")
+            route = routes.get(route_id) if isinstance(route_id, str) else None
+            if route is None:
+                continue
+            if isinstance(ref, dict) and "route_id" not in resource:
+                # The expanded map is schema-validated and expansion pops
+                # material_ref, so a reviewed compact row must also carry
+                # its route_id at the top level (the live storage shape);
+                # the fingerprint below binds that same placement.
+                resource["route_id"] = route_id
+            effective = dict(resource)
+            if isinstance(ref, dict):
+                for field in ref.get("inherit") or []:
+                    owner = MATERIAL_FIELDS.get(field) if isinstance(field, str) else None
+                    if owner is not None and owner in route:
+                        effective[field] = copy.deepcopy(route[owner])
+            review["fingerprint"] = angle_review_fingerprint(route, stage, effective)
+    return bound
 
 # A locator is exact when it names a numbered division AND a page. Slides and
 # videos are exempt from the page half: a deck locator names a file and a slide
@@ -555,7 +610,8 @@ class ChecksPlanRigor:
     def _check_row_scope(self, smid: str, stage: dict, resource: dict,
                          scope: dict, where: str, *, unit_id: str,
                          disposed_sources: set[str],
-                         material_route_id: str | None = None) -> None:
+                         material_route_id: str | None = None,
+                         module_id: str = "") -> None:
         """A stage resource must resolve to something the module adopted.
 
         A resource that names a route is bound, and the unknown-route and
@@ -571,6 +627,25 @@ class ChecksPlanRigor:
         """
         if resource.get("kind") == "reference":
             return
+        if resource.get("kind") == "practise" \
+                and not resource.get("source_id") \
+                and not resource.get("route_id") \
+                and material_route_id is None \
+                and not resource.get("url"):
+            # A self-contained exercise or a stage-owned attachment prompt
+            # adopts no external teaching material, so there is no source
+            # for the module's map to bind. A practise row that names a
+            # source, route or material:// path is still adopting material
+            # and stays bound below (#94).
+            vault_path = resource.get("vault_path")
+            if not vault_path:
+                return
+            attachments = (
+                f"curriculum/modules/{module_id}/units/{unit_id}"
+                f"/stages/{stage.get('id')}/attachments/"
+            )
+            if isinstance(vault_path, str) and vault_path.startswith(attachments):
+                return
         route_id = resource.get("route_id")
         if isinstance(route_id, str) and route_id:
             # `references.py` reports an unknown route (REF-ROUTE) and a
@@ -671,6 +746,7 @@ class ChecksPlanRigor:
                             smid, stage, resource, scope_for, where,
                             unit_id=study_map.unit_id, disposed_sources=disposed_sources,
                             material_route_id=authored_routes.get((stage_id, index)),
+                            module_id=module_id,
                         )
                     if node_id is not None:
                         self._check_row_node(smid, stage, node_id, resource, routes, where,

@@ -1733,3 +1733,165 @@ def test_overnight_plan_check_shares_one_shadow_and_two_loaded_models(mini_repo,
     args = los.build_parser().parse_args(["--root", str(mini_repo), "unit-plan-revise", "unit-demo-l01", "--file", str(draft), "--check"])
     assert args.func(args) == 0
     assert len(loads) == 2 and len(shadows) == 1
+
+
+# ------------------------------------------------ compact stage/unit fields
+def _stamp_template(mini_repo: Path) -> None:
+    from repo_builders import write_yaml as _write_yaml
+
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["plan_template_version"] = 1
+    data["stages"][0].update(number=1, exam_critical=False, concepts=[])
+    _write_yaml(path, data)
+
+
+def _two_stage_unit(mini_repo: Path) -> None:
+    """Give the sliced unit a second stage so order changes are real."""
+    import copy as _copy
+
+    from repo_builders import write_yaml as _write_yaml
+
+    _compact_setup(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["plan_template_version"] = 1
+    first = data["stages"][0]
+    first.update(number=1, exam_critical=False, concepts=[],
+                 knowledge_node_id="knowledge-demo-expectation")
+    second = _copy.deepcopy(first)
+    second.update(
+        id="stage-demo-2", number=2, title="Second stage", status="pending",
+        knowledge_node_id="knowledge-demo-outcomes",
+        resources=[], working_note=(
+            "curriculum/modules/module-demo/units/unit-demo-l01/"
+            "stages/stage-demo-2/notes.md"))
+    note = mini_repo / second["working_note"]
+    note.parent.mkdir(parents=True, exist_ok=True)
+    note.write_text("", encoding="utf-8")
+    data["stages"].append(second)
+    _write_yaml(path, data)
+
+
+def _check_revision(mini_repo, tmp_path, revision, name="revision.yaml"):
+    from repo_builders import run_los
+    from repo_builders import write_yaml as _write_yaml
+
+    draft = tmp_path / name
+    _write_yaml(draft, revision)
+    return run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check")
+
+
+def test_unit_revision_stage_patches_patch_in_place(mini_repo, tmp_path):
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(mini_repo, stage_patches=[
+        {"stage_id": "stage-demo", "fields": {"title": "Patched stage title"}}])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["canonical_files_written"] == 0
+
+
+def test_unit_revision_unit_patch_and_stage_addition(mini_repo, tmp_path):
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(
+        mini_repo,
+        unit_patch={"title": "Retitled lecture"},
+        stage_additions=[{
+            "after_stage_id": "stage-demo",
+            "stage": {"id": "stage-demo-extra", "title": "Extra stage",
+                      "objective": "Practise the derivation.",
+                      "knowledge_node_id": "knowledge-demo-expectation",
+                      "concepts": [], "exam_critical": False,
+                      "scope_triage": "required-now",
+                      "done_when": ["Show the working."], "resources": []},
+        }])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_unit_revision_unit_patch_refuses_identity_fields(mini_repo, tmp_path):
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(mini_repo, unit_patch={"status": "complete"})
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode != 0
+    assert "unit_patch" in proc.stderr
+
+
+def test_unit_revision_stage_order_needs_a_declaration(mini_repo, tmp_path):
+    _two_stage_unit(mini_repo)
+    revision = _compact_revision(
+        mini_repo, stage_order=["stage-demo-2", "stage-demo"])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode != 0
+    assert "reorders existing stages" in proc.stderr
+
+
+def test_unit_revision_addition_positioned_by_order_needs_no_declaration(mini_repo, tmp_path):
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(
+        mini_repo,
+        stage_additions=[{
+            "after_stage_id": "stage-demo",
+            "stage": {"id": "stage-demo-extra", "title": "Extra stage",
+                      "objective": "Practise the derivation.",
+                      "knowledge_node_id": "knowledge-demo-expectation",
+                      "concepts": [], "exam_critical": False,
+                      "scope_triage": "required-now",
+                      "done_when": ["Show the working."], "resources": []},
+        }],
+        stage_order=["stage-demo-extra", "stage-demo"])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_unit_revision_stage_order_with_a_declaration(mini_repo, tmp_path):
+    _two_stage_unit(mini_repo)
+    revision = _compact_revision(
+        mini_repo, stage_order=["stage-demo-2", "stage-demo"])
+    revision["plan_contract"]["intentional_reorder"] = "Work the second stage first."
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_unit_revision_full_map_and_compact_fields_refuse_together(mini_repo, tmp_path):
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(
+        mini_repo, stage_patches=[
+            {"stage_id": "stage-demo", "fields": {"title": "Patched"}}])
+    revision["study_map"] = {"unit_id": "unit-demo-l01"}
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode != 0
+    assert "cannot combine" in proc.stderr
+
+
+def test_unit_revision_report_out_allows_venv_scratch(mini_repo, tmp_path):
+    from repo_builders import run_los
+    from repo_builders import write_yaml as _write_yaml
+
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    _compact_setup(mini_repo)
+    draft = tmp_path / "revision.yaml"
+    _write_yaml(draft, _compact_revision(mini_repo, route_changes={
+        "update": [{"route_id": "route-demo-book",
+                    "fields": {"angle": "A sharper angle."}}]}))
+    before = canonical_fingerprint(mini_repo)
+    scratch = mini_repo / ".venv"
+    scratch.mkdir(exist_ok=True)
+    proc = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(scratch / "scratch-report.json"))
+    assert proc.returncode == 0, proc.stderr
+    assert (scratch / "scratch-report.json").is_file()
+    assert canonical_fingerprint(mini_repo) == before
+    inside = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                     "--file", str(draft), "--check",
+                     "--report-out", str(mini_repo / "work" / "report.json"))
+    assert inside.returncode == 2, inside.stdout
+    assert "must be outside the repository" in inside.stderr

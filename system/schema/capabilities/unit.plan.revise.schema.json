@@ -61,6 +61,30 @@
             "array",
             "null"
           ]
+        },
+        "unit_patch": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "stage_patches": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "stage_additions": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "stage_order": {
+          "type": [
+            "array",
+            "null"
+          ]
         }
       },
       "additionalProperties": false,

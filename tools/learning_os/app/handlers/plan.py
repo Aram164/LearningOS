@@ -54,8 +54,13 @@ from learning_os.derive.semantics.lineage import (
     LineageError,
 )
 from learning_os.derive.semesters import module_listing as _module_listing
+from learning_os.derive.validation.plan_rigor import bind_angle_reviews as _bind_angle_reviews
 from learning_os.domain.failures import NotFound, RevisionConflict, WriteRefused
 from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
+from learning_os.domain.plan_import import apply_stage_additions as _apply_stage_additions
+from learning_os.domain.plan_import import apply_stage_order as _apply_stage_order
+from learning_os.domain.plan_import import apply_stage_patches as _apply_stage_patches
+from learning_os.domain.plan_import import apply_unit_patch as _apply_unit_patch
 from learning_os.domain.plan_import import apply_unit_route_changes as _apply_unit_route_changes
 from learning_os.domain.plan_import import (
     assemble_compact_module_revision as _assemble_compact_module_revision,
@@ -69,6 +74,7 @@ from learning_os.domain.plan_import import (
 from learning_os.domain.plan_import import (
     module_plan_routing_problems as _module_plan_routing_problems,
 )
+from learning_os.domain.plan_import import reindex_stages as _reindex_stages
 from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
 from learning_os.domain.render import replace_h2_section as _replace_h2_section
 from learning_os.domain.suggest import not_found
@@ -194,7 +200,25 @@ def _report_out_target_problem(root: Path, target_text: str, *, draft: str | Non
     except OSError as exc:
         return f"cannot resolve --report-out target: {exc}"
     if target == root_resolved or root_resolved in target.parents:
-        return f"--report-out target must be outside the repository: {target_text}"
+        # The checkout's gitignored .venv/ scratch is the one in-repo home
+        # for a check report: it is excluded from canonical_fingerprint, so
+        # the report cannot move the snapshot it attests (same boundary as
+        # ReportStore and seal_envelope's _scratch_path_problem). Both the
+        # lexical and the resolved path must stay inside it, with no symlink
+        # traversal on the way in.
+        lexical = Path(target_text).expanduser().absolute()
+        scratch = root_resolved / ".venv"
+        in_scratch = lexical.is_relative_to(scratch) and target.is_relative_to(scratch)
+        traverses_link = False
+        if in_scratch:
+            for component in (lexical.parent, *lexical.parents):
+                if component == root_resolved:
+                    break
+                if component.is_symlink():
+                    traverses_link = True
+                    break
+        if not in_scratch or traverses_link:
+            return f"--report-out target must be outside the repository: {target_text}"
     if draft:
         try:
             if target == Path(draft).expanduser().resolve():
@@ -259,7 +283,8 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
     if not isinstance(revision, dict):
         return ["unit revision must be a mapping"]
     unknown = set(revision) - {"unit_id", "plan_contract", "route_changes", "study_map",
-                               "material_synthesis", "claim_evidence", "acknowledgments"}
+                               "material_synthesis", "claim_evidence", "acknowledgments",
+                               "unit_patch", "stage_patches", "stage_additions", "stage_order"}
     if unknown:
         problems.append(f"unknown revision fields: {sorted(unknown)}")
     if revision.get("unit_id", unit_id) != unit_id:
@@ -294,6 +319,28 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
         else:
             for problem in current_template_problems(study_map, "curriculum"):
                 problems.append(f"study_map: {problem}")
+    compact_map_fields = [field for field in ("stage_patches", "stage_additions", "stage_order")
+                          if revision.get(field) is not None]
+    if study_map is not None and compact_map_fields:
+        problems.append(
+            "study_map cannot combine with compact stage fields: "
+            + ", ".join(sorted(compact_map_fields)))
+    unit_patch = revision.get("unit_patch")
+    if unit_patch is not None and not isinstance(unit_patch, dict):
+        problems.append("unit_patch must be a mapping")
+    for field in ("stage_patches", "stage_additions"):
+        value = revision.get(field)
+        if value is not None and not isinstance(value, list):
+            problems.append(f"{field} must be a list")
+    stage_order = revision.get("stage_order")
+    if stage_order is not None:
+        if not isinstance(stage_order, list) or not stage_order \
+                or any(not isinstance(row, str) for row in stage_order):
+            problems.append("stage_order must be a non-empty list of stage ids")
+        # Whether the order actually reorders surviving stages — and so
+        # needs a declaration — is decided once by the ordering gate over
+        # the assembled package; an additions-only positioning is not a
+        # reorder and must not be forced to declare one here.
     dossier = revision.get("material_synthesis")
     if dossier is not None and not isinstance(dossier, dict):
         problems.append("material_synthesis must be a mapping")
@@ -566,6 +613,11 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         if not isinstance(map_data, dict) or map_data.get("unit_id") != uid:
             _plan_refuse(ctx, f"study map must belong to {uid}", "map-foreign-unit")
         map_data = _bind_runtime_reviews(map_data)
+        map_data = _bind_angle_reviews(
+            map_data,
+            source_map if isinstance(source_map, dict)
+            else repo.module_source_maps.get(module_id, {}),
+            module_id, uid)
         existing_map = next((sm for sm in repo.study_maps.values() if sm.unit_id == uid), None)
         writes[unit_dir / "study-map.yaml"] = (
             _dump_study_map(existing_map, map_data) if existing_map else _dump_yaml(map_data)
@@ -1247,7 +1299,52 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
         )
     contract = revision["plan_contract"]
     unit_data = copy.deepcopy(unit.data)
+    compact_problems: list[str] = []
+    if revision.get("unit_patch") is not None:
+        compact_problems.extend(_apply_unit_patch(
+            unit_data, revision["unit_patch"], "unit revision"))
     map_data = copy.deepcopy(revision.get("study_map"))
+    patches = revision.get("stage_patches") or []
+    additions = revision.get("stage_additions") or []
+    stage_order = revision.get("stage_order")
+    if map_data is None and (patches or additions or stage_order is not None):
+        current_map = repo.study_maps.get(unit.data.get("current_study_map"))
+        if current_map is None:
+            compact_problems.append("unit revision has no current study map to patch")
+        else:
+            if any(isinstance(patch, dict) and "resources_append" in patch
+                   for patch in patches):
+                base_data = current_map.authored_data or current_map.data
+            else:
+                base_data = current_map.data
+            map_data = copy.deepcopy(base_data)
+            compact_problems.extend(_apply_stage_patches(map_data, patches, "unit revision"))
+            compact_problems.extend(_apply_stage_additions(
+                map_data, additions, "unit revision",
+                module_id=module_id, unit_id=req["unit_id"]))
+            if stage_order is not None:
+                compact_problems.extend(_apply_stage_order(map_data, stage_order, "unit revision"))
+            _reindex_stages(map_data)
+    if compact_problems:
+        _plan_refuse(
+            ctx,
+            "unit revision compact changes failed; no canonical files were written",
+            "compact-changes-failed",
+            extra=tuple(f"- {problem}" for problem in compact_problems),
+        )
+    declared_reorders = copy.deepcopy(contract.get("intentional_reorders") or [])
+    if not isinstance(declared_reorders, list):
+        declared_reorders = []
+    singular = contract.get("intentional_reorder")
+    if stage_order is not None and isinstance(singular, str) and singular.strip() \
+            and not any(isinstance(row, dict)
+                        and row.get("target") == "study-map-stage-order"
+                        for row in declared_reorders):
+        declared_reorders.append({
+            "target": "study-map-stage-order",
+            "id": unit.data.get("current_study_map"),
+            "reason": singular,
+        })
     dossier = copy.deepcopy(revision.get("material_synthesis"))
     package = {
         "module_id": module_id,
@@ -1256,7 +1353,7 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
             "plan_template_version": contract.get("plan_template_version"),
             "coverage_audit": contract.get("coverage_audit"),
             "checks": copy.deepcopy(contract.get("checks")),
-            "intentional_reorders": [],
+            "intentional_reorders": declared_reorders,
         },
         "module_patch": {},
         "source_map": new_map,

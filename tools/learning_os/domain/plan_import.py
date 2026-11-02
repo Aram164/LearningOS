@@ -31,6 +31,142 @@ _SOURCE_MAP_ROLES = frozenset({
 
 _COMPACT_JOIN_FIELDS = frozenset({"source_id", "role", "why", "priority", "when"})
 
+#: The only `unit.yaml` fields a compact revision may patch in place.
+_UNIT_PATCH_FIELDS = frozenset({"title", "scope", "knowledge_map"})
+
+
+def apply_unit_patch(unit_data: dict[str, Any], patch: Any, where: str) -> list[str]:
+    """Patch the reviewed identity/scope fields of one existing unit record."""
+    if not isinstance(patch, dict) or not patch:
+        return [f"{where}.unit_patch must be a non-empty mapping"]
+    unknown = set(patch) - _UNIT_PATCH_FIELDS
+    if unknown:
+        return [f"{where}.unit_patch may only set {sorted(_UNIT_PATCH_FIELDS)}; "
+                f"got {sorted(unknown)}"]
+    unit_data.update(copy.deepcopy(patch))
+    return []
+
+
+def apply_stage_patches(study_map: dict[str, Any], patches: list,
+                        where: str) -> list[str]:
+    """Apply compact stage field/append patches onto a study-map copy."""
+    problems: list[str] = []
+    stages = {stage.get("id"): stage for stage in study_map.get("stages", [])
+              if isinstance(stage, dict)}
+    existing_ids = {row.get("id") for stage in stages.values()
+                    for row in (stage.get("resources") or [])
+                    if isinstance(row, dict)}
+    existing_ids = {rid for rid in existing_ids if isinstance(rid, str)}
+    seen_stages: set[str] = set()
+    for stage_index, patch in enumerate(patches):
+        stage_where = f"{where}.stage_patches[{stage_index}]"
+        if not isinstance(patch, dict) or "stage_id" not in patch \
+                or set(patch) - {"stage_id", "fields", "resources_append"}:
+            problems.append(f"{stage_where} needs stage_id plus fields and/or resources_append")
+            continue
+        sid = patch["stage_id"]
+        fields = patch.get("fields")
+        append = patch.get("resources_append")
+        if fields is None and append is None:
+            problems.append(f"{stage_where} changes nothing; give fields and/or resources_append")
+            continue
+        if not isinstance(sid, str) or sid in seen_stages or sid not in stages:
+            problems.append(f"{stage_where} names a missing or repeated stage: {sid}")
+            continue
+        seen_stages.add(sid)
+        if fields is not None:
+            if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
+                problems.append(f"{stage_where}.fields must be non-empty and limited to "
+                                f"{sorted(_COMPACT_STAGE_FIELDS)}")
+                continue
+            if append is not None and "resources" in fields:
+                problems.append(f"{stage_where} cannot combine resources_append with fields.resources")
+                continue
+        if append is not None:
+            if not isinstance(append, list) or not append \
+                    or any(not isinstance(row, dict) for row in append):
+                problems.append(f"{stage_where}.resources_append must be a non-empty list of resource objects")
+                continue
+            new_ids = [row.get("id") for row in append]
+            if any(not isinstance(rid, str) or not rid for rid in new_ids):
+                problems.append(f"{stage_where}.resources_append needs a fresh resource id on every row")
+                continue
+            if len(set(new_ids)) != len(new_ids):
+                problems.append(f"{stage_where}.resources_append repeats a resource id")
+                continue
+            collisions = [rid for rid in new_ids if rid in existing_ids]
+            if collisions:
+                problems.append(f"{stage_where}.resources_append reuses an existing resource id: {collisions[0]}")
+                continue
+        if fields is not None:
+            stages[sid].update(copy.deepcopy(fields))
+        if append is not None:
+            stages[sid].setdefault("resources", []).extend(copy.deepcopy(append))
+            existing_ids.update(row["id"] for row in append)
+    return problems
+
+
+def apply_stage_additions(study_map: dict[str, Any], additions: list,
+                          where: str, *, module_id: str, unit_id: str) -> list[str]:
+    """Insert full new stages; learner-state defaults keep the map writable."""
+    problems: list[str] = []
+    stages = study_map.setdefault("stages", [])
+    ids = [stage.get("id") for stage in stages if isinstance(stage, dict)]
+    for index, addition in enumerate(additions):
+        item_where = f"{where}.stage_additions[{index}]"
+        if not isinstance(addition, dict) or set(addition) - {"after_stage_id", "stage"}:
+            problems.append(f"{item_where} allows only after_stage_id and stage")
+            continue
+        stage = addition.get("stage")
+        if not isinstance(stage, dict) or not isinstance(stage.get("id"), str) \
+                or not stage["id"]:
+            problems.append(f"{item_where}.stage must be a stage mapping with an id")
+            continue
+        stage_id = stage["id"]
+        if stage_id in ids:
+            problems.append(f"{item_where} reuses an existing stage id: {stage_id}")
+            continue
+        after = addition.get("after_stage_id")
+        if after is not None and after not in ids:
+            problems.append(f"{item_where} names an unknown after_stage_id: {after}")
+            continue
+        row = copy.deepcopy(stage)
+        row.setdefault("working_note",
+                       f"curriculum/modules/{module_id}/units/{unit_id}"
+                       f"/stages/{stage_id}/notes.md")
+        row.setdefault("attachments", [])
+        row.setdefault("source_feedback", [])
+        row.setdefault("status", "pending")
+        row.setdefault("resources", [])
+        position = 0 if after is None else ids.index(after) + 1
+        stages.insert(position, row)
+        ids.insert(position, stage_id)
+    return problems
+
+
+def apply_stage_order(study_map: dict[str, Any], order: Any, where: str) -> list[str]:
+    """Reorder stages to an explicit permutation of the resulting stage ids."""
+    if not isinstance(order, list) or not order \
+            or any(not isinstance(stage_id, str) for stage_id in order):
+        return [f"{where}.stage_order must be a non-empty list of stage ids"]
+    stages = study_map.get("stages", [])
+    current = [stage.get("id") for stage in stages if isinstance(stage, dict)]
+    if sorted(order) != sorted(current) or len(set(order)) != len(order):
+        return [f"{where}.stage_order must name every resulting stage exactly once"]
+    by_id = {stage.get("id"): stage for stage in stages if isinstance(stage, dict)}
+    study_map["stages"] = [by_id[stage_id] for stage_id in order]
+    return []
+
+
+def reindex_stages(study_map: dict[str, Any]) -> None:
+    """Number stages sequentially and keep the resume pointer inside the map."""
+    stages = [stage for stage in study_map.get("stages", []) if isinstance(stage, dict)]
+    for number, stage in enumerate(stages, 1):
+        stage["number"] = number
+    ids = {stage.get("id") for stage in stages}
+    if stages and study_map.get("current_stage") not in ids:
+        study_map["current_stage"] = stages[0].get("id")
+
 UNIT_ROUTE_UPDATE_FIELDS = frozenset({
     "title", "format", "angle", "angle_detail", "covers", "depth", "scope",
     "locator", "url", "vault_path", "exposes_solutions_for", "requires_assets",
@@ -443,7 +579,8 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
             problems.append(f"{where} must be a mapping")
             continue
         unknown = set(item) - {"unit_id", "route_changes", "stage_patches",
-                               "material_synthesis"}
+                               "material_synthesis", "unit_patch",
+                               "stage_additions", "stage_order"}
         if unknown:
             problems.append(f"{where} has unknown fields: {sorted(unknown)}")
         uid = item.get("unit_id")
@@ -471,13 +608,22 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
         if not isinstance(patches, list):
             problems.append(f"{where}.stage_patches must be a list")
             continue
+        additions = item.get("stage_additions", [])
+        if additions is None:
+            additions = []
+        if not isinstance(additions, list):
+            problems.append(f"{where}.stage_additions must be a list")
+            continue
+        stage_order = item.get("stage_order")
+        unit_patch = item.get("unit_patch")
         current_id = unit.data.get("current_study_map")
         current_map = repo.study_maps.get(current_id) if current_id else None
-        if patches and current_map is None:
+        needs_map = bool(patches or additions or stage_order is not None)
+        if needs_map and current_map is None:
             problems.append(f"{where} has no current study map to patch")
             continue
         base_data = None
-        if patches and current_map is not None:
+        if needs_map and current_map is not None:
             # An append patch carries authored placements forward, so the whole
             # map starts from the authored form; legacy patches keep the
             # expanded base they were reviewed against.
@@ -487,58 +633,17 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
             else:
                 base_data = current_map.data
         study_map = copy.deepcopy(base_data) if base_data is not None else None
-        stages = {stage.get("id"): stage for stage in study_map.get("stages", [])
-                  if isinstance(stage, dict)} if study_map else {}
-        existing_ids = {row.get("id") for stage in stages.values()
-                        for row in (stage.get("resources") or [])
-                        if isinstance(row, dict)}
-        existing_ids = {rid for rid in existing_ids if isinstance(rid, str)}
-        seen_stages: set[str] = set()
-        for stage_index, patch in enumerate(patches):
-            stage_where = f"{where}.stage_patches[{stage_index}]"
-            if not isinstance(patch, dict) or "stage_id" not in patch \
-                    or set(patch) - {"stage_id", "fields", "resources_append"}:
-                problems.append(f"{stage_where} needs stage_id plus fields and/or resources_append")
-                continue
-            sid = patch["stage_id"]
-            fields = patch.get("fields")
-            append = patch.get("resources_append")
-            if fields is None and append is None:
-                problems.append(f"{stage_where} changes nothing; give fields and/or resources_append")
-                continue
-            if not isinstance(sid, str) or sid in seen_stages or sid not in stages:
-                problems.append(f"{stage_where} names a missing or repeated stage: {sid}")
-                continue
-            seen_stages.add(sid)
-            if fields is not None:
-                if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
-                    problems.append(f"{stage_where}.fields must be non-empty and limited to "
-                                    f"{sorted(_COMPACT_STAGE_FIELDS)}")
-                    continue
-                if append is not None and "resources" in fields:
-                    problems.append(f"{stage_where} cannot combine resources_append with fields.resources")
-                    continue
-            if append is not None:
-                if not isinstance(append, list) or not append \
-                        or any(not isinstance(row, dict) for row in append):
-                    problems.append(f"{stage_where}.resources_append must be a non-empty list of resource objects")
-                    continue
-                new_ids = [row.get("id") for row in append]
-                if any(not isinstance(rid, str) or not rid for rid in new_ids):
-                    problems.append(f"{stage_where}.resources_append needs a fresh resource id on every row")
-                    continue
-                if len(set(new_ids)) != len(new_ids):
-                    problems.append(f"{stage_where}.resources_append repeats a resource id")
-                    continue
-                collisions = [rid for rid in new_ids if rid in existing_ids]
-                if collisions:
-                    problems.append(f"{stage_where}.resources_append reuses an existing resource id: {collisions[0]}")
-                    continue
-            if fields is not None:
-                stages[sid].update(copy.deepcopy(fields))
-            if append is not None:
-                stages[sid].setdefault("resources", []).extend(copy.deepcopy(append))
-                existing_ids.update(row["id"] for row in append)
+        if study_map is not None:
+            problems.extend(apply_stage_patches(study_map, patches, where))
+            problems.extend(apply_stage_additions(
+                study_map, additions, where, module_id=module_id, unit_id=uid))
+            if stage_order is not None:
+                problems.extend(apply_stage_order(study_map, stage_order, where))
+            if patches or additions or stage_order is not None:
+                reindex_stages(study_map)
+        unit_data = copy.deepcopy(unit.data)
+        if unit_patch is not None:
+            problems.extend(apply_unit_patch(unit_data, unit_patch, where))
         dossier = item.get("material_synthesis")
         if dossier is not None:
             if not isinstance(dossier, dict) or dossier.get("unit_id", uid) != uid:
@@ -546,9 +651,10 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
             else:
                 syntheses.append({"unit_id": uid, "dossier": copy.deepcopy(dossier)})
         if not any(changes.get(kind) for kind in ("add", "update", "remove")) \
-                and not patches and dossier is None:
+                and not patches and not additions and stage_order is None \
+                and unit_patch is None and dossier is None:
             problems.append(f"{where} changes nothing")
-        entries.append({"unit": copy.deepcopy(unit.data), "study_map": study_map})
+        entries.append({"unit": unit_data, "study_map": study_map})
     additions = revision.get("unit_additions", [])
     order = list(repo.modules[module_id].get("unit_order", []))
     if not isinstance(additions, list):

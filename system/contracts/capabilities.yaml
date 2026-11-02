@@ -621,6 +621,10 @@ commands:
         - material_synthesis
         - claim_evidence
         - acknowledgments
+        - unit_patch
+        - stage_patches
+        - stage_additions
+        - stage_order
         required:
         - plan_contract
         types:
@@ -639,6 +643,18 @@ commands:
           - array
           - "null"
           acknowledgments:
+          - array
+          - "null"
+          unit_patch:
+          - object
+          - "null"
+          stage_patches:
+          - array
+          - "null"
+          stage_additions:
+          - array
+          - "null"
+          stage_order:
           - array
           - "null"
   unit.map.import:

@@ -727,3 +727,183 @@ def test_overnight_rigor_indexes_legacy_route_ids():
     checker = _ScopeChecker(_demo_source_map(route), resources=[])
     index = ChecksPlanRigor._routes_by_id(checker)
     assert deterministic_route_id("module-demo", "source-demo-book", route) in index
+
+
+# ------------------------------------------------- source-less practise (#94)
+def test_a_source_less_practise_row_is_not_reported():
+    checker = _ScopeChecker(
+        _demo_source_map(_demo_route()),
+        resources=[{"kind": "practise", "locator": "attachments/own-work.md"}],
+    )
+    checker.check_plan_rigor()
+    assert checker.warnings == []
+
+
+def test_a_stage_attachment_practise_row_is_not_reported():
+    checker = _ScopeChecker(
+        _demo_source_map(_demo_route()),
+        resources=[{
+            "kind": "practise",
+            "vault_path": "curriculum/modules/module-demo/units/unit-demo"
+                          "/stages/stage-demo/attachments/own-work.md",
+        }],
+    )
+    checker.check_plan_rigor()
+    assert checker.warnings == []
+
+
+def test_a_practise_row_naming_an_unadopted_source_is_still_reported():
+    checker = _ScopeChecker(
+        _demo_source_map(_demo_route()),
+        resources=[{
+            "kind": "practise", "source_id": "source-probe-offmap",
+            "locator": "chapter 42",
+        }],
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+
+
+def test_a_practise_row_with_a_material_path_is_still_reported():
+    checker = _ScopeChecker(
+        _demo_source_map(_demo_route()),
+        resources=[{
+            "kind": "practise",
+            "vault_path": "material://source-probe-offmap/sheet.pdf",
+        }],
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+
+
+def test_a_read_row_without_a_source_is_still_reported():
+    checker = _ScopeChecker(
+        _demo_source_map(_demo_route()),
+        resources=[{"kind": "read", "locator": "attachments/own-work.md"}],
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+
+
+# ------------------------------------------------------- angle-review binding
+def _bindable_map(resource):
+    return {
+        "id": "study-map-demo", "unit_id": "unit-demo",
+        "stages": [{
+            "id": "stage-demo", "title": "Demo stage",
+            "objective": "Derive it.", "resources": [resource],
+        }],
+    }
+
+
+def test_bind_angle_reviews_binds_an_inline_row():
+    from learning_os.derive.validation.plan_rigor import bind_angle_reviews
+    from learning_os.domain.material_refs import unit_routes
+
+    source_map = _demo_source_map(_demo_route())
+    route = unit_routes(source_map, "module-demo", "unit-demo")[0]
+    resource = {
+        "route_id": route["id"], "source_id": "source-demo-book",
+        "kind": "read", "locator": "PDF p. 2", "angle": "Stage angle.",
+        "angle_review": {
+            "kind": "refinement", "reviewed_by": "operator-test",
+            "reviewed_on": "2026-09-30", "rationale": "Deliberate refinement.",
+        },
+    }
+    bound = bind_angle_reviews(_bindable_map(resource), source_map,
+                               "module-demo", "unit-demo")
+    stage = bound["stages"][0]
+    expected = angle_review_fingerprint(route, stage, resource)
+    assert bound["stages"][0]["resources"][0]["angle_review"]["fingerprint"] == expected
+    # The validator's own verdict on the bound row is current, not stale.
+    checker = _StubChecker({}, {}, {})
+    checker._check_row_angle("sm", stage, bound["stages"][0]["resources"][0],
+                             {route["id"]: route}, "study-map.yaml")
+    assert checker.warnings == []
+
+
+def test_bind_angle_reviews_binds_a_material_ref_row():
+    from learning_os.derive.validation.plan_rigor import bind_angle_reviews
+    from learning_os.domain.material_refs import expand_map, unit_routes
+
+    source_map = _demo_source_map(_demo_route())
+    route = unit_routes(source_map, "module-demo", "unit-demo")[0]
+    resource = {
+        "kind": "read", "angle": "Stage angle.",
+        "material_ref": {
+            "route_id": route["id"],
+            "inherit": ["label", "source_id", "locator", "angle_detail"],
+        },
+        "angle_review": {
+            "kind": "refinement", "reviewed_by": "operator-test",
+            "reviewed_on": "2026-09-30", "rationale": "Deliberate refinement.",
+        },
+    }
+    authored = _bindable_map(resource)
+    bound = bind_angle_reviews(authored, source_map, "module-demo", "unit-demo")
+    fingerprint = bound["stages"][0]["resources"][0]["angle_review"]["fingerprint"]
+    # The bound authored row carries its route_id at the top level: expansion
+    # pops material_ref, and the expanded map is the one schema-validated.
+    assert bound["stages"][0]["resources"][0]["route_id"] == route["id"]
+    effective = expand_map(bound, source_map, "module-demo", "unit-demo")
+    stage = effective["stages"][0]
+    assert stage["resources"][0]["route_id"] == route["id"]
+    assert "material_ref" not in stage["resources"][0]
+    assert fingerprint == angle_review_fingerprint(
+        route, stage, stage["resources"][0])
+    checker = _StubChecker({}, {}, {})
+    checker._check_row_angle("sm", stage, stage["resources"][0],
+                             {route["id"]: route}, "study-map.yaml")
+    assert checker.warnings == []
+
+
+def test_bind_angle_reviews_preserves_an_existing_fingerprint():
+    from learning_os.derive.validation.plan_rigor import bind_angle_reviews
+    from learning_os.domain.material_refs import unit_routes
+
+    source_map = _demo_source_map(_demo_route())
+    route = unit_routes(source_map, "module-demo", "unit-demo")[0]
+    stale = "sha256:" + "0" * 64
+    resource = {
+        "route_id": route["id"], "kind": "read",
+        "angle_review": {
+            "kind": "refinement", "reviewed_by": "operator-test",
+            "reviewed_on": "2026-09-30", "rationale": "Deliberate refinement.",
+            "fingerprint": stale,
+        },
+    }
+    bound = bind_angle_reviews(_bindable_map(resource), source_map,
+                               "module-demo", "unit-demo")
+    assert bound["stages"][0]["resources"][0]["angle_review"]["fingerprint"] == stale
+
+
+def test_map_import_binds_a_reviewed_material_ref_row(mini_repo, tmp_path):
+    """A compact row with angle_review but no fingerprint or route_id imports:
+    the binder supplies both, and the expanded map passes schema validation."""
+    import yaml
+    from repo_builders import _sliced_route, _sliced_unit, run_los, write_yaml
+
+    _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+
+    write_baseline(mini_repo, collect(mini_repo)[0], "angle-review import fixture")
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["plan_template_version"] = 1
+    stage = data["stages"][0]
+    stage.update(number=1, exam_critical=False, concepts=[],
+                 knowledge_node_id="knowledge-demo-expectation")
+    stage["resources"] = [{
+        "id": "resource-reviewed", "kind": "read", "angle": "Stage angle.",
+        "material_ref": {"route_id": "route-demo-book",
+                         "inherit": ["label", "source_id", "locator", "angle_detail"]},
+        "angle_review": {"kind": "refinement", "reviewed_by": "operator-test",
+                         "reviewed_on": "2026-09-30",
+                         "rationale": "Deliberate refinement."},
+    }]
+    draft = tmp_path / "map.yaml"
+    write_yaml(draft, data)
+    proc = run_los(mini_repo, "unit-map-import", "unit-demo-l01",
+                   "--file", str(draft), "--replace", "--check")
+    assert proc.returncode == 0, proc.stderr
