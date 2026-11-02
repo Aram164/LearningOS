@@ -19,9 +19,7 @@ _RENDER_FN = None
 
 # Only these mechanical frames may delegate, and only to their immediate
 # production caller. An engine frame further out cannot authorize a callback.
-MECHANICAL_HELPERS = {
-    "learning_os.store.durable_fs": frozenset({"learning_os.store.transactions"}),
-}
+MECHANICAL_HELPERS: dict[str, frozenset[str]] = {}
 
 #: Events logged only while the render marker is set (SPEC §3.5b).
 _RENDER_ONLY_EVENTS = frozenset({

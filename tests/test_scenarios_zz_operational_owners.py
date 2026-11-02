@@ -424,11 +424,12 @@ def test_engine_phase_cannot_authorize_a_hidden_callback_writer(tmp_path):
         phase="apply")], receipts=proof)
 
 
-def test_mechanical_delegation_is_bounded_to_the_immediate_caller(tmp_path):
+def test_mechanical_delegation_is_bounded_to_the_immediate_caller(tmp_path, monkeypatch):
     import arch_audit_hook
 
-    helper = "learning_os.store.durable_fs"
+    helper = "learning_os.store.example_helper"
     engine = "learning_os.store.transactions"
+    monkeypatch.setitem(arch_audit_hook.MECHANICAL_HELPERS, helper, frozenset({engine}))
     frames = [(helper, "helper.py", 1), (helper, "helper.py", 2), (engine, "engine.py", 3)]
     assert arch_audit_hook.delegated_owner(frames) == engine
     frames.insert(2, ("learning_os.app.handlers.plan", "callback.py", 4))

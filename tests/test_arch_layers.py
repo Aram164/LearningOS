@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import ast
-import importlib.util
 import subprocess
 import sys
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 PYPROJECT = ROOT / "pyproject.toml"
@@ -14,41 +15,23 @@ PYPROJECT = ROOT / "pyproject.toml"
 FIX = "Move the import below the importer's layer, or split the module (PLAN D17)."
 
 
-def _imports_mechanical_helper(source: str, package: str = "learning_os.app.handlers") -> bool:
-    helper = "learning_os.store.durable_fs"
-    for node in ast.walk(ast.parse(source)):
-        if isinstance(node, ast.Import) and any(alias.name == helper for alias in node.names):
-            return True
-        if isinstance(node, ast.ImportFrom):
-            module = node.module or ""
-            if node.level:
-                module = importlib.util.resolve_name("." * node.level + module, package)
-            if module == helper:
-                return True
-            if module == "learning_os.store" and any(
-                    alias.name == "durable_fs" for alias in node.names):
-                return True
-    return False
+def _missing_declared_helpers(modules, tools_root: Path) -> list[str]:
+    """Declared protected modules with no source file: a guard on them proves nothing."""
+    return [module for module in modules
+            if not (tools_root / (module.replace(".", "/") + ".py")).is_file()]
 
 
-def test_mechanical_helper_has_one_production_importer():
-    allowed = {"tools/learning_os/store/transactions.py", "tools/learning_os/store/durable_fs.py"}
-    for path in (ROOT / "tools/learning_os").rglob("*.py"):
-        relative = path.relative_to(ROOT).as_posix()
-        if relative not in allowed:
-            package = ".".join(path.relative_to(ROOT / "tools").parts[:-1])
-            assert not _imports_mechanical_helper(path.read_text(), package), f"protected helper imported by {relative}"
+def test_declared_mechanical_helpers_exist():
+    import arch_audit_hook
+    owners = yaml.safe_load((ROOT / "tests/architecture/operational-owners.yaml").read_text())
+    declared = [row["module"] for row in owners["io_helpers"]] + list(arch_audit_hook.MECHANICAL_HELPERS)
+    assert _missing_declared_helpers(declared, ROOT / "tools") == []
 
 
-def test_mechanical_helper_protection_detects_all_import_forms():
-    for source in (
-        "import learning_os.store.durable_fs as fs",
-        "from learning_os.store import durable_fs as fs",
-        "from learning_os.store.durable_fs import replace_bytes",
-        "from ...store.durable_fs import replace_bytes",
-        "from ...store import durable_fs",
-    ):
-        assert _imports_mechanical_helper(source)
+def test_missing_declared_helper_is_detected():
+    tools = ROOT / "tools"
+    assert _missing_declared_helpers(["learning_os.store.transactions"], tools) == []
+    assert _missing_declared_helpers(["learning_os.store.durable_fs"], tools) == ["learning_os.store.durable_fs"]
 
 
 def _impure_derivation(source: str) -> list[str]:

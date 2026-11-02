@@ -1,7 +1,6 @@
 schema: 1
 roots: ["operations/", "<STATE>/"]
-io_helpers:
-  - {module: learning_os.store.durable_fs, callers: [learning_os.store.transactions]}
+io_helpers: []
 excluded:
   - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
   - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}
