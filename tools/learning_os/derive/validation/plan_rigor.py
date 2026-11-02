@@ -35,13 +35,43 @@ from learning_os.store.materials.resolution import (
 )
 
 
+def _fingerprint_payload(payload: dict) -> str:
+    raw = json.dumps(payload, sort_keys=True, ensure_ascii=False,
+                     separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
+
+
 def angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
     """Bind a declared relation review to the actual route and placement.
 
     This attests to the relation between the descriptions, not to mastery or
     independently verified source content. Corrections additionally need
     inspected, content-bound material evidence.
+
+    The v2 payload binds the relation itself — route identity, its angle
+    descriptions, coverage and material address, the stage's node, and the
+    placement — but not prose titles or the stage objective: fixing a typo
+    in a title is not a new relation, and making it one forced a whole
+    stage's resources to be re-supplied just to re-bind a review.
+    Fingerprints bound under v1 stay current (see
+    ``_legacy_angle_review_fingerprint``); new binds use v2.
     """
+    payload = {
+        "contract": "angle-review-v2",
+        "route": {key: route.get(key) for key in
+                  ("id", "source_id", "angle", "angle_detail", "covers",
+                   "locator", "url", "vault_path")},
+        "stage": {key: stage.get(key) for key in
+                  ("id", "knowledge_node_id")},
+        "placement": {key: resource.get(key) for key in
+                      ("route_id", "source_id", "kind", "locator", "angle",
+                       "angle_detail", "scope_triage", "vault_path", "url")},
+    }
+    return _fingerprint_payload(payload)
+
+
+def _legacy_angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
+    """The v1 payload, kept only so already-bound reviews stay current."""
     payload = {
         "contract": "angle-review-v1",
         "route": route,
@@ -51,9 +81,7 @@ def angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
                       ("route_id", "source_id", "kind", "locator", "angle",
                        "angle_detail", "scope_triage", "vault_path", "url")},
     }
-    raw = json.dumps(payload, sort_keys=True, ensure_ascii=False,
-                     separators=(",", ":")).encode("utf-8")
-    return "sha256:" + hashlib.sha256(raw).hexdigest()
+    return _fingerprint_payload(payload)
 
 
 def bind_angle_reviews(map_data: dict, source_map: dict | None,
@@ -342,7 +370,9 @@ class ChecksPlanRigor:
                        for key in ("reviewed_by", "reviewed_on", "rationale")):
             return "stale"
         try:
-            if review.get("fingerprint") != angle_review_fingerprint(route, stage, resource):
+            if review.get("fingerprint") not in (
+                    angle_review_fingerprint(route, stage, resource),
+                    _legacy_angle_review_fingerprint(route, stage, resource)):
                 return "stale"
         except (TypeError, ValueError):
             return "stale"

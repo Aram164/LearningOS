@@ -285,3 +285,40 @@ def test_a_stage_without_a_review_has_nothing_to_renew(mini_repo, tmp_path):
         tmp_path, runtime_review={"reviewed_by": "Aram", "reviewed_on": "2026-10-30"}))
     assert check.returncode != 0
     assert "no runtime_review to renew" in check.stderr
+
+
+def test_runtime_review_fingerprint_uses_the_material_ref_route():
+    """Canonical route identity: a compact row and its expanded form bind
+    the same runtime review, whichever stage spelling is fingerprinted."""
+    from learning_os.derive.learning_runtime import (
+        bind_runtime_reviews,
+        runtime_review_fingerprint,
+        runtime_review_stage_view,
+    )
+
+    authored_stage = {
+        "id": "stage-demo",
+        "runtime_target": {"concept": "c", "capability": "derive",
+                           "evidence_spec": ["show it"]},
+        "resources": [{
+            "affordance": "read",
+            "material_ref": {"route_id": "route-demo",
+                             "inherit": ["label"]},
+        }],
+        "runtime_review": {"reviewed_by": "operator-test",
+                           "reviewed_on": "2026-09-30"},
+    }
+    expanded_stage = {
+        **authored_stage,
+        "resources": [{"affordance": "read", "label": "Demo"}],
+    }
+    view = runtime_review_stage_view(expanded_stage, authored_stage)
+    assert runtime_review_fingerprint(view) == runtime_review_fingerprint(authored_stage)
+    bound = bind_runtime_reviews({"stages": [authored_stage]})
+    fingerprint = bound["stages"][0]["runtime_review"]["fingerprint"]
+    assert fingerprint == runtime_review_fingerprint(view)
+    # Adding the top-level spelling later changes nothing.
+    topped = {**authored_stage, "resources": [{
+        "affordance": "read", "route_id": "route-demo",
+        "material_ref": {"route_id": "route-demo", "inherit": ["label"]}}]}
+    assert runtime_review_fingerprint(topped) == fingerprint

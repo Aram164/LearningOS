@@ -1895,3 +1895,107 @@ def test_unit_revision_report_out_allows_venv_scratch(mini_repo, tmp_path):
                      "--report-out", str(mini_repo / "work" / "report.json"))
     assert inside.returncode == 2, inside.stdout
     assert "must be outside the repository" in inside.stderr
+
+
+def test_verify_envelope_mode_admits_a_unit_revision_with_route_changes(
+        mini_repo, tmp_path):
+    """Envelope verification must accept the module source-map write and a
+    pre-existing dossier the revision did not rewrite."""
+    from learning_os.store.session_ledger import sealed_request_path
+
+    _compact_setup(mini_repo)
+    revision = _compact_revision(mini_repo, route_changes={
+        "update": [{"route_id": "route-demo-book",
+                    "fields": {"angle": "A sharper angle."}}]})
+    applied = _seal_one(mini_repo, capability="unit.plan.revise",
+                        payload={"unit_id": "unit-demo-l01", "record": revision},
+                        key="verify-envelope-revise-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    envelope = sealed_request_path(mini_repo, "verify-envelope-revise-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 0, verify.stdout + verify.stderr
+    assert "state: committed-and-verified" in verify.stdout
+
+
+def test_routing_problems_see_the_live_map_when_a_revision_omits_it(mini_repo):
+    """A package entry without study_map must not blind routing to the
+    live map's stage resources."""
+    from learning_os.domain.plan_import import module_plan_routing_problems
+    from learning_os.store.loader import load_repo
+
+    _compact_setup(mini_repo)
+    repo = load_repo(mini_repo)
+    unit_data = __import__("copy").deepcopy(repo.units["unit-demo-l01"].data)
+    unit_data.pop("scope_sources", None)
+    unit_data.pop("source_selections", None)
+    package = {
+        "source_map": {"module_id": "module-demo", "sources": []},
+        "units": [{"unit": unit_data, "study_map": None}],
+    }
+    problems = module_plan_routing_problems(repo, "module-demo", package)
+    assert any("source-demo-book" in problem for problem in problems), problems
+
+
+def test_noop_unit_revision_refuses_at_check(mini_repo, tmp_path):
+    """A revision that changes no canonical bytes refuses on --check,
+    not only when its sealed envelope is applied."""
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(mini_repo, route_changes={
+        "update": [{"route_id": "route-demo-book",
+                    "fields": {"angle": "A synthetic angle."}}]})
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode != 0
+    assert "changes no canonical bytes" in proc.stderr
+
+
+def test_full_map_revision_honours_the_singular_reorder_declaration(
+        mini_repo, tmp_path):
+    """plan_contract.intentional_reorder applies to a full study_map
+    revision, not only to compact stage_order revisions."""
+    _two_stage_unit(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["stages"] = list(reversed(data["stages"]))
+    for number, stage in enumerate(data["stages"], 1):
+        stage["number"] = number
+    revision = _compact_revision(mini_repo, study_map=data)
+    revision["plan_contract"]["intentional_reorder"] = "Work the second stage first."
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_route_and_stage_patch_on_a_compact_map_stays_bound(mini_repo, tmp_path):
+    """Route updates plus stage patches over material_ref rows: the
+    revision starts from the authored map, so bound reviews match the
+    staged expansion against the new source map."""
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["stages"][0].update(knowledge_node_id="knowledge-demo-expectation")
+    data["stages"][0]["resources"] = [{
+        "id": "resource-reviewed", "kind": "read",
+        "material_ref": {"route_id": "route-demo-book",
+                         "inherit": ["label", "source_id", "locator",
+                                     "angle", "angle_detail"]},
+        "angle_review": {"kind": "refinement", "reviewed_by": "operator-test",
+                         "reviewed_on": "2026-09-30",
+                         "rationale": "Deliberate refinement."},
+    }]
+    from repo_builders import write_yaml as _write_yaml
+
+    _write_yaml(path, data)
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+    write_baseline(mini_repo, collect(mini_repo)[0], "compact bound fixture")
+    revision = _compact_revision(
+        mini_repo,
+        route_changes={"update": [{"route_id": "route-demo-book", "fields": {
+            "angle": "A revised route angle.",
+            "angle_detail": "A revised route angle in long form."}}]},
+        stage_patches=[{"stage_id": "stage-demo",
+                        "fields": {"title": "Patched stage title"}}])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr

@@ -430,7 +430,12 @@ def module_plan_routing_problems(repo: Any, module_id: str,
             continue
         uid = entry["unit"].get("id")
         if isinstance(uid, str):
-            units[uid] = (entry["unit"], entry.get("study_map"))
+            # An entry that omits study_map does not touch the map: keep the
+            # live one, or routing goes blind to its stage resources.
+            proposed_map = entry.get("study_map")
+            if proposed_map is None and uid in units:
+                proposed_map = units[uid][1]
+            units[uid] = (entry["unit"], proposed_map)
 
     problems: list[str] = []
     for uid, (unit_data, map_data) in sorted(units.items()):
@@ -624,14 +629,11 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
             continue
         base_data = None
         if needs_map and current_map is not None:
-            # An append patch carries authored placements forward, so the whole
-            # map starts from the authored form; legacy patches keep the
-            # expanded base they were reviewed against.
-            if any(isinstance(patch, dict) and "resources_append" in patch
-                   for patch in patches):
-                base_data = current_map.authored_data or current_map.data
-            else:
-                base_data = current_map.data
+            # Compact edits always start from the authored form when one
+            # exists: the expanded base was expanded against the old source
+            # map, and preserve_map_refs would silently restore material_ref
+            # rows whose fingerprints were bound against those old fields.
+            base_data = current_map.authored_data or current_map.data
         study_map = copy.deepcopy(base_data) if base_data is not None else None
         if study_map is not None:
             problems.extend(apply_stage_patches(study_map, patches, where))
@@ -882,7 +884,7 @@ def minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
             continue
         parts = rel.parts
         if len(parts) >= 4 and parts[0] == "curriculum" and parts[1] == "modules" \
-                and parts[3] == "source-map.yaml":
+                and parts[3] in ("source-map.yaml", "module.yaml"):
             if module_id not in ids:
                 ids.append(module_id)
         elif "units" in parts:
@@ -892,8 +894,19 @@ def minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
                 did = dossier.get("id") if isinstance(dossier, dict) else None
                 if isinstance(did, str) and did not in ids:
                     ids.append(did)
-            elif uid not in ids:
-                ids.append(uid)
+            else:
+                if uid not in ids:
+                    ids.append(uid)
+                if rel.name == "study-map.yaml":
+                    # Every other map-mutating capability guards the map's
+                    # own artifact id alongside its unit's.
+                    try:
+                        written = yaml.safe_load(writes[path])
+                    except (yaml.YAMLError, TypeError):
+                        written = None
+                    map_id = written.get("id") if isinstance(written, dict) else None
+                    if isinstance(map_id, str) and map_id not in ids:
+                        ids.append(map_id)
     return ids
 
 

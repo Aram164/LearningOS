@@ -828,3 +828,22 @@ def test_operator_channel_cannot_present_a_learner_gesture_for_a_compact_edit(mi
     assert refused.returncode != 0
     assert 'authorized by a reviewed action in the LearningOS app' in refused.stdout + refused.stderr
     assert canonical_fingerprint(mini_repo) == untouched
+
+
+def test_route_patch_refuses_an_evidential_change_with_a_dossier(mini_repo):
+    """route.patch cannot leave an approved dossier silently stale: an
+    evidential route change on a dossier unit refuses at check time."""
+    from repo_builders import _compact_setup
+
+    _compact_setup(mini_repo)
+    from repo_builders import SLICED_LECTURE_TEXT
+
+    evidence = {"claim_id": "covers:route-demo-book", "evidence": [{
+        "kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
+        "page": 1, "text": SLICED_LECTURE_TEXT}]}
+    proc = run_los(mini_repo, "route-patch", "unit-demo-l01", "route-demo-book",
+                   "--changes", json.dumps({"url": "https://example.org/lecture-02"}),
+                   "--claim-evidence", json.dumps(evidence),
+                   "--check")
+    assert proc.returncode != 0
+    assert "replacement dossier" in proc.stderr

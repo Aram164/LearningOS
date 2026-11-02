@@ -10,6 +10,7 @@ from dataclasses import replace
 
 import yaml
 
+from learning_os.app._plan_gate import _semantic_ack_problems, _staged_synthesis_errors
 from learning_os.app._plan_gate import compose_plan_gate_errors as _compose_plan_gate_errors
 from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
@@ -28,6 +29,7 @@ from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
+from learning_os.derive.material_synthesis import MaterialSynthesisError
 from learning_os.derive.semantics.claim_status import claim_impacts, observe_claims
 from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
@@ -224,23 +226,36 @@ def compaction_plan(repo, module_id):
                                "referenced_routes": len(used)}
 
 
-def _check_gate(root, writes):
+def _check_gate(root, writes, *, module_id=None, live_repo=None, touched_units=()):
     """The plan preflight as a check ``validate_extra`` (SPEC (bd) item 3).
 
-    Returns exactly what ``_module_plan_validation_errors(root, writes)``
-    returned: the real-tree perimeter layer plus the staged run's content
-    errors and warning delta, from ``check_proposal``'s one validation, and
-    nothing when there are no writes (the preflight did not run then).
+    Returns the composed plan-gate refusal: the real-tree perimeter layer,
+    staged synthesis and semantic-acknowledgment errors when a module
+    context is given, the staged run's content errors and warning delta,
+    and nothing when there are no writes (the preflight did not run then).
+    A route patch that changes a route evidentially on a unit with an
+    approved dossier must fail here — never commit and leave the dossier
+    silently stale (it needs unit.plan.revise with a replacement).
     """
     def validate_extra(staged_repo, staged_issues):
         if not writes:
             return []
         signatures, content_errors = signatures_from_issues(staged_issues)
+        synthesis_errors: list[str] = []
+        ack_errors: list[str] = []
+        if module_id is not None and live_repo is not None:
+            try:
+                synthesis_errors = _staged_synthesis_errors(
+                    root, module_id, live_repo, staged_repo.root, staged_repo, [])
+            except MaterialSynthesisError as exc:
+                synthesis_errors = [f"material_syntheses: staged state unreadable: {exc}"]
+            ack_errors = _semantic_ack_problems(
+                module_id, live_repo, staged_repo, list(touched_units), [])
         return _compose_plan_gate_errors(
             root,
             perimeter_errors=_real_perimeter_errors(root),
-            synthesis_errors=[],
-            ack_errors=[],
+            synthesis_errors=synthesis_errors,
+            ack_errors=ack_errors,
             content_errors=content_errors,
             signatures=signatures)
 
@@ -342,7 +357,13 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
     if ctx.gateway is None and not req.get("check"):
         # Only a direct CLI apply — which the commit refuses as
         # envelope-less — keeps the shadow refusal text it always had.
-        errors = _module_plan_validation_errors(root, writes) if writes else []
+        errors = _module_plan_validation_errors(
+            root, writes,
+            module_id=unit.module_id if capability == "route.patch" else None,
+            syntheses=[] if capability == "route.patch" else None,
+            touched_units=[req["unit_id"]] if capability == "route.patch" else None,
+            acknowledgments=[] if capability == "route.patch" else None,
+        ) if writes else []
         if errors:
             raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, errors[:8])))
     if checking:
@@ -354,14 +375,23 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
                 capability=capability,
                 writes=writes,
                 artifact_ids=sorted(artifacts),
-                validate_extra=_check_gate(root, writes),
+                validate_extra=_check_gate(
+                    root, writes,
+                    module_id=unit.module_id if capability == "route.patch" else None,
+                    live_repo=repo if capability == "route.patch" else None,
+                    touched_units=(req["unit_id"],) if capability == "route.patch" else ()),
             ),
 
         )
     if not writes:
         raise WriteRefused("no material changes to apply",
                            site=f"{ctx.operation}.no-changes")
-    validate_extra, gate_errors = _plan_apply_gate(root)
+    if capability == "route.patch":
+        validate_extra, gate_errors = _plan_apply_gate(
+            root, live_repo=repo, module_id=unit.module_id,
+            syntheses=[], touched_units=[req["unit_id"]], acknowledgments=[])
+    else:
+        validate_extra, gate_errors = _plan_apply_gate(root)
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:

@@ -612,12 +612,12 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             continue
         if not isinstance(map_data, dict) or map_data.get("unit_id") != uid:
             _plan_refuse(ctx, f"study map must belong to {uid}", "map-foreign-unit")
-        map_data = _bind_runtime_reviews(map_data)
         map_data = _bind_angle_reviews(
             map_data,
             source_map if isinstance(source_map, dict)
             else repo.module_source_maps.get(module_id, {}),
             module_id, uid)
+        map_data = _bind_runtime_reviews(map_data)
         existing_map = next((sm for sm in repo.study_maps.values() if sm.unit_id == uid), None)
         writes[unit_dir / "study-map.yaml"] = (
             _dump_study_map(existing_map, map_data) if existing_map else _dump_yaml(map_data)
@@ -633,6 +633,11 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             if not note.exists():
                 writes[note] = ""
 
+    map_artifact_ids = [
+        entry["study_map"]["id"] for entry in units
+        if isinstance(entry, dict) and isinstance(entry.get("study_map"), dict)
+        and isinstance(entry["study_map"].get("id"), str)
+    ]
     synthesis_ids: list[str] = []
     for unit_id, dossier in synthesis_entries:
         unit = repo.units.get(unit_id)
@@ -719,7 +724,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             )
     if minimal_writes:
         writes = _drop_unchanged_writes(writes)
-        if not writes and not req.get("check"):
+        if not writes and not lineage_will_change:
             _plan_refuse(ctx, "revision changes no canonical bytes; nothing to apply",
                          "noop-revision")
     basis_unit = req.get("staged_basis")
@@ -770,7 +775,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         payload = review_input[1] if review_input else {
             "module_id": module_id, "file": str(source), "file_sha256": package_sha}
         owners = result["commit_artifact_ids"] if minimal_writes \
-            else [module_id, *sorted(seen_units), *synthesis_ids]
+            else [module_id, *sorted(seen_units), *map_artifact_ids, *synthesis_ids]
         owners = lineage_artifacts(owners, lineage_will_change)
         result["expected_revisions"] = {aid: load_revisions(root).get(aid, 0) for aid in owners}
         result["commit_artifact_ids"] = owners
@@ -829,7 +834,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         artifact_ids = _minimal_artifact_ids(
             root, module_id, writes, synthesis_entries)
     else:
-        artifact_ids = [module_id, *sorted(seen_units), *synthesis_ids]
+        artifact_ids = [module_id, *sorted(seen_units), *map_artifact_ids, *synthesis_ids]
     artifact_ids = lineage_artifacts(artifact_ids, lineage_will_change)
     validate_extra, gate_errors = _plan_apply_gate(
         root, live_repo=repo, module_id=module_id,
@@ -1312,11 +1317,7 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
         if current_map is None:
             compact_problems.append("unit revision has no current study map to patch")
         else:
-            if any(isinstance(patch, dict) and "resources_append" in patch
-                   for patch in patches):
-                base_data = current_map.authored_data or current_map.data
-            else:
-                base_data = current_map.data
+            base_data = current_map.authored_data or current_map.data
             map_data = copy.deepcopy(base_data)
             compact_problems.extend(_apply_stage_patches(map_data, patches, "unit revision"))
             compact_problems.extend(_apply_stage_additions(
@@ -1336,7 +1337,7 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
     if not isinstance(declared_reorders, list):
         declared_reorders = []
     singular = contract.get("intentional_reorder")
-    if stage_order is not None and isinstance(singular, str) and singular.strip() \
+    if isinstance(singular, str) and singular.strip() \
             and not any(isinstance(row, dict)
                         and row.get("target") == "study-map-stage-order"
                         for row in declared_reorders):

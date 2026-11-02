@@ -1094,3 +1094,21 @@ def test_report_out_allows_venv_scratch(mini_repo, tmp_path):
     assert proc.returncode == 0, proc.stderr
     assert (scratch / "scratch-report.json").is_file()
     assert canonical_fingerprint(mini_repo) == before
+
+
+def test_minimal_artifact_ids_guard_module_and_study_map():
+    """module.yaml and study-map.yaml writes guard their own artifacts."""
+    from learning_os.domain.plan_import import minimal_artifact_ids
+
+    root = ROOT
+    module_yaml = root / "curriculum/modules/module-demo/module.yaml"
+    map_yaml = (root / "curriculum/modules/module-demo/units/unit-demo-l01"
+                / "study-map.yaml")
+    writes = {
+        module_yaml: "id: module-demo\n",
+        map_yaml: "id: study-map-demo-l01\nunit_id: unit-demo-l01\n",
+    }
+    ids = minimal_artifact_ids(root, "module-demo", writes, [])
+    assert "module-demo" in ids
+    assert "unit-demo-l01" in ids
+    assert "study-map-demo-l01" in ids

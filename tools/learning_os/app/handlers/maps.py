@@ -413,9 +413,9 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         except ValueError as exc:
             raise WriteRefused(str(exc), site=f"{ctx.operation}.structural-edit-invalid",
                                prefixed=True, exit_code=2) from exc
-    data = _bind_runtime_reviews(data)
     data = _bind_angle_reviews(data, repo.module_source_maps.get(unit.module_id, {}),
                                unit.module_id, unit.id)
+    data = _bind_runtime_reviews(data)
     diff: dict = {"replacement": current_data is not None}
 
     if current_data is None:

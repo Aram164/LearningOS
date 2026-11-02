@@ -82,6 +82,49 @@ def activity_fingerprint(repo: Repo, resource: dict) -> str | None:
 RUNTIME_REVIEW_VERSION = "runtime-review-v1"
 
 
+def _resource_route_id(resource: dict) -> str:
+    """The one canonical route identity of a resource, however it is spelled.
+
+    A compact row names its route through ``material_ref.route_id``; the
+    expanded row may or may not also carry it at the top level. The review
+    fingerprint must see the same identity in both spellings, or adding the
+    top-level spelling (as the angle-review binder does) would invalidate
+    a runtime review whose route and affordance never changed.
+    """
+    route_id = resource.get("route_id")
+    if isinstance(route_id, str) and route_id:
+        return route_id
+    ref = resource.get("material_ref")
+    if isinstance(ref, dict) and isinstance(ref.get("route_id"), str):
+        return ref["route_id"]
+    return ""
+
+
+def runtime_review_stage_view(stage: dict, authored_stage: dict | None) -> dict:
+    """The expanded stage with compact rows' route identities restored.
+
+    Expansion pops ``material_ref``, so a validator holding only the loaded
+    stage cannot see the route a compact row names. Correspondence with the
+    authored stage is by resource index, the same one expansion preserves.
+    """
+    if not isinstance(authored_stage, dict):
+        return stage
+    authored_resources = authored_stage.get("resources") or []
+    resources = stage.get("resources") or []
+    if len(authored_resources) != len(resources):
+        return stage
+    view = []
+    for resource, authored in zip(resources, authored_resources, strict=True):
+        if isinstance(resource, dict) and not resource.get("route_id") \
+                and isinstance(authored, dict) \
+                and isinstance(authored.get("material_ref"), dict) \
+                and isinstance(authored["material_ref"].get("route_id"), str):
+            view.append({**resource, "route_id": authored["material_ref"]["route_id"]})
+        else:
+            view.append(resource)
+    return {**stage, "resources": view}
+
+
 def runtime_review_fingerprint(stage: dict) -> str:
     """Bind a review attestation to one stage's exact runtime payload.
 
@@ -93,7 +136,7 @@ def runtime_review_fingerprint(stage: dict) -> str:
     """
     resources = stage.get("resources") or []
     pairs = sorted(
-        (str(resource.get("route_id") or ""), str(resource.get("affordance") or ""))
+        (_resource_route_id(resource), str(resource.get("affordance") or ""))
         for resource in resources
         if isinstance(resource, dict)
     )

@@ -545,7 +545,6 @@ def test_unbound_reviews_are_visible_even_without_a_comparison(change):
     ("route", "source_id", "source-other"),
     ("resource", "locator", "PDF p. 3"),
     ("resource", "angle", "Read a different example."),
-    ("stage", "objective", "Do something else."),
     ("stage", "id", "stage-other"),
 ])
 def test_input_changes_invalidate_an_angle_review(owner, field, value):
@@ -907,3 +906,30 @@ def test_map_import_binds_a_reviewed_material_ref_row(mini_repo, tmp_path):
     proc = run_los(mini_repo, "unit-map-import", "unit-demo-l01",
                    "--file", str(draft), "--replace", "--check")
     assert proc.returncode == 0, proc.stderr
+
+
+def test_prose_edits_do_not_stale_an_angle_review_but_relation_edits_do():
+    """v2 binds the relation, not the titles: stage/route prose may be
+    fixed without re-review, while angle and coverage changes still stale."""
+    checker, route, stage, resource = _angle_case()
+    stage["title"] = "A corrected stage title"
+    stage["objective"] = "A corrected objective."
+    route["title"] = "A corrected route title"
+    checker.check_plan_rigor()
+    assert checker.warnings == []
+    route["angle"] = "The source does not teach Bayes."
+    checker.check_plan_rigor()
+    assert "ANGLE-REVIEW-STALE" in _codes(checker)
+
+
+def test_a_v1_bound_angle_review_stays_current():
+    """Fingerprints written under the v1 payload are still accepted."""
+    from learning_os.derive.validation.plan_rigor import (
+        _legacy_angle_review_fingerprint,
+    )
+
+    checker, route, stage, resource = _angle_case()
+    resource["angle_review"]["fingerprint"] = _legacy_angle_review_fingerprint(
+        route, stage, resource)
+    checker.check_plan_rigor()
+    assert checker.warnings == []

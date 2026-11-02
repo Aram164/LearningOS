@@ -238,7 +238,10 @@ def verify(root: Path, args) -> int:
         # target unit's directory or the shared transaction ledgers.
         outside = [path for path in sorted(written_paths)
                    if not path.startswith("operations/transactions/")
-                   and f"/units/{args.unit}/" not in path]
+                   and f"/units/{args.unit}/" not in path
+                   and not (capability == "unit.plan.revise"
+                            and path.startswith("curriculum/modules/")
+                            and path.endswith("/source-map.yaml"))]
         if outside:
             failures.append("receipt writes outside the target unit: "
                             + ", ".join(outside))
@@ -330,7 +333,12 @@ def verify(root: Path, args) -> int:
                 dossier_rel = None
             wrote = dossier_rel in {row.get("path") for row in receipt.get("writes", []) or []
                                     if isinstance(row, dict)}
-            synthesis = {"before": {"present": False}, "after": {"replaced": wrote, "fresh": wrote}}
+            # Envelope mode has no recorded before-state: a dossier on disk
+            # now that this request did not write was already there. A report
+            # stripped of its disposition keeps the receipt-derived rule.
+            before_present = wrote or (report is None and destination.exists())
+            synthesis = {"before": {"present": before_present},
+                         "after": {"replaced": wrote, "fresh": wrote}}
         if not isinstance(synthesis, dict):
             raise ValueError("report has an invalid synthesis disposition")
         before, after = synthesis.get("before"), synthesis.get("after")

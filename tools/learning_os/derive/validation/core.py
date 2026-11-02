@@ -19,6 +19,7 @@ from learning_os.derive.learning_runtime import (
     read_observations,
     read_stage_results,
     runtime_review_fingerprint,
+    runtime_review_stage_view,
 )
 from learning_os.derive.validation.contract import ChecksContract
 from learning_os.derive.validation.curriculum import ChecksCurriculum
@@ -318,11 +319,21 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         for map_id in sorted(self.repo.study_maps):
             study_map = self.repo.study_maps[map_id]
             data = study_map.data or {}
+            authored = study_map.authored_data if isinstance(study_map.authored_data, dict) else {}
+            authored_stages = {
+                str(row.get("id")): row for row in (authored.get("stages") or [])
+                if isinstance(row, dict) and row.get("id")
+            }
             stages = data.get("stages") or []
             for stage in stages:
                 if not isinstance(stage, dict):
                     continue
                 resources = stage.get("resources") or []
+                # The loaded stage is expanded: a compact row's route lives
+                # only in the authored material_ref. Fingerprint the same
+                # canonical view the import binder bound.
+                stage = runtime_review_stage_view(
+                    stage, authored_stages.get(str(stage.get("id"))))
                 has_semantics = "runtime_target" in stage or any(
                     isinstance(resource, dict) and "affordance" in resource
                     for resource in resources
