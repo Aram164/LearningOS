@@ -662,3 +662,36 @@ def test_ci_bootstrap_refuses_unbound_submission_intent(pair, monkeypatch, inval
     result = _run_hook(pair["core"], refs)
     assert result.returncode == 1
     assert _invocations(pair["log"]) == []
+
+
+def _hooks_checkout(tmp_path: Path) -> Path:
+    root = Path(__file__).resolve().parent.parent
+    checkout = tmp_path / "repository"
+    (checkout / "tools" / "hooks").mkdir(parents=True)
+    shutil.copy(root / "Makefile", checkout / "Makefile")
+    for hook in ("pre-commit", "post-commit", "pre-push"):
+        shutil.copy(root / "tools" / "hooks" / hook, checkout / "tools" / "hooks" / hook)
+    subprocess.run(["git", "init", "-q"], cwd=checkout, check=True)
+    return checkout
+
+
+def test_make_hooks_is_idempotent_when_core_runs_the_canonical_directory(tmp_path):
+    checkout = _hooks_checkout(tmp_path)
+    ui_hooks = tmp_path / "obsidian-ui" / ".git" / "hooks"
+    ui_hooks.mkdir(parents=True)
+    subprocess.run(["git", "config", "core.hooksPath", str(checkout / "tools" / "hooks")],
+                   cwd=checkout, check=True)
+    result = subprocess.run(["make", "hooks"], cwd=checkout, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    # Reaching the UI step is what the same-file failure used to prevent.
+    assert (ui_hooks / "pre-push").read_bytes() == (checkout / "tools" / "hooks" / "pre-push").read_bytes()
+
+
+def test_make_hooks_still_copies_to_a_distinct_hooks_directory(tmp_path):
+    checkout = _hooks_checkout(tmp_path)
+    result = subprocess.run(["make", "hooks"], cwd=checkout, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    for hook in ("pre-commit", "post-commit", "pre-push"):
+        installed = checkout / ".git" / "hooks" / hook
+        assert installed.read_bytes() == (checkout / "tools" / "hooks" / hook).read_bytes()
+        assert os.access(installed, os.X_OK)

@@ -257,9 +257,9 @@ scrut:
 
 hooks:
 	HOOKS_DIR=`git rev-parse --git-path hooks`; mkdir -p "$$HOOKS_DIR"; \
-	install -m 0755 tools/hooks/pre-commit "$$HOOKS_DIR/pre-commit"; \
-	install -m 0755 tools/hooks/post-commit "$$HOOKS_DIR/post-commit"; \
-	install -m 0755 tools/hooks/pre-push "$$HOOKS_DIR/pre-push"
+	for hook in pre-commit post-commit pre-push; do \
+		[ "tools/hooks/$$hook" -ef "$$HOOKS_DIR/$$hook" ] || install -m 0755 "tools/hooks/$$hook" "$$HOOKS_DIR/$$hook" || exit 1; \
+	done
 	@if [ -d ../obsidian-ui/.git/hooks ]; then \
 		install -m 0755 tools/hooks/pre-push ../obsidian-ui/.git/hooks/pre-push; \
 	fi
