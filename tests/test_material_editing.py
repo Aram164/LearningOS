@@ -418,7 +418,26 @@ def test_structural_review_names_the_added_row_ahead_of_the_exact_arrays(mini_re
     assert [row['id'] for row in change['added']] == ['resource-new-appended']
     assert change['removed'] == [] and change['reordered'] is False
     assert list(diff).index('resource_changes') < list(diff).index('content_changes')
-    exact = next(row for row in diff['content_changes'] if row['field'] == 'resources')
+    # Only rows were added, so the arrays give way to what proves them unchanged.
+    summary = next(row for row in diff['content_changes'] if row['field'] == 'resources')
+    assert summary['after']['count'] == summary['before']['count'] + 1
+    assert summary['after']['added_at'] == [summary['before']['count']]
+    assert summary['before']['sha256'] != summary['after']['sha256']
+    assert 'resource-new-appended' not in json.dumps(summary)
+
+
+def test_full_map_replacement_review_keeps_the_exact_arrays(mini_repo, tmp_path):
+    _path, before = _structural_fixture(mini_repo)
+    data = copy.deepcopy(before)
+    stage = next(s for s in data['stages'] if s['id'] == 'stage-demo')
+    stage['resources'] = [*stage['resources'], {**stage['resources'][-1], 'id': 'resource-copied-row'}]
+    draft = tmp_path / 'full.yaml'
+    draft.write_text(yaml.safe_dump(data))
+    check = run_los(mini_repo, 'unit-map-import', 'unit-demo-l01', '--file', str(draft), '--replace', '--check')
+    assert check.returncode == 0, check.stderr
+    exact = next(row for row in json.loads(check.stdout)['diff']['content_changes']
+                 if row['field'] == 'resources')
+    assert isinstance(exact['before'], list) and isinstance(exact['after'], list)
     assert len(exact['after']) == len(exact['before']) + 1
 
 

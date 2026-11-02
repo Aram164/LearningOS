@@ -697,6 +697,8 @@ first map has no compact form and refuses validation errors only.
 Use the normal `unit-map-import UNIT --file FILE --replace --check` preflight.
 Its `diff.resource_changes` names each stage's added and removed rows ahead of the
 exact arrays in `diff.content_changes`, so read it even when you cut a long review.
+When a structural edit only adds rows, `content_changes` gives each array's count
+and digest and the added positions instead, because the added rows are the change.
 Review the full resulting order and changed resource fields, then apply the same
 file digest, snapshot and revisions through `unit.map.import`. The reason lives
 in the bound file; do not combine structural files with reset, retire or reorder

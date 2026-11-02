@@ -131,7 +131,9 @@ def _resource_changes(before_stages: dict, effective: dict) -> list[dict]:
 
     One appended row otherwise sits inside two long arrays: a reader has to
     compare them, and an operator that cuts a long review never reaches the row.
-    The exact before and after stay in ``content_changes``.
+    Full arrays stay in ``content_changes``, except for a compact edit that
+    only adds rows: there the added rows here are the exact change, and the
+    arrays would repeat every unchanged row (#85).
     """
     changes = []
     for stage in effective.get("stages", []):
@@ -148,6 +150,21 @@ def _resource_changes(before_stages: dict, effective: dict) -> list[dict]:
             "reordered": [row for row in old if row in new] != [row for row in new if row in old],
         })
     return changes
+
+
+def _additions_only(change: dict) -> bool:
+    """Whether a row-level change fully determines the new array from the old."""
+    return (not change["removed"] and not change["reordered"]
+            and change["after_count"] - change["before_count"] == len(change["added"]))
+
+
+def _resources_summary(rows: list, added: list | None = None) -> dict:
+    """Stand in for an array whose row-level change is already exact."""
+    payload = json.dumps(rows, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
+    summary = {"count": len(rows), "sha256": "sha256:" + hashlib.sha256(payload).hexdigest()}
+    if added is not None:
+        summary["added_at"] = [index for index, row in enumerate(rows) if row in added]
+    return summary
 
 
 def _stage_evidence(root: Path, stage: dict) -> dict:
@@ -478,13 +495,21 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     resource_changes = _resource_changes(before_stages, effective)
     if resource_changes:
         diff["resource_changes"] = resource_changes
+    additions = {change["stage_id"]: change["added"] for change in resource_changes
+                 if structural and _additions_only(change)}
     content_changes = []
     for stage in effective.get("stages", []):
         before = before_stages.get(stage["id"], {})
         for field in sorted(set(before) | set(stage)):
             if field in {"id", *_PRESERVED_STAGE_STATE}:
                 continue
-            if before.get(field) != stage.get(field):
+            if field == "resources" and stage["id"] in additions:
+                content_changes.append({
+                    "stage_id": stage["id"], "field": field,
+                    "before": _resources_summary(before.get(field) or []),
+                    "after": _resources_summary(stage.get(field) or [], additions[stage["id"]]),
+                })
+            elif before.get(field) != stage.get(field):
                 content_changes.append({"stage_id": stage["id"], "field": field,
                                         "before": before.get(field), "after": stage.get(field)})
     diff["content_changes"] = content_changes
