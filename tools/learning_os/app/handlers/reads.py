@@ -131,20 +131,45 @@ def _recorded_options(manifest) -> list[dict]:
     not which active workspace to choose next. Each active workspace's own
     next action carries its id and source path, never a derived ranking. A
     workspace with no recorded action still appears, with an empty action,
-    so no track silently drops out of the page.
+    so no track silently drops out of the page. A track whose linked modules
+    have no sitting left says so in ``past_last_sitting``; it stays listed, and
+    the date is a fact to weigh, not a ranking.
     """
+    from learning_os.store import observations
+
+    sittings = _last_sittings(manifest)
+    today = observations.today().isoformat()
     options = []
     for record in manifest.get("records", []):
         if not isinstance(record, dict) or record.get("type") != "workspace":
             continue
         if record.get("archived") or record.get("status") != "active":
             continue
-        options.append({
+        option = {
             "workspace_id": record.get("id"),
             "next_action": record.get("next_action") or "",
             "source": record.get("path") or "",
-        })
+        }
+        linked = {mid: sittings[mid] for mid in record.get("module_ids") or [] if mid in sittings}
+        if linked and all(last < today for last in linked.values()):
+            option["past_last_sitting"] = dict(sorted(linked.items()))
+        options.append(option)
     return sorted(options, key=lambda row: str(row["workspace_id"]))
+
+
+def _last_sittings(manifest) -> dict[str, str]:
+    """Each module's last examination day, for modules that declare sittings."""
+    last: dict[str, str] = {}
+    for record in manifest.get("records", []):
+        if not isinstance(record, dict) or record.get("type") != "module":
+            continue
+        days = [str(sitting.get("end_date") or sitting.get("date") or "")
+                for sitting in (record.get("examination") or {}).get("sittings") or []
+                if isinstance(sitting, dict)]
+        days = [day for day in days if day]
+        if days:
+            last[str(record.get("id"))] = max(days)
+    return last
 
 
 def _brief_deadlines(manifest: dict) -> list[dict]:

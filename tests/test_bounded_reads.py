@@ -557,7 +557,9 @@ def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
     assert brief.returncode == 0, brief.stderr
     data = json.loads(brief.stdout)
     assert data["pointer_state"] == "missing"
-    assert data["recorded_options"] == [
+    # The fixture's last sitting has a fixed date, so its marker follows the clock.
+    assert [{key: row[key] for key in ("workspace_id", "next_action", "source")}
+            for row in data["recorded_options"]] == [
         {"workspace_id": "workspace-demo",
          "next_action": "Do the demo thing.",
          "source": "work/active/workspace-demo/CONTEXT.md"},
@@ -566,7 +568,7 @@ def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
          "source": "work/active/workspace-second/CONTEXT.md"},
     ]
     for option in data["recorded_options"]:
-        assert set(option) == {"workspace_id", "next_action", "source"}
+        assert set(option) <= {"workspace_id", "next_action", "source", "past_last_sitting"}
     assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
 
 
@@ -1058,3 +1060,37 @@ def test_compact_unit_list_refuses_unreadable_unit(mini_repo):
     compact = run_los(mini_repo, "unit-list", "--compact")
     assert compact.returncode != 0, compact.stderr
     assert not compact.stdout
+
+
+def _set_demo_sittings(root, sitting_days):
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"] = [
+        {**module["examination"]["sittings"][0], "date": day, "termin": index + 1}
+        for index, day in enumerate(sitting_days)]
+    write_yaml(module_path, module)
+
+
+def test_brief_marks_a_recorded_option_whose_last_sitting_has_passed(mini_repo):
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    past = [(_dt.date.today() - _dt.timedelta(days=days)).isoformat() for days in (40, 10)]
+    _set_demo_sittings(mini_repo, past)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    option = json.loads(brief.stdout)["recorded_options"][0]
+    # Marked, not dropped or reranked: the learner may still want this track.
+    assert option["workspace_id"] == "workspace-demo"
+    assert option["past_last_sitting"] == {"module-demo": past[1]}
+
+
+def test_brief_leaves_a_recorded_option_with_a_sitting_ahead_unmarked(mini_repo):
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    days = [(_dt.date.today() + _dt.timedelta(days=offset)).isoformat() for offset in (-10, 10)]
+    _set_demo_sittings(mini_repo, days)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    assert "past_last_sitting" not in json.loads(brief.stdout)["recorded_options"][0]
