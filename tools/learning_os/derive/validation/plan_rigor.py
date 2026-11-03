@@ -25,7 +25,12 @@ from collections import defaultdict
 from pathlib import PurePosixPath
 from typing import Literal
 
-from learning_os.domain.material_refs import MATERIAL_FIELDS, unit_routes
+from learning_os.domain.material_refs import (
+    MATERIAL_FIELDS,
+    MaterialReferenceError,
+    expand_map,
+    unit_routes,
+)
 from learning_os.domain.route_identity import route_with_identity
 from learning_os.store.loading.yamlio import LoaderError, load_yaml
 from learning_os.store.materials.resolution import (
@@ -82,6 +87,115 @@ def _legacy_angle_review_fingerprint(route: dict, stage: dict, resource: dict) -
                        "angle_detail", "scope_triage", "vault_path", "url")},
     }
     return _fingerprint_payload(payload)
+
+
+def _route_by_id(source_map: dict | None, module_id: str, unit_id: str) -> dict:
+    if not isinstance(source_map, dict):
+        return {}
+    return {str(route["id"]): route
+            for route in unit_routes(source_map, module_id, unit_id)}
+
+
+def _view_route_id(authored: dict, expanded: dict) -> str | None:
+    route_id = expanded.get("route_id") or authored.get("route_id")
+    if isinstance(route_id, str) and route_id:
+        return route_id
+    ref = authored.get("material_ref")
+    if isinstance(ref, dict) and isinstance(ref.get("route_id"), str):
+        return ref["route_id"]
+    return None
+
+
+def refresh_prose_only_angle_reviews(before_map: dict | None,
+                                     before_source_map: dict | None,
+                                     after_map: dict,
+                                     after_source_map: dict | None,
+                                     module_id: str, unit_id: str) -> dict:
+    """Upgrade a still-current review's fingerprint to v2 on prose edits.
+
+    A review bound under v1 (or v2) whose relation payload is unchanged —
+    only prose the v2 payload excludes moved (stage title/objective, route
+    title) — is transparently rebound to the v2 fingerprint. A relation
+    change keeps the stored fingerprint, and the validator flags it stale.
+    Returns a copy; maps that cannot be expanded are returned unchanged.
+    """
+    if not isinstance(before_map, dict) or not isinstance(after_map, dict):
+        return after_map
+    if not isinstance(after_map.get("stages"), list):
+        return after_map
+    try:
+        before_expanded = expand_map(before_map, before_source_map or {},
+                                     module_id, unit_id)
+        after_expanded = expand_map(after_map, after_source_map or {},
+                                    module_id, unit_id)
+    except (MaterialReferenceError, TypeError, ValueError, KeyError):
+        return after_map
+    before_routes = _route_by_id(before_source_map, module_id, unit_id)
+    after_routes = _route_by_id(after_source_map, module_id, unit_id)
+    before_stages = {
+        str(authored.get("id")): (authored, expanded)
+        for authored, expanded in zip(before_map.get("stages") or [],
+                                      before_expanded.get("stages") or [],
+                                      strict=False)
+        if isinstance(authored, dict) and isinstance(expanded, dict)
+        and authored.get("id")
+    }
+    refreshed = copy.deepcopy(after_map)
+    for authored_stage, expanded_stage, refreshed_stage in zip(
+            after_map.get("stages") or [], after_expanded.get("stages") or [],
+            refreshed.get("stages") or [], strict=False):
+        if not isinstance(authored_stage, dict) or not isinstance(expanded_stage, dict):
+            continue
+        before_pair = before_stages.get(str(authored_stage.get("id")))
+        if before_pair is None:
+            continue
+        before_authored_stage, before_expanded_stage = before_pair
+        before_authored = before_authored_stage.get("resources") or []
+        before_expanded_resources = before_expanded_stage.get("resources") or []
+        for authored, expanded, target in zip(
+                authored_stage.get("resources") or [],
+                expanded_stage.get("resources") or [],
+                refreshed_stage.get("resources") or [], strict=False):
+            if not isinstance(authored, dict) or not isinstance(target, dict):
+                continue
+            review = target.get("angle_review")
+            if not isinstance(review, dict):
+                continue
+            fingerprint = review.get("fingerprint")
+            if not isinstance(fingerprint, str) or not fingerprint:
+                continue
+            index = next((i for i, row in enumerate(before_authored)
+                          if isinstance(row, dict)
+                          and authored.get("id") is not None
+                          and row.get("id") == authored.get("id")), None)
+            if index is None or index >= len(before_expanded_resources):
+                continue
+            before_authored_row = before_authored[index]
+            before_expanded_row = before_expanded_resources[index]
+            if not isinstance(before_authored_row, dict) \
+                    or not isinstance(before_expanded_row, dict):
+                continue
+            before_route = before_routes.get(
+                _view_route_id(before_authored_row, before_expanded_row) or "")
+            after_route = after_routes.get(
+                _view_route_id(authored, expanded) or "")
+            if before_route is None or after_route is None:
+                continue
+            before_v2 = angle_review_fingerprint(
+                before_route, before_expanded_stage, before_expanded_row)
+            current_before = fingerprint in (before_v2, _legacy_angle_review_fingerprint(
+                before_route, before_expanded_stage, before_expanded_row))
+            after_v2 = angle_review_fingerprint(
+                after_route, expanded_stage, expanded)
+            current_after = fingerprint in (after_v2, _legacy_angle_review_fingerprint(
+                after_route, expanded_stage, expanded))
+            if current_before and not current_after and before_v2 == after_v2:
+                review["fingerprint"] = after_v2
+                if "material_ref" in target and "route_id" not in target:
+                    route_id = _view_route_id(authored, expanded)
+                    if route_id:
+                        target["route_id"] = route_id
+    return refreshed
 
 
 def bind_angle_reviews(map_data: dict, source_map: dict | None,

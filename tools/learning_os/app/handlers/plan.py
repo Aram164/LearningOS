@@ -55,8 +55,14 @@ from learning_os.derive.semantics.lineage import (
 )
 from learning_os.derive.semesters import module_listing as _module_listing
 from learning_os.derive.validation.plan_rigor import bind_angle_reviews as _bind_angle_reviews
+from learning_os.derive.validation.plan_rigor import (
+    refresh_prose_only_angle_reviews as _refresh_angle_reviews,
+)
 from learning_os.domain.failures import NotFound, RevisionConflict, WriteRefused
 from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
+from learning_os.domain.plan_import import (
+    apply_material_synthesis_patch as _apply_synthesis_patch,
+)
 from learning_os.domain.plan_import import apply_stage_additions as _apply_stage_additions
 from learning_os.domain.plan_import import apply_stage_order as _apply_stage_order
 from learning_os.domain.plan_import import apply_stage_patches as _apply_stage_patches
@@ -283,7 +289,8 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
     if not isinstance(revision, dict):
         return ["unit revision must be a mapping"]
     unknown = set(revision) - {"unit_id", "plan_contract", "route_changes", "study_map",
-                               "material_synthesis", "claim_evidence", "acknowledgments",
+                               "material_synthesis", "material_synthesis_patch",
+                               "claim_evidence", "acknowledgments",
                                "unit_patch", "stage_patches", "stage_additions", "stage_order"}
     if unknown:
         problems.append(f"unknown revision fields: {sorted(unknown)}")
@@ -342,6 +349,11 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
         # the assembled package; an additions-only positioning is not a
         # reorder and must not be forced to declare one here.
     dossier = revision.get("material_synthesis")
+    synthesis_patch = revision.get("material_synthesis_patch")
+    if dossier is not None and synthesis_patch is not None:
+        problems.append("material_synthesis cannot combine with material_synthesis_patch")
+    if synthesis_patch is not None and not isinstance(synthesis_patch, dict):
+        problems.append("material_synthesis_patch must be a mapping")
     if dossier is not None and not isinstance(dossier, dict):
         problems.append("material_synthesis must be a mapping")
     elif isinstance(dossier, dict) and dossier.get("unit_id", unit_id) != unit_id:
@@ -612,13 +624,15 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             continue
         if not isinstance(map_data, dict) or map_data.get("unit_id") != uid:
             _plan_refuse(ctx, f"study map must belong to {uid}", "map-foreign-unit")
-        map_data = _bind_angle_reviews(
-            map_data,
-            source_map if isinstance(source_map, dict)
-            else repo.module_source_maps.get(module_id, {}),
-            module_id, uid)
-        map_data = _bind_runtime_reviews(map_data)
+        effective_source_map = source_map if isinstance(source_map, dict) \
+            else repo.module_source_maps.get(module_id, {})
         existing_map = next((sm for sm in repo.study_maps.values() if sm.unit_id == uid), None)
+        map_data = _refresh_angle_reviews(
+            (existing_map.authored_data or existing_map.data) if existing_map else None,
+            repo.module_source_maps.get(module_id, {}),
+            map_data, effective_source_map, module_id, uid)
+        map_data = _bind_angle_reviews(map_data, effective_source_map, module_id, uid)
+        map_data = _bind_runtime_reviews(map_data)
         writes[unit_dir / "study-map.yaml"] = (
             _dump_study_map(existing_map, map_data) if existing_map else _dump_yaml(map_data)
         )
@@ -638,6 +652,52 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         if isinstance(entry, dict) and isinstance(entry.get("study_map"), dict)
         and isinstance(entry["study_map"].get("id"), str)
     ]
+    def _dossier_needs_binding(candidate: dict) -> bool:
+        if not candidate.get("basis"):
+            return True
+        rows = list(candidate.get("route_assessments") or []) \
+            + list(candidate.get("comparisons") or [])
+        return any(isinstance(ev, dict) and not ev.get("checksum")
+                   for row in rows if isinstance(row, dict)
+                   for ev in (row.get("evidence") or []))
+
+    if any(_dossier_needs_binding(candidate) for _, candidate in synthesis_entries):
+        with _staged_shadow(root, writes) as shadow:
+            for unit_id, candidate in synthesis_entries:
+                if not _dossier_needs_binding(candidate):
+                    continue
+                try:
+                    staged_basis = current_unit_material_basis(shadow, unit_id)
+                except MaterialSynthesisError as exc:
+                    _plan_refuse(ctx, str(exc), "synthesis-basis")
+                if not candidate.get("basis"):
+                    bound_basis = dict(staged_basis)
+                    try:
+                        existing_destination = synthesis_destination(
+                            root, unit_id, repo=repo)
+                        existing_dossier = yaml.safe_load(
+                            existing_destination.read_text(encoding="utf-8")) \
+                            if existing_destination.is_file() else None
+                    except (MaterialSynthesisError, OSError, yaml.YAMLError):
+                        existing_dossier = None
+                    if isinstance(existing_dossier, dict) \
+                            and isinstance(existing_dossier.get("basis"), dict) \
+                            and "ai_provenance" in existing_dossier["basis"]:
+                        bound_basis["ai_provenance"] = copy.deepcopy(
+                            existing_dossier["basis"]["ai_provenance"])
+                    candidate["basis"] = bound_basis
+                checksums = staged_basis.get("material_checksums") or {}
+                rows = list(candidate.get("route_assessments") or []) \
+                    + list(candidate.get("comparisons") or [])
+                for row in rows:
+                    if not isinstance(row, dict):
+                        continue
+                    checksum = checksums.get(row.get("route_id"))
+                    if not isinstance(checksum, str):
+                        continue
+                    for ev in row.get("evidence") or []:
+                        if isinstance(ev, dict) and not ev.get("checksum"):
+                            ev["checksum"] = checksum
     synthesis_ids: list[str] = []
     for unit_id, dossier in synthesis_entries:
         unit = repo.units.get(unit_id)
@@ -1347,6 +1407,30 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
             "reason": singular,
         })
     dossier = copy.deepcopy(revision.get("material_synthesis"))
+    if revision.get("material_synthesis_patch") is not None:
+        try:
+            patch_destination = synthesis_destination(root, req["unit_id"], repo=repo)
+        except MaterialSynthesisError as exc:
+            _plan_refuse(ctx, str(exc), "synthesis-destination")
+        if not patch_destination.is_file():
+            _plan_refuse(ctx, "material_synthesis_patch needs an existing "
+                              "material-synthesis.yaml", "synthesis-patch-missing")
+        try:
+            current_dossier = yaml.safe_load(
+                patch_destination.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError) as exc:
+            _plan_refuse(ctx, f"existing dossier unreadable: {exc}",
+                         "synthesis-destination")
+        patched_dossier, patch_problems = _apply_synthesis_patch(
+            current_dossier, revision["material_synthesis_patch"],
+            new_map, module_id, req["unit_id"], "unit revision")
+        if patch_problems:
+            _plan_refuse(
+                ctx,
+                "unit revision material_synthesis_patch failed; no canonical files were written",
+                "synthesis-patch-failed",
+                extra=tuple(f"- {problem}" for problem in patch_problems))
+        dossier = patched_dossier
     package = {
         "module_id": module_id,
         "plan_contract": {

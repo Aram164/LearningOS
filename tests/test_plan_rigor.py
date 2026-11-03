@@ -933,3 +933,70 @@ def test_a_v1_bound_angle_review_stays_current():
         route, stage, resource)
     checker.check_plan_rigor()
     assert checker.warnings == []
+
+
+def _v1_bound_pair():
+    from learning_os.derive.validation.plan_rigor import (
+        _legacy_angle_review_fingerprint,
+    )
+    from learning_os.domain.material_refs import unit_routes
+
+    route_row = _demo_route()
+    route_row["id"] = "route-demo-book"
+    source_map = _demo_source_map(route_row)
+    route = unit_routes(source_map, "module-demo", "unit-demo")[0]
+    resource = {
+        "id": "resource-reviewed", "route_id": route["id"],
+        "source_id": "source-demo-book", "kind": "read",
+        "locator": "PDF p. 2", "angle": "Stage angle.",
+        "angle_review": {
+            "kind": "refinement", "reviewed_by": "operator-test",
+            "reviewed_on": "2026-09-30", "rationale": "Deliberate refinement.",
+        },
+    }
+    stage = {"id": "stage-demo", "title": "Demo stage",
+             "objective": "Derive it.", "resources": [resource]}
+    resource["angle_review"]["fingerprint"] = _legacy_angle_review_fingerprint(
+        route, stage, resource)
+    return source_map, {"id": "study-map-demo", "unit_id": "unit-demo",
+                        "stages": [stage]}
+
+
+def test_refresh_upgrades_a_v1_review_on_prose_only_edits():
+    import copy as _copy
+
+    from learning_os.derive.validation.plan_rigor import refresh_prose_only_angle_reviews
+
+    source_map, before = _v1_bound_pair()
+    after = _copy.deepcopy(before)
+    after["stages"][0]["title"] = "A corrected stage title"
+    after["stages"][0]["objective"] = "A corrected objective."
+    after_source = _copy.deepcopy(source_map)
+    after_source["sources"][0]["unit_routes"][0]["title"] = "A corrected title"
+    refreshed = refresh_prose_only_angle_reviews(
+        before, source_map, after, after_source, "module-demo", "unit-demo")
+    fingerprint = refreshed["stages"][0]["resources"][0]["angle_review"]["fingerprint"]
+    assert fingerprint != before["stages"][0]["resources"][0]["angle_review"]["fingerprint"]
+    from learning_os.domain.material_refs import unit_routes
+
+    route = unit_routes(after_source, "module-demo", "unit-demo")[0]
+    checker = _StubChecker({}, {}, {})
+    stage = refreshed["stages"][0]
+    checker._check_row_angle("sm", stage, stage["resources"][0],
+                             {route["id"]: route}, "study-map.yaml")
+    assert checker.warnings == []
+
+
+def test_refresh_leaves_a_relation_change_stale():
+    import copy as _copy
+
+    from learning_os.derive.validation.plan_rigor import refresh_prose_only_angle_reviews
+
+    source_map, before = _v1_bound_pair()
+    after = _copy.deepcopy(before)
+    after_source = _copy.deepcopy(source_map)
+    after_source["sources"][0]["unit_routes"][0]["angle"] = "A different angle."
+    refreshed = refresh_prose_only_angle_reviews(
+        before, source_map, after, after_source, "module-demo", "unit-demo")
+    assert (refreshed["stages"][0]["resources"][0]["angle_review"]["fingerprint"]
+            == before["stages"][0]["resources"][0]["angle_review"]["fingerprint"])

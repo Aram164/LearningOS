@@ -484,7 +484,7 @@ except the sealed `gateway_envelope`, plus the saved path and SHA-256:
 ```
 
 Apply, receipt verification, and recovery then point at the saved file
-(`--review-report /tmp/unit-revise-check.json`); the compact stdout is for
+(`--review-report /tmp/unit-revise-check.json`, or `tools/seal_envelope.py --guards-from /tmp/unit-revise-check.json --key <key> --submit`); the compact stdout is for
 review only and carries no approval.
 
 Structural or multi-unit change:
@@ -497,7 +497,7 @@ Structural or multi-unit change:
 For revisions to several **existing** units in one module, the same command
 also accepts the compact shape in
 `system/templates/module-plan-revise.template.yaml`: `unit_revisions[]` names
-only route changes and stage field patches. It cannot add units, reorder stages,
+only route changes, stage patches/additions/order, unit patches, and dossier updates. It cannot add units,
 change module metadata, or update workspaces; use the full import template for
 those operations. Each `stage_patches[].fields.resources` value is the complete
 final resource array for that stage, so the existing learner-evidence gate still
@@ -506,13 +506,17 @@ records under one operator lock, then uses the same validation gate, lineage,
 reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
 full import. Save the compact-file `reviewed_file_sha256` from `--check` for
 `--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal
-full package and is not the file to approve. To add placements without
-copying the array, a stage patch may carry `resources_append` instead of
-`fields.resources`: new rows with fresh resource ids land after every
-existing authored placement, in order, and the importer carries the old
-rows forward itself. The same source-reading, angle-review, and
-evidence-preservation obligations apply — the new rows and their teaching
-purpose still need review.
+full package and is not the file to approve. To add or modify placements without
+copying the array, a stage patch may carry `resources_append` (new rows with
+fresh resource ids appended in order), `resources_patch` (`{resource_id, fields}`
+in-place field patches, automatically pruning overridden fields from
+`material_ref.inherit`), or `resources_remove` (list of resource ids to drop,
+still refused if any row carries learner evidence) instead of
+`fields.resources`: the importer carries the untouched rows forward itself. The same source-reading, angle-review, and
+evidence-preservation obligations apply — the new or patched rows and their teaching
+purpose still need review, while existing valid `angle-review-v1` fingerprints
+automatically upgrade to `angle-review-v2` when only surrounding stage or route
+title/objective prose changes.
 
 The command checks the plan contract, source routing, schemas, references,
 module ownership, unit order, study-map state, and workspace joins in a shadow
@@ -539,8 +543,13 @@ Moving the report under `work/` after preflight changes the guarded snapshot.
 
 Two further gates ride on the same report. A route addition, removal, locator
 change, or evidence-relevant coverage change on a unit with an approved
-synthesis dossier requires a replacement `material_synthesis` validated
-together with the new maps against the staged post-change state — pure
+synthesis dossier requires either a replacement `material_synthesis` or an
+in-place `material_synthesis_patch` (`route_assessments_patch`,
+`route_assessments_add`, `route_assessments_remove`, `concept_groups`,
+`concept_groups_patch`, `comparisons`)
+validated together with the new maps against the staged post-change state —
+omitted `basis` and `evidence[].checksum` entries are bound automatically from
+that staged state while preserving `ai_provenance`, and pure
 `angle`/`angle_detail` edits keep the dossier. Suspicious-but-legitimate
 changes (demoting current exercises, promoting advanced-reference material,
 removing last coverage of a node, exact-to-unresolved swaps, coverage

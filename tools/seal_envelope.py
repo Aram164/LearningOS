@@ -135,13 +135,39 @@ def _scratch_path_problem(root: Path, raw: str, flag: str) -> str | None:
             ".venv/ scratch")
 
 
+def _normalize_check_record(record):
+    """Accept a gateway ``--report-out`` check report as a check record.
+
+    A saved ``--check --report-out`` report carries the same guards inside
+    its gateway envelope; normalize it to the schema-1 record shape so one
+    reviewed file can go straight from ``--check`` to sealing.
+    """
+    if isinstance(record, dict) and record.get("schema") is None \
+            and record.get("mode") == "check" \
+            and record.get("ok") is True \
+            and isinstance(record.get("gateway_envelope"), dict) \
+            and isinstance(record.get("expected_snapshot"), str) \
+            and isinstance(record.get("expected_revisions"), dict):
+        envelope = record["gateway_envelope"]
+        return {
+            "schema": 1,
+            "ok": record.get("ok"),
+            "capability": record.get("capability") or envelope.get("capability"),
+            "expected_snapshot": record["expected_snapshot"],
+            "expected_revisions": record["expected_revisions"],
+            "payload": envelope.get("payload"),
+            "idempotency_key": record.get("idempotency_key"),
+        }
+    return record
+
+
 def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
     """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
 
     Refuses a record that is unreadable, of another schema, failed, for
     another capability, or for another payload than the one being sealed.
     """
-    record = json.loads(Path(path).read_text(encoding="utf-8"))
+    record = _normalize_check_record(json.loads(Path(path).read_text(encoding="utf-8")))
     # S13 candidate J9-J12: record validation, in SPEC order.
     if not isinstance(record, dict) or record.get("schema") != 1:
         raise ValueError("--guards-from record schema must be 1")
@@ -782,7 +808,8 @@ def main(argv: list[str] | None = None) -> int:
     explicit_payload_given = args.payload is not None
     if args.guards_from:
         try:
-            record = json.loads(Path(args.guards_from).read_text(encoding="utf-8"))
+            record = _normalize_check_record(
+                json.loads(Path(args.guards_from).read_text(encoding="utf-8")))
         except (OSError, ValueError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2

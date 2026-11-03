@@ -777,7 +777,7 @@ def _append_refusal_cases():
     row = _appended_row()
     return [
         ("bare-stage", [{"stage_id": "stage-demo"}], 2,
-         "changes nothing; give fields and/or resources_append"),
+         "changes nothing; give fields, resources_append, resources_patch and/or resources_remove"),
         ("empty-append", [{"stage_id": "stage-demo", "resources_append": []}], 2,
          "must be a non-empty list of resource objects"),
         ("dict-append", [{"stage_id": "stage-demo", "resources_append": {}}], 2,
@@ -786,13 +786,13 @@ def _append_refusal_cases():
          "must be a non-empty list of resource objects"),
         ("unknown-field", [{"stage_id": "stage-demo", "fields": {"title": "t"},
                             "bogus": 1}], 2,
-         "needs stage_id plus fields and/or resources_append"),
+         "needs stage_id plus fields, resources_append, resources_patch and/or resources_remove"),
         ("scalar-patch", ["stage-demo"], 2,
-         "needs stage_id plus fields and/or resources_append"),
+         "needs stage_id plus fields, resources_append, resources_patch and/or resources_remove"),
         ("replacement-plus-append",
          [{"stage_id": "stage-demo", "fields": {"resources": []},
            "resources_append": [row]}], 2,
-         "cannot combine resources_append with fields.resources"),
+         "cannot combine a resource list operation with fields.resources"),
         ("missing-stage", [{"stage_id": "stage-missing",
                             "resources_append": [row]}], 2,
          "missing or repeated stage"),
@@ -1112,3 +1112,35 @@ def test_minimal_artifact_ids_guard_module_and_study_map():
     assert "module-demo" in ids
     assert "unit-demo-l01" in ids
     assert "study-map-demo-l01" in ids
+
+
+def test_synthesis_patch_syncs_locator_and_clears_checksums():
+    """A route locator move syncs the assessment and drops stale checksums
+    so the staged binder refills them; the cleared basis is rebound later."""
+    from learning_os.domain.plan_import import apply_material_synthesis_patch
+
+    dossier = {
+        "id": "material-synthesis-demo-l01", "unit_id": "unit-demo-l01",
+        "basis": {"route_set_checksum": "sha256:old"},
+        "route_assessments": [{
+            "route_id": "route-demo-book", "source_id": "source-demo-book",
+            "locator": "lecture-01.pdf",
+            "evidence": [{"locator": "lecture-01.pdf", "checksum": "sha256:old"}],
+        }],
+        "concept_groups": [], "comparisons": [],
+    }
+    source_map = {"module_id": "module-demo", "sources": [{
+        "source_id": "source-demo-book", "unit_routes": [{
+            "id": "route-demo-book", "unit_id": "unit-demo-l01",
+            "source_id": "source-demo-book",
+            "locator": "Ch. 1 of lecture-01.pdf"}]}]}
+    patched, problems = apply_material_synthesis_patch(
+        dossier, {"route_assessments_patch": [{
+            "route_id": "route-demo-book",
+            "fields": {"contribution": "Revised."}}]},
+        source_map, "module-demo", "unit-demo-l01", "unit revision")
+    assert problems == []
+    row = patched["route_assessments"][0]
+    assert row["locator"] == "Ch. 1 of lecture-01.pdf"
+    assert "checksum" not in row["evidence"][0]
+    assert patched["basis"] == {}

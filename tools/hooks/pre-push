@@ -134,6 +134,43 @@ if [ -n "$mismatch" ]; then
     exit 1
 fi
 
+# Serialize the pair gate across both repositories: two concurrent pushes
+# otherwise run duplicate system-checks against the same worktrees, and one
+# can read a dirty tree the other's npm build is mid-write on. The lock is
+# an atomic mkdir in Core's common git directory (no flock on macOS), with
+# dead-holder reclamation; it is held from the cleanliness check to exit.
+core_common_dir="$(git -C "$core" rev-parse --git-common-dir)"
+case "$core_common_dir" in
+    /*) ;;
+    *) core_common_dir="$core/$core_common_dir" ;;
+esac
+lockdir="$core_common_dir/learningos-pre-push.lock"
+notified=""
+while ! mkdir "$lockdir" 2>/dev/null; do
+    holder="$(cat "$lockdir/pid" 2>/dev/null || true)"
+    if [ -z "$holder" ]; then
+        # The holder may sit between mkdir and writing its pid; give it a
+        # beat, then treat a still-pidless lock as stale.
+        sleep 1
+        holder="$(cat "$lockdir/pid" 2>/dev/null || true)"
+        if [ -z "$holder" ]; then
+            rm -rf "$lockdir"
+            continue
+        fi
+    fi
+    if ! kill -0 "$holder" 2>/dev/null; then
+        rm -rf "$lockdir"
+        continue
+    fi
+    if [ -z "$notified" ]; then
+        echo "pre-push: waiting for concurrent pair gate (pid $holder)..." >&2
+        notified=1
+    fi
+    sleep 1
+done
+trap 'rm -rf "$lockdir"' EXIT INT TERM HUP
+printf '%s\n' "$$" > "$lockdir/pid"
+
 for repo in "$core" "$ui"; do
     # Ask Git itself: in a linked worktree `.git` is a file, not a
     # directory, so a `-d` test would report every worktree missing.

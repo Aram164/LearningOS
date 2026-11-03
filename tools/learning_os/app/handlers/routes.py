@@ -32,6 +32,9 @@ from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.material_synthesis import MaterialSynthesisError
 from learning_os.derive.semantics.claim_status import claim_impacts, observe_claims
 from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
+from learning_os.derive.validation.plan_rigor import (
+    refresh_prose_only_angle_reviews as _refresh_angle_reviews,
+)
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.material_refs import (
     MATERIAL_FIELDS,
@@ -183,6 +186,9 @@ def route_patch_plan(repo, unit_id, route_id, changes):
                     # mirrors are synchronized; inherited fields expand later.
                     if owner in changes and field in resource and resource[field] == old.get(owner):
                         resource[field] = changes[owner]
+        raw = _refresh_angle_reviews(
+            sm.authored_data or sm.data, source_map, raw, updated,
+            module_id, unit_id)
         if raw != (sm.authored_data or sm.data):
             _changed_write(writes, sm.path, raw)
         # A map's effective material changes even when only its owner is written.

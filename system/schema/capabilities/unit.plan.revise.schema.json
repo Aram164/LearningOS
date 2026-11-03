@@ -85,6 +85,12 @@
             "array",
             "null"
           ]
+        },
+        "material_synthesis_patch": {
+          "type": [
+            "object",
+            "null"
+          ]
         }
       },
       "additionalProperties": false,

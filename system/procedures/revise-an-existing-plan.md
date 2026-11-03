@@ -168,16 +168,27 @@ Reference: [plan-creation SOP](../PLAN-CREATION-SOP.md).
    `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
    `--check` runs the contract, ordering, routing and shadow-repository
    validation and reports `"canonical_files_written": 0`.
-   When a replacement material dossier needs the post-change basis, run the
-   same package with `--check --staged-basis UNIT_ID` (also available on
-   `unit-plan-revise`). This prints the staged basis and package SHA without
-   writing canonical files. Its `validated: false` means it is preparation,
-   not an approval: insert the basis into the reviewed dossier, then run an
-   ordinary `--check` on the final package. For several existing units, the
-   compact `unit_revisions[]` shape (SOP Gate 4) also accepts an append-only
-   `resources_append` list on a stage patch: reviewed new placements with
-   fresh resource ids go after the existing authored rows without copying
-   them. Full-array `fields.resources` stays for intentional replacement.
+   When a replacement material dossier is supplied (`material_synthesis`) or
+   patched in place (`material_synthesis_patch`, supporting
+   `route_assessments_patch`, `route_assessments_add`,
+   `route_assessments_remove`, `concept_groups`, `concept_groups_patch`, and
+   `comparisons` without combining with
+   a full `material_synthesis`), the importer automatically binds any omitted
+   `basis` block and omitted `evidence[].checksum` values against the staged
+   post-change state while preserving `ai_provenance`. You may still run the
+   package with `--check --staged-basis UNIT_ID` (also available on
+   `unit-plan-revise`) when you want to inspect the staged basis and package
+   SHA beforehand without writing canonical files; its `validated: false` means
+   it is preparation, not an approval. For existing units, a stage patch on
+   `unit.plan.revise` or `unit_revisions[]` (SOP Gate 4) accepts
+   `resources_append` (reviewed new placements with fresh resource ids),
+   `resources_patch` (`{resource_id, fields}` in-place updates that
+   automatically prune overridden keys from `material_ref.inherit`), and
+   `resources_remove` (non-evidence resource ids to remove) without copying
+   surviving rows; full-array `fields.resources` stays for intentional
+   replacement. When `--check --report-out <path>` is used (including under
+   `.venv/`), `tools/seal_envelope.py --guards-from <path> --key <key> --submit`
+   can seal and submit directly from that saved check report.
    One `--check` is also the evidence harvest: when a route-`covers` edge
    changes, the report's `claims[].claim_evidence_scaffold` carries a
    `candidate_excerpt` of the exact local text — fill the `quote` evidence

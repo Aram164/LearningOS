@@ -14,7 +14,11 @@ from typing import Any
 
 import yaml  # type: ignore[import-untyped]
 
-from learning_os.domain.material_refs import MaterialReferenceError, expand_map
+from learning_os.domain.material_refs import (
+    MATERIAL_FIELDS,
+    MaterialReferenceError,
+    expand_map,
+)
 from learning_os.domain.route_identity import route_with_identity
 from learning_os.domain.suggest import not_found
 
@@ -33,6 +37,13 @@ _COMPACT_JOIN_FIELDS = frozenset({"source_id", "role", "why", "priority", "when"
 
 #: The only `unit.yaml` fields a compact revision may patch in place.
 _UNIT_PATCH_FIELDS = frozenset({"title", "scope", "knowledge_map"})
+
+#: Fields one existing resource row may be patched on inside a stage patch.
+_COMPACT_RESOURCE_PATCH_FIELDS = frozenset({
+    "kind", "label", "source_id", "route_id", "locator", "angle",
+    "angle_detail", "scope_triage", "affordance", "url", "vault_path",
+    "material_ref", "angle_review",
+})
 
 
 def apply_unit_patch(unit_data: dict[str, Any], patch: Any, where: str) -> list[str]:
@@ -61,27 +72,82 @@ def apply_stage_patches(study_map: dict[str, Any], patches: list,
     for stage_index, patch in enumerate(patches):
         stage_where = f"{where}.stage_patches[{stage_index}]"
         if not isinstance(patch, dict) or "stage_id" not in patch \
-                or set(patch) - {"stage_id", "fields", "resources_append"}:
-            problems.append(f"{stage_where} needs stage_id plus fields and/or resources_append")
+                or set(patch) - {"stage_id", "fields", "resources_append",
+                                 "resources_patch", "resources_remove"}:
+            problems.append(f"{stage_where} needs stage_id plus fields, resources_append, "
+                            "resources_patch and/or resources_remove")
             continue
         sid = patch["stage_id"]
         fields = patch.get("fields")
         append = patch.get("resources_append")
-        if fields is None and append is None:
-            problems.append(f"{stage_where} changes nothing; give fields and/or resources_append")
+        resource_patch = patch.get("resources_patch")
+        resource_remove = patch.get("resources_remove")
+        if fields is None and append is None and resource_patch is None \
+                and resource_remove is None:
+            problems.append(f"{stage_where} changes nothing; give fields, resources_append, "
+                            "resources_patch and/or resources_remove")
             continue
         if not isinstance(sid, str) or sid in seen_stages or sid not in stages:
             problems.append(f"{stage_where} names a missing or repeated stage: {sid}")
             continue
         seen_stages.add(sid)
+        stage_rows = [row for row in (stages[sid].get("resources") or [])
+                      if isinstance(row, dict)]
+        stage_row_ids = [row.get("id") for row in stage_rows]
         if fields is not None:
             if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
                 problems.append(f"{stage_where}.fields must be non-empty and limited to "
                                 f"{sorted(_COMPACT_STAGE_FIELDS)}")
                 continue
-            if append is not None and "resources" in fields:
-                problems.append(f"{stage_where} cannot combine resources_append with fields.resources")
+            if "resources" in fields and (append is not None or resource_patch is not None
+                                          or resource_remove is not None):
+                problems.append(f"{stage_where} cannot combine a resource list operation "
+                                "with fields.resources")
                 continue
+        remove_set: list[str] = []
+        if resource_remove is not None:
+            if not isinstance(resource_remove, list) or not resource_remove \
+                    or any(not isinstance(rid, str) or not rid for rid in resource_remove) \
+                    or len(set(resource_remove)) != len(resource_remove):
+                problems.append(f"{stage_where}.resources_remove must be a non-empty list "
+                                "of distinct resource ids")
+                continue
+            missing = [rid for rid in resource_remove if rid not in stage_row_ids]
+            if missing:
+                problems.append(f"{stage_where}.resources_remove names a missing resource: {missing[0]}")
+                continue
+            remove_set = list(resource_remove)
+        patch_rows: list[dict] = []
+        if resource_patch is not None:
+            if not isinstance(resource_patch, list) or not resource_patch \
+                    or any(not isinstance(row, dict)
+                           or set(row) - {"resource_id", "fields"}
+                           or "resource_id" not in row or "fields" not in row
+                           for row in resource_patch):
+                problems.append(f"{stage_where}.resources_patch must be a non-empty list "
+                                "of {resource_id, fields} objects")
+                continue
+            patch_ids = [row.get("resource_id") for row in resource_patch]
+            if any(not isinstance(rid, str) or not rid for rid in patch_ids) \
+                    or len(set(patch_ids)) != len(patch_ids):
+                problems.append(f"{stage_where}.resources_patch repeats a resource id")
+                continue
+            missing = [rid for rid in patch_ids if rid not in stage_row_ids]
+            if missing:
+                problems.append(f"{stage_where}.resources_patch names a missing resource: {missing[0]}")
+                continue
+            if any(rid in remove_set for rid in patch_ids):
+                problems.append(f"{stage_where}.resources_patch cannot patch a removed resource")
+                continue
+            bad_fields = [row["resource_id"] for row in resource_patch
+                          if not isinstance(row.get("fields"), dict) or not row["fields"]
+                          or set(row["fields"]) - _COMPACT_RESOURCE_PATCH_FIELDS]
+            if bad_fields:
+                problems.append(f"{stage_where}.resources_patch fields for {bad_fields[0]} "
+                                f"must be non-empty and limited to "
+                                f"{sorted(_COMPACT_RESOURCE_PATCH_FIELDS)}")
+                continue
+            patch_rows = resource_patch
         if append is not None:
             if not isinstance(append, list) or not append \
                     or any(not isinstance(row, dict) for row in append):
@@ -100,10 +166,148 @@ def apply_stage_patches(study_map: dict[str, Any], patches: list,
                 continue
         if fields is not None:
             stages[sid].update(copy.deepcopy(fields))
+        if remove_set:
+            stages[sid]["resources"] = [
+                row for row in (stages[sid].get("resources") or [])
+                if not (isinstance(row, dict) and row.get("id") in remove_set)
+            ]
+            existing_ids.difference_update(remove_set)
+        for patch_row in patch_rows:
+            target = next(row for row in (stages[sid].get("resources") or [])
+                          if isinstance(row, dict)
+                          and row.get("id") == patch_row["resource_id"])
+            ref = target.get("material_ref")
+            ref_route_id = ref.get("route_id") if isinstance(ref, dict) else None
+            for key, value in patch_row["fields"].items():
+                if value is None:
+                    target.pop(key, None)
+                else:
+                    target[key] = copy.deepcopy(value)
+                if key == "angle_review" and isinstance(value, dict) \
+                        and "fingerprint" not in value:
+                    target["angle_review"].pop("fingerprint", None)
+                if key in MATERIAL_FIELDS and value is not None \
+                        and isinstance(ref, dict) \
+                        and isinstance(ref.get("inherit"), list) \
+                        and key in ref["inherit"]:
+                    # A local override cannot also inherit the same field.
+                    ref["inherit"] = [field for field in ref["inherit"] if field != key]
+                    if not ref["inherit"]:
+                        target.pop("material_ref", None)
+                        if isinstance(ref_route_id, str):
+                            target.setdefault("route_id", ref_route_id)
+                        ref = None
         if append is not None:
             stages[sid].setdefault("resources", []).extend(copy.deepcopy(append))
             existing_ids.update(row["id"] for row in append)
     return problems
+
+
+_SYNTHESIS_PATCH_KEYS = frozenset({
+    "route_assessments_patch", "route_assessments_add",
+    "route_assessments_remove", "concept_groups", "concept_groups_patch",
+    "comparisons",
+})
+
+
+def apply_material_synthesis_patch(current_dossier: dict[str, Any], patch: Any,
+                                   source_map: dict[str, Any], module_id: str,
+                                   unit_id: str, where: str,
+                                   ) -> tuple[dict[str, Any] | None, list[str]]:
+    """Patch an existing material-synthesis dossier in place.
+
+    Only the named assessments/groups move; the basis is cleared so the
+    import binds the fresh staged basis instead of demanding that the
+    operator restate checksums that the route edits already determine.
+    """
+    if not isinstance(patch, dict) or not patch:
+        return None, [f"{where}.material_synthesis_patch must be a non-empty mapping"]
+    unknown = set(patch) - _SYNTHESIS_PATCH_KEYS
+    if unknown:
+        return None, [f"{where}.material_synthesis_patch allows only "
+                      f"{sorted(_SYNTHESIS_PATCH_KEYS)}; got {sorted(unknown)}"]
+    if "concept_groups" in patch and "concept_groups_patch" in patch:
+        return None, [f"{where}.material_synthesis_patch cannot combine "
+                      "concept_groups with concept_groups_patch"]
+    dossier = copy.deepcopy(current_dossier)
+    routes_by_id = {route_id: {**route, "source_id": source_id}
+                    for route_id, (source_id, route)
+                    in source_map_routes_with_source(source_map).items()
+                    if route.get("unit_id") == unit_id}
+    assessments = dossier.setdefault("route_assessments", [])
+    if not isinstance(assessments, list):
+        return None, [f"{where} existing dossier route_assessments is not a list"]
+
+    remove = patch.get("route_assessments_remove") or []
+    if not isinstance(remove, list) or any(not isinstance(r, str) for r in remove):
+        return None, [f"{where}.route_assessments_remove must be a list of route ids"]
+    assessments = [row for row in assessments
+                   if not (isinstance(row, dict) and row.get("route_id") in remove)]
+    dossier["route_assessments"] = assessments
+    by_route = {row.get("route_id"): row for row in assessments if isinstance(row, dict)}
+
+    for entry in patch.get("route_assessments_patch") or []:
+        if not isinstance(entry, dict) or not isinstance(entry.get("route_id"), str) \
+                or not isinstance(entry.get("fields"), dict):
+            return None, [f"{where}.route_assessments_patch needs route_id and fields"]
+        row = by_route.get(entry["route_id"])
+        if row is None:
+            return None, [f"{where}.route_assessments_patch names an unassessed route: "
+                          f"{entry['route_id']}"]
+        fields = entry["fields"]
+        row.update(copy.deepcopy(fields))
+        route = routes_by_id.get(entry["route_id"])
+        if route is not None:
+            if "source_id" not in fields:
+                row["source_id"] = route.get("source_id")
+            if "locator" not in fields:
+                row["locator"] = route.get("locator")
+        if "evidence" not in fields:
+            for evidence in row.get("evidence") or []:
+                if isinstance(evidence, dict):
+                    evidence.pop("checksum", None)
+
+    for entry in patch.get("route_assessments_add") or []:
+        if not isinstance(entry, dict) or not isinstance(entry.get("route_id"), str):
+            return None, [f"{where}.route_assessments_add needs route_id rows"]
+        if entry["route_id"] in by_route:
+            return None, [f"{where}.route_assessments_add repeats an assessed route: "
+                          f"{entry['route_id']}"]
+        row = copy.deepcopy(entry)
+        route = routes_by_id.get(row["route_id"])
+        if route is not None:
+            row.setdefault("source_id", route.get("source_id"))
+            row.setdefault("locator", route.get("locator"))
+        assessments.append(row)
+        by_route[row["route_id"]] = row
+
+    for row in assessments:
+        if not isinstance(row, dict):
+            continue
+        route = routes_by_id.get(row.get("route_id"))
+        if route is not None and row.get("locator") != route.get("locator"):
+            row["locator"] = route.get("locator")
+            for evidence in row.get("evidence") or []:
+                if isinstance(evidence, dict):
+                    evidence.pop("checksum", None)
+
+    if "concept_groups" in patch:
+        dossier["concept_groups"] = copy.deepcopy(patch["concept_groups"])
+    for entry in patch.get("concept_groups_patch") or []:
+        if not isinstance(entry, dict) or not isinstance(entry.get("concept_id"), str) \
+                or not isinstance(entry.get("fields"), dict):
+            return None, [f"{where}.concept_groups_patch needs concept_id and fields"]
+        groups = dossier.setdefault("concept_groups", [])
+        group = next((row for row in groups if isinstance(row, dict)
+                      and row.get("concept_id") == entry["concept_id"]), None)
+        if group is None:
+            return None, [f"{where}.concept_groups_patch names an unknown concept: "
+                          f"{entry['concept_id']}"]
+        group.update(copy.deepcopy(entry["fields"]))
+    if "comparisons" in patch:
+        dossier["comparisons"] = copy.deepcopy(patch["comparisons"])
+    dossier["basis"] = {}
+    return dossier, []
 
 
 def apply_stage_additions(study_map: dict[str, Any], additions: list,
@@ -424,7 +628,8 @@ def module_plan_routing_problems(repo: Any, module_id: str,
         if unit.module_id != module_id:
             continue
         study_map = repo.study_maps.get(unit.data.get("current_study_map"))
-        units[uid] = (unit.data, study_map.data if study_map else None)
+        units[uid] = (unit.data, (study_map.authored_data or study_map.data)
+                      if study_map else None)
     for entry in package.get("units", []) or []:
         if not isinstance(entry, dict) or not isinstance(entry.get("unit"), dict):
             continue
@@ -584,8 +789,8 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
             problems.append(f"{where} must be a mapping")
             continue
         unknown = set(item) - {"unit_id", "route_changes", "stage_patches",
-                               "material_synthesis", "unit_patch",
-                               "stage_additions", "stage_order"}
+                               "material_synthesis", "material_synthesis_patch",
+                               "unit_patch", "stage_additions", "stage_order"}
         if unknown:
             problems.append(f"{where} has unknown fields: {sorted(unknown)}")
         uid = item.get("unit_id")
@@ -647,14 +852,38 @@ def assemble_compact_module_revision(repo: Any, module_id: str,
         if unit_patch is not None:
             problems.extend(apply_unit_patch(unit_data, unit_patch, where))
         dossier = item.get("material_synthesis")
-        if dossier is not None:
+        synthesis_patch = item.get("material_synthesis_patch")
+        if dossier is not None and synthesis_patch is not None:
+            problems.append(f"{where} cannot combine material_synthesis with "
+                            "material_synthesis_patch")
+        elif dossier is not None:
             if not isinstance(dossier, dict) or dossier.get("unit_id", uid) != uid:
                 problems.append(f"{where}.material_synthesis must belong to {uid}")
             else:
                 syntheses.append({"unit_id": uid, "dossier": copy.deepcopy(dossier)})
+        elif synthesis_patch is not None:
+            destination = Path(unit.path).parent / "material-synthesis.yaml"
+            if not destination.is_file():
+                problems.append(f"{where}.material_synthesis_patch needs an existing "
+                                "material-synthesis.yaml")
+            else:
+                try:
+                    current_dossier = yaml.safe_load(
+                        destination.read_text(encoding="utf-8"))
+                except (OSError, yaml.YAMLError) as exc:
+                    problems.append(f"{where} existing dossier unreadable: {exc}")
+                    current_dossier = None
+                if isinstance(current_dossier, dict):
+                    patched, patch_problems = apply_material_synthesis_patch(
+                        current_dossier, synthesis_patch, source_map,
+                        module_id, uid, where)
+                    problems.extend(patch_problems)
+                    if patched is not None and not patch_problems:
+                        syntheses.append({"unit_id": uid, "dossier": patched})
         if not any(changes.get(kind) for kind in ("add", "update", "remove")) \
                 and not patches and not additions and stage_order is None \
-                and unit_patch is None and dossier is None:
+                and unit_patch is None and dossier is None \
+                and synthesis_patch is None:
             problems.append(f"{where} changes nothing")
         entries.append({"unit": unit_data, "study_map": study_map})
     additions = revision.get("unit_additions", [])

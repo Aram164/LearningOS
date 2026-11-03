@@ -1999,3 +1999,153 @@ def test_route_and_stage_patch_on_a_compact_map_stays_bound(mini_repo, tmp_path)
                         "fields": {"title": "Patched stage title"}}])
     proc = _check_revision(mini_repo, tmp_path, revision)
     assert proc.returncode == 0, proc.stderr
+
+
+def test_removing_a_route_used_by_an_untouched_compact_map_refuses_cleanly(
+        mini_repo, tmp_path):
+    """Removing a route an untouched compact map references is a clean
+    routing refusal, not a Broken material_ref crash in the shadow load."""
+
+    from repo_builders import _structural_fixture
+    from repo_builders import run_los as _run
+    from repo_builders import write_yaml as _wy
+
+    _structural_fixture(mini_repo)
+    revision = _compact_revision(
+        mini_repo,
+        route_changes={
+            "add": [{"source_id": "source-demo-book", "route": {
+                "id": "route-demo-book-2", "unit_id": "unit-demo-l01",
+                "title": "Second route", "format": "book",
+                "angle": "Another angle.", "covers": ["knowledge-demo-expectation"],
+                "depth": "derivation", "scope": "current",
+                "locator": "lecture-01.pdf"}}],
+            "remove": [{"route_id": "route-demo-book",
+                        "reason": "Superseded by the second route."}],
+        })
+    draft = tmp_path / "remove-route.yaml"
+    _wy(draft, revision)
+    proc = _run(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                "--file", str(draft), "--check")
+    assert proc.returncode != 0
+    assert "material_ref route-demo-book is missing" in proc.stderr
+    assert "Traceback" not in proc.stderr
+
+
+def test_stage_patches_patch_and_remove_resources(mini_repo, tmp_path):
+    """resources_patch edits one row; resources_remove drops one row."""
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(mini_repo, stage_patches=[{
+        "stage_id": "stage-demo",
+        "resources_patch": [{
+            "resource_id": "resource-demo-book-ch01",
+            "fields": {"angle": "A patched placement angle."},
+        }],
+        "resources_remove": ["resource-demo-book-appendix"],
+    }])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_stage_patches_patch_a_material_ref_row_and_add_a_review(mini_repo, tmp_path):
+    """Overriding angle on a compact row prunes inherit and binds the review."""
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["stages"][0].update(knowledge_node_id="knowledge-demo-expectation")
+    data["stages"][0]["resources"] = [{
+        "id": "resource-reviewed", "kind": "read",
+        "material_ref": {"route_id": "route-demo-book",
+                         "inherit": ["label", "source_id", "locator",
+                                     "angle", "angle_detail"]},
+    }]
+    from repo_builders import write_yaml as _wy
+
+    _wy(path, data)
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
+    write_baseline(mini_repo, collect(mini_repo)[0], "resources_patch fixture")
+    revision = _compact_revision(mini_repo, stage_patches=[{
+        "stage_id": "stage-demo",
+        "resources_patch": [{
+            "resource_id": "resource-reviewed",
+            "fields": {
+                "angle": "A locally overridden angle.",
+                "angle_review": {"kind": "refinement",
+                                 "reviewed_by": "operator-test",
+                                 "reviewed_on": "2026-09-30",
+                                 "rationale": "Deliberate refinement."},
+            },
+        }],
+    }])
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_full_synthesis_without_basis_or_checksums_auto_binds(mini_repo, tmp_path):
+    """A replacement dossier may omit basis and evidence checksums; the
+    import binds them against the staged writes."""
+    _compact_setup(mini_repo)
+    dossier = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
+    dossier.pop("basis", None)
+    for row in dossier.get("route_assessments", []):
+        for evidence in row.get("evidence", []) or []:
+            evidence.pop("checksum", None)
+    revision = _compact_revision(mini_repo, material_synthesis=dossier)
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_route_locator_change_with_synthesis_patch_in_one_pass(mini_repo, tmp_path):
+    """A route update plus a dossier patch needs no staged-basis trip."""
+    _compact_setup(mini_repo)
+    revision = _compact_revision(
+        mini_repo,
+        route_changes={"update": [{"route_id": "route-demo-book",
+                                   "fields": {"angle": "A revised route angle."}}]},
+        material_synthesis_patch={"route_assessments_patch": [{
+            "route_id": "route-demo-book",
+            "fields": {"contribution": "Revised contribution."}}]})
+    proc = _check_revision(mini_repo, tmp_path, revision)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_seal_envelope_accepts_a_report_out_check_report(mini_repo, tmp_path):
+    """One reviewed file: --check --report-out feeds seal --guards-from."""
+    import subprocess
+    import sys
+
+    from repo_builders import run_los as _run
+    from repo_builders import write_yaml as _wy
+
+    _compact_setup(mini_repo)
+    _stamp_template(mini_repo)
+    revision = _compact_revision(mini_repo, route_changes={
+        "update": [{"route_id": "route-demo-book",
+                    "fields": {"angle": "A sharper angle."}}]})
+    draft = tmp_path / "revision.yaml"
+    _wy(draft, revision)
+    scratch = mini_repo / ".venv"
+    scratch.mkdir(exist_ok=True)
+    report = scratch / "report.json"
+    checked = _run(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(report))
+    assert checked.returncode == 0, checked.stderr
+    seal = Path(__file__).resolve().parents[1] / "tools" / "seal_envelope.py"
+    applied = subprocess.run(
+        [sys.executable, str(seal), "--root", str(mini_repo),
+         "--guards-from", str(report), "--key", "report-out-seal-001",
+         "--submit"],
+        text=True, capture_output=True, timeout=120)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    from learning_os.store.session_ledger import sealed_request_path
+
+    envelope = sealed_request_path(mini_repo, "report-out-seal-001")
+    verify = _verify(mini_repo, "--envelope", str(envelope),
+                     "--unit", "unit-demo-l01")
+    assert verify.returncode == 0, verify.stdout + verify.stderr
+    assert "state: committed-and-verified" in verify.stdout
+

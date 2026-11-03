@@ -45,6 +45,10 @@ def pair(tmp_path: Path, monkeypatch):
                        cwd=repo, check=True)
     (core / "core.txt").write_text("core\n", encoding="utf-8")
     (ui / "ui.txt").write_text("ui\n", encoding="utf-8")
+    # Real checkouts ignore bytecode caches; the gate's own interpreter
+    # writes them mid-run, and a serialized second push must not see dirt.
+    for repo in (core, ui):
+        (repo / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
     # The canonical gate, memo, and live-root detector under test, verbatim.
     (core / "tools" / "hooks").mkdir(parents=True)
     shutil.copy(REPO_ROOT / "tools" / "hooks" / "pre-push",
@@ -695,3 +699,51 @@ def test_make_hooks_still_copies_to_a_distinct_hooks_directory(tmp_path):
         installed = checkout / ".git" / "hooks" / hook
         assert installed.read_bytes() == (checkout / "tools" / "hooks" / hook).read_bytes()
         assert os.access(installed, os.X_OK)
+
+
+def test_concurrent_main_pushes_run_system_check_once_and_reuse_stamp(pair):
+    """Two pushes at once: one full gate, and the waiter skips on its stamp."""
+    import threading
+
+    core, ui = pair["core"], pair["ui"]
+    stub_bin = pair["root"].parent / "stub-bin"
+    make_stub = stub_bin / "make"
+    make_stub.write_text(
+        '#!/bin/sh\n'
+        'echo "make $*" >> "$GATE_LOG"\n'
+        'case "$*" in *system-check*) sleep 1; '
+        f'"{core}/.venv/bin/python" "{core}/tools/verified_pairs.py" stamp '
+        '>/dev/null 2>&1 || true;; esac\n',
+        encoding="utf-8")
+    make_stub.chmod(0o755)
+    head_core, head_ui = _head(core), _head(ui)
+    results: dict[str, object] = {}
+
+    def run(name, repo, head):
+        results[name] = _run_hook(
+            repo, f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n")
+
+    threads = [threading.Thread(target=run, args=("core", core, head_core)),
+               threading.Thread(target=run, args=("ui", ui, head_ui))]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert results["core"].returncode == 0, results["core"].stderr
+    assert results["ui"].returncode == 0, results["ui"].stderr
+    assert _invocations(pair["log"]) == [f"make -C {core} system-check"]
+    assert any("stamped pair" in (r.stdout or "") for r in results.values())
+
+
+def test_stale_lock_from_dead_pid_is_reclaimed(pair):
+    lockdir = pair["core"] / ".git" / "learningos-pre-push.lock"
+    lockdir.mkdir()
+    (lockdir / "pid").write_text("999999\n", encoding="utf-8")
+    head = _head(pair["core"])
+    result = _run_hook(
+        pair["core"],
+        f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
+    )
+    assert result.returncode == 0, result.stderr
+    assert _invocations(pair["log"]) == [f"make -C {pair['core']} system-check"]
+    assert not lockdir.exists()

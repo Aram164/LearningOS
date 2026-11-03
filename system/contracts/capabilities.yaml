@@ -625,6 +625,7 @@ commands:
         - stage_patches
         - stage_additions
         - stage_order
+        - material_synthesis_patch
         required:
         - plan_contract
         types:
@@ -656,6 +657,9 @@ commands:
           - "null"
           stage_order:
           - array
+          - "null"
+          material_synthesis_patch:
+          - object
           - "null"
   unit.map.import:
     handler: unit_map_import
