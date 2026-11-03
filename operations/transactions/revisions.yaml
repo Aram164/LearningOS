@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 5
+  file:operations/transactions/lineage.yaml: 8
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -47,14 +47,14 @@ revisions:
   material-synthesis-m2-sad-l04: 4
   materials-manifest: 1
   module-hu-algo2: 2
-  module-hu-aml: 14
-  module-hu-betriebssysteme: 1
+  module-hu-aml: 15
+  module-hu-betriebssysteme: 2
   module-hu-icop: 2
   module-hu-m2-statistik-analysis: 62
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
-  module-job-python-engineering: 1
+  module-job-python-engineering: 2
   module-job-rust-engineering: 1
   module-project-bachelor-thesis: 2
   note-06-random-variables-pp005-008: 1
@@ -70,6 +70,7 @@ revisions:
   note-11-datascience-intro-pp033-038: 1
   note-11-datascience-intro-pp039-046: 1
   note-11-datascience-intro-pp047-049: 1
+  note-aml-l02-exercise-bank: 1
   note-bachelor-thesis-medical-mle-exploration: 1
   note-bs-os-basics-exercise-bank: 1
   note-bs-os-basics-reference: 1
@@ -79,6 +80,7 @@ revisions:
   note-icop-l01-reference: 1
   note-pandas-groupby-signatures: 1
   note-pandas-polars-aggregation-contentions: 3
+  note-python-intermediate-roadmap: 1
   note-sad-l05-counting-probability-pp028-030: 1
   note-sad-l07-2025-geometric-pp038-044: 1
   note-sad-l07-blitzstein-geom-convention-pp174-178: 1
@@ -124,6 +126,7 @@ revisions:
   source-analysis-klausuren-extern: 1
   source-aptos-winning-solution: 1
   source-arora-barak: 1
+  source-beazley-generator-tricks: 1
   source-bermbach-csb: 1
   source-blitzstein-hwang: 1
   source-blum-algorithmen-datenstrukturen: 2
@@ -138,14 +141,15 @@ revisions:
   source-cornell-topaloglu-lp: 1
   source-cs229-2018-videos: 1
   source-cs229-notes: 1
-  source-cs229-project-archive: 1
+  source-cs229-project-archive: 2
   source-cs231n-notes: 1
   source-dantzig-orden-wolfe-generalized-simplex-1955: 1
   source-datacamp-catalogue: 1
   source-disser-skutella-simplex-np-mighty-2018: 1
   source-educative-catalogue: 1
-  source-eecs498: 1
+  source-eecs498: 2
   source-esl: 1
+  source-fortmann-roe-bias-variance: 1
   source-frankfurt-algo2-course: 1
   source-frontendmasters-catalogue: 1
   source-github-student-developer-pack: 1
@@ -190,6 +194,7 @@ revisions:
   source-polars-definitive-guide: 1
   source-ptb-xl: 1
   source-pydata-handbook: 1
+  source-python-docs: 1
   source-pytorch-tutorials: 1
   source-rd-agent-paper: 1
   source-rex-mle-paper: 1
@@ -198,8 +203,9 @@ revisions:
   source-scalable-dataframe-systems-paper: 1
   source-scrimba-catalogue: 1
   source-siim-isic-winning-solution: 1
-  source-sklearn-user-guide: 2
+  source-sklearn-user-guide: 3
   source-skrub: 1
+  source-slatkin-effective-python: 1
   source-spielman-teng-smoothed-simplex-2004: 1
   source-stanford-cs261-2016: 1
   source-stat110: 1
@@ -209,6 +215,8 @@ revisions:
   source-toussaint-optimization-script: 1
   source-tripod-ai: 1
   source-tu-python-ml-course: 1
+  source-typing-docs: 1
+  source-uv-docs: 1
   source-visual-studio-dev-essentials: 1
   stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
   stage-git-02-the-state-triangle-working-tree-index-and-head: 1
@@ -315,6 +323,8 @@ revisions:
   study-map-aml-l09: 4
   study-map-aml-l10: 5
   study-map-aml-l11: 3
+  study-map-bs-cpu-scheduling: 1
+  study-map-bs-processes: 1
   study-map-job-engineering-tools-fluency: 2
   study-map-job-git-fluency: 2
   study-map-job-polars-backend-loop: 2
@@ -324,7 +334,7 @@ revisions:
   study-map-job-polars-pandas-fluency: 10
   study-map-job-polars-schema-missing-types: 7
   study-map-job-polars-selection-backend: 10
-  study-map-job-python-engineering-fluency: 2
+  study-map-job-python-engineering-fluency: 3
   study-map-job-rust-engineering-fluency: 1
   study-map-m2-analysis-ch01: 1
   study-map-m2-analysis-ch02: 1
@@ -347,10 +357,11 @@ revisions:
   study-map-m2-sad-l13: 6
   study-map-m2-sad-l14: 6
   study-map-m2-sad-l15: 7
+  study-map-python-intermediate-roadmap: 1
   unit-algo2-exam-prep: 2
   unit-aml-exam-prep: 10
   unit-aml-l01: 6
-  unit-aml-l02: 6
+  unit-aml-l02: 7
   unit-aml-l03: 7
   unit-aml-l04: 6
   unit-aml-l05: 6
@@ -360,7 +371,9 @@ revisions:
   unit-aml-l09: 6
   unit-aml-l10: 8
   unit-aml-l11: 7
+  unit-bs-cpu-scheduling: 1
   unit-bs-os-structure: 1
+  unit-bs-processes: 1
   unit-icop-l01-linear-programming: 2
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 2
@@ -374,7 +387,7 @@ revisions:
   unit-job-polars-pandas-fluency: 13
   unit-job-polars-schema-missing-types: 9
   unit-job-polars-selection-backend: 12
-  unit-job-python-engineering-fluency: 2
+  unit-job-python-engineering-fluency: 3
   unit-job-rust-engineering-fluency: 1
   unit-m2-analysis-ch01: 6
   unit-m2-analysis-ch02: 9
@@ -402,4 +415,5 @@ revisions:
   unit-m2-sad-l13: 12
   unit-m2-sad-l14: 16
   unit-m2-sad-l15: 17
+  unit-python-intermediate-roadmap: 1
   workspace-thesis-mle-medical: 3

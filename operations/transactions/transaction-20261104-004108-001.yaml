@@ -1,0 +1,62 @@
+schema_version: 2
+id: transaction-20261104-004108-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-04T00:41:08+01:00'
+snapshot_before: sha256:a7b0296e62cef7ae6cf0e79d1935ce10ae2cb5ef1e6fe9fe97e7f061d11cee81
+snapshot_after: sha256:b91ed93c861f640980f2f0e090ce996bec8e78821cb448b3d96126bc85ebc5a1
+expected_revisions:
+  source-beazley-generator-tricks: 0
+  source-cs229-project-archive: 1
+  source-eecs498: 1
+  source-fortmann-roe-bias-variance: 0
+  source-sklearn-user-guide: 2
+artifact_revisions:
+  source-beazley-generator-tricks:
+    before: 0
+    after: 1
+  source-cs229-project-archive:
+    before: 1
+    after: 2
+  source-eecs498:
+    before: 1
+    after: 2
+  source-fortmann-roe-bias-variance:
+    before: 0
+    after: 1
+  source-sklearn-user-guide:
+    before: 2
+    after: 3
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: d188e05e32723f1235cd6d62035200e01529f1a8f969fe675b1bdea06476b80b
+  sha256_after: b6624ed38204f98a0761f99cc9195dbc54effbc57fd73d7d74a785aefa905153
+  created: false
+- path: sources/registry/method-admin.yaml
+  sha256_before: 5b00907533459a2be72d5a99d111cb2f0d50d747f60713169ad179b40592b44b
+  sha256_after: ae2b5fb0426997fb44a9966af41f5432ed0bbf3fc2eb8862c4649b0eba4e1713
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: 43f051549d7007ece856093a9dd88d766b71125def2af309feac146f76539a27
+  sha256_after: 27b76ea3e9899cd035b80799727e1d3740e1da00b037334c3ff3f5daa38c1de5
+  created: false
+metadata:
+  data_roots_sha256: sha256:17e2e20ab1a63678aac7a4fc0e30785faa5a86a9f06cbd733593339075d700f3
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-dead-links-fix-20261104-b958036b
+  idempotency_key: dead-links-fix-20261104
+  intent_sha256: sha256:1174f2e4d45c97dc0cec8799b213041b6f33919a382d7b6f2b0234a9865e31f5
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:1174f2e4d45c97dc0cec8799b213041b6f33919a382d7b6f2b0234a9865e31f5

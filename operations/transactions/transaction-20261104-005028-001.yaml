@@ -1,0 +1,50 @@
+schema_version: 2
+id: transaction-20261104-005028-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-04T00:50:28+01:00'
+snapshot_before: sha256:293a2158dfe1dd09f736c3e7e1ee98b284252d405596f5637eb40cb718d8a046
+snapshot_after: sha256:0a37aa7152525d58f53a18b7b6dc297689499059d3d0790ab8b5b81f393ae321
+expected_revisions:
+  source-python-docs: 0
+  source-slatkin-effective-python: 0
+  source-typing-docs: 0
+  source-uv-docs: 0
+artifact_revisions:
+  source-python-docs:
+    before: 0
+    after: 1
+  source-slatkin-effective-python:
+    before: 0
+    after: 1
+  source-typing-docs:
+    before: 0
+    after: 1
+  source-uv-docs:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 27b76ea3e9899cd035b80799727e1d3740e1da00b037334c3ff3f5daa38c1de5
+  sha256_after: a321d89495fd53a8203b5f960950af2f93893eb74642132e3651d72d649c7941
+  created: false
+metadata:
+  data_roots_sha256: sha256:7b2db6bdfc9459fcb142d7e519d89ca3040a797df8e2d587654bd4249d01af16
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-python-plan-intake-v2-143d9022
+  idempotency_key: python-plan-intake-v2
+  intent_sha256: sha256:a3ade94c0e7612de71c7374d6a61302a9f2fa1d26554251bcfe067c33fadb946
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a3ade94c0e7612de71c7374d6a61302a9f2fa1d26554251bcfe067c33fadb946

@@ -2,19 +2,111 @@ id: unit-job-python-engineering-fluency
 type: unit
 module_id: module-job-python-engineering
 kind: topic
-title: Python engineering fluency — independent design, implementation, and review
+title: Python fluency for reading and working with Stratum
 order: 1
-scope: Given an ambiguous Python idea, unfamiliar codebase, or Job ticket, independently turn it into
-  a precise contract; choose clear data and module boundaries; implement a small reviewable change; test
-  normal, boundary, and failure behavior; debug from evidence; reason about types, complexity, resources,
-  concurrency, packaging, and operations; and review or maintain the result over time. AI is a bounded
-  reviewer and accelerator, never the source of the specification or proof of correctness. Fluency is
-  evidenced by delayed no-AI reconstruction, open-source code traces, engineering decision records, and
-  a final maintainable package whose design and every accepted line can be explained.
+scope: 'Material-only Python fluency: everyday data, names and mutation, functions, decorators, classes,
+  data records, special methods, imports, iteration, type hints, interfaces, errors, tests, tooling and
+  version differences, followed by read-only Stratum code. No required exercises, signature memorisation
+  or interpreter internals.'
 status: ready
-scope_sources: []
+scope_sources:
+- source_id: source-batchelder-names
+  authority: reference
+- source_id: source-cosmicpython-architecture-patterns
+  authority: reference
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-pytest-docs
+  authority: reference
+- source_id: source-python-depth-drills
+  authority: reference
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+- source_id: source-stratum-paper
+  authority: reference
+- source_id: source-typing-docs
+  authority: reference
+- source_id: source-uv-docs
+  authority: reference
 source_selections: []
 working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/notes.md
 artifacts: {}
 workspace_ids: []
 current_study_map: study-map-job-python-engineering-fluency
+knowledge_map:
+  summary: Sixteen topics ordered by their language prerequisites and relevance to reading Stratum.
+  nodes:
+  - id: knowledge-python-everyday-data
+    title: Everyday data structures and expressions
+    summary: Comprehensions, unpacking, slicing, sorting, dictionaries, missing keys and sets. Choose
+      ordinary containers and read compact expressions without memorising signatures.
+  - id: knowledge-python-names-mutation
+    title: Names, identity and mutation
+    summary: Names bind objects; assignment, equality, identity, aliasing, shallow copies and mutable
+      defaults determine whether state is shared.
+  - id: knowledge-python-functions-scope
+    title: Functions, scope and closures
+    summary: Functions as values, callables, positional and keyword arguments, defaults, partial application,
+      lexical scope and nonlocal. Read closure behaviour without inspecting its implementation.
+  - id: knowledge-python-decorators-registration
+    title: Decorators and registration
+    summary: Decorator application, import-time registration, wrapper functions, metadata preservation
+      and parameterised registration decorators.
+  - id: knowledge-python-classes-inheritance
+    title: Classes and inheritance
+    summary: Instances, class and instance attributes, bound methods, constructors, classmethod and staticmethod,
+      super, method resolution and composition versus inheritance.
+  - id: knowledge-python-dataclasses-properties
+    title: Dataclasses, properties, enums and slots
+    summary: Data records, field factories, post-init, class variables, validated attributes, Enum and
+      the practical constraints of slots.
+  - id: knowledge-python-special-methods
+    title: Special methods and attribute handling
+    summary: Read repr, str, equality, hashing, truth, iteration and attribute access as Python protocols.
+      Understand observable behaviour rather than internal machinery.
+  - id: knowledge-python-modules-imports
+    title: Modules and imports
+    summary: Modules, packages, relative imports, public APIs, import-time side effects and circular dependency
+      repair. Import-time registration links back to decorators.
+  - id: knowledge-python-iterators-with
+    title: Iterators, generators and with
+    summary: Iterable versus iterator, one-shot consumption, generator functions and expressions, lazy
+      composition, yield from and synchronous context managers.
+  - id: knowledge-python-type-hints
+    title: Type hints
+    summary: 'Read and write baseline-compatible annotations: built-in generics, unions, Callable, Iterable,
+      TypeVar, generic classes, forward references and Protocol. Hints do not enforce values at runtime.'
+  - id: knowledge-python-interfaces-dispatch
+    title: Interfaces and dispatch
+    summary: Duck typing, abstract base classes, structural protocols, isinstance tradeoffs and singledispatch
+      registries. Separate interface promises from inheritance and registration.
+  - id: knowledge-python-errors-logging
+    title: Errors and logging
+    summary: Exception propagation, narrow handlers, cleanup, chaining, application exception classes
+      and library logging configuration.
+  - id: knowledge-python-testing
+    title: Reading Python tests
+    summary: Test structure, assertions, fixture scope and cleanup, parametrisation, monkeypatch, tmp_path,
+      exception assertions, mocks, pdb and profiling as debugging tools. No test-writing exercises.
+  - id: knowledge-python-tooling
+    title: Projects, environments and tooling
+    summary: Understand pyproject.toml, dependency groups/extras, uv.lock, environment synchronisation
+      and running commands; recognise maturin as the Python/Rust build boundary without learning Rust
+      or publishing packages.
+  - id: knowledge-python-newer-python
+    title: Reading newer Python while keeping a 3.11 floor
+    summary: Recognise user-facing changes from 3.11 through 3.15, distinguish the interpreter in use
+      from the project minimum, and avoid introducing syntax unavailable to supported versions.
+  - id: knowledge-python-read-stratum
+    title: Read Stratum using the Python topics
+    summary: Follow the public entry point through graph construction, orchestration, operation classes,
+      rewrite helpers, registration and runtime. Read Python constructs in context; optimizer design,
+      proofs and rebuilding the system are optional background.
+  - id: knowledge-python-optional-former-path
+    title: Optional former engineering and diagnostic path
+    summary: Preserved former diagnostic, repair, optimizer, project and engineering activities; all deferred
+      and outside the 16-topic reading path.

@@ -65,22 +65,6 @@ sources:
   type: documentation
   organization: TU Berlin
   material: material://source-stupo-2015
-- id: source-cs229-project-archive
-  thematic_group_ids:
-  - thematic-group-method-admin
-  - thematic-group-machine-learning
-  title: Stanford CS229 project archive (+ CS230 past projects)
-  type: website
-  organization: Stanford
-  url: https://cs229.stanford.edu/projects_backup.html
-  identifiers:
-    cs230: https://cs230.stanford.edu/past-projects/
-    stanford-cs229-project-archive: http://cs229.stanford.edu/projects.html
-  evaluations:
-  - roles:
-    - reference
-    strengths:
-    - Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing
 - id: source-github-student-developer-pack
   title: GitHub Student Developer Pack — benefits and learning directory
   type: website
@@ -95,3 +79,19 @@ sources:
       selecting it for a unit or stage.
   thematic_group_ids:
   - thematic-group-method-admin
+- id: source-cs229-project-archive
+  thematic_group_ids:
+  - thematic-group-method-admin
+  - thematic-group-machine-learning
+  title: Stanford CS229 project archive (+ CS230 past projects)
+  type: website
+  organization: Stanford
+  url: https://cs229.stanford.edu/projects_backup.html
+  identifiers:
+    cs230: https://cs230.stanford.edu/past-projects/
+    stanford-cs229-project-archive: https://cs229.stanford.edu/projects_backup.html
+  evaluations:
+  - roles:
+    - reference
+    strengths:
+    - Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing

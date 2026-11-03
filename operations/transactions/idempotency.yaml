@@ -180,6 +180,17 @@ entries:
       unit-aml-l10: 5
     snapshot_before: sha256:46d3b7b62cc9e94059444546c019836e8a8dc74238c996e3075770f7b85c537c
     snapshot_after: sha256:d6526a66625e9729e7a15edda62803efd3b04c79019d332aae875c798f32cab6
+  aml-note-url-fix-20261104:
+    request_id: request-aml-note-url-fix-20261104-4a2850df
+    capability: note.revise
+    channel: operator
+    intent_sha256: sha256:2a5b94a5c33297516f3df887a73f70b665a5f481fdf52ef3743e9809f35609a0
+    transaction_id: transaction-20261104-004325-001
+    receipt_path: operations/transactions/transaction-20261104-004325-001.yaml
+    revisions:
+      note-aml-l02-exercise-bank: 1
+    snapshot_before: sha256:c9290fbd453ac082dc78dc0826fba12b887245f60a21bf4ff2dd9d357e2833e9
+    snapshot_after: sha256:00bedcb560021ff37c4aefb8c094fab2030d9531bc722ef942b8a2f4ad7dcd29
   aml-resource-target-p5-20260901-001:
     request_id: request-aml-resource-target-p5-20260901-001
     capability: module.plan.import
@@ -215,6 +226,19 @@ entries:
       unit-aml-l11: 6
     snapshot_before: sha256:57ff6192fe83164337efb47a682251ead81309ac3c09f9bab32dd7acd301113a
     snapshot_after: sha256:2e63f0de9cc636019b2299d80e40d80d38fe0a82222be91230332932502a11d3
+  aml-route-url-fix-20261104:
+    request_id: request-aml-route-url-fix-20261104-5dce1bf1
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:4cb008a87aa2391f0b1cb5c0473039937129c504574a660c82ec3dafb59f454c
+    transaction_id: transaction-20261104-004151-001
+    receipt_path: operations/transactions/transaction-20261104-004151-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 7
+      module-hu-aml: 15
+      unit-aml-l02: 7
+    snapshot_before: sha256:b91ed93c861f640980f2f0e090ce996bec8e78821cb448b3d96126bc85ebc5a1
+    snapshot_after: sha256:943295402a3210e2cc041230cd32a82e3399ba5a98d2dd134185882817d8e715
   aml-source-rigor-p1-20260830-002:
     request_id: request-aml-source-rigor-p1-20260830-002
     capability: module.plan.import
@@ -694,6 +718,21 @@ entries:
       unit-m2-sad-l04: 17
     snapshot_before: sha256:8990a7156f909c0758641ebd410cb3c04449f82f137e569645ee920b296ff4b1
     snapshot_after: sha256:93239f28246ddce3af0b539129c8c8fb713b1371457623baaaeefcbbafbed95a
+  dead-links-fix-20261104:
+    request_id: request-dead-links-fix-20261104-b958036b
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:1174f2e4d45c97dc0cec8799b213041b6f33919a382d7b6f2b0234a9865e31f5
+    transaction_id: transaction-20261104-004108-001
+    receipt_path: operations/transactions/transaction-20261104-004108-001.yaml
+    revisions:
+      source-beazley-generator-tricks: 1
+      source-cs229-project-archive: 2
+      source-eecs498: 2
+      source-fortmann-roe-bias-variance: 1
+      source-sklearn-user-guide: 3
+    snapshot_before: sha256:a7b0296e62cef7ae6cf0e79d1935ce10ae2cb5ef1e6fe9fe97e7f061d11cee81
+    snapshot_after: sha256:b91ed93c861f640980f2f0e090ce996bec8e78821cb448b3d96126bc85ebc5a1
   ea714712-6255-4f7c-b6d9-451a1330e05e:
     request_id: 8d64e141-6c2f-4992-9393-c63aab7cff79
     capability: module.plan.import
@@ -2520,6 +2559,17 @@ entries:
       unit-job-polars-selection-backend: 8
     snapshot_before: sha256:6bea708d2d6628a2e12a202e07803e5aed1cb87c208a07f7e4f55cc6a38d6899
     snapshot_after: sha256:b079c7b8d9b57a6403a64b09e97446df8c0ffdfd5f255d2478535cefb634e27d
+  py-note-url-fix-20261104:
+    request_id: request-py-note-url-fix-20261104-2a87f66d
+    capability: note.revise
+    channel: operator
+    intent_sha256: sha256:2f5cd6049ce45b81276cc4c0abce699bc4960b5f651f5f9d9b4e4230106ab24e
+    transaction_id: transaction-20261104-004315-001
+    receipt_path: operations/transactions/transaction-20261104-004315-001.yaml
+    revisions:
+      note-python-intermediate-roadmap: 1
+    snapshot_before: sha256:9898febd36e648264668d7b32c64c12b8b84293751d934b3d1a930c094667ff7
+    snapshot_after: sha256:c9290fbd453ac082dc78dc0826fba12b887245f60a21bf4ff2dd9d357e2833e9
   python-engineering-compress-20260904:
     request_id: request-python-engineering-compress-20260904
     capability: unit.map.import
@@ -2532,6 +2582,20 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  python-plan-intake-v2:
+    request_id: request-python-plan-intake-v2-143d9022
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:a3ade94c0e7612de71c7374d6a61302a9f2fa1d26554251bcfe067c33fadb946
+    transaction_id: transaction-20261104-005028-001
+    receipt_path: operations/transactions/transaction-20261104-005028-001.yaml
+    revisions:
+      source-python-docs: 1
+      source-slatkin-effective-python: 1
+      source-typing-docs: 1
+      source-uv-docs: 1
+    snapshot_before: sha256:293a2158dfe1dd09f736c3e7e1ee98b284252d405596f5637eb40cb718d8a046
+    snapshot_after: sha256:0a37aa7152525d58f53a18b7b6dc297689499059d3d0790ab8b5b81f393ae321
   repair-clt-652f4642affe40a5a3fe42e7238f7766:
     request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
     capability: module.plan.import
@@ -2987,6 +3051,20 @@ entries:
       unit-m2-sad-l12: 13
     snapshot_before: sha256:2357e4fbecdaf147e51ebab8ebe98f9162d15d40d6af894bce3de511e9e76e2d
     snapshot_after: sha256:fd87966223f4fc3d75eaa1cebd70baa4c3cd81f407b225f0ea0b4ebab09e1a03
+  reviewed-99212b1e3d064633a39c8faea0696ce7:
+    request_id: request-reviewed-5d97257aa8774e1384096a7fddcbf1a7
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:2df087ef27e6510afcdf4be6b9e61c87be3eddbbd0529f9ce4bf4aa9b8f2826f
+    transaction_id: transaction-20261104-005237-001
+    receipt_path: operations/transactions/transaction-20261104-005237-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 8
+      module-job-python-engineering: 2
+      study-map-job-python-engineering-fluency: 3
+      unit-job-python-engineering-fluency: 3
+    snapshot_before: sha256:8d3327a4b74ee36bf153a3fb917b82070c9041c45351a16762fde93cd8e5d12c
+    snapshot_after: sha256:75999024ff6b1f73d4ad2448422f9435b3076951541b7ff13e69f644138ebea8
   reviewed-9aa58391d570401cb0dd07aa31f3fdc5:
     request_id: request-reviewed-a1228c73b5fc479487a6627eecf5a93a
     capability: unit.map.import
@@ -3057,6 +3135,22 @@ entries:
       unit-algo2-exam-prep: 2
     snapshot_before: sha256:3ae27636b70a61fc95e0fc3cd418722a7a8ac3f28e724d2ffb3f2e8a361e1d5f
     snapshot_after: sha256:24197f662054e676d03534479cf30a14b9594864a27ea0484a11e0d0e3fdcb71
+  reviewed-b5770ea1fdc549cf872e65fc47098e07:
+    request_id: request-reviewed-a7fca830ef994953b6244764ebd37b53
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:cc8c272e8f85e71f22e4016659bc91b4442cab2236953039963399a20eb395b6
+    transaction_id: transaction-20261104-002241-001
+    receipt_path: operations/transactions/transaction-20261104-002241-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 6
+      module-hu-betriebssysteme: 2
+      study-map-bs-cpu-scheduling: 1
+      study-map-bs-processes: 1
+      unit-bs-cpu-scheduling: 1
+      unit-bs-processes: 1
+    snapshot_before: sha256:8e3d48a9bfe8239416fea05620f88ba063c13a5c1e0d464657c1f659e52c0362
+    snapshot_after: sha256:a7b0296e62cef7ae6cf0e79d1935ce10ae2cb5ef1e6fe9fe97e7f061d11cee81
   reviewed-b58de405621a4d2b8683ef85fba001fd:
     request_id: request-reviewed-79f16c0165254599b56801e8a11729ac
     capability: unit.plan.revise
@@ -3204,6 +3298,18 @@ entries:
       note-bs-os-basics-reference: 1
     snapshot_before: sha256:969347251f408e4e01655b2831745a757e3395007a81db35e687d2661393b217
     snapshot_after: sha256:b7595091f3ff178d4a3bdc8d501df4b9b7a266bdc21ba739a39ee7426e50ded2
+  roadmap-url-fix-20261104:
+    request_id: request-roadmap-url-fix-20261104-927e658b
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:b435cbdac749b687df11ff944906aa74f513441d5bc1fa4d0a99b51013b013e7
+    transaction_id: transaction-20261104-004254-001
+    receipt_path: operations/transactions/transaction-20261104-004254-001.yaml
+    revisions:
+      study-map-python-intermediate-roadmap: 1
+      unit-python-intermediate-roadmap: 1
+    snapshot_before: sha256:943295402a3210e2cc041230cd32a82e3399ba5a98d2dd134185882817d8e715
+    snapshot_after: sha256:9898febd36e648264668d7b32c64c12b8b84293751d934b3d1a930c094667ff7
   route-patch-leuphana-locator-2026-09-16:
     request_id: request-leuphana-locator-2026-09-16
     capability: route.patch

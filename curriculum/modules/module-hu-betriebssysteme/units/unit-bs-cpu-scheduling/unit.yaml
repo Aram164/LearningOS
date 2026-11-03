@@ -1,0 +1,88 @@
+id: unit-bs-cpu-scheduling
+type: unit
+module_id: module-hu-betriebssysteme
+kind: lecture
+title: BS 04 - CPU Scheduling (ältere Folien)
+order: 3
+scope: Der von Aram am 2026-11-04 als diesjährige Folienbasis bestätigte ältere Foliensatz 04_cpu_scheduling
+  copy.pdf, PDF-S.1-56 (Mai 2006). Vertieft die Scheduling-Grundlagen aus 03_processes.pdf S.15-29. Kein
+  Übungsblatt vorhanden; die vorgerechneten Wartezeit-Beispiele im Deck sind die einzige eingebaute Kontrolle.
+status: ready
+knowledge_map:
+  summary: Von den Scheduling-Zielen und Fairness-Massen über FCFS und Round Robin zu SJF mit Burst-Vorhersage,
+    dann Prioritäten und Multilevel-Verfahren bis zu CFS und Lottery und zuletzt den Systemkosten des
+    Kontextwechsels.
+  nodes:
+  - id: knowledge-bs-scheduling-goals
+    title: Scheduling-Ziele, Metriken und Fairness messen
+    summary: Latenz, Durchsatz und Turnaround auseinanderhalten; Max-Min-Fairness schrittweise verteilen
+      und Jains Index als Fairness-Mass lesen.
+  - id: knowledge-bs-fifo-rr
+    title: FCFS, Konvoi-Effekt und Round Robin beurteilen
+    summary: Wartezeiten unter FCFS berechnen und den Konvoi-Effekt benennen; Round Robin und Virtual
+      Round Robin samt Quantum-Abwägung dagegenstellen.
+    builds_on:
+    - knowledge-bs-scheduling-goals
+  - id: knowledge-bs-sjf-prediction
+    title: SJF/STCF und Burst-Vorhersage anwenden
+    summary: Präemptives gegen nicht-präemptives STCF an einem Beispiel durchrechnen; die nächste Burst-Länge
+      mit exponentieller Glättung schätzen.
+    builds_on:
+    - knowledge-bs-fifo-rr
+  - id: knowledge-bs-priority-multilevel
+    title: Prioritäten, Multilevel Queues, CFS und Lottery vergleichen
+    summary: Prioritätsinversion erklären; Multilevel-Feedback, Unix-Verfahren, CFS-Ideal und Lottery
+      an ihrem Fairness-Mechanismus unterscheiden.
+    builds_on:
+    - knowledge-bs-sjf-prediction
+  - id: knowledge-bs-scheduling-costs
+    title: Kontextwechsel-Kosten und Systemeffekte einordnen
+    summary: Versteckte Cache-Kosten des Kontextwechsels, Prozessor-Affinität, Gang Scheduling und Lastverteilung
+      durch Zufallswahl als Planungsgrössen benennen.
+    builds_on:
+    - knowledge-bs-priority-multilevel
+scope_sources:
+- source_id: source-bs-hu-prior-slides
+  authority: reference
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 1-56; ältere Arbeitsgrundlage, am 2026-11-04 als diesjährige
+    Folienbasis bestätigt
+source_selections:
+- route_id: route-bs-scheduling-goals
+  source_id: source-bs-hu-prior-slides
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 1-16
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-scheduling-goals
+- route_id: route-bs-fifo-rr
+  source_id: source-bs-hu-prior-slides
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 17-28
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-fifo-rr
+- route_id: route-bs-sjf-prediction
+  source_id: source-bs-hu-prior-slides
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 29-38
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-sjf-prediction
+- route_id: route-bs-priority-multilevel
+  source_id: source-bs-hu-prior-slides
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 39-49
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-priority-multilevel
+- route_id: route-bs-scheduling-costs
+  source_id: source-bs-hu-prior-slides
+  locator: 04_cpu_scheduling copy.pdf, pdf pp. 50-56
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-scheduling-costs
+current_study_map: study-map-bs-cpu-scheduling
+artifacts: {}
+workspace_ids:
+- workspace-bs-foundations

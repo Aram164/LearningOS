@@ -1,0 +1,135 @@
+schema_version: 2
+id: transaction-20261104-002241-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-11-04T00:22:41+01:00'
+snapshot_before: sha256:8e3d48a9bfe8239416fea05620f88ba063c13a5c1e0d464657c1f659e52c0362
+snapshot_after: sha256:a7b0296e62cef7ae6cf0e79d1935ce10ae2cb5ef1e6fe9fe97e7f061d11cee81
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 5
+  module-hu-betriebssysteme: 1
+  study-map-bs-cpu-scheduling: 0
+  study-map-bs-processes: 0
+  unit-bs-cpu-scheduling: 0
+  unit-bs-processes: 0
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 5
+    after: 6
+  module-hu-betriebssysteme:
+    before: 1
+    after: 2
+  study-map-bs-cpu-scheduling:
+    before: 0
+    after: 1
+  study-map-bs-processes:
+    before: 0
+    after: 1
+  unit-bs-cpu-scheduling:
+    before: 0
+    after: 1
+  unit-bs-processes:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-betriebssysteme/module.yaml
+  sha256_before: e4713d5dbef91f16946685c81b3893ced84277b293afc2ffbbada8b786446593
+  sha256_after: a5187423907ad77bfd28384c97fdbed1547d0dd818b693b55a4fd3f557d74149
+  created: false
+- path: curriculum/modules/module-hu-betriebssysteme/source-map.yaml
+  sha256_before: 928c8363705ee6f929f836b3a699aa7e74e55ae08bb6ebb9c88791a108dfc6a4
+  sha256_after: e3b2303a79f19a9cd417f29a9064db468c8bfd40759ffdada1a6b4554b61028e
+  created: false
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-fifo-rr/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-priority-multilevel/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-scheduling-costs/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-scheduling-goals/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-sjf-prediction/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/study-map.yaml
+  sha256_before: null
+  sha256_after: 48252646aad9fec91d95b71a0f147d65500bcf768d930204210e4b2d1211adfd
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/unit.yaml
+  sha256_before: null
+  sha256_after: b34d0e8cc0aef20a081dc7ee71b234cd2f12c6f88d03feccbbe5f5f5ee4a4c50
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-ipc/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-pcb-context-switch/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-process-concept/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-process-state/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-unix-lifecycle/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-windows-processes/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/study-map.yaml
+  sha256_before: null
+  sha256_after: 14e0f00c3356a10c9c8f0bd9d2deff3f21cd1f280381213c536ded784a60eeb0
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/unit.yaml
+  sha256_before: null
+  sha256_after: ca1f6cafe118afb42e08057d6e48027dee93e4e3c2e736125ccb6046b749460a
+  created: true
+- path: operations/transactions/lineage.yaml
+  sha256_before: 8c1ea698c63b0def5a5340ceffcab48b355eb8386891f27b12d6bf80bdb726b3
+  sha256_after: d95843b9cce906b5bd2e767c5672e103f2bff7428f28ce2495a736143ba5a869
+  created: false
+- path: work/active/workspace-bs-foundations/CONTEXT.md
+  sha256_before: 3df92242eecfdfb9bed1363b3a642e2bfd06b01f2940026745ced33fa0e60eb6
+  sha256_after: f88ee3c961e0bbb9c96571bb23c1b16bb14c186ba3346ec230d84b8be60a6667
+  created: false
+metadata:
+  data_roots_sha256: sha256:c4e9348cb0aeb6f8773c96642d9da4d977521a0343b58f64dc19f065b616c1ab
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-a7fca830ef994953b6244764ebd37b53
+  idempotency_key: reviewed-b5770ea1fdc549cf872e65fc47098e07
+  intent_sha256: sha256:cc8c272e8f85e71f22e4016659bc91b4442cab2236953039963399a20eb395b6
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:cc8c272e8f85e71f22e4016659bc91b4442cab2236953039963399a20eb395b6

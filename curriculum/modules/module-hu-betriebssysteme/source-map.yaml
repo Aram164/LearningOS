@@ -3,10 +3,11 @@ module_id: module-hu-betriebssysteme
 sources:
 - source_id: source-bs-hu-prior-slides
   role: first-exposure
-  why: Aram hat die älteren Folien ausdrücklich als Startmaterial gewählt; nur 02_structure.pdf erhält
-    jetzt einen Lernplan. Die drei vorhandenen PDFs bleiben erhalten.
-  when: Arbeitsgrundlage aus älteren Folien (Mai 2006), kein Nachweis für aktuellen Lehr- oder Prüfungsumfang.
-    03_processes.pdf und 04_cpu_scheduling copy.pdf sind für spätere Arbeit zurückgestellt.
+  why: Aram hat die älteren Folien ausdrücklich als Startmaterial gewählt; seit 2026-11-04 ist bestätigt,
+    dass die diesjährigen BS-Vorlesungen dieselben Folien verwenden. Alle drei vorhandenen PDFs erhalten
+    je eine Vorlesungseinheit mit Lernplan.
+  when: Älterer Foliensatz (Mai 2006), von Aram am 2026-11-04 als Folienbasis dieses Jahres bestätigt.
+    Kein Nachweis für Prüfungsformat oder Termine.
   priority: 0
   unit_routes:
   - id: route-bs-os-hardware
@@ -118,3 +119,188 @@ sources:
     scope: prior-year
     locator: 02_structure.pdf, pdf pp. 35-44
     vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+  - id: route-bs-process-concept
+    unit_id: unit-bs-processes
+    title: Prozess und Programm unterscheiden - ältere BS-Folien
+    format: course-material
+    angle: Das nedit-Beispiel trennt die Datei auf der Platte von zwei laufenden Ausführungen mit eigenem
+      Zustand; Lebenszyklus, Speicherlayout und virtuelle CPU bauen darauf auf.
+    angle_detail: 'S.2-8: Programm als passive Datei, Prozess als Ausführung mit Nutzer, Datei und Zustand;
+      dazu Text-/Daten-/Stack-Segmente, Heap, CPU-Virtualisierung mit I/O-Überlappung sowie pid/uid als
+      Prozessparameter. Älterer Foliensatz (Mai 2006); Folienbasis dieses Jahres laut Aram (2026-11-04).
+      Die Unix-/Windows-Sicht auf S.5 wird auf S.67 erneut aufgegriffen.'
+    covers:
+    - knowledge-bs-process-concept
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 1-8
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-pcb-context-switch
+    unit_id: unit-bs-processes
+    title: PCB, Kernel-Stack und Kontextwechsel - ältere BS-Folien
+    format: course-material
+    angle: Die Speicherort-Frage (Heap des Prozesses gegen Kernel) begründet, warum der PCB geschützt
+      im Kernel liegt und warum der Kontextwechsel einen eigenen Kernel-Stack braucht.
+    angle_detail: 'S.9-14: PCB-Inhalte (Speicherverwaltung, Zustand, Register), die beiden Speicherort-Ideen
+      mit ihren Crash- und Manipulationsfolgen, die tatsächliche Unix-Darstellung mit User-/Kernel-Stack
+      und residenten Tabellen sowie der Kontextwechsel als Sichern und Laden des vollständigen Prozesszustands
+      inklusive Seitentabelle.'
+    covers:
+    - knowledge-bs-pcb-context-switch
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 9-14
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-process-state
+    unit_id: unit-bs-processes
+    title: Prozesszustände, Warteschlangen und Scheduler-Ebenen - ältere BS-Folien
+    format: course-material
+    angle: 'Das Zustandsdiagramm wird zweimal gelesen: präemptiv mit externem Interrupt gegen kooperativ
+      nur über yield/block/exit; Warteschlangen und die drei Scheduler-Zeitskalen ordnen dieselben Übergänge
+      organisatorisch ein.'
+    angle_detail: 'S.15-29: Zustände New/Running/Ready/Waiting/Terminated, präemptives gegen kooperatives
+      Scheduling, Job-/Ready-/I/O-Warteschlangen, Long-/Medium-/Short-term-Scheduler, I/O-bound gegen
+      CPU-bound sowie das Linux-2.6-Beispiel mit task_struct und scheduler_tick(). S.29 kündigt ausdrücklich
+      an, dass Scheduling-Techniken später vertieft werden; diese Vertiefung ist 04_cpu_scheduling.'
+    covers:
+    - knowledge-bs-process-state
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 15-29
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-unix-lifecycle
+    unit_id: unit-bs-processes
+    title: 'Unix-Lebenszyklus: fork, exec, COW, exit und Zombie - ältere BS-Folien'
+    format: course-material
+    angle: 'Vom Win32-CreateProcess (neu spezifizieren) zum Unix-fork (duplizieren und später ersetzen):
+      die Quizprogramme zu fork-Ketten und die Gegenüberstellung von fork, vfork und COW machen die Semantik
+      zähl- und vorhersagbar.'
+    angle_detail: 'S.30-54: CreateProcess gegen fork/exec, Prozessbaum, die fork-Quizze auf S.37-38 und
+      41-42, Sharing- und Ausführungs-Optionen, vfork und Copy-on-Write, exec-Formate (ELF, Skript, Flat),
+      exit-Pfade, Zombie-PCB bis wait() sowie Kernel-Threads. Historischer Linux-2.6-Stand; als Mechanik,
+      nicht als heutige API-Anleitung lesen.'
+    covers:
+    - knowledge-bs-unix-lifecycle
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 30-54
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-ipc
+    unit_id: unit-bs-processes
+    title: IPC mit Signalen und Pipes - ältere BS-Folien
+    format: course-material
+    angle: Signale als Software-Interrupts mit ignorierbaren und nicht ignorierbaren Ausnahmen; die Pipe
+      als gerichteter Byte-Strom, dessen voller Puffer Produzenten blockiert und so Koordination ohne
+      Byte-für-Byte-Scheduling erzwingt.
+    angle_detail: 'S.55-65: Signalbegriff, Signal-Tabelle mit Default-Aktionen, eigener Handler über signal(),
+      die drei Empfangsoptionen, anonyme Pipes mit fork/dup2-Beispiel, Producer/Consumer-Koordination
+      am Puffer, Named Pipes (FIFO) für nicht verwandte Prozesse und Sockets als Verallgemeinerung der
+      Pipe-Idee.'
+    covers:
+    - knowledge-bs-ipc
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 55-65
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-windows-processes
+    unit_id: unit-bs-processes
+    title: Windows-Prozesse und Threads als Gegenmodell - ältere BS-Folien
+    format: course-material
+    angle: Windows trennt Ressourcencontainer (Prozess) und Ausführungseinheit (Thread) strikt; Subsysteme,
+      Per-Process-/Per-Thread-Daten und Thread-Zustände zeigen dieselben OS-Fragen in anderer Aufteilung
+      als Unix.
+    angle_detail: 'S.67-88: Prozess als Adressraum plus Ressourcen plus Sicherheit, Thread als Scheduling-Einheit
+      mit eigenem User-/Kernel-Stack und TLS, CreateProcess-Ablauf, Subsysteme und Native Images, geteilte
+      PCB-Darstellung, Jobs als Prozessgruppen mit Limits und AppDomains. S.66 ist eine leere Trennseite;
+      S.88 ist die Vokabelliste des Decks.'
+    covers:
+    - knowledge-bs-windows-processes
+    depth: course-aligned
+    scope: prior-year
+    locator: 03_processes.pdf, pdf pp. 67-88
+    vault_path: material://source-bs-hu-prior-slides/03_processes.pdf
+  - id: route-bs-scheduling-goals
+    unit_id: unit-bs-cpu-scheduling
+    title: Scheduling-Ziele, Metriken und Fairness - ältere BS-Folien
+    format: course-material
+    angle: Das Fabrik-Beispiel trennt Durchsatz von Latenz an einem Tag gegen 10 Minuten; Max-Min-Fairness
+      und Jains Index machen aus dem Fairness-Wunsch eine rechenbare Verteilung.
+    angle_detail: 'S.1-16: Scheduling als Zuordnung von Jobs zu Prozessoren, die drei Scheduler-Typen,
+      präemptiv gegen kooperativ, I/O-bound gegen CPU-bound mit Burst-Histogramm, die Ziele Latenz, Durchsatz,
+      Turnaround und Fairness, das durchgerechnete Max-Min-Beispiel (Bedarfe 2, 2.6, 4, 5 bei Kapazität
+      10) und Jains Fairness-Index mit seinen Eigenschaften.'
+    covers:
+    - knowledge-bs-scheduling-goals
+    depth: course-aligned
+    scope: prior-year
+    locator: 04_cpu_scheduling copy.pdf, pdf pp. 1-16
+    vault_path: material://source-bs-hu-prior-slides/04_cpu_scheduling copy.pdf
+  - id: route-bs-fifo-rr
+    unit_id: unit-bs-cpu-scheduling
+    title: FCFS, Konvoi-Effekt und Round Robin - ältere BS-Folien
+    format: course-material
+    angle: FCFS scheitert am Konvoi-Effekt eines langen ersten Jobs; Round Robin kauft Antwortzeit mit
+      Kontextwechseln, und das Zeitquantum ist die Abwägung zwischen beiden, die Virtual Round Robin für
+      I/O-lastige Prozesse nachbessert.
+    angle_detail: 'S.17-28: Strategieüberblick und Problemfälle (Verhungern, interaktive Prozesse hinter
+      Batch), FCFS mit Wartezeit-Beispiel, Konvoi-Effekt und Head-of-Line-Blocking, Round Robin mit Quantum,
+      das Gleichgrößen-Gegenbeispiel auf S.25, I/O-Fairness und die Quantum-Abwägung auf S.27 sowie Virtual
+      Round Robin mit AUX-Queue.'
+    covers:
+    - knowledge-bs-fifo-rr
+    depth: course-aligned
+    scope: prior-year
+    locator: 04_cpu_scheduling copy.pdf, pdf pp. 17-28
+    vault_path: material://source-bs-hu-prior-slides/04_cpu_scheduling copy.pdf
+  - id: route-bs-sjf-prediction
+    unit_id: unit-bs-cpu-scheduling
+    title: SJF/STCF und Burst-Vorhersage - ältere BS-Folien
+    format: course-material
+    angle: Das Optimalitätsargument zählt Fertigstellungszeiten in lexikalischer Reihenfolge; weil die
+      Burst-Länge unbekannt ist, ersetzt exponentielle Glättung die fehlende Zukunft durch gewichtete
+      Vergangenheit.
+    angle_detail: 'S.29-38: STCF/SJF präemptiv und nicht-präemptiv, das Optimalitätsargument auf S.30,
+      beide Wartezeit-Beispiele (nicht-präemptiv 4, präemptiv 3 bei P1-P4), das Wissensproblem auf S.33,
+      die Vorhersage aus dem letzten Burst, exponentielle Glättung S[n+1] auf S.36 und die Übertragung
+      auf Plattenzugriffe, wo die Armbewegung die Länge vorhersagbar macht.'
+    covers:
+    - knowledge-bs-sjf-prediction
+    depth: course-aligned
+    scope: prior-year
+    locator: 04_cpu_scheduling copy.pdf, pdf pp. 29-38
+    vault_path: material://source-bs-hu-prior-slides/04_cpu_scheduling copy.pdf
+  - id: route-bs-priority-multilevel
+    unit_id: unit-bs-cpu-scheduling
+    title: Prioritäten, Multilevel Queues, CFS und Lottery - ältere BS-Folien
+    format: course-material
+    angle: Prioritätsinversion zeigt, warum Rang allein keine Korrektheit gibt; Multilevel-Feedback ersetzt
+      den festen Rang durch beobachtetes Verhalten, CFS durch ein ideales Gleichlauf-Modell und Lottery
+      durch Lose.
+    angle_detail: 'S.39-49: Prioritäten mit Round Robin innerhalb einer Stufe, Prioritätsinversion am
+      Schloss-Szenario, getrennte Multilevel Queues, Multilevel-Feedback mit Queue-Parametern und dem
+      Drei-Queue-Beispiel (8 ms, 16 ms, FCFS), die Unix-Beispiele SVR3 und 4.3BSD mit Zerfall der CPU-Nutzung,
+      der Completely Fair Scheduler mit dem 1/n-Ideal und Lottery Scheduling mit proportionaler Aufteilung
+      unter Laständerung.'
+    covers:
+    - knowledge-bs-priority-multilevel
+    depth: course-aligned
+    scope: prior-year
+    locator: 04_cpu_scheduling copy.pdf, pdf pp. 39-49
+    vault_path: material://source-bs-hu-prior-slides/04_cpu_scheduling copy.pdf
+  - id: route-bs-scheduling-costs
+    unit_id: unit-bs-cpu-scheduling
+    title: Kontextwechsel-Kosten, Affinität und Lastverteilung - ältere BS-Folien
+    format: course-material
+    angle: 'Der Kontextwechsel kostet mehr als Register: kalte Caches verlangsamen um Faktoren, also plant
+      der Scheduler Affinität, Gang Scheduling für kooperierende Prozesse und zufällige Knotenwahl mit
+      ein.'
+    angle_detail: 'S.50-56: direkte gegen versteckte Kontextwechsel-Kosten (Cache-Verluste mit 2-10x-Verlangsamung),
+      Prozessor-Affinität, Gang Scheduling für Prozessgruppen, Lastverteilung durch zufällige Knotenwahl
+      statt teurer Vollabfrage, die Gesamtzusammenfassung auf S.54 und das Postscript auf S.55; S.56 ist
+      die Vokabelliste des Decks.'
+    covers:
+    - knowledge-bs-scheduling-costs
+    depth: course-aligned
+    scope: prior-year
+    locator: 04_cpu_scheduling copy.pdf, pdf pp. 50-56
+    vault_path: material://source-bs-hu-prior-slides/04_cpu_scheduling copy.pdf

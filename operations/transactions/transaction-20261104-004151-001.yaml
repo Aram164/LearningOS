@@ -1,0 +1,52 @@
+schema_version: 2
+id: transaction-20261104-004151-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-11-04T00:41:51+01:00'
+snapshot_before: sha256:b91ed93c861f640980f2f0e090ce996bec8e78821cb448b3d96126bc85ebc5a1
+snapshot_after: sha256:943295402a3210e2cc041230cd32a82e3399ba5a98d2dd134185882817d8e715
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 6
+  module-hu-aml: 14
+  unit-aml-l02: 6
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 6
+    after: 7
+  module-hu-aml:
+    before: 14
+    after: 15
+  unit-aml-l02:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 9b8fbcc8aa0cc258213ef6d5a6f95d92e1a14eb8a29edb7e04b6301d0761d76a
+  sha256_after: 5dbf5ac29387dc2767973352c615b00f01a2601b484cc168ee5ccfb09b5ab31b
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: d95843b9cce906b5bd2e767c5672e103f2bff7428f28ce2495a736143ba5a869
+  sha256_after: 72d5334542ae194260e436a5bf61d875581a36a87f4b900559b68792f2e78c20
+  created: false
+metadata:
+  data_roots_sha256: sha256:559eb29c05067e51176667273fea2969c27221c687ff950bdd93f46d1ade6808
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-aml-route-url-fix-20261104-5dce1bf1
+  idempotency_key: aml-route-url-fix-20261104
+  intent_sha256: sha256:4cb008a87aa2391f0b1cb5c0473039937129c504574a660c82ec3dafb59f454c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:4cb008a87aa2391f0b1cb5c0473039937129c504574a660c82ec3dafb59f454c

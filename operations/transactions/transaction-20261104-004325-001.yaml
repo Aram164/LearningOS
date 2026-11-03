@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261104-004325-001
+type: transaction-receipt
+status: committed
+capability: note.revise
+committed_at: '2026-11-04T00:43:25+01:00'
+snapshot_before: sha256:c9290fbd453ac082dc78dc0826fba12b887245f60a21bf4ff2dd9d357e2833e9
+snapshot_after: sha256:00bedcb560021ff37c4aefb8c094fab2030d9531bc722ef942b8a2f4ad7dcd29
+expected_revisions:
+  note-aml-l02-exercise-bank: 0
+artifact_revisions:
+  note-aml-l02-exercise-bank:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/machine-learning/note-aml-l02-exercise-bank.md
+  sha256_before: 7669ba155c15c71242be0f5e4e0776927d605337955783f0460c39dc572934df
+  sha256_after: 36a0353dbd304097e9358e16d2ca96c0669e4c650c79d9bce1cd5341246e967c
+  created: false
+metadata:
+  data_roots_sha256: sha256:f877fbbfa708f67aa2d8e3ccdc2e08e9dcff7662b6c6f83fd78bc5c26b55f83b
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.revise
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-aml-note-url-fix-20261104-4a2850df
+  idempotency_key: aml-note-url-fix-20261104
+  intent_sha256: sha256:2a5b94a5c33297516f3df887a73f70b665a5f481fdf52ef3743e9809f35609a0
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:2a5b94a5c33297516f3df887a73f70b665a5f481fdf52ef3743e9809f35609a0

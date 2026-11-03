@@ -483,21 +483,6 @@ sources:
     - implementation
     strengths:
     - For mlprov sprint step M.4.x (Fairness — graded, has a test). Read when reaching it, not before
-- id: source-fortmann-roe-bias-variance
-  thematic_group_ids:
-  - thematic-group-machine-learning
-  title: Understanding the Bias-Variance Tradeoff
-  type: website
-  authors:
-  - Scott Fortmann-Roe
-  url: https://scott.fortmann-roe.com/docs/BiasVariance.html
-  evaluations:
-  - roles:
-    - intuition
-    - derivation
-    strengths:
-    - The canonical bias–variance essay; works the decomposition through k-NN → exact fit for AML L02
-      §8
 - id: source-geron-handson
   thematic_group_ids:
   - thematic-group-machine-learning
@@ -1135,35 +1120,6 @@ sources:
     cs231n-notes-image-classification-k: https://cs231n.github.io/classification/
     optimization-sgd: https://cs231n.github.io/optimization-1/
     cs231n-stanford-edu: https://cs231n.stanford.edu/
-- id: source-eecs498
-  thematic_group_ids:
-  - thematic-group-machine-learning
-  title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson)
-  type: course
-  organization: University of Michigan
-  url: https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r
-  evaluations:
-  - concepts:
-    - concept-gradient-descent
-    - concept-adam-optimizer
-    - concept-neural-network
-    - concept-backpropagation
-    - concept-convolutional-networks
-    - concept-recurrent-networks
-    - concept-dropout
-    roles:
-    - first-learning
-    - review
-    level: intermediate
-    strengths:
-    - 'Schedule-verified picks: L4 Optimization (SGD→momentum→AdaGrad→Adam→second-order = exactly AML
-      L06''s outlook incl. Newton), L5 NNs, L6 Backprop (computational graphs — teaches it exactly the
-      lecture''s way), L7 Conv + L8 CNN Architectures (AlexNet/VGG/ResNet), L10 Training I (init/dropout/augmentation),
-      L12 Recurrent Networks'
-    weaknesses:
-    - L7's batch-norm part is beyond the 2026 AML deck
-  identifiers:
-    course-site: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
 - id: source-cs229-2018-videos
   title: Stanford CS229 Machine Learning (Autumn 2018 lectures, Andrew Ng)
   type: video
@@ -1793,54 +1749,6 @@ sources:
     cpp-resources: https://brandonrohrer.com/cpp_resources.html
     git: https://brandonrohrer.com/git_resources.html
     matplotlib-guides: https://brandonrohrer.com/matplotlib_just_plot_it.html
-- id: source-sklearn-user-guide
-  thematic_group_ids:
-  - thematic-group-machine-learning
-  - thematic-group-software
-  title: scikit-learn documentation — user guide & examples
-  type: documentation
-  organization: scikit-learn
-  url: https://scikit-learn.org/stable/user_guide.html
-  identifiers:
-    examples-gallery: https://scikit-learn.org/stable/auto_examples/index.html
-    scikit-learn-underfitting-vs: https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html
-    ridge-lasso-user-guide: https://scikit-learn.org/stable/modules/linear_model.html
-    sklearn-getting-started: https://scikit-learn.org/stable/getting_started.html
-    developing-estimators: https://scikit-learn.org/stable/developers/develop.html
-    compose-guide: https://scikit-learn.org/stable/modules/compose.html
-    mixed-types-ct-example: https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html
-    scikit-learn-algorithm-cheat-sheet: https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
-    docs-pdf: https://scikit-learn.org/stable/_downloads/scikit-learn-docs.pdf
-  evaluations:
-  - roles:
-    - review
-    - implementation
-    useful_sections:
-    - Underfitting vs. Overfitting example: the degree 1/4/15 polynomial demo (train vs test, with code)
-        for AML L04 — previews Übungsblatt 2
-    - Linear Models user guide: the authoritative free Ridge/Lasso reference
-  - roles:
-    - implementation
-    strengths:
-    - The complete reference set — the targeted mlprov subset below is sequenced with exercises in the
-      sklearn crash-plan note; the full guide/gallery is the whole-library index for anything not covered
-    useful_sections:
-    - Getting Started + Developing estimators: the mlprov-relevant contract pages (fit/predict, estimator
-        API)
-    - compose guide + ColumnTransformer mixed-types example: near line-for-line the adult_complex test
-        pipeline
-    - Choosing the right estimator (cheat-sheet flowchart): quick model-selection reference for mlprov
-        + AML
-  - concepts:
-    - concept-classification-metrics
-    - concept-bias-variance-tradeoff
-    roles:
-    - implementation
-    - review
-    strengths:
-    - The common-pitfalls guide explains preprocessing leakage and separation of training from evaluation.
-    useful_sections:
-    - Common pitfalls — data leakage: https://scikit-learn.org/stable/common_pitfalls.html
 - id: source-sutton-barto-rl
   thematic_group_ids:
   - thematic-group-machine-learning
@@ -2038,3 +1946,95 @@ sources:
     possible_use: Medical prediction reporting, uncertainty, evaluation and limitations.
   thematic_group_ids:
   - thematic-group-machine-learning
+- id: source-fortmann-roe-bias-variance
+  thematic_group_ids:
+  - thematic-group-machine-learning
+  title: Understanding the Bias-Variance Tradeoff
+  type: website
+  authors:
+  - Scott Fortmann-Roe
+  url: https://web.archive.org/web/2024/https://scott.fortmann-roe.com/docs/BiasVariance.html
+  evaluations:
+  - roles:
+    - intuition
+    - derivation
+    strengths:
+    - The canonical bias–variance essay; works the decomposition through k-NN → exact fit for AML L02
+      §8
+- id: source-eecs498
+  thematic_group_ids:
+  - thematic-group-machine-learning
+  title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson)
+  type: course
+  organization: University of Michigan
+  url: https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r
+  evaluations:
+  - concepts:
+    - concept-gradient-descent
+    - concept-adam-optimizer
+    - concept-neural-network
+    - concept-backpropagation
+    - concept-convolutional-networks
+    - concept-recurrent-networks
+    - concept-dropout
+    roles:
+    - first-learning
+    - review
+    level: intermediate
+    strengths:
+    - 'Schedule-verified picks: L4 Optimization (SGD→momentum→AdaGrad→Adam→second-order = exactly AML
+      L06''s outlook incl. Newton), L5 NNs, L6 Backprop (computational graphs — teaches it exactly the
+      lecture''s way), L7 Conv + L8 CNN Architectures (AlexNet/VGG/ResNet), L10 Training I (init/dropout/augmentation),
+      L12 Recurrent Networks'
+    weaknesses:
+    - L7's batch-norm part is beyond the 2026 AML deck
+  identifiers:
+    course-site: https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r
+- id: source-sklearn-user-guide
+  thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-software
+  title: scikit-learn documentation — user guide & examples
+  type: documentation
+  organization: scikit-learn
+  url: https://scikit-learn.org/stable/user_guide.html
+  identifiers:
+    examples-gallery: https://scikit-learn.org/stable/auto_examples/index.html
+    scikit-learn-underfitting-vs: https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html
+    ridge-lasso-user-guide: https://scikit-learn.org/stable/modules/linear_model.html
+    sklearn-getting-started: https://scikit-learn.org/stable/getting_started.html
+    developing-estimators: https://scikit-learn.org/stable/developers/develop.html
+    compose-guide: https://scikit-learn.org/stable/modules/compose.html
+    mixed-types-ct-example: https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html
+    scikit-learn-algorithm-cheat-sheet: https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
+    docs-pdf: https://scikit-learn.org/stable/user_guide.html
+  evaluations:
+  - roles:
+    - review
+    - implementation
+    useful_sections:
+    - Underfitting vs. Overfitting example: the degree 1/4/15 polynomial demo (train vs test, with code)
+        for AML L04 — previews Übungsblatt 2
+    - Linear Models user guide: the authoritative free Ridge/Lasso reference
+  - roles:
+    - implementation
+    strengths:
+    - The complete reference set — the targeted mlprov subset below is sequenced with exercises in the
+      sklearn crash-plan note; the full guide/gallery is the whole-library index for anything not covered
+    useful_sections:
+    - Getting Started + Developing estimators: the mlprov-relevant contract pages (fit/predict, estimator
+        API)
+    - compose guide + ColumnTransformer mixed-types example: near line-for-line the adult_complex test
+        pipeline
+    - Choosing the right estimator (cheat-sheet flowchart): quick model-selection reference for mlprov
+        + AML
+  - concepts:
+    - concept-classification-metrics
+    - concept-bias-variance-tradeoff
+    roles:
+    - implementation
+    - review
+    strengths:
+    - The common-pitfalls guide explains preprocessing leakage and separation of training from evaluation.
+    useful_sections:
+    - Common pitfalls — data leakage: https://scikit-learn.org/stable/common_pitfalls.html

@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261104-004315-001
+type: transaction-receipt
+status: committed
+capability: note.revise
+committed_at: '2026-11-04T00:43:15+01:00'
+snapshot_before: sha256:9898febd36e648264668d7b32c64c12b8b84293751d934b3d1a930c094667ff7
+snapshot_after: sha256:c9290fbd453ac082dc78dc0826fba12b887245f60a21bf4ff2dd9d357e2833e9
+expected_revisions:
+  note-python-intermediate-roadmap: 0
+artifact_revisions:
+  note-python-intermediate-roadmap:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  sha256_before: 083350e87927733143084db93395818caf299034bab834b62f372599a91436b6
+  sha256_after: 83c982e8988733155553820b514cb5380f3ef3825b9cd5d3607fb18308628927
+  created: false
+metadata:
+  data_roots_sha256: sha256:43c57b5ecbf2da50820bdaed7c417d07135a5d1fbf1d340da6828bb0ca56292c
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.revise
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-py-note-url-fix-20261104-2a87f66d
+  idempotency_key: py-note-url-fix-20261104
+  intent_sha256: sha256:2f5cd6049ce45b81276cc4c0abce699bc4960b5f651f5f9d9b4e4230106ab24e
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:2f5cd6049ce45b81276cc4c0abce699bc4960b5f651f5f9d9b4e4230106ab24e

@@ -1,0 +1,257 @@
+id: study-map-bs-cpu-scheduling
+type: study-map
+plan_template_version: 1
+unit_id: unit-bs-cpu-scheduling
+status: ready
+current_stage: stage-bs-scheduling-goals
+source_plan:
+  path: ../../../../workbench/bs-lectures-2026-11-04/module-plan.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-bs-scheduling-goals
+  number: 1
+  title: Scheduling-Ziele, Metriken und Fairness messen
+  status: pending
+  objective: Latenz, Durchsatz und Turnaround auseinanderhalten; Max-Min-Fairness schrittweise verteilen
+    und Jains Index als Fairness-Mass lesen.
+  done_when:
+  - Erkläre am Fabrik-Beispiel (S.10), warum ein Tag Durchlaufzeit mit guter Latenz verträglich ist.
+  - Rechne die Max-Min-Verteilung für die Bedarfe 2, 2.6, 4, 5 bei Kapazität 10 (S.13) schrittweise nach.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-scheduling-goals
+    kind: read
+    material_ref:
+      route_id: route-bs-scheduling-goals
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-scheduling-goals
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-scheduling-goals/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-scheduling-goals
+  runtime_target:
+    concept: knowledge-bs-scheduling-goals
+    capability:
+      kind: explain
+      operands:
+      - Scheduling-Ziele, Metriken und Fairness messen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Erkläre am Fabrik-Beispiel (S.10), warum ein Tag Durchlaufzeit mit guter Latenz verträglich ist.
+    - Rechne die Max-Min-Verteilung für die Bedarfe 2, 2.6, 4, 5 bei Kapazität 10 (S.13) schrittweise
+      nach.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:c4881d57753700bce580153ad232fc7f67d4c4d04b1648d37a8a71cb43e3e0cd
+- id: stage-bs-fifo-rr
+  number: 2
+  title: FCFS, Konvoi-Effekt und Round Robin beurteilen
+  status: pending
+  objective: Wartezeiten unter FCFS berechnen und den Konvoi-Effekt benennen; Round Robin und Virtual
+    Round Robin samt Quantum-Abwägung dagegenstellen.
+  done_when:
+  - Berechne die mittlere Wartezeit des Drei-Job-Beispiels (S.20) in beiden Ankunftsreihenfolgen und benenne
+    den Konvoi-Effekt.
+  - Begründe am Beispiel gleich langer Jobs (S.25), warum Round Robin faire, aber schlechte mittlere Wartezeit
+    liefert, und was Virtual Round Robin daran ändert.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-fifo-rr
+    kind: read
+    material_ref:
+      route_id: route-bs-fifo-rr
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-fifo-rr
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-fifo-rr/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-fifo-rr
+  runtime_target:
+    concept: knowledge-bs-fifo-rr
+    capability:
+      kind: explain
+      operands:
+      - FCFS, Konvoi-Effekt und Round Robin beurteilen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Berechne die mittlere Wartezeit des Drei-Job-Beispiels (S.20) in beiden Ankunftsreihenfolgen und
+      benenne den Konvoi-Effekt.
+    - Begründe am Beispiel gleich langer Jobs (S.25), warum Round Robin faire, aber schlechte mittlere
+      Wartezeit liefert, und was Virtual Round Robin daran ändert.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:b2d1b486b914932f8c99780a6b1cb609d9d8f9f1da2ac2b42f52d068d5023188
+- id: stage-bs-sjf-prediction
+  number: 3
+  title: SJF/STCF und Burst-Vorhersage anwenden
+  status: pending
+  objective: Präemptives gegen nicht-präemptives STCF an einem Beispiel durchrechnen; die nächste Burst-Länge
+    mit exponentieller Glättung schätzen.
+  done_when:
+  - Rechne P1-P4 (S.31-32) nicht-präemptiv und präemptiv durch und prüfe die mittleren Wartezeiten 4 gegen
+    3.
+  - Schätze mit S[n+1] aus zwei gegebenen Burst-Längen den nächsten Burst und erkläre die Rolle der Gewichtung.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-sjf-prediction
+    kind: read
+    material_ref:
+      route_id: route-bs-sjf-prediction
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-sjf-prediction
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-sjf-prediction/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-sjf-prediction
+  runtime_target:
+    concept: knowledge-bs-sjf-prediction
+    capability:
+      kind: explain
+      operands:
+      - SJF/STCF und Burst-Vorhersage anwenden
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Rechne P1-P4 (S.31-32) nicht-präemptiv und präemptiv durch und prüfe die mittleren Wartezeiten 4
+      gegen 3.
+    - Schätze mit S[n+1] aus zwei gegebenen Burst-Längen den nächsten Burst und erkläre die Rolle der
+      Gewichtung.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:4d95bdf2e77a92b5772942301a29acf74cb53bb569764466532da90b56fc8c17
+- id: stage-bs-priority-multilevel
+  number: 4
+  title: Prioritäten, Multilevel Queues, CFS und Lottery vergleichen
+  status: pending
+  objective: Prioritätsinversion erklären; Multilevel-Feedback, Unix-Verfahren, CFS-Ideal und Lottery
+    an ihrem Fairness-Mechanismus unterscheiden.
+  done_when:
+  - Erkläre die Prioritätsinversion am Schloss-Szenario (S.40) und, warum reine Prioritäten sie nicht
+    verhindern.
+  - Verfolge einen CPU-lastigen und einen interaktiven Prozess durch die drei Queues (8 ms, 16 ms, FCFS)
+    und stelle CFS und Lottery mit je einem Satz dagegen.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-priority-multilevel
+    kind: read
+    material_ref:
+      route_id: route-bs-priority-multilevel
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-priority-multilevel
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-priority-multilevel/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-priority-multilevel
+  runtime_target:
+    concept: knowledge-bs-priority-multilevel
+    capability:
+      kind: explain
+      operands:
+      - Prioritäten, Multilevel Queues, CFS und Lottery vergleichen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Erkläre die Prioritätsinversion am Schloss-Szenario (S.40) und, warum reine Prioritäten sie nicht
+      verhindern.
+    - Verfolge einen CPU-lastigen und einen interaktiven Prozess durch die drei Queues (8 ms, 16 ms, FCFS)
+      und stelle CFS und Lottery mit je einem Satz dagegen.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:c23533b66426ebb56c49acb7a03a2b1bd9c1c64174f7ffc1758dc3bab97a5ef4
+- id: stage-bs-scheduling-costs
+  number: 5
+  title: Kontextwechsel-Kosten und Systemeffekte einordnen
+  status: pending
+  objective: Versteckte Cache-Kosten des Kontextwechsels, Prozessor-Affinität, Gang Scheduling und Lastverteilung
+    durch Zufallswahl als Planungsgrössen benennen.
+  done_when:
+  - Unterscheide direkte von versteckten Kontextwechsel-Kosten und begründe Prozessor-Affinität daraus.
+  - Nutze S.56 zur freien Begriffswiederholung und ordne Gang Scheduling und Lastverteilung je einem Einsatzfall
+    zu.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-scheduling-costs
+    kind: read
+    material_ref:
+      route_id: route-bs-scheduling-costs
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-scheduling-costs
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/stages/stage-bs-scheduling-costs/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-scheduling-costs
+  runtime_target:
+    concept: knowledge-bs-scheduling-costs
+    capability:
+      kind: explain
+      operands:
+      - Kontextwechsel-Kosten und Systemeffekte einordnen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Unterscheide direkte von versteckten Kontextwechsel-Kosten und begründe Prozessor-Affinität daraus.
+    - Nutze S.56 zur freien Begriffswiederholung und ordne Gang Scheduling und Lastverteilung je einem
+      Einsatzfall zu.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:3be93c56bc1c17b4363c2c9a6d8023d627e230b2c60ae48be3f5f7e40fe6660e
+shelving:
+  state: none

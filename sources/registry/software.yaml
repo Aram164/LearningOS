@@ -25,25 +25,6 @@ sources:
     strengths:
     - ⭐ Names are references; assignment never copies; mutation vs rebinding (~40 min). The written twin
       of Fluent Python Ch 6 — explains why a shared provenance DataFrame bites
-- id: source-beazley-generator-tricks
-  title: Beazley — Generator Tricks for Systems Programmers
-  type: course
-  thematic_group_ids:
-  - thematic-group-software
-  authors:
-  - David Beazley
-  url: https://github.com/dabeaz/generators
-  evaluations:
-  - concepts:
-    - concept-python
-    roles:
-    - first-learning
-    - implementation
-    level: intermediate
-    strengths:
-    - ⭐ Slides + code, ~2h. Builds generator PIPELINES over log files — the closest public analogue to
-      a pass pipeline over a graph. The best single resource for depth-drills Stage 7; Parts 1–4 if short
-      on time
 - id: source-beazley-python-distilled
   title: Beazley — Python Distilled
   type: book
@@ -502,43 +483,6 @@ sources:
   - Carol Nichols
   url: https://doc.rust-lang.org/book/
   material: material://source-rust-book
-- id: source-slatkin-effective-python
-  title: Slatkin — Effective Python
-  type: book
-  thematic_group_ids:
-  - thematic-group-software
-  authors:
-  - Brett Slatkin
-  year: 2024
-  material: material://source-slatkin-effective-python/effective-python.pdf
-  evaluations:
-  - concepts:
-    - concept-python
-    roles:
-    - review
-    - reference
-    level: intermediate
-    strengths:
-    - '⭐ The best complement to Fluent Python at the intermediate band: 125 short items, four minutes
-      each, telling you what to DO where FP explains how the language works. Per-stage item mapping is
-      in the depth-drills SHELF.md §1a'
-    - 3e Item 21 'Be Defensive when Iterating over Arguments' is the one-shot-iterator hazard stated as
-      an API-design rule — the single best four pages on it anywhere
-    - 3e Item 49 'Prefer Object-Oriented Polymorphism over functools.singledispatch' is depth-drills Stage
-      8's expression-problem judgement stated outright — the 3rd ed. is the only edition that has it
-    - 3e Items 92–96, 99, 108–115 are the only local coverage of the three cross-cutting topics no depth-drills
-      stage owns (testing, debugging, performance) — SHELF.md §3a/3b/3c. Items 94–96 (replacing Python
-      with C, ctypes, extension modules) also feed the Rust/PyO3 track, Roadmap Step 25
-    weaknesses:
-    - ⚠️ TWO FILES, ONE RECORD. Citations throughout the depth drills use 3rd-ed numbering, taken from
-      effective-python-3e-toc-sample.pdf — an 80-page publisher sample that carries the complete 125-item
-      table of contents but NO item body text. The readable full text on the shelf (effective-python.pdf,
-      the `material:` path above) is the 2nd ed., 90 items, Python 3.8-era. To read a cited item in the
-      2e copy, use the 3e→2e crosswalk in SHELF.md §1a
-    - ~35 items are 3rd-ed-only and have no 2e text on the shelf at all — including 3e 20, 22, 30, 39,
-      46, 49, 50, 51, 65, 89, 93. SHELF.md §1a marks which stage citations fall in that set
-    - Concurrency (3e Items 67–79) and asyncio are deliberately out of scope for the depth ladder — Roadmap
-      Step 19
 - id: source-software-foundations
   thematic_group_ids:
   - thematic-group-software
@@ -852,5 +796,100 @@ sources:
     observed: '2026-10-22'
     possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
       selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-beazley-generator-tricks
+  title: Beazley — Generator Tricks for Systems Programmers
+  type: course
+  thematic_group_ids:
+  - thematic-group-software
+  authors:
+  - David Beazley
+  url: https://web.archive.org/web/2024/https://github.com/dabeaz/generators
+  evaluations:
+  - concepts:
+    - concept-python
+    roles:
+    - first-learning
+    - implementation
+    level: intermediate
+    strengths:
+    - ⭐ Slides + code, ~2h. Builds generator PIPELINES over log files — the closest public analogue to
+      a pass pipeline over a graph. The best single resource for depth-drills Stage 7; Parts 1–4 if short
+      on time
+- id: source-slatkin-effective-python
+  title: Slatkin - Effective Python (2nd edition full text; 3rd edition contents sample)
+  type: book
+  thematic_group_ids:
+  - thematic-group-software
+  authors:
+  - Brett Slatkin
+  year: 2020
+  material: material://source-slatkin-effective-python/effective-python.pdf
+  evaluations:
+  - concepts:
+    - concept-python
+    roles:
+    - review
+    - reference
+    level: intermediate
+    strengths:
+    - '⭐ The best complement to Fluent Python at the intermediate band: 125 short items, four minutes
+      each, telling you what to DO where FP explains how the language works. Per-stage item mapping is
+      in the depth-drills SHELF.md §1a'
+    - 3e Item 21 'Be Defensive when Iterating over Arguments' is the one-shot-iterator hazard stated as
+      an API-design rule — the single best four pages on it anywhere
+    - 3e Item 49 'Prefer Object-Oriented Polymorphism over functools.singledispatch' is depth-drills Stage
+      8's expression-problem judgement stated outright — the 3rd ed. is the only edition that has it
+    - 3e Items 92–96, 99, 108–115 are the only local coverage of the three cross-cutting topics no depth-drills
+      stage owns (testing, debugging, performance) — SHELF.md §3a/3b/3c. Items 94–96 (replacing Python
+      with C, ctypes, extension modules) also feed the Rust/PyO3 track, Roadmap Step 25
+    weaknesses:
+    - ⚠️ TWO FILES, ONE RECORD. Citations throughout the depth drills use 3rd-ed numbering, taken from
+      effective-python-3e-toc-sample.pdf — an 80-page publisher sample that carries the complete 125-item
+      table of contents but NO item body text. The readable full text on the shelf (effective-python.pdf,
+      the `material:` path above) is the 2nd ed., 90 items, Python 3.8-era. To read a cited item in the
+      2e copy, use the 3e→2e crosswalk in SHELF.md §1a
+    - ~35 items are 3rd-ed-only and have no 2e text on the shelf at all — including 3e 20, 22, 30, 39,
+      46, 49, 50, 51, 65, 89, 93. SHELF.md §1a marks which stage citations fall in that set
+    - Concurrency (3e Items 67–79) and asyncio are deliberately out of scope for the depth ladder — Roadmap
+      Step 19
+- id: source-python-docs
+  title: 'Python documentation: tutorial, reference, HOWTOs and version changes'
+  type: documentation
+  organization: Python Software Foundation
+  url: https://docs.python.org/3/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.python.org/3.11/tutorial/index.html
+    observed: '2026-11-02'
+    possible_use: Official language authority, with the 3.11 baseline and separately labelled newer features.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-typing-docs
+  title: Python typing documentation
+  type: documentation
+  organization: Python typing community
+  url: https://typing.python.org/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://typing.python.org/en/latest/guides/modernizing.html
+    observed: '2026-11-02'
+    possible_use: Version-aware guidance for annotations, generics and protocols.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-uv-docs
+  title: uv documentation
+  type: documentation
+  organization: Astral
+  url: https://docs.astral.sh/uv/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.astral.sh/uv/guides/projects/
+    observed: '2026-11-02'
+    possible_use: Project environments, locks, dependencies and running commands.
   thematic_group_ids:
   - thematic-group-software

@@ -1,6 +1,6 @@
 # 2026-11-03 — Focus project entry and selected-area feedback disagree
 
-**Status:** retained observation; GitHub filing blocked on3 November2026. Search of the owning UI repository found no matching unresolved report. The connected GitHub integration returned403 `Resource not accessible by integration`; the alternate local GitHub account reports an invalid token, and the browser requires sign-in. No issue was created. The complete ready-to-file body is linked below; no credentials or sharing settings were changed.
+**Status:** retained observation; GitHub filing blocked on 3 November 2026. Search of the owning UI repository found no matching unresolved report. The connected GitHub integration returned 403 `Resource not accessible by integration`; the alternate local GitHub account reports an invalid token, and the browser requires sign-in. No issue was created. The complete ready-to-file body is linked below; no credentials or sharing settings were changed.
 
 **Task and exact step.** During the authorized live Focus visibility/navigation/order audit, step 02 selected a study area inside Learn; steps 19 and 20 activated the identically labelled Thesis & projects controls in the sidebar and Learn page.
 

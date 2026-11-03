@@ -5634,7 +5634,7 @@ sources:
     angle_detail: Change k in the interactive boundary and predict the variance term before reading the
       formula. Unlike ISLP, this route explicitly gives σ²/k for k-NN; unlike ESL, it makes the effect
       visible before the algebra.
-    url: https://scott.fortmann-roe.com/docs/BiasVariance.html
+    url: https://web.archive.org/web/2024/https://scott.fortmann-roe.com/docs/BiasVariance.html
 - source_id: source-mueller-kernel-tutorial
   role: derivation
   why: The examiner-school primary tutorial introduces feature spaces and kernel algorithms independently

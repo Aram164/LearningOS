@@ -8,6 +8,8 @@ institution: HU Berlin
 semester: wise-2026
 unit_order:
 - unit-bs-os-structure
+- unit-bs-processes
+- unit-bs-cpu-scheduling
 source_map: source-map.yaml
 thematic_group_ids:
 - thematic-group-software

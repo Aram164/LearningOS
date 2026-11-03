@@ -234,7 +234,7 @@ sources: [source-fluent-python]
 
 - **Core:** FP **Ch 17** (Iterators, Generators, Classic Coroutines) — PY.06 ⬜ — read the generators section first; the coroutines section is Step 24.
 - **Article:** [Trey Hunner — The Iterator Protocol: How for Loops Work](https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/).
-- **Classic:** [David Beazley — Generator Tricks for Systems Programmers](https://github.com/dabeaz/generators) ⭐ — generator pipelines over logs; career-grade for data engineering.
+- **Classic:** [David Beazley — Generator Tricks for Systems Programmers](https://web.archive.org/web/2024/https://github.com/dabeaz/generators) ⭐ — generator pipelines over logs; career-grade for data engineering.
 - **Article:** [Real Python — Introduction to Generators](https://realpython.com/introduction-to-python-generators/).
 - **`yield from`:** delegates to a sub-iterator; essential in recursive generator traversals (like Stratum's DAG walkers). `yield from inner` is shorthand for `for x in inner: yield x` but also proxies `.send()` and `.throw()`. [PEP 380](https://peps.python.org/pep-0380/).
 - **Hierarchy:** iterable (has `__iter__`) ⊃ iterator (also has `__next__`, exhausts) ⊃ generator (iterator written with `yield`).

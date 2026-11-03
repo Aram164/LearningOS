@@ -1,0 +1,307 @@
+id: study-map-bs-processes
+type: study-map
+plan_template_version: 1
+unit_id: unit-bs-processes
+status: ready
+current_stage: stage-bs-process-concept
+source_plan:
+  path: ../../../../workbench/bs-lectures-2026-11-04/module-plan.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-bs-process-concept
+  number: 1
+  title: Prozess und Programm unterscheiden
+  status: pending
+  objective: Eine Programmdatei gegen ihre laufenden Ausführungen mit eigenem Zustand abgrenzen; Segmente,
+    Heap, virtuelle CPU, pid und uid als Prozessbestandteile benennen.
+  done_when:
+  - Erkläre am nedit-Beispiel (S.2), warum zwei Prozesse dasselbe Programm ausführen und trotzdem verschiedene
+    Zustände haben.
+  - Zeichne Text-, Daten-, Stack-Segment und Heap eines Prozesses und ordne pid und uid als Parameter
+    zu.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-process-concept
+    kind: read
+    material_ref:
+      route_id: route-bs-process-concept
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-process-concept
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-process-concept/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-process-concept
+  runtime_target:
+    concept: knowledge-bs-process-concept
+    capability:
+      kind: explain
+      operands:
+      - Prozess und Programm unterscheiden
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Erkläre am nedit-Beispiel (S.2), warum zwei Prozesse dasselbe Programm ausführen und trotzdem verschiedene
+      Zustände haben.
+    - Zeichne Text-, Daten-, Stack-Segment und Heap eines Prozesses und ordne pid und uid als Parameter
+      zu.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:289c2f7794329b87b108097ac0c26d270941701a8aaff5a1b15c9ad100e048ca
+- id: stage-bs-pcb-context-switch
+  number: 2
+  title: PCB, Kernel-Stack und Kontextwechsel erklären
+  status: pending
+  objective: PCB-Inhalte und ihren geschützten Speicherort im Kernel begründen; Sichern und Laden des
+    Prozesszustands beim Kontextwechsel nachzeichnen.
+  done_when:
+  - Begründe, warum der PCB nicht im Heap des Prozesses liegen darf (Absturz und Manipulation), und nenne
+    seine Inhaltsgruppen.
+  - Zeichne einen Kontextwechsel mit Register-, Seitentabellen- und Kernel-Stack-Wechsel.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-pcb-context-switch
+    kind: read
+    material_ref:
+      route_id: route-bs-pcb-context-switch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-pcb-context-switch
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-pcb-context-switch/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-pcb-context-switch
+  runtime_target:
+    concept: knowledge-bs-pcb-context-switch
+    capability:
+      kind: explain
+      operands:
+      - PCB, Kernel-Stack und Kontextwechsel erklären
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Begründe, warum der PCB nicht im Heap des Prozesses liegen darf (Absturz und Manipulation), und
+      nenne seine Inhaltsgruppen.
+    - Zeichne einen Kontextwechsel mit Register-, Seitentabellen- und Kernel-Stack-Wechsel.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:b734c8a108aad2f9b05fb143416797226f53de64a7cd4bc26db419722e43d64b
+- id: stage-bs-process-state
+  number: 3
+  title: Prozesszustände und Scheduler-Ebenen einordnen
+  status: pending
+  objective: Zustandsübergänge präemptiv gegen kooperativ unterscheiden; Job-, Ready- und I/O-Warteschlangen
+    sowie Long-, Medium- und Short-term-Scheduler auseinanderhalten.
+  done_when:
+  - Klassifiziere Timer-Interrupt, yield(), block() und exit() im präemptiven und im kooperativen Modell.
+  - Verfolge einen Prozess durch Ready-, Running- und I/O-Wartezustände und benenne, welcher Scheduler-Typ
+    jeweils entscheidet.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-process-state
+    kind: read
+    material_ref:
+      route_id: route-bs-process-state
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-process-state
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-process-state/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-process-state
+  runtime_target:
+    concept: knowledge-bs-process-state
+    capability:
+      kind: explain
+      operands:
+      - Prozesszustände und Scheduler-Ebenen einordnen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Klassifiziere Timer-Interrupt, yield(), block() und exit() im präemptiven und im kooperativen Modell.
+    - Verfolge einen Prozess durch Ready-, Running- und I/O-Wartezustände und benenne, welcher Scheduler-Typ
+      jeweils entscheidet.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:8366e937fd1b7433247f8b86962a7f964004d71a497c4c3f87a87ec5f4b40d26
+- id: stage-bs-unix-lifecycle
+  number: 4
+  title: 'Unix-Lebenszyklus: Erzeugung, exec, Beendigung'
+  status: pending
+  objective: fork, vfork, COW und exec in ihrer Wirkung auf Segmente und Prozesszahl vorhersagen; exit,
+    Zombie und wait() sowie Kernel-Threads einordnen.
+  done_when:
+  - Sage für die fork-Programme auf S.37-38 und S.41-42 die Prozesszahl und die printf-Ausgaben vorher
+    und begründe sie.
+  - Erkläre COW an der Seitentabelle und den Zombie-Zustand bis zum wait() des Elternprozesses.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-unix-lifecycle
+    kind: read
+    material_ref:
+      route_id: route-bs-unix-lifecycle
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-unix-lifecycle
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-unix-lifecycle/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-unix-lifecycle
+  runtime_target:
+    concept: knowledge-bs-unix-lifecycle
+    capability:
+      kind: explain
+      operands:
+      - 'Unix-Lebenszyklus: Erzeugung, exec, Beendigung'
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Sage für die fork-Programme auf S.37-38 und S.41-42 die Prozesszahl und die printf-Ausgaben vorher
+      und begründe sie.
+    - Erkläre COW an der Seitentabelle und den Zombie-Zustand bis zum wait() des Elternprozesses.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:b87307b03654e6af1eca26e7f5c4bcf57614889cc3abc3e700f6dec59f011c77
+- id: stage-bs-ipc
+  number: 5
+  title: IPC mit Signalen und Pipes anwenden
+  status: pending
+  objective: Signalbehandlung mit Default, Ignorieren und eigenem Handler wählen; Pipes inklusive Puffer-Blockade
+    und Named Pipes als Koordinationsmittel erklären.
+  done_when:
+  - Entscheide für SIGINT, SIGKILL und SIGUSR1, welche Empfangsoptionen möglich sind, und skizziere einen
+    eigenen Handler.
+  - Erkläre am cat/wc-Beispiel, warum ein voller Pipe-Puffer den Produzenten blockiert und wann Named
+    Pipes nötig sind.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-ipc
+    kind: read
+    material_ref:
+      route_id: route-bs-ipc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-ipc
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-ipc/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-ipc
+  runtime_target:
+    concept: knowledge-bs-ipc
+    capability:
+      kind: explain
+      operands:
+      - IPC mit Signalen und Pipes anwenden
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Entscheide für SIGINT, SIGKILL und SIGUSR1, welche Empfangsoptionen möglich sind, und skizziere
+      einen eigenen Handler.
+    - Erkläre am cat/wc-Beispiel, warum ein voller Pipe-Puffer den Produzenten blockiert und wann Named
+      Pipes nötig sind.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:ae3deaf9dca35c6f5499b3d1a476af9cf4ba278c7003fe95093a942c58e3e58d
+- id: stage-bs-windows-processes
+  number: 6
+  title: Windows-Prozesse und Threads vergleichen
+  status: pending
+  objective: Prozess als Ressourcencontainer gegen Thread als Ausführungseinheit stellen; Subsysteme,
+    Per-Thread-Daten, Jobs und AppDomains von den Unix-Begriffen abgrenzen.
+  done_when:
+  - Stelle in einer Tabelle gegenüber, was in Windows Prozess und Thread jeweils besitzen (Adressraum,
+    Stacks, TLS, Scheduling-Zustand).
+  - Nutze S.88 zur freien Begriffswiederholung und markiere COW und Zombie, falls sie ohne die Unix-Stufen
+    nicht sicher sitzen.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-windows-processes
+    kind: read
+    material_ref:
+      route_id: route-bs-windows-processes
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-windows-processes
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/stages/stage-bs-windows-processes/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-windows-processes
+  runtime_target:
+    concept: knowledge-bs-windows-processes
+    capability:
+      kind: explain
+      operands:
+      - Windows-Prozesse und Threads vergleichen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Stelle in einer Tabelle gegenüber, was in Windows Prozess und Thread jeweils besitzen (Adressraum,
+      Stacks, TLS, Scheduling-Zustand).
+    - Nutze S.88 zur freien Begriffswiederholung und markiere COW und Zombie, falls sie ohne die Unix-Stufen
+      nicht sicher sitzen.
+  runtime_review:
+    reviewed_by: claude-code (operator)
+    reviewed_on: '2026-11-04'
+    fingerprint: sha256:59f98d509dcb1b6999aad793c9076459e708412d51a4e2559b0bd7f540325b54
+shelving:
+  state: none

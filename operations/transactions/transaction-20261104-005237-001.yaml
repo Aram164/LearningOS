@@ -1,0 +1,135 @@
+schema_version: 2
+id: transaction-20261104-005237-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-11-04T00:52:37+01:00'
+snapshot_before: sha256:8d3327a4b74ee36bf153a3fb917b82070c9041c45351a16762fde93cd8e5d12c
+snapshot_after: sha256:75999024ff6b1f73d4ad2448422f9435b3076951541b7ff13e69f644138ebea8
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 7
+  module-job-python-engineering: 1
+  study-map-job-python-engineering-fluency: 2
+  unit-job-python-engineering-fluency: 2
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 7
+    after: 8
+  module-job-python-engineering:
+    before: 1
+    after: 2
+  study-map-job-python-engineering-fluency:
+    before: 2
+    after: 3
+  unit-job-python-engineering-fluency:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-job-python-engineering/module.yaml
+  sha256_before: fbba63159e6aa3d1b7044738a4b0031bf26d0409cba0f706d9d885a068abde81
+  sha256_after: a40e3ff99f2217ab74af045f151d6ca8322311a19bfe705639df2f921bc5006a
+  created: false
+- path: curriculum/modules/module-job-python-engineering/source-map.yaml
+  sha256_before: a440ded98041a6080489029e207e2a1db3ca5bba34cfa04f9f8bec922c29d520
+  sha256_after: 4de0bf839f5a31edec72ae860124f698cb6bbd22a0422e3a4e9c72f0e36db982
+  created: false
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-classes-inheritance/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-dataclasses-properties/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-decorators-registration/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-errors-logging/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-everyday-data/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-functions-scope/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-interfaces-dispatch/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-iterators-with/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-modules-imports/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-names-mutation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-newer-python/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-read-stratum/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-special-methods/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-testing/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-tooling/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-type-hints/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
+  sha256_before: 900fa5a0bccbcd428d4b6a253486fc31bc54306ea6983e4be334456e23c40db4
+  sha256_after: bcd3ffc282b956ba14f099a4d62f0bd75f531b702c1332dbd52d2342b6c257ec
+  created: false
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/unit.yaml
+  sha256_before: 60bdc0792ba79cc95fa705065e34eebdc172e84e76c459bc46f1d356f6d7763b
+  sha256_after: a52ae0a54c003dd91615bfbe3fc038d79bf29bd46bd8c466580f9097c7ab0bac
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: 72d5334542ae194260e436a5bf61d875581a36a87f4b900559b68792f2e78c20
+  sha256_after: ffaea1c37df77cd79fbe009c493f97c3cd962816eaee57630dd06e6a5bd2b48c
+  created: false
+metadata:
+  data_roots_sha256: sha256:1fe9884d821c1d6c66f0605c56316d9ed6d00e822911d0a03879c7be85f828b6
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-5d97257aa8774e1384096a7fddcbf1a7
+  idempotency_key: reviewed-99212b1e3d064633a39c8faea0696ce7
+  intent_sha256: sha256:2df087ef27e6510afcdf4be6b9e61c87be3eddbbd0529f9ce4bf4aa9b8f2826f
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:2df087ef27e6510afcdf4be6b9e61c87be3eddbbd0529f9ce4bf4aa9b8f2826f

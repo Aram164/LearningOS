@@ -1,0 +1,101 @@
+id: unit-bs-processes
+type: unit
+module_id: module-hu-betriebssysteme
+kind: lecture
+title: BS 03 - Processes (ältere Folien)
+order: 2
+scope: Der von Aram am 2026-11-04 als diesjährige Folienbasis bestätigte ältere Foliensatz 03_processes.pdf,
+  PDF-S.1-88 (Mai 2006). Inhaltliche Arbeit S.1-65 und S.67-87, S.66 leere Trennseite, S.88 Vokabelkontrolle.
+  Kein Übungsblatt vorhanden; die fork-Quizze im Deck sind die einzige eingebaute Kontrolle.
+status: ready
+knowledge_map:
+  summary: Vom Unterschied zwischen Programm und Prozess über PCB und Kontextwechsel zum Zustandsmodell,
+    dann der Unix-Lebenszyklus mit fork/exec/COW und Zombie, IPC über Signale und Pipes und zuletzt das
+    Windows-Gegenmodell mit Threads.
+  nodes:
+  - id: knowledge-bs-process-concept
+    title: Prozess und Programm unterscheiden
+    summary: Eine Programmdatei gegen ihre laufenden Ausführungen mit eigenem Zustand abgrenzen; Segmente,
+      Heap, virtuelle CPU, pid und uid als Prozessbestandteile benennen.
+  - id: knowledge-bs-pcb-context-switch
+    title: PCB, Kernel-Stack und Kontextwechsel erklären
+    summary: PCB-Inhalte und ihren geschützten Speicherort im Kernel begründen; Sichern und Laden des
+      Prozesszustands beim Kontextwechsel nachzeichnen.
+    builds_on:
+    - knowledge-bs-process-concept
+  - id: knowledge-bs-process-state
+    title: Prozesszustände und Scheduler-Ebenen einordnen
+    summary: Zustandsübergänge präemptiv gegen kooperativ unterscheiden; Job-, Ready- und I/O-Warteschlangen
+      sowie Long-, Medium- und Short-term-Scheduler auseinanderhalten.
+    builds_on:
+    - knowledge-bs-pcb-context-switch
+  - id: knowledge-bs-unix-lifecycle
+    title: 'Unix-Lebenszyklus: Erzeugung, exec, Beendigung'
+    summary: fork, vfork, COW und exec in ihrer Wirkung auf Segmente und Prozesszahl vorhersagen; exit,
+      Zombie und wait() sowie Kernel-Threads einordnen.
+    builds_on:
+    - knowledge-bs-process-state
+  - id: knowledge-bs-ipc
+    title: IPC mit Signalen und Pipes anwenden
+    summary: Signalbehandlung mit Default, Ignorieren und eigenem Handler wählen; Pipes inklusive Puffer-Blockade
+      und Named Pipes als Koordinationsmittel erklären.
+    builds_on:
+    - knowledge-bs-unix-lifecycle
+  - id: knowledge-bs-windows-processes
+    title: Windows-Prozesse und Threads vergleichen
+    summary: Prozess als Ressourcencontainer gegen Thread als Ausführungseinheit stellen; Subsysteme,
+      Per-Thread-Daten, Jobs und AppDomains von den Unix-Begriffen abgrenzen.
+    builds_on:
+    - knowledge-bs-process-concept
+scope_sources:
+- source_id: source-bs-hu-prior-slides
+  authority: reference
+  locator: 03_processes.pdf, pdf pp. 1-88; ältere Arbeitsgrundlage, am 2026-11-04 als diesjährige Folienbasis
+    bestätigt
+source_selections:
+- route_id: route-bs-process-concept
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 1-8
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-process-concept
+- route_id: route-bs-pcb-context-switch
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 9-14
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-pcb-context-switch
+- route_id: route-bs-process-state
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 15-29
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-process-state
+- route_id: route-bs-unix-lifecycle
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 30-54
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-unix-lifecycle
+- route_id: route-bs-ipc
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 55-65
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-ipc
+- route_id: route-bs-windows-processes
+  source_id: source-bs-hu-prior-slides
+  locator: 03_processes.pdf, pdf pp. 67-88
+  purpose: 'Explizite Wahl von Aram (2026-11-04): alle diesjährigen BS-Vorlesungen aus denselben älteren
+    Folien lernen.'
+  stage_ids:
+  - stage-bs-windows-processes
+current_study_map: study-map-bs-processes
+artifacts: {}
+workspace_ids:
+- workspace-bs-foundations

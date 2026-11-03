@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261104-004254-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-11-04T00:42:54+01:00'
+snapshot_before: sha256:943295402a3210e2cc041230cd32a82e3399ba5a98d2dd134185882817d8e715
+snapshot_after: sha256:9898febd36e648264668d7b32c64c12b8b84293751d934b3d1a930c094667ff7
+expected_revisions:
+  study-map-python-intermediate-roadmap: 0
+  unit-python-intermediate-roadmap: 0
+artifact_revisions:
+  study-map-python-intermediate-roadmap:
+    before: 0
+    after: 1
+  unit-python-intermediate-roadmap:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
+  sha256_before: 2607af0409f57c632122f71e31a7373b8f1883e506cac8ad80b7fe0451ff05cb
+  sha256_after: c005d7b0849aebf0491bd8add9b053c9538b5c6551d9ea1537157d7412030c7d
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/unit.yaml
+  sha256_before: 4e0bdcfb72e95552f97e5cb36f73185ecd2f046b6d504f2d67e5289be4242118
+  sha256_after: 4e0bdcfb72e95552f97e5cb36f73185ecd2f046b6d504f2d67e5289be4242118
+  created: false
+metadata:
+  data_roots_sha256: sha256:b332d6c1870ad30dd6e4c75afdd0953d3adf31be2caece10cd8b5898b3523368
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-roadmap-url-fix-20261104-927e658b
+  idempotency_key: roadmap-url-fix-20261104
+  intent_sha256: sha256:b435cbdac749b687df11ff944906aa74f513441d5bc1fa4d0a99b51013b013e7
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:b435cbdac749b687df11ff944906aa74f513441d5bc1fa4d0a99b51013b013e7

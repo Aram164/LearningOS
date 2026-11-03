@@ -274,9 +274,9 @@ stages:
     label: 'Article: Real Python — Instance, Class, and Static Methods Demystified.'
     url: https://realpython.com/instance-class-and-static-methods-demystified/
   - kind: reference
-    label: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed layout of named slots;
-      eliminates per-instance dict overhead; important for classes created in hot loops (like Op nodes
-      in Stratum''s large DAGs). Python data model — `__slots__`. Also see Step 27.'
+    label: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed layout of named slots; eliminates
+      per-instance dict overhead; important for classes created in hot loops (like Op nodes in Stratum''s
+      large DAGs). Python data model — `__slots__`. Also see Step 27.'
     url: https://docs.python.org/3/reference/datamodel.html#object.__slots__
   - kind: reference
     label: '`__init_subclass__` — a hook called on the base class every time a subclass is defined; used
@@ -483,7 +483,7 @@ stages:
     label: 'Classic: David Beazley — Generator Tricks for Systems Programmers ⭐ — generator pipelines
       over logs; career-grade for data engineering.'
     source_id: source-beazley-generator-tricks
-    url: https://github.com/dabeaz/generators
+    url: https://web.archive.org/web/2024/https://github.com/dabeaz/generators
   - kind: read
     label: 'Article: Real Python — Introduction to Generators.'
     url: https://realpython.com/introduction-to-python-generators/
@@ -977,8 +977,8 @@ stages:
       Any code in that module that uses `ClassName` after the patch sees the new class. Code that already
       did `from module import ClassName` and stored a local binding is NOT affected — order matters.'
   - kind: read
-    label: 'Reference: Python docs — `unittest.mock.patch` — the context manager
-      does exactly this; understanding it demystifies Stratum''s manual version.'
+    label: 'Reference: Python docs — `unittest.mock.patch` — the context manager does exactly this; understanding
+      it demystifies Stratum''s manual version.'
     url: https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch
   - kind: reference
     label: 'Idempotence pattern: Stratum uses `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock`
@@ -1167,8 +1167,8 @@ stages:
       in `_optimize.py`''s `topological_traverse`. DFS-based in `_linearization.py`''s `linearize_dag`.
       Know both.'
   - kind: read
-    label: 'Core graph representation · Article: Python.org — Implementing Graphs — adjacency lists
-      and graph traversal in Python.'
+    label: 'Core graph representation · Article: Python.org — Implementing Graphs — adjacency lists and
+      graph traversal in Python.'
     url: https://www.python.org/doc/essays/graphs/
   - kind: read
     label: 'Core graph representation · Book: CLRS §22 (Graph algorithms, already in your Algo2 plan)

@@ -1,6 +1,6 @@
 # 2026-11-03 — Focus Materials loses scope, return and scroll context
 
-**Status:** retained observation; GitHub filing blocked on3 November2026. Search of the owning UI repository found no matching unresolved report. The connected GitHub integration returned403 `Resource not accessible by integration`; the alternate local GitHub account reports an invalid token, and the browser requires sign-in. No issue was created. The complete ready-to-file body is linked below; no credentials or sharing settings were changed.
+**Status:** retained observation; GitHub filing blocked on 3 November 2026. Search of the owning UI repository found no matching unresolved report. The connected GitHub integration returned 403 `Resource not accessible by integration`; the alternate local GitHub account reports an invalid token, and the browser requires sign-in. No issue was created. The complete ready-to-file body is linked below; no credentials or sharing settings were changed.
 
 **Task and exact step.** During the authorized audit, steps 07–08 entered Materials from Study plan and used its return control; steps 10/10b inspected Compare all's initial and manually corrected scroll positions; step 11 selected Course sources and inspected peer-lecture order.
 

@@ -93,7 +93,7 @@ I opened the PDFs and pinned down which quizzes carry the k-NN problem (it's alw
 ### Famous essays + CS231n (conceptual self-check)
 
 - ⭐ **Stanford CS231n — [Image Classification (k-NN + cross-validation)](https://cs231n.github.io/classification/)** — read the notes, then do the linked **k-NN assignment** (validation-set + 5-fold CV for choosing k) — basically Übungsblatt 1 Tasks 9–10 done from scratch.
-- ⭐ **Scott Fortmann-Roe — [Understanding the Bias-Variance Tradeoff](https://scott.fortmann-roe.com/docs/BiasVariance.html)** — after the mock exam, use it to sanity-check your bias-variance answers (it's worked through k-NN).
+- ⭐ **Scott Fortmann-Roe — [Understanding the Bias-Variance Tradeoff](https://web.archive.org/web/2024/https://scott.fortmann-roe.com/docs/BiasVariance.html)** — after the mock exam, use it to sanity-check your bias-variance answers (it's worked through k-NN).
 - ⭐ **Pedro Domingos — [A Few Useful Things to Know About Machine Learning](https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf)** (CACM 2012) — the famous overview essay; one read covers L02–L04 (overfitting, bias-variance, curse of dimensionality).
 
 ---
