@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import functools
 import importlib
 import json
 import sys
@@ -208,7 +210,7 @@ def _add_property(target, dest: str, schema: dict) -> None:
     cli = schema["x-los-cli"]
     flags = list(cli["flags"])
     action = cli["action"]
-    default = cli["default"]
+    default = copy.deepcopy(cli["default"])
     if default == "__SUPPRESS__":
         default = argparse.SUPPRESS
     help_value = _help_for(schema.get("description"))
@@ -219,13 +221,40 @@ def _add_property(target, dest: str, schema: dict) -> None:
     if flags:
         kwargs.update(dest=dest, required=bool(cli["required"]))
     if action in ("store_const", "append_const"):
-        kwargs["const"] = cli.get("const")
+        kwargs["const"] = copy.deepcopy(cli.get("const"))
     elif action not in ("store_true", "store_false", "count"):
         type_name = cli.get("type")
-        kwargs.update(nargs=cli.get("nargs"), const=cli.get("const"),
+        kwargs.update(nargs=cli.get("nargs"), const=copy.deepcopy(cli.get("const")),
                       type=CONVERTERS[type_name] if type_name is not None else None,
-                      choices=cli.get("choices"), metavar=metavar)
+                      choices=copy.deepcopy(cli.get("choices")), metavar=metavar)
     target.add_argument(*(flags or [dest]), **kwargs)
+
+
+def _load_request_schemas(requests_dir: Path) -> dict[str, tuple[str, dict]]:
+    # Read current bytes even on cache hits: contracts can change while a
+    # long-lived caller builds parsers, and audit windows must see the reads.
+    sources = tuple((path.name, path.read_text(encoding="utf-8"))
+                    for path in sorted(requests_dir.glob("*.schema.json")))
+    return _parsed_request_schemas(sources)
+
+
+@functools.lru_cache(maxsize=4)
+def _parsed_request_schemas(sources: tuple[tuple[str, str], ...]
+                            ) -> dict[str, tuple[str, dict]]:
+    by_name: dict[str, tuple[str, dict]] = {}
+    for filename, raw in sources:
+        data = json.loads(raw)
+        cmd = data.get("x-los-cli-command")
+        if cmd is None:
+            continue
+        if cmd["name"] in by_name:
+            raise ValueError(f"duplicate CLI binding: {cmd['name']}")
+        by_name[cmd["name"]] = (filename[: -len(".schema.json")], data)
+    if set(by_name) != set(_SUBCOMMAND_ORDER):
+        missing = sorted(set(_SUBCOMMAND_ORDER) - set(by_name))
+        extra = sorted(set(by_name) - set(_SUBCOMMAND_ORDER))
+        raise ValueError(f"subcommand order mismatch: missing={missing} extra={extra}")
+    return by_name
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -242,19 +271,7 @@ def build_parser() -> argparse.ArgumentParser:
                              "default: wait as long as needed, announced)")
     sub = parser.add_subparsers(dest="command", required=True)
     requests_dir = _repository_root() / "system/schema/requests"
-    by_name: dict[str, tuple[str, dict]] = {}
-    for path in sorted(requests_dir.glob("*.schema.json")):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        cmd = data.get("x-los-cli-command")
-        if cmd is None:
-            continue
-        if cmd["name"] in by_name:
-            raise ValueError(f"duplicate CLI binding: {cmd['name']}")
-        by_name[cmd["name"]] = (path.name[: -len(".schema.json")], data)
-    if set(by_name) != set(_SUBCOMMAND_ORDER):
-        missing = sorted(set(_SUBCOMMAND_ORDER) - set(by_name))
-        extra = sorted(set(by_name) - set(_SUBCOMMAND_ORDER))
-        raise ValueError(f"subcommand order mismatch: missing={missing} extra={extra}")
+    by_name = _load_request_schemas(requests_dir)
     for name in _SUBCOMMAND_ORDER:
         operation, data = by_name[name]
         cmd = data["x-los-cli-command"]
@@ -272,7 +289,7 @@ def build_parser() -> argparse.ArgumentParser:
         # parser default, never a request property.
         for dest, schema in properties.items():
             _add_property(group_for.get(dest, p), dest, schema)
-        p.set_defaults(**cmd.get("defaults", {}))
+        p.set_defaults(**copy.deepcopy(cmd.get("defaults", {})))
         if "operation_kind" in cmd:
             p.set_defaults(_operation_kind=cmd["operation_kind"])
         handler = cmd["handler"]

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -88,12 +89,33 @@ def _validate_write_scopes(writes: tuple[str, ...], *, label: str) -> None:
             raise CapabilityCatalogError(f"{label} has an invalid write scope: {exc}") from exc
 
 
+_CATALOG_CACHE: dict[str, tuple[dict, tuple[tuple[str, str], ...]]] = {}
+
+
 def load_capability_catalog(root: Path) -> dict:
     path = root / "system" / "contracts" / "capabilities.yaml"
     if not path.is_file():
         raise CapabilityCatalogError(f"capability catalogue not found: {path}")
+    raw = path.read_text(encoding="utf-8")
+    cached_entry = _CATALOG_CACHE.get(raw)
+    if cached_entry is not None:
+        cached_data, query_schemas = cached_entry
+        resolved_root = root.resolve()
+        for qname, schema in query_schemas:
+            schema_path = (root / schema).resolve()
+            try:
+                schema_path.relative_to(resolved_root)
+            except ValueError as exc:
+                raise CapabilityCatalogError(
+                    f"query {qname} schema escapes the repository"
+                ) from exc
+            if not schema_path.is_file():
+                raise CapabilityCatalogError(
+                    f"query {qname} schema does not exist: {schema}"
+                )
+        return copy.deepcopy(cached_data)
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        data = yaml.safe_load(raw) or {}
     except yaml.YAMLError as exc:
         raise CapabilityCatalogError(f"invalid capability catalogue: {exc}") from exc
     if not isinstance(data, dict) or data.get("contract_version") != 2:
@@ -219,6 +241,13 @@ def load_capability_catalog(root: Path) -> dict:
         _string_list(
             row.get("allowed_fields"), label=f"domain capability {name} allowed_fields"
         )
+    query_schemas = tuple(
+        (qname, str(qrow["schema"]))
+        for qname, qrow in (data.get("queries", {}) or {}).items()
+        if isinstance(qrow, dict) and isinstance(qrow.get("schema"), str)
+    )
+    if len(_CATALOG_CACHE) < 16:
+        _CATALOG_CACHE[raw] = (copy.deepcopy(data), query_schemas)
     return data
 
 

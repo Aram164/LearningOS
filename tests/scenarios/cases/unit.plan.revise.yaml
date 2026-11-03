@@ -425,6 +425,83 @@ cases:
   - <CASEDATA>/report.json
   expect:
     site: unit.plan.revise.reviewed-report-invalid
+- id: compact-changes-failed
+  kind: refusal
+  transport: gateway
+  request:
+    unit_id: unit-demo-l01
+    record:
+      unit_id: unit-demo-l01
+      plan_contract:
+        version: 1
+        plan_template_version: 1
+        coverage_audit: work/active/workspace-demo/outputs/demo-coverage-audit.md
+        checks:
+          local_inventory_complete: true
+          linked_inventory_complete: true
+          materials_opened_and_content_checked: true
+          current_and_prior_scope_reconciled: true
+          duplicates_and_numbering_checked: true
+          exclusions_and_unresolved_gaps_recorded: true
+      route_changes: {}
+      stage_patches:
+      - stage_id: stage-nope
+        fields:
+          title: Unreachable stage
+    check: true
+  artifact_ids: []
+  expect:
+    site: unit.plan.revise.compact-changes-failed
+- id: synthesis-patch-missing
+  kind: refusal
+  transport: gateway
+  request:
+    unit_id: unit-demo-l01
+    record:
+      unit_id: unit-demo-l01
+      plan_contract:
+        version: 1
+        plan_template_version: 1
+        coverage_audit: work/active/workspace-demo/outputs/demo-coverage-audit.md
+        checks:
+          local_inventory_complete: true
+          linked_inventory_complete: true
+          materials_opened_and_content_checked: true
+          current_and_prior_scope_reconciled: true
+          duplicates_and_numbering_checked: true
+          exclusions_and_unresolved_gaps_recorded: true
+      route_changes: {}
+      material_synthesis_patch: {}
+    check: true
+  artifact_ids: []
+  expect:
+    site: unit.plan.revise.synthesis-patch-missing
+- id: synthesis-basis
+  kind: refusal
+  transport: gateway
+  request:
+    unit_id: unit-demo-l02
+    record:
+      unit_id: unit-demo-l02
+      plan_contract:
+        version: 1
+        plan_template_version: 1
+        coverage_audit: work/active/workspace-demo/outputs/demo-coverage-audit.md
+        checks:
+          local_inventory_complete: true
+          linked_inventory_complete: true
+          materials_opened_and_content_checked: true
+          current_and_prior_scope_reconciled: true
+          duplicates_and_numbering_checked: true
+          exclusions_and_unresolved_gaps_recorded: true
+      route_changes: {}
+      material_synthesis:
+        id: synthesis-demo-l02
+        unit_id: unit-demo-l02
+    check: true
+  artifact_ids: []
+  expect:
+    site: unit.plan.revise.synthesis-basis
 untriggered:
 - site: unit.plan.revise.bad-expected-revision
   reason: fixture-inexpressible
@@ -508,5 +585,9 @@ untriggered:
   reason: fixture-inexpressible
   proof: _prove_helper_plan_backstop
 - site: unit.plan.revise.needs-file-or-record
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+# rich_world has no existing synthesis dossier; inject its collaborator fault.
+- site: unit.plan.revise.synthesis-patch-failed
   reason: fixture-inexpressible
   proof: _prove_helper_plan_backstop

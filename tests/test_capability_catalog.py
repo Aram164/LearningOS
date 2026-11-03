@@ -188,3 +188,29 @@ def test_retired_project_envelope_cannot_create_a_record(mini_repo: Path):
     assert result.returncode != 0
     assert snapshot(mini_repo) == before
     assert not (mini_repo / "projects/registry/project-envelope-demo.yaml").exists()
+
+
+def test_catalog_cache_keeps_current_bytes_and_private_results(mini_repo):
+    from learning_os.store.contracts.capability_catalog import load_capability_catalog
+
+    first = load_capability_catalog(mini_repo)
+    first['contract_version'] = 999
+    assert load_capability_catalog(mini_repo)['contract_version'] == 2
+    path = mini_repo / 'system/contracts/capabilities.yaml'
+    path.write_text('contract_version: 999\n')
+    with pytest.raises(CapabilityCatalogError, match='contract_version'):
+        load_capability_catalog(mini_repo)
+
+
+def test_catalog_cache_checks_schema_presence_for_each_root(mini_repo, tmp_path):
+    import shutil
+
+    from learning_os.store.contracts.capability_catalog import load_capability_catalog
+
+    catalog = load_capability_catalog(mini_repo)
+    other = tmp_path / 'other'
+    shutil.copytree(mini_repo, other)
+    schema = next(row['schema'] for row in catalog['queries'].values())
+    (other / schema).unlink()
+    with pytest.raises(CapabilityCatalogError, match='schema does not exist'):
+        load_capability_catalog(other)

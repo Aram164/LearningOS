@@ -968,29 +968,28 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
 
 def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
     # B2 retires aliases. Verify all 40 effective requests against their
-    # former primary schemas; all unlisted shape differences still fail.
+    # former primary schemas when the ratchet base still carries the alias
+    # file; once the base is post-B2 (old_text is None), verify the alias
+    # stays retired and let test_surface_diffs_have_approvals govern
+    # approved schema evolutions on the primary.
     mapping = json.loads((ARCH / "operation-moves.json").read_text())
     assert len(mapping) == 40 and len(set(mapping.values())) == 40
     for old_name, new_name in mapping.items():
         rel = f"system/schema/requests/{old_name}.schema.json"
         new_rel = f"system/schema/requests/{new_name}.schema.json"
         old_text = _git_show(base_ref, rel)
-        new = _before_approved_c1_schema(new_name, (ROOT / new_rel).read_bytes())
         if old_text is None:
             assert not (ROOT / rel).exists(), rel
-            # A post-C1 base already carries the same approved additions.
-            # Compare both sides in the historical context, keeping the
-            # exact approved-byte checks in _before_approved_c1_schema.
-            old = _before_approved_c1_schema(
-                new_name, _git_show(base_ref, new_rel).encode("utf-8"))
-        else:
-            old = json.loads(old_text)
-            old["$id"] = "learningos/requests/" + new_name
-            old["x-los-cli-command"]["handler"] = "learning_os.adapters.cli.invoke:" + new_name
-            if new_name in {"backup.manifest", "health.report", "legacy.archive.inspect", "legacy.archive.status", "masters-planning.dashboard"}:
-                old["x-los-cli-command"]["operation_kind"] = "tool"
-            if new_name in {"repository.validate", "projection.generate"}:
-                old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
+            assert (ROOT / new_rel).is_file(), new_rel
+            continue
+        new = _before_approved_c1_schema(new_name, (ROOT / new_rel).read_bytes())
+        old = json.loads(old_text)
+        old["$id"] = "learningos/requests/" + new_name
+        old["x-los-cli-command"]["handler"] = "learning_os.adapters.cli.invoke:" + new_name
+        if new_name in {"backup.manifest", "health.report", "legacy.archive.inspect", "legacy.archive.status", "masters-planning.dashboard"}:
+            old["x-los-cli-command"]["operation_kind"] = "tool"
+        if new_name in {"repository.validate", "projection.generate"}:
+            old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
         new = _restore_phase6_descriptions(new_name, old, new)
         assert new == old, new_name
 

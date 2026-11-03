@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import atexit
 import json
 import os
 import shutil
+import tempfile
 import textwrap
 from pathlib import Path
 
@@ -321,6 +323,19 @@ def mini_repo(tmp_path: Path) -> Path:
     return build_mini_repo(tmp_path)
 
 
+_MINI_REPO_TEMPLATE: Path | None = None
+
+
+def _mini_repo_template() -> Path:
+    global _MINI_REPO_TEMPLATE
+    if _MINI_REPO_TEMPLATE is None:
+        container = Path(tempfile.mkdtemp(prefix="los-mini-repo-"))
+        atexit.register(shutil.rmtree, container, ignore_errors=True)
+        _build_mini_repo_raw(container)
+        _MINI_REPO_TEMPLATE = container / "LearningOS"
+    return _MINI_REPO_TEMPLATE
+
+
 def build_mini_repo(tmp_path: Path) -> Path:
     """The builder behind the fixture.
 
@@ -330,6 +345,12 @@ def build_mini_repo(tmp_path: Path) -> Path:
     get at this was the alternative, and a second copy of the description was
     the worse one.
     """
+    los = tmp_path / "LearningOS"
+    shutil.copytree(_mini_repo_template(), los, dirs_exist_ok=True)
+    return los / "repository"
+
+
+def _build_mini_repo_raw(tmp_path: Path) -> Path:
     los = tmp_path / "LearningOS"
     root = los / "repository"
     for d in ("knowledge/notes/mathematics", "knowledge/attachments", "records",

@@ -88,9 +88,18 @@ _ELAPSED_RE = re.compile(
     r"(\d+ error\(s\), \d+ warning\(s\) — \S+ )\(\d+\.\ds\)")
 
 
+_CASE_FILE_CACHE: dict[tuple[str, int], dict] = {}
+
+
 def load_case_file(path: str | Path) -> dict:
     """Parse one ``tests/scenarios/cases/<operation>.yaml`` file."""
-    return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    resolved = Path(path).resolve()
+    key = (str(resolved), resolved.stat().st_mtime_ns)
+    cached = _CASE_FILE_CACHE.get(key)
+    if cached is None:
+        cached = yaml.safe_load(resolved.read_text(encoding="utf-8"))
+        _CASE_FILE_CACHE[key] = cached
+    return copy.deepcopy(cached)
 
 
 def pretty(recording: dict) -> str:
@@ -169,6 +178,16 @@ def _git(root: Path, *args: str, env: dict | None = None) -> None:
             f"git {' '.join(args)} failed: {proc.stderr[-1000:]}")
 
 
+def _apply_git_setup(root: Path, git_setup: dict | None) -> None:
+    git_setup = git_setup or {}
+    if git_setup.get("failing_pre_commit"):
+        hook = root / ".git" / "hooks" / "pre-commit"
+        hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+        hook.chmod(0o755)
+    if git_setup.get("origin"):
+        _git(root, "remote", "add", "origin", str(git_setup["origin"]))
+
+
 def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
     # An explicit branch: the default branch name is environment-dependent
     # and leaks into session-end push output.
@@ -182,13 +201,46 @@ def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
     _git(root, "add", "-A")
     env = dict(os.environ, GIT_AUTHOR_DATE=now_iso, GIT_COMMITTER_DATE=now_iso)
     _git(root, "commit", "-qm", FIXTURE_COMMIT_MESSAGE, env=env)
-    git_setup = git_setup or {}
-    if git_setup.get("failing_pre_commit"):
-        hook = root / ".git" / "hooks" / "pre-commit"
-        hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
-        hook.chmod(0o755)
-    if git_setup.get("origin"):
-        _git(root, "remote", "add", "origin", str(git_setup["origin"]))
+    _apply_git_setup(root, git_setup)
+
+
+_COMMITTED_TEMPLATES: dict[tuple[str, str], tuple[Path, str]] = {}
+
+
+def _committed_template(fixture_name: str, now_iso: str) -> tuple[Path, str]:
+    key = (fixture_name, now_iso)
+    cached = _COMMITTED_TEMPLATES.get(key)
+    if cached is not None:
+        return cached
+    container = Path(tempfile.mkdtemp(prefix=f"los-committed-{fixture_name}-"))
+    atexit.register(shutil.rmtree, container, ignore_errors=True)
+    root = _build_fixture(fixture_name, container)
+    _commit_fixture(root, now_iso, None)
+    sys.path.insert(0, str(REPO_ROOT / "tools"))
+    try:
+        from learning_os.store.fingerprint import snapshot
+    finally:
+        del sys.path[0]
+    snap = snapshot(root)
+    _COMMITTED_TEMPLATES[key] = (root, snap)
+    return root, snap
+
+
+def _materialize_committed_fixture(
+    fixture_name: str,
+    now_iso: str,
+    container: Path,
+    git_setup: dict | None = None,
+    *,
+    with_git: bool = True,
+) -> tuple[Path, str]:
+    template_root, snap = _committed_template(fixture_name, now_iso)
+    ignore = None if with_git else shutil.ignore_patterns(".git")
+    shutil.copytree(template_root.parent, Path(container) / "LearningOS", ignore=ignore)
+    root = Path(container) / "LearningOS" / "repository"
+    if with_git and git_setup:
+        _apply_git_setup(root, git_setup)
+    return root, snap
 
 
 def _inbox_mtimes(root: Path, fixture_mtime: str) -> dict:
@@ -232,8 +284,7 @@ def prepare_transcript_fixture(fixture_name: str, container: str | Path, *,
     ``seed`` is the transcript file name. Returns ``{"root", "observations"}``.
     """
     container = Path(container)
-    root = _build_fixture(fixture_name, container)
-    _commit_fixture(root, now_iso, None)
+    root, _ = _materialize_committed_fixture(fixture_name, now_iso, container)
     observations = {
         "now": now_iso,
         "ids": {"seed": seed,
@@ -253,7 +304,8 @@ def prepare_transcript_fixture(fixture_name: str, container: str | Path, *,
 
 class _CaseContext:
     def __init__(self, *, root: Path, workdir: Path, observations_path: Path,
-                 operation: str, case_id: str):
+                 operation: str, case_id: str,
+                 fixture_snapshot: str | None = None):
         self.root = root
         self.workdir = workdir
         self.observations_path = observations_path
@@ -262,8 +314,10 @@ class _CaseContext:
         self.log_path = workdir / "audit.jsonl"
         self.tokens: list[str] = []
         self.casedata = CASEDATA_DIR / operation / case_id
-        from learning_os.store.fingerprint import snapshot
-        self.fixture_snapshot = snapshot(root)
+        if fixture_snapshot is None:
+            from learning_os.store.fingerprint import snapshot
+            fixture_snapshot = snapshot(root)
+        self.fixture_snapshot = fixture_snapshot
         self.fixture_digests: dict[str, str] = {}
 
 
@@ -1140,13 +1194,14 @@ def reconcile_recorded(recording: dict) -> list[str]:
 # entry points
 # --------------------------------------------------------------------------
 
-def _prepare_world(case: dict, operation: str, workdir: Path
-                   ) -> _CaseContext:
+def _prepare_world(case: dict, operation: str, workdir: Path,
+                   *, with_git: bool = True) -> _CaseContext:
     workdir = Path(workdir)
     container = workdir / "fx"
-    root = _build_fixture(case.get("fixture", "rich_world"), container)
     now_iso = case["observations"]["now"]
-    _commit_fixture(root, now_iso, case.get("git"))
+    root, snap = _materialize_committed_fixture(
+        case.get("fixture", "rich_world"), now_iso, container,
+        case.get("git"), with_git=with_git)
     observations_path = _write_observations(
         workdir, case["observations"], operation, case["id"], root,
         case.get("fixture_mtime", FIXTURE_MTIME_DEFAULT))
@@ -1155,7 +1210,8 @@ def _prepare_world(case: dict, operation: str, workdir: Path
     # committed path would leak the checkout location into intent hashes.
     ctx = _CaseContext(root=root, workdir=workdir,
                        observations_path=observations_path,
-                       operation=operation, case_id=case["id"])
+                       operation=operation, case_id=case["id"],
+                       fixture_snapshot=snap)
     committed = CASEDATA_DIR / operation / case["id"]
     if committed.is_dir():
         import shutil

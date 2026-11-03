@@ -650,9 +650,10 @@ def test_generated_parser_action_semantics_through_metadata(
 
 def test_production_bindings_and_baseline_stay_frozen(repo_root):
     import los
+    from learning_os.adapters.cli_parser import _SUBCOMMAND_ORDER
     from learning_os.store.contracts.payloads import subparsers
 
-    assert len(subparsers(los.build_parser())) == 94
+    assert set(subparsers(los.build_parser())) == set(_SUBCOMMAND_ORDER)
     baseline = json.loads(
         (repo_root / "tests/architecture/cli-parity-baseline.json")
         .read_text(encoding="utf-8"))
@@ -662,3 +663,31 @@ def test_production_bindings_and_baseline_stay_frozen(repo_root):
         (repo_root / "tests/architecture/cli-parity-corpus.json")
         .read_text(encoding="utf-8"))
     assert len(corpus["cases"]) == 1786
+
+
+def test_parser_cache_observes_schema_edits_and_isolates_defaults(tmp_path, monkeypatch):
+    import shutil
+
+    from learning_os.adapters import cli_parser
+
+    schemas = tmp_path / 'system/schema/requests'
+    shutil.copytree(cli_parser._repository_root() / 'system/schema/requests', schemas)
+    monkeypatch.setattr(cli_parser, '_repository_root', lambda: tmp_path)
+    path = schemas / 'project.inspect.schema.json'
+    original = json.loads(path.read_text())
+    command = original['x-los-cli-command']['name']
+    original['x-los-cli-command']['defaults']['cache_probe'] = {'nested': ['fresh']}
+    path.write_text(json.dumps(original))
+    from learning_os.store.contracts.payloads import subparsers
+    first = subparsers(cli_parser.build_parser())[command]
+    first.get_default('cache_probe')['nested'].append('caller mutation')
+    second = subparsers(cli_parser.build_parser())[command]
+    assert second.get_default('cache_probe') == {'nested': ['fresh']}
+    changed = dict(original)
+    changed['x-los-cli-command'] = dict(original['x-los-cli-command'], description='fresh schema')
+    path.write_text(json.dumps(changed))
+    parser = cli_parser.build_parser()
+    assert subparsers(parser)[command].description == 'fresh schema'
+    path.write_text('{broken JSON')
+    with pytest.raises(json.JSONDecodeError):
+        cli_parser.build_parser()

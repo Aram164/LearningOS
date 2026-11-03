@@ -66,10 +66,32 @@ def _assert_retired_refusal(actual: dict, command: str) -> None:
 
 
 def test_cli_operations_lists_every_cli_primary():
+    from learning_os.store.contracts.capability_catalog import (
+        load_capability_catalog,
+    )
+
     data = yaml.safe_load(CLI_OPS_PATH.read_text(encoding="utf-8"))
     assert data.get("schema") == 1
     operations = data.get("operations", {})
-    assert len(operations) == 42, len(operations)
+    catalog = load_capability_catalog(ROOT)
+    # Queries without their own cli_command remain owned by cli-operations;
+    # the verb catalogue uses the same explicit declaration boundary.
+    catalog_commands = {
+        row["cli_command"]
+        for section in ("queries", "commands", "internal_commands")
+        for row in catalog.get(section, {}).values()
+        if row.get("cli_command")
+    }
+    expected_cli_primaries = {
+        path.name[:-len(".schema.json")]
+        for path in REQUESTS_DIR.glob("*.schema.json")
+        if json.loads(path.read_text(encoding="utf-8"))[
+            "x-los-cli-command"]["name"] not in catalog_commands
+    }
+    assert set(operations) == expected_cli_primaries, (
+        f"missing={sorted(expected_cli_primaries - set(operations))} "
+        f"extra={sorted(set(operations) - expected_cli_primaries)}"
+    )
     for name, entry in sorted(operations.items()):
         command = entry.get("cli_command")
         assert isinstance(command, str) and command, name

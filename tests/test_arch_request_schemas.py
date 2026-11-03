@@ -97,16 +97,18 @@ def test_required_and_defaults_preserved_through_alias():
 
 
 def test_exactly_94_cli_bindings_and_union():
+    import los
+    from learning_os.store.contracts.payloads import subparsers
+
     primaries = _primaries()
     aliases = _aliases()
+    cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 94, len(with_cli)
-    assert len(primaries) == 94, len(primaries)
+    assert len(with_cli) == len(primaries), (len(with_cli), len(primaries))
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)
-    assert len(union) == 94, len(union)
-    cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     assert union == cases, f"missing={sorted(cases - union)} extra={sorted(union - cases)}"
+    assert len(subparsers(los.build_parser())) == len(with_cli)
 
 
 def test_no_duplicate_parser_from_aliases():

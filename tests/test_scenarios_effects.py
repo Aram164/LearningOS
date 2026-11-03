@@ -701,3 +701,46 @@ def test_fixture_file_digest_is_frozen_and_cannot_escape(mini_repo, tmp_path):
     assert scenario_harness._substitute(token, ctx) == expected
     with pytest.raises(ValueError):
         scenario_harness._substitute('<CASEDATA_SHA256:../outside>', ctx)
+
+
+def test_committed_template_matches_fresh_fixture_and_copies_are_independent(tmp_path):
+    import arch_effects
+
+    from learning_os.store.fingerprint import snapshot
+
+    now = '2026-10-01T09:00:00+02:00'
+    fresh = scenario_harness._build_fixture('rich_world', tmp_path / 'fresh')
+    scenario_harness._commit_fixture(fresh, now, None)
+    first, first_snapshot = scenario_harness._materialize_committed_fixture(
+        'rich_world', now, tmp_path / 'first')
+    second, second_snapshot = scenario_harness._materialize_committed_fixture(
+        'rich_world', now, tmp_path / 'second')
+    assert arch_effects.capture_tree(fresh) == arch_effects.capture_tree(first)
+    assert first_snapshot == second_snapshot == snapshot(fresh)
+    def head(root):
+        return subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'])
+
+    assert head(fresh) == head(first) == head(second)
+    target = 'work/inbox/independent.md'
+    (first / target).write_text('one world only')
+    assert not (fresh / target).exists()
+    assert not (second / target).exists()
+    (second / target).write_text('another world')
+    ctx = scenario_harness._CaseContext(
+        root=first, workdir=tmp_path, observations_path=tmp_path / 'observations.json',
+        operation='capture.create', case_id='fresh-snapshot', fixture_snapshot=first_snapshot)
+    envelope_path = scenario_harness.build_envelope(ctx, 'capture.create', {
+        'request': {'text': 'capture'}, 'artifact_ids': []}, 0)
+    envelope = json.loads(envelope_path.read_text())
+    assert envelope['expected_snapshot'] == snapshot(first)
+    assert envelope['expected_snapshot'] != first_snapshot
+
+
+def test_case_cache_returns_independent_documents(tmp_path):
+    path = tmp_path / 'cases.yaml'
+    path.write_text('cases: [{id: original}]\n')
+    first = scenario_harness.load_case_file(path)
+    first['cases'][0]['id'] = 'caller mutation'
+    assert scenario_harness.load_case_file(path)['cases'][0]['id'] == 'original'
+    path.write_text('cases: [{id: replacement-with-new-bytes}]\n')
+    assert scenario_harness.load_case_file(path)['cases'][0]['id'] == 'replacement-with-new-bytes'

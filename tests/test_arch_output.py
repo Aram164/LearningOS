@@ -111,12 +111,134 @@ def _merged_case(operation: str, case_id: str) -> dict:
 #: for the target step, shared by the exit and CLI clauses over the
 #: same live evidence.
 _LIVE: dict[str, tuple[int, list[dict], str, str]] = {}
+_SHARED_WORLDS: dict[tuple[str, str, str], tuple[Path, str]] = {}
+_SHARED_TREES: dict[Path, dict[str, str]] = {}
+
+
+def _shared_world_for(case: dict, operation: str, workdir: Path):
+    """Prepare a world context, reusing a shared fixture root for pure single-step refusals."""
+    import scenario_harness as harness
+    from arch_effects import capture_tree
+
+    fixture_name = case.get("fixture", "rich_world")
+    now_iso = case["observations"]["now"]
+    mtime = case.get("fixture_mtime", harness.FIXTURE_MTIME_DEFAULT)
+    wkey = (fixture_name, now_iso, mtime)
+    if wkey not in _SHARED_WORLDS:
+        import atexit
+        import shutil
+        import tempfile
+
+        container = Path(tempfile.mkdtemp(prefix="los-a7-shared-"))
+        atexit.register(shutil.rmtree, container, ignore_errors=True)
+        root, snap = harness._materialize_committed_fixture(
+            fixture_name, now_iso, container, None, with_git=False)
+        _SHARED_WORLDS[wkey] = (root, snap)
+        _SHARED_TREES[root] = capture_tree(root)
+    root, snap = _SHARED_WORLDS[wkey]
+    observations_path = harness._write_observations(
+        workdir, case["observations"], operation, case["id"], root, mtime)
+    return harness._CaseContext(
+        root=root, workdir=workdir, observations_path=observations_path,
+        operation=operation, case_id=case["id"], fixture_snapshot=snap)
 
 
 @pytest.fixture(scope="module")
 def _witness_dir(tmp_path_factory):
     """One directory for the session's per-unit witness files."""
     return tmp_path_factory.mktemp("a7-witness")
+
+
+def _run_step_live_fast(ctx, operation: str, step: dict, step_index: int,
+                        witness_file: Path | None) -> tuple[int, str, str]:
+    """Execute one step for A7 without redundant full-tree SHA-256 walks.
+
+    Uses in-process ``los.main()`` under the active audit hook and witness
+    environment for standard Python handlers, and falls back to a child
+    process for ``session.end`` (which spawns git subprocesses whose raw fd
+    streams are asserted by D-9).
+    """
+    import contextlib
+    import io
+    import sys
+
+    import arch_audit_hook
+    import scenario_harness as harness
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    import los
+    from learning_os.store.diagnostics.conventions import TRACE_STORE_DENY_ENV
+    from learning_os.store.diagnostics.store import bind_store
+
+    step_op = step.get("operation", operation)
+    argv = harness.step_argv(ctx, step_op, step, step_index)
+    if step_op == "session.end":
+        previous = os.environ.pop(SITE_WITNESS_ENV, None)
+        if witness_file is not None:
+            os.environ[SITE_WITNESS_ENV] = str(witness_file)
+        try:
+            proc = harness.launch(ctx, argv)
+        finally:
+            if previous is None:
+                os.environ.pop(SITE_WITNESS_ENV, None)
+            else:
+                os.environ[SITE_WITNESS_ENV] = previous
+        harness.check_render_purity_error(proc.stderr)
+        return proc.returncode, proc.stdout, proc.stderr
+
+    old_cwd = os.getcwd()
+    old_argv = sys.argv
+    old_env = {
+        k: os.environ.get(k)
+        for k in ("LOS_OBSERVATIONS", "LOS_ARCH_RENDER_CHECK", "TZ",
+                  "PATH", SITE_WITNESS_ENV, TRACE_STORE_DENY_ENV)
+    }
+    out_buf = io.StringIO()
+    err_buf = io.StringIO()
+    os.environ["LOS_OBSERVATIONS"] = str(ctx.observations_path)
+    os.environ["LOS_ARCH_RENDER_CHECK"] = "1"
+    os.environ["TZ"] = "Europe/Berlin"
+    deny = os.environ.get(TRACE_STORE_DENY_ENV, "")
+    os.environ[TRACE_STORE_DENY_ENV] = os.pathsep.join(
+        [str(ctx.root), deny]).rstrip(os.pathsep)
+    if step_op in harness._HEALTH_SCENARIO_OPERATIONS:
+        bindir = harness._health_command_dir(ctx)
+        path_val = os.environ.get("PATH")
+        os.environ["PATH"] = (str(bindir) if not path_val
+                              else str(bindir) + os.pathsep + path_val)
+    if witness_file is not None:
+        os.environ[SITE_WITNESS_ENV] = str(witness_file)
+    else:
+        os.environ.pop(SITE_WITNESS_ENV, None)
+
+    sys.argv = [str(argv[1]), *argv[2:]]
+    os.chdir(ctx.root)
+    arch_audit_hook.install(str(ctx.log_path))
+    try:
+        with contextlib.redirect_stdout(out_buf), contextlib.redirect_stderr(err_buf):
+            try:
+                rc = los.main()
+            except SystemExit as exc:
+                if exc.code is None:
+                    rc = 0
+                elif isinstance(exc.code, int):
+                    rc = exc.code
+                else:
+                    rc = 1
+    finally:
+        arch_audit_hook.uninstall()
+        os.chdir(old_cwd)
+        sys.argv = old_argv
+        for k, v in old_env.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        bind_store(None)
+    arch_audit_hook.assert_capture_ok()
+    stderr_val = err_buf.getvalue()
+    harness.check_render_purity_error(stderr_val)
+    return int(rc), out_buf.getvalue(), stderr_val
 
 
 def _live_target(unit, tmp_path: Path, witness_dir: Path):
@@ -131,7 +253,6 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
     recorded output.
     """
     import scenario_harness as harness
-    from arch_audit_hook import SITE_WITNESS_ENV
 
     key = _unit_id(unit)
     if key in _LIVE:
@@ -145,39 +266,48 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
     recorded_steps = recorded["steps"] if step is not None else [recorded]
     workdir = tmp_path / "world"
     workdir.mkdir(parents=True, exist_ok=True)
-    ctx = harness._prepare_world(case, operation, workdir)
-    previous = os.environ.pop(SITE_WITNESS_ENV, None)
-    try:
-        for prereq in range(target_index):
-            full = {"operation": operation, **steps[prereq]}
-            result = harness._run_step(ctx, operation, full, prereq)
-            want = recorded_steps[prereq]["exit"]
-            assert result["exit"] == want, (
-                f"A7 {key}: prerequisite step {prereq} exits "
-                f"{result['exit']}, recorded {want}: "
-                f"{result['stderr'][:300]!r} — {FIX}")
-    finally:
-        if previous is not None:
-            os.environ[SITE_WITNESS_ENV] = previous
+    can_share = (
+        step is None
+        and operation != "session.end"
+        and not case.get("git")
+        and not (harness.CASEDATA_DIR / operation / case_id).is_dir()
+        and not recorded.get("canonical_changed")
+        and not recorded.get("receipts")
+        and not recorded.get("revisions_changed")
+        and not recorded.get("idempotency_changed")
+        and recorded.get("session_ledger_changed") is None
+    )
+    if can_share:
+        ctx = _shared_world_for(case, operation, workdir)
+    else:
+        ctx = harness._prepare_world(
+            case, operation, workdir,
+            with_git=(operation == "session.end" or bool(case.get("git"))))
+    for prereq in range(target_index):
+        full = {"operation": operation, **steps[prereq]}
+        rc, _out, err = _run_step_live_fast(ctx, operation, full, prereq, None)
+        want = recorded_steps[prereq]["exit"]
+        assert rc == want, (
+            f"A7 {key}: prerequisite step {prereq} exits "
+            f"{rc}, recorded {want}: "
+            f"{err[:300]!r} — {FIX}")
     witness_file = witness_dir / (key.replace(":", "_")
                                   .replace("/", "_") + ".jsonl")
     witness_file.touch()
     full = {"operation": operation, **steps[target_index]}
-    os.environ[SITE_WITNESS_ENV] = str(witness_file)
-    try:
-        result = harness._run_step(ctx, operation, full, target_index)
-    finally:
-        if previous is None:
-            os.environ.pop(SITE_WITNESS_ENV, None)
-        else:
-            os.environ[SITE_WITNESS_ENV] = previous
+    rc, live_stdout, live_stderr = _run_step_live_fast(
+        ctx, operation, full, target_index, witness_file)
     harness.check_witnesses(ctx)
+    if can_share:
+        from arch_effects import capture_tree
+
+        assert capture_tree(ctx.root) == _SHARED_TREES[ctx.root], (
+            f"A7 {key}: refusal mutated the shared canonical world — {FIX}")
     lines = [json.loads(line)
              for line in witness_file.read_text(
                  encoding="utf-8").splitlines()
              if line.strip()]
-    _LIVE[key] = (result["exit"], lines, result["stdout"],
-                    result["stderr"])
+    _LIVE[key] = (rc, lines, live_stdout, live_stderr)
     return _LIVE[key]
 
 
@@ -1288,3 +1418,31 @@ def test_control_command_streams_without_line_fails():
         _check_command_failure_streams(
             "a7-control::cmd-noline", "session.end", stdout, stderr,
             None, stdout, stderr)
+
+
+def test_control_shared_world_refusal_mutation_fails(tmp_path, monkeypatch):
+    import sys
+
+    import scenario_harness as harness
+
+    import los
+
+    monkeypatch.setattr(sys.modules[__name__], '_LIVE', {})
+    monkeypatch.setattr(sys.modules[__name__], '_SHARED_WORLDS', {})
+    monkeypatch.setattr(sys.modules[__name__], '_SHARED_TREES', {})
+    unit = next(unit for unit in _all_refusal_units()
+                if unit[0] == 'capture.create' and unit[2] is None
+                and not (harness.CASEDATA_DIR / unit[0] / unit[1]).is_dir())
+    original = los.main
+
+    def mutating_refusal():
+        result = original()
+        root = Path(sys.argv[sys.argv.index('--root') + 1])
+        (root / 'work/inbox/a7-control.md').write_text('unexpected canonical mutation')
+        return result
+
+    monkeypatch.setattr(los, 'main', mutating_refusal)
+    witness_dir = tmp_path / 'witness'
+    witness_dir.mkdir()
+    with pytest.raises(AssertionError, match='mutated the shared canonical world'):
+        _live_target(unit, tmp_path, witness_dir)

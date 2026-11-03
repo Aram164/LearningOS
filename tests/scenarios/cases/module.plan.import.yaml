@@ -572,6 +572,17 @@ cases:
   - <CASEDATA>/report.json
   expect:
     site: module.plan.import.reviewed-report-invalid
+- id: synthesis-basis
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:57a2d494bf4faf73d3f550c7d35436d41c076d4033d4a94ccc331e456a29552c
+    check: true
+  artifact_ids: []
+  expect:
+    site: module.plan.import.synthesis-basis
 untriggered:
 - site: module.plan.import.bad-expected-revision
   reason: fixture-inexpressible

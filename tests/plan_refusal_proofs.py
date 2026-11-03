@@ -154,6 +154,25 @@ def prove(mini_repo, tmp_path, monkeypatch, *, site):
             monkeypatch.setattr(plan, '_execute_plan_import', compact)
             monkeypatch.setattr(plan, '_assemble_compact_module_revision',
                                 lambda repo, module_id, revision: (revision, []))
+    elif slug == 'synthesis-patch-failed':
+        from dataclasses import replace
+
+        import yaml
+
+        entry = a9.REGISTRY[operation]
+        destination = tmp_path / 'a9-material-synthesis.yaml'
+        destination.write_text(yaml.safe_dump({'id': 'a9-dossier'}), encoding='utf-8')
+        monkeypatch.setattr(plan, 'synthesis_destination', lambda *a, **k: destination)
+        monkeypatch.setattr(plan, '_apply_synthesis_patch',
+                            lambda *a, **k: (None, ['a9 patch fault']))
+
+        def with_synthesis_patch(context, request):
+            request = copy.deepcopy(request)
+            request['record']['material_synthesis_patch'] = {}
+            return entry.handler(context, request)
+
+        monkeypatch.setitem(a9.REGISTRY, operation,
+                            replace(entry, handler=with_synthesis_patch))
     elif slug in ('reviewed-needs-file', 'needs-file-or-record'):
         from dataclasses import replace
         entry = a9.REGISTRY[operation]

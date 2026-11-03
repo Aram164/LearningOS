@@ -422,6 +422,16 @@ def _helper_sites(tree: ast.Module, stem: str, entered: list[str], rel: str
     return found
 
 
+_DEFAULT_HANDLERS_DIR = HANDLERS_DIR
+_DEFAULT_CASES_DIR = CASES_DIR
+_DEFAULT_REGISTRY_KEYS = frozenset(REGISTRY)
+_DECLARED_SITES_CACHE: dict[tuple[str, str], str] | None = None
+_CASED_SITES_CACHE: dict[str, str] | None = None
+_DECLARING_CASES_CACHE: dict[str, list[str]] | None = None
+_UNTRIGGERED_ENTRIES_CACHE: dict[str, dict] | None = None
+_SESSION_WITNESSES_CACHE: tuple[tuple[str, int, int], set[tuple[str, str]]] | None = None
+
+
 def _declared_sites() -> dict[tuple[str, str], str]:
     """``(operation, site)`` -> ``"rel:line"`` for every declared site.
 
@@ -435,6 +445,11 @@ def _declared_sites() -> dict[tuple[str, str], str]:
     narrowed to the operations whose handler statically calls the
     twin (R-A9-1); literals name their operation as written.
     """
+    global _DECLARED_SITES_CACHE
+    is_default = (HANDLERS_DIR == _DEFAULT_HANDLERS_DIR
+                  and frozenset(REGISTRY) == _DEFAULT_REGISTRY_KEYS)
+    if is_default and _DECLARED_SITES_CACHE is not None:
+        return _DECLARED_SITES_CACHE
     serving = _serving_ops()
     entry_points = set(_entry_point_ops())
     declared: dict[tuple[str, str], str] = {}
@@ -523,6 +538,8 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                     for operation in narrowed:
                         record(operation, f"{operation}.{slug}", rel,
                                stmt.lineno)
+    if is_default:
+        _DECLARED_SITES_CACHE = declared
     return declared
 
 
@@ -574,11 +591,17 @@ def _session_witnesses() -> set[tuple[str, str]]:
     no scenario ran in
     this session: skip locally, fail when CI is set.
     """
+    global _SESSION_WITNESSES_CACHE
     path = os.environ.get(SITE_WITNESS_ENV)
     assert path, f"A9 {SITE_WITNESS_ENV} is unset — {FIX}"
     try:
+        st = os.stat(path)
+        cache_key = (path, st.st_mtime_ns, st.st_size)
+        if _SESSION_WITNESSES_CACHE is not None and _SESSION_WITNESSES_CACHE[0] == cache_key:
+            return set(_SESSION_WITNESSES_CACHE[1])
         text = Path(path).read_text(encoding="utf-8")
     except FileNotFoundError:
+        cache_key = None
         text = ""
     lines = [line for line in text.splitlines() if line.strip()]
     if not lines:
@@ -599,11 +622,16 @@ def _session_witnesses() -> set[tuple[str, str]]:
             f"({line[:120]!r}) — {FIX}")
         if record["site"] is not None:
             witnesses.add((record["operation"], record["site"]))
+    if cache_key is not None:
+        _SESSION_WITNESSES_CACHE = (cache_key, set(witnesses))
     return witnesses
 
 
 def _cased_sites() -> dict[str, str]:
     """Typed ``expect.site`` -> ``"file:case"`` over every case file."""
+    global _CASED_SITES_CACHE
+    if CASES_DIR == _DEFAULT_CASES_DIR and _CASED_SITES_CACHE is not None:
+        return _CASED_SITES_CACHE
     import scenario_harness as harness
 
     cased = {}
@@ -613,6 +641,8 @@ def _cased_sites() -> dict[str, str]:
             site = (case.get("expect") or {}).get("site")
             if site is not None:
                 cased.setdefault(site, f"{path.stem}:{case['id']}")
+    if CASES_DIR == _DEFAULT_CASES_DIR:
+        _CASED_SITES_CACHE = cased
     return cased
 
 
@@ -622,6 +652,9 @@ def _declaring_cases() -> dict[str, list[str]]:
     Keys use the case file's ``operation``, the name the harness
     attributes a run to (``scenario_harness.CASE_SITE_WITNESSES``).
     """
+    global _DECLARING_CASES_CACHE
+    if CASES_DIR == _DEFAULT_CASES_DIR and _DECLARING_CASES_CACHE is not None:
+        return _DECLARING_CASES_CACHE
     import scenario_harness as harness
 
     declaring: dict[str, list[str]] = {}
@@ -632,6 +665,8 @@ def _declaring_cases() -> dict[str, list[str]]:
             if site is not None:
                 declaring.setdefault(site, []).append(
                     f"{doc['operation']}:{case['id']}")
+    if CASES_DIR == _DEFAULT_CASES_DIR:
+        _DECLARING_CASES_CACHE = declaring
     return declaring
 
 
@@ -670,6 +705,12 @@ def _untriggered_entries() -> dict[str, dict]:
     them. A site entry must name its operation's file, a declared
     site, and a fixed-vocabulary reason.
     """
+    global _UNTRIGGERED_ENTRIES_CACHE
+    is_default = (CASES_DIR == _DEFAULT_CASES_DIR
+                  and HANDLERS_DIR == _DEFAULT_HANDLERS_DIR
+                  and frozenset(REGISTRY) == _DEFAULT_REGISTRY_KEYS)
+    if is_default and _UNTRIGGERED_ENTRIES_CACHE is not None:
+        return _UNTRIGGERED_ENTRIES_CACHE
     import scenario_harness as harness
 
     declared_where = {site: where
@@ -697,6 +738,8 @@ def _untriggered_entries() -> dict[str, dict]:
                 f"A9 {label}: reason {entry.get('reason')!r} is outside "
                 f"{sorted(_UNTRIGGERED_REASONS)} — {FIX}")
             entries[site] = entry
+    if is_default:
+        _UNTRIGGERED_ENTRIES_CACHE = entries
     return entries
 
 
@@ -3102,6 +3145,7 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
     witness.touch()
     arch_audit_hook.install(str(log))
     try:
+        monkeypatch.delenv(SITE_WITNESS_ENV, raising=False)
         args = los.build_parser().parse_args(
             ["session-end", "--commit-message", "push me", "--push"])
         outcome = pipeline_module.run_cli(mini_repo, "session.end", args)
@@ -3275,7 +3319,7 @@ for _phase4_site in ('lineage.restamp.analysis-failed', 'lineage.restamp.restamp
 
 
 
-for _helper_site in ('module.plan.import.noop-revision', 'module.plan.import.inventory-preflight-failed', 'module.plan.import.source-patch-splice', 'module.plan.import.synthesis-destination', 'module.plan.import.lineage-admission-failed', 'module.plan.import.validation-crash', 'module.plan.import.report-out-failed', 'module.plan.import.promotion-hash-mismatch', 'module.plan.import.promotion-needs-hash', 'module.plan.import.promotion-preflight-failed', 'module.plan.import.promotion-revisions-mismatch', 'module.plan.import.promotion-needs-approval', 'module.plan.import.promotion-needs-snapshot', 'module.plan.import.assembled-contract-failed', 'module.plan.import.reviewed-needs-file', 'unit.plan.revise.module-patch-escape', 'unit.plan.revise.source-patches-nonlist', 'unit.plan.revise.units-nonlist', 'unit.plan.revise.workspace-updates-nonlist', 'unit.plan.revise.ordering-preflight-failed', 'unit.plan.revise.routing-preflight-failed', 'unit.plan.revise.lineage-preflight-failed', 'unit.plan.revise.source-map-foreign', 'unit.plan.revise.source-patch-unknown', 'unit.plan.revise.unit-invalid', 'unit.plan.revise.map-foreign-unit', 'unit.plan.revise.synthesis-unknown-unit', 'unit.plan.revise.workspace-not-joined', 'unit.plan.revise.staged-outside-package', 'unit.plan.revise.validation-preflight-failed', 'unit.plan.revise.inventory-preflight-failed', 'unit.plan.revise.source-patch-splice', 'unit.plan.revise.stage-note-escape', 'unit.plan.revise.synthesis-destination', 'unit.plan.revise.workspace-splice', 'unit.plan.revise.lineage-admission-failed', 'unit.plan.revise.staged-unavailable', 'unit.plan.revise.validation-crash', 'unit.plan.revise.report-out-failed', 'unit.plan.revise.assembled-contract-failed', 'unit.plan.revise.needs-file-or-record'):
+for _helper_site in ('unit.plan.revise.synthesis-patch-failed', 'module.plan.import.noop-revision', 'module.plan.import.inventory-preflight-failed', 'module.plan.import.source-patch-splice', 'module.plan.import.synthesis-destination', 'module.plan.import.lineage-admission-failed', 'module.plan.import.validation-crash', 'module.plan.import.report-out-failed', 'module.plan.import.promotion-hash-mismatch', 'module.plan.import.promotion-needs-hash', 'module.plan.import.promotion-preflight-failed', 'module.plan.import.promotion-revisions-mismatch', 'module.plan.import.promotion-needs-approval', 'module.plan.import.promotion-needs-snapshot', 'module.plan.import.assembled-contract-failed', 'module.plan.import.reviewed-needs-file', 'unit.plan.revise.module-patch-escape', 'unit.plan.revise.source-patches-nonlist', 'unit.plan.revise.units-nonlist', 'unit.plan.revise.workspace-updates-nonlist', 'unit.plan.revise.ordering-preflight-failed', 'unit.plan.revise.routing-preflight-failed', 'unit.plan.revise.lineage-preflight-failed', 'unit.plan.revise.source-map-foreign', 'unit.plan.revise.source-patch-unknown', 'unit.plan.revise.unit-invalid', 'unit.plan.revise.map-foreign-unit', 'unit.plan.revise.synthesis-unknown-unit', 'unit.plan.revise.workspace-not-joined', 'unit.plan.revise.staged-outside-package', 'unit.plan.revise.validation-preflight-failed', 'unit.plan.revise.inventory-preflight-failed', 'unit.plan.revise.source-patch-splice', 'unit.plan.revise.stage-note-escape', 'unit.plan.revise.synthesis-destination', 'unit.plan.revise.workspace-splice', 'unit.plan.revise.lineage-admission-failed', 'unit.plan.revise.staged-unavailable', 'unit.plan.revise.validation-crash', 'unit.plan.revise.report-out-failed', 'unit.plan.revise.assembled-contract-failed', 'unit.plan.revise.needs-file-or-record'):
     _PROOF_FNS[_helper_site] = _phase4_partial(_prove_helper_plan_backstop, site=_helper_site)
 
 def _prove_overnight_learner_backstops(mini_repo, tmp_path, monkeypatch, *, operation):

@@ -652,6 +652,12 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         if isinstance(entry, dict) and isinstance(entry.get("study_map"), dict)
         and isinstance(entry["study_map"].get("id"), str)
     ]
+    for unit_id, _ in synthesis_entries:
+        unit = repo.units.get(unit_id)
+        if unit is None or unit.module_id != module_id:
+            _plan_refuse(ctx, f"synthesis replacement targets an unknown unit: {unit_id}",
+                         "synthesis-unknown-unit")
+
     def _dossier_needs_binding(candidate: dict) -> bool:
         if not candidate.get("basis"):
             return True
@@ -700,10 +706,6 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                             ev["checksum"] = checksum
     synthesis_ids: list[str] = []
     for unit_id, dossier in synthesis_entries:
-        unit = repo.units.get(unit_id)
-        if unit is None or unit.module_id != module_id:
-            _plan_refuse(ctx, f"synthesis replacement targets an unknown unit: {unit_id}",
-                         "synthesis-unknown-unit")
         try:
             destination = synthesis_destination(root, unit_id, repo=repo)
         except MaterialSynthesisError as exc:
