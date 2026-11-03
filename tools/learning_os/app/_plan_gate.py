@@ -105,7 +105,7 @@ def _evidential_diff(live_rows: dict[str, dict],
     return added, removed, changed
 
 
-def _staged_synthesis_errors(root: Path, module_id: str, live_repo,
+def staged_synthesis_errors(root: Path, module_id: str, live_repo,
                              shadow: Path, shadow_repo,
                              entries: list[tuple[str, dict]]) -> list[str]:
     """Validate replacements against staged state and demand missing ones.
@@ -346,7 +346,7 @@ def _route_changed_units(live_repo, staged_repo, module_id: str) -> set[str]:
     return changed
 
 
-def _semantic_ack_problems(module_id: str, live_repo, staged_repo,
+def semantic_ack_problems(module_id: str, live_repo, staged_repo,
                             touched_units: list[str],
                             acknowledgments: list[dict]) -> list[str]:
     """Context-dependent changes that need an explicit documented acknowledgment.
@@ -493,12 +493,12 @@ def plan_apply_gate(
         ack_errors: list[str] = []
         if module_id is not None and syntheses is not None:
             try:
-                synthesis_errors = _staged_synthesis_errors(
+                synthesis_errors = staged_synthesis_errors(
                     root, module_id, live_repo, root, staged_repo, syntheses)
             except MaterialSynthesisError as exc:
                 synthesis_errors = [f"material_syntheses: staged state unreadable: {exc}"]
             if touched_units is not None and acknowledgments is not None:
-                ack_errors = _semantic_ack_problems(
+                ack_errors = semantic_ack_problems(
                     module_id, live_repo, staged_repo,
                     touched_units, acknowledgments)
         errors = compose_plan_gate_errors(
@@ -552,12 +552,12 @@ def module_plan_validation_errors(
         if module_id is not None and syntheses is not None:
             live_repo = load_repo(root) if live_repo is None else live_repo
             try:
-                synthesis_errors = _staged_synthesis_errors(
+                synthesis_errors = staged_synthesis_errors(
                     root, module_id, live_repo, shadow, staged_repo, syntheses)
             except MaterialSynthesisError as exc:
                 synthesis_errors = [f"material_syntheses: staged state unreadable: {exc}"]
             if touched_units is not None and acknowledgments is not None:
-                ack_errors = _semantic_ack_problems(
+                ack_errors = semantic_ack_problems(
                     module_id, live_repo, staged_repo,
                     touched_units, acknowledgments)
         content_errors = errors
@@ -916,7 +916,7 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
                 else:
                     after["detail"] = f"routes change without replacement: added={a} removed={r} changed={c}"
             synthesis[uid] = {"before": before, "after": after}
-        ack_problems = _semantic_ack_problems(
+        ack_problems = semantic_ack_problems(
             module_id, live_repo, staged_repo,
             sorted(set(seen_units)
                    | _route_changed_units(live_repo, staged_repo, module_id)),

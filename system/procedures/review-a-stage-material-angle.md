@@ -158,8 +158,8 @@ $ export MAT_SHA && $LOS_REPO/.venv/bin/python - <<'EOF'
 > open(os.environ["TMPDIR"] + "/map-l01-replace.yaml", "w").write(yaml.safe_dump(draft, sort_keys=False))
 > print("drafted map-l01-replace.yaml")
 > EOF
-fp1: sha256:b21056feaeec6fd635522b55207a8e95668bfaa41de9439152c3d37dbf850d0f
-fp2: sha256:58df9cfa103de838dfb6fb11fdf4e25f7be525a95e1cb848bc098c2d1e9d0f01
+fp1: sha256:f46220a225bdd7d2ea253e98f7e1fb76034cc3c8b13331a82e899c0f7bd8c2b2
+fp2: sha256:1e5d53899765a0479356526d32f741d3df21cd5f0d860287d1ff7d0d27564f55
 drafted map-l01-replace.yaml
 ```
 
@@ -169,7 +169,7 @@ drafted map-l01-replace.yaml
 $ los unit-map-import unit-demo-l01 --file "$TMPDIR/map-l01-replace.yaml" --replace --check | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"], d["mode"], d["canonical_files_written"]); print(d["diff"]["replacement"], d["diff"]["stages_after"]); print(d["file_sha256"])'
 True check 0
 True ['stage-demo', 'stage-demo-pending']
-sha256:31ac987f75414ab831ac92f8013ace3b607aa1dae035358c08fc51c2b4613f56
+sha256:b0dc8a4cdd0385a383a1b418aee13023cc9ffddfbbc550666e5665e56f0314ff
 ```
 
 ## Seal the replacement with derived guards

@@ -1076,7 +1076,7 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
         mini_repo, capability="module.plan.import",
         payload={"module_id": "module-demo", "file": str(package),
                  "file_sha256": file_sha256(package)},
-        artifact_ids=["module-demo", "unit-demo-l02"],
+        artifact_ids=["module-demo", "unit-demo-l02", "study-map-demo-l02"],
         idempotency_key="curriculum-module-plan-import",
         expected_snapshot=snapshot,
     )

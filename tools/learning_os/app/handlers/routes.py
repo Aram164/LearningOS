@@ -10,12 +10,17 @@ from dataclasses import replace
 
 import yaml
 
-from learning_os.app._plan_gate import _semantic_ack_problems, _staged_synthesis_errors
 from learning_os.app._plan_gate import compose_plan_gate_errors as _compose_plan_gate_errors
 from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
 )
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
+from learning_os.app._plan_gate import (
+    semantic_ack_problems as _semantic_ack_problems,
+)
+from learning_os.app._plan_gate import (
+    staged_synthesis_errors as _staged_synthesis_errors,
+)
 from learning_os.app.check import real_perimeter_errors as _real_perimeter_errors
 from learning_os.app.claim_admission import (
     anchor_report,

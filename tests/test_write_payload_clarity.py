@@ -208,7 +208,9 @@ def test_route_concept_review_and_unit_shapes_mirror_their_handlers(repo_root):
     assert revision["additionalProperties"] is False
     assert set(revision["properties"]) == {
         "unit_id", "plan_contract", "route_changes", "study_map",
-        "material_synthesis", "claim_evidence", "acknowledgments",
+        "material_synthesis", "material_synthesis_patch", "claim_evidence",
+        "acknowledgments", "unit_patch", "stage_patches", "stage_additions",
+        "stage_order",
     }
     assert set(revision["required"]) == {"plan_contract"}
 
