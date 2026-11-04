@@ -4140,7 +4140,9 @@
       "epilog": null,
       "prog": "los health-report",
       "defaults": {
-        "func": "learning_os.commands.vnext.cmd_health_report"
+        "_operation": "'health.report'",
+        "_operation_kind": "'tool'",
+        "func": "learning_os.adapters.cli.invoke"
       },
       "groups": [],
       "actions": [
@@ -4159,6 +4161,21 @@
           "help": "show this help message and exit",
           "metavar": null,
           "action": "help"
+        },
+        {
+          "option_strings": [
+            "--ui-root"
+          ],
+          "dest": "ui_root",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "UI source checkout whose build and schema lock are compared (default: the obsidian-ui sibling of Core); running identity is checked separately in Obsidian Diagnostics",
+          "metavar": null,
+          "action": "store"
         },
         {
           "option_strings": [

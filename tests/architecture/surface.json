@@ -414,6 +414,7 @@
    "garden.add-transcription",
    "garden.update",
    "migration.projects-to-modules-v62",
+   "migration.python-topic-sessions-v63",
    "relationship.create",
    "unit.material-synthesis.publish"
   ],
@@ -3054,6 +3055,19 @@
     "nargs": 0,
     "option_strings": [
      "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "ui_root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--ui-root"
     ],
     "required": false,
     "type": null
@@ -9388,7 +9402,7 @@
   "dossier.read.schema.json": "717b9d631fe689b747698ea6d9cb6eb67bf85beb6fa915d131141a00a34db0d5",
   "garden.seed.create.schema.json": "56ac1bac97ea847e27b591aa21ab802126ba482f2f403bf42c0d1c895d428238",
   "goal.decide.schema.json": "153d5ec6ea2358ec84af5df7cb2469c0fd7445bc4c62492f773fb753ee5df3f0",
-  "health.report.schema.json": "eeb16526fc97b6560c2f32bd3fabce12b1b0a7e1e762c1a7f4b6b60e392b259e",
+  "health.report.schema.json": "df214296cbb7e986c8d8cdfd3e983dea391064be142f21693c58290bd6c32131",
   "inbox.content.schema.json": "b956e7822531c67d13d4143b2c50cce2ff22e0e86bbbab5f63af18aaf4f998f4",
   "inbox.list.schema.json": "e7c01475bec27d2a5cd1e957a41b899a218c79ecb0e7099bb26c1f191ec8f55d",
   "inbox.resolve.schema.json": "1ffa96d3077615e4ec86e4c942af946fb65f454dd903b16dc2a7a58c61855097",

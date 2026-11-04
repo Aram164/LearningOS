@@ -20691,7 +20691,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -20713,7 +20714,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -20735,7 +20737,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -26426,7 +26429,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -26448,7 +26452,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -26470,7 +26475,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -39904,7 +39910,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": false,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -39926,7 +39933,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": true,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -39948,7 +39956,8 @@
           "lock_timeout": null,
           "command": "health-report",
           "json": true,
-          "func": "learning_os.commands.vnext.cmd_health_report"
+          "func": "learning_os.commands.vnext.cmd_health_report",
+          "ui_root": null
         }
       }
     },
@@ -39967,9 +39976,10 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los health-report [-h]\nlos health-report: error: unrecognized arguments: --bogus-flag-xyz\n",
-          "first_line": "usage: los health-report [-h]"
-        }
+          "first_line": "usage: los health-report [-h] [--ui-root UI_ROOT]",
+          "stderr": "usage: los health-report [-h] [--ui-root UI_ROOT]\nlos health-report: error: unrecognized arguments: --bogus-flag-xyz\n"
+        },
+        "stdout": ""
       }
     },
     {
