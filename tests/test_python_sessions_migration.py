@@ -6,6 +6,7 @@ import copy
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 from repo_builders import add_curriculum, write_yaml
 
 from learning_os.app import python_sessions_migration as migration
@@ -220,6 +221,42 @@ def test_replay_does_not_overwrite_later_notes_and_requires_evidence(python_plan
     assert note.read_text() == "Later learning stays untouched.\n"
     (root / f"{migration.BASE}/evidence.json").write_text("{}")
     with pytest.raises(WriteRefused, match="evidence differs"):
+        commit(root, report)
+
+
+@pytest.mark.parametrize("missing", ["evidence", "before-image", "deletion", "write"])
+def test_replay_refuses_a_schema_valid_receipt_with_a_missing_row(python_plan, missing):
+    root = python_plan
+    report = migration.prepare(root)
+    result = commit(root, report)
+    targets = {"evidence": f"{migration.BASE}/evidence.json",
+               "before-image": f"{migration.BASE}/before/{migration.MAP_PATH}",
+               "deletion": report["deletes"][0],
+               "write": f"{migration.MODULE_DIR}/units/unit-job-python-everyday-data/study-map.yaml"}
+    target = targets[missing]
+    receipt_path = root / result["receipt_path"]
+    receipt = yaml.safe_load(receipt_path.read_text())
+    receipt["writes"] = [row for row in receipt["writes"] if row["path"] != target]
+    import json
+    schema = json.loads((root / "system/schema/transaction-receipt.schema.json").read_text())
+    assert not list(Draft202012Validator(schema).iter_errors(receipt))
+    write_yaml(receipt_path, receipt)
+    if missing in {"evidence", "before-image"}:
+        (root / target).unlink()
+    with pytest.raises(WriteRefused, match="receipt inventory differs"):
+        commit(root, report)
+
+
+def test_replay_binds_receipt_postimage_hash_to_reviewed_bytes(python_plan):
+    root = python_plan
+    report = migration.prepare(root)
+    result = commit(root, report)
+    receipt_path = root / result["receipt_path"]
+    receipt = yaml.safe_load(receipt_path.read_text())
+    row = next(row for row in receipt["writes"] if row["path"] == migration.MAP_PATH)
+    row["sha256_after"] = "0" * 64
+    write_yaml(receipt_path, receipt)
+    with pytest.raises(WriteRefused, match="receipt hashes differ"):
         commit(root, report)
 
 

@@ -279,7 +279,7 @@ def prepare(root: Path) -> dict[str, object]:
             "optional_stage_ids": [row["id"] for row in optional]}
 
 
-def _completed(root: Path, reviewed_sha256: str) -> dict[str, object] | None:
+def _completed(root: Path, report: dict[str, object], reviewed_sha256: str) -> dict[str, object] | None:
     if not _path(root, MARKER).exists():
         return None
     marker_bytes = _read(root, MARKER)
@@ -298,9 +298,30 @@ def _completed(root: Path, reviewed_sha256: str) -> dict[str, object] | None:
             or receipt.get("capability") != AUTHORITY
             or cast(dict[str, object], receipt.get("metadata", {})).get("plan_sha256") != reviewed_sha256):
         raise WriteRefused("migration marker lacks its committed receipt")
-    rows = {cast(str, row["path"]): row for row in cast(list[dict[str, object]], receipt["writes"])}
-    if rows.get(MARKER, {}).get("sha256_after") != hashlib.sha256(marker_bytes).hexdigest():
-        raise WriteRefused("migration marker does not match receipt")
+    recorded_rows = cast(list[dict[str, object]], receipt["writes"])
+    rows = {cast(str, row["path"]): row for row in recorded_rows}
+    planned_writes = cast(dict[str, str], report["writes"])
+    planned_deletes = cast(list[str], report["deletes"])
+    expected_paths = set(planned_writes) | set(planned_deletes) | {MARKER}
+    if len(rows) != len(recorded_rows) or set(rows) != expected_paths:
+        raise WriteRefused("migration receipt inventory differs from reviewed plan")
+    pins = cast(dict[str, str | None], report["source_sha256"])
+    after_hashes = {relative: hashlib.sha256(content.encode()).hexdigest()
+                    for relative, content in planned_writes.items()}
+    after_hashes[MARKER] = hashlib.sha256(marker_bytes).hexdigest()
+    for relative, row in rows.items():
+        before = pins.get(relative)
+        if (row.get("sha256_before") != before
+                or row.get("sha256_after") != after_hashes.get(relative)
+                or row.get("created") != (before is None)):
+            raise WriteRefused(f"migration receipt hashes differ from reviewed plan: {relative}")
+    revisions = cast(dict[str, int], report["expected_revisions"])
+    if (receipt.get("snapshot_before") != report["snapshot"]
+            or receipt.get("expected_revisions") != revisions
+            or receipt.get("artifact_revisions") != {
+                artifact: {"before": revision, "after": revision + 1}
+                for artifact, revision in revisions.items()}):
+        raise WriteRefused("migration receipt guards differ from reviewed plan")
     for relative, row in rows.items():
         if relative.startswith(BASE + "/before/") or relative == f"{BASE}/evidence.json":
             if hashlib.sha256(_read(root, relative)).hexdigest() != row["sha256_after"]:
@@ -315,7 +336,7 @@ def apply(root: Path, report: dict[str, object], *, reviewed_sha256: str) -> dic
     if plan_sha256(report) != reviewed_sha256:
         raise WriteRefused("reviewed migration plan hash does not match")
     with operator_lock(root):
-        completed = _completed(root, reviewed_sha256)
+        completed = _completed(root, report, reviewed_sha256)
         if completed:
             return completed
         if prepare(root) != report:
