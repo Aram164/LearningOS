@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import shutil
 from types import SimpleNamespace
 
 import pytest
@@ -227,28 +228,87 @@ def _plugin_pair(tmp_path, *, installed_main: str = "bundle-v2",
     return vault, ui, installed
 
 
-def test_plugin_check_flags_a_stale_installed_build(tmp_path):
-    """#110: a vault running an older bundle is a warning naming reinstall."""
+def test_plugin_check_flags_disk_build_disagreement(tmp_path):
+    """A disk difference requires source review, not a claim about executing code."""
     vault, ui, _installed = _plugin_pair(tmp_path, installed_main="bundle-v1")
     row = health._ui_plugin_check(vault, ui_root=ui)
     assert row["id"] == "ui-plugin-current"
     assert row["status"] == "warning"
-    assert "DIFFERENT BUILD" in row["summary"]
-    assert "reinstall the plugin" in row["summary"]
-    assert "install.py" in row["remedy"]
+    assert "differ from the comparison build" in row["summary"]
+    assert "--ui-root" in row["remedy"]
+    assert row["details"]["runtime_identity"] == "not-observed"
+    assert row["details"]["comparison_ui_root"] == str(ui)
+    assert row["details"]["comparison_source"] == "explicit-ui-root"
     assert [entry["name"] for entry in row["details"]["differing"]] == [
         "main.js", "build-info.json"]
     assert row["details"]["built"]["source_fingerprint"] == "fp-new"
     assert row["details"]["installed_build"]["source_fingerprint"] == "fp-old"
 
 
-def test_plugin_check_is_ok_when_the_vault_runs_this_build(tmp_path):
+def test_plugin_check_is_ok_when_installed_files_match_this_build(tmp_path):
     vault, ui, _installed = _plugin_pair(
         tmp_path,
         installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
     row = health._ui_plugin_check(vault, ui_root=ui)
     assert row["status"] == "ok"
     assert "4 shipped files match" in row["summary"]
+
+
+def test_plugin_check_identifies_default_and_explicit_sources_without_trusting_metadata(tmp_path):
+    vault, older_ui, installed = _plugin_pair(
+        tmp_path,
+        installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    selected_ui = tmp_path / "other-source"
+    shutil.copytree(older_ui, selected_ui)
+    (older_ui / "plugin" / "main.js").write_text("older-source")
+
+    default = health._ui_plugin_check(vault)
+    assert default["status"] == "warning"
+    assert default["details"]["comparison_ui_root"] == str(older_ui)
+    assert default["details"]["comparison_source"] == "default-sibling"
+    assert default["details"]["runtime_identity"] == "not-observed"
+
+    selected = health._ui_plugin_check(vault, ui_root=selected_ui)
+    assert selected["status"] == "ok"
+    assert selected["details"]["comparison_ui_root"] == str(selected_ui)
+    assert selected["details"]["comparison_source"] == "explicit-ui-root"
+
+    # Even matching claimed build metadata cannot conceal a changed asset.
+    (installed / "main.js").write_text("changed-after-install")
+    tampered = health._ui_plugin_check(vault, ui_root=selected_ui)
+    assert tampered["status"] == "warning"
+    assert [row["name"] for row in tampered["details"]["differing"]] == ["main.js"]
+
+
+def test_health_cli_uses_one_selected_source_for_plugin_and_contract_lock(mini_repo):
+    from repo_builders import run_los
+
+    vault, older_ui, _installed = _plugin_pair(
+        mini_repo.parent,
+        installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    assert vault == mini_repo
+    selected_ui = mini_repo.parent / "selected-ui"
+    shutil.copytree(older_ui, selected_ui)
+    version = health.declared_version(mini_repo)
+    for ui, digest in ((older_ui, "obsolete"),
+                       (selected_ui, health.declared_schema_sha256(mini_repo))):
+        (ui / "contracts").mkdir()
+        (ui / "contracts" / f"manifest-v{version}.lock.json").write_text(json.dumps({
+            "contract_version": version, "schema_sha256": digest,
+        }))
+    (older_ui / "plugin" / "main.js").write_text("older-source")
+
+    default = health.build_health_report(mini_repo)
+    default_checks = {row["id"]: row for row in default["checks"]}
+    assert default_checks["ui-plugin-current"]["status"] == "warning"
+    assert default_checks["schema-core-ui-lock"]["status"] == "error"
+
+    process = run_los(mini_repo, "health-report", "--ui-root", str(selected_ui), "--json")
+    assert process.returncode == 0, process.stderr
+    checks = {row["id"]: row for row in json.loads(process.stdout)["checks"]}
+    assert checks["ui-plugin-current"]["status"] == "ok"
+    assert checks["ui-plugin-current"]["details"]["comparison_ui_root"] == str(selected_ui)
+    assert checks["schema-core-ui-lock"]["status"] == "ok"
 
 
 def test_plugin_check_is_unknown_without_an_install_or_a_checkout(tmp_path):
@@ -263,6 +323,7 @@ def test_plugin_check_is_unknown_without_an_install_or_a_checkout(tmp_path):
     row = health._ui_plugin_check(vault, ui_root=tmp_path / "no-such-ui")
     assert row["status"] == "unknown"
     assert "unavailable" in row["summary"]
+    assert row["details"]["comparison_ui_root"] == str(tmp_path / "no-such-ui")
 
 
 def test_health_report_carries_the_plugin_check(mini_repo):

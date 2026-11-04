@@ -6,6 +6,27 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
+    "ui_root": {
+      "type": "string",
+      "description": "UI source checkout whose build and schema lock are compared (default: the obsidian-ui sibling of Core); running identity is checked separately in Obsidian Diagnostics",
+      "x-los-cli": {
+        "flags": [
+          "--ui-root"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "json": {
       "type": "boolean",
       "description": "==SUPPRESS==",

@@ -19,6 +19,21 @@ from learning_os.store import fingerprint
 from learning_os.store.loader import load_repo
 
 
+def test_root_claude_adapter_routes_through_resolving_document_links():
+    """A symlink's Markdown targets were previously wrong from the root view (#83)."""
+    root = Path(__file__).resolve().parents[1]
+    entry = root / "CLAUDE.md"
+    links = re.findall(r"\]\(([^)#]+)(?:#[^)]*)?\)", entry.read_text())
+    assert links == ["system/CLAUDE.md"]
+    adapter = entry.parent / links[0]
+    assert adapter.is_file()
+    targets = [adapter.parent / link for link in re.findall(
+        r"\]\(([^)#]+)(?:#[^)]*)?\)", adapter.read_text())]
+    assert root / "system/OPERATOR.md" in targets
+    assert root / "system/DEVELOPER.md" in targets
+    assert all(target.is_file() for target in targets)
+
+
 def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
     """Run the linked Scrut inputs, including their write/effect witnesses."""
     from test_procedures import (

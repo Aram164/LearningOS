@@ -442,7 +442,8 @@ def health_report(ctx: OpContext, req: dict) -> Result:
     """Build the repository health report."""
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
-    return Result(build_health_report(ctx.root))
+    ui_root = Path(req["ui_root"]).expanduser().resolve() if req.get("ui_root") else None
+    return Result(build_health_report(ctx.root, ui_root=ui_root))
 
 
 @register("legacy.archive.inspect", kind="query", effects=OperationEffects.READ)

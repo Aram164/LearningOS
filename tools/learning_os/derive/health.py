@@ -123,12 +123,12 @@ def _time_machine_check(
     )
 
 
-def _core_ui_lock_check(root: Path) -> dict[str, Any]:
-    """Compare the producer lock to the explicit sibling UI mirror, if present."""
+def _core_ui_lock_check(root: Path, *, ui_root: Path | None = None) -> dict[str, Any]:
+    """Compare the producer lock to the selected UI mirror, if present."""
     expected_version = declared_version(root)
+    ui = ui_root if ui_root is not None else root.parent / "obsidian-ui"
     ui_lock = (
-        root.parent
-        / "obsidian-ui"
+        ui
         / "contracts"
         / f"manifest-v{expected_version}.lock.json"
     )
@@ -165,8 +165,8 @@ def _shipped_file_digest(path: Path) -> str | None:
     """The `sha256:` digest of a shipped plugin file, or None when unusable.
 
     Mirrors `plugin-assets.mjs shippedFileProblem`: only a regular file
-    counts — a symlink, directory, or missing path is not a build the
-    vault is running.
+    counts — a symlink, directory, or missing path is unusable comparison
+    evidence.
     """
     try:
         if not stat.S_ISREG(path.lstat().st_mode):
@@ -178,7 +178,28 @@ def _shipped_file_digest(path: Path) -> str | None:
 
 def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
                      installed_dir: Path | None = None) -> dict[str, Any]:
-    """Whether the vault has the UI checkout's current plugin build installed.
+    """Compare installed disk assets with one identified UI source checkout.
+
+    Runtime identity is observed separately by the executing Obsidian plugin;
+    Core's file comparison cannot establish which bundle is running.
+    """
+    root = root.resolve()
+    ui = (ui_root.expanduser().resolve() if ui_root is not None
+          else root.parent / "obsidian-ui")
+    installed = (installed_dir.absolute() if installed_dir is not None
+                 else root / ".obsidian" / "plugins" / "learningos-ui")
+    row = _compare_ui_plugin_files(ui, installed)
+    row.setdefault("details", {}).update({
+        "comparison_ui_root": str(ui),
+        "comparison_source": "explicit-ui-root" if ui_root is not None else "default-sibling",
+        "installed_plugin_dir": str(installed),
+        "runtime_identity": "not-observed",
+    })
+    return row
+
+
+def _compare_ui_plugin_files(ui: Path, installed: Path) -> dict[str, Any]:
+    """Whether installed plugin files equal the selected checkout's build.
 
     The same comparison `npm run install:status`
     (`scripts/check-install-current.mjs`) performs, from Core's side of
@@ -186,13 +207,10 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
     byte-identical between the built `plugin/` directory and the vault's
     installed copy. A stale build is a warning, not an error — the app
     still runs — and an absent UI checkout or a vault with nothing
-    installed is unknown, never stale: Core is usable alone.
+    installed is unknown, never stale: Core is usable alone. An asset mismatch
+    does not establish whether this is the installation's intended source.
     """
-    root = root.resolve()
-    ui = ui_root.resolve() if ui_root is not None else root.parent / "obsidian-ui"
     built_dir = ui / "plugin"
-    installed = (installed_dir.absolute() if installed_dir is not None
-                 else root / ".obsidian" / "plugins" / "learningos-ui")
     try:
         manifest = json.loads((ui / "plugin-assets.json").read_text(encoding="utf-8"))
         if (not isinstance(manifest, dict)
@@ -216,7 +234,8 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
         return _check(
             "ui-plugin-current", "unknown",
             f"The UI shipping manifest is unavailable: {exc}.",
-            "core-ui", "Open the paired UI checkout and run `npm run build`.",
+            "core-ui", "Select the intended UI checkout with `health-report --ui-root PATH` "
+            "and verify its build.",
         )
     installed_missing = False
     for directory in (installed.parent.parent, installed.parent, installed):
@@ -340,8 +359,8 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
     if not differing and not unexpected and not vault_problems:
         return _check(
             "ui-plugin-current", "ok",
-            f"The installed plugin matches this build ({len(rows)} shipped files match).",
-            "core-ui", "Reinstall the plugin after every UI rebuild.",
+            f"The installed plugin files match the comparison build ({len(rows)} shipped files match).",
+            "core-ui", "Use Obsidian Diagnostics to compare the running and installed identities.",
         )
     details: dict[str, Any] = {
         "differing": [
@@ -357,13 +376,12 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
         summary = ("The installed plugin directory holds entries this build "
                    "does not own.")
     else:
-        summary = ("THE VAULT IS RUNNING A DIFFERENT BUILD: "
-                   f"{', '.join(row['name'] for row in differing)} "
-                   "differ(s) from this UI checkout — reinstall the plugin.")
+        summary = ("Installed plugin files differ from the comparison build: "
+                   f"{', '.join(row['name'] for row in differing)}.")
     return _check(
         "ui-plugin-current", "warning", summary,
-        "core-ui", "Run `python3 install.py` in the UI checkout, then reload "
-        "Obsidian with Cmd+R.",
+        "core-ui", "Confirm the intended UI source with `health-report --ui-root PATH`. "
+        "Review asset differences before an update; use Obsidian Diagnostics for running identity.",
         **details,
     )
 
@@ -484,8 +502,10 @@ def _projection_check(root: Path, expected: dict[str, Any]) -> dict[str, Any]:
     )
 
 
-def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[str, Any]:
+def build_health_report(root: Path, *, now: dt.datetime | None = None,
+                        ui_root: Path | None = None) -> dict[str, Any]:
     root = root.resolve()
+    selected_ui = ui_root.expanduser().resolve() if ui_root is not None else None
     repo = load_repo(root)
     checks: list[dict[str, Any]] = []
 
@@ -536,8 +556,8 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
         "manifest-contract", "ok", contract_message,
         "core-ui", "Ship the producer schema and UI lock as one coordinated version.",
     ))
-    checks.append(_core_ui_lock_check(root))
-    checks.append(_ui_plugin_check(root))
+    checks.append(_core_ui_lock_check(root, ui_root=selected_ui))
+    checks.append(_ui_plugin_check(root, ui_root=selected_ui))
     checks.append(_projection_check(root, manifest))
 
     try:
