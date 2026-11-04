@@ -1,0 +1,100 @@
+id: study-map-job-python-everyday-data
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-everyday-data
+status: ready
+current_stage: stage-python-everyday-data
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-everyday-data
+  number: 1
+  title: Everyday data structures and expressions
+  status: pending
+  objective: Comprehensions, unpacking, slicing, sorting, dictionaries, missing keys
+    and sets. Choose ordinary containers and read compact expressions without memorising
+    signatures.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-everyday-data-fp-1
+    route_id: route-python-everyday-data-fp-1
+    kind: read
+    label: Fluent Python 2e - Everyday data structures and expressions
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 55-67, 77-80, 86-88, 108-110, 113-124, 131-140.
+      Ch 2: stop before Pattern Matching with Sequences on p68; on p80 stop before
+      Using + and * with Sequences. Ch 3: skip the short implementation discussion
+      under Practical Consequences of How dict Works on p132; read only observable
+      set/hash behaviour, not storage mechanics.'
+    angle: The main explanation and worked examples for everyday data structures and
+      expressions.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 2: stop before Pattern
+      Matching with Sequences on p68; on p80 stop before Using + and * with Sequences.
+      Ch 3: skip the short implementation discussion under Practical Consequences
+      of How dict Works on p132; read only observable set/hash behaviour, not storage
+      mechanics.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-everyday-data-ep-2
+    route_id: route-python-everyday-data-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 5, PDF pp. 44-47; Item 6, PDF pp. 47-51;
+      Item 7, PDF pp. 51-53; Item 8, PDF pp. 53-55; Item 13, PDF pp. 71-75; Item 14,
+      PDF pp. 75-81; Item 16, PDF pp. 88-93; Item 17, PDF pp. 93-96; Item 27, PDF
+      pp. 130-132; Item 28, PDF pp. 132-134; start at each named item heading and
+      stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-everyday-data-python-docs-3
+    route_id: route-python-everyday-data-python-docs-1
+    kind: read
+    label: Python tutorial - Data Structures
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Data Structures": Sections 5.1-5.6; stop before
+      5.7 More on Conditions'
+    angle: A compact baseline for the containers used throughout the books.
+    angle_detail: Read for ordinary use. The 3.11 edition matches the project minimum;
+      this is not an API-signature checklist.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/datastructures.html
+  - id: resource-python-everyday-data-python-docs-4
+    route_id: route-python-everyday-data-python-docs-2
+    kind: reference
+    label: Python library - collections
+    source_id: source-python-docs
+    locator: 'Page "Python library - collections": Counter, defaultdict and deque'
+    angle: Look up the container or iterator tool a reading names.
+    angle_detail: Lookup only; do not read or memorise the complete API.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/collections.html
+  - id: resource-python-everyday-data-python-docs-5
+    route_id: route-python-everyday-data-python-docs-3
+    kind: reference
+    label: Python library - itertools
+    source_id: source-python-docs
+    locator: 'Page "Python library - itertools": Function summary table; look up individual
+      functions only when needed'
+    angle: Look up the container or iterator tool a reading names.
+    angle_detail: Lookup only; do not read or memorise the complete API.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/itertools.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-everyday-data/stages/stage-python-everyday-data/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-everyday-data

@@ -1,0 +1,29 @@
+id: unit-job-python-decorators-registration
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Decorators and registration
+order: 4
+scope: Decorator application, import-time registration, wrapper functions, metadata
+  preservation and parameterised registration decorators.
+status: ready
+scope_sources:
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-decorators-registration/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-decorators-registration
+knowledge_map:
+  summary: Decorator application, import-time registration, wrapper functions, metadata
+    preservation and parameterised registration decorators.
+  nodes:
+  - id: knowledge-python-decorators-registration
+    title: Decorators and registration
+    summary: Decorator application, import-time registration, wrapper functions, metadata
+      preservation and parameterised registration decorators.

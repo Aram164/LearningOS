@@ -1,0 +1,76 @@
+id: study-map-job-python-tooling
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-tooling
+status: ready
+current_stage: stage-python-tooling
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-tooling
+  number: 1
+  title: Projects, environments and tooling
+  status: pending
+  objective: Understand pyproject.toml, dependency groups/extras, uv.lock, environment
+    synchronisation and running commands; recognise maturin as the Python/Rust build
+    boundary without learning Rust or publishing packages.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-tooling-uv-docs-1
+    route_id: route-python-tooling-uv-docs-1
+    kind: read
+    label: uv - Working on projects
+    source_id: source-uv-docs
+    locator: 'Page "uv - Working on projects": Project structure; managing dependencies;
+      running commands; building distributions for context'
+    angle: The current project workflow absent from the old packaging stage.
+    angle_detail: Read the guide. Commands are examples, not instructions to change
+      Stratum or create a new project.
+    scope_triage: required-now
+    url: https://docs.astral.sh/uv/guides/projects/
+  - id: resource-python-tooling-uv-docs-2
+    route_id: route-python-tooling-uv-docs-2
+    kind: read
+    label: uv - Locking and syncing
+    source_id: source-uv-docs
+    locator: 'Page "uv - Locking and syncing": Locking and syncing; automatic lock/sync;
+      extras and dependency groups; exact versus inexact sync'
+    angle: Why the lockfile, declared dependencies and environment are different things.
+    angle_detail: Read how --locked, --frozen and extras affect reproducibility; avoid
+      blindly copying the tutorial's sync command into a work repository.
+    scope_triage: required-now
+    url: https://docs.astral.sh/uv/concepts/projects/sync/
+  - id: resource-python-tooling-pointer-1
+    kind: reference
+    label: pyproject.toml specification
+    locator: 'Page "pyproject.toml specification": [build-system], [project], optional-dependencies
+      and [tool] tables'
+    angle: Read-only connection to real Python code.
+    angle_detail: Lookup only. Maintained by the Python Packaging Authority.
+    scope_triage: reference-only
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+  - id: resource-python-tooling-pointer-2
+    kind: reference
+    label: maturin tutorial
+    locator: 'Page "maturin tutorial": Introduction; mixed Python/Rust project layout;
+      develop versus build'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read only. No Rust implementation, ABI internals, package publication
+      or build assignment. This related tool page shares the tooling route group,
+      not uv authorship.
+    scope_triage: helpful-now
+    url: https://www.maturin.rs/tutorial.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-tooling/stages/stage-python-tooling/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-tooling

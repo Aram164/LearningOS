@@ -54,7 +54,7 @@ revisions:
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
-  module-job-python-engineering: 2
+  module-job-python-engineering: 3
   module-job-rust-engineering: 1
   module-project-bachelor-thesis: 2
   note-06-random-variables-pp005-008: 1
@@ -334,7 +334,23 @@ revisions:
   study-map-job-polars-pandas-fluency: 10
   study-map-job-polars-schema-missing-types: 7
   study-map-job-polars-selection-backend: 10
-  study-map-job-python-engineering-fluency: 3
+  study-map-job-python-classes-inheritance: 1
+  study-map-job-python-dataclasses-properties: 1
+  study-map-job-python-decorators-registration: 1
+  study-map-job-python-engineering-fluency: 4
+  study-map-job-python-errors-logging: 1
+  study-map-job-python-everyday-data: 1
+  study-map-job-python-functions-scope: 1
+  study-map-job-python-interfaces-dispatch: 1
+  study-map-job-python-iterators-with: 1
+  study-map-job-python-modules-imports: 1
+  study-map-job-python-names-mutation: 1
+  study-map-job-python-newer-python: 1
+  study-map-job-python-read-stratum: 1
+  study-map-job-python-special-methods: 1
+  study-map-job-python-testing: 1
+  study-map-job-python-tooling: 1
+  study-map-job-python-type-hints: 1
   study-map-job-rust-engineering-fluency: 1
   study-map-m2-analysis-ch01: 1
   study-map-m2-analysis-ch02: 1
@@ -387,7 +403,23 @@ revisions:
   unit-job-polars-pandas-fluency: 13
   unit-job-polars-schema-missing-types: 9
   unit-job-polars-selection-backend: 12
-  unit-job-python-engineering-fluency: 3
+  unit-job-python-classes-inheritance: 1
+  unit-job-python-dataclasses-properties: 1
+  unit-job-python-decorators-registration: 1
+  unit-job-python-engineering-fluency: 4
+  unit-job-python-errors-logging: 1
+  unit-job-python-everyday-data: 1
+  unit-job-python-functions-scope: 1
+  unit-job-python-interfaces-dispatch: 1
+  unit-job-python-iterators-with: 1
+  unit-job-python-modules-imports: 1
+  unit-job-python-names-mutation: 1
+  unit-job-python-newer-python: 1
+  unit-job-python-read-stratum: 1
+  unit-job-python-special-methods: 1
+  unit-job-python-testing: 1
+  unit-job-python-tooling: 1
+  unit-job-python-type-hints: 1
   unit-job-rust-engineering-fluency: 1
   unit-m2-analysis-ch01: 6
   unit-m2-analysis-ch02: 9

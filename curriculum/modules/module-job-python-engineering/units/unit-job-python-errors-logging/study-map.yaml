@@ -1,0 +1,68 @@
+id: study-map-job-python-errors-logging
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-errors-logging
+status: ready
+current_stage: stage-python-errors-logging
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-errors-logging
+  number: 1
+  title: Errors and logging
+  status: pending
+  objective: Exception propagation, narrow handlers, cleanup, chaining, application
+    exception classes and library logging configuration.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-errors-logging-ep-1
+    route_id: route-python-errors-logging-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 20, PDF pp. 103-106; Item 65, PDF pp.
+      322-327; Item 87, PDF pp. 431-436; start at each named item heading and stop
+      before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-errors-logging-python-docs-2
+    route_id: route-python-errors-logging-python-docs-1
+    kind: read
+    label: Python tutorial - Errors and Exceptions
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Errors and Exceptions": 8.1-8.8; exception groups
+      in 8.9 are optional background'
+    angle: The complete ordinary error-handling story before policy advice.
+    angle_detail: Read handling, raising, chaining, custom exceptions and cleanup.
+      No exercises are assigned.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/errors.html
+  - id: resource-python-errors-logging-python-docs-3
+    route_id: route-python-errors-logging-python-docs-2
+    kind: read
+    label: Logging HOWTO
+    source_id: source-python-docs
+    locator: 'Page "Logging HOWTO": Basic Logging Tutorial; Advanced Logging Tutorial
+      (flow and configuration); Configuring Logging for a Library'
+    angle: Logger names, levels, handlers and configuration for code used as a library.
+    angle_detail: Read examples; skip optimisation, custom-handler design and the
+      logging cookbook.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/howto/logging.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-errors-logging/stages/stage-python-errors-logging/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-errors-logging

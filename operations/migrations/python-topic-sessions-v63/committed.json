@@ -1,0 +1,5 @@
+{
+  "migration": "python-topic-sessions-v63",
+  "plan_sha256": "27030d3b4bf248dcb405dbc96464c4452fe6fdf7ef4017637fd6fe171593b7d9",
+  "transaction_id": "transaction-20261104-193703-001"
+}

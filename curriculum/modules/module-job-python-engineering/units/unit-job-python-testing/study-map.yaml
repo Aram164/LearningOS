@@ -1,0 +1,150 @@
+id: study-map-job-python-testing
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-testing
+status: ready
+current_stage: stage-python-testing
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-testing
+  number: 1
+  title: Reading Python tests
+  status: pending
+  objective: Test structure, assertions, fixture scope and cleanup, parametrisation,
+    monkeypatch, tmp_path, exception assertions, mocks, pdb and profiling as debugging
+    tools. No test-writing exercises.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-testing-ep-1
+    route_id: route-python-testing-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 76, PDF pp. 380-388; Item 78, PDF pp.
+      390-398; Item 79, PDF pp. 398-402; Item 80, PDF pp. 402-407; Item 70, PDF pp.
+      345-349; start at each named item heading and stop before the following item
+      heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-testing-python-docs-2
+    route_id: route-python-testing-python-docs-1
+    kind: read
+    label: unittest - Basic example and TestCase
+    source_id: source-python-docs
+    locator: 'Page "unittest - Basic example and TestCase": Basic example; Organizing
+      test code; Distinguishing test iterations using subtests; setUp, tearDown, assertEqual
+      and assertRaises examples'
+    angle: The class-based tests used alongside pytest, without making the optional
+      book a prerequisite.
+    angle_detail: Read the named examples only. Understand test methods and per-test
+      setup/cleanup; no test-writing or runner-building assignment.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/unittest.html
+  - id: resource-python-testing-pytest-docs-3
+    route_id: route-python-testing-pytest-docs-1
+    kind: read
+    label: pytest - Fixtures
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Fixtures": Requesting fixtures; scope; autouse; yield
+      teardown'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read the examples and cleanup rules; no fixture exercise.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/fixtures.html
+  - id: resource-python-testing-pytest-docs-4
+    route_id: route-python-testing-pytest-docs-2
+    kind: read
+    label: pytest - Parametrization
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Parametrization": pytest.mark.parametrize; parametrized
+      fixtures; basic examples'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read how inputs become separate cases; skip custom collection hooks.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/parametrize.html
+  - id: resource-python-testing-pytest-docs-5
+    route_id: route-python-testing-pytest-docs-3
+    kind: read
+    label: pytest - Monkeypatch
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Monkeypatch": Patching functions, attributes, environment
+      variables and dictionaries'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Understand automatic restoration and where the patched name is looked
+      up.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/monkeypatch.html
+  - id: resource-python-testing-pytest-docs-6
+    route_id: route-python-testing-pytest-docs-4
+    kind: read
+    label: pytest - Temporary paths
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Temporary paths": The tmp_path fixture and basic Path
+      example'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read the isolated directory example; do not create files in Stratum.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/tmp_path.html
+  - id: resource-python-testing-pytest-docs-7
+    route_id: route-python-testing-pytest-docs-5
+    kind: read
+    label: pytest - Assertions and exceptions
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Assertions and exceptions": Assertion introspection and
+      Assertions about expected exceptions'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read pytest.raises, including match; no generated test or answer
+      key.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/assert.html
+  - id: resource-python-testing-pytest-docs-8
+    route_id: route-python-testing-pytest-docs-6
+    kind: read
+    label: pytest - unittest-based tests
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - unittest-based tests": Opening overview; pytest features
+      in unittest.TestCase subclasses'
+    angle: Why pytest runs TestCase classes and which pytest features do not transfer
+      to them.
+    angle_detail: 'Read the compatibility limits: TestCase methods do not accept ordinary
+      fixture arguments or pytest parametrization. Skip migration recipes.'
+    scope_triage: helpful-now
+    url: https://docs.pytest.org/en/stable/how-to/unittest.html
+  - id: resource-python-testing-shared-49
+    route_id: route-python-modules-imports-python-docs-3-session-testing
+    kind: read
+    label: unittest.mock - Where to patch
+    source_id: source-python-docs
+    locator: 'Page "unittest.mock - Where to patch": Where to patch section'
+    angle: Patching replaces the name used by the caller, following ordinary module
+      bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both
+      placements point to the same page.
+    scope_triage: helpful-now
+    url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
+  - id: resource-python-testing-pointer-1
+    kind: reference
+    label: Stratum - tests to read
+    locator: Stratum/tests/optimizer/logical/test_literal_inlining.py; tests/application/pds/
+    angle: Read-only connection to real Python code.
+    angle_detail: Read assertions and existing parametrisation. Do not add, run or
+      repair project tests as an assignment.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-testing/stages/stage-python-testing/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-testing

@@ -6,4 +6,20 @@ title: Python fluency for Stratum
 status: active
 source_map: source-map.yaml
 unit_order:
+- unit-job-python-everyday-data
+- unit-job-python-names-mutation
+- unit-job-python-functions-scope
+- unit-job-python-decorators-registration
+- unit-job-python-classes-inheritance
+- unit-job-python-dataclasses-properties
+- unit-job-python-special-methods
+- unit-job-python-modules-imports
+- unit-job-python-iterators-with
+- unit-job-python-type-hints
+- unit-job-python-interfaces-dispatch
+- unit-job-python-errors-logging
+- unit-job-python-testing
+- unit-job-python-tooling
+- unit-job-python-newer-python
+- unit-job-python-read-stratum
 - unit-job-python-engineering-fluency

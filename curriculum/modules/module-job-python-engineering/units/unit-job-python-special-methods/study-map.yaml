@@ -1,0 +1,85 @@
+id: study-map-job-python-special-methods
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-special-methods
+status: ready
+current_stage: stage-python-special-methods
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-special-methods
+  number: 1
+  title: Special methods and attribute handling
+  status: pending
+  objective: Read repr, str, equality, hashing, truth, iteration and attribute access
+    as Python protocols. Understand observable behaviour rather than internal machinery.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-special-methods-fp-1
+    route_id: route-python-special-methods-fp-1
+    kind: read
+    label: Fluent Python 2e - Special methods and attribute handling
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 33-46, 404-407, 900-902. Ch 1 stop before Why
+      len Is Not a Method p47. On p407 stop before Supporting Positional Pattern Matching.
+      On p900 begin at Built-In Functions for Attribute Handling, then read the behaviour
+      of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
+      storage attributes, vars/__dict__ investigation and descriptor implementation.
+    angle: The main explanation and worked examples for special methods and attribute
+      handling.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 1 stop before Why len
+      Is Not a Method p47. On p407 stop before Supporting Positional Pattern Matching.
+      On p900 begin at Built-In Functions for Attribute Handling, then read the behaviour
+      of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
+      storage attributes, vars/__dict__ investigation and descriptor implementation.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-special-methods-ep-2
+    route_id: route-python-special-methods-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 75, PDF pp. 377-380; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+      In Item 75, skip the paragraph beginning When you don't have control over the
+      class definition and its __dict__ inspection example; resume at Things to Remember.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-special-methods-python-docs-3
+    route_id: route-python-special-methods-python-docs-1
+    kind: reference
+    label: Python data model reference
+    source_id: source-python-docs
+    locator: 'Page "Python data model reference": Basic customization: __repr__, __str__,
+      __eq__, __hash__, __bool__; Customizing attribute access'
+    angle: Authority when a special method in real code is unfamiliar.
+    angle_detail: Reference only; never read the reference end to end or memorise
+      its method table.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/reference/datamodel.html
+  - id: resource-python-special-methods-pointer-1
+    kind: reference
+    label: Stratum - OperandRef
+    locator: 'Stratum/stratum/optimizer/logical/_base.py: OperandRef'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read what the special methods and attributes let callers do, without
+      reverse-engineering Python.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-special-methods/stages/stage-python-special-methods/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-special-methods

@@ -1,0 +1,283 @@
+{
+  "optional_stage_ids": [
+    "stage-python-00-mechanism-diagnostic",
+    "stage-python-repair-mechanism-gaps",
+    "stage-python-optimizer-theory-and-rewrite-soundness",
+    "stage-python-rewriter-tests-and-benchmark-evidence",
+    "stage-python-contribution-loop",
+    "stage-python-14-packaging-environments-maturin-and-the-python-to-rust",
+    "stage-python-15-requirements-decomposition-and-design-records",
+    "stage-python-16-api-design-boundaries-and-refactoring",
+    "stage-python-17-concurrency-async-and-resource-lifetimes",
+    "stage-python-18-errors-observability-and-operational-debugging"
+  ],
+  "sessions": [
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-everyday-data/stages/stage-python-everyday-data/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-everyday-data/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-everyday-data-fp-1",
+        "resource-python-everyday-data-ep-2",
+        "resource-python-everyday-data-python-docs-3",
+        "resource-python-everyday-data-python-docs-4",
+        "resource-python-everyday-data-python-docs-5"
+      ],
+      "stage_id": "stage-python-everyday-data",
+      "title": "Everyday data structures and expressions",
+      "unit_id": "unit-job-python-everyday-data"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-names-mutation/stages/stage-python-names-mutation/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-names-mutation/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-names-mutation-fp-1",
+        "resource-python-names-mutation-ep-2",
+        "resource-python-names-mutation-batchelder-names-3",
+        "resource-python-names-mutation-pointer-1"
+      ],
+      "stage_id": "stage-python-names-mutation",
+      "title": "Names, identity and mutation",
+      "unit_id": "unit-job-python-names-mutation"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-functions-scope/stages/stage-python-functions-scope/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-functions-scope/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-functions-scope-fp-1",
+        "resource-python-functions-scope-ep-2",
+        "resource-python-functions-scope-pointer-1"
+      ],
+      "stage_id": "stage-python-functions-scope",
+      "title": "Functions, scope and closures",
+      "unit_id": "unit-job-python-functions-scope"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-decorators-registration/stages/stage-python-decorators-registration/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-decorators-registration/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-decorators-registration-fp-1",
+        "resource-python-decorators-registration-ep-2",
+        "resource-python-decorators-registration-python-docs-3",
+        "resource-python-decorators-registration-pointer-1"
+      ],
+      "stage_id": "stage-python-decorators-registration",
+      "title": "Decorators and registration",
+      "unit_id": "unit-job-python-decorators-registration"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-classes-inheritance/stages/stage-python-classes-inheritance/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-classes-inheritance/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-classes-inheritance-python-docs-3",
+        "resource-python-classes-inheritance-fp-1",
+        "resource-python-classes-inheritance-ep-2"
+      ],
+      "stage_id": "stage-python-classes-inheritance",
+      "title": "Classes and inheritance",
+      "unit_id": "unit-job-python-classes-inheritance"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-dataclasses-properties/stages/stage-python-dataclasses-properties/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-dataclasses-properties/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-dataclasses-properties-fp-1",
+        "resource-python-dataclasses-properties-ep-2",
+        "resource-python-dataclasses-properties-python-docs-3",
+        "resource-python-dataclasses-properties-python-docs-4"
+      ],
+      "stage_id": "stage-python-dataclasses-properties",
+      "title": "Dataclasses, properties, enums and slots",
+      "unit_id": "unit-job-python-dataclasses-properties"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-special-methods/stages/stage-python-special-methods/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-special-methods/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-special-methods-fp-1",
+        "resource-python-special-methods-ep-2",
+        "resource-python-special-methods-python-docs-3",
+        "resource-python-special-methods-pointer-1"
+      ],
+      "stage_id": "stage-python-special-methods",
+      "title": "Special methods and attribute handling",
+      "unit_id": "unit-job-python-special-methods"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-modules-imports/stages/stage-python-modules-imports/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-modules-imports/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-modules-imports-ep-1",
+        "resource-python-modules-imports-python-docs-2",
+        "resource-python-modules-imports-python-docs-3",
+        "resource-python-modules-imports-python-docs-4"
+      ],
+      "stage_id": "stage-python-modules-imports",
+      "title": "Modules and imports",
+      "unit_id": "unit-job-python-modules-imports"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-iterators-with/stages/stage-python-iterators-with/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-iterators-with/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-iterators-with-fp-1",
+        "resource-python-iterators-with-ep-2",
+        "resource-python-iterators-with-pointer-1"
+      ],
+      "stage_id": "stage-python-iterators-with",
+      "title": "Iterators, generators and with",
+      "unit_id": "unit-job-python-iterators-with"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-type-hints/stages/stage-python-type-hints/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-type-hints/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-type-hints-fp-1",
+        "resource-python-type-hints-typing-docs-2",
+        "resource-python-type-hints-python-docs-3",
+        "resource-python-type-hints-typing-docs-4",
+        "resource-python-type-hints-pointer-1"
+      ],
+      "stage_id": "stage-python-type-hints",
+      "title": "Type hints",
+      "unit_id": "unit-job-python-type-hints"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-interfaces-dispatch/stages/stage-python-interfaces-dispatch/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-interfaces-dispatch/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-interfaces-dispatch-fp-1",
+        "resource-python-interfaces-dispatch-ep-2",
+        "resource-python-interfaces-dispatch-python-docs-3",
+        "resource-python-interfaces-dispatch-python-docs-4",
+        "resource-python-interfaces-dispatch-typing-docs-5",
+        "resource-python-interfaces-dispatch-pointer-1"
+      ],
+      "stage_id": "stage-python-interfaces-dispatch",
+      "title": "Interfaces and dispatch",
+      "unit_id": "unit-job-python-interfaces-dispatch"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-errors-logging/stages/stage-python-errors-logging/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-errors-logging/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-errors-logging-ep-1",
+        "resource-python-errors-logging-python-docs-2",
+        "resource-python-errors-logging-python-docs-3"
+      ],
+      "stage_id": "stage-python-errors-logging",
+      "title": "Errors and logging",
+      "unit_id": "unit-job-python-errors-logging"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-testing/stages/stage-python-testing/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-testing/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-testing-ep-1",
+        "resource-python-testing-python-docs-2",
+        "resource-python-testing-pytest-docs-3",
+        "resource-python-testing-pytest-docs-4",
+        "resource-python-testing-pytest-docs-5",
+        "resource-python-testing-pytest-docs-6",
+        "resource-python-testing-pytest-docs-7",
+        "resource-python-testing-pytest-docs-8",
+        "resource-python-testing-shared-49",
+        "resource-python-testing-pointer-1"
+      ],
+      "stage_id": "stage-python-testing",
+      "title": "Reading Python tests",
+      "unit_id": "unit-job-python-testing"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-tooling/stages/stage-python-tooling/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-tooling/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-tooling-uv-docs-1",
+        "resource-python-tooling-uv-docs-2",
+        "resource-python-tooling-pointer-1",
+        "resource-python-tooling-pointer-2"
+      ],
+      "stage_id": "stage-python-tooling",
+      "title": "Projects, environments and tooling",
+      "unit_id": "unit-job-python-tooling"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-newer-python/stages/stage-python-newer-python/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-newer-python/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-newer-python-python-docs-1",
+        "resource-python-newer-python-python-docs-2",
+        "resource-python-newer-python-python-docs-3",
+        "resource-python-newer-python-python-docs-4",
+        "resource-python-newer-python-python-docs-5"
+      ],
+      "stage_id": "stage-python-newer-python",
+      "title": "Reading newer Python while keeping a 3.11 floor",
+      "unit_id": "unit-job-python-newer-python"
+    },
+    {
+      "note_after": "curriculum/modules/module-job-python-engineering/units/unit-job-python-read-stratum/stages/stage-python-read-stratum/notes.md",
+      "note_before": "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-read-stratum/notes.md",
+      "note_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resource_ids": [
+        "resource-python-read-stratum-stratum-paper-1",
+        "resource-python-read-stratum-pointer-1",
+        "resource-python-read-stratum-pointer-2",
+        "resource-python-read-stratum-pointer-3",
+        "resource-python-read-stratum-pointer-4"
+      ],
+      "stage_id": "stage-python-read-stratum",
+      "title": "Read Stratum using the Python topics",
+      "unit_id": "unit-job-python-read-stratum"
+    }
+  ],
+  "source_sha256": {
+    "curriculum/modules/module-job-python-engineering/module.yaml": "a40e3ff99f2217ab74af045f151d6ca8322311a19bfe705639df2f921bc5006a",
+    "curriculum/modules/module-job-python-engineering/source-map.yaml": "4de0bf839f5a31edec72ae860124f698cb6bbd22a0422e3a4e9c72f0e36db982",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/notes.md": "313c35465353125d272a33102c285b7cc0f375358d4e9600f4c3652d196eb7c3",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-00-mechanism-diagnostic/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md": "67ffb301db45af1e74545ad58f805e4dcf4f14b5e4fc2bd4096e25a4cfd466cd",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md": "c52e3bba0ece0007611031e825f2db4e707eb1a255912db0e2dd8aff36e6f772",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md": "1ff36ff1e452bbdd7eb4fb7dc239cdcb1b213d9d30fd445fd96c16258a9efc0b",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md": "6129921565fbb4abe8ec5d7210d53b12ba5be2fb03e4cd758e8ada3c37a0fef7",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md": "c0cc8b0eb9c86693913407be23de666848b81e8e3e37ed763f000cd487ae421b",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-classes-inheritance/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-contribution-loop/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-dataclasses-properties/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-decorators-registration/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-errors-logging/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-everyday-data/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-functions-scope/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-interfaces-dispatch/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-iterators-with/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-modules-imports/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-names-mutation/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-newer-python/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-optimizer-theory-and-rewrite-soundness/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-read-stratum/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-repair-mechanism-gaps/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-rewriter-tests-and-benchmark-evidence/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-special-methods/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-testing/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-tooling/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-type-hints/notes.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml": "bcd3ffc282b956ba14f099a4d62f0bd75f531b702c1332dbd52d2342b6c257ec",
+    "curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/unit.yaml": "a52ae0a54c003dd91615bfbe3fc038d79bf29bd46bd8c466580f9097c7ab0bac",
+    "curriculum/resume.yaml": null,
+    "operations/transactions/revisions.yaml": "268f2b9806738f2bb5e47ec5917891b423ce87fd949a0f7f60ebbbe0160918bf"
+  }
+}

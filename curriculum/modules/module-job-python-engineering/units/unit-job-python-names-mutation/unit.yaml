@@ -1,0 +1,29 @@
+id: unit-job-python-names-mutation
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Names, identity and mutation
+order: 2
+scope: Names bind objects; assignment, equality, identity, aliasing, shallow copies
+  and mutable defaults determine whether state is shared.
+status: ready
+scope_sources:
+- source_id: source-batchelder-names
+  authority: reference
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-names-mutation/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-names-mutation
+knowledge_map:
+  summary: Names bind objects; assignment, equality, identity, aliasing, shallow copies
+    and mutable defaults determine whether state is shared.
+  nodes:
+  - id: knowledge-python-names-mutation
+    title: Names, identity and mutation
+    summary: Names bind objects; assignment, equality, identity, aliasing, shallow
+      copies and mutable defaults determine whether state is shared.

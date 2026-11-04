@@ -1,0 +1,28 @@
+id: unit-job-python-tooling
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Projects, environments and tooling
+order: 14
+scope: Understand pyproject.toml, dependency groups/extras, uv.lock, environment synchronisation
+  and running commands; recognise maturin as the Python/Rust build boundary without
+  learning Rust or publishing packages.
+status: ready
+scope_sources:
+- source_id: source-uv-docs
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-tooling/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-tooling
+knowledge_map:
+  summary: Understand pyproject.toml, dependency groups/extras, uv.lock, environment
+    synchronisation and running commands; recognise maturin as the Python/Rust build
+    boundary without learning Rust or publishing packages.
+  nodes:
+  - id: knowledge-python-tooling
+    title: Projects, environments and tooling
+    summary: Understand pyproject.toml, dependency groups/extras, uv.lock, environment
+      synchronisation and running commands; recognise maturin as the Python/Rust build
+      boundary without learning Rust or publishing packages.

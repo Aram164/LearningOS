@@ -1,0 +1,80 @@
+id: study-map-job-python-names-mutation
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-names-mutation
+status: ready
+current_stage: stage-python-names-mutation
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-names-mutation
+  number: 1
+  title: Names, identity and mutation
+  status: pending
+  objective: Names bind objects; assignment, equality, identity, aliasing, shallow
+    copies and mutable defaults determine whether state is shared.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-names-mutation-fp-1
+    route_id: route-python-names-mutation-fp-1
+    kind: read
+    label: Fluent Python 2e - Names, identity and mutation
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 232-248, 80-85. Ch 6: stop before del and
+      Garbage Collection on p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented
+      assignment; no reference-count or recycling material.'
+    angle: The main explanation and worked examples for names, identity and mutation.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 6: stop before del and
+      Garbage Collection on p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented
+      assignment; no reference-count or recycling material.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-names-mutation-ep-2
+    route_id: route-python-names-mutation-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 24, PDF pp. 117-120; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-names-mutation-batchelder-names-3
+    route_id: route-python-names-mutation-batchelder-names-1
+    kind: read
+    label: Facts and myths about Python names and values
+    source_id: source-batchelder-names
+    locator: 'Page "Facts and myths about Python names and values": Written article:
+      names, assignment, rebinding, mutation and aliasing; stop before any garbage-collection
+      discussion'
+    angle: A visual explanation of bindings and shared values before the book details.
+    angle_detail: Use the diagrams and assignment examples; no interpreter-memory
+      investigation.
+    scope_triage: helpful-now
+    url: https://nedbatchelder.com/text/names.html
+  - id: resource-python-names-mutation-pointer-1
+    kind: reference
+    label: Stratum - shared inputs
+    locator: 'Stratum/stratum/optimizer/logical/_base.py: replace_input and _check_dup_in_inputs;
+      logical/rewrites/_cse.py: docstring'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read how object identity and shared inputs affect existing code;
+      do not reproduce the rewrite algorithm.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-names-mutation/stages/stage-python-names-mutation/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-names-mutation

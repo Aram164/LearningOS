@@ -1,0 +1,34 @@
+id: unit-job-python-interfaces-dispatch
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Interfaces and dispatch
+order: 11
+scope: Duck typing, abstract base classes, structural protocols, isinstance tradeoffs
+  and singledispatch registries. Separate interface promises from inheritance and
+  registration.
+status: ready
+scope_sources:
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+- source_id: source-typing-docs
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-interfaces-dispatch/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-interfaces-dispatch
+knowledge_map:
+  summary: Duck typing, abstract base classes, structural protocols, isinstance tradeoffs
+    and singledispatch registries. Separate interface promises from inheritance and
+    registration.
+  nodes:
+  - id: knowledge-python-interfaces-dispatch
+    title: Interfaces and dispatch
+    summary: Duck typing, abstract base classes, structural protocols, isinstance
+      tradeoffs and singledispatch registries. Separate interface promises from inheritance
+      and registration.

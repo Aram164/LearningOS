@@ -3,7 +3,8 @@ module_id: module-job-python-engineering
 sources:
 - source_id: source-cosmicpython-architecture-patterns
   role: reference
-  why: Deferred architecture reference; web-application design is outside the language-reading goal.
+  why: Deferred architecture reference; web-application design is outside the language-reading
+    goal.
   priority: 0
   unit_routes:
   - unit-job-python-engineering-fluency
@@ -13,193 +14,216 @@ sources:
   priority: 0
   unit_routes:
   - id: route-python-everyday-data-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-everyday-data
     title: Fluent Python 2e - Everyday data structures and expressions
     format: book
-    angle: The main explanation and worked examples for everyday data structures and expressions.
-    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Ch 2: stop before Pattern Matching with Sequences on p68; on p80 stop
-      before Using + and * with Sequences. Ch 3: skip the short implementation discussion under Practical
-      Consequences of How dict Works on p132; read only observable set/hash behaviour, not storage mechanics.'
+    angle: The main explanation and worked examples for everyday data structures and
+      expressions.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 2: stop before Pattern
+      Matching with Sequences on p68; on p80 stop before Using + and * with Sequences.
+      Ch 3: skip the short implementation discussion under Practical Consequences
+      of How dict Works on p132; read only observable set/hash behaviour, not storage
+      mechanics.'
     covers:
     - knowledge-python-everyday-data
     depth: orientation
     scope: complementary
-    locator: 'Fluent Python 2e, PDF pp. 55-67, 77-80, 86-88, 108-110, 113-124, 131-140. Ch 2: stop before
-      Pattern Matching with Sequences on p68; on p80 stop before Using + and * with Sequences. Ch 3: skip
-      the short implementation discussion under Practical Consequences of How dict Works on p132; read
-      only observable set/hash behaviour, not storage mechanics.'
+    locator: 'Fluent Python 2e, PDF pp. 55-67, 77-80, 86-88, 108-110, 113-124, 131-140.
+      Ch 2: stop before Pattern Matching with Sequences on p68; on p80 stop before
+      Using + and * with Sequences. Ch 3: skip the short implementation discussion
+      under Practical Consequences of How dict Works on p132; read only observable
+      set/hash behaviour, not storage mechanics.'
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-names-mutation-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-names-mutation
     title: Fluent Python 2e - Names, identity and mutation
     format: book
     angle: The main explanation and worked examples for names, identity and mutation.
-    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Ch 6: stop before del and Garbage Collection on p249. Ch 2 pp80-85
-      supplies nested-list aliasing and augmented assignment; no reference-count or recycling material.'
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 6: stop before del and
+      Garbage Collection on p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented
+      assignment; no reference-count or recycling material.'
     covers:
     - knowledge-python-names-mutation
     depth: orientation
     scope: complementary
-    locator: 'Fluent Python 2e, PDF pp. 232-248, 80-85. Ch 6: stop before del and Garbage Collection on
-      p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented assignment; no reference-count or
-      recycling material.'
+    locator: 'Fluent Python 2e, PDF pp. 232-248, 80-85. Ch 6: stop before del and
+      Garbage Collection on p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented
+      assignment; no reference-count or recycling material.'
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-functions-scope-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-functions-scope
     title: Fluent Python 2e - Functions, scope and closures
     format: book
     angle: The main explanation and worked examples for functions, scope and closures.
-    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Ch 9: p338 begin at Variable Scope Rules. On p340 stop before Comparing
-      Bytecodes; skip the whole sidebar through p341. Read the closure prose and examples on pp342-343
-      and only the diagram on p344 if helpful: skip Inspecting the returned averager object, __code__,
-      __closure__, co_freevars and cells. Resume at The nonlocal Declaration p345; on p347 stop before
-      Implementing a Simple Decorator. No disassembly.'
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 9: p338 begin at Variable
+      Scope Rules. On p340 stop before Comparing Bytecodes; skip the whole sidebar
+      through p341. Read the closure prose and examples on pp342-343 and only the
+      diagram on p344 if helpful: skip Inspecting the returned averager object, __code__,
+      __closure__, co_freevars and cells. Resume at The nonlocal Declaration p345;
+      on p347 stop before Implementing a Simple Decorator. No disassembly.'
     covers:
     - knowledge-python-functions-scope
     depth: orientation
     scope: complementary
-    locator: 'Fluent Python 2e, PDF pp. 262-279, 338-340, 342-343, 345-347. Ch 9: p338 begin at Variable
-      Scope Rules. On p340 stop before Comparing Bytecodes; skip the whole sidebar through p341. Read
-      the closure prose and examples on pp342-343 and only the diagram on p344 if helpful: skip Inspecting
-      the returned averager object, __code__, __closure__, co_freevars and cells. Resume at The nonlocal
-      Declaration p345; on p347 stop before Implementing a Simple Decorator. No disassembly.'
+    locator: 'Fluent Python 2e, PDF pp. 262-279, 338-340, 342-343, 345-347. Ch 9:
+      p338 begin at Variable Scope Rules. On p340 stop before Comparing Bytecodes;
+      skip the whole sidebar through p341. Read the closure prose and examples on
+      pp342-343 and only the diagram on p344 if helpful: skip Inspecting the returned
+      averager object, __code__, __closure__, co_freevars and cells. Resume at The
+      nonlocal Declaration p345; on p347 stop before Implementing a Simple Decorator.
+      No disassembly.'
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-decorators-registration-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-decorators-registration
     title: Fluent Python 2e - Decorators and registration
     format: book
     angle: The main explanation and worked examples for decorators and registration.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. On p338 stop before Variable Scope Rules; on p350 stop before Decorators
-      in the Standard Library; on p362 stop before The Parameterized Clock Decorator. Dispatch comes later.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. On p338 stop before Variable
+      Scope Rules; on p350 stop before Decorators in the Standard Library; on p362
+      stop before The Parameterized Clock Decorator. Dispatch comes later.
     covers:
     - knowledge-python-decorators-registration
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 334-338, 347-350, 359-362. On p338 stop before Variable Scope Rules;
-      on p350 stop before Decorators in the Standard Library; on p362 stop before The Parameterized Clock
-      Decorator. Dispatch comes later.
+    locator: Fluent Python 2e, PDF pp. 334-338, 347-350, 359-362. On p338 stop before
+      Variable Scope Rules; on p350 stop before Decorators in the Standard Library;
+      on p362 stop before The Parameterized Clock Decorator. Dispatch comes later.
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-classes-inheritance-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-classes-inheritance
     title: Fluent Python 2e - Classes and inheritance
     format: book
     angle: The main explanation and worked examples for classes and inheritance.
-    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Use the tutorial first for class basics. On p414 stop before Saving
-      Memory with __slots__. On p543 stop before Tkinter: The Good, the Bad, and the Ugly. Skip the Django
-      and Tkinter case studies.'
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Use the tutorial first for
+      class basics. On p414 stop before Saving Memory with __slots__. On p543 stop
+      before Tkinter: The Good, the Bad, and the Ugly. Skip the Django and Tkinter
+      case studies.'
     covers:
     - knowledge-python-classes-inheritance
     depth: orientation
     scope: complementary
-    locator: 'Fluent Python 2e, PDF pp. 394-399, 412-414, 419-420, 518-529, 540-543. Use the tutorial
-      first for class basics. On p414 stop before Saving Memory with __slots__. On p543 stop before Tkinter:
-      The Good, the Bad, and the Ugly. Skip the Django and Tkinter case studies.'
+    locator: 'Fluent Python 2e, PDF pp. 394-399, 412-414, 419-420, 518-529, 540-543.
+      Use the tutorial first for class basics. On p414 stop before Saving Memory with
+      __slots__. On p543 stop before Tkinter: The Good, the Bad, and the Ugly. Skip
+      the Django and Tkinter case studies.'
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-dataclasses-properties-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-dataclasses-properties
     title: Fluent Python 2e - Dataclasses, properties, enums and slots
     format: book
-    angle: The main explanation and worked examples for dataclasses, properties, enums and slots.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. On p887 start at Using a Property for Attribute Validation; read the
-      LineItem examples through p889 and stop before descriptor/factory discussion. On p418 start at Summarizing
-      the Issues with __slots__; skip the memory benchmark on p417 and its continuation. No descriptor
-      construction or memory measurements.
+    angle: The main explanation and worked examples for dataclasses, properties, enums
+      and slots.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. On p887 start at Using a
+      Property for Attribute Validation; read the LineItem examples through p889 and
+      stop before descriptor/factory discussion. On p418 start at Summarizing the
+      Issues with __slots__; skip the memory benchmark on p417 and its continuation.
+      No descriptor construction or memory measurements.
     covers:
     - knowledge-python-dataclasses-properties
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 194-198, 203-205, 209-216, 220-221, 887-889, 414-416, 418. On p887
-      start at Using a Property for Attribute Validation; read the LineItem examples through p889 and
-      stop before descriptor/factory discussion. On p418 start at Summarizing the Issues with __slots__;
-      skip the memory benchmark on p417 and its continuation. No descriptor construction or memory measurements.
+    locator: Fluent Python 2e, PDF pp. 194-198, 203-205, 209-216, 220-221, 887-889,
+      414-416, 418. On p887 start at Using a Property for Attribute Validation; read
+      the LineItem examples through p889 and stop before descriptor/factory discussion.
+      On p418 start at Summarizing the Issues with __slots__; skip the memory benchmark
+      on p417 and its continuation. No descriptor construction or memory measurements.
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-special-methods-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-special-methods
     title: Fluent Python 2e - Special methods and attribute handling
     format: book
-    angle: The main explanation and worked examples for special methods and attribute handling.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Ch 1 stop before Why len Is Not a Method p47. On p407 stop before
-      Supporting Positional Pattern Matching. On p900 begin at Built-In Functions for Attribute Handling,
-      then read the behaviour of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
+    angle: The main explanation and worked examples for special methods and attribute
+      handling.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 1 stop before Why len
+      Is Not a Method p47. On p407 stop before Supporting Positional Pattern Matching.
+      On p900 begin at Built-In Functions for Attribute Handling, then read the behaviour
+      of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
       storage attributes, vars/__dict__ investigation and descriptor implementation.
     covers:
     - knowledge-python-special-methods
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 33-46, 404-407, 900-902. Ch 1 stop before Why len Is Not a Method
-      p47. On p407 stop before Supporting Positional Pattern Matching. On p900 begin at Built-In Functions
-      for Attribute Handling, then read the behaviour of getattr, hasattr, setattr, __getattr__ and __getattribute__;
-      skip special storage attributes, vars/__dict__ investigation and descriptor implementation.
+    locator: Fluent Python 2e, PDF pp. 33-46, 404-407, 900-902. Ch 1 stop before Why
+      len Is Not a Method p47. On p407 stop before Supporting Positional Pattern Matching.
+      On p900 begin at Built-In Functions for Attribute Handling, then read the behaviour
+      of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
+      storage attributes, vars/__dict__ investigation and descriptor implementation.
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-iterators-with-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-iterators-with
     title: Fluent Python 2e - Iterators, generators and with
     format: book
-    angle: The main explanation and worked examples for iterators, generators and with.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Stop before Classic Coroutines p671 and before Pattern Matching in
-      lis.py p699. No send/throw, async, coroutine machinery or hand-built interpreter.
+    angle: The main explanation and worked examples for iterators, generators and
+      with.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Stop before Classic Coroutines
+      p671 and before Pattern Matching in lis.py p699. No send/throw, async, coroutine
+      machinery or hand-built interpreter.
     covers:
     - knowledge-python-iterators-with
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 624-645, 649-660, 662-668, 688-698. Stop before Classic Coroutines
-      p671 and before Pattern Matching in lis.py p699. No send/throw, async, coroutine machinery or hand-built
-      interpreter.
+    locator: Fluent Python 2e, PDF pp. 624-645, 649-660, 662-668, 688-698. Stop before
+      Classic Coroutines p671 and before Pattern Matching in lis.py p699. No send/throw,
+      async, coroutine machinery or hand-built interpreter.
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-type-hints-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-type-hints
     title: Fluent Python 2e - Type hints
     format: book
     angle: The main explanation and worked examples for type hints.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Use the explanations and annotation examples; installing/running a
-      type checker is optional. Skip the outdated annotation-runtime forecast on pp567-570; use the official
-      modernisation guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Use the explanations and
+      annotation examples; installing/running a type checker is optional. Skip the
+      outdated annotation-runtime forecast on pp567-570; use the official modernisation
+      guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
       with Python 3.11, not the 3.12 type-parameter syntax.
     covers:
     - knowledge-python-type-hints
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 284-326, 571-574. Use the explanations and annotation examples;
-      installing/running a type checker is optional. Skip the outdated annotation-runtime forecast on
-      pp567-570; use the official modernisation guide instead. On p574 stop before Variance. Use TypeVar/Generic
-      forms compatible with Python 3.11, not the 3.12 type-parameter syntax.
+    locator: Fluent Python 2e, PDF pp. 284-326, 571-574. Use the explanations and
+      annotation examples; installing/running a type checker is optional. Skip the
+      outdated annotation-runtime forecast on pp567-570; use the official modernisation
+      guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
+      with Python 3.11, not the 3.12 type-parameter syntax.
     vault_path: material://source-fluent-python/fluent-python.pdf
   - id: route-python-interfaces-dispatch-fp-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-interfaces-dispatch
     title: Fluent Python 2e - Interfaces and dispatch
     format: book
     angle: The main explanation and worked examples for interfaces and dispatch.
-    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
-      material, not assigned tasks. Stop before virtual subclass registration on p490; no custom subclass
-      hooks or metaclasses. Read Protocol as interface documentation first; runtime checks do not prove
-      all type contracts.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Stop before virtual subclass
+      registration on p490; no custom subclass hooks or metaclasses. Read Protocol
+      as interface documentation first; runtime checks do not prove all type contracts.
     covers:
     - knowledge-python-interfaces-dispatch
     depth: orientation
     scope: complementary
-    locator: Fluent Python 2e, PDF pp. 462-470, 472-488, 496-506, 354-358. Stop before virtual subclass
-      registration on p490; no custom subclass hooks or metaclasses. Read Protocol as interface documentation
-      first; runtime checks do not prove all type contracts.
+    locator: Fluent Python 2e, PDF pp. 462-470, 472-488, 496-506, 354-358. Stop before
+      virtual subclass registration on p490; no custom subclass hooks or metaclasses.
+      Read Protocol as interface documentation first; runtime checks do not prove
+      all type contracts.
     vault_path: material://source-fluent-python/fluent-python.pdf
 - source_id: source-pydata-handbook
   role: reference
-  why: Reference-only for data-analysis lookup; not a Python-language spine. Its older library examples
-    are outside the required path.
+  why: Reference-only for data-analysis lookup; not a Python-language spine. Its older
+    library examples are outside the required path.
   priority: 0
   unit_routes:
   - unit-job-python-engineering-fluency
 - source_id: source-python-depth-drills
   role: reference
-  why: Deferred existing diagnostic material; exercises and internals are excluded from the new path.
+  why: Deferred existing diagnostic material; exercises and internals are excluded
+    from the new path.
   priority: 0
   unit_routes:
   - unit-job-python-engineering-fluency
@@ -209,215 +233,222 @@ sources:
   priority: 0
   unit_routes:
   - id: route-python-everyday-data-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-everyday-data
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-everyday-data
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 5, PDF pp. 44-47; Item 6, PDF pp. 47-51; Item 7, PDF pp.
-      51-53; Item 8, PDF pp. 53-55; Item 13, PDF pp. 71-75; Item 14, PDF pp. 75-81; Item 16, PDF pp. 88-93;
-      Item 17, PDF pp. 93-96; Item 27, PDF pp. 130-132; Item 28, PDF pp. 132-134; start at each named
-      item heading and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 5, PDF pp. 44-47; Item 6, PDF pp. 47-51;
+      Item 7, PDF pp. 51-53; Item 8, PDF pp. 53-55; Item 13, PDF pp. 71-75; Item 14,
+      PDF pp. 75-81; Item 16, PDF pp. 88-93; Item 17, PDF pp. 93-96; Item 27, PDF
+      pp. 130-132; Item 28, PDF pp. 132-134; start at each named item heading and
+      stop before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-names-mutation-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-names-mutation
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-names-mutation
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 24, PDF pp. 117-120; start at each named item heading and
-      stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 24, PDF pp. 117-120; start at each named
+      item heading and stop before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-functions-scope-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-functions-scope
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-functions-scope
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 21, PDF pp. 106-110; Item 22, PDF pp. 110-113; Item 23,
-      PDF pp. 113-117; Item 25, PDF pp. 120-125; Item 38, PDF pp. 175-178; start at each named item heading
-      and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 21, PDF pp. 106-110; Item 22, PDF pp.
+      110-113; Item 23, PDF pp. 113-117; Item 25, PDF pp. 120-125; Item 38, PDF pp.
+      175-178; start at each named item heading and stop before the following item
+      heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-decorators-registration-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-decorators-registration
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-decorators-registration
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 26, PDF pp. 125-130; start at each named item heading and
-      stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 26, PDF pp. 125-130; start at each named
+      item heading and stop before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-classes-inheritance-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-classes-inheritance
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-classes-inheritance
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 37, PDF pp. 168-175; Item 39, PDF pp. 178-183; Item 40,
-      PDF pp. 183-188; Item 42, PDF pp. 193-198; start at each named item heading and stop before the
-      following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 37, PDF pp. 168-175; Item 39, PDF pp.
+      178-183; Item 40, PDF pp. 183-188; Item 42, PDF pp. 193-198; start at each named
+      item heading and stop before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-dataclasses-properties-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-dataclasses-properties
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-dataclasses-properties
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 44, PDF pp. 204-209; Item 45, PDF pp. 209-213; start at
-      each named item heading and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 44, PDF pp. 204-209; Item 45, PDF pp.
+      209-213; start at each named item heading and stop before the following item
+      heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-special-methods-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-special-methods
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-special-methods
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 75, PDF pp. 377-380; start at each named item heading and
-      stop before the following item heading, even on a shared page. In Item 75, skip the paragraph beginning
-      When you don't have control over the class definition and its __dict__ inspection example; resume
-      at Things to Remember.
+    locator: Effective Python 2e (2020), Item 75, PDF pp. 377-380; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+      In Item 75, skip the paragraph beginning When you don't have control over the
+      class definition and its __dict__ inspection example; resume at Things to Remember.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-modules-imports-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-modules-imports
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-modules-imports
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 85, PDF pp. 424-429; Item 86, PDF pp. 429-431; Item 88,
-      PDF pp. 436-441; start at each named item heading and stop before the following item heading, even
-      on a shared page.
+    locator: Effective Python 2e (2020), Item 85, PDF pp. 424-429; Item 86, PDF pp.
+      429-431; Item 88, PDF pp. 436-441; start at each named item heading and stop
+      before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-iterators-with-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-iterators-with
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-iterators-with
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 30, PDF pp. 137-140; Item 31, PDF pp. 140-145; Item 33,
-      PDF pp. 147-150; Item 36, PDF pp. 161-168; Item 66, PDF pp. 327-331; start at each named item heading
-      and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 30, PDF pp. 137-140; Item 31, PDF pp.
+      140-145; Item 33, PDF pp. 147-150; Item 36, PDF pp. 161-168; Item 66, PDF pp.
+      327-331; start at each named item heading and stop before the following item
+      heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-interfaces-dispatch-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-interfaces-dispatch
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-interfaces-dispatch
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 38, PDF pp. 175-178; Item 43, PDF pp. 198-204; start at
-      each named item heading and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 38, PDF pp. 175-178; Item 43, PDF pp.
+      198-204; start at each named item heading and stop before the following item
+      heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-errors-logging-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-errors-logging
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-errors-logging
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 20, PDF pp. 103-106; Item 65, PDF pp. 322-327; Item 87,
-      PDF pp. 431-436; start at each named item heading and stop before the following item heading, even
-      on a shared page.
+    locator: Effective Python 2e (2020), Item 20, PDF pp. 103-106; Item 65, PDF pp.
+      322-327; Item 87, PDF pp. 431-436; start at each named item heading and stop
+      before the following item heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
   - id: route-python-testing-ep-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: Effective Python 2e - selected items
     format: book
     angle: Short choices and failure cases that complement the longer explanation.
-    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
-      sample. Read the named items only.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
     covers:
     - knowledge-python-testing
     depth: orientation
     scope: complementary
-    locator: Effective Python 2e (2020), Item 76, PDF pp. 380-388; Item 78, PDF pp. 390-398; Item 79,
-      PDF pp. 398-402; Item 80, PDF pp. 402-407; Item 70, PDF pp. 345-349; start at each named item heading
-      and stop before the following item heading, even on a shared page.
+    locator: Effective Python 2e (2020), Item 76, PDF pp. 380-388; Item 78, PDF pp.
+      390-398; Item 79, PDF pp. 398-402; Item 80, PDF pp. 402-407; Item 70, PDF pp.
+      345-349; start at each named item heading and stop before the following item
+      heading, even on a shared page.
     vault_path: material://source-slatkin-effective-python/effective-python.pdf
 - source_id: source-uv-docs
   role: reference
-  why: Current project and environment workflow; related maturin reading is labelled by publisher.
+  why: Current project and environment workflow; related maturin reading is labelled
+    by publisher.
   priority: 1
   unit_routes:
   - id: route-python-tooling-uv-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-tooling
     title: uv - Working on projects
     format: documentation
     angle: The current project workflow absent from the old packaging stage.
-    angle_detail: Read the guide. Commands are examples, not instructions to change Stratum or create
-      a new project.
+    angle_detail: Read the guide. Commands are examples, not instructions to change
+      Stratum or create a new project.
     covers:
     - knowledge-python-tooling
     depth: orientation
     scope: current
-    locator: 'Page "uv - Working on projects": Project structure; managing dependencies; running commands;
-      building distributions for context'
+    locator: 'Page "uv - Working on projects": Project structure; managing dependencies;
+      running commands; building distributions for context'
     url: https://docs.astral.sh/uv/guides/projects/
   - id: route-python-tooling-uv-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-tooling
     title: uv - Locking and syncing
     format: documentation
     angle: Why the lockfile, declared dependencies and environment are different things.
-    angle_detail: Read how --locked, --frozen and extras affect reproducibility; avoid blindly copying
-      the tutorial's sync command into a work repository.
+    angle_detail: Read how --locked, --frozen and extras affect reproducibility; avoid
+      blindly copying the tutorial's sync command into a work repository.
     covers:
     - knowledge-python-tooling
     depth: orientation
     scope: current
-    locator: 'Page "uv - Locking and syncing": Locking and syncing; automatic lock/sync; extras and dependency
-      groups; exact versus inexact sync'
+    locator: 'Page "uv - Locking and syncing": Locking and syncing; automatic lock/sync;
+      extras and dependency groups; exact versus inexact sync'
     url: https://docs.astral.sh/uv/concepts/projects/sync/
 - source_id: source-typing-docs
   role: reference
@@ -425,21 +456,23 @@ sources:
   priority: 1
   unit_routes:
   - id: route-python-type-hints-typing-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-type-hints
     title: Modernizing superseded typing features
     format: documentation
     angle: Reconciles book-era typing with current recommendations and a 3.11 minimum.
-    angle_detail: Read newer syntax for recognition only when its minimum is above 3.11. The future annotations
-      import changes annotation handling, not runtime checking.
+    angle_detail: Read newer syntax for recognition only when its minimum is above
+      3.11. The future annotations import changes annotation handling, not runtime
+      checking.
     covers:
     - knowledge-python-type-hints
     depth: orientation
     scope: current
-    locator: 'Page "Modernizing superseded typing features": Introduction, built-in generics, union syntax,
-      TypeAlias and TypeVar notes; check the stated minimum version for each feature'
+    locator: 'Page "Modernizing superseded typing features": Introduction, built-in
+      generics, union syntax, TypeAlias and TypeVar notes; check the stated minimum
+      version for each feature'
     url: https://typing.python.org/en/latest/guides/modernizing.html
   - id: route-python-type-hints-typing-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-type-hints
     title: Typing - Generics
     format: documentation
     angle: A version-aware companion to the book's Generic examples.
@@ -448,21 +481,22 @@ sources:
     - knowledge-python-type-hints
     depth: orientation
     scope: current
-    locator: 'Page "Typing - Generics": Generic classes and TypeVar; distinguish Python 3.11 forms from
-      3.12+ syntax'
+    locator: 'Page "Typing - Generics": Generic classes and TypeVar; distinguish Python
+      3.11 forms from 3.12+ syntax'
     url: https://typing.python.org/en/latest/reference/generics.html
   - id: route-python-interfaces-dispatch-typing-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-interfaces-dispatch
     title: Typing - Protocols
     format: documentation
     angle: Current guidance for describing an interface without imposing inheritance.
-    angle_detail: Read the ordinary examples. Advanced protocol variance and runtime introspection are
-      outside scope.
+    angle_detail: Read the ordinary examples. Advanced protocol variance and runtime
+      introspection are outside scope.
     covers:
     - knowledge-python-interfaces-dispatch
     depth: orientation
     scope: current
-    locator: 'Page "Typing - Protocols": Simple user-defined protocols; protocol members; structural subtyping'
+    locator: 'Page "Typing - Protocols": Simple user-defined protocols; protocol members;
+      structural subtyping'
     url: https://typing.python.org/en/latest/reference/protocols.html
 - source_id: source-batchelder-names
   role: reference
@@ -470,17 +504,19 @@ sources:
   priority: 1
   unit_routes:
   - id: route-python-names-mutation-batchelder-names-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-names-mutation
     title: Facts and myths about Python names and values
     format: documentation
     angle: A visual explanation of bindings and shared values before the book details.
-    angle_detail: Use the diagrams and assignment examples; no interpreter-memory investigation.
+    angle_detail: Use the diagrams and assignment examples; no interpreter-memory
+      investigation.
     covers:
     - knowledge-python-names-mutation
     depth: orientation
     scope: current
-    locator: 'Page "Facts and myths about Python names and values": Written article: names, assignment,
-      rebinding, mutation and aliasing; stop before any garbage-collection discussion'
+    locator: 'Page "Facts and myths about Python names and values": Written article:
+      names, assignment, rebinding, mutation and aliasing; stop before any garbage-collection
+      discussion'
     url: https://nedbatchelder.com/text/names.html
 - source_id: source-stratum-paper
   role: reference
@@ -488,39 +524,42 @@ sources:
   priority: 1
   unit_routes:
   - id: route-python-read-stratum-stratum-paper-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-read-stratum
     title: Stratum paper - context only
     format: paper
     angle: Optional architectural orientation for the code-reading map.
-    angle_detail: This paper explains the system, not Python. It is not a required theory stage.
+    angle_detail: This paper explains the system, not Python. It is not a required
+      theory stage.
     covers:
     - knowledge-python-read-stratum
     depth: orientation
     scope: current
-    locator: 'Page "Stratum paper - context only": Local Stratum paper, sections 3-4.3, PDF pp. 3-5; read
-      only if architecture terms obscure the Python'
+    locator: 'Page "Stratum paper - context only": Local Stratum paper, sections 3-4.3,
+      PDF pp. 3-5; read only if architecture terms obscure the Python'
     url: https://arxiv.org/abs/2603.03589
     vault_path: material://source-stratum-paper/stratum-paper.pdf
 - source_id: source-python-docs
   role: reference
-  why: Official authority with 3.11 baseline pages and separately labelled newer-version deltas.
+  why: Official authority with 3.11 baseline pages and separately labelled newer-version
+    deltas.
   priority: 1
   unit_routes:
   - id: route-python-everyday-data-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-everyday-data
     title: Python tutorial - Data Structures
     format: documentation
     angle: A compact baseline for the containers used throughout the books.
-    angle_detail: Read for ordinary use. The 3.11 edition matches the project minimum; this is not an
-      API-signature checklist.
+    angle_detail: Read for ordinary use. The 3.11 edition matches the project minimum;
+      this is not an API-signature checklist.
     covers:
     - knowledge-python-everyday-data
     depth: orientation
     scope: current
-    locator: 'Page "Python tutorial - Data Structures": Sections 5.1-5.6; stop before 5.7 More on Conditions'
+    locator: 'Page "Python tutorial - Data Structures": Sections 5.1-5.6; stop before
+      5.7 More on Conditions'
     url: https://docs.python.org/3.11/tutorial/datastructures.html
   - id: route-python-everyday-data-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-everyday-data
     title: Python library - collections
     format: documentation
     angle: Look up the container or iterator tool a reading names.
@@ -532,7 +571,7 @@ sources:
     locator: 'Page "Python library - collections": Counter, defaultdict and deque'
     url: https://docs.python.org/3.11/library/collections.html
   - id: route-python-everyday-data-python-docs-3
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-everyday-data
     title: Python library - itertools
     format: documentation
     angle: Look up the container or iterator tool a reading names.
@@ -541,11 +580,11 @@ sources:
     - knowledge-python-everyday-data
     depth: orientation
     scope: current
-    locator: 'Page "Python library - itertools": Function summary table; look up individual functions
-      only when needed'
+    locator: 'Page "Python library - itertools": Function summary table; look up individual
+      functions only when needed'
     url: https://docs.python.org/3.11/library/itertools.html
   - id: route-python-decorators-registration-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-decorators-registration
     title: functools.wraps
     format: documentation
     angle: The standard way to preserve a wrapped function's public metadata.
@@ -557,74 +596,79 @@ sources:
     locator: 'Page "functools.wraps": functools.wraps section'
     url: https://docs.python.org/3.11/library/functools.html#functools.wraps
   - id: route-python-classes-inheritance-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-classes-inheritance
     title: Python tutorial - Classes
     format: documentation
-    angle: The missing introduction to instances, methods and inheritance before Fluent Python assumes
-      them.
-    angle_detail: Read the class and inheritance examples. Namespace lookup is language behaviour, not
-      a request to study interpreter implementation.
+    angle: The missing introduction to instances, methods and inheritance before Fluent
+      Python assumes them.
+    angle_detail: Read the class and inheritance examples. Namespace lookup is language
+      behaviour, not a request to study interpreter implementation.
     covers:
     - knowledge-python-classes-inheritance
     depth: orientation
     scope: current
-    locator: 'Page "Python tutorial - Classes": Sections 9.1-9.7; skip 9.8+ iterators until topic 9'
+    locator: 'Page "Python tutorial - Classes": Sections 9.1-9.7; skip 9.8+ iterators
+      until topic 9'
     url: https://docs.python.org/3.11/tutorial/classes.html
   - id: route-python-dataclasses-properties-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-dataclasses-properties
     title: dataclasses documentation
     format: documentation
     angle: Current 3.11 details for the record declarations used in a codebase.
-    angle_detail: Read the named sections only. Field factories matter more here than exhaustive decorator
-      options.
+    angle_detail: Read the named sections only. Field factories matter more here than
+      exhaustive decorator options.
     covers:
     - knowledge-python-dataclasses-properties
     depth: orientation
     scope: current
-    locator: 'Page "dataclasses documentation": Module example; dataclass decorator options init, repr,
-      eq, frozen, slots; field default_factory; post-init and ClassVar'
+    locator: 'Page "dataclasses documentation": Module example; dataclass decorator
+      options init, repr, eq, frozen, slots; field default_factory; post-init and
+      ClassVar'
     url: https://docs.python.org/3.11/library/dataclasses.html
   - id: route-python-dataclasses-properties-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-dataclasses-properties
     title: Enum HOWTO
     format: documentation
     angle: Enums as named values with class syntax and stable comparisons.
-    angle_detail: Read basic enum usage and the short IntEnum note; skip metaclass and custom Enum internals.
+    angle_detail: Read basic enum usage and the short IntEnum note; skip metaclass
+      and custom Enum internals.
     covers:
     - knowledge-python-dataclasses-properties
     depth: orientation
     scope: current
-    locator: 'Page "Enum HOWTO": Opening Weekday/Color examples; Programmatic access; Iteration; Comparisons;
-      Allowed members; Functional API; IntEnum note'
+    locator: 'Page "Enum HOWTO": Opening Weekday/Color examples; Programmatic access;
+      Iteration; Comparisons; Allowed members; Functional API; IntEnum note'
     url: https://docs.python.org/3.11/howto/enum.html
   - id: route-python-special-methods-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-special-methods
     title: Python data model reference
     format: documentation
     angle: Authority when a special method in real code is unfamiliar.
-    angle_detail: Reference only; never read the reference end to end or memorise its method table.
+    angle_detail: Reference only; never read the reference end to end or memorise
+      its method table.
     covers:
     - knowledge-python-special-methods
     depth: orientation
     scope: current
-    locator: 'Page "Python data model reference": Basic customization: __repr__, __str__, __eq__, __hash__,
-      __bool__; Customizing attribute access'
+    locator: 'Page "Python data model reference": Basic customization: __repr__, __str__,
+      __eq__, __hash__, __bool__; Customizing attribute access'
     url: https://docs.python.org/3.11/reference/datamodel.html
   - id: route-python-modules-imports-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-modules-imports
     title: Python tutorial - Modules
     format: documentation
     angle: A clear package model before circular-import advice.
-    angle_detail: Read ordinary module/package use; skip bytecode-file inspection and import tracing.
+    angle_detail: Read ordinary module/package use; skip bytecode-file inspection
+      and import tracing.
     covers:
     - knowledge-python-modules-imports
     depth: orientation
     scope: current
-    locator: 'Page "Python tutorial - Modules": Sections 6.1-6.4; package and import examples; skip 6.1.3
-      Compiled Python files'
+    locator: 'Page "Python tutorial - Modules": Sections 6.1-6.4; package and import
+      examples; skip 6.1.3 Compiled Python files'
     url: https://docs.python.org/3.11/tutorial/modules.html
   - id: route-python-modules-imports-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-modules-imports
     title: Python import reference
     format: documentation
     angle: Look up a package/import rule only when the tutorial leaves a question.
@@ -633,24 +677,25 @@ sources:
     - knowledge-python-modules-imports
     depth: orientation
     scope: current
-    locator: 'Page "Python import reference": 5.2 Packages; 5.4.2 Submodules; 5.7 Package Relative Imports'
+    locator: 'Page "Python import reference": 5.2 Packages; 5.4.2 Submodules; 5.7
+      Package Relative Imports'
     url: https://docs.python.org/3.11/reference/import.html
   - id: route-python-modules-imports-python-docs-3
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-modules-imports
     title: unittest.mock - Where to patch
     format: documentation
-    angle: Patching replaces the name used by the caller, following ordinary module bindings.
-    angle_detail: Read after modules and revisit while reading mocks in tests. Both placements point to
-      the same page.
+    angle: Patching replaces the name used by the caller, following ordinary module
+      bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both
+      placements point to the same page.
     covers:
     - knowledge-python-modules-imports
-    - knowledge-python-testing
     depth: orientation
     scope: current
     locator: 'Page "unittest.mock - Where to patch": Where to patch section'
     url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
   - id: route-python-type-hints-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-type-hints
     title: typing reference
     format: documentation
     angle: Authority for the annotation forms the project can support.
@@ -659,11 +704,11 @@ sources:
     - knowledge-python-type-hints
     depth: orientation
     scope: current
-    locator: 'Page "typing reference": Any, Callable, Iterable, TypeVar, Generic, Protocol, TYPE_CHECKING
-      and get_type_hints'
+    locator: 'Page "typing reference": Any, Callable, Iterable, TypeVar, Generic,
+      Protocol, TYPE_CHECKING and get_type_hints'
     url: https://docs.python.org/3.11/library/typing.html
   - id: route-python-interfaces-dispatch-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-interfaces-dispatch
     title: abc reference
     format: documentation
     angle: Look up the standard ABC declaration used by real classes.
@@ -675,7 +720,7 @@ sources:
     locator: 'Page "abc reference": ABC and abstractmethod examples only'
     url: https://docs.python.org/3.11/library/abc.html
   - id: route-python-interfaces-dispatch-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-interfaces-dispatch
     title: functools.singledispatch
     format: documentation
     angle: The official counterpart to the book's dispatch example.
@@ -684,131 +729,150 @@ sources:
     - knowledge-python-interfaces-dispatch
     depth: orientation
     scope: current
-    locator: 'Page "functools.singledispatch": singledispatch: definition, register examples and dispatch
-      on first argument'
+    locator: 'Page "functools.singledispatch": singledispatch: definition, register
+      examples and dispatch on first argument'
     url: https://docs.python.org/3.11/library/functools.html#functools.singledispatch
   - id: route-python-errors-logging-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-errors-logging
     title: Python tutorial - Errors and Exceptions
     format: documentation
     angle: The complete ordinary error-handling story before policy advice.
-    angle_detail: Read handling, raising, chaining, custom exceptions and cleanup. No exercises are assigned.
+    angle_detail: Read handling, raising, chaining, custom exceptions and cleanup.
+      No exercises are assigned.
     covers:
     - knowledge-python-errors-logging
     depth: orientation
     scope: current
-    locator: 'Page "Python tutorial - Errors and Exceptions": 8.1-8.8; exception groups in 8.9 are optional
-      background'
+    locator: 'Page "Python tutorial - Errors and Exceptions": 8.1-8.8; exception groups
+      in 8.9 are optional background'
     url: https://docs.python.org/3.11/tutorial/errors.html
   - id: route-python-errors-logging-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-errors-logging
     title: Logging HOWTO
     format: documentation
     angle: Logger names, levels, handlers and configuration for code used as a library.
-    angle_detail: Read examples; skip optimisation, custom-handler design and the logging cookbook.
+    angle_detail: Read examples; skip optimisation, custom-handler design and the
+      logging cookbook.
     covers:
     - knowledge-python-errors-logging
     depth: orientation
     scope: current
-    locator: 'Page "Logging HOWTO": Basic Logging Tutorial; Advanced Logging Tutorial (flow and configuration);
-      Configuring Logging for a Library'
+    locator: 'Page "Logging HOWTO": Basic Logging Tutorial; Advanced Logging Tutorial
+      (flow and configuration); Configuring Logging for a Library'
     url: https://docs.python.org/3.11/howto/logging.html
   - id: route-python-testing-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: unittest - Basic example and TestCase
     format: documentation
-    angle: The class-based tests used alongside pytest, without making the optional book a prerequisite.
-    angle_detail: Read the named examples only. Understand test methods and per-test setup/cleanup; no
-      test-writing or runner-building assignment.
+    angle: The class-based tests used alongside pytest, without making the optional
+      book a prerequisite.
+    angle_detail: Read the named examples only. Understand test methods and per-test
+      setup/cleanup; no test-writing or runner-building assignment.
     covers:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "unittest - Basic example and TestCase": Basic example; Organizing test code; Distinguishing
-      test iterations using subtests; setUp, tearDown, assertEqual and assertRaises examples'
+    locator: 'Page "unittest - Basic example and TestCase": Basic example; Organizing
+      test code; Distinguishing test iterations using subtests; setUp, tearDown, assertEqual
+      and assertRaises examples'
     url: https://docs.python.org/3.11/library/unittest.html
   - id: route-python-newer-python-python-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-newer-python
     title: What's New in Python 3.11
     format: documentation
     angle: A selected delta from the book baseline, with its introduction version.
-    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
-      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
-      floor is 3.11.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
     covers:
     - knowledge-python-newer-python
     depth: orientation
     scope: current
-    locator: 'Page "What''s New in Python 3.11": Summary; improved error locations; exception groups and
-      except* as recognition only; typing.Self and typing changes'
+    locator: 'Page "What''s New in Python 3.11": Summary; improved error locations;
+      exception groups and except* as recognition only; typing.Self and typing changes'
     url: https://docs.python.org/3.11/whatsnew/3.11.html
   - id: route-python-newer-python-python-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-newer-python
     title: What's New in Python 3.12
     format: documentation
     angle: A selected delta from the book baseline, with its introduction version.
-    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
-      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
-      floor is 3.11.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
     covers:
     - knowledge-python-newer-python
     depth: orientation
     scope: current
-    locator: 'Page "What''s New in Python 3.12": Summary; new type parameter and type alias syntax for
-      recognition only; f-string syntax improvements'
+    locator: 'Page "What''s New in Python 3.12": Summary; new type parameter and type
+      alias syntax for recognition only; f-string syntax improvements'
     url: https://docs.python.org/3.12/whatsnew/3.12.html
   - id: route-python-newer-python-python-docs-3
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-newer-python
     title: What's New in Python 3.13
     format: documentation
     angle: A selected delta from the book baseline, with its introduction version.
-    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
-      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
-      floor is 3.11.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
     covers:
     - knowledge-python-newer-python
     depth: orientation
     scope: current
-    locator: 'Page "What''s New in Python 3.13": Summary; improved errors and interactive interpreter;
-      typing deprecations affecting annotations'
+    locator: 'Page "What''s New in Python 3.13": Summary; improved errors and interactive
+      interpreter; typing deprecations affecting annotations'
     url: https://docs.python.org/3.13/whatsnew/3.13.html
   - id: route-python-newer-python-python-docs-4
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-newer-python
     title: What's New in Python 3.14
     format: documentation
     angle: A selected delta from the book baseline, with its introduction version.
-    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
-      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
-      floor is 3.11.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
     covers:
     - knowledge-python-newer-python
     depth: orientation
     scope: current
-    locator: 'Page "What''s New in Python 3.14": Summary; deferred evaluation of annotations (PEP 649/749);
-      template string literals for recognition only'
+    locator: 'Page "What''s New in Python 3.14": Summary; deferred evaluation of annotations
+      (PEP 649/749); template string literals for recognition only'
     url: https://docs.python.org/3.14/whatsnew/3.14.html
   - id: route-python-newer-python-python-docs-5
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-newer-python
     title: What's New in Python 3.15
     format: documentation
     angle: A selected delta from the book baseline, with its introduction version.
-    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
-      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
-      floor is 3.11.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
     covers:
     - knowledge-python-newer-python
     depth: orientation
     scope: current
-    locator: 'Page "What''s New in Python 3.15": Summary; UTF-8 default; explicit lazy imports; frozendict,
-      sentinel and unpacking in comprehensions for recognition only'
+    locator: 'Page "What''s New in Python 3.15": Summary; UTF-8 default; explicit
+      lazy imports; frozendict, sentinel and unpacking in comprehensions for recognition
+      only'
     url: https://docs.python.org/3.15/whatsnew/3.15.html
+  - id: route-python-modules-imports-python-docs-3-session-testing
+    unit_id: unit-job-python-testing
+    title: unittest.mock - Where to patch
+    format: documentation
+    angle: Patching replaces the name used by the caller, following ordinary module
+      bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both
+      placements point to the same page.
+    covers:
+    - knowledge-python-testing
+    depth: orientation
+    scope: current
+    locator: 'Page "unittest.mock - Where to patch": Where to patch section'
+    url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
 - source_id: source-pytest-docs
   role: reference
   why: Official explanations of the features encountered while reading tests.
   priority: 1
   unit_routes:
   - id: route-python-testing-pytest-docs-1
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - Fixtures
     format: documentation
     angle: The pytest feature used by real tests, explained by its maintainers.
@@ -817,10 +881,11 @@ sources:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - Fixtures": Requesting fixtures; scope; autouse; yield teardown'
+    locator: 'Page "pytest - Fixtures": Requesting fixtures; scope; autouse; yield
+      teardown'
     url: https://docs.pytest.org/en/stable/how-to/fixtures.html
   - id: route-python-testing-pytest-docs-2
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - Parametrization
     format: documentation
     angle: The pytest feature used by real tests, explained by its maintainers.
@@ -829,22 +894,25 @@ sources:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - Parametrization": pytest.mark.parametrize; parametrized fixtures; basic examples'
+    locator: 'Page "pytest - Parametrization": pytest.mark.parametrize; parametrized
+      fixtures; basic examples'
     url: https://docs.pytest.org/en/stable/how-to/parametrize.html
   - id: route-python-testing-pytest-docs-3
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - Monkeypatch
     format: documentation
     angle: The pytest feature used by real tests, explained by its maintainers.
-    angle_detail: Understand automatic restoration and where the patched name is looked up.
+    angle_detail: Understand automatic restoration and where the patched name is looked
+      up.
     covers:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - Monkeypatch": Patching functions, attributes, environment variables and dictionaries'
+    locator: 'Page "pytest - Monkeypatch": Patching functions, attributes, environment
+      variables and dictionaries'
     url: https://docs.pytest.org/en/stable/how-to/monkeypatch.html
   - id: route-python-testing-pytest-docs-4
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - Temporary paths
     format: documentation
     angle: The pytest feature used by real tests, explained by its maintainers.
@@ -853,32 +921,35 @@ sources:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - Temporary paths": The tmp_path fixture and basic Path example'
+    locator: 'Page "pytest - Temporary paths": The tmp_path fixture and basic Path
+      example'
     url: https://docs.pytest.org/en/stable/how-to/tmp_path.html
   - id: route-python-testing-pytest-docs-5
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - Assertions and exceptions
     format: documentation
     angle: The pytest feature used by real tests, explained by its maintainers.
-    angle_detail: Read pytest.raises, including match; no generated test or answer key.
+    angle_detail: Read pytest.raises, including match; no generated test or answer
+      key.
     covers:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - Assertions and exceptions": Assertion introspection and Assertions about
-      expected exceptions'
+    locator: 'Page "pytest - Assertions and exceptions": Assertion introspection and
+      Assertions about expected exceptions'
     url: https://docs.pytest.org/en/stable/how-to/assert.html
   - id: route-python-testing-pytest-docs-6
-    unit_id: unit-job-python-engineering-fluency
+    unit_id: unit-job-python-testing
     title: pytest - unittest-based tests
     format: documentation
-    angle: Why pytest runs TestCase classes and which pytest features do not transfer to them.
-    angle_detail: 'Read the compatibility limits: TestCase methods do not accept ordinary fixture arguments
-      or pytest parametrization. Skip migration recipes.'
+    angle: Why pytest runs TestCase classes and which pytest features do not transfer
+      to them.
+    angle_detail: 'Read the compatibility limits: TestCase methods do not accept ordinary
+      fixture arguments or pytest parametrization. Skip migration recipes.'
     covers:
     - knowledge-python-testing
     depth: orientation
     scope: current
-    locator: 'Page "pytest - unittest-based tests": Opening overview; pytest features in unittest.TestCase
-      subclasses'
+    locator: 'Page "pytest - unittest-based tests": Opening overview; pytest features
+      in unittest.TestCase subclasses'
     url: https://docs.pytest.org/en/stable/how-to/unittest.html

@@ -1,0 +1,77 @@
+id: study-map-job-python-read-stratum
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-read-stratum
+status: ready
+current_stage: stage-python-read-stratum
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-read-stratum
+  number: 1
+  title: Read Stratum using the Python topics
+  status: pending
+  objective: Follow the public entry point through graph construction, orchestration,
+    operation classes, rewrite helpers, registration and runtime. Read Python constructs
+    in context; optimizer design, proofs and rebuilding the system are optional background.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-read-stratum-stratum-paper-1
+    route_id: route-python-read-stratum-stratum-paper-1
+    kind: read
+    label: Stratum paper - context only
+    source_id: source-stratum-paper
+    locator: 'Page "Stratum paper - context only": Local Stratum paper, sections 3-4.3,
+      PDF pp. 3-5; read only if architecture terms obscure the Python'
+    angle: Optional architectural orientation for the code-reading map.
+    angle_detail: This paper explains the system, not Python. It is not a required
+      theory stage.
+    scope_triage: helpful-now
+    url: https://arxiv.org/abs/2603.03589
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+  - id: resource-python-read-stratum-pointer-1
+    kind: reference
+    label: README and public API
+    locator: Stratum/README.md; Stratum/stratum/_api.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Start at the documented example and recognise imports, functions
+      and signatures by lookup. Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-2
+    kind: reference
+    label: Frontend and orchestration
+    locator: Stratum/stratum/frontend/_skrub_graph.py; stratum/optimizer/_optimize.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Follow class use, function calls and collection transformations;
+      no optimizer-theory assignment. Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-3
+    kind: reference
+    label: Operations and rewrite helpers
+    locator: Stratum/stratum/optimizer/logical/_base.py; logical/rewrites/; optimizer/_op_utils.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Read one representative class/function at a time, using earlier
+      readings as lookup. Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-4
+    kind: reference
+    label: Registration and runtime
+    locator: Stratum/stratum/optimizer/physical/_registry.py; stratum/runtime/
+    angle: Read-only connection to real Python code.
+    angle_detail: Recognise decorators, annotations, dispatch, iteration and cleanup
+      in the existing implementation. Read only; do not modify the checkout.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-read-stratum/stages/stage-python-read-stratum/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-read-stratum

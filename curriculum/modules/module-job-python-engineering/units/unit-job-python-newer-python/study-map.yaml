@@ -1,0 +1,98 @@
+id: study-map-job-python-newer-python
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-newer-python
+status: ready
+current_stage: stage-python-newer-python
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-newer-python
+  number: 1
+  title: Reading newer Python while keeping a 3.11 floor
+  status: pending
+  objective: Recognise user-facing changes from 3.11 through 3.15, distinguish the
+    interpreter in use from the project minimum, and avoid introducing syntax unavailable
+    to supported versions.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-newer-python-python-docs-1
+    route_id: route-python-newer-python-python-docs-1
+    kind: read
+    label: What's New in Python 3.11
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.11": Summary; improved error locations;
+      exception groups and except* as recognition only; typing.Self and typing changes'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/whatsnew/3.11.html
+  - id: resource-python-newer-python-python-docs-2
+    route_id: route-python-newer-python-python-docs-2
+    kind: read
+    label: What's New in Python 3.12
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.12": Summary; new type parameter and type
+      alias syntax for recognition only; f-string syntax improvements'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.12/whatsnew/3.12.html
+  - id: resource-python-newer-python-python-docs-3
+    route_id: route-python-newer-python-python-docs-3
+    kind: read
+    label: What's New in Python 3.13
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.13": Summary; improved errors and interactive
+      interpreter; typing deprecations affecting annotations'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.13/whatsnew/3.13.html
+  - id: resource-python-newer-python-python-docs-4
+    route_id: route-python-newer-python-python-docs-4
+    kind: read
+    label: What's New in Python 3.14
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.14": Summary; deferred evaluation of annotations
+      (PEP 649/749); template string literals for recognition only'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.14/whatsnew/3.14.html
+  - id: resource-python-newer-python-python-docs-5
+    route_id: route-python-newer-python-python-docs-5
+    kind: read
+    label: What's New in Python 3.15
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.15": Summary; UTF-8 default; explicit
+      lazy imports; frozendict, sentinel and unpacking in comprehensions for recognition
+      only'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation,
+      C API, JIT and GIL/free-threading sections. Reading a feature does not authorise
+      its use in a project whose floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.15/whatsnew/3.15.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-newer-python/stages/stage-python-newer-python/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-newer-python

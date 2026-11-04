@@ -1,0 +1,89 @@
+id: study-map-job-python-dataclasses-properties
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-dataclasses-properties
+status: ready
+current_stage: stage-python-dataclasses-properties
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-dataclasses-properties
+  number: 1
+  title: Dataclasses, properties, enums and slots
+  status: pending
+  objective: Data records, field factories, post-init, class variables, validated
+    attributes, Enum and the practical constraints of slots.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-dataclasses-properties-fp-1
+    route_id: route-python-dataclasses-properties-fp-1
+    kind: read
+    label: Fluent Python 2e - Dataclasses, properties, enums and slots
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 194-198, 203-205, 209-216, 220-221, 887-889,
+      414-416, 418. On p887 start at Using a Property for Attribute Validation; read
+      the LineItem examples through p889 and stop before descriptor/factory discussion.
+      On p418 start at Summarizing the Issues with __slots__; skip the memory benchmark
+      on p417 and its continuation. No descriptor construction or memory measurements.
+    angle: The main explanation and worked examples for dataclasses, properties, enums
+      and slots.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. On p887 start at Using a
+      Property for Attribute Validation; read the LineItem examples through p889 and
+      stop before descriptor/factory discussion. On p418 start at Summarizing the
+      Issues with __slots__; skip the memory benchmark on p417 and its continuation.
+      No descriptor construction or memory measurements.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-dataclasses-properties-ep-2
+    route_id: route-python-dataclasses-properties-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 44, PDF pp. 204-209; Item 45, PDF pp.
+      209-213; start at each named item heading and stop before the following item
+      heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-dataclasses-properties-python-docs-3
+    route_id: route-python-dataclasses-properties-python-docs-1
+    kind: read
+    label: dataclasses documentation
+    source_id: source-python-docs
+    locator: 'Page "dataclasses documentation": Module example; dataclass decorator
+      options init, repr, eq, frozen, slots; field default_factory; post-init and
+      ClassVar'
+    angle: Current 3.11 details for the record declarations used in a codebase.
+    angle_detail: Read the named sections only. Field factories matter more here than
+      exhaustive decorator options.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/dataclasses.html
+  - id: resource-python-dataclasses-properties-python-docs-4
+    route_id: route-python-dataclasses-properties-python-docs-2
+    kind: read
+    label: Enum HOWTO
+    source_id: source-python-docs
+    locator: 'Page "Enum HOWTO": Opening Weekday/Color examples; Programmatic access;
+      Iteration; Comparisons; Allowed members; Functional API; IntEnum note'
+    angle: Enums as named values with class syntax and stable comparisons.
+    angle_detail: Read basic enum usage and the short IntEnum note; skip metaclass
+      and custom Enum internals.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/howto/enum.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-dataclasses-properties/stages/stage-python-dataclasses-properties/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-dataclasses-properties

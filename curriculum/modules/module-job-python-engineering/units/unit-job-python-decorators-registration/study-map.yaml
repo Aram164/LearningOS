@@ -1,0 +1,76 @@
+id: study-map-job-python-decorators-registration
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-decorators-registration
+status: ready
+current_stage: stage-python-decorators-registration
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-decorators-registration
+  number: 1
+  title: Decorators and registration
+  status: pending
+  objective: Decorator application, import-time registration, wrapper functions, metadata
+    preservation and parameterised registration decorators.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-decorators-registration-fp-1
+    route_id: route-python-decorators-registration-fp-1
+    kind: read
+    label: Fluent Python 2e - Decorators and registration
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 334-338, 347-350, 359-362. On p338 stop before
+      Variable Scope Rules; on p350 stop before Decorators in the Standard Library;
+      on p362 stop before The Parameterized Clock Decorator. Dispatch comes later.
+    angle: The main explanation and worked examples for decorators and registration.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. On p338 stop before Variable
+      Scope Rules; on p350 stop before Decorators in the Standard Library; on p362
+      stop before The Parameterized Clock Decorator. Dispatch comes later.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-decorators-registration-ep-2
+    route_id: route-python-decorators-registration-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 26, PDF pp. 125-130; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-decorators-registration-python-docs-3
+    route_id: route-python-decorators-registration-python-docs-1
+    kind: read
+    label: functools.wraps
+    source_id: source-python-docs
+    locator: 'Page "functools.wraps": functools.wraps section'
+    angle: The standard way to preserve a wrapped function's public metadata.
+    angle_detail: Read the short example; leave the rest of functools for lookup.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/functools.html#functools.wraps
+  - id: resource-python-decorators-registration-pointer-1
+    kind: reference
+    label: Stratum - registration decorator
+    locator: 'Stratum/stratum/optimizer/physical/_registry.py: physical_impl'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read the decorator factory, returned decorator and registry update;
+      do not create an implementation.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-decorators-registration/stages/stage-python-decorators-registration/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-decorators-registration

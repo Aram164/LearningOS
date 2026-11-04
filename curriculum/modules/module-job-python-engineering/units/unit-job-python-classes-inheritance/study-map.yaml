@@ -1,0 +1,75 @@
+id: study-map-job-python-classes-inheritance
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-classes-inheritance
+status: ready
+current_stage: stage-python-classes-inheritance
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-classes-inheritance
+  number: 1
+  title: Classes and inheritance
+  status: pending
+  objective: Instances, class and instance attributes, bound methods, constructors,
+    classmethod and staticmethod, super, method resolution and composition versus
+    inheritance.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-classes-inheritance-python-docs-3
+    route_id: route-python-classes-inheritance-python-docs-1
+    kind: read
+    label: Python tutorial - Classes
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Classes": Sections 9.1-9.7; skip 9.8+ iterators
+      until topic 9'
+    angle: The missing introduction to instances, methods and inheritance before Fluent
+      Python assumes them.
+    angle_detail: Read the class and inheritance examples. Namespace lookup is language
+      behaviour, not a request to study interpreter implementation.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/classes.html
+  - id: resource-python-classes-inheritance-fp-1
+    route_id: route-python-classes-inheritance-fp-1
+    kind: read
+    label: Fluent Python 2e - Classes and inheritance
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 394-399, 412-414, 419-420, 518-529, 540-543.
+      Use the tutorial first for class basics. On p414 stop before Saving Memory with
+      __slots__. On p543 stop before Tkinter: The Good, the Bad, and the Ugly. Skip
+      the Django and Tkinter case studies.'
+    angle: The main explanation and worked examples for classes and inheritance.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Use the tutorial first for
+      class basics. On p414 stop before Saving Memory with __slots__. On p543 stop
+      before Tkinter: The Good, the Bad, and the Ugly. Skip the Django and Tkinter
+      case studies.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-classes-inheritance-ep-2
+    route_id: route-python-classes-inheritance-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 37, PDF pp. 168-175; Item 39, PDF pp.
+      178-183; Item 40, PDF pp. 183-188; Item 42, PDF pp. 193-198; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-classes-inheritance/stages/stage-python-classes-inheritance/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-classes-inheritance

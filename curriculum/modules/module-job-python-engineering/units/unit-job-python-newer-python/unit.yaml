@@ -1,0 +1,28 @@
+id: unit-job-python-newer-python
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Reading newer Python while keeping a 3.11 floor
+order: 15
+scope: Recognise user-facing changes from 3.11 through 3.15, distinguish the interpreter
+  in use from the project minimum, and avoid introducing syntax unavailable to supported
+  versions.
+status: ready
+scope_sources:
+- source_id: source-python-docs
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-newer-python/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-newer-python
+knowledge_map:
+  summary: Recognise user-facing changes from 3.11 through 3.15, distinguish the interpreter
+    in use from the project minimum, and avoid introducing syntax unavailable to supported
+    versions.
+  nodes:
+  - id: knowledge-python-newer-python
+    title: Reading newer Python while keeping a 3.11 floor
+    summary: Recognise user-facing changes from 3.11 through 3.15, distinguish the
+      interpreter in use from the project minimum, and avoid introducing syntax unavailable
+      to supported versions.

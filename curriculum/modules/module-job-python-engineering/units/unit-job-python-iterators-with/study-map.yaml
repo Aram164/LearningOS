@@ -1,0 +1,70 @@
+id: study-map-job-python-iterators-with
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-iterators-with
+status: ready
+current_stage: stage-python-iterators-with
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-iterators-with
+  number: 1
+  title: Iterators, generators and with
+  status: pending
+  objective: Iterable versus iterator, one-shot consumption, generator functions and
+    expressions, lazy composition, yield from and synchronous context managers.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-iterators-with-fp-1
+    route_id: route-python-iterators-with-fp-1
+    kind: read
+    label: Fluent Python 2e - Iterators, generators and with
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 624-645, 649-660, 662-668, 688-698. Stop before
+      Classic Coroutines p671 and before Pattern Matching in lis.py p699. No send/throw,
+      async, coroutine machinery or hand-built interpreter.
+    angle: The main explanation and worked examples for iterators, generators and
+      with.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Stop before Classic Coroutines
+      p671 and before Pattern Matching in lis.py p699. No send/throw, async, coroutine
+      machinery or hand-built interpreter.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-iterators-with-ep-2
+    route_id: route-python-iterators-with-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 30, PDF pp. 137-140; Item 31, PDF pp.
+      140-145; Item 33, PDF pp. 147-150; Item 36, PDF pp. 161-168; Item 66, PDF pp.
+      327-331; start at each named item heading and stop before the following item
+      heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-iterators-with-pointer-1
+    kind: reference
+    label: Stratum - iteration and configuration scope
+    locator: 'Stratum/stratum/optimizer/_op_utils.py: iterators; stratum/_config.py:
+      contextmanager'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read the iteration and cleanup structure; no benchmarking or code
+      changes.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-iterators-with/stages/stage-python-iterators-with/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-iterators-with

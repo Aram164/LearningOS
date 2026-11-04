@@ -1,0 +1,2002 @@
+id: study-map-job-python-engineering-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-engineering-fluency
+status: ready
+current_stage: stage-python-everyday-data
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-everyday-data
+  number: 1
+  title: Everyday data structures and expressions
+  status: pending
+  objective: Comprehensions, unpacking, slicing, sorting, dictionaries, missing keys and sets. Choose
+    ordinary containers and read compact expressions without memorising signatures.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-everyday-data-fp-1
+    route_id: route-python-everyday-data-fp-1
+    kind: read
+    label: Fluent Python 2e - Everyday data structures and expressions
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 55-67, 77-80, 86-88, 108-110, 113-124, 131-140. Ch 2: stop before
+      Pattern Matching with Sequences on p68; on p80 stop before Using + and * with Sequences. Ch 3: skip
+      the short implementation discussion under Practical Consequences of How dict Works on p132; read
+      only observable set/hash behaviour, not storage mechanics.'
+    angle: The main explanation and worked examples for everyday data structures and expressions.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Ch 2: stop before Pattern Matching with Sequences on p68; on p80 stop
+      before Using + and * with Sequences. Ch 3: skip the short implementation discussion under Practical
+      Consequences of How dict Works on p132; read only observable set/hash behaviour, not storage mechanics.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-everyday-data-ep-2
+    route_id: route-python-everyday-data-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 5, PDF pp. 44-47; Item 6, PDF pp. 47-51; Item 7, PDF pp.
+      51-53; Item 8, PDF pp. 53-55; Item 13, PDF pp. 71-75; Item 14, PDF pp. 75-81; Item 16, PDF pp. 88-93;
+      Item 17, PDF pp. 93-96; Item 27, PDF pp. 130-132; Item 28, PDF pp. 132-134; start at each named
+      item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-everyday-data-python-docs-3
+    route_id: route-python-everyday-data-python-docs-1
+    kind: read
+    label: Python tutorial - Data Structures
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Data Structures": Sections 5.1-5.6; stop before 5.7 More on Conditions'
+    angle: A compact baseline for the containers used throughout the books.
+    angle_detail: Read for ordinary use. The 3.11 edition matches the project minimum; this is not an
+      API-signature checklist.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/datastructures.html
+  - id: resource-python-everyday-data-python-docs-4
+    route_id: route-python-everyday-data-python-docs-2
+    kind: reference
+    label: Python library - collections
+    source_id: source-python-docs
+    locator: 'Page "Python library - collections": Counter, defaultdict and deque'
+    angle: Look up the container or iterator tool a reading names.
+    angle_detail: Lookup only; do not read or memorise the complete API.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/collections.html
+  - id: resource-python-everyday-data-python-docs-5
+    route_id: route-python-everyday-data-python-docs-3
+    kind: reference
+    label: Python library - itertools
+    source_id: source-python-docs
+    locator: 'Page "Python library - itertools": Function summary table; look up individual functions
+      only when needed'
+    angle: Look up the container or iterator tool a reading names.
+    angle_detail: Lookup only; do not read or memorise the complete API.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/itertools.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-everyday-data/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-everyday-data
+- id: stage-python-names-mutation
+  number: 2
+  title: Names, identity and mutation
+  status: pending
+  objective: Names bind objects; assignment, equality, identity, aliasing, shallow copies and mutable
+    defaults determine whether state is shared.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-names-mutation-fp-1
+    route_id: route-python-names-mutation-fp-1
+    kind: read
+    label: Fluent Python 2e - Names, identity and mutation
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 232-248, 80-85. Ch 6: stop before del and Garbage Collection on
+      p249. Ch 2 pp80-85 supplies nested-list aliasing and augmented assignment; no reference-count or
+      recycling material.'
+    angle: The main explanation and worked examples for names, identity and mutation.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Ch 6: stop before del and Garbage Collection on p249. Ch 2 pp80-85
+      supplies nested-list aliasing and augmented assignment; no reference-count or recycling material.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-names-mutation-ep-2
+    route_id: route-python-names-mutation-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 24, PDF pp. 117-120; start at each named item heading and
+      stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-names-mutation-batchelder-names-3
+    route_id: route-python-names-mutation-batchelder-names-1
+    kind: read
+    label: Facts and myths about Python names and values
+    source_id: source-batchelder-names
+    locator: 'Page "Facts and myths about Python names and values": Written article: names, assignment,
+      rebinding, mutation and aliasing; stop before any garbage-collection discussion'
+    angle: A visual explanation of bindings and shared values before the book details.
+    angle_detail: Use the diagrams and assignment examples; no interpreter-memory investigation.
+    scope_triage: helpful-now
+    url: https://nedbatchelder.com/text/names.html
+  - id: resource-python-names-mutation-pointer-1
+    kind: reference
+    label: Stratum - shared inputs
+    locator: 'Stratum/stratum/optimizer/logical/_base.py: replace_input and _check_dup_in_inputs; logical/rewrites/_cse.py:
+      docstring'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read how object identity and shared inputs affect existing code; do not reproduce the
+      rewrite algorithm.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-names-mutation/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-names-mutation
+- id: stage-python-functions-scope
+  number: 3
+  title: Functions, scope and closures
+  status: pending
+  objective: Functions as values, callables, positional and keyword arguments, defaults, partial application,
+    lexical scope and nonlocal. Read closure behaviour without inspecting its implementation.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-functions-scope-fp-1
+    route_id: route-python-functions-scope-fp-1
+    kind: read
+    label: Fluent Python 2e - Functions, scope and closures
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 262-279, 338-340, 342-343, 345-347. Ch 9: p338 begin at Variable
+      Scope Rules. On p340 stop before Comparing Bytecodes; skip the whole sidebar through p341. Read
+      the closure prose and examples on pp342-343 and only the diagram on p344 if helpful: skip Inspecting
+      the returned averager object, __code__, __closure__, co_freevars and cells. Resume at The nonlocal
+      Declaration p345; on p347 stop before Implementing a Simple Decorator. No disassembly.'
+    angle: The main explanation and worked examples for functions, scope and closures.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Ch 9: p338 begin at Variable Scope Rules. On p340 stop before Comparing
+      Bytecodes; skip the whole sidebar through p341. Read the closure prose and examples on pp342-343
+      and only the diagram on p344 if helpful: skip Inspecting the returned averager object, __code__,
+      __closure__, co_freevars and cells. Resume at The nonlocal Declaration p345; on p347 stop before
+      Implementing a Simple Decorator. No disassembly.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-functions-scope-ep-2
+    route_id: route-python-functions-scope-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 21, PDF pp. 106-110; Item 22, PDF pp. 110-113; Item 23,
+      PDF pp. 113-117; Item 25, PDF pp. 120-125; Item 38, PDF pp. 175-178; start at each named item heading
+      and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-functions-scope-pointer-1
+    kind: reference
+    label: Stratum - functions passed as values
+    locator: 'Stratum/stratum/optimizer/logical/rewrites/_numeric.py: match_two_op_chain; optimizer/_op_utils.py:
+      rewrite_pass'
+    angle: Read-only connection to real Python code.
+    angle_detail: Follow the function arguments and returned callable, using the function chapter as the
+      explanation.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-functions-scope/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-functions-scope
+- id: stage-python-decorators-registration
+  number: 4
+  title: Decorators and registration
+  status: pending
+  objective: Decorator application, import-time registration, wrapper functions, metadata preservation
+    and parameterised registration decorators.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-decorators-registration-fp-1
+    route_id: route-python-decorators-registration-fp-1
+    kind: read
+    label: Fluent Python 2e - Decorators and registration
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 334-338, 347-350, 359-362. On p338 stop before Variable Scope Rules;
+      on p350 stop before Decorators in the Standard Library; on p362 stop before The Parameterized Clock
+      Decorator. Dispatch comes later.
+    angle: The main explanation and worked examples for decorators and registration.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. On p338 stop before Variable Scope Rules; on p350 stop before Decorators
+      in the Standard Library; on p362 stop before The Parameterized Clock Decorator. Dispatch comes later.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-decorators-registration-ep-2
+    route_id: route-python-decorators-registration-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 26, PDF pp. 125-130; start at each named item heading and
+      stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-decorators-registration-python-docs-3
+    route_id: route-python-decorators-registration-python-docs-1
+    kind: read
+    label: functools.wraps
+    source_id: source-python-docs
+    locator: 'Page "functools.wraps": functools.wraps section'
+    angle: The standard way to preserve a wrapped function's public metadata.
+    angle_detail: Read the short example; leave the rest of functools for lookup.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/functools.html#functools.wraps
+  - id: resource-python-decorators-registration-pointer-1
+    kind: reference
+    label: Stratum - registration decorator
+    locator: 'Stratum/stratum/optimizer/physical/_registry.py: physical_impl'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read the decorator factory, returned decorator and registry update; do not create an
+      implementation.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-decorators-registration/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-decorators-registration
+- id: stage-python-classes-inheritance
+  number: 5
+  title: Classes and inheritance
+  status: pending
+  objective: Instances, class and instance attributes, bound methods, constructors, classmethod and staticmethod,
+    super, method resolution and composition versus inheritance.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-classes-inheritance-python-docs-3
+    route_id: route-python-classes-inheritance-python-docs-1
+    kind: read
+    label: Python tutorial - Classes
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Classes": Sections 9.1-9.7; skip 9.8+ iterators until topic 9'
+    angle: The missing introduction to instances, methods and inheritance before Fluent Python assumes
+      them.
+    angle_detail: Read the class and inheritance examples. Namespace lookup is language behaviour, not
+      a request to study interpreter implementation.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/classes.html
+  - id: resource-python-classes-inheritance-fp-1
+    route_id: route-python-classes-inheritance-fp-1
+    kind: read
+    label: Fluent Python 2e - Classes and inheritance
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 394-399, 412-414, 419-420, 518-529, 540-543. Use the tutorial
+      first for class basics. On p414 stop before Saving Memory with __slots__. On p543 stop before Tkinter:
+      The Good, the Bad, and the Ugly. Skip the Django and Tkinter case studies.'
+    angle: The main explanation and worked examples for classes and inheritance.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Use the tutorial first for class basics. On p414 stop before Saving
+      Memory with __slots__. On p543 stop before Tkinter: The Good, the Bad, and the Ugly. Skip the Django
+      and Tkinter case studies.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-classes-inheritance-ep-2
+    route_id: route-python-classes-inheritance-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 37, PDF pp. 168-175; Item 39, PDF pp. 178-183; Item 40,
+      PDF pp. 183-188; Item 42, PDF pp. 193-198; start at each named item heading and stop before the
+      following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-classes-inheritance/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-classes-inheritance
+- id: stage-python-dataclasses-properties
+  number: 6
+  title: Dataclasses, properties, enums and slots
+  status: pending
+  objective: Data records, field factories, post-init, class variables, validated attributes, Enum and
+    the practical constraints of slots.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-dataclasses-properties-fp-1
+    route_id: route-python-dataclasses-properties-fp-1
+    kind: read
+    label: Fluent Python 2e - Dataclasses, properties, enums and slots
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 194-198, 203-205, 209-216, 220-221, 887-889, 414-416, 418. On p887
+      start at Using a Property for Attribute Validation; read the LineItem examples through p889 and
+      stop before descriptor/factory discussion. On p418 start at Summarizing the Issues with __slots__;
+      skip the memory benchmark on p417 and its continuation. No descriptor construction or memory measurements.
+    angle: The main explanation and worked examples for dataclasses, properties, enums and slots.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. On p887 start at Using a Property for Attribute Validation; read the
+      LineItem examples through p889 and stop before descriptor/factory discussion. On p418 start at Summarizing
+      the Issues with __slots__; skip the memory benchmark on p417 and its continuation. No descriptor
+      construction or memory measurements.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-dataclasses-properties-ep-2
+    route_id: route-python-dataclasses-properties-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 44, PDF pp. 204-209; Item 45, PDF pp. 209-213; start at
+      each named item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-dataclasses-properties-python-docs-3
+    route_id: route-python-dataclasses-properties-python-docs-1
+    kind: read
+    label: dataclasses documentation
+    source_id: source-python-docs
+    locator: 'Page "dataclasses documentation": Module example; dataclass decorator options init, repr,
+      eq, frozen, slots; field default_factory; post-init and ClassVar'
+    angle: Current 3.11 details for the record declarations used in a codebase.
+    angle_detail: Read the named sections only. Field factories matter more here than exhaustive decorator
+      options.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/dataclasses.html
+  - id: resource-python-dataclasses-properties-python-docs-4
+    route_id: route-python-dataclasses-properties-python-docs-2
+    kind: read
+    label: Enum HOWTO
+    source_id: source-python-docs
+    locator: 'Page "Enum HOWTO": Opening Weekday/Color examples; Programmatic access; Iteration; Comparisons;
+      Allowed members; Functional API; IntEnum note'
+    angle: Enums as named values with class syntax and stable comparisons.
+    angle_detail: Read basic enum usage and the short IntEnum note; skip metaclass and custom Enum internals.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/howto/enum.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-dataclasses-properties/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-dataclasses-properties
+- id: stage-python-special-methods
+  number: 7
+  title: Special methods and attribute handling
+  status: pending
+  objective: Read repr, str, equality, hashing, truth, iteration and attribute access as Python protocols.
+    Understand observable behaviour rather than internal machinery.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-special-methods-fp-1
+    route_id: route-python-special-methods-fp-1
+    kind: read
+    label: Fluent Python 2e - Special methods and attribute handling
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 33-46, 404-407, 900-902. Ch 1 stop before Why len Is Not a Method
+      p47. On p407 stop before Supporting Positional Pattern Matching. On p900 begin at Built-In Functions
+      for Attribute Handling, then read the behaviour of getattr, hasattr, setattr, __getattr__ and __getattribute__;
+      skip special storage attributes, vars/__dict__ investigation and descriptor implementation.
+    angle: The main explanation and worked examples for special methods and attribute handling.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Ch 1 stop before Why len Is Not a Method p47. On p407 stop before
+      Supporting Positional Pattern Matching. On p900 begin at Built-In Functions for Attribute Handling,
+      then read the behaviour of getattr, hasattr, setattr, __getattr__ and __getattribute__; skip special
+      storage attributes, vars/__dict__ investigation and descriptor implementation.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-special-methods-ep-2
+    route_id: route-python-special-methods-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 75, PDF pp. 377-380; start at each named item heading and
+      stop before the following item heading, even on a shared page. In Item 75, skip the paragraph beginning
+      When you don't have control over the class definition and its __dict__ inspection example; resume
+      at Things to Remember.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-special-methods-python-docs-3
+    route_id: route-python-special-methods-python-docs-1
+    kind: reference
+    label: Python data model reference
+    source_id: source-python-docs
+    locator: 'Page "Python data model reference": Basic customization: __repr__, __str__, __eq__, __hash__,
+      __bool__; Customizing attribute access'
+    angle: Authority when a special method in real code is unfamiliar.
+    angle_detail: Reference only; never read the reference end to end or memorise its method table.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/reference/datamodel.html
+  - id: resource-python-special-methods-pointer-1
+    kind: reference
+    label: Stratum - OperandRef
+    locator: 'Stratum/stratum/optimizer/logical/_base.py: OperandRef'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read what the special methods and attributes let callers do, without reverse-engineering
+      Python.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-special-methods/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-special-methods
+- id: stage-python-modules-imports
+  number: 8
+  title: Modules and imports
+  status: pending
+  objective: Modules, packages, relative imports, public APIs, import-time side effects and circular dependency
+    repair. Import-time registration links back to decorators.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-modules-imports-ep-1
+    route_id: route-python-modules-imports-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 85, PDF pp. 424-429; Item 86, PDF pp. 429-431; Item 88,
+      PDF pp. 436-441; start at each named item heading and stop before the following item heading, even
+      on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-modules-imports-python-docs-2
+    route_id: route-python-modules-imports-python-docs-1
+    kind: read
+    label: Python tutorial - Modules
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Modules": Sections 6.1-6.4; package and import examples; skip 6.1.3
+      Compiled Python files'
+    angle: A clear package model before circular-import advice.
+    angle_detail: Read ordinary module/package use; skip bytecode-file inspection and import tracing.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/modules.html
+  - id: resource-python-modules-imports-python-docs-3
+    route_id: route-python-modules-imports-python-docs-2
+    kind: reference
+    label: Python import reference
+    source_id: source-python-docs
+    locator: 'Page "Python import reference": 5.2 Packages; 5.4.2 Submodules; 5.7 Package Relative Imports'
+    angle: Look up a package/import rule only when the tutorial leaves a question.
+    angle_detail: Reference only. No loaders, finders, import hooks or trace instrumentation.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/reference/import.html
+  - id: resource-python-modules-imports-python-docs-4
+    route_id: route-python-modules-imports-python-docs-3
+    kind: read
+    label: unittest.mock - Where to patch
+    source_id: source-python-docs
+    locator: 'Page "unittest.mock - Where to patch": Where to patch section'
+    angle: Patching replaces the name used by the caller, following ordinary module bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both placements point to
+      the same page.
+    scope_triage: helpful-now
+    url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-modules-imports/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-modules-imports
+- id: stage-python-iterators-with
+  number: 9
+  title: Iterators, generators and with
+  status: pending
+  objective: Iterable versus iterator, one-shot consumption, generator functions and expressions, lazy
+    composition, yield from and synchronous context managers.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-iterators-with-fp-1
+    route_id: route-python-iterators-with-fp-1
+    kind: read
+    label: Fluent Python 2e - Iterators, generators and with
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 624-645, 649-660, 662-668, 688-698. Stop before Classic Coroutines
+      p671 and before Pattern Matching in lis.py p699. No send/throw, async, coroutine machinery or hand-built
+      interpreter.
+    angle: The main explanation and worked examples for iterators, generators and with.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Stop before Classic Coroutines p671 and before Pattern Matching in
+      lis.py p699. No send/throw, async, coroutine machinery or hand-built interpreter.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-iterators-with-ep-2
+    route_id: route-python-iterators-with-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 30, PDF pp. 137-140; Item 31, PDF pp. 140-145; Item 33,
+      PDF pp. 147-150; Item 36, PDF pp. 161-168; Item 66, PDF pp. 327-331; start at each named item heading
+      and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-iterators-with-pointer-1
+    kind: reference
+    label: Stratum - iteration and configuration scope
+    locator: 'Stratum/stratum/optimizer/_op_utils.py: iterators; stratum/_config.py: contextmanager'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read the iteration and cleanup structure; no benchmarking or code changes.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-iterators-with/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-iterators-with
+- id: stage-python-type-hints
+  number: 10
+  title: Type hints
+  status: pending
+  objective: 'Read and write baseline-compatible annotations: built-in generics, unions, Callable, Iterable,
+    TypeVar, generic classes, forward references and Protocol. Hints do not enforce values at runtime.'
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-type-hints-fp-1
+    route_id: route-python-type-hints-fp-1
+    kind: read
+    label: Fluent Python 2e - Type hints
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 284-326, 571-574. Use the explanations and annotation examples;
+      installing/running a type checker is optional. Skip the outdated annotation-runtime forecast on
+      pp567-570; use the official modernisation guide instead. On p574 stop before Variance. Use TypeVar/Generic
+      forms compatible with Python 3.11, not the 3.12 type-parameter syntax.
+    angle: The main explanation and worked examples for type hints.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Use the explanations and annotation examples; installing/running a
+      type checker is optional. Skip the outdated annotation-runtime forecast on pp567-570; use the official
+      modernisation guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
+      with Python 3.11, not the 3.12 type-parameter syntax.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-type-hints-typing-docs-2
+    route_id: route-python-type-hints-typing-docs-1
+    kind: read
+    label: Modernizing superseded typing features
+    source_id: source-typing-docs
+    locator: 'Page "Modernizing superseded typing features": Introduction, built-in generics, union syntax,
+      TypeAlias and TypeVar notes; check the stated minimum version for each feature'
+    angle: Reconciles book-era typing with current recommendations and a 3.11 minimum.
+    angle_detail: Read newer syntax for recognition only when its minimum is above 3.11. The future annotations
+      import changes annotation handling, not runtime checking.
+    scope_triage: required-now
+    url: https://typing.python.org/en/latest/guides/modernizing.html
+  - id: resource-python-type-hints-python-docs-3
+    route_id: route-python-type-hints-python-docs-1
+    kind: reference
+    label: typing reference
+    source_id: source-python-docs
+    locator: 'Page "typing reference": Any, Callable, Iterable, TypeVar, Generic, Protocol, TYPE_CHECKING
+      and get_type_hints'
+    angle: Authority for the annotation forms the project can support.
+    angle_detail: Reference only; no exhaustive API study.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/typing.html
+  - id: resource-python-type-hints-typing-docs-4
+    route_id: route-python-type-hints-typing-docs-2
+    kind: reference
+    label: Typing - Generics
+    source_id: source-typing-docs
+    locator: 'Page "Typing - Generics": Generic classes and TypeVar; distinguish Python 3.11 forms from
+      3.12+ syntax'
+    angle: A version-aware companion to the book's Generic examples.
+    angle_detail: Reference only; no variance proofs or checker setup.
+    scope_triage: reference-only
+    url: https://typing.python.org/en/latest/reference/generics.html
+  - id: resource-python-type-hints-pointer-1
+    kind: reference
+    label: mypy - Type hints cheat sheet
+    locator: Built-in types, collections, functions, classes and protocols; stop before advanced examples
+    angle: Read-only connection to real Python code.
+    angle_detail: Optional syntax lookup. Reading this does not require installing or adopting mypy.
+    scope_triage: reference-only
+    url: https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-type-hints/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-type-hints
+- id: stage-python-interfaces-dispatch
+  number: 11
+  title: Interfaces and dispatch
+  status: pending
+  objective: Duck typing, abstract base classes, structural protocols, isinstance tradeoffs and singledispatch
+    registries. Separate interface promises from inheritance and registration.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-interfaces-dispatch-fp-1
+    route_id: route-python-interfaces-dispatch-fp-1
+    kind: read
+    label: Fluent Python 2e - Interfaces and dispatch
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 462-470, 472-488, 496-506, 354-358. Stop before virtual subclass
+      registration on p490; no custom subclass hooks or metaclasses. Read Protocol as interface documentation
+      first; runtime checks do not prove all type contracts.
+    angle: The main explanation and worked examples for interfaces and dispatch.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries. Examples are reading
+      material, not assigned tasks. Stop before virtual subclass registration on p490; no custom subclass
+      hooks or metaclasses. Read Protocol as interface documentation first; runtime checks do not prove
+      all type contracts.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-interfaces-dispatch-ep-2
+    route_id: route-python-interfaces-dispatch-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 38, PDF pp. 175-178; Item 43, PDF pp. 198-204; start at
+      each named item heading and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-interfaces-dispatch-python-docs-3
+    route_id: route-python-interfaces-dispatch-python-docs-1
+    kind: reference
+    label: abc reference
+    source_id: source-python-docs
+    locator: 'Page "abc reference": ABC and abstractmethod examples only'
+    angle: Look up the standard ABC declaration used by real classes.
+    angle_detail: Skip ABCMeta machinery, __subclasshook__ and virtual subclasses.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/abc.html
+  - id: resource-python-interfaces-dispatch-python-docs-4
+    route_id: route-python-interfaces-dispatch-python-docs-2
+    kind: read
+    label: functools.singledispatch
+    source_id: source-python-docs
+    locator: 'Page "functools.singledispatch": singledispatch: definition, register examples and dispatch
+      on first argument'
+    angle: The official counterpart to the book's dispatch example.
+    angle_detail: Read use and registration; no exhaustive dispatcher internals.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/functools.html#functools.singledispatch
+  - id: resource-python-interfaces-dispatch-typing-docs-5
+    route_id: route-python-interfaces-dispatch-typing-docs-1
+    kind: read
+    label: Typing - Protocols
+    source_id: source-typing-docs
+    locator: 'Page "Typing - Protocols": Simple user-defined protocols; protocol members; structural subtyping'
+    angle: Current guidance for describing an interface without imposing inheritance.
+    angle_detail: Read the ordinary examples. Advanced protocol variance and runtime introspection are
+      outside scope.
+    scope_triage: helpful-now
+    url: https://typing.python.org/en/latest/reference/protocols.html
+  - id: resource-python-interfaces-dispatch-pointer-1
+    kind: reference
+    label: Stratum - three dispatch styles
+    locator: 'Stratum/stratum/optimizer/logical/_numeric_ops.py: process; physical/_expressions.py: singledispatch;
+      physical/_lowering.py: lowering_rule'
+    angle: Read-only connection to real Python code.
+    angle_detail: Compare branch dispatch, singledispatch and decorator registration by reading existing
+      code.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-interfaces-dispatch/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-interfaces-dispatch
+- id: stage-python-errors-logging
+  number: 12
+  title: Errors and logging
+  status: pending
+  objective: Exception propagation, narrow handlers, cleanup, chaining, application exception classes
+    and library logging configuration.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-errors-logging-ep-1
+    route_id: route-python-errors-logging-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 20, PDF pp. 103-106; Item 65, PDF pp. 322-327; Item 87,
+      PDF pp. 431-436; start at each named item heading and stop before the following item heading, even
+      on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-errors-logging-python-docs-2
+    route_id: route-python-errors-logging-python-docs-1
+    kind: read
+    label: Python tutorial - Errors and Exceptions
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Errors and Exceptions": 8.1-8.8; exception groups in 8.9 are optional
+      background'
+    angle: The complete ordinary error-handling story before policy advice.
+    angle_detail: Read handling, raising, chaining, custom exceptions and cleanup. No exercises are assigned.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/errors.html
+  - id: resource-python-errors-logging-python-docs-3
+    route_id: route-python-errors-logging-python-docs-2
+    kind: read
+    label: Logging HOWTO
+    source_id: source-python-docs
+    locator: 'Page "Logging HOWTO": Basic Logging Tutorial; Advanced Logging Tutorial (flow and configuration);
+      Configuring Logging for a Library'
+    angle: Logger names, levels, handlers and configuration for code used as a library.
+    angle_detail: Read examples; skip optimisation, custom-handler design and the logging cookbook.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/howto/logging.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-errors-logging/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-errors-logging
+- id: stage-python-testing
+  number: 13
+  title: Reading Python tests
+  status: pending
+  objective: Test structure, assertions, fixture scope and cleanup, parametrisation, monkeypatch, tmp_path,
+    exception assertions, mocks, pdb and profiling as debugging tools. No test-writing exercises.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-testing-ep-1
+    route_id: route-python-testing-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 76, PDF pp. 380-388; Item 78, PDF pp. 390-398; Item 79,
+      PDF pp. 398-402; Item 80, PDF pp. 402-407; Item 70, PDF pp. 345-349; start at each named item heading
+      and stop before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF, not the 3rd-edition
+      sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-testing-python-docs-2
+    route_id: route-python-testing-python-docs-1
+    kind: read
+    label: unittest - Basic example and TestCase
+    source_id: source-python-docs
+    locator: 'Page "unittest - Basic example and TestCase": Basic example; Organizing test code; Distinguishing
+      test iterations using subtests; setUp, tearDown, assertEqual and assertRaises examples'
+    angle: The class-based tests used alongside pytest, without making the optional book a prerequisite.
+    angle_detail: Read the named examples only. Understand test methods and per-test setup/cleanup; no
+      test-writing or runner-building assignment.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/unittest.html
+  - id: resource-python-testing-pytest-docs-3
+    route_id: route-python-testing-pytest-docs-1
+    kind: read
+    label: pytest - Fixtures
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Fixtures": Requesting fixtures; scope; autouse; yield teardown'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read the examples and cleanup rules; no fixture exercise.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/fixtures.html
+  - id: resource-python-testing-pytest-docs-4
+    route_id: route-python-testing-pytest-docs-2
+    kind: read
+    label: pytest - Parametrization
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Parametrization": pytest.mark.parametrize; parametrized fixtures; basic examples'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read how inputs become separate cases; skip custom collection hooks.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/parametrize.html
+  - id: resource-python-testing-pytest-docs-5
+    route_id: route-python-testing-pytest-docs-3
+    kind: read
+    label: pytest - Monkeypatch
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Monkeypatch": Patching functions, attributes, environment variables and dictionaries'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Understand automatic restoration and where the patched name is looked up.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/monkeypatch.html
+  - id: resource-python-testing-pytest-docs-6
+    route_id: route-python-testing-pytest-docs-4
+    kind: read
+    label: pytest - Temporary paths
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Temporary paths": The tmp_path fixture and basic Path example'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read the isolated directory example; do not create files in Stratum.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/tmp_path.html
+  - id: resource-python-testing-pytest-docs-7
+    route_id: route-python-testing-pytest-docs-5
+    kind: read
+    label: pytest - Assertions and exceptions
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - Assertions and exceptions": Assertion introspection and Assertions about
+      expected exceptions'
+    angle: The pytest feature used by real tests, explained by its maintainers.
+    angle_detail: Read pytest.raises, including match; no generated test or answer key.
+    scope_triage: required-now
+    url: https://docs.pytest.org/en/stable/how-to/assert.html
+  - id: resource-python-testing-pytest-docs-8
+    route_id: route-python-testing-pytest-docs-6
+    kind: read
+    label: pytest - unittest-based tests
+    source_id: source-pytest-docs
+    locator: 'Page "pytest - unittest-based tests": Opening overview; pytest features in unittest.TestCase
+      subclasses'
+    angle: Why pytest runs TestCase classes and which pytest features do not transfer to them.
+    angle_detail: 'Read the compatibility limits: TestCase methods do not accept ordinary fixture arguments
+      or pytest parametrization. Skip migration recipes.'
+    scope_triage: helpful-now
+    url: https://docs.pytest.org/en/stable/how-to/unittest.html
+  - id: resource-python-testing-shared-49
+    route_id: route-python-modules-imports-python-docs-3
+    kind: read
+    label: unittest.mock - Where to patch
+    source_id: source-python-docs
+    locator: 'Page "unittest.mock - Where to patch": Where to patch section'
+    angle: Patching replaces the name used by the caller, following ordinary module bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both placements point to
+      the same page.
+    scope_triage: helpful-now
+    url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
+  - id: resource-python-testing-pointer-1
+    kind: reference
+    label: Stratum - tests to read
+    locator: Stratum/tests/optimizer/logical/test_literal_inlining.py; tests/application/pds/
+    angle: Read-only connection to real Python code.
+    angle_detail: Read assertions and existing parametrisation. Do not add, run or repair project tests
+      as an assignment.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-testing/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-testing
+- id: stage-python-tooling
+  number: 14
+  title: Projects, environments and tooling
+  status: pending
+  objective: Understand pyproject.toml, dependency groups/extras, uv.lock, environment synchronisation
+    and running commands; recognise maturin as the Python/Rust build boundary without learning Rust or
+    publishing packages.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-tooling-uv-docs-1
+    route_id: route-python-tooling-uv-docs-1
+    kind: read
+    label: uv - Working on projects
+    source_id: source-uv-docs
+    locator: 'Page "uv - Working on projects": Project structure; managing dependencies; running commands;
+      building distributions for context'
+    angle: The current project workflow absent from the old packaging stage.
+    angle_detail: Read the guide. Commands are examples, not instructions to change Stratum or create
+      a new project.
+    scope_triage: required-now
+    url: https://docs.astral.sh/uv/guides/projects/
+  - id: resource-python-tooling-uv-docs-2
+    route_id: route-python-tooling-uv-docs-2
+    kind: read
+    label: uv - Locking and syncing
+    source_id: source-uv-docs
+    locator: 'Page "uv - Locking and syncing": Locking and syncing; automatic lock/sync; extras and dependency
+      groups; exact versus inexact sync'
+    angle: Why the lockfile, declared dependencies and environment are different things.
+    angle_detail: Read how --locked, --frozen and extras affect reproducibility; avoid blindly copying
+      the tutorial's sync command into a work repository.
+    scope_triage: required-now
+    url: https://docs.astral.sh/uv/concepts/projects/sync/
+  - id: resource-python-tooling-pointer-1
+    kind: reference
+    label: pyproject.toml specification
+    locator: 'Page "pyproject.toml specification": [build-system], [project], optional-dependencies and
+      [tool] tables'
+    angle: Read-only connection to real Python code.
+    angle_detail: Lookup only. Maintained by the Python Packaging Authority.
+    scope_triage: reference-only
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+  - id: resource-python-tooling-pointer-2
+    kind: reference
+    label: maturin tutorial
+    locator: 'Page "maturin tutorial": Introduction; mixed Python/Rust project layout; develop versus
+      build'
+    angle: Read-only connection to real Python code.
+    angle_detail: Read only. No Rust implementation, ABI internals, package publication or build assignment.
+      This related tool page shares the tooling route group, not uv authorship.
+    scope_triage: helpful-now
+    url: https://www.maturin.rs/tutorial.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-tooling/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-tooling
+- id: stage-python-newer-python
+  number: 15
+  title: Reading newer Python while keeping a 3.11 floor
+  status: pending
+  objective: Recognise user-facing changes from 3.11 through 3.15, distinguish the interpreter in use
+    from the project minimum, and avoid introducing syntax unavailable to supported versions.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-newer-python-python-docs-1
+    route_id: route-python-newer-python-python-docs-1
+    kind: read
+    label: What's New in Python 3.11
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.11": Summary; improved error locations; exception groups and
+      except* as recognition only; typing.Self and typing changes'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
+      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
+      floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/whatsnew/3.11.html
+  - id: resource-python-newer-python-python-docs-2
+    route_id: route-python-newer-python-python-docs-2
+    kind: read
+    label: What's New in Python 3.12
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.12": Summary; new type parameter and type alias syntax for
+      recognition only; f-string syntax improvements'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
+      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
+      floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.12/whatsnew/3.12.html
+  - id: resource-python-newer-python-python-docs-3
+    route_id: route-python-newer-python-python-docs-3
+    kind: read
+    label: What's New in Python 3.13
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.13": Summary; improved errors and interactive interpreter;
+      typing deprecations affecting annotations'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
+      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
+      floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.13/whatsnew/3.13.html
+  - id: resource-python-newer-python-python-docs-4
+    route_id: route-python-newer-python-python-docs-4
+    kind: read
+    label: What's New in Python 3.14
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.14": Summary; deferred evaluation of annotations (PEP 649/749);
+      template string literals for recognition only'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
+      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
+      floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.14/whatsnew/3.14.html
+  - id: resource-python-newer-python-python-docs-5
+    route_id: route-python-newer-python-python-docs-5
+    kind: read
+    label: What's New in Python 3.15
+    source_id: source-python-docs
+    locator: 'Page "What''s New in Python 3.15": Summary; UTF-8 default; explicit lazy imports; frozendict,
+      sentinel and unpacking in comprehensions for recognition only'
+    angle: A selected delta from the book baseline, with its introduction version.
+    angle_detail: Read only the named user-facing features. Skip interpreter implementation, C API, JIT
+      and GIL/free-threading sections. Reading a feature does not authorise its use in a project whose
+      floor is 3.11.
+    scope_triage: required-now
+    url: https://docs.python.org/3.15/whatsnew/3.15.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-newer-python/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-newer-python
+- id: stage-python-read-stratum
+  number: 16
+  title: Read Stratum using the Python topics
+  status: pending
+  objective: Follow the public entry point through graph construction, orchestration, operation classes,
+    rewrite helpers, registration and runtime. Read Python constructs in context; optimizer design, proofs
+    and rebuilding the system are optional background.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or mastery assessment
+    is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-read-stratum-stratum-paper-1
+    route_id: route-python-read-stratum-stratum-paper-1
+    kind: read
+    label: Stratum paper - context only
+    source_id: source-stratum-paper
+    locator: 'Page "Stratum paper - context only": Local Stratum paper, sections 3-4.3, PDF pp. 3-5; read
+      only if architecture terms obscure the Python'
+    angle: Optional architectural orientation for the code-reading map.
+    angle_detail: This paper explains the system, not Python. It is not a required theory stage.
+    scope_triage: helpful-now
+    url: https://arxiv.org/abs/2603.03589
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+  - id: resource-python-read-stratum-pointer-1
+    kind: reference
+    label: README and public API
+    locator: Stratum/README.md; Stratum/stratum/_api.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Start at the documented example and recognise imports, functions and signatures by lookup.
+      Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-2
+    kind: reference
+    label: Frontend and orchestration
+    locator: Stratum/stratum/frontend/_skrub_graph.py; stratum/optimizer/_optimize.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Follow class use, function calls and collection transformations; no optimizer-theory
+      assignment. Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-3
+    kind: reference
+    label: Operations and rewrite helpers
+    locator: Stratum/stratum/optimizer/logical/_base.py; logical/rewrites/; optimizer/_op_utils.py
+    angle: Read-only connection to real Python code.
+    angle_detail: Read one representative class/function at a time, using earlier readings as lookup.
+      Read only; do not modify the checkout.
+    scope_triage: required-now
+  - id: resource-python-read-stratum-pointer-4
+    kind: reference
+    label: Registration and runtime
+    locator: Stratum/stratum/optimizer/physical/_registry.py; stratum/runtime/
+    angle: Read-only connection to real Python code.
+    angle_detail: Recognise decorators, annotations, dispatch, iteration and cleanup in the existing implementation.
+      Read only; do not modify the checkout.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-read-stratum/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-read-stratum
+- id: stage-python-00-mechanism-diagnostic
+  number: 17
+  title: Optional - Phase 0 - cold diagnostic across the nine mechanisms
+  status: pending
+  objective: Optional diagnostic; the reviewed brief selects material directly and excludes exercises.
+    Find out which of the nine Python mechanisms are already fluent. Attempt every prediction notebook
+    cold, with no guide, no book, and no AI. Most should pass and be skipped. The misses are the only
+    thing Phase 1 repairs. This is triage, not a course.
+  done_when:
+  - All nine prediction notebooks attempted closed-book, with no guide, no reference, and no AI.
+  - Every notebook scored pass or miss, and each miss named down to the specific weighted question.
+  - The Phase 1 repair list is written, and every passed mechanism is recorded as skipped rather than
+    silently dropped.
+  - The measured cost of Phase 0 is recorded, since it sets the real size of Phase 1.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: practise
+    label: Cold diagnostic stage-0-names-and-identity.ipynb
+    id: resource-python-d0-01-notebook-stage0namesandidentity
+    source_id: source-python-depth-drills
+    locator: '''stage-0-names-and-identity.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
+    angle: Scores names, identity, aliasing, and the hash contract before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-1-functions-as-objects.ipynb
+    id: resource-python-d0-02-notebook-stage1functionsasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-1-functions-as-objects.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+    angle: Scores functions as objects, closures over call timing before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-2-scope-and-closures.ipynb
+    id: resource-python-d0-03-notebook-stage2scopeandclosures
+    source_id: source-python-depth-drills
+    locator: '''stage-2-scope-and-closures.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+    angle: Scores scope, captured state, rebinding versus mutation before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-3-decorators.ipynb
+    id: resource-python-d0-04-notebook-stage3decorators
+    source_id: source-python-depth-drills
+    locator: '''stage-3-decorators.ipynb'', every weighted question, closed book, no guide and no AI'
+    vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+    angle: Scores decorators, import-time execution, registration before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-4-classes-as-objects.ipynb
+    id: resource-python-d0-05-notebook-stage4classesasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-4-classes-as-objects.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+    angle: Scores attribute lookup, MRO, cooperative super before any reading, so Phase 1 repairs misses
+      instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-5-imports-and-registration.ipynb
+    id: resource-python-d0-06-notebook-stage5importsandregistrati
+    source_id: source-python-depth-drills
+    locator: '''stage-5-imports-and-registration.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+    angle: Scores imports, circular dependencies, plugin discovery before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-6-data-model-and-dunders.ipynb
+    id: resource-python-d0-07-notebook-stage6datamodelanddunders
+    source_id: source-python-depth-drills
+    locator: '''stage-6-data-model-and-dunders.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+    angle: Scores dunders, slots, equality, hashing before any reading, so Phase 1 repairs misses instead
+      of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-7-generators-and-iterators.ipynb
+    id: resource-python-d0-08-notebook-stage7generatorsanditerato
+    source_id: source-python-depth-drills
+    locator: '''stage-7-generators-and-iterators.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+    angle: Scores iterators, generators, mutation while walking before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Cold diagnostic stage-8-interfaces-and-dispatch.ipynb
+    id: resource-python-d0-09-notebook-stage8interfacesanddispatc
+    source_id: source-python-depth-drills
+    locator: '''stage-8-interfaces-and-dispatch.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+    angle: Scores protocols, typing, dispatch design before any reading, so Phase 1 repairs misses instead
+      of re-teaching what is already fluent.
+    scope_triage: deferred
+  - kind: practise
+    label: Write the repair list and the skip list
+    id: resource-python-d0-10-score-ledger
+    locator: Score every notebook pass or miss. Name each miss down to its weighted question. Record the
+      mechanisms that passed as deliberately skipped, and record the hours Phase 0 actually cost.
+    scope_triage: deferred
+    angle: Turns the diagnostic into the input Phase 1 consumes, and makes a skip visible rather than
+      silent.
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-00-mechanism-diagnostic/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-repair-mechanism-gaps
+  number: 18
+  title: Optional - Phase 1 - repair only the mechanisms that failed
+  status: pending
+  objective: 'Optional diagnostic repair; reading now follows the topic sequence rather than a test miss.
+    Repair the mechanisms Phase 0 marked as misses, and skip the rest. Reading is pull-based: a guide
+    or a book chapter is opened only when a recorded miss names it. Every repair ends in a rebuild from
+    blank rather than a re-read, and each one names the Stratum construct it explains.'
+  done_when:
+  - Every mechanism marked miss in Phase 0 has a from-blank rebuild that passes its own tests, written
+    with the guide closed.
+  - Every mechanism marked pass in Phase 0 is skipped, and the skip stays recorded rather than quietly
+    reinstated.
+  - Each repair names the Stratum construct it explains, so the mechanism is attached to a design question
+    and not to a language feature.
+  - Each repaired mechanism is re-checked cold at least 48 hours later, and any second miss is recorded
+    rather than retried immediately.
+  - The budget below is an upper bound; the diagnostic decides the real cost, and finishing early is the
+    expected outcome.
+  estimate_minutes: 360
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: reference
+    label: Repair guide stage-0-names-and-identity.md
+    id: resource-python-p1-01-guide-stage0namesandidentity
+    source_id: source-python-depth-drills
+    locator: '''stage-0-names-and-identity.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-1-functions-as-objects.md
+    id: resource-python-p1-02-guide-stage1functionsasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-1-functions-as-objects.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-2-scope-and-closures.md
+    id: resource-python-p1-03-guide-stage2scopeandclosures
+    source_id: source-python-depth-drills
+    locator: '''stage-2-scope-and-closures.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-3-decorators.md
+    id: resource-python-p1-04-guide-stage3decorators
+    source_id: source-python-depth-drills
+    locator: '''stage-3-decorators.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-3-decorators.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-4-classes-as-objects.md
+    id: resource-python-p1-05-guide-stage4classesasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-4-classes-as-objects.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-5-imports-and-registration.md
+    id: resource-python-p1-06-guide-stage5importsandregistrati
+    source_id: source-python-depth-drills
+    locator: '''stage-5-imports-and-registration.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-6-data-model-and-dunders.md
+    id: resource-python-p1-07-guide-stage6datamodelanddunders
+    source_id: source-python-depth-drills
+    locator: '''stage-6-data-model-and-dunders.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-7-generators-and-iterators.md
+    id: resource-python-p1-08-guide-stage7generatorsanditerato
+    source_id: source-python-depth-drills
+    locator: '''stage-7-generators-and-iterators.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: reference
+    label: Repair guide stage-8-interfaces-and-dispatch.md
+    id: resource-python-p1-09-guide-stage8interfacesanddispatc
+    source_id: source-python-depth-drills
+    locator: '''stage-8-interfaces-and-dispatch.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: deferred
+  - kind: read
+    label: Fluent Python, opened at the chapter a miss names
+    id: resource-python-p1-10-fluent-python-on-miss
+    source_id: source-fluent-python
+    locator: Open only the chapter that a recorded Phase 0 miss identifies, never the book in sequence
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    angle: Replaces four scheduled readings per mechanism with one chapter bought by a specific failure.
+    scope_triage: deferred
+  - kind: read
+    label: Effective Python, opened at the item a miss names
+    id: resource-python-p1-11-effective-python-on-miss
+    source_id: source-slatkin-effective-python
+    locator: Open only the mapped item that a recorded Phase 0 miss identifies
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: deferred
+  - kind: read
+    label: Cross-cutting shelf index
+    id: resource-python-p1-12-shelf-index
+    source_id: source-python-depth-drills
+    locator: '''SHELF.md'', used to find which chapter a miss maps to'
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: deferred
+  - kind: practise
+    label: Rebuild remove_node from blank
+    id: resource-python-p1-13-rebuild-remove-node
+    locator: 'Write the mutation contract first: inputs, side effects, identity rules, edge invariants,
+      failure behaviour, non-goals. Then implement without looking at Stratum and prove both sides of
+      every edge are repaired by identity.'
+    scope_triage: deferred
+    angle: The identity mechanism attached to the real design question it answers in an optimizer.
+  - kind: practise
+    label: Rebuild match_n_op_chain(op_cls, types) from a blank file
+    id: resource-python-p1-14-rebuild-match-chain
+    locator: State in words when the factory, the returned matcher, the action, and the rewrite runner
+      each execute, then implement and test the ordering you predicted.
+    scope_triage: deferred
+  - kind: practise
+    label: Rebuild a registration decorator, typed selector, and lazy traversal in one miniature package
+    id: resource-python-p1-15-rebuild-registry-and-traversal
+    locator: One package, not three exercises. Add an intentional circular import and repair the architecture
+      rather than hiding it behind a local import.
+    scope_triage: deferred
+  - kind: practise
+    label: Explain why adding structural __eq__ to Op would break deduplication and buffer-pool keys
+    id: resource-python-p1-16-structural-equality-question
+    locator: Write the answer as a design argument with a counterexample, not as a language fact.
+    scope_triage: deferred
+    angle: The single question in this module that most directly predicts whether a rewrite proposal is
+      sound.
+  - kind: read
+    label: Read-only Stratum anchors for the repaired mechanisms
+    id: resource-python-p1-17-stratum-anchors
+    locator: stratum/optimizer/logical/_base.py replace_input and _check_dup_in_inputs; stratum/optimizer/logical/rewrites/_numeric.py
+      match_two_op_chain and eliminate_two_op_chain; stratum/optimizer/physical/_registry.py physical_impl
+      and build_default_physical_registry; stratum/optimizer/logical/_ops.py Op __repr__ and update_name;
+      stratum/runtime/_buffer_pool.py
+    angle: Read only after the matching rebuild passes, to compare a design decision, never to copy an
+      implementation.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-repair-mechanism-gaps/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-optimizer-theory-and-rewrite-soundness
+  number: 19
+  title: Optional - Phase 2 - logical plans, rewrite soundness, and cost
+  status: pending
+  objective: 'Optimizer theory is optional background, outside the Python-language goal. Learn why a system
+    like Stratum has the shape it has: a declarative abstraction, a logical plan, rewrite rules, lowering
+    to physical operators, and cost-based implementation selection. The output is a rule table you could
+    defend in a design discussion, not code. Without this, a rewrite proposal can only imitate the shape
+    of the rewrites already in the tree.'
+  done_when:
+  - The Stratum paper read closely enough to state in your own words what it claims, what it actually
+    measures, and which of its stated open directions are still open.
+  - Six rewrites written up, each with its precondition, the invariant it preserves, and a concrete counterexample
+    that breaks it when the precondition is dropped.
+  - 'The logical and physical split explained: what a logical operator may assume, what lowering decides,
+    and why implementation selection is a separate cost question.'
+  - Common subexpression elimination explained as a semantic argument about when two nodes are interchangeable,
+    not as a hash-key trick.
+  - At least two claims in the write-up marked as uncertain and carried to the paper or a maintainer rather
+    than resolved by guessing.
+  estimate_minutes: 240
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: 'stratum: A System Infrastructure for Massive Agent-Centric ML Workloads'
+    id: resource-python-p2-01-stratum-paper-architecture
+    locator: Sections 3 to 4.3, Our Vision through Runtime Optimizations, pdf pp. 3-5
+    url: https://arxiv.org/abs/2603.03589
+    angle: The only document that states the system's intent in the authors' own words; everything else
+      in the repository is a consequence of it.
+    scope_triage: deferred
+  - kind: read
+    label: stratum paper, the authors' own open problems
+    id: resource-python-p2-02-stratum-paper-open-directions
+    locator: Section 5 Challenges and Key Directions, pdf pp. 5-6
+    url: https://arxiv.org/abs/2603.03589
+    angle: A published list of what is unsolved, which is where a contribution can be intentional rather
+      than decorative.
+    scope_triage: deferred
+  - kind: read
+    label: 'Spark SQL: Relational Data Processing in Spark'
+    id: resource-python-p2-03-catalyst
+    locator: Section 4 Catalyst Optimizer, 4.1 Trees through 4.4 Extension Points, pdf pp. 5-8
+    url: https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf
+    angle: The compact canonical account of trees, rules, logical optimization, and physical planning
+      that Stratum's optimizer package assumes you already have.
+    scope_triage: deferred
+  - kind: read
+    label: skrub DataOps reference
+    id: resource-python-p2-04-skrub-dataops
+    locator: '''DataOps'' and ''The skb accessor exposes all DataOps methods and attributes'''
+    url: https://skrub-data.org/stable/reference/data_ops.html
+    angle: Separates the abstraction Stratum inherits from skrub, which is not yours to change, from the
+      parts Stratum actually owns.
+    scope_triage: deferred
+  - kind: read
+    label: Stratum's own stated intent in the sibling checkout
+    id: resource-python-p2-05-stratum-intent-docs
+    locator: README.md 'Design Principles'; CONTRIBUTING.md; stratum/optimizer/rewrite_ideas.md
+    angle: Maintainer-written intent and an explicit ideas list, which is requirements gathering rather
+      than implementation copying.
+    scope_triage: deferred
+  - kind: practise
+    label: Write the rewrite rule table
+    id: resource-python-p2-06-rule-table
+    locator: Six rewrites, each with precondition, preserved invariant, and a counterexample that breaks
+      it when the precondition is dropped. Derive each from the semantics, not from an implementation.
+    scope_triage: deferred
+    angle: The deliverable that converts reading into something you can argue from.
+  - kind: practise
+    label: Sketch the cost question for one operation family
+    id: resource-python-p2-07-cost-model-sketch
+    locator: For one family, write what a selector would need to know to choose an implementation, what
+      is cheap to measure, what has to be estimated, and what happens when the estimate is wrong.
+    scope_triage: deferred
+  - kind: read
+    label: Read-only comparison after the rule table exists
+    id: resource-python-p2-08-stratum-rewrite-anchors
+    locator: stratum/optimizer/logical/rewrites/_algebraic.py; stratum/optimizer/logical/rewrites/_numeric.py;
+      stratum/optimizer/logical/rewrites/_cse.py; stratum/optimizer/physical/_lowering.py; stratum/optimizer/physical/_impl_selection.py
+    angle: Opened only after the table is written, to find where your derivation and the tree disagree
+      and which of the two is wrong.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-optimizer-theory-and-rewrite-soundness/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-rewriter-tests-and-benchmark-evidence
+  number: 20
+  title: Optional - Phase 3 - one rewriter, its tests, and honest measurement
+  status: pending
+  objective: 'Building a rewriter and mutation testing are project exercises, outside this material-only
+    revision. Build one small rewriter end to end and make it produce evidence: a DAG utility with real
+    invariants, an adversarial suite that is provably sensitive, and a benchmark harness that reports
+    spread instead of a single number. The contract is written before the code every time.'
+  done_when:
+  - A DAG utility with topological ordering, sub-DAG cloning with stop and replacement boundaries, and
+    an invariant checker covering reciprocal edges, duplicate inputs, reachability, and cycle refusal,
+    with at least 25 named cases.
+  - One rewrite pass built on it, its contract written before the code and compared against the implementation
+    once the tests pass.
+  - 'Mutation testing proves the suite is sensitive: four deliberate incorrect rewires are each caught
+    by a named test.'
+  - A reusable benchmark harness separates construction, planning, and execution, repeats each measurement,
+    and reports spread rather than one number.
+  - Exactly one optimization is made and defended with that harness, including the case where the measurement
+    says the optimization is not worth it.
+  - 'One agent-generated implementation reviewed as an untrusted patch: the defect found without hints,
+    and why it looked convincing recorded.'
+  estimate_minutes: 360
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Python graphlib topological sorter
+    id: resource-python-p3-01-graphlib
+    locator: TopologicalSorter, static and incremental use, and CycleError
+    url: https://docs.python.org/3/library/graphlib.html
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab, NetworkX DAG algorithms
+    id: resource-python-p3-02-networkx-dag
+    locator: topological_generations and is_directed_acyclic_graph, then the matching tests
+    url: https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+    angle: A mature implementation of the exact operations you just built, useful for comparing ordering
+      guarantees and mutation assumptions rather than style.
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab, Hypothesis
+    id: resource-python-p3-03-hypothesis
+    locator: One small strategy or shrinking behaviour, starting from a test and tracing only the implementation
+      it exercises
+    url: https://github.com/HypothesisWorks/hypothesis
+    scope_triage: deferred
+  - kind: practise
+    label: Build the DAG utility and its invariant checker from blank
+    id: resource-python-p3-04-dag-utility
+    locator: Derive Kahn's algorithm on paper first and hand-run it on a diamond, a chain, a disconnected
+      branch, and a cycle. Then implement, and state what ordering is and is not guaranteed.
+    scope_triage: deferred
+  - kind: practise
+    label: Mutation-test the checker
+    id: resource-python-p3-05-mutation-sensitivity
+    locator: Introduce four incorrect rewires and record which named test caught each. A mutation that
+      nothing catches is a missing test, not a passing suite.
+    scope_triage: deferred
+    angle: Proves the suite has power, which is the difference between tests that pass and tests that
+      would catch a real regression.
+  - kind: practise
+    label: Build the benchmark harness before making any optimization
+    id: resource-python-p3-06-benchmark-harness
+    locator: Separate construction, planning, and execution. Repeat every measurement, report spread,
+      state what is held fixed, and write down why a single wall-clock number on a laptop is not evidence.
+    scope_triage: deferred
+    angle: The harness is the deliverable; the optimization is only what it is used on.
+  - kind: practise
+    label: Review a plausible but wrong implementation
+    id: resource-python-p3-07-untrusted-patch
+    locator: Only after your own version passes, ask an agent for two subtly flawed implementations. Without
+      hints, find each defect through contract review and targeted tests, and record why it looked convincing.
+    scope_triage: deferred
+  - kind: read
+    label: Read-only Stratum anchors for graph surgery and measurement
+    id: resource-python-p3-08-stratum-graph-anchors
+    locator: stratum/optimizer/_op_utils.py clone_sub_dag, topological_iterator_bfs and dfs, validate_dag,
+      rewrite_pass; stratum/optimizer/_optimize.py pass orchestration; stratum/utils/_utils.py start_time
+      and log_time; stratum/runtime/_buffer_pool.py
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-rewriter-tests-and-benchmark-evidence/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-contribution-loop
+  number: 21
+  title: Optional - Phase 4 - the recurring contribution loop
+  status: pending
+  objective: A contribution loop is optional project work; the required path is Python reading. Run the
+    loop that actually produces intentional contributions, weekly, starting in week one rather than at
+    the end. Read real merged changes, write your own review before asking an agent, then land small patches
+    under the receiving project's own conventions. This stage recurs and is never marked complete after
+    a single pass.
+  done_when:
+  - 'One merged change in a mature Python repository reviewed in full before any AI: problem restatement,
+    call-path map, test assessment, correctness and compatibility risks, and prioritized comments.'
+  - That review then compared against an agent's, classifying unique, overlapping, false-positive, and
+    missed findings with evidence for each.
+  - Stratum's contributing workflow followed for one small change on a local branch, including the commit
+    tag convention and an issue reference where one applies.
+  - One question or proposal written for a maintainer that cites the paper or the code and states what
+    you already checked, rather than asking to be told what to do.
+  - The loop has run at least four times before this stage is reconsidered, and the ledger of what was
+    proposed, accepted, and rejected is kept.
+  estimate_minutes: 120
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Stratum contributing workflow in the sibling checkout
+    id: resource-python-p4-01-stratum-contributing
+    locator: CONTRIBUTING.md 'Workflow', 'Commit Message Tags', and 'Referencing Issues'
+    angle: The receiving project's actual conventions, which decide whether a good change arrives in a
+      reviewable shape.
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab, pytest contribution workflow
+    id: resource-python-p4-02-pytest-contributing
+    locator: The current contributing guide, then one small merged pull request read as issue, patch,
+      tests, discussion, final change
+    url: https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab, pluggy as a compact mature library
+    id: resource-python-p4-03-pluggy
+    locator: One small recent behaviour change traced through changelog, implementation, compatibility
+      handling, and tests
+    url: https://github.com/pytest-dev/pluggy
+    angle: Small enough to hold in your head, old enough that every change had to justify itself against
+      compatibility.
+    scope_triage: deferred
+  - kind: practise
+    label: Write the review before asking an agent
+    id: resource-python-p4-04-review-before-ai
+    locator: Review a patch of 100 to 250 lines with repository context and tests. Only afterwards ask
+      an agent for a second review, then classify the two against each other with evidence.
+    scope_triage: deferred
+  - kind: practise
+    label: Land small changes under the project's own conventions
+    id: resource-python-p4-05-first-patches
+    locator: A test, a documentation fix, or a reproduction of an open issue, on a local branch, committed
+      with the correct tag. Publishing stays optional; being reviewable does not.
+    scope_triage: deferred
+  - kind: practise
+    label: Write one question that cites evidence
+    id: resource-python-p4-06-maintainer-question
+    locator: State what you read, what you tried, what you concluded, and the specific thing you cannot
+      resolve from the paper or the code.
+    scope_triage: deferred
+    angle: The artifact that most reliably distinguishes an intentional contributor from someone matching
+      the local style.
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-contribution-loop/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-14-packaging-environments-maturin-and-the-python-to-rust
+  number: 22
+  title: Optional - Packaging, environments, maturin, and the Python to Rust boundary
+  status: pending
+  objective: Replaced on the required path by current uv/pyproject reading; Rust implementation is optional.
+    Use Packaging, environments, maturin, and the Python to Rust boundary fluently, explain the language
+    and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - build-boundary diagram, disposable toy package, and FFI contract.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Required core — note-python-intermediate-roadmap.md
+    id: resource-python-14-01-required-core-note-python-intermediate
+    locator: Roadmap Step 25 and Python packaging tutorial
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+    scope_triage: deferred
+  - kind: read
+    label: Required core — packaging.python.org — packaging projects
+    id: resource-python-14-02-required-core-packaging-python-org-pac
+    locator: Roadmap Step 25 and Python packaging tutorial
+    url: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+    scope_triage: deferred
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-python-14-03-local-material-note-programming-toolbo
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: deferred
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-14-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: deferred
+  - kind: reference
+    label: Official reference — packaging.python.org — pyproject toml
+    id: resource-python-14-05-official-reference-packaging-python-or
+    locator: pyproject, maturin, and PyO3
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+    scope_triage: deferred
+  - kind: reference
+    label: Official reference — www.maturin.rs
+    id: resource-python-14-06-official-reference-www-maturin-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://www.maturin.rs/
+    scope_triage: deferred
+  - kind: reference
+    label: Official reference — pyo3.rs
+    id: resource-python-14-07-official-reference-pyo3-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://pyo3.rs/
+    scope_triage: deferred
+  - kind: practise
+    label: Guided exercises — Build a minimal wheel and native-extension package in a clean lab environment,
+      inspect artifacts, and test the installed result rather than the source tree.
+    id: resource-python-14-08-guided-exercises-build-a-minimal-wheel
+    locator: Build a minimal wheel and native-extension package in a clean lab environment, inspect artifacts,
+      and test the installed result rather than the source tree.
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — docs.python.org — stable.html
+    id: resource-python-14-09-optional-depth-docs-python-org-stable
+    locator: Python binary extension ABI guidance
+    url: https://docs.python.org/3/c-api/stable.html
+    scope_triage: deferred
+  - kind: practise
+    label: Diagram interpreter, virtual environment, package source, wheel, shared library, import name,
+      and build backend.
+    id: resource-python-14-10-diagram-interpreter-virtual-environmen
+    locator: Exercise 1
+    scope_triage: deferred
+  - kind: practise
+    label: Create a tiny pure-Python package outside Stratum with pyproject and editable install in a
+      disposable environment.
+    id: resource-python-14-11-create-a-tiny-pure-python-package-outs
+    locator: Exercise 2
+    scope_triage: deferred
+  - kind: practise
+    label: Inspect a wheel's contents and map import names to files.
+    id: resource-python-14-12-inspect-a-wheel-s-contents-and-map-imp
+    locator: Exercise 3
+    scope_triage: deferred
+  - kind: practise
+    label: Sketch one PyO3 function contract including ownership, error conversion, GIL, and copy expectations
+      without building Stratum.
+    id: resource-python-14-13-sketch-one-pyo3-function-contract-incl
+    locator: Exercise 4
+    scope_triage: deferred
+  - kind: practise
+    label: Explain exactly when maturin develop, a Python import, and a Rust function call execute.
+    id: resource-python-14-14-explain-exactly-when-maturin-develop-a
+    locator: Exercise 5
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab — Pydantic's Python/Rust boundary
+    id: resource-python-14-15-open-source-pydantic-boundary
+    locator: Trace one validation request from a Python public API into pydantic-core and back to a Python
+      error/result. Record ownership, conversion, exception, packaging, and test boundaries without reading
+      the whole validator.
+    url: https://github.com/pydantic/pydantic
+    scope_triage: deferred
+  - kind: practise
+    label: Engineering drill — review the built artifact as a consumer
+    id: resource-python-14-16-installed-artifact-review
+    locator: Install the toy wheel into a clean environment, inspect only its published API and metadata,
+      and list every assumption that leaked from the source tree.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-15-requirements-decomposition-and-design-records
+  number: 23
+  title: Optional - Requirements, decomposition, and design records
+  status: pending
+  objective: 'Requirements decomposition and design-record assignments are outside this Python material
+    scope. Turn a vague idea into an executable engineering contract before code: identify the user and
+    problem, define scope and non-goals, make uncertainty visible, choose a thin vertical slice, and record
+    consequential decisions.'
+  done_when:
+  - A one-page brief contains user/problem, examples, non-goals, inputs/outputs, invariants, failure behavior,
+    observability, test matrix, and acceptance criteria.
+  - A no-AI vertical slice proves the riskiest assumption; three short decision records state context,
+    options, choice, consequences, and reversal cost.
+  - An AI critique happens only after the brief and slice exist; disagreements are resolved with evidence
+    rather than deference.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Architecture Patterns with Python — domain modelling and service boundaries
+    id: resource-python-15-01-architecture-patterns
+    source_id: source-cosmicpython-architecture-patterns
+    locator: Use the preface plus one relevant early chapter to separate domain intent from infrastructure.
+    url: https://www.cosmicpython.com/book/preface.html
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab — Architecture Patterns with Python examples
+    id: resource-python-15-02-open-source-cosmic-python
+    locator: Trace one use case from an acceptance-facing example through a service/domain boundary into
+      tests. Record what the code makes easy or hard to change.
+    url: https://github.com/cosmicpython/book
+    scope_triage: deferred
+  - kind: practise
+    label: No-AI product slice — turn one personal idea into a tested contract
+    id: resource-python-15-03-spec-first-vertical-slice
+    locator: Pick an idea you would normally hand to an agent. Write the brief, implement the smallest
+      end-to-end slice yourself, then ask AI only to challenge assumptions and missing cases.
+    scope_triage: deferred
+  - kind: practise
+    label: Write three lightweight architecture decision records
+    id: resource-python-15-04-decision-records
+    locator: Cover data model, dependency direction, and error contract. Each record must include a rejected
+      alternative and what evidence would change the decision.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-16-api-design-boundaries-and-refactoring
+  number: 24
+  title: Optional - Readable APIs, boundaries, and refactoring
+  status: pending
+  objective: Broader API design/refactoring projects remain optional after the language reading. Design
+    small unsurprising Python APIs, keep dependencies pointing inward, and improve existing code through
+    behavior-preserving, test-guarded refactoring.
+  done_when:
+  - A working module is refactored through small commits with no behavior change until an explicit contract
+    change is introduced.
+  - The public API has typed signatures, stable errors, documented ownership/mutation, narrow dependencies,
+    and consumer-focused examples.
+  - A self-review explains naming, abstraction level, compatibility, cohesion, coupling, and why each
+    new type or layer earns its cost.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Open-source reading lab — HTTPX public API
+    id: resource-python-16-01-open-source-httpx-api
+    locator: Trace one simple Client request from the public method in httpx/_client.py into transport
+      behavior and tests. Note sync/async symmetry, context ownership, errors, and what remains private.
+    url: https://github.com/encode/httpx
+    scope_triage: deferred
+  - kind: read
+    label: Effective Python — interfaces, composition, and maintainability
+    id: resource-python-16-02-effective-python
+    source_id: source-slatkin-effective-python
+    locator: Use the locally mapped items on functions, classes, interfaces, and collaboration.
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: deferred
+  - kind: practise
+    label: Refactoring lab — characterize, simplify, and preserve behavior
+    id: resource-python-16-03-characterization-refactor
+    locator: Take a deliberately tangled but working module. Write characterization tests, split responsibilities,
+      remove one accidental abstraction, and review the final diff as if it were a pull request.
+    scope_triage: deferred
+  - kind: practise
+    label: Consumer test — use the package from outside its source tree
+    id: resource-python-16-04-consumer-test
+    locator: Write a short script using only the published API. Any need to reach into internals becomes
+      an API-design observation, not an immediate export.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-17-concurrency-async-and-resource-lifetimes
+  number: 25
+  title: Optional - Concurrency, async, cancellation, and resource lifetimes
+  status: pending
+  objective: Async/concurrency and resource-lifetime labs are outside the chosen scope. Choose threads,
+    processes, asyncio, native parallelism, or sequential execution from the workload and correctness
+    requirements; make cancellation, cleanup, backpressure, and ownership explicit.
+  done_when:
+  - One bounded workload has sequential, threaded, and async or process-oriented versions with a written
+    choice based on evidence.
+  - Tests cover timeout, cancellation, partial failure, cleanup, ordering, backpressure, and repeated
+    execution without leaked tasks or resources.
+  - A resource-lifetime diagram identifies who creates, owns, closes, and observes every client, task,
+    executor, queue, and temporary artifact.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Python asyncio — tasks, cancellation, timeouts, and synchronization
+    id: resource-python-17-01-asyncio-docs
+    locator: Focus on task lifecycle, TaskGroup, cancellation, timeouts, queues, and running blocking
+      work.
+    url: https://docs.python.org/3/library/asyncio.html
+    scope_triage: deferred
+  - kind: reference
+    label: Python concurrent.futures
+    id: resource-python-17-02-concurrent-futures
+    locator: ThreadPoolExecutor, ProcessPoolExecutor, futures, shutdown, and deadlock warnings.
+    url: https://docs.python.org/3/library/concurrent.futures.html
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab — HTTPX sync/async clients
+    id: resource-python-17-03-open-source-httpx-sync-async
+    locator: Compare Client and AsyncClient on one narrow request path. Trace context-manager cleanup,
+      transports, timeouts, and tests; do not infer that async is faster for CPU work.
+    url: https://github.com/encode/httpx
+    scope_triage: deferred
+  - kind: practise
+    label: Build a bounded, cancellable work pipeline
+    id: resource-python-17-04-bounded-concurrency-lab
+    locator: Start from a sequential oracle. Add bounded concurrency, inject slow and failing jobs, prove
+      cleanup, and measure throughput and overhead before choosing the final design.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path
+- id: stage-python-18-errors-observability-and-operational-debugging
+  number: 26
+  title: Optional - Errors, observability, and operational debugging
+  status: pending
+  objective: Replaced on the required path by ordinary exceptions/logging reading; operational labs are
+    optional. Design errors and telemetry so another engineer can understand what failed, where, for which
+    input and operation, without reproducing the entire process.
+  done_when:
+  - A service or pipeline has an error taxonomy, preserved exception causes, stable user-facing messages,
+    and structured events at boundaries rather than noisy internal spam.
+  - Failure-injection tests prove correlation context, cleanup, retry/refusal behavior, and that sensitive
+    values are not logged.
+  - A cold debugging exercise reaches the cause from logs, traceback, metrics/timing, and a minimal reproducer;
+    the evidence chain is recorded.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Python exceptions and exception chaining
+    id: resource-python-18-01-exceptions-docs
+    locator: Raising, handling, cleanup, user-defined exceptions, and explicit chaining.
+    url: https://docs.python.org/3/tutorial/errors.html
+    scope_triage: deferred
+  - kind: read
+    label: Python logging cookbook
+    id: resource-python-18-02-logging-docs
+    locator: Context, configuration, handlers, concurrency, and library/application responsibilities.
+    url: https://docs.python.org/3/howto/logging-cookbook.html
+    scope_triage: deferred
+  - kind: read
+    label: Open-source reading lab — structlog
+    id: resource-python-18-03-open-source-structlog
+    locator: Trace one event dictionary through processors into a renderer and corresponding tests. Identify
+      pure transformations, context binding, exception handling, and performance choices.
+    url: https://github.com/hynek/structlog
+    scope_triage: deferred
+  - kind: practise
+    label: Operational lab — inject five failures and diagnose from evidence
+    id: resource-python-18-04-failure-injection
+    locator: Cover invalid input, dependency failure, timeout/cancellation, corrupted state, and programmer
+      bug. Define which are retried, refused, wrapped, or allowed to crash.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md
+  knowledge_node_id: knowledge-python-optional-former-path

@@ -1,0 +1,29 @@
+id: unit-job-python-read-stratum
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Read Stratum using the Python topics
+order: 16
+scope: Follow the public entry point through graph construction, orchestration, operation
+  classes, rewrite helpers, registration and runtime. Read Python constructs in context;
+  optimizer design, proofs and rebuilding the system are optional background.
+status: ready
+scope_sources:
+- source_id: source-stratum-paper
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-read-stratum/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-read-stratum
+knowledge_map:
+  summary: Follow the public entry point through graph construction, orchestration,
+    operation classes, rewrite helpers, registration and runtime. Read Python constructs
+    in context; optimizer design, proofs and rebuilding the system are optional background.
+  nodes:
+  - id: knowledge-python-read-stratum
+    title: Read Stratum using the Python topics
+    summary: Follow the public entry point through graph construction, orchestration,
+      operation classes, rewrite helpers, registration and runtime. Read Python constructs
+      in context; optimizer design, proofs and rebuilding the system are optional
+      background.

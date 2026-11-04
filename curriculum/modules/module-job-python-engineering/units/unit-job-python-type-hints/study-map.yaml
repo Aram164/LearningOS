@@ -1,0 +1,97 @@
+id: study-map-job-python-type-hints
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-type-hints
+status: ready
+current_stage: stage-python-type-hints
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-type-hints
+  number: 1
+  title: Type hints
+  status: pending
+  objective: 'Read and write baseline-compatible annotations: built-in generics, unions,
+    Callable, Iterable, TypeVar, generic classes, forward references and Protocol.
+    Hints do not enforce values at runtime.'
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-type-hints-fp-1
+    route_id: route-python-type-hints-fp-1
+    kind: read
+    label: Fluent Python 2e - Type hints
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 284-326, 571-574. Use the explanations and
+      annotation examples; installing/running a type checker is optional. Skip the
+      outdated annotation-runtime forecast on pp567-570; use the official modernisation
+      guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
+      with Python 3.11, not the 3.12 type-parameter syntax.
+    angle: The main explanation and worked examples for type hints.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Use the explanations and
+      annotation examples; installing/running a type checker is optional. Skip the
+      outdated annotation-runtime forecast on pp567-570; use the official modernisation
+      guide instead. On p574 stop before Variance. Use TypeVar/Generic forms compatible
+      with Python 3.11, not the 3.12 type-parameter syntax.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-type-hints-typing-docs-2
+    route_id: route-python-type-hints-typing-docs-1
+    kind: read
+    label: Modernizing superseded typing features
+    source_id: source-typing-docs
+    locator: 'Page "Modernizing superseded typing features": Introduction, built-in
+      generics, union syntax, TypeAlias and TypeVar notes; check the stated minimum
+      version for each feature'
+    angle: Reconciles book-era typing with current recommendations and a 3.11 minimum.
+    angle_detail: Read newer syntax for recognition only when its minimum is above
+      3.11. The future annotations import changes annotation handling, not runtime
+      checking.
+    scope_triage: required-now
+    url: https://typing.python.org/en/latest/guides/modernizing.html
+  - id: resource-python-type-hints-python-docs-3
+    route_id: route-python-type-hints-python-docs-1
+    kind: reference
+    label: typing reference
+    source_id: source-python-docs
+    locator: 'Page "typing reference": Any, Callable, Iterable, TypeVar, Generic,
+      Protocol, TYPE_CHECKING and get_type_hints'
+    angle: Authority for the annotation forms the project can support.
+    angle_detail: Reference only; no exhaustive API study.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/typing.html
+  - id: resource-python-type-hints-typing-docs-4
+    route_id: route-python-type-hints-typing-docs-2
+    kind: reference
+    label: Typing - Generics
+    source_id: source-typing-docs
+    locator: 'Page "Typing - Generics": Generic classes and TypeVar; distinguish Python
+      3.11 forms from 3.12+ syntax'
+    angle: A version-aware companion to the book's Generic examples.
+    angle_detail: Reference only; no variance proofs or checker setup.
+    scope_triage: reference-only
+    url: https://typing.python.org/en/latest/reference/generics.html
+  - id: resource-python-type-hints-pointer-1
+    kind: reference
+    label: mypy - Type hints cheat sheet
+    locator: Built-in types, collections, functions, classes and protocols; stop before
+      advanced examples
+    angle: Read-only connection to real Python code.
+    angle_detail: Optional syntax lookup. Reading this does not require installing
+      or adopting mypy.
+    scope_triage: reference-only
+    url: https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-type-hints/stages/stage-python-type-hints/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-type-hints

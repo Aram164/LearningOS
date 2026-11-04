@@ -1,0 +1,27 @@
+id: unit-job-python-iterators-with
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Iterators, generators and with
+order: 9
+scope: Iterable versus iterator, one-shot consumption, generator functions and expressions,
+  lazy composition, yield from and synchronous context managers.
+status: ready
+scope_sources:
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-iterators-with/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-iterators-with
+knowledge_map:
+  summary: Iterable versus iterator, one-shot consumption, generator functions and
+    expressions, lazy composition, yield from and synchronous context managers.
+  nodes:
+  - id: knowledge-python-iterators-with
+    title: Iterators, generators and with
+    summary: Iterable versus iterator, one-shot consumption, generator functions and
+      expressions, lazy composition, yield from and synchronous context managers.

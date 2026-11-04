@@ -1,0 +1,27 @@
+id: unit-job-python-errors-logging
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Errors and logging
+order: 12
+scope: Exception propagation, narrow handlers, cleanup, chaining, application exception
+  classes and library logging configuration.
+status: ready
+scope_sources:
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-errors-logging/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-errors-logging
+knowledge_map:
+  summary: Exception propagation, narrow handlers, cleanup, chaining, application
+    exception classes and library logging configuration.
+  nodes:
+  - id: knowledge-python-errors-logging
+    title: Errors and logging
+    summary: Exception propagation, narrow handlers, cleanup, chaining, application
+      exception classes and library logging configuration.

@@ -1,0 +1,103 @@
+id: study-map-job-python-interfaces-dispatch
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-interfaces-dispatch
+status: ready
+current_stage: stage-python-interfaces-dispatch
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-interfaces-dispatch
+  number: 1
+  title: Interfaces and dispatch
+  status: pending
+  objective: Duck typing, abstract base classes, structural protocols, isinstance
+    tradeoffs and singledispatch registries. Separate interface promises from inheritance
+    and registration.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-interfaces-dispatch-fp-1
+    route_id: route-python-interfaces-dispatch-fp-1
+    kind: read
+    label: Fluent Python 2e - Interfaces and dispatch
+    source_id: source-fluent-python
+    locator: Fluent Python 2e, PDF pp. 462-470, 472-488, 496-506, 354-358. Stop before
+      virtual subclass registration on p490; no custom subclass hooks or metaclasses.
+      Read Protocol as interface documentation first; runtime checks do not prove
+      all type contracts.
+    angle: The main explanation and worked examples for interfaces and dispatch.
+    angle_detail: Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Stop before virtual subclass
+      registration on p490; no custom subclass hooks or metaclasses. Read Protocol
+      as interface documentation first; runtime checks do not prove all type contracts.
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-interfaces-dispatch-ep-2
+    route_id: route-python-interfaces-dispatch-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 38, PDF pp. 175-178; Item 43, PDF pp.
+      198-204; start at each named item heading and stop before the following item
+      heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-interfaces-dispatch-python-docs-3
+    route_id: route-python-interfaces-dispatch-python-docs-1
+    kind: reference
+    label: abc reference
+    source_id: source-python-docs
+    locator: 'Page "abc reference": ABC and abstractmethod examples only'
+    angle: Look up the standard ABC declaration used by real classes.
+    angle_detail: Skip ABCMeta machinery, __subclasshook__ and virtual subclasses.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/library/abc.html
+  - id: resource-python-interfaces-dispatch-python-docs-4
+    route_id: route-python-interfaces-dispatch-python-docs-2
+    kind: read
+    label: functools.singledispatch
+    source_id: source-python-docs
+    locator: 'Page "functools.singledispatch": singledispatch: definition, register
+      examples and dispatch on first argument'
+    angle: The official counterpart to the book's dispatch example.
+    angle_detail: Read use and registration; no exhaustive dispatcher internals.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/library/functools.html#functools.singledispatch
+  - id: resource-python-interfaces-dispatch-typing-docs-5
+    route_id: route-python-interfaces-dispatch-typing-docs-1
+    kind: read
+    label: Typing - Protocols
+    source_id: source-typing-docs
+    locator: 'Page "Typing - Protocols": Simple user-defined protocols; protocol members;
+      structural subtyping'
+    angle: Current guidance for describing an interface without imposing inheritance.
+    angle_detail: Read the ordinary examples. Advanced protocol variance and runtime
+      introspection are outside scope.
+    scope_triage: helpful-now
+    url: https://typing.python.org/en/latest/reference/protocols.html
+  - id: resource-python-interfaces-dispatch-pointer-1
+    kind: reference
+    label: Stratum - three dispatch styles
+    locator: 'Stratum/stratum/optimizer/logical/_numeric_ops.py: process; physical/_expressions.py:
+      singledispatch; physical/_lowering.py: lowering_rule'
+    angle: Read-only connection to real Python code.
+    angle_detail: Compare branch dispatch, singledispatch and decorator registration
+      by reading existing code.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-interfaces-dispatch/stages/stage-python-interfaces-dispatch/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-interfaces-dispatch

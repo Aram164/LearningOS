@@ -1,0 +1,79 @@
+id: study-map-job-python-modules-imports
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-modules-imports
+status: ready
+current_stage: stage-python-modules-imports
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-modules-imports
+  number: 1
+  title: Modules and imports
+  status: pending
+  objective: Modules, packages, relative imports, public APIs, import-time side effects
+    and circular dependency repair. Import-time registration links back to decorators.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-modules-imports-ep-1
+    route_id: route-python-modules-imports-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 85, PDF pp. 424-429; Item 86, PDF pp.
+      429-431; Item 88, PDF pp. 436-441; start at each named item heading and stop
+      before the following item heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-modules-imports-python-docs-2
+    route_id: route-python-modules-imports-python-docs-1
+    kind: read
+    label: Python tutorial - Modules
+    source_id: source-python-docs
+    locator: 'Page "Python tutorial - Modules": Sections 6.1-6.4; package and import
+      examples; skip 6.1.3 Compiled Python files'
+    angle: A clear package model before circular-import advice.
+    angle_detail: Read ordinary module/package use; skip bytecode-file inspection
+      and import tracing.
+    scope_triage: required-now
+    url: https://docs.python.org/3.11/tutorial/modules.html
+  - id: resource-python-modules-imports-python-docs-3
+    route_id: route-python-modules-imports-python-docs-2
+    kind: reference
+    label: Python import reference
+    source_id: source-python-docs
+    locator: 'Page "Python import reference": 5.2 Packages; 5.4.2 Submodules; 5.7
+      Package Relative Imports'
+    angle: Look up a package/import rule only when the tutorial leaves a question.
+    angle_detail: Reference only. No loaders, finders, import hooks or trace instrumentation.
+    scope_triage: reference-only
+    url: https://docs.python.org/3.11/reference/import.html
+  - id: resource-python-modules-imports-python-docs-4
+    route_id: route-python-modules-imports-python-docs-3
+    kind: read
+    label: unittest.mock - Where to patch
+    source_id: source-python-docs
+    locator: 'Page "unittest.mock - Where to patch": Where to patch section'
+    angle: Patching replaces the name used by the caller, following ordinary module
+      bindings.
+    angle_detail: Read after modules and revisit while reading mocks in tests. Both
+      placements point to the same page.
+    scope_triage: helpful-now
+    url: https://docs.python.org/3.11/library/unittest.mock.html#where-to-patch
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-modules-imports/stages/stage-python-modules-imports/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-modules-imports

@@ -1,0 +1,77 @@
+id: study-map-job-python-functions-scope
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-functions-scope
+status: ready
+current_stage: stage-python-functions-scope
+source_plan:
+  path: work/active/python-plan-2026-11-02/outputs/coverage-audit.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-functions-scope
+  number: 1
+  title: Functions, scope and closures
+  status: pending
+  objective: Functions as values, callables, positional and keyword arguments, defaults,
+    partial application, lexical scope and nonlocal. Read closure behaviour without
+    inspecting its implementation.
+  done_when:
+  - Read the selected material within the stated section boundaries; no exercise or
+    mastery assessment is required.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-python-functions-scope-fp-1
+    route_id: route-python-functions-scope-fp-1
+    kind: read
+    label: Fluent Python 2e - Functions, scope and closures
+    source_id: source-fluent-python
+    locator: 'Fluent Python 2e, PDF pp. 262-279, 338-340, 342-343, 345-347. Ch 9:
+      p338 begin at Variable Scope Rules. On p340 stop before Comparing Bytecodes;
+      skip the whole sidebar through p341. Read the closure prose and examples on
+      pp342-343 and only the diagram on p344 if helpful: skip Inspecting the returned
+      averager object, __code__, __closure__, co_freevars and cells. Resume at The
+      nonlocal Declaration p345; on p347 stop before Implementing a Simple Decorator.
+      No disassembly.'
+    angle: The main explanation and worked examples for functions, scope and closures.
+    angle_detail: 'Read the specified pages and the explicit stop/skip boundaries.
+      Examples are reading material, not assigned tasks. Ch 9: p338 begin at Variable
+      Scope Rules. On p340 stop before Comparing Bytecodes; skip the whole sidebar
+      through p341. Read the closure prose and examples on pp342-343 and only the
+      diagram on p344 if helpful: skip Inspecting the returned averager object, __code__,
+      __closure__, co_freevars and cells. Resume at The nonlocal Declaration p345;
+      on p347 stop before Implementing a Simple Decorator. No disassembly.'
+    scope_triage: required-now
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: resource-python-functions-scope-ep-2
+    route_id: route-python-functions-scope-ep-1
+    kind: read
+    label: Effective Python 2e - selected items
+    source_id: source-slatkin-effective-python
+    locator: Effective Python 2e (2020), Item 21, PDF pp. 106-110; Item 22, PDF pp.
+      110-113; Item 23, PDF pp. 113-117; Item 25, PDF pp. 120-125; Item 38, PDF pp.
+      175-178; start at each named item heading and stop before the following item
+      heading, even on a shared page.
+    angle: Short choices and failure cases that complement the longer explanation.
+    angle_detail: These are direct 2nd-edition item numbers from the full local PDF,
+      not the 3rd-edition sample. Read the named items only.
+    scope_triage: helpful-now
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+  - id: resource-python-functions-scope-pointer-1
+    kind: reference
+    label: Stratum - functions passed as values
+    locator: 'Stratum/stratum/optimizer/logical/rewrites/_numeric.py: match_two_op_chain;
+      optimizer/_op_utils.py: rewrite_pass'
+    angle: Read-only connection to real Python code.
+    angle_detail: Follow the function arguments and returned callable, using the function
+      chapter as the explanation.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-functions-scope/stages/stage-python-functions-scope/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-python-functions-scope

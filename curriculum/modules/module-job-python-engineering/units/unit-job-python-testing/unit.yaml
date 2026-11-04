@@ -1,0 +1,32 @@
+id: unit-job-python-testing
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Reading Python tests
+order: 13
+scope: Test structure, assertions, fixture scope and cleanup, parametrisation, monkeypatch,
+  tmp_path, exception assertions, mocks, pdb and profiling as debugging tools. No
+  test-writing exercises.
+status: ready
+scope_sources:
+- source_id: source-pytest-docs
+  authority: reference
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-testing/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-testing
+knowledge_map:
+  summary: Test structure, assertions, fixture scope and cleanup, parametrisation,
+    monkeypatch, tmp_path, exception assertions, mocks, pdb and profiling as debugging
+    tools. No test-writing exercises.
+  nodes:
+  - id: knowledge-python-testing
+    title: Reading Python tests
+    summary: Test structure, assertions, fixture scope and cleanup, parametrisation,
+      monkeypatch, tmp_path, exception assertions, mocks, pdb and profiling as debugging
+      tools. No test-writing exercises.

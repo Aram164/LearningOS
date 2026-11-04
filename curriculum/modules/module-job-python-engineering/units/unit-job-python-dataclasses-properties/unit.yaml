@@ -1,0 +1,29 @@
+id: unit-job-python-dataclasses-properties
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Dataclasses, properties, enums and slots
+order: 6
+scope: Data records, field factories, post-init, class variables, validated attributes,
+  Enum and the practical constraints of slots.
+status: ready
+scope_sources:
+- source_id: source-fluent-python
+  authority: reference
+- source_id: source-python-docs
+  authority: reference
+- source_id: source-slatkin-effective-python
+  authority: reference
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-dataclasses-properties/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-dataclasses-properties
+knowledge_map:
+  summary: Data records, field factories, post-init, class variables, validated attributes,
+    Enum and the practical constraints of slots.
+  nodes:
+  - id: knowledge-python-dataclasses-properties
+    title: Dataclasses, properties, enums and slots
+    summary: Data records, field factories, post-init, class variables, validated
+      attributes, Enum and the practical constraints of slots.
