@@ -51,19 +51,44 @@ Take the backup:
    installer in dry-run mode with projection, validation, and restored UI
    bundle smoke checks.
 
+Bind this drill's entry count: the paired UI's allowlisted source inventory
+changes with its commit. Later reads and verification must agree with that
+same count; the inventory check below also requires all three roots and the
+declared plugin set.
+
 ```scrut {interpolated: true}
-$ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" > "$TMPDIR/backup/summary.json" && eval "$(cat "$TMPDIR/backup/summary.json" | $H/los-bind BACKUP_AGGREGATE '$.aggregate_sha256')" && cat "$TMPDIR/backup/summary.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
+$ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" > "$TMPDIR/backup/summary.json" && eval "$(cat "$TMPDIR/backup/summary.json" | $H/los-bind BACKUP_AGGREGATE '$.aggregate_sha256')" && eval "$(cat "$TMPDIR/backup/summary.json" | $H/los-bind BACKUP_ENTRIES '$.entries')" && cat "$TMPDIR/backup/summary.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
 True
 ['core', 'materials', 'ui']
-521
+$BACKUP_ENTRIES
 $BACKUP_AGGREGATE
+```
+
+## The inventory covers all three roots and the declared plugin set
+
+```scrut
+$ $LOS_REPO/.venv/bin/python - <<'PY'
+> import json, os
+> from pathlib import Path
+> backup = Path(os.environ["TMPDIR"]) / "backup"
+> manifest = json.loads((backup / "manifest.json").read_text())
+> inventory = {(entry["root"], entry["path"]) for entry in manifest["entries"]}
+> required = {("core", "system/contracts/backup-roots.yaml"), ("materials", "source-demo-book/book.pdf"), ("ui", "src/main.ts"), ("ui", "plugin-assets.json")}
+> assets = json.loads((backup / "ui-src/plugin-assets.json").read_text())
+> required.update(("ui", f"plugin/{name}") for name in assets["shipped"])
+> assert required <= inventory, sorted(required - inventory)
+> assert {root for root, _ in inventory} == {"core", "materials", "ui"}
+> assert len(manifest["entries"]) == int(os.environ["BACKUP_ENTRIES"])
+> print("three roots and declared plugin assets included")
+> PY
+three roots and declared plugin assets included
 ```
 
 ## The manifest binds data to Core's commit
 
 ```scrut {interpolated: true}
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
-521
+$BACKUP_ENTRIES
 $BACKUP_AGGREGATE
 63
 True None
@@ -73,7 +98,7 @@ True None
 
 ```scrut {interpolated: true}
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
-521
+$BACKUP_ENTRIES
 ['core', 'materials', 'ui']
 $BACKUP_AGGREGATE
 ```
@@ -115,9 +140,9 @@ copies match
 
 ## Verify the restore without executing restored code
 
-```scrut
+```scrut {interpolated: true}
 $ los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only
-{"ok":true,"checked":521,"issues":[]}
+{"ok":true,"checked":$BACKUP_ENTRIES,"issues":[]}
 ```
 
 ## Verify the restore in full
@@ -139,10 +164,10 @@ True
 
 ## A tampered restored byte fails the drill
 
-```scrut
+```scrut {interpolated: true}
 $ printf 'tamper' >> "$TMPDIR/backup/restored-materials/source-demo-book/book.pdf" && los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only >"$TMPDIR/backup/tamper-out.txt" 2>&1; echo "exit=$?"; cat "$TMPDIR/backup/tamper-out.txt"
 exit=1
-{"ok":false,"checked":521,"issues":[{"root":"materials","path":"source-demo-book/book.pdf","issue":"checksum-mismatch"}]}
+{"ok":false,"checked":$BACKUP_ENTRIES,"issues":[{"root":"materials","path":"source-demo-book/book.pdf","issue":"checksum-mismatch"}]}
 ```
 
 ## The fixture itself still validates
