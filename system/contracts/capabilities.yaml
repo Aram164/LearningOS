@@ -1052,6 +1052,16 @@ forbidden:
 - repository.write-arbitrary
 - artifact.delete
 domain_capabilities:
+  migration.python-topic-sessions-v63:
+    writes:
+    - curriculum/modules/module-job-python-engineering/**
+    - curriculum/resume.yaml
+    - operations/migrations/python-topic-sessions-v63/**
+    invariants:
+    - one-shot-through-data-contract-v63
+    - exact-reviewed-plan-snapshot-and-revisions
+    - sixteen-existing-topics-and-ten-deferred-stages-preserved
+    - original-byte-backups-and-shared-transaction-recovery
   migration.projects-to-modules-v62:
     writes:
     - projects/registry/project-bachelor-thesis.yaml

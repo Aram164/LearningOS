@@ -46,6 +46,7 @@ ENTRYPOINTS = (
     "los.py",
     "manifest_contract.py",
     "migrations/projects_to_modules_v62.py",
+    "migrations/python_topic_sessions_v63.py",
     "material_text.py",
     "material_toc.py",
     "material_summarize.py",

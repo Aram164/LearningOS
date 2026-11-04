@@ -90,6 +90,7 @@ contract is newer than the last generation it understands.
 | `job_quarantine_collapse.py` | compatibility planner; direct apply always refused | The gateway-bound legacy Job capability reuses its plan and before-image verification. |
 | `summaries_to_notes_v1.py` | one-shot; direct operator execution through v35 | Freeze, map, and migrate legacy summary-cache entries to durable analysis notes via note.analysis.save; refuses changed inputs and retires by lifecycle after v35. |
 | `projects_to_modules_v62.py` | one-shot through v62; dry-run default | Exact reviewed thesis consolidation through the application controller, declared migration authority and shared transaction receipt/recovery. |
+| `python_topic_sessions_v63.py` | one-shot through v63; dry-run default | Rehomes the sixteen existing Python topics into individual sessions, preserves ten deferred stages in a paused history unit, and records exact before-images through the shared transaction engine. |
 
 When the current contract needs a data rewrite, add a new migration with a new
 identifier and supported-through declaration.  Do not revive or broaden a

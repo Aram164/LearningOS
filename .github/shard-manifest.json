@@ -122,6 +122,7 @@
    "tests/test_policy_query.py",
    "tests/test_projection_readiness.py",
    "tests/test_projects_to_modules_migration.py",
+   "tests/test_python_sessions_migration.py",
    "tests/test_read_session.py",
    "tests/test_related.py",
    "tests/test_render.py",
