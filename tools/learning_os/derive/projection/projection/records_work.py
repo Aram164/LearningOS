@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.domain.snapshot import Repo
@@ -21,9 +22,12 @@ def project_workspaces(repo: Repo, revision: Revision) -> list[dict]:
             "status": ws.status, "standing": ws.standing, "archived": ws.archived,
             "deadline": ws.meta.get("deadline"),
             # interface fields: the two sections every surface wants to show.
-            # Parsed HERE so no interface ever regexes CONTEXT.md again.
-            "objective": _first_para(ws.section("Objective"))[:400],
-            "next_action": _first_para(ws.section("Next Action"))[:400],
+            # Parsed HERE so no interface ever regexes CONTEXT.md again. Bounded
+            # with an explicit marker, never silently: the authored paragraph in
+            # CONTEXT.md stays the complete canonical text, and `inspect` reads
+            # it whole; this projection carries a marked excerpt for display.
+            "objective": _excerpt(_first_para(ws.section("Objective")), 1200),
+            "next_action": _excerpt(_first_para(ws.section("Next Action")), 1200),
             "concepts": sorted(ws.meta.get("concepts", []) or []),
             "notes": sorted(ws.meta.get("notes", []) or []),
             "sources": sorted(ws.meta.get("sources", []) or []),

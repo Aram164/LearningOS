@@ -572,6 +572,66 @@ def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
     assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
 
 
+def test_excerpt_cuts_visibly_never_silently():
+    """The shared excerpt helper marks every cut and cuts at a boundary."""
+    from learning_os.derive.projection.common import excerpt
+
+    whole = " ".join(["Alpha beta gamma delta epsilon."] * 20)
+    assert excerpt(whole, 1200) == whole  # under the limit: passes through whole
+    long = " ".join(["Alpha beta gamma delta epsilon."] * 60)
+    cut = excerpt(long, 700)
+    assert cut.endswith("…") and long.startswith(cut[:-1])
+    # The dropped remainder starts at a word boundary: sentence cut when one
+    # lands past half the limit, word fallback otherwise — never mid-word.
+    assert long[len(cut) - 1] == " "
+    word_text = " ".join(["word"] * 300)  # no sentence punctuation at all
+    word_cut = excerpt(word_text, 100)
+    assert word_cut.endswith("…") and word_text.startswith(word_cut[:-1])
+    assert word_text[len(word_cut) - 1] == " "
+
+
+def test_brief_next_action_whole_under_the_bound_and_marked_over_it(mini_repo):
+    """Regression 2026-11-05: the projection sliced next_action/objective with
+    a silent [:400], so the brief's one operative text ended mid-sentence with
+    a dangling comma and no marker. Under the bound the whole authored
+    paragraph is delivered; over it the cut is explicit and sentence-aligned."""
+    add_curriculum(mini_repo)
+    (mini_repo / "curriculum/resume.yaml").unlink()
+    long_action = (
+        "Calibrate closed book across the Übung Themen list, build the "
+        "six-class error ledger, and mark every later cluster full-pass, "
+        "repair-only or cold-skip from evidence, and place the AGNES "
+        "registration-window check, sourced from the module record, on the "
+        "execution checklist, then re-run the ledger review with the weakest "
+        "cluster as the first repair-only candidate. Do not read the "
+        "references before the session."
+    )
+    over_action = (
+        "Confirm the medical scope and the compute budget with the supervisor "
+        "before the first pilot. "
+        "Keep final test scores reserved until the adaptation is frozen. " * 9
+    )
+    for name, action in (("workspace-long", long_action),
+                         ("workspace-over", over_action)):
+        path = mini_repo / f"work/active/{name}/CONTEXT.md"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            f"---\nid: {name}\ntype: workspace\ntitle: T {name}\n"
+            f"status: active\n---\n\n## Objective\n\nObjective for {name}.\n\n"
+            f"## Next Action\n\n{action}\n", encoding="utf-8")
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    options = {row["workspace_id"]: row["next_action"]
+               for row in json.loads(brief.stdout)["recorded_options"]}
+    assert len(long_action) > 400  # the old silent cut would have clipped this
+    assert options["workspace-long"] == long_action
+    whole = " ".join(over_action.split())
+    cut = options["workspace-over"]
+    assert len(whole) > 1200
+    assert cut.endswith("…") and whole.startswith(cut[:-1])
+    assert whole[len(cut) - 1] == " "
+
+
 def test_brief_pointer_invalid_matches_missing(mini_repo):
     add_curriculum(mini_repo)
     pointer_path = mini_repo / "curriculum/resume.yaml"

@@ -252,3 +252,21 @@ def first_para(text: str | None) -> str:
         if block:
             return block
     return ""
+
+
+def excerpt(text: str, limit: int) -> str:
+    """Cut ``text`` to at most ``limit`` codepoints, visibly.
+
+    Cuts at the last sentence boundary inside the limit when one lands past
+    half of it, else at the last word boundary, and always appends ``…`` when
+    anything is dropped. The marker is the contract: a reader of a projected
+    field can tell a cut happened, so no surface ever loses text silently.
+    Text at or under the limit passes through unchanged.
+    """
+    if len(text) <= limit:
+        return text
+    prefix = text[:limit]
+    sentences = [match.end() for match in re.finditer(r"[.!?](?:\s|$)", prefix)
+                 if match.end() >= limit // 2]
+    return (prefix[:sentences[-1]].rstrip() if sentences else
+            prefix.rsplit(" ", 1)[0]) + "…"

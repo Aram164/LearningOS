@@ -19,6 +19,7 @@ from learning_os.derive.learning_runtime import (
     read_stage_results,
     stage_results_for,
 )
+from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.derive.projection.resume_dossier import ResumeDossierError, build_resume_dossier
@@ -704,14 +705,9 @@ def _recorded_aims(repo, module_id: str, unit_id: str) -> list[tuple[str, str, s
     aims: list[tuple[str, str, str]] = []
 
     def excerpt(value: str, limit: int) -> str:
-        value = value.replace("**", "").replace("`", "")
-        if len(value) <= limit:
-            return value
-        prefix = value[:limit]
-        sentences = [match.end() for match in re.finditer(r"[.!?](?:\s|$)", prefix)
-                     if match.end() >= limit // 2]
-        return (prefix[:sentences[-1]].rstrip() if sentences else
-                prefix.rsplit(" ", 1)[0]) + "…"
+        # display surface: drop markdown emphasis, then cut with the shared
+        # marked sentence-boundary excerpt so the cut idiom exists once.
+        return _excerpt(value.replace("**", "").replace("`", ""), limit)
 
     if repo.coordination is not None:
         priority = _first_para(repo.coordination.section("Priorities"))
