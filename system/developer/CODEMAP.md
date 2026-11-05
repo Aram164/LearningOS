@@ -52,7 +52,11 @@ invent an unguarded persistence path. Interfaces use the CLI, never Python inter
 `tests/architecture/` owns refusal-site, ownership and ratchet inventories.
 ADR-018 explains those gates; ADR-019 records this documentation split.
 The import graph may contain reciprocal component dependencies inside one layer;
-that does not imply a cycle among individual Python modules.
+that does not imply a cycle among individual Python modules. That sentence is
+not an assertion but a gate: `tools/code_reachability.py` builds the
+module-level direct-import graph and rejects any strongly-connected component
+with more than one node (`make code-check`, CI), and
+`tests/test_code_reachability.py` pins the mechanism itself.
 
 ## Cross-cutting concerns
 
