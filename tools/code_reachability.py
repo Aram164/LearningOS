@@ -54,6 +54,7 @@ ENTRYPOINTS = (
     "move_map.py",
     "normalise_material_uris.py",
     "plan_write_audit.py",
+    "receipt_drift.py",
     "refresh_amls_fixture.py",
     "release_pair_receipt.py",
     "schema_contract.py",

@@ -18,7 +18,7 @@ PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYT
 # small machine.
 WORKERS ?= 4
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired test-parallel bench lint code-check typecheck all setup setup-lean scrut hooks garden status plan-check system-check stress clean-derived commit-check
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired test-parallel bench lint code-check typecheck all setup setup-lean scrut hooks garden status plan-check receipt-drift system-check stress clean-derived commit-check
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -46,6 +46,8 @@ help:
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
 	@echo "make clean-derived - sweep unreferenced derived-state blobs (disposable cache)"
 	@echo "make plan-check - verify a curriculum revision (focused tests, no UI build)"
+	@echo "make receipt-drift - report canonical files that no longer match their last"
+	@echo "                gateway receipt (hand-edit drift detector; report-only)"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
 	@echo "make all    - check + views + materials + test"
@@ -89,6 +91,11 @@ plan-check:
 	$(PY) -m pytest -q tests/test_curriculum_v2.py tests/test_unit_plan_revision.py tests/test_module_plan_warning_gate.py tests/test_vnext_boundaries.py
 	$(PY) tools/generate.py
 	git diff --check
+
+# Boundary 16's residual hand-edit hole, measured: report-only detector, not
+# a gate. Drift here is evidence to investigate, never an automatic block.
+receipt-drift:
+	$(PY) tools/receipt_drift.py
 
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"

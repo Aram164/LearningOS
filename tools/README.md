@@ -47,6 +47,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
 | `library_reconciliation.py` | read-only diagnostic | Occurrence-level reconciliation of the old resource lists against the source registry (two-pass source intake); reads only declared inputs and writes only inside its workspace, never canonical records. |
 | `plan_write_audit.py` | read-only diagnostic | Reports commit co-occurrence of plan changes and newly added receipt documents across available Git refs; it does not prove per-write gateway provenance. |
+| `receipt_drift.py` | read-only diagnostic (`make receipt-drift`) | Reports canonical plan/module files whose bytes no longer match the last gateway receipt, records under no receipt, and snapshot-chain gaps — the boundary 16 hand-edit detector; report-only, gates nothing. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
 | `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 | `affected_tests.py` | supported test tool | Maps changed files to test groups for `make test-affected`; a rerun minimizer, never a gate. |

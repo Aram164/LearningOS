@@ -48,6 +48,7 @@
    "tests/test_program_semester_update.py",
    "tests/test_projection_fidelity.py",
    "tests/test_read_suggestions.py",
+   "tests/test_receipt_drift.py",
    "tests/test_recovery_conflicts.py",
    "tests/test_resume_pointer.py",
    "tests/test_route_identity_migration.py",
