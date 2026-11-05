@@ -547,6 +547,7 @@ _PAIRED_BOUNDARY = [
     "test_arch_prose.py",
     "test_causal_resolver.py",
     "test_contract_differential.py",
+    "test_flows_pin.py",
     "test_operations_gate.py",
     "test_trace_context.py",
     "test_ui_gateway_recovery.py",

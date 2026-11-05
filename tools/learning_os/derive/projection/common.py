@@ -255,7 +255,7 @@ def first_para(text: str | None) -> str:
 
 
 def excerpt(text: str, limit: int) -> str:
-    """Cut ``text`` to at most ``limit`` codepoints, visibly.
+    """Cut ``text`` to at most ``limit`` codepoints including the marker.
 
     Cuts at the last sentence boundary inside the limit when one lands past
     half of it, else at the last word boundary, and always appends ``…`` when
@@ -265,7 +265,7 @@ def excerpt(text: str, limit: int) -> str:
     """
     if len(text) <= limit:
         return text
-    prefix = text[:limit]
+    prefix = text[:limit - 1]
     sentences = [match.end() for match in re.finditer(r"[.!?](?:\s|$)", prefix)
                  if match.end() >= limit // 2]
     return (prefix[:sentences[-1]].rstrip() if sentences else

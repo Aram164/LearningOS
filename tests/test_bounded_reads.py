@@ -588,6 +588,10 @@ def test_excerpt_cuts_visibly_never_silently():
     word_cut = excerpt(word_text, 100)
     assert word_cut.endswith("…") and word_text.startswith(word_cut[:-1])
     assert word_text[len(word_cut) - 1] == " "
+    # The marker fits inside the limit even when no word boundary exists.
+    no_space = "x" * 1500
+    assert excerpt(no_space, 100) == "x" * 99 + "…"
+    assert len(excerpt(no_space, 100)) == 100
 
 
 def test_brief_next_action_whole_under_the_bound_and_marked_over_it(mini_repo):

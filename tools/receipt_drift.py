@@ -83,15 +83,24 @@ def load_receipts(root: Path) -> tuple[list[dict], list[str]]:
     return receipts, malformed
 
 
-def last_writes(receipts: list[dict]) -> dict[str, tuple[str | None, str]]:
-    """path -> (sha256_after, receipt id), last receipt in id order winning."""
+def last_writes(receipts: list[dict]) -> tuple[dict[str, tuple[str | None, str]], int]:
+    """path -> (sha256_after, receipt id), last committed receipt winning.
+
+    Only ``status: committed`` receipts count as the last-write authority; a
+    non-committed ledger row is not yet a guarantee, and its hashes must not
+    shadow the committed ones. Returns the skipped count separately.
+    """
     last: dict[str, tuple[str | None, str]] = {}
+    skipped = 0
     for receipt in receipts:
+        if receipt.get("status") != "committed":
+            skipped += 1
+            continue
         for row in receipt.get("writes") or []:
             path = row.get("path")
             if path:
                 last[path] = (row.get("sha256_after"), str(receipt.get("id", "")))
-    return last
+    return last, skipped
 
 
 def record_files(root: Path) -> list[str]:
@@ -105,7 +114,7 @@ def record_files(root: Path) -> list[str]:
 
 def report(root: Path) -> dict:
     receipts, malformed = load_receipts(root)
-    last = last_writes(receipts)
+    last, non_committed = last_writes(receipts)
 
     drift: list[dict] = []
     for path in sorted(last):
@@ -128,6 +137,7 @@ def report(root: Path) -> dict:
 
     return {
         "receipts": len(receipts),
+        "non_committed_skipped": non_committed,
         "tracked_paths": len(last),
         "records_checked": len(record_files(root)),
         "drift": drift,
@@ -152,13 +162,17 @@ def _print(findings: dict) -> None:
     print(f"report-only: {total} finding(s); this tool gates nothing")
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path,
                         default=Path(__file__).resolve().parents[1])
     parser.add_argument("--json", action="store_true",
                         help="print the findings as JSON")
-    args = parser.parse_args()
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
     findings = report(args.root)
     if args.json:
         print(json.dumps(findings, indent=2, sort_keys=True))

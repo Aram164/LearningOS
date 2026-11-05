@@ -1,12 +1,17 @@
-"""The FLOWS.md sibling-commit pin must stay reachable in the UI checkout.
+"""The FLOWS.md sibling-commit pin must stay true against the UI checkout.
 
 FLOWS.md pins the UI boundary trace to a specific sibling commit, and before
 2026-11-05 nothing read that pin: a rewritten or garbage-collected sibling
 history could silently strand the trace with every Core gate green (the
 symbol-checked-not-behavior-checked gap). This test makes the pin
-load-bearing: it must name a commit the sibling checkout actually contains,
-and one that is an ancestor of (or equal to) its HEAD — a fast-forward keeps
-the pin true, while a rebase that drops the traced commit fails here loudly.
+load-bearing in two ways:
+
+1. The pinned commit must exist in the sibling checkout and be an ancestor
+   of (or equal to) its HEAD — a fast-forward keeps the pin true, a
+   rewritten history fails loudly.
+2. Every file the trace names must be unchanged between the pin and HEAD.
+   A change to a traced file means the trace no longer describes the UI the
+   pair ships — re-trace the boundary and move the pin deliberately.
 """
 import os
 import re
@@ -44,10 +49,11 @@ def _git(repo: Path, *args: str) -> str | None:
 def test_flows_ui_pin_is_reachable_in_the_sibling_checkout():
     if not UI_ROOT.is_dir():
         pytest.skip("no sibling obsidian-ui checkout")
-    pins = re.findall(r"at\s+UI\s+`([0-9a-f]{7,40})`",
-                      FLOWS.read_text(encoding="utf-8"))
-    assert pins, "FLOWS.md no longer names a pinned UI commit — update this test"
-    for pin in pins:
+    text = FLOWS.read_text(encoding="utf-8")
+    traces = re.findall(
+        r"traced in sibling `([^`]+)` at\s+UI `([0-9a-f]{7,40})`", text)
+    assert traces, "FLOWS.md no longer names a pinned UI trace — update this test"
+    for traced_file, pin in traces:
         kind = _git(UI_ROOT, "cat-file", "-t", pin)
         assert kind in ("commit", "tag"), (
             f"FLOWS.md pins UI {pin}, which the sibling checkout does not "
@@ -57,3 +63,12 @@ def test_flows_ui_pin_is_reachable_in_the_sibling_checkout():
         assert _git(UI_ROOT, "merge-base", "--is-ancestor", pin, "HEAD") is not None, (
             f"FLOWS.md pins UI {pin}, which is not an ancestor of the sibling "
             f"HEAD — the traced commit left the UI history; re-trace and re-pin")
+        changed = _git(UI_ROOT, "diff", "--name-only", pin, "HEAD")
+        assert changed is not None, f"git diff failed in the sibling checkout for {pin}"
+        drifted = [line for line in changed.splitlines()
+                   if line.strip() == traced_file.strip()]
+        assert not drifted, (
+            f"FLOWS.md traces sibling {traced_file} at UI {pin}, but that file "
+            f"changed between the pin and HEAD — the trace no longer describes "
+            f"the shipped UI; re-trace the boundary and move the pin "
+            f"deliberately")

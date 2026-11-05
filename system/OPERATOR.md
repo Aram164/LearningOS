@@ -99,9 +99,9 @@ with the task each one starts.
 For multi-step agent work (several dependent reads/writes), use the
 declared runner `tools/agent_run.py PLAN --root ROOT` (see
 [agent plans](procedures/agent-plans.md)); a single focused read remains a
-direct `los` call below. The runner itself is still experimental — its code
-says so, and this contract routes work through it anyway — so treat a run
-report as evidence to verify, never as settled output.
+direct `los` call below. The runner is experimental: verify a run report
+against the repository before acting on it, and never treat it as settled
+output.
 
 ## Product hierarchy
 
