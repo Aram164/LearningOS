@@ -86,6 +86,22 @@ def test_hand_edit_and_unreceipted_delete_are_drift(tmp_path):
     }
 
 
+def test_recreated_file_after_a_deletion_receipt_is_drift(tmp_path):
+    """The last receipt recorded a delete; the file is back with no receipt."""
+    path = tmp_path / "curriculum" / "modules" / "module-demo" / "units" / "unit-demo" / "study-map.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("stages: []\n", encoding="utf-8")
+    _receipt(tmp_path, "transaction-20261105-000001-001",
+             "b" * 64, "c" * 64,
+             [{"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+               "sha256_before": "a" * 64, "sha256_after": None,
+               "created": False}])
+    findings = _run(tmp_path)
+    assert len(findings["drift"]) == 1
+    assert findings["drift"][0]["note"] == \
+        "file exists but the last receipt recorded its deletion"
+
+
 def test_untracked_record_is_reported(tmp_path):
     _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
     _receipt(tmp_path, "transaction-20261105-000001-001",

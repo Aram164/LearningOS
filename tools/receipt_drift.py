@@ -115,6 +115,7 @@ def record_files(root: Path) -> list[str]:
 def report(root: Path) -> dict:
     receipts, malformed = load_receipts(root)
     last, non_committed = last_writes(receipts)
+    records = record_files(root)
 
     drift: list[dict] = []
     for path in sorted(last):
@@ -127,19 +128,24 @@ def report(root: Path) -> dict:
                               "note": "file deleted after the receipt recorded it"})
             continue
         actual = _sha256(actual_path)
-        if expected and actual != expected:
+        if expected is None:
+            drift.append({"path": path, "receipt": receipt_id,
+                          "expected": None, "actual": actual,
+                          "note": "file exists but the last receipt recorded its deletion"})
+            continue
+        if actual != expected:
             drift.append({"path": path, "receipt": receipt_id,
                           "expected": expected, "actual": actual,
                           "note": "bytes differ from the last receipt"})
 
     tracked = set(last)
-    untracked = [path for path in record_files(root) if path not in tracked]
+    untracked = [path for path in records if path not in tracked]
 
     return {
         "receipts": len(receipts),
         "non_committed_skipped": non_committed,
         "tracked_paths": len(last),
-        "records_checked": len(record_files(root)),
+        "records_checked": len(records),
         "drift": drift,
         "untracked": untracked,
         "malformed_receipts": malformed,
@@ -149,7 +155,8 @@ def report(root: Path) -> dict:
 def _print(findings: dict) -> None:
     print(f"receipts: {findings['receipts']}  "
           f"tracked paths: {findings['tracked_paths']}  "
-          f"plan/module records: {findings['records_checked']}")
+          f"plan/module records: {findings['records_checked']}  "
+          f"non-committed skipped: {findings['non_committed_skipped']}")
     for row in findings["drift"]:
         print(f"DRIFT {row['path']} — {row['note']} "
               f"(receipt {row['receipt']})")
