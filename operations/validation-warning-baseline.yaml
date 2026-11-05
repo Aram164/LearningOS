@@ -22,15 +22,15 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-10-26'
-note: Reviewed AML mock logistics and Math2 subject-repair placements; governed map
-  imports record five deliberate supporting roles without extending route coverage.
-total: 964
+recorded: '2026-11-05'
+note: 'Ratchet adopted repairs: inherited paydown since 2026-10-26 plus the HYGIENE-VIEWS
+  repair after regenerating views on codex/review-shortcomings-20261105'
+total: 574
 distinct_signatures: 32
 signatures:
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
-  count: 14
+  count: 6
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-hu-amls/units/unit-amls-l01/study-map.yaml
   count: 5
@@ -75,52 +75,52 @@ signatures:
   count: 7
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
-  count: 183
+  count: 71
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
-  count: 168
+  count: 75
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
-  count: 29
+  count: 12
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
-  count: 11
+  count: 7
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
-  count: 18
+  count: 7
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
-  count: 23
+  count: 9
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
-  count: 24
+  count: 12
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
-  count: 22
+  count: 12
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
-  count: 20
+  count: 6
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
-  count: 16
+  count: 8
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
-  count: 19
+  count: 9
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
-  count: 30
+  count: 18
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
-  count: 67
+  count: 40
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
-  count: 65
+  count: 46
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml
   count: 19
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
-  count: 87
+  count: 73
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
-  count: 14
+  count: 9
