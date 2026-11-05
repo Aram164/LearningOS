@@ -57,7 +57,12 @@ material_suffixes:
    ".mp4", ".mkv", ".mov", ".m4v", ".webm"]
 
 # Present at both levels, owned by the host rather than by us.
-ephemera: [".DS_Store", ".git", ".obsidian", ".venv", ".idea", ".smart-env"]
+# Present at both levels, owned by the host rather than by us.
+# `.zwork` is the Zwork/AutoClaw host harness's per-session state
+# (attachments, task scratch): it appears and disappears with the session
+# that created it, so declaring it as an entry would freeze a name whose
+# lifetime is not ours to govern.
+ephemera: [".DS_Store", ".git", ".obsidian", ".venv", ".idea", ".smart-env", ".zwork"]
 
 entries:
 
