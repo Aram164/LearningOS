@@ -21,18 +21,20 @@ clone, each producing counted, command-reproducible numbers; then a synthesis
 verification pass (§11) that re-ran the load-bearing commands. Counting
 conventions:
 
-- Line counts are `wc -l`. Per-family extraction vs diagnostic splits count
-  lines inside `self.err(`/`self.warn(` call spans (quote-aware balanced-paren
-  parse) as *diagnostic* lines, lines matching the extraction regex (registry
-  access, `.get`, `id_list_items`/`list_items`, `isinstance`, parsing helpers)
-  as *extraction* lines, remainder as control flow/comments/docstrings. The
-  script and commands are in the source slice; the totals and gate samples were
-  independently re-verified (§11).
+- Line counts are `wc -l`. Diagnostic lines are the lines covered by
+  `self.err(`/`self.warn(` call expressions, measured exactly with the
+  stdlib `ast` module (`Call.lineno`–`Call.end_lineno`; the full runnable
+  command and its output are in Appendix A). Extraction lines are lines
+  outside those spans matching the extraction regex stated in Appendix A.
+  The diag column is exact and machine-reproduced; the extract column is
+  method-stated and reproduces within ±4 lines total (the boundary sits in
+  three families' classifier). Emit sites and totals were independently
+  re-verified (§11).
 - Emit sites are `rg -n "self\.(err|warn)\(" <file> | wc -l`.
-- Every number in this document is reproducible from a command stated here or
-  in the referenced slice counts (Appendix A). Numbers that are design-stage
-  estimates are labelled ESTIMATE and never appear in this document — this
-  document contains only counted numbers.
+- Every counted number in this document is reproducible from a command stated
+  here or in Appendix A. One figure is a design-stage estimate and is labelled
+  as such wherever it appears: the Role-B *addition* side in §8/Q4 (machinery
+  that would be written, not machinery that exists).
 
 ## 2. The candidates and their measured size
 
@@ -55,8 +57,12 @@ owner analysis done via `lineage.py` instead).
 
 90 diagnostic sites (86 `err` / 4 `warn`) through `core.py:70-75` helpers into
 `Issue(severity, code, message, path)` (`domain/validation.py:274-283`).
-Totals: **257/672 lines (38%) build diagnostics; 223/672 (33%) locate/normalize
-references**; remainder is control flow, comments, docstrings.
+Totals: **257/672 lines (38%) build diagnostics** (exact, reproduced by the
+Appendix A command); **≈220/672 (33%) locate/normalize references** (219 by
+the published command; 223 by the slice's classifier variant — the ±4 is a
+classification boundary in three families); the remainder ≈195 is control
+flow, comments, docstrings. The per-family extract values below come from the
+slice's classifier; the Appendix command reproduces the diag column exactly.
 
 | Family (lines) | Sites | diag | extract | Classification (evidence) |
 |---|---|---|---|---|
@@ -283,7 +289,7 @@ modes removed + places-to-change reduced − integration cost honestly charged.
 | Rank | Candidate | Verdict | Reason (evidence) |
 |---|---|---|---|
 | 1 | **Reference validation (K1)** | strongest first candidate | largest bespoke bookkeeping (672 L, 90 sites), most duplicated invariants (§5 items 1–8), 50–60/90 sites plain membership, wide change surface (§6); extraction is a hybrid: declarative field-path registry fits the membership families, route/scoped/guard families keep hand-written producers |
-| 2 | **Derived-state persistence (K5, Role B)** | strongest evidenced SQL net-deletion, separately staged | Q4 answered YES with counted spans: ≈ −295 L deleted vs +131 L added (≈ **−160 L net**, range −110…−195), concentrated precisely in hand-reasoned invariant machinery; Role B is design-only in this task per §4 of the brief |
+| 2 | **Derived-state persistence (K5, Role B)** | strongest evidenced SQL net-deletion case, separately staged | Q4 answered YES: the ≈ −295 L deletion side is **counted** from existing function spans; the ≈ +131 L new-machinery side is an **ESTIMATE** (design-stage derivation, range 113–148); net ≈ **−160 L ESTIMATE** (range −110…−195). The deletion concentrates precisely in hand-reasoned invariant machinery; Role B is design-only in this task per §4 of the brief |
 | 3 | **Lineage read-side graph queries (K3, Role A)** | viable under the Q2 condition | ≈200 L of genuinely replaceable graph machinery (BFS closure, topo sort, cycle DFS); ledger, admission binding and gateway minting stay; net lines ≈ flat — the win is delegating recursion/cycles to the engine, so it must beat a refactor arm in its own later pilot |
 | 4 | Ledger/receipt row storage (K6) | not first | purest tables, but the canonical-bytes digest contract is evidence, and the subsystem is gateway-coupled — integration risk outweighs the small deletion |
 | 5 | **Manifest projection (K4) — recommended AGAINST** | argued rejection | diagnostics 0 L; the SQL-delegable part is view-shaped assembly, but the record shapes would then exist in JSON schema, SQL DDL, *and* the published contract — a new duplication; the contract/versioning/UI-mirror machinery is procedural-policy and stays; no failure mode is delegated |
@@ -312,8 +318,10 @@ modes removed + places-to-change reduced − integration cost honestly charged.
   is the major risk) turns, and it is quantified in Deliverable 2.
 - **Q4 (Role B)**: **YES** — `store/derived/store.py` + the engine's
   persistence plumbing cost enough hand-maintained crash-safety/shape machinery
-  that SQLite owning it is a net deletion (≈ −160 L point estimate, range
-  −110…−195; deleted: 5+5 corruption→miss paths, blobs-first/state-last
+  that SQLite owning it is a net deletion. Net ≈ −160 L, **ESTIMATE**: the
+  ≈ −295 L deletion side is counted from existing function spans, the ≈ +131 L
+  addition side is a design-stage derivation (range 113–148), giving the range
+  −110…−195 (deleted: 5+5 corruption→miss paths, blobs-first/state-last
   choreography, RMW merge, GC sweep, O(N²)-workaround session caches, deferred
   batching; added: schema+pragmas, identity bind/verify, atomic publication,
   rebuild-or-refuse, thin adapters). The doctrine "corrupt cache is a miss"
@@ -389,9 +397,15 @@ sites in `references.py`; 27 predicate registry entries; 42 `raise LineageError`
 and the three `emit_` constructors; B3's zero-`maxLength` result (exit 1) and
 the stored-schema contrast; gate samples at `references.py` lines 98, 178, 204,
 219, 244, 317, 442, 566 against the family table; the corrected B1 search (§9).
-The per-family diag/extract splits and the 50-site T1 list were produced by the
-stated balanced-paren/regex counting script and are reproducible from it; the
-spot-checked gates and totals agree with it.
+The Appendix A command reproduces the per-family diag column exactly and the
+extract column within the stated ±4; the spot-checked gates and totals agree
+with the family table.
+
+An independent read-only review pass (2026-11-06) re-ran a sample of the
+commands, verified ~20 file:line pointers across both deliverables, and found
+one labelling defect — the Role-B addition side quoted as counted — corrected
+in this revision together with a runnable reproduction command for the
+per-family splits.
 
 Not done, deliberately: no venv, no validation run, no benchmark execution, no
 prototype code (Stop gate 1's autonomous clause: proceed to Stage 2 *design
@@ -425,4 +439,42 @@ rg -n "_has_armed_inflight" tools/learning_os/app/lock.py                 # 154,
 grep -roh "workbench/audits/[a-z0-9.-]*" --include="*.md" system/ | sort -u
 ls operations/transactions/transaction-*.yaml | wc -l                    # 380
 wc -l operations/transactions/revisions.yaml                             # 451 (448 rows)
+```
+
+Per-family diag/extract reproduction (the §3 table; diag exact, extract ±4):
+
+```python
+python3 - <<'EOF'
+import ast, re
+FAM = [("F0-parsers",19,60),("F1-route",65,93),("F2-synthesis",94,173),
+       ("F3-notes",174,200),("F4-workspaces",201,224),("F5-modules",225,258),
+       ("F6-units",259,385),("F7-source-maps",386,418),("F8-study-maps",419,460),
+       ("F9-resume",461,472),("F10-paths",473,501),("F11-concepts-sources-topics",502,557),
+       ("F12-relations",558,569),("F13-coordination",570,580),("F14-uri",582,611),
+       ("F1b-solution-exposure",613,642),("F15-links",644,672)]
+path = "tools/learning_os/derive/validation/references.py"
+lines = open(path).read().splitlines()
+tree = ast.parse(open(path).read())
+spans = set()
+for node in ast.walk(tree):
+    if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+            and node.func.attr in ("err", "warn")):
+        spans.update(range(node.lineno, node.end_lineno + 1))
+EXTRACT = re.compile(r"\br\.[a-z_]+|\.get\(|id_list_items\(|list_items\(|"
+    r"isinstance\(|startswith\(|\.split\(|\bstr\(|\bset\(|\.values\(\)|\.items\(\)|"
+    r"enumerate\(|findall\(|resolve\(|is_relative_to|is_file|\.exists\(|"
+    r"markdown_link_targets|classify_markdown_link|parse_reference_uri|"
+    r"iter_route_references|routes_by_id|exact_selection_matches|"
+    r"self\._(?:rel|origin_for)")
+td = te = 0
+for name, lo, hi in FAM:
+    d = sum(1 for n in range(lo, hi+1) if n in spans)
+    e = sum(1 for n in range(lo, hi+1) if n not in spans and EXTRACT.search(lines[n-1]))
+    td += d; te += e
+    print(f"{name:28s} diag {d:3d} extract {e:3d}")
+print(f"{'TOTAL':28s} diag {td:3d} extract {te:3d} other {len(lines)-td-te}")
+EOF
+# Published output: diag column matches the §3 table exactly (Σ 257);
+# extract Σ 219 by this regex vs 223 by the slice's variant — the four-line
+# difference sits in F3/F8/F15's classifier boundary.
 ```

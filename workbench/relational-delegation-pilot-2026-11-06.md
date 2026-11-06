@@ -68,13 +68,18 @@ Design, complete accounting:
   resolves against the schema; every template id has an implementation),
   plus the shared parity harness (§6).
 
-**Ledger-relevant estimate:** net bespoke ≈ **640–700 L** (ESTIMATE,
-derivation: extraction displaced by spec rows is ≈ 1:1 (+10 L); spec-driven
-diagnostics compress into templates (−16 L); guard collapse −19 L net within
-the file plus −25 L in `routes.py`; stage-membership +2 L; dual-container −4 L;
-ownership equalities −8 L; engine boilerplate +15 L). Roughly line-neutral;
-the value is one implementation per invariant (dimension 2) and a shorter
-change path (dimension 3).
+**Ledger-relevant estimate (single reconciled bottom-up derivation).** Arm (b)
+keeps what no spec drives — complex-family code (extraction ≈103 L +
+diagnostics ≈131 L at the same per-family split basis as D1 §3) plus control
+flow/comments/docstrings ≈192 L — and collapses the duplicated invariants
+(guard blocks ≈ −84 L replaced by a 35 L helper + 30 L rows; stage-membership
+−10 L + 12 L helper; ownership −8 L into the engine; dual-container −4 L into
+a spec field), then adds the declarative layer: spec rows ≈130 L + engine
+≈100 L + templates ≈110 L. **Net ≈ 700–780 L ESTIMATE (baseline +30…+110)**;
+`routes.py` sheds its fourth guard copy (−25 L). The increase is the price of
+the declarative layer and is justified — if at all — by dimension 2 (one
+implementation per invariant) and dimension 3 (change propagation), never by
+line count (§9 of the brief).
 
 ## 4. Arm (c) — in-memory SQLite, Role A (complete accounting)
 
@@ -122,9 +127,12 @@ Stdlib `sqlite3` only; database exists for one operation, then discarded.
   (collation/ordering), the completeness/refusal paths — ≈ +15–25 cases over
   the shared corpus.
 
-**Ledger-relevant estimate:** net bespoke ≈ **780–900 L** (ESTIMATE; sum of
-the above minus the template-layer overlap with arm (b)). ≈ +190 L over the
-status quo, ≈ +220 L over arm (b).
+**Ledger-relevant estimate (structurally derived from arm (b)).** Arm (c) is
+arm (b) with the Python engine replaced by persistence machinery: stays
+≈ 330–350 L (complex code minus the guard/membership/ownership blocks that
+become queries) + spec rows ≈130 L (exporter extraction) + exporter loop
+≈120 L + DDL ≈130 L + queries ≈80 L + fail-closed boundary ≈50 L + templates
+≈110 L. **Net ≈ 950–1030 L ESTIMATE (baseline +280…+360; ≈ arm (b) +250…+290).**
 
 ## 5. The complexity ledger (§9 of the brief)
 
@@ -133,8 +141,8 @@ replaced by spike measurements if the reviewer authorizes a Stage-2.5 spike.
 
 | Dimension | (a) current | (b) refactor | (c) in-memory SQLite |
 |---|---|---|---|
-| 1 Bespoke implementation | **672 L** counted | ≈ 640–700 L | ≈ 780–900 L |
-| 2 Duplicated responsibility | 12 sites; guard invariant ×4; stage-membership ×2; dual-container ×2 | each collapses to one implementation; **new duplication: none** | same collapses in SQL, **plus** record shapes declared a third time (JSON schema + SQL DDL + exporter mapping) |
+| 1 Bespoke implementation | **672 L** counted | ≈ 700–780 L ESTIMATE (+30…+110) | ≈ 950–1030 L ESTIMATE (+280…+360) |
+| 2 Duplicated responsibility | 12 sites; guard invariant ×4; stage-membership ×2; dual-container ×2 | each invariant collapses to one implementation; **no new *code* duplication** — the spec registry is a declarative restatement of schema facts (the residual judgment call is Risk 2) | same collapses in SQL, **plus** record shapes declared a third time (JSON schema + SQL DDL + exporter mapping) |
 | 3 Change propagation (one new note id-list field) | 3–4 places | **2 places** (schema + spec row) | 4–5 places (schema + spec row + DDL + exporter + query set) |
 | 4 Failure modes owned | today's (crash containment exists) | fewer bug sites, no new class | **new classes**: build-failure refusal path, SQL-exception mapping, silent-skip risk needing a completeness assertion; SQLite delegates nothing the Python arms own (everything is ephemeral) |
 | 5 Verification burden | recorded scenarios | shared parity/mutation corpus + registry-totality test | same corpus **+** schema/exporter/determinism/refusal tests (+15–25 cases) |
@@ -240,14 +248,19 @@ ledger, not recommended.
 - **NO-GO — in-memory SQLite (and DuckDB) for the reference-validation
   slice.** The null-hypothesis arm (b) captures the available value (one
   implementation per invariant, 2-place change propagation) at lower bespoke
-  cost than the SQL arm on every ledger dimension; the ephemeral role gives
-  SQLite no invariant to own.
+  cost than the SQL arm on every ledger dimension, at the price of a modest
+  net line increase (+30…+110 ESTIMATE) justified only by the named
+  dimension-2/3 wins — exactly the trade §9 of the brief permits; if the
+  reviewer judges those wins insufficient, the fallback is no change at all
+  (Risk 2). The ephemeral role gives SQLite no invariant to own.
 - **GO-WITH-DIFFERENT-SLICE — the SQL program proceeds elsewhere**, in this
   order, each through its own pilot gates and separate assignments:
   1. **Role B: derived-state persistence** (`store/derived/store.py` + engine
-     plumbing) — the strongest evidenced net deletion in the repository
-     (D1 §8/Q4: ≈ −160 L, range −110…−195, concentrated in hand-reasoned
-     invariant machinery; corruption→miss becomes rebuild-or-refuse).
+     plumbing) — the strongest evidenced net-deletion case in the repository
+     (D1 §8/Q4: ≈ −295 L deleted, counted from existing spans; ≈ +131 L new
+     machinery, ESTIMATE; net ≈ −160 L ESTIMATE, range −110…−195; concentrated
+     in hand-reasoned invariant machinery; corruption→miss becomes
+     rebuild-or-refuse).
   2. **Role A: lineage read-side graph queries** (Stage 6), under the Q2
      condition "replace the queries, expose the ledger" (D1 §8): ≈200 L of
      BFS/topo/cycle machinery delegable; ledger, admission binding and
@@ -268,7 +281,11 @@ line budget), or the reviewer rejecting the Q4 line accounting.
 
 ## 11. Performance constraint record (per §9 of the brief)
 
-Unmeasured by design (no spike under the autonomous clause). Harness named:
+Unmeasured by design (no spike under the autonomous clause). Arm (a)'s
+baseline numbers are producible today without any prototype code — both
+harnesses are existing scripts; they need a `.venv`, which this task did not
+create — and are recorded here as the spike's first deliverable rather than
+run under the design-only clause. Harness named:
 `tests/benchmark_projection.py` (named `seconds.load` /
 `seconds.validate_loaded_repo` phases, mutation corpus on a scratch copy) and
 `tests/benchmark_runtime.py` (named phases + an existing arm mechanism a SQL
@@ -286,6 +303,14 @@ corpus + harness, §11 benchmark arms) is specified so a Stage-2.5 spike can
 replace the ranges with numbers before any Stage 3 gate. Nothing was executed;
 no production file under `tools/` was touched; the only changes on this branch
 are the two workbench deliverables.
+
+An independent read-only review pass (2026-11-06) verified ~20 file:line
+pointers and every counted figure; its findings are incorporated: the Role-B
+addition side is labelled ESTIMATE in both documents, the arm-(b)/(c)
+estimates were reconciled into single bottom-up derivations (the earlier
+delta-style derivation double-counted the declarative layer's savings), the
+dim-2 cell for arm (b) is reconciled with Risk 2, and D1's per-family counting
+method is now a runnable Appendix command.
 
 **What the reviewer is asked to decide:** (1) the Stage 1 ranking and the two
 argued rejections (manifest projection, semantic predicates); (2) whether to
