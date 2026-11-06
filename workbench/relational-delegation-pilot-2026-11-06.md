@@ -340,6 +340,48 @@ authorize a Stage-2.5 throwaway spike (arm (b) prototype + parity harness in
 assignment (Role B derived-store vs lineage Role A). Per Stop gate 2, no
 further work happens without that assignment.
 
+---
+
+## 13. Owner decision override — 2026-11-06 (Gate 2.5)
+
+Recorded verbatim-in-substance from the owner's decision message; this section
+governs over every recommendation above wherever they disagree.
+
+**Acceptance criterion: maintainability and robustness. Net line count and
+speed are explicitly not gates** (§9's ledger remains as evidence, but
+dimensions 1/5/6 no longer decide; dimensions 2–4 do).
+
+Revised decisions:
+
+1. **Role B derived-store → PROCEED to Stage 5.** The Stage 2.5 spike proved
+   the robustness claim: every hand-reasoned crash-safety path
+   (blobs-before-index, orphan sweeping, five corruption paths,
+   read-modify-write merging) became one transaction, one primary-key upsert,
+   one `DELETE` — and passed the full behavioral oracle plus 28/28 corruption
+   scenarios. Stage 5 includes the engine-side rewrite, porting the 23
+   format-pinning tests to the spike's DB-medium scenarios, and **deleting**
+   the JSON-index/blob store machinery after parity — a replacement, not a
+   parallel implementation.
+2. **Route-guard unification → ADOPTED at +62 L** as an ordinary production
+   refactor, on its 98/98 parity evidence (recorded-sequence oracle included):
+   four copies of one drift-prone invariant become one implementation.
+3. **Queue after Role B, in order:** lineage read-side graph queries under the
+   Q2 condition (ledger stays canonical and gateway-owned; the traversal
+   machinery is what gets deleted); then reference-validation structural
+   families as SQL (Python retains diagnostics, malformed-input suppression
+   and policy checks); then ledger/revision reconciliation read-side (canonical
+   receipts stay files, gateway stays the only writer); then
+   `needs_study_map`-class derived semantic obligations re-examined once a real
+   relational model exists — not excluded forever.
+4. **The ADR recording the §3.1-A2 authority sentence is written before Stage 5
+   code.**
+5. **Still immovable:** canonical files as source of truth, the transaction
+   gateway and its receipts, and human-authorization judgments.
+
+Status: **stopped — awaiting the Stage 5 assignment.** The Stage 2.5 spike
+reports stand as its evidence base; no further work happens until that
+assignment arrives.
+
 ## Appendix — reproduction
 
 ```
