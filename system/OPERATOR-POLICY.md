@@ -12,7 +12,7 @@
 > 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** `records/modules.yaml` is a frozen compatibility snapshot. Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
-> 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
+> 5. **Captures go to their routed destination — the identified stage's note, `work/inbox/`, `knowledge/garden/`, or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions. The full destination contract is OPERATOR.md's capture-routing section.
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from `bootstrap --brief`, then the named workspace plus `inspect` (`inspect coordination` when priorities matter)** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.

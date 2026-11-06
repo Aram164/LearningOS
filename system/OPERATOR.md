@@ -233,7 +233,10 @@ Skills and projects use modules and units without false academic metadata.
     an agent-run plan pass once broadcast wrong locators onto six routes and
     the validator scored it perfect. The safeguards stay: the snapshot-guarded
     gateway apply records an append-only receipt, so every applied package
-    remains visible and revertible). Without the deck, stop and ask: never
+    remains visible and revertible). The removed gate governs only
+    deck-dictated content: a plan change whose content the agent chose is
+    still a boundary 2 change — show the exact `--check` result and apply on
+    the learner's yes. Without the deck, stop and ask: never
     scope a lecture from textbook chapter titles, keyword matches, or a source
     the module never adopted. Workflows 24 (turn the semester) and 27 (promote
     a future Master's module) still have **no executable transcript**, and the scope
