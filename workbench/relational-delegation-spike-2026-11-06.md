@@ -122,9 +122,14 @@ replacement plus an ≈ −40 L engine simplification justifies adopting SQLite 
 
 ## 5. Spike 2 — route-guard unification
 
-Authorized as optional/narrow; result recorded in
-`workbench/spikes/route-guard-2026-11-06/` (see §6 of that directory's report
-fragment in the spike commit) — throwaway, measured, no production edits.
+Authorized as optional/narrow; measured result in
+`workbench/spikes/route-guard-2026-11-06/REPORT.md`: parity **98/98** including
+the recorded-sequence oracle, but the measured ledger is a **+62 wc-l net
+increase** (672 → 734; 65 removed, 127 added) — with byte-exact message parity
+the unification costs more scaffolding than the bare `if` conditions it
+replaces, so its value is dimension-2 only (one implementation of the
+drift-prone guard comparison across four sites). The pilot's ≈ −19 L net
+estimate for the guard collapse does not survive measurement.
 
 ## 6. Verification and honesty notes
 
