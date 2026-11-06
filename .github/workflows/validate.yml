@@ -88,12 +88,16 @@ jobs:
       # The UI checkout also serves the paired tests inside the suite
       # (test_ui_gateway_recovery drives the real harness in
       # obsidian-ui/tests/; the contract-mirror tests read the sibling).
+      # Full history, as in release-pair: test_flows_pin requires the UI
+      # commit FLOWS.md pins to be an ancestor of this checkout's HEAD, and
+      # a depth-1 clone contains no ancestor at all.
       - name: Check out the paired UI consumer
         uses: actions/checkout@v4
         with:
           repository: Aram164/learningos-obsidian-ui
           ref: ${{ steps.consumer-ref.outputs.ref }}
           path: obsidian-ui
+          fetch-depth: 0
 
       - name: Print the resolved UI ref and commit
         working-directory: obsidian-ui
