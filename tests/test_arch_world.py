@@ -135,8 +135,15 @@ def test_tampered_world_data_exits_two(world: dict, tmp_path: Path):
 def _scratch_clone(dest: Path) -> Path:
     parent = dest.parent
     parent.mkdir(parents=True, exist_ok=True)
+    # --no-hardlinks: `git clone --local` hardlinks the source objects, and
+    # during the 2026-11-06 system-check one clone died mid-run with
+    # "failed to create link ... Operation not permitted" while the very
+    # object it named already carried ~15 successful hardlinks (source link
+    # count 16; both paths on the same Data volume). A transient link()
+    # denial, not a logic defect — but it cost a 41-minute gate. Copying
+    # instead of linking removes the failure class at a small per-clone cost.
     proc = subprocess.run(
-        ["git", "clone", "--local", str(REPO_ROOT), str(dest)],
+        ["git", "clone", "--local", "--no-hardlinks", str(REPO_ROOT), str(dest)],
         capture_output=True, text=True, timeout=300, env=_child_env(), cwd=parent,
     )
     assert proc.returncode == 0, proc.stderr[-2000:]
