@@ -110,15 +110,29 @@ Stdlib `sqlite3` only; database exists for one operation, then discarded.
   (source family × target family) pair; exactly-one resolution via
   `GROUP BY route_id HAVING COUNT(*) != 1` with the four distinct message
   families (110, 349, 308/433, 87); guard comparisons as join + column
-  compare; every user-visible result `ORDER BY source_ordinal,
-  occurrence_ordinal` to reproduce the authored sequence.
+  compare; every user-visible result ordered by `ORDER BY source_ordinal,
+  occurrence_ordinal, emission_rank` — the third key is **mandatory**, not
+  cosmetic: several families emit more than one diagnostic per row (the
+  guard trios at `references.py:118-138` and `316-337` are independent
+  `if`s, and F12 can emit four diagnostics for one relation), so
+  `(source_ordinal, occurrence_ordinal)` ties are real and SQL tie order is
+  otherwise undefined. `emission_rank` is a rule-emission rank per
+  diagnostic kind per family encoding the authored if-order.
 - **Diagnostic mapping.** Query rows → `(code, template_id, params, path)` →
   the *same* template layer as arm (b) (≈ 110 L, shared).
-- **Fail-closed machinery.** ≈ 50 L: model construction runs to completion
-  from the admitted snapshot or the operation refuses naming why; one
-  exception boundary converts `sqlite3.Error` into a structured diagnostic
-  (never a skip); a completeness assertion verifies every registered family
-  table was populated before any query result is treated as authoritative.
+- **Fail-closed machinery.** ≈ 50 L: **refusal, never a fabricated
+  diagnostic** — model construction runs to completion from the admitted
+  snapshot or the operation refuses naming why; a `sqlite3.Error` anywhere
+  is never converted into an `Issue` (build- and query-time failures refuse
+  the operation; the only Issues are real reference diagnostics).
+  **Extraction completeness is a separate invariant from population**:
+  "every family table was populated" does not prove the exporter saw every
+  reference edge. The carried invariant is site-for-site coverage — the
+  spec registry enumerates all 90 arm-(a) emit sites and a registry test
+  asserts the migrated arm implements exactly that (family, code) set —
+  plus per-run row reconciliation: each container family is walked by
+  exactly one spec, and its row count is reconciled against the loader's
+  own collection cardinality.
 - **Determinism rules.** TEXT comparisons under the default BINARY collation
   (exact codepoint, matching Python `==` on NFC YAML strings); `NOCASE` and
   `LIKE` forbidden; no reliance on rowid iteration order for user-visible
@@ -168,7 +182,10 @@ only things that justify a database — have nothing here to own.
      (loader-level `ID-DUP` interaction);
   3. guard drift: `source_id`, `locator`, `unit_id` on a synthesis assessment,
      a unit selection, and a study-map resource (three families, one
-     asymmetry: the resource locator guard must stay absent);
+     asymmetry: the resource locator guard must stay absent) — including
+     the **simultaneous** case, one record with two or three guard
+     attributes wrong at once, pinning the authored if-order of the
+     resulting diagnostics (the emission-rank obligation);
   4. self-edges: `REL-SELF`, `REF-ANSWER-NOTE` self, `ROUTE-SOLUTION-SELF`;
   5. quarantined-workspace context (F3/F14 dual container) and archived
      workspace `COORD-DEP`;
@@ -194,10 +211,10 @@ only things that justify a database — have nothing here to own.
 
 | Contract | Arm (b) | Arm (c) as designed |
 |---|---|---|
-| 1 Complete diagnostics, no FK termination | no database layer exists; same helpers; nothing terminates early | no FK/PK constraints; duplicates preserved as rows; queries return complete result sets; `sqlite3.Error` mapped to a structured diagnostic, never a skip |
-| 2 Exact parity, ordered | authored iteration order untouched; template layer byte-exact | ordinal columns + explicit `ORDER BY source_ordinal, occurrence_ordinal`; shared template layer |
+| 1 Complete diagnostics, no FK termination | no database layer exists; same helpers; nothing terminates early | no FK/PK constraints; duplicates preserved as rows; queries return complete result sets; a `sqlite3.Error` is **never** converted into an `Issue` — it refuses the operation naming why (refusal ≠ diagnostic); no check terminates at the first bad reference |
+| 2 Exact parity, ordered | authored iteration order untouched; per-row checks run in authored sequence, so the authored if-order (independent guard comparisons) is preserved **by construction** — no emission-rank mechanism needed; template layer byte-exact | ordinal columns **+ per-family rule-emission rank** encoding the authored if-order (the guard trios at 118–138/316–337 and F12 emit 2–4 diagnostics per row, so `(source_ordinal, occurrence_ordinal)` ties are real and SQL tie order is undefined); explicit `ORDER BY source_ordinal, occurrence_ordinal, emission_rank`; shared template layer |
 | 3 Malformed-input semantics | `id_list_items`/`list_items` reused verbatim | exporter replicates their semantics exactly; non-list → zero rows; schema layer owns shape errors, unchanged upstream |
-| 4 Fail-closed semantics | n/a (no database) | construction completes from the admitted snapshot or the operation refuses naming why; completeness assertion before any result is authoritative. Role B (design only): versioned schema + snapshot identity verified on open; corrupt/mismatched → rebuild-or-refuse; atomic publication build-to-temp/rename/verify — specified in D1 §8 (Q4), never built here; the derived-store "corrupt cache is a miss" doctrine is **not** imported |
+| 4 Fail-closed semantics | n/a (no database) | **refusal** on construction failure (naming why) and on any `sqlite3.Error`; **no diagnostic is fabricated from an engine failure**. Role B (design only): versioned schema + snapshot identity verified on open; corrupt/mismatched → rebuild-or-refuse; atomic publication build-to-temp/rename/verify — **measured in the Stage 2.5 spike** (`workbench/relational-delegation-spike-2026-11-06.md`), where rebuild-or-refuse is reconciled with the cache doctrine in one sentence: rebuild **is** the miss path made atomic and explicit; per-read hash verification stays Python policy |
 | 5 Snapshot consistency | unchanged (same `Repo` discipline) | Role A makes this nearly free and it is stated: the model is built from one memoized `Repo` under `ReadSession`; no second snapshot can intervene mid-build |
 | 6 Reference-graph fidelity | preserved by construction (no model) | carried by per-family tables: origin paths, ordinals, scope kind/id, polymorphic per-type columns, guard columns, per-family falsy semantics; the generic abstraction was tried and rejected — a finding |
 | 7 Determinism | unchanged Python semantics | BINARY collation (= exact codepoint); `NOCASE`/`LIKE` forbidden; explicit ordering everywhere; no rowid-order dependence |
@@ -256,11 +273,15 @@ ledger, not recommended.
 - **GO-WITH-DIFFERENT-SLICE — the SQL program proceeds elsewhere**, in this
   order, each through its own pilot gates and separate assignments:
   1. **Role B: derived-state persistence** (`store/derived/store.py` + engine
-     plumbing) — the strongest evidenced net-deletion case in the repository
-     (D1 §8/Q4: ≈ −295 L deleted, counted from existing spans; ≈ +131 L new
-     machinery, ESTIMATE; net ≈ −160 L ESTIMATE, range −110…−195; concentrated
-     in hand-reasoned invariant machinery; corruption→miss becomes
-     rebuild-or-refuse).
+     plumbing) — the strongest evidenced SQL case in the repository, with the
+     Stage 2.5 spike's measured correction (D1 §8/Q4 + Appendix B span ledger;
+     `workbench/relational-delegation-spike-2026-11-06.md` §3): the store
+     replacement is line-neutral at the same API boundary (308 → 280 wc-l,
+     189 → 193 code lines; blobs moved **into** SQLite), parity 199/224 oracle
+     tests with zero behavioral failures, and the net-deletion case now rests
+     on the engine-side ESTIMATE (≈ −40 L, still unproven) plus the **measured**
+     dimension-4 ownership transfer — corruption→miss machinery became schema
+     constraints, one transaction, one PK upsert, one `DELETE … NOT IN`.
   2. **Role A: lineage read-side graph queries** (Stage 6), under the Q2
      condition "replace the queries, expose the ledger" (D1 §8): ≈200 L of
      BFS/topo/cycle machinery delegable; ledger, admission binding and
@@ -302,7 +323,7 @@ figures — reproducible arithmetic, not measurement — and the spike plan (§6
 corpus + harness, §11 benchmark arms) is specified so a Stage-2.5 spike can
 replace the ranges with numbers before any Stage 3 gate. Nothing was executed;
 no production file under `tools/` was touched; the only changes on this branch
-are the two workbench deliverables.
+are the workbench deliverables and labelled spikes.
 
 An independent read-only review pass (2026-11-06) verified ~20 file:line
 pointers and every counted figure; its findings are incorporated: the Role-B
@@ -323,7 +344,7 @@ further work happens without that assignment.
 
 ```
 cd /Users/aramaljanadi/los-sql-2026-11-06/repository
-git log --oneline main..HEAD        # the two workbench deliverable commits
+git log --oneline main..HEAD        # the workbench deliverable, spike and fix commits on this branch
 git status --porcelain              # clean except labelled spike, if any
 sed -n '118,138p;316,337p;441,456p' tools/learning_os/derive/validation/references.py
 sed -n '64,88p' tools/learning_os/derive/routes.py

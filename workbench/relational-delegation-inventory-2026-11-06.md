@@ -289,7 +289,7 @@ modes removed + places-to-change reduced − integration cost honestly charged.
 | Rank | Candidate | Verdict | Reason (evidence) |
 |---|---|---|---|
 | 1 | **Reference validation (K1)** | strongest first candidate | largest bespoke bookkeeping (672 L, 90 sites), most duplicated invariants (§5 items 1–8), 50–60/90 sites plain membership, wide change surface (§6); extraction is a hybrid: declarative field-path registry fits the membership families, route/scoped/guard families keep hand-written producers |
-| 2 | **Derived-state persistence (K5, Role B)** | strongest evidenced SQL net-deletion case, separately staged | Q4 answered YES: the ≈ −295 L deletion side is **counted** from existing function spans; the ≈ +131 L new-machinery side is an **ESTIMATE** (design-stage derivation, range 113–148); net ≈ **−160 L ESTIMATE** (range −110…−195). The deletion concentrates precisely in hand-reasoned invariant machinery; Role B is design-only in this task per §4 of the brief |
+| 2 | **Derived-state persistence (K5, Role B)** | strongest evidenced SQL net-deletion case, separately staged | Q4 answered YES: the deletion side is **published as counted function spans (Appendix B)**; the addition side was **measured** by the Stage 2.5 spike. Measured correction: the same-API-boundary replacement is line-neutral (308 → 280 wc-l; 189 → 193 code lines) with parity 199/224 and zero behavioral failures — the net-deletion case rests on the engine-side ESTIMATE (≈ −40 L) plus the **measured** dimension-4 ownership transfer. The deletion concentrates precisely in hand-reasoned invariant machinery; Role B is design-only in this task per §4 of the brief |
 | 3 | **Lineage read-side graph queries (K3, Role A)** | viable under the Q2 condition | ≈200 L of genuinely replaceable graph machinery (BFS closure, topo sort, cycle DFS); ledger, admission binding and gateway minting stay; net lines ≈ flat — the win is delegating recursion/cycles to the engine, so it must beat a refactor arm in its own later pilot |
 | 4 | Ledger/receipt row storage (K6) | not first | purest tables, but the canonical-bytes digest contract is evidence, and the subsystem is gateway-coupled — integration risk outweighs the small deletion |
 | 5 | **Manifest projection (K4) — recommended AGAINST** | argued rejection | diagnostics 0 L; the SQL-delegable part is view-shaped assembly, but the record shapes would then exist in JSON schema, SQL DDL, *and* the published contract — a new duplication; the contract/versioning/UI-mirror machinery is procedural-policy and stays; no failure mode is delegated |
@@ -317,16 +317,28 @@ modes removed + places-to-change reduced − integration cost honestly charged.
   any arm; it changes representation. This is the pivot on which A4 (extraction
   is the major risk) turns, and it is quantified in Deliverable 2.
 - **Q4 (Role B)**: **YES** — `store/derived/store.py` + the engine's
-  persistence plumbing cost enough hand-maintained crash-safety/shape machinery
-  that SQLite owning it is a net deletion. Net ≈ −160 L, **ESTIMATE**: the
-  ≈ −295 L deletion side is counted from existing function spans, the ≈ +131 L
-  addition side is a design-stage derivation (range 113–148), giving the range
-  −110…−195 (deleted: 5+5 corruption→miss paths, blobs-first/state-last
-  choreography, RMW merge, GC sweep, O(N²)-workaround session caches, deferred
-  batching; added: schema+pragmas, identity bind/verify, atomic publication,
-  rebuild-or-refuse, thin adapters). The doctrine "corrupt cache is a miss"
-  must **not** be imported into validation (§6.4 of the brief) — a validator
-  refuses; a cache misses.
+  persistence plumbing own enough hand-reasoned crash-safety/shape machinery
+  that SQLite owning it deletes invariant code. **Deletion side published as
+  counted spans in Appendix B** (reproducible AST command included): −202
+  store.py deleted spans, −18 `_checked_store_dir` shrink, ≈ −40 engine-side
+  ESTIMATE (untouched by the spike); the earlier headline “≈ −295” included
+  ≈ −25 of `__init__` shrink that the same-API measurement corrects to ≈ 0.
+  **Blob decision: content-addressed blobs move INTO SQLite** (a `blobs`
+  table keyed by sha256), not paths-on-disk — this deletes the blob-file
+  GC/symlink logic and the crash-ordering choreography; the alternative
+  (SQLite stores paths) keeps most of `lookup`/`sweep` file logic and
+  materially shrinks the deletion side. **Measured correction (Stage 2.5
+  spike, `workbench/relational-delegation-spike-2026-11-06.md` §3): the
+  same-API-boundary replacement is line-neutral (308 → 280 wc-l; 189 → 193
+  code lines) with parity 199/224 and zero behavioral failures — the net
+  ≈ −160 L ESTIMATE does not survive measurement; the case rests on the
+  engine-side ESTIMATE plus the measured dimension-4 transfer (corruption→
+  miss machinery → schema constraints + one transaction + PK upsert + one
+  `DELETE … NOT IN`). Aram's caveat honored and measured: path safety, hash
+  verification and identity binding remain ≈ 21 code lines of Python policy
+  in the spike module. The doctrine "corrupt cache is a miss" must **not**
+  be imported into validation (§6.4 of the brief) — a validator refuses; a
+  cache misses, and rebuild **is** the miss path made atomic and explicit.
 
 ## 9. Friction and defect pointers (recorded, not fixed)
 
@@ -407,17 +419,21 @@ one labelling defect — the Role-B addition side quoted as counted — correcte
 in this revision together with a runnable reproduction command for the
 per-family splits.
 
-Not done, deliberately: no venv, no validation run, no benchmark execution, no
-prototype code (Stop gate 1's autonomous clause: proceed to Stage 2 *design
-only*). Every behavior claim above is a static read of code at `60da966`,
-branch `research/relational-delegation-2026-11-06`.
+Not done, deliberately: no validation run, no benchmark execution, no
+prototype code in the original Stage 1–2 pass (Stop gate 1's autonomous
+clause: proceed to Stage 2 *design only*). The Stage 2.5 spike (authorized at
+Gate 2) subsequently ran the oracle test suites in-process; its results live
+in `workbench/relational-delegation-spike-2026-11-06.md`. Behavior claims in
+§§2–8 are static reads on branch `research/relational-delegation-2026-11-06`;
+counted numbers were taken at the commit that introduced them (commit-relative:
+`git log --oneline main..HEAD`).
 
 ## Appendix A — key reproduction commands
 
 ```
 cd /Users/aramaljanadi/los-sql-2026-11-06/repository
 git branch --show-current                     # research/relational-delegation-2026-11-06
-git log --oneline -1                          # 60da966
+git log --oneline main..HEAD                  # the workbench deliverable, spike and fix commits on this branch
 wc -l tools/learning_os/derive/validation/references.py \
       tools/learning_os/derive/validation/registries.py \
       tools/learning_os/derive/semantics/predicates.py \
@@ -440,6 +456,57 @@ grep -roh "workbench/audits/[a-z0-9.-]*" --include="*.md" system/ | sort -u
 ls operations/transactions/transaction-*.yaml | wc -l                    # 380
 wc -l operations/transactions/revisions.yaml                             # 451 (448 rows)
 ```
+
+## Appendix B — Role-B deletion-side span ledger (reproducible)
+
+The §8/Q4 deletion side, as counted function spans (`ast` `lineno`–
+`end_lineno`, wc-l basis), with the classification under the **blob decision**
+(blobs move into SQLite — see §8/Q4):
+
+| Span | wc-l | Classification |
+|---|---|---|
+| `store.py:47-62` `_state_payload` | 16 | deleted (row serializer → schema) |
+| `store.py:65-72` `derived_dir` / `state_path` | 6 | stays (path API parity) |
+| `store.py:75-86` `canonical_bytes` | 12 | stays (feeds output digests) |
+| `store.py:89-95` `_reject_duplicates` | 7 | deleted (PK uniqueness) |
+| `store.py:98-135` `read_state` | 38 | deleted (SELECT + schema) |
+| `store.py:138-151` `invalidate` | 14 | deleted (one `DELETE`) |
+| `store.py:154-181` `lookup` | 28 | deleted; the hash-verify half is retained as policy |
+| `store.py:184-205` `_checked_store_dir` | 22 | shrinks to one open-time guard (≈4) |
+| `store.py:208-215` `_atomic_write` | 8 | deleted (journaling/transactions) |
+| `store.py:218-233` `stage_node_blob` | 16 | deleted (INSERT) |
+| `store.py:236-251` `publish_staged_states` | 16 | deleted (transaction upsert) |
+| `store.py:254-262` `store_node` | 9 | stays (thin wrapper) |
+| `store.py:265-308` `sweep_unreferenced_blobs` | 44 | deleted (one `DELETE … NOT IN`) |
+| `engine.py` `_Session.states` cache + `_lookup` amortization | ≈12 | ESTIMATE (untouched by the spike) |
+| `engine.py` `deferred_index` batching | ≈14 | ESTIMATE |
+| `engine.py` `commit_staging` persistence half | ≈14 | ESTIMATE |
+| `__init__.py` re-export shrink | ≈0 | measured correction (same API surface preserved) |
+
+Counted store-side total: **−220** (−202 deleted spans − 18 shrink); with the
+engine ESTIMATEs ≈ −260. The former “≈ −295” headline additionally counted
+≈ −10 of store.py docstring/constants (retained in any rewrite of the same
+surface) and ≈ −25 of `__init__` shrink the same-API measurement corrects to
+≈ 0 — hence the measured correction in §8/Q4.
+
+Command (spans are exact; run in the clone):
+
+```python
+python3 - <<'EOF'
+import ast
+for path in ("tools/learning_os/store/derived/store.py",
+             "tools/learning_os/store/derived/engine.py"):
+    src = open(path).read()
+    for node in ast.parse(src).body:
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+            print(f"{path}:{node.lineno}-{node.end_lineno} {node.name} "
+                  f"({node.end_lineno - node.lineno + 1}L)")
+EOF
+```
+
+Measured counterpart (spike module replacing exactly this surface): 280 wc-l /
+193 code lines, parity 199/224, zero behavioral failures —
+`workbench/relational-delegation-spike-2026-11-06.md` §§1–3.
 
 Per-family diag/extract reproduction (the §3 table; diag exact, extract ±4):
 
