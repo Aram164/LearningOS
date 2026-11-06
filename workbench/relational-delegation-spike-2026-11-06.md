@@ -40,18 +40,18 @@ whose attributes are identity-identical to the real functions.
 ## 2. Parity evidence
 
 Oracle: the derived-store/validation-cache/search/compute test suites, run
-against the unmodified production baseline and then against the spike swapped
-in behind the same API surface. Baseline: **224 passed**. Swapped: **200
-passed, 24 failed** (measured in the Stage 5 worktree mid-state with the
-rebind-fixed harness; the earlier in-research run reported 199/25, where one
-extra failure was an artifact of the harness bug documented in §1 — the
-engine wrote JSON while tests read the DB).
+against the unmodified production baseline and then against the **repaired**
+spike swapped in behind the same API surface — one consolidated run in this
+worktree against the spike-repair commit, whose numbers are the only ones
+quoted anywhere in this document. Baseline: **224 passed**. Swapped: **199
+passed, 25 failed**.
 
 **Stated plainly: full migration parity is NOT established by this spike.**
-What is established: all 24 failures are classified below, and our evidence
-says each is format-only — the failing assertion surface is the physical file
-path or file bytes, never diagnostic ordering, attribution, or presence,
-which are pinned end-to-end by the suites that pass unmodified
+What is established: all 25 failures are classified one-to-one in Appendix C,
+and our evidence says each is format-only — the failing assertion surface is
+the physical file path or file bytes (two failures are subprocess-boundary
+artifacts of the swap harness), never diagnostic ordering, attribution, or
+presence, which are pinned end-to-end by the suites that pass unmodified
 (`tests/test_scenarios.py` recorded sequences byte-identical; all behavioral
 engine/store suites green). The reviewer judges the classification; until
 that judgment lands, treat parity as not established. Every failure is one of:
@@ -73,6 +73,13 @@ that judgment lands, treat parity as not established. Every failure is one of:
    the child wrote a JSON cache the in-process DB read cannot see. A real Stage 5
    ships the store in production code and all processes use it — this is a
    harness limitation, not a store defect.
+
+Footnote (counting regimes): an earlier in-research run measured 199/25 with
+the harness bug of §1 (engine wrote JSON while tests read the DB), and a
+Stage 5 worktree mid-state measured 200/24 (its production store and
+engine-side changes make the two subprocess tests pass naturally and flip
+one removed-machinery pin). The consolidated run above supersedes both; no
+other numbers are quoted.
 
 The behavioral contract held everywhere it was reachable through the API:
 all `evaluate`/`evaluate_many` reuse, batch-merge-over-concurrent-entry,
@@ -121,11 +128,42 @@ replacement plus an ≈ −40 L engine simplification justifies adopting SQLite 
 `generated/`-level cache state is now an honest reviewer judgment between
 "dimension-4 win, measured" and "no dimension-1 win at this boundary".
 
+### Durable costs, scored on all six dimensions
+
+The ledger above scores the store body only. Delegating the store also
+carries permanent costs a full comparison must charge — scored here so
+"simpler" is judged on all six dimensions of the brief's §9, not line count
+alone:
+
+- **SQL schema maintenance**: the `_SCHEMA` DDL, its versioned `meta`
+  identity rows, and the schema-version bump discipline are a permanent
+  second schema surface beside the stored-record schemas.
+- **Migration/rebuild logic kept forever**: the build-to-temp → verify →
+  rename protocol (and its `.rebuild` temp discipline) is permanent
+  machinery the JSON layout never needed at this scope; it exists precisely
+  so the rebuild is atomic.
+- **DB-medium test replacements carried permanently**: the 23 format pins
+  become permanent DB-medium tests (Appendix C's replacements) in addition
+  to the behavioral suite — a verification-burden line (dimension 5), not a
+  saving.
+- **Failure-class ownership split across two layers**: identity and
+  path-safety refusals stay Python; byte corruption and missing rows become
+  SQL-medium misses. The ownership table in
+  `system/developer/components/derived-store.md` is the contract that keeps
+  that split honest (dimension 4's bookkeeping).
+
+The measured result stands: the store replacement is line-neutral (−28
+wc-l, +4 code lines) with the engine-side ≈ −40 L still ESTIMATE — the
+original −160 L prediction has not materialized at the store boundary, and
+whether the engine-side rewrite changes that is the open question a
+measured Stage 5 decision must answer.
+
 ## 4. What a real Stage 5 would inherit from this spike
 
-- Rewrite list: the 23 format-pinning tests (port to DB-medium equivalents —
-  `spike_behavior.py` already contains 28 such scenarios) and the 2 subprocess
-  tests become in-process once the store ships in production code.
+- Rewrite list: the 23 file-format-pinning tests (Appendix C rows 1–23; the
+  spike's behavior script contains the DB-medium scenario corpus they port
+  to) and the 2 subprocess-boundary tests (rows 24–25) become in-process once
+  the store ships in production code.
 - Engine-side work needed for the remaining ≈ −40 L: session cache removal
   (B-tree lookups need no amortization), deferred-index batching removal (each
   publish is one transaction), `commit_staging` persistence half (COMMIT).
@@ -187,7 +225,9 @@ miss, write and sweep refused with `TransactionFailure`, foreign store
 byte-identical after every attempt), corrupt DB file (reads are misses that
 leave the corrupt file byte-identical, write rebuilds atomically, no
 `.rebuild` temp left). Behavior script re-run: **43/43 scenarios pass**
-(28 original — one now honest — plus 15 adversarial checks).
+(28 original — one now honest — plus 15 adversarial checks). The
+consolidated swapped-suite run against the repaired spike: **199 passed,
+25 failed** (§2, Appendix C).
 
 Parity wording corrected per the same review: the "zero behavioral failures"
 claim is replaced by the plain statement in §2 plus the per-failure evidence
@@ -207,11 +247,15 @@ PYTHONPATH=tools .venv/bin/pytest tests/test_derived_state.py \
   tests/test_context_dossiers.py tests/test_module_surface.py -q        # 224 passed
 # spike swap
 PYTHONPATH="tools:workbench/spikes/roleb-sqlite-2026-11-06" \
-  .venv/bin/pytest -p spike_swap <same files> -q                        # 199 passed, 25 failed (classified)
+  .venv/bin/pytest -p spike_swap <same files> -q                        # 199 passed, 25 failed (consolidated run; Appendix C)
 # DB-equivalent corruption/rebuild/identity scenarios
 PYTHONPATH="tools:workbench/spikes/roleb-sqlite-2026-11-06" \
-  .venv/bin/python workbench/spikes/roleb-sqlite-2026-11-06/spike_behavior.py   # 28/28
+  .venv/bin/python workbench/spikes/roleb-sqlite-2026-11-06/spike_behavior.py   # 43/43 (post-repair, incl. adversarial)
 ```
+
+Expected-output comments in this section are commit-relative: they state
+what the branch tip at the spike-repair commit produces — re-run before
+trusting them on a later revision.
 
 Two baseline environment facts, documented so they are not mistaken for
 findings: the two `test_module_surface.py` failures seen without
@@ -249,47 +293,49 @@ store-side numbers are the measured ones.
    dedup value vs refactor cost, no SQL involved).
 
 
-## Appendix C — per-failure classification of the 24 swapped-suite failures
+## Appendix C — per-failure classification of the 25 swapped-suite failures
 
-Evidence basis: the Stage 5 worktree mid-state run (rebind-fixed harness) at
-`60da966` + spike store: 200 passed / 24 failed. For every failure, the
+Evidence basis: the consolidated run against the repaired spike in this
+worktree (spike-repair commit, 2026-11-06): baseline 224 passed / swapped
+199 passed, 25 failed. One row per failed test. For every failure, the
 failing assertion surface is the physical medium (file path, file bytes, or
 file-write counting) — never diagnostic code, message text, attributed path,
 ordering, or presence, which are pinned by the suites that pass unmodified
 (`tests/test_scenarios.py` recorded sequences byte-identical; all behavioral
-engine/store/validation/search suites green). Each DB-medium equivalent that
-replaces a format pin is named; all pass.
+engine/store/validation/search suites green). Each DB-medium replacement
+named in the last column is part of the Stage 5 test-port plan and passes
+there.
 
 | # | Test (file) | Failing surface | Format-only because | DB-medium replacement (passing) |
 |---|---|---|---|---|
-| 1 | test_store_replaces_and_orphans_old_blob (derived_state:263) | `(derived_dir / blob).exists()` | asserts blob FILE existence; sweep/orphan semantics themselves asserted via API first and passed | test_store_replaces_and_orphans_old_blob (row query) |
-| 2 | test_stored_state_carries_the_generated_header (derived_state:271) | reads `state-v1.json` bytes | pins the JSON header location, not the warning's existence | same test (meta `generator` row) |
-| 3 | test_misshapen_entries_are_skipped_selectively (derived_state:339) | hand-written JSON rows | the selective-skip semantics passed via API; the fixture medium was JSON | same test (hand-tampered rows) |
-| 4 | test_tampered_blob_is_a_miss (derived_state) | overwrites blob FILE then expects miss | tamper vector is a file path; hash-verify semantics pinned by API tests | same test (UPDATE bytes row) |
-| 5 | test_symlinked_blob_is_a_miss (derived_state) | symlinks a blob FILE | symlink vector is path-based; impossible in one DB file | test_symlinked_db_file_is_a_miss (symlinked DB refused) |
-| 6 | test_invalidate_drops_the_entry_and_keeps_the_blob (derived_state:395) | blob FILE existence after invalidate | keep-the-orphan semantics asserted via API first and passed | same test (row query) |
-| 7 | test_sweep_deletes_only_unreferenced_blobs (derived_state:495) | blob FILE existence after sweep | count asserts (deleted/kept) passed; only the file surface failed | same test (row queries) |
-| 8 | test_sweep_crash_between_blob_and_state_keeps_referenced (derived_state) | hand-written orphan blob FILE | crash-orphan semantics asserted via API first and passed | same test (orphan row) |
-| 9 | test_commit_staging_collects_superseded_blobs (derived_state) | blob FILE list after commit | collect-superseded semantics asserted via API first and passed | same test (row queries) |
-| 10 | test_sweep_dry_run_reports_without_deleting (derived_state) | blob FILE existence after dry run | dry-run report counts passed; file surface failed | same test (row query) |
-| 11 | test_sweep_skips_symlinks_and_non_blob_names (derived_state) | creates non-blob FILE + symlink, asserts skipped==2 | file-namespace policy; DB rows are store-owned so reclaim replaces skip | test_sweep_reclaims_hand_tampered_rows |
-| 12 | test_unpublished_stage_is_a_collectable_orphan (derived_state) | empty blobs DIR listing after sweep | collect-orphan semantics asserted via API first and passed | same test (row query) |
-| 13 | test_corrupt_cache_rebuilds_quietly (engine:204) | writes `state-v1.json` garbage, expects rebuild | corruption vector is a file the DB never reads; rebuild-on-corruption itself is proven on the DB medium | same test (corrupt DB file bytes) |
-| 14 | test_missing_blob_rebuilds_quietly (engine:213) | unlinks blob FILES | missing-blob vector is a file path; rebuild-on-miss pinned by API tests | same test (DELETE blob rows) |
-| 15 | test_one_session_reads_the_state_index_once (engine:323) | counts `read_state` calls == 1 | pins the removed session cache's read pattern, not an API contract | test_session_never_bulk_reads_the_state_index (zero bulk reads) |
-| 16 | test_evaluate_many_publishes_one_index_write (engine:496) | counts `_atomic_write` file writes == 1 | one-publication-per-batch property itself proven via API; the counting medium was file writes | same test (counts publish calls == 1) |
-| 17 | test_evaluate_many_all_hits_writes_nothing (engine) | reads `state-v1.json` bytes before/after | all-hit write-nothing property proven via API statuses; medium was file bytes | same test (DB rows before/after) |
-| 18 | test_evaluate_many_no_cache_publishes_nothing (engine) | reads `state-v1.json` bytes before/after | same as 17 | same test (DB rows before/after) |
-| 19 | test_status_memoizes_and_reuses_cache_byte_identical (validation_cache:51) | subprocess wrote JSON cache, in-process swap read DB | process boundary of the swap harness; store ships in production code in a real migration | passes naturally once the store ships (verified in the Stage 5 worktree) |
-| 20 | test_validate_offline_writes_cache_with_header_and_pins (validation_cache:288) | same subprocess boundary | same as 19 | passes naturally once the store ships |
-| 21 | test_garbage_cache_misses_discards_and_leaves_no_phantom (validation_cache:153) | overwrites blob FILE, expects miss | tamper vector is a file path | same test (UPDATE bytes row) |
-| 22 | test_tampered_blob_rebuilds_and_heals (search) | overwrites blob FILE | tamper vector is a file path; heal-after-miss pinned by API tests | same test (UPDATE bytes row) |
-| 23 | test_missing_blob_rebuilds_and_heals (search) | unlinks blob FILE | missing-blob vector is a file path | same test (DELETE blob rows) |
-| 24 | test_wrongly_shaped_postings_self_heals / test_wrongly_shaped_segment_self_heals (search ×2) | forges blob FILE + rewrites `state-v1.json` entry | forge vector is file-based; wrong-shape refusal + self-heal proven on the DB medium | same tests (UPDATE node row + INSERT forged blob row) |
-| 25 | test_corrupt_receipt_sidecar_falls_back_to_the_full_pass (compute_once) | overwrites blob FILE | fallback-on-corruption pinned by API tests; vector was a file path | same test (UPDATE bytes row) |
+| 1 | test_store_replaces_and_orphans_old_blob (derived_state) | `(derived_dir / blob).exists()` | asserts blob FILE existence; the orphan/sweep semantics themselves asserted via API first and passed | row query on the blobs table |
+| 2 | test_stored_state_carries_the_generated_header (derived_state) | reads `state-v1.json` bytes | pins the JSON header location, not the warning's existence | meta `generator` row assertion |
+| 3 | test_misshapen_entries_are_skipped_selectively (derived_state) | hand-written JSON row fixture | selective-skip semantics asserted via API first and passed; the fixture medium was JSON | hand-tampered rows |
+| 4 | test_tampered_blob_is_a_miss (derived_state) | overwrites a blob FILE | tamper vector is a file path; hash-verify semantics pinned by API tests | UPDATE of the blob row's bytes |
+| 5 | test_symlinked_blob_is_a_miss (derived_state) | symlinks a blob FILE | the symlink vector is path-based; impossible for one DB file | symlinked-DB-file refusal test |
+| 6 | test_invalidate_drops_the_entry_and_keeps_the_blob (derived_state) | blob FILE existence after invalidate | keep-the-orphan semantics asserted via API first and passed | row query on the blobs table |
+| 7 | test_sweep_deletes_only_unreferenced_blobs (derived_state) | blob FILE existence after sweep | count asserts (deleted/kept) passed; only the file surface failed | row queries on the blobs table |
+| 8 | test_sweep_crash_between_blob_and_state_keeps_referenced (derived_state) | hand-written orphan blob FILE | crash-orphan semantics asserted via API first and passed | hand-inserted orphan row |
+| 9 | test_commit_staging_collects_superseded_blobs (derived_state) | blob FILE list after commit | collect-superseded semantics asserted via API first and passed | row queries on the blobs table |
+| 10 | test_sweep_dry_run_reports_without_deleting (derived_state) | blob FILE existence after dry run | dry-run report counts passed; the file surface failed | row query on the blobs table |
+| 11 | test_sweep_skips_symlinks_and_non_blob_names (derived_state) | non-blob FILE + symlink, asserts skipped == 2 | file-namespace policy; DB rows are store-owned, so reclaim replaces skip | test_sweep_reclaims_hand_tampered_rows |
+| 12 | test_unpublished_stage_is_a_collectable_orphan (derived_state) | empty blobs DIR listing after sweep | collect-orphan semantics asserted via API first and passed | row query on the blobs table |
+| 13 | test_corrupt_cache_rebuilds_quietly (engine) | writes `state-v1.json` garbage, expects rebuild | corruption vector is a file the DB never reads; rebuild-on-corruption itself is proven on the DB medium | corrupt DB file bytes test |
+| 14 | test_missing_blob_rebuilds_quietly (engine) | unlinks blob FILES | missing-blob vector is a file path; rebuild-on-miss pinned by API tests | DELETE of blob rows |
+| 15 | test_evaluate_many_publishes_one_index_write (engine) | counts `_atomic_write` file writes == 1 | the one-publication-per-batch property itself is proven via API; the counting medium was file writes | publish-call counting == 1 |
+| 16 | test_evaluate_many_all_hits_writes_nothing (engine) | reads `state-v1.json` bytes before/after | all-hit write-nothing property proven via API statuses; the medium was file bytes | DB rows before/after |
+| 17 | test_evaluate_many_no_cache_publishes_nothing (engine) | reads `state-v1.json` bytes before/after | same as row 16 | DB rows before/after |
+| 18 | test_garbage_cache_misses_discards_and_leaves_no_phantom (validation_cache) | overwrites a blob FILE | tamper vector is a file path | UPDATE of the blob row's bytes |
+| 19 | test_tampered_blob_rebuilds_and_heals (search) | overwrites a blob FILE | tamper vector is a file path; heal-after-miss pinned by API tests | UPDATE of the blob row's bytes |
+| 20 | test_missing_blob_rebuilds_and_heals (search) | unlinks a blob FILE | missing-blob vector is a file path | DELETE of blob rows |
+| 21 | test_wrongly_shaped_postings_self_heals (search) | forges blob FILE + rewrites `state-v1.json` entry | forge vector is file-based; wrong-shape refusal and self-heal proven on the DB medium | UPDATE node row + forged blob row |
+| 22 | test_wrongly_shaped_segment_self_heals (search) | forges blob FILE + rewrites `state-v1.json` entry | same as row 21 | UPDATE node row + forged blob row |
+| 23 | test_corrupt_receipt_sidecar_falls_back_to_the_full_pass (compute_once) | overwrites a blob FILE | fallback-on-corruption pinned by API tests; the vector was a file path | UPDATE of the blob row's bytes |
+| 24 | test_status_memoizes_and_reuses_cache_byte_identical (validation_cache) | subprocess wrote JSON cache; in-process swap read the DB | process boundary of the swap harness, not a store defect | passes naturally once the store ships in production code |
+| 25 | test_validate_offline_writes_cache_with_header_and_pins (validation_cache) | same subprocess boundary | same as row 24 | passes naturally once the store ships in production code |
 
-Grouped: 22 file-format pins (rows 1–18, 21–25), 1 removed-machinery pin
-(row 15 — the session cache the assignment removed), 1 file-write-count
-medium (row 16, counted in 22), 2 process-boundary tests (rows 19–20; they
-pass naturally once the store ships — verified). No failure involves
-diagnostic ordering, attribution, or presence.
+Grouped: **23 file-format pins** (rows 1–23) and **2 process-boundary
+artifacts** (rows 24–25) = 25, matching §2 exactly. No failure involves
+diagnostic ordering, attribution, or presence: `tests/test_scenarios.py`
+(recorded sequences, byte-identical) and the behavioral suites pin those and
+pass unmodified.
