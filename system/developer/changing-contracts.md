@@ -73,3 +73,25 @@ manifest no longer matches `system/contracts/manifest-contract.yaml`:
 Additive still bumps. Consumers declare an exact version and fail closed, so
 "only added a key" is not "invisible".
 
+## Scenario recordings pin contract content — re-record last
+
+`tests/scenarios/recorded/` holds the pinned expectations the scenario suite
+compares against: with `LOS_RECORD_SCENARIOS=1` the suite re-records; without
+it each case compares against its recording (see the module docstring of
+`tests/test_scenarios_effects.py`). These are unrelated to lecture recordings,
+the material authority named in unit schemas — "recordings" in this section
+always means the pinned test expectations.
+
+The recordings pin the *content* of `system/contracts/*` and `system/schema/*`:
+any edit to that content, including one that only removes a duplicate comment,
+changes its hash and stales every recording that pins it. That bit twice on
+2026-11-05: recordings were refreshed mid-branch, then the perimeter dedup
+(2252fa8) removed a duplicate comment, the contract hash moved, and the same
+eight recordings went stale again (fixed in d2a907e).
+
+The rule: **re-record last.** Finish every contract-content edit first,
+re-record once against the final bytes, and audit the re-record (hashes and
+sizes only — a re-record is evidence, not a fix). Any content edit after a
+re-record stales it again: if a review correction lands after re-recording,
+re-record once more against the final content and re-audit.
+
