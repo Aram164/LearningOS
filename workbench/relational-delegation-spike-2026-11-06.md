@@ -16,9 +16,9 @@ never imported by production code; committed on this branch only):
 
 | File | wc -l | code lines (non-doc, non-blank, non-comment) | Role |
 |---|---|---|---|
-| `spike_store_sqlite.py` | 280 | 193 | the SQLite-backed store behind the existing `store.py` API surface |
+| `spike_store_sqlite.py` | 377 | 265 | the SQLite-backed store behind the existing `store.py` API surface (280/193 before the repair rounds; 343/~238 after round 2; final after the secure-temp round 3) |
 | `spike_swap.py` | 57 | 34 | pytest plugin: installs the spike as `learning_os.store.derived.store` (sys.modules + package attrs + rebind of already-imported modules) |
-| `spike_behavior.py` | 212 | 174 | 28 DB-equivalent corruption/rebuild/identity/path-safety/sweep scenarios (the oracle tests' format-pinned scenarios, ported to the DB medium) |
+| `spike_behavior.py` | 311 | 254 | 47 scenarios: the oracle tests' format-pinned scenarios ported to the DB medium, plus the adversarial rounds (identity, foreign stores, corruption, planted temp symlink) |
 
 Production files under `tools/` were not edited. The venv (`.venv/`, gitignored,
 Python 3.12) was created in the clone as authorized; dependencies PyYAML,
@@ -40,11 +40,12 @@ whose attributes are identity-identical to the real functions.
 ## 2. Parity evidence
 
 Oracle: the derived-store/validation-cache/search/compute test suites, run
-against the unmodified production baseline and then against the **repaired**
-spike swapped in behind the same API surface — one consolidated run in this
-worktree against the spike-repair commit, whose numbers are the only ones
-quoted anywhere in this document. Baseline: **224 passed**. Swapped: **199
-passed, 25 failed**.
+against the unmodified production baseline and then against the **final
+repaired spike** (secure-temp round included) swapped in behind the same API
+surface — one consolidated run in this worktree against the repair-round-3
+commit, whose numbers are the only ones quoted anywhere in this document.
+Baseline: **224 passed**. Swapped: **199 passed, 25 failed** (the fresh run
+reproduces the consolidated numbers exactly).
 
 **Stated plainly: full migration parity is NOT established by this spike.**
 What is established: all 25 failures are classified one-to-one in Appendix C,
@@ -98,24 +99,26 @@ values share one blob row; sweep counts match the file store's semantics.
 
 | Quantity | Value | Status |
 |---|---|---|
-| Production `store.py` superseded by the spike module | 308 wc-l → 280 wc-l; 189 code → 193 code | **measured: line-neutral at the store API boundary (−28 wc-l, +4 code)** |
+| Production `store.py` superseded by the spike module | 308 wc-l / 189 code → **377 wc-l / 265 code** | **measured: +69 wc-l / +76 code — NOT line-neutral.** Atomic rebuild, secure temp creation, and retained path safety are new machinery (brief §4: each new obligation is machinery charged against the savings — measured) |
 | Retained policy inside the spike module (path safety 13, hash verify 4, blob-string parity 2, identity binding 2) | ≈ 21 code lines | measured — the reviewer caveat honored, not absorbed |
 | Engine-side deletions (states cache −12, deferred-index batching −14, commit-staging plumbing −14) | ≈ −40 wc-l | **still ESTIMATE — engine untouched by this spike** |
 | `__init__.py` re-export shrink | ≈ 0 (not −25 as estimated) | measured correction: the same-API-surface approach preserves the re-exported names, so the estimated −25 does not materialize unless the API itself shrinks |
 | Micro-benchmark (in-process, 200 stores + 200 lookups + 100 read_states + 1 sweep, 50-key values) | JSON: 133–140 / 20–21 / 6–7 ms; SQLite: 149–157 / 44–45 / 11–12 ms | measured, informal: ≈1.1–2× slower per op, sub-second at this scale; the spike opens a connection per call (a real integration holds one per session, which would narrow the gap); no material regression claim needed at S23's loader-dominated scale |
 
-**Correction the measurements force:** Deliverable 2's Role B net of ≈ −160 L
-ESTIMATE (range −110…−195) does not survive measurement. Behind the *same API
-surface*, the store replacement is line-neutral; the deletion side of the D1
+**Correction the measurements force (final, after repair rounds 2–3):**
+Deliverable 2's Role B net of ≈ −160 L ESTIMATE does not survive measurement.
+The final repaired store is **+69 wc-l / +76 code lines larger than the JSON
+store it replaces** (377/265 vs 308/189) — the brief's own §4 prediction
+playing out in measured form: the atomic-rebuild protocol, secure temp
+creation, and the path-safety policy SQLite does not absorb are new
+machinery, each charged against the savings. The deletion side of the D1
 ledger assumed engine-side and `__init__` simplifications that either remain
-unproven (engine ≈ −40) or were based on an API-shrinking design this spike did
-not test (≈ −25 → ≈ 0). The honest measured statement: **net ≈ −28 wc-l measured
-for the store slice alone; ≈ −68 wc-l if the engine-side ESTIMATE also lands —
-at or beyond the pessimistic edge of the published range, and only if a later
-assignment actually rewrites the engine plumbing.** The Gate 2 prediction
-("budget the true net nearer the pessimistic end") is confirmed; the Q4 verdict
-(YES, net deletion) survives only via the engine-side estimate and the
-dimension-4 argument.
+unproven (engine ≈ −40, ESTIMATE) or were based on an API-shrinking design
+this spike did not test (≈ −25 → ≈ 0). The honest statement: **the store
+slice is a measured line INCREASE; the only remaining deletion is the
+engine-side ESTIMATE, and the robustness-vs-simplicity trade is exactly what
+the Stage 5 GO/NO-GO must price on these numbers.** This supersedes the
+"line-neutral" phrasing in pilot §13, which described the pre-repair store.
 
 What measurement *strengthens*: the qualitative core of the Role B case. The
 hand-reasoned machinery — five corruption→miss paths in `read_state`, five in
@@ -123,10 +126,11 @@ hand-reasoned machinery — five corruption→miss paths in `read_state`, five i
 construction" GC — became schema constraints, one transaction, one PK upsert,
 and one `DELETE ... NOT IN` in the spike, and every behavioral test that
 exercises those invariants through the API passes unchanged. That is dimension-4
-ownership transfer, demonstrated, not argued. Whether a ~line-neutral store
-replacement plus an ≈ −40 L engine simplification justifies adopting SQLite for
-`generated/`-level cache state is now an honest reviewer judgment between
-"dimension-4 win, measured" and "no dimension-1 win at this boundary".
+ownership transfer, demonstrated, not argued. Whether a +69 wc-l / +76 code
+line store replacement plus an ≈ −40 L engine ESTIMATE justifies adopting
+SQLite for `generated/`-level cache state is now an honest reviewer judgment
+between "dimension-4 win, measured" and "no dimension-1 win at this
+boundary".
 
 ### Durable costs, scored on all six dimensions
 
@@ -152,11 +156,13 @@ alone:
   `system/developer/components/derived-store.md` is the contract that keeps
   that split honest (dimension 4's bookkeeping).
 
-The measured result stands: the store replacement is line-neutral (−28
-wc-l, +4 code lines) with the engine-side ≈ −40 L still ESTIMATE — the
-original −160 L prediction has not materialized at the store boundary, and
-whether the engine-side rewrite changes that is the open question a
-measured Stage 5 decision must answer.
+The measured result stands, restated against the final code: the store
+replacement is **+69 wc-l / +76 code lines**, with the engine-side ≈ −40 L
+still ESTIMATE — the original −160 L prediction has not materialized at the
+store boundary, and whether the engine-side rewrite changes that is the open
+question a measured Stage 5 decision must answer. The durable costs above
+are the reason the number moved: robustness obligations are machinery, and
+the ledger charges them.
 
 ## 4. What a real Stage 5 would inherit from this spike
 
@@ -235,6 +241,35 @@ in Appendix C. Two documentation corrections are applied in §5 (guard
 unification scope) and §7 (NO-GO reconciliation; engine-side ≈ −40 L marked
 ESTIMATE).
 
+### Repair round 3 (2026-11-06): the secure-temp protocol
+
+A further review reproduced a NEW blocker against the round-2 repair: a
+dangling symlink planted at the fixed temp name `state-v1.db.rebuild`
+bypassed `tmp.exists()` (it follows the link), `sqlite3.connect(tmp)` then
+followed it and created/wrote an external file, and `os.replace(tmp, db)`
+renamed the symlink itself onto the live store path — a store hijack.
+Confirmed in source at the consolidation commit.
+
+Repaired with the complete protocol, not a spot patch: the rebuild temp is
+created with `tempfile.mkstemp` in the store's own directory (exclusive,
+unpredictable, created by us — a pre-planted symlink cannot occupy the
+name), lstat-verified as a plain regular file with link count 1 before
+connect, re-verified after the build together with the `generated/` and
+destination symlink state and the temp's own bound identity, and only then
+`os.replace`d onto the live path (the rename does not follow a destination
+symlink). Failure points unchanged: any refusal leaves the old database
+untouched; a crash before the rename leaves an unpredictable orphan temp.
+
+Regression test from the reproduced attack, added to the adversarial
+section: a dangling symlink planted at the historical fixed name, a forced
+rebuild, then assertions that the store rebuilt and serves, the planted
+symlink was never followed or replaced, the external target was never
+created, and the live store is a plain regular file. Fresh runs against the
+final code: behavior suite **47/47**; swapped oracle suite **199 passed,
+25 failed** (Appendix C stands unchanged). Ledger recalculated against the
+final code: **+69 wc-l / +76 code lines** vs the 308/189 JSON store —
+stated plainly in §3, not softened.
+
 ## 6a. Verification and honesty notes
 
 Everything above is reproducible from the clone:
@@ -247,10 +282,10 @@ PYTHONPATH=tools .venv/bin/pytest tests/test_derived_state.py \
   tests/test_context_dossiers.py tests/test_module_surface.py -q        # 224 passed
 # spike swap
 PYTHONPATH="tools:workbench/spikes/roleb-sqlite-2026-11-06" \
-  .venv/bin/pytest -p spike_swap <same files> -q                        # 199 passed, 25 failed (consolidated run; Appendix C)
+  .venv/bin/pytest -p spike_swap <same files> -q                        # 199 passed, 25 failed (fresh run on the final code; Appendix C)
 # DB-equivalent corruption/rebuild/identity scenarios
 PYTHONPATH="tools:workbench/spikes/roleb-sqlite-2026-11-06" \
-  .venv/bin/python workbench/spikes/roleb-sqlite-2026-11-06/spike_behavior.py   # 43/43 (post-repair, incl. adversarial)
+  .venv/bin/python workbench/spikes/roleb-sqlite-2026-11-06/spike_behavior.py   # 47/47 (final code, incl. adversarial rounds)
 ```
 
 Expected-output comments in this section are commit-relative: they state
