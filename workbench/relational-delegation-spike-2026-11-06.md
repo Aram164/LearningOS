@@ -160,6 +160,11 @@ from this spike directory and this report.
 
 ## 7. What the reviewer is asked to decide
 
+**Resolved 2026-11-06 by owner override (Gate 2.5):** Role B proceeds to
+Stage 5; the guard unification is adopted at +62 L. See the pilot
+deliverable §13. The questions below are retained as the record of what
+this spike asked.
+
 1. Accept the measured correction: Role B's net-deletion case is ≈ line-neutral
    at the store boundary, ≈ −68 wc-l with the engine-side estimate — the Q4 GO
    now rests primarily on the measured dimension-4 ownership transfer rather
