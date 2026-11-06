@@ -14,21 +14,16 @@ stages:
   number: 1
   title: Expression grammar, contexts, aliases, and sibling visibility
   status: pending
-  objective: 'Treat a Polars expression as a value you can inspect rather than a statement you run: predict
-    output width, height and schema for a tree before executing it, and derive the sibling-visibility
-    rule that decides how a pandas assign chain lowers into one with_columns context or several.'
+  objective: 'Treat a Polars expression as a value you can compose: predict the columns, height and schema
+    it produces before running it, and see why pandas assign, which runs in sequence, does not map onto
+    one with_columns.'
   done_when:
-  - The four sibling-visibility cases run, and you can state what `with_columns` evaluates against versus
-    what `assign` evaluates against, plus the lowering consequence for each.
-  - Output width and height predicted correctly for all eight context cases, including the two that raise
-    and why `sum()` broadcasts where `head(2)` is refused.
-  - For three expressions of your own you can answer 'which columns, from which inputs' WITHOUT executing,
-    using `meta.output_name`, `meta.root_names` and `collect_schema`.
-  - Eight assign pipelines translated and classified native / staged / fallback, each with an executed
-    comparison of values and dtype.
-  - Twenty operations classified projection / map / metadata / fallback closed-book, with every misclassification
-    kept and annotated.
-  - '`s2a-check.py` passes (27 assertions).'
+  - The four sibling-visibility cases run, and you can say what with_columns evaluates against and what
+    assign evaluates against.
+  - Output width and height predicted for the eight context cases, including why sum() broadcasts where
+    head(2) is refused.
+  - The 28 Polars-first expressions written from intent, and their check passes.
+  - Eight assign pipelines translated, each compared on values and dtype.
   exam_critical: false
   concepts:
   - concept-python
@@ -36,30 +31,16 @@ stages:
   - concept-projection-family
   scope_triage: required-now
   resources:
-  - id: resource-polars-05-sheet
-    kind: practise
-    label: Stage exercise sheet - contexts, sibling visibility, and reading an expression tree
-    locator: attachments/s2a-exercises.md - Fixture F2, then Tasks 1-5
-    angle: Builds the sibling-visibility rule by making it fail, then turns it into the assign lowering
-      rule.
-    angle_detail: 'Task 1''s four cases separate ''Polars needs two calls'' from the real finding: pandas
-      assign is sequential, so its entries form a dependency chain a translator must compute. Task 2 makes
-      context a shape question rather than a syntax one — including the pair where `sum()` broadcasts
-      and `head(2)` raises. Task 3 replaces ''print the Expr tree'' with the four `meta` calls that actually
-      do it. Every expected value was executed against the pinned pair.'
+  - kind: reference
+    label: Polars user guide - Expressions and contexts
+    id: resource-polars-04-04-official-reference-docs-pola-rs-expres
+    locator: §'Expressions and contexts' - the four contexts, then §'Expression expansion'
+    url: https://docs.pola.rs/user-guide/concepts/expressions-and-contexts/
     scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises.md
-  - id: resource-polars-05-sheet-check
-    kind: practise
-    label: Answer-key self-check - 27 assertions, including the silent wrong answer
-    locator: attachments/s2a-check.py - run after Tasks 1-4
-    angle: Asserts the case where a naive one-context lowering returns plausible numbers and raises nothing.
-    angle_detail: 'The assertion worth reading in the source is `R5`: it executes both the naive and the
-      staged lowering of an overwrite-then-read chain and records that they differ, with no exception
-      on the wrong one. That difference is the argument for building a dependency graph, expressed as
-      a test rather than as advice.'
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-check.py
+    angle: The official statement of which contexts exist and what each does to output height.
+    angle_detail: Use it as the checklist for Task 2 after you have made your predictions. Its examples
+      are all well-behaved; the cases that teach — multi-output plus alias, scalar broadcast versus length-2
+      result — are not there, which is why the sheet supplies them.
   - material_ref:
       route_id: route-polars-definitive-guide-s02
       inherit:
@@ -76,42 +57,109 @@ stages:
       computation, so it has properties before it has results. Ch 8''s four operation categories (element-wise,
       summarize-to-one, summarize-to-one-or-more, extend) are exactly the categories that decide whether
       a tree is legal in a given context — pair them with Task 2''s width/height table. Early-release
-      edition: verify callables against 1.36.0.'
+      edition: verify callables against 2.0.'
     scope_triage: required-now
     route_id: route-polars-definitive-guide-s02
     angle_review:
       kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Expression grammar,
-        contexts, aliases, and sibling visibility'. The stage description selects that stage's task or
-        reading purpose from the broader route; preserve the narrower description. This relation review
-        asserts no new source observation or learner achievement.
-      fingerprint: sha256:46f9bcce7c273d832ac014107ce93af10a708a79d80ca07a69a47347078c7db6
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Polars book - Session 2 route'' against the stage ''Expression
+        grammar, contexts, aliases, and sibling visibility'': the row narrows the route to this stage''s
+        purpose. This relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:441d1fdee0b619e20d477b87448fc9e1723ff44fa444c7d9c71993f021797945
+  - material_ref:
+      route_id: route-modern-polars-s02
+      inherit:
+      - source_id
+      - url
+    id: resource-modern-polars-chaining
+    kind: read
+    label: Modern Polars - Method Chaining
+    locator: Chapter 2, whole chapter
+    angle: The style both libraries reward, side by side.
+    angle_detail: Read after the book's definition of an expression, so you can see what the style rests
+      on.
+    scope_triage: helpful-now
+    route_id: route-modern-polars-s02
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Modern Polars - Method Chaining'' against the stage ''Expression
+        grammar, contexts, aliases, and sibling visibility'': the row narrows the route to this stage''s
+        purpose. This relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:7d9788ead02c6f0e74739ea68c08e54e99ccdf3ddaebf6336942d0fff907380a
+  - id: resource-polars-05-sheet
+    kind: practise
+    label: Stage exercise sheet - contexts, sibling visibility, and reading an expression tree
+    locator: attachments/s2a-exercises-p2.md - Fixture F2, then Tasks 1-5
+    angle: Builds the sibling-visibility rule by making it fail, then turns it into the assign translation
+      rule.
+    angle_detail: 'Task 1''s four cases separate ''Polars needs two calls'' from the real finding: pandas
+      assign is sequential, so its entries form a dependency chain a translator must compute. Task 2 makes
+      context a shape question rather than a syntax one — including the pair where `sum()` broadcasts
+      and `head(2)` raises. Task 3 replaces ''print the Expr tree'' with the four `meta` calls that actually
+      do it. Every expected value was executed against the versions in Stratum''s lockfile.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises-p2.md
+  - id: resource-polars-05-sheet-check
+    kind: practise
+    label: Answer-key self-check - 27 assertions, including the silent wrong answer
+    locator: attachments/s2a-check-p2.py - run after Tasks 1-4
+    angle: Asserts the case where a naive one-context translation returns plausible numbers and raises
+      nothing.
+    angle_detail: 'The assertion worth reading in the source is `R5`: it executes both the naive and the
+      staged translation of an overwrite-then-read chain and records that they differ, with no exception
+      on the wrong one. That difference is the argument for building a dependency graph, expressed as
+      a test rather than as advice.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-check-p2.py
+  - id: resource-polars-05-polars-first
+    kind: practise
+    label: Polars-first drill set - 28 expressions from intent, no pandas in the file
+    locator: attachments/u2-polars-first-p2.md - Sets A, B, C, D
+    angle: Given intent and no source expression, so there is nothing to translate and the only way through
+      is the language.
+    angle_detail: Set A's drills 4, 6, 8, 10, 12, 13 and 14 all have one shape — an aggregation that must
+      not collapse the frame — and all seven are `<aggregation>.over(<partition>)`. Writing `over` for
+      all seven without hesitating is the marker for this session; reaching for a group_by and a join
+      on any of them is the reflex to retire. Set B's five statements must survive a new column being
+      added to the fixture, which is the property that makes a selector worth using rather than merely
+      shorter.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-p2.md
+  - id: resource-polars-05-polars-first-check
+    kind: practise
+    label: Polars-first drill self-check - 26 assertions
+    locator: attachments/u2-polars-first-check-p2.py
+    angle: 'Includes the composition property: the same statement re-run against a widened frame.'
+    angle_detail: 'One assertion adds a column to the fixture and re-runs the Set B statements unchanged.
+      That is the test worth copying: a selector-based statement that needs editing when the schema grows
+      was a name list wearing a selector''s syntax.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-check-p2.py
+  - kind: practise
+    label: Add to your differences sheet
+    id: resource-polars-05-99-axis-pass
+    locator: attachments/differences-sheet.md, in the stage 'What changes from pandas'
+    scope_triage: helpful-now
+    angle: One row for each thing that surprised you in this stage.
+    angle_detail: Your own words and the smallest example. This replaces the harness deposit.
   - kind: reference
-    label: Official reference — docs.pola.rs — expressions and contexts
-    id: resource-polars-04-04-official-reference-docs-pola-rs-expres
-    locator: §'Expressions and contexts' - the four contexts, then §'Expression expansion'
-    url: https://docs.pola.rs/user-guide/concepts/expressions-and-contexts/
-    scope_triage: reference-only
-    angle: The official statement of which contexts exist and what each does to output height.
-    angle_detail: Use it as the checklist for Task 2 after you have made your predictions. Its examples
-      are all well-behaved; the cases that teach — multi-output plus alias, scalar broadcast versus length-2
-      result — are not there, which is why the sheet supplies them.
-  - kind: reference
-    label: Optional depth — docs.pola.rs — meta.html
+    label: Polars docs - meta.html
     id: resource-polars-04-08-optional-depth-docs-pola-rs-meta-html
     locator: meta.output_name, meta.root_names, meta.tree_format, meta.has_multiple_outputs
     url: https://docs.pola.rs/api/python/stable/reference/expressions/meta.html
-    scope_triage: required-now
+    scope_triage: reference-only
     angle: The four calls that let you answer 'what will this produce' without running it - promoted from
       optional.
     angle_detail: 'The migrated plan filed this as optional depth and simultaneously asked for an exercise
       that prints an expression tree, which is not possible without it. These four are the static-analysis
-      surface a lowering pass needs: `root_names` is the exact read-set that Task 3 of the assign-lowering
+      surface a translation pass needs: `root_names` is the exact read-set that Task 3 of the assign-translation
       stage shows pandas cannot give you.'
   - kind: reference
-    label: Official reference — pandas.pydata.org — pandas.DataFrame.assign.html
+    label: pandas docs - pandas.DataFrame.assign.html
     id: resource-polars-04-05-official-reference-pandas-pydata-org-p
     locator: The 'Notes' section on ordering and the later-key-referring-to-earlier example
     url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.assign.html
@@ -122,7 +170,7 @@ stages:
       does not promise: nothing about an entry that overwrites a name, which is Task 1 case 5 and the
       case that produces a silent wrong answer.'
   - kind: read
-    label: Local material — 03.03-Operations-in-Pandas.ipynb
+    label: 03.03-Operations-in-Pandas.ipynb
     id: resource-polars-04-02-local-material-03-03-operations-in-pan
     source_id: source-pydata-handbook
     locator: §'Index alignment in DataFrame' and §'Operations between DataFrame and Series' (notebook
@@ -131,22 +179,12 @@ stages:
     scope_triage: reference-only
     angle: Shows pandas doing alignment inside ordinary arithmetic - the behaviour Polars has no analogue
       for.
-    angle_detail: 'Read the two named sections only, and read them as a source of harness cases rather
-      than as instruction: every alignment example there is a Session 1 Task 3 case with different numbers.
-      Pre-3.0 notebook, so its dtypes and its `object` string columns describe a different library than
-      the pinned one.'
-  - kind: practise
-    label: Axis pass — classify every divergence found this session against the eight axes, then add one
-      harness case per divergence and re-run the whole harness.
-    id: resource-polars-05-99-axis-pass
-    locator: Sheet Task 5 (closed-book translation table), then deposit into the Session 1 harness
-    scope_triage: required-now
-    angle: Closes the session by turning this stage's misclassifications into executable cases.
-    angle_detail: 'The twenty-row table from Task 5 is the input: every row you got wrong is a divergence
-      you would have shipped, so it earns a named harness case today. Re-run the whole harness, not just
-      the new cases — a normalization added this session can silence a Session 1 finding.'
+    angle_detail: 'Read the two named sections only, and read them as a source of differences sheet cases
+      rather than as instruction: every alignment example there is a Session 1 Task 3 case with different
+      numbers. Pre-3.0 notebook, so its dtypes and its `object` string columns describe a different library
+      than the pinned one.'
   - kind: reference
-    label: Official reference — pandas.pydata.org — enhancingperf.html
+    label: pandas docs - enhancingperf.html
     id: resource-polars-04-06-official-reference-pandas-pydata-org-e
     locator: §'Expression evaluation via eval()' and the operation-support list
     url: https://pandas.pydata.org/docs/user_guide/enhancingperf.html#expression-evaluation-via-eval
@@ -164,32 +202,8 @@ stages:
     angle_detail: Read only if you want to see what this stage looked like before it was split into four.
       It is a short mental-model sketch, not a guide — the working content it promised now lives in the
       stage exercise sheet, which is where new work should go.
-    scope_triage: reference-only
+    scope_triage: deferred
     vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-05-expressions-and-column-creation/notes.md
-  - id: resource-polars-05-polars-first
-    kind: practise
-    label: Polars-first drill set - 28 expressions from intent, no pandas in the file
-    locator: attachments/u2-polars-first.md - Sets A, B, C, D
-    angle: Given intent and no source expression, so there is nothing to translate and the only way through
-      is the language.
-    angle_detail: Set A's drills 4, 6, 8, 10, 12, 13 and 14 all have one shape — an aggregation that must
-      not collapse the frame — and all seven are `<aggregation>.over(<partition>)`. Writing `over` for
-      all seven without hesitating is the marker for this session; reaching for a group_by and a join
-      on any of them is the reflex to retire. Set B's five statements must survive a new column being
-      added to the fixture, which is the property that makes a selector worth using rather than merely
-      shorter.
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first.md
-  - id: resource-polars-05-polars-first-check
-    kind: practise
-    label: Polars-first drill self-check - 26 assertions
-    locator: attachments/u2-polars-first-check.py
-    angle: 'Includes the composition property: the same statement re-run against a widened frame.'
-    angle_detail: 'One assertion adds a column to the fixture and re-runs the Set B statements unchanged.
-      That is the test worth copying: a selector-based statement that needs editing when the schema grows
-      was a name list wearing a selector''s syntax.'
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-check.py
   - kind: watch
     label: Ritchie Vink - 'Polars and a peek into the expression engine' (PyData Amsterdam 2023)
     locator: pola.rs/posts/talk-pydata-amsterdam-2023 - full talk
@@ -199,7 +213,7 @@ stages:
       of expressions being values you can store, reuse and build programmatically; the talk explains what
       that buys the engine — which is the direction that makes the idea stick. It is a 2023 talk, so treat
       any specific API shown as historical and the reasoning as current.
-    scope_triage: helpful-now
+    scope_triage: deferred
     id: resource-polars-05-expr-engine-talk
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises.md
@@ -210,6 +224,14 @@ stages:
     label: Polars-first drill set - 28 expressions from intent
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-check.py
     label: Polars-first drill self-check (26 assertions)
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-check-p2.py
+    label: Self-check for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises-p2.md
+    label: Exercise sheet for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-check-p2.py
+    label: Self-check for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/u2-polars-first-p2.md
+    label: Polars-first drills for Polars 2.0
   source_feedback: []
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/notes.md
 - id: stage-polars-expr-selectors-expansion
@@ -220,18 +242,11 @@ stages:
   objective: Select columns by name and dtype without materializing schema-specific Python lists, and
     predict the expanded output columns before execution.
   done_when:
-  - The seven selector set-algebra expressions expanded and predicted correctly with `cs.expand_selector`.
-  - 'The operator-ambiguity case answered: you can say what decides whether `-` is set difference or arithmetic,
-    and what the same overloading does to `|` and `&`.'
-  - One expression written once and applied unchanged to narrow, wide, drifted and no-numeric schemas,
-    with the empty-selection behaviour recorded for both `select` and `with_columns`.
-  - '`translate_select_dtypes(include, exclude)` total over single dtype, list, string alias and both-given
-    forms, raising on unsupported forms rather than selecting nothing.'
-  - The Boolean/Categorical class question answered with an executed result on both sides rather than
-    assumed.
-  - A schema-change test passes without editing the expression, and the materialized-name-list version
-    is demonstrated to fail it.
-  - '`s2b-check.py` passes (22 assertions).'
+  - The selector expressions predicted and checked with cs.expand_selector.
+  - You can say what decides whether - is set difference or arithmetic, and what 2.0 changed about | and
+    & next to pl.col.
+  - One expression applied unchanged to several schemas, including one with no matching column.
+  - pandas select_dtypes compared on the same frames, including the new str dtype.
   exam_critical: false
   concepts:
   - concept-python
@@ -239,29 +254,6 @@ stages:
   - concept-projection-family
   scope_triage: required-now
   resources:
-  - id: resource-polars-selectors-sheet
-    kind: practise
-    label: Stage exercise sheet - selector set algebra, drift, strictness
-    locator: attachments/s2b-exercises.md - Fixture F3, then Tasks 1-4
-    angle: Turns 'selectors are declarative' into four executed properties, including the one that silently
-      computes.
-    angle_detail: Task 1 ends on `cs.numeric() - 1`, which is not a set difference at all but element-wise
-      subtraction applied to every numeric column — legal, silent, and a selection quietly turned into
-      a computation. Task 3 settles strictness with `require_all`, and Task 4 asks for the `select_dtypes`
-      translation with the Boolean/Categorical class boundary answered by execution.
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-exercises.md
-  - id: resource-polars-selectors-sheet-check
-    kind: practise
-    label: Answer-key self-check - 22 assertions including the stale-name-list proof
-    locator: attachments/s2b-check.py - run after Tasks 1-3
-    angle: Encodes the drift property as a test, so the materialized shortcut fails visibly rather than
-      plausibly.
-    angle_detail: The last assertion builds the tempting version — a Python list comprehension over `df.schema`
-      — and shows it selecting nothing on the drifted schema. Keep it in your own test file when you write
-      the real translation; it is the regression that catches the shortcut being reintroduced.
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-check.py
   - id: resource-polars-expression-expansion
     kind: read
     label: Polars expression expansion
@@ -292,24 +284,12 @@ stages:
     route_id: route-polars-definitive-guide-s02
     angle_review:
       kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Selectors and expression
-        expansion'. The stage description selects that stage's task or reading purpose from the broader
-        route; preserve the narrower description. This relation review asserts no new source observation
-        or learner achievement.
-      fingerprint: sha256:3132f8275fe8aab97747a9b493751f66f2be4ab7309eab3472b6d9b02b704120
-  - id: resource-polars-selector-schema-drift
-    kind: practise
-    label: Selector schema-drift lab
-    locator: Sheet Tasks 2 and 4 - one expression against narrow, wide, drifted and no-numeric schemas
-    angle: 'The property test for the whole stage: an expression that stops working when the schema moves
-      has failed.'
-    angle_detail: The drifted schema retypes `a` from Int64 to Float64 and adds a numeric column, so a
-      dtype selector legitimately picks a different set — intended behaviour and a risk at once. Record
-      which of your selections want to follow the schema and which want a fixed set, because the two need
-      different code and the failure mode of confusing them is silent.
-    scope_triage: required-now
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Polars book - Session 2 route'' against the stage ''Selectors and
+        expression expansion'': the row narrows the route to this stage''s purpose. This relation review
+        asserts no new source observation or learner achievement.'
+      fingerprint: sha256:b7f1a0f0d847ad20c046b0b7654a48d221aeba7605bfb028fb649b03edbf1de8
   - id: resource-note-columnselectorop
     kind: read
     label: Stratum ColumnSelectorOp note
@@ -321,14 +301,52 @@ stages:
       to be stale after drift, so the note and the exercise disagree in an interesting way. Resolve it
       deliberately — early resolution may be the right contract for a fitted pipeline — and write the
       reason down rather than letting the two records sit inconsistent.'
-    scope_triage: required-now
+    scope_triage: helpful-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-columnselectorop.md
+  - id: resource-polars-selectors-sheet
+    kind: practise
+    label: Stage exercise sheet - selector set algebra, drift, strictness
+    locator: attachments/s2b-exercises-p2.md - Fixture F3, then Tasks 1-4
+    angle: Turns 'selectors are declarative' into four executed properties, including the one that silently
+      computes.
+    angle_detail: Task 1 ends on `cs.numeric() - 1`, which is not a set difference at all but element-wise
+      subtraction applied to every numeric column — legal, silent, and a selection quietly turned into
+      a computation. Task 3 settles strictness with `require_all`, and Task 4 asks for the `select_dtypes`
+      translation with the Boolean/Categorical class boundary answered by execution.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-exercises-p2.md
+  - id: resource-polars-selectors-sheet-check
+    kind: practise
+    label: Answer-key self-check - 22 assertions including the stale-name-list proof
+    locator: attachments/s2b-check-p2.py - run after Tasks 1-3
+    angle: Encodes the drift property as a test, so the materialized shortcut fails visibly rather than
+      plausibly.
+    angle_detail: The last assertion builds the tempting version — a Python list comprehension over `df.schema`
+      — and shows it selecting nothing on the drifted schema. Keep it in your own test file when you write
+      the real translation; it is the regression that catches the shortcut being reintroduced.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-check-p2.py
+  - id: resource-polars-selector-schema-drift
+    kind: practise
+    label: Selector schema-drift lab
+    locator: Sheet Tasks 2 and 4 - one expression against narrow, wide, drifted and no-numeric schemas
+    angle: 'The property test for the whole stage: an expression that stops working when the schema moves
+      has failed.'
+    angle_detail: The drifted schema retypes `a` from Int64 to Float64 and adds a numeric column, so a
+      dtype selector legitimately picks a different set — intended behaviour and a risk at once. Record
+      which of your selections want to follow the schema and which want a fixed set, because the two need
+      different code and the failure mode of confusing them is silent.
+    scope_triage: required-now
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/notes.md
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-exercises.md
     label: Exercise sheet - selector set algebra and schema drift
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-check.py
     label: Answer-key self-check (22 assertions)
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-check-p2.py
+    label: Self-check for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/attachments/s2b-exercises-p2.md
+    label: Exercise sheet for Polars 2.0
   source_feedback: []
 - id: stage-polars-expr-horizontal-conditional
   knowledge_node_id: knowledge-polars-expr-horizontal
@@ -338,21 +356,10 @@ stages:
   objective: Compose row-wise boolean/count expressions safely across dynamic column sets, including Kleene
     logic and Polars' requirement that every when/then branch be independently valid.
   done_when:
-  - Both Kleene truth tables filled in for the five-row fixture, with the two cells where a definite answer
-    survives an unknown operand identified and explained.
-  - The `ignore_nulls` question settled against the pinned build rather than the live documentation, and
-    the places where null handling IS controllable in 1.36.0 recorded.
-  - '`fold` and `sum_horizontal` compared on the same null-bearing data, with the skipna=True / skipna=False
-    mapping stated and the accumulator-dtype rule recorded.'
-  - The empty-subset case run, its exception message read, and a decision recorded for what an empty subset
-    means at the operation boundary.
-  - All six when/then/otherwise cases classified, including the silent Int64-to-String supertype coercion
-    and the constant-predicate exception to branch validity.
-  - The three dropna predicates implemented over a dynamic subset with no Python row loop, tested against
-    all-null, partially-null, NaN-not-null, empty-subset and out-of-range thresh inputs.
-  - The pandas/Polars dropna divergence recorded as a named harness case with the null-versus-NaN decision
-    written down.
-  - '`s2c-check.py` passes (32 assertions).'
+  - Both Kleene truth tables filled in and the two surprising cells explained.
+  - fold and sum_horizontal compared on data with nulls.
+  - The when/then/otherwise cases predicted, including the silent Int64 to String supertype.
+  - A dropna-style filter written with no Python loop, for how='any', how='all' and thresh.
   exam_critical: false
   concepts:
   - concept-python
@@ -360,50 +367,6 @@ stages:
   - concept-dataframe-semantics
   scope_triage: required-now
   resources:
-  - id: resource-polars-horizontal-sheet
-    kind: practise
-    label: Stage exercise sheet - Kleene tables, fold seeds, branch validity, dropna core
-    locator: attachments/s2c-exercises.md - Fixture F4, then Tasks 1-6
-    angle: Supplies the verified truth tables the dropna lowering is derived from, plus the version fact
-      the docs get wrong here.
-    angle_detail: 'Task 2 is the concrete instance of this module''s abstract warning about live documentation:
-      `ignore_nulls` is not a keyword `any_horizontal` accepts in 1.36.0, and the sheet asserts the TypeError.
-      Task 3 puts `fold` and `sum_horizontal` on the same null-bearing data and they disagree, which is
-      the skipna mapping. Task 5''s case 5d is the silent one: an Int64 branch and a String branch unify
-      to String and the numbers arrive stringified, with no error.'
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises.md
-  - id: resource-polars-horizontal-sheet-check
-    kind: practise
-    label: Answer-key self-check - 32 assertions including the dropna divergence
-    locator: attachments/s2c-check.py - run after Tasks 1-5, then again after Task 6
-    angle: Pins the Kleene tables and the exact row-count divergence between the two dropna implementations.
-    angle_detail: It asserts that the Polars predicate keeps two rows where pandas keeps one, and that
-      the difference is exactly the NaN row. Keeping this runnable is how you notice if a later refactor
-      of the predicate quietly adopts pandas semantics — the counts move and the test says so.
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-check.py
-  - id: resource-polars-horizontal-dropna-core
-    kind: practise
-    label: Derive the dropna predicate core
-    locator: Sheet Task 6 - how='any', how='all', and thresh over a dynamic subset
-    angle: 'The stage''s payload: the predicate Session 3''s DROPNA lowering is built from.'
-    angle_detail: Implement `thresh` as a non-null count compared to n, not as a chain of any/all — the
-      chain reintroduces the fold seed problem and breaks on an empty subset. The fixture deliberately
-      contains a real NaN that is not a null, and that single row is what makes pandas and Polars return
-      different row counts for `how='any'`. Decide which semantics `dropna` has at the boundary and record
-      it; `how='all'` agrees either way and will hide the choice.
-    scope_triage: required-now
-  - id: resource-polars-when
-    kind: read
-    label: polars.when
-    locator: Branch validity, expression inputs, literals, and chained when/then/otherwise
-    angle: The API reference for the conditional, read for what it does not say about branch typing.
-    angle_detail: It documents the chaining and the literal handling. The two behaviours you need — that
-      an unselected branch is still evaluated for validity, and that branches of different types are unified
-      to a supertype rather than rejected — are visible only by execution, which is Task 5.
-    scope_triage: required-now
-    url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.when.html
   - id: resource-polars-folds
     kind: read
     label: Polars folds
@@ -435,41 +398,78 @@ stages:
     route_id: route-polars-definitive-guide-s02
     angle_review:
       kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Horizontal logic,
-        folds, conditionals, and literals'. The stage description selects that stage's task or reading
-        purpose from the broader route; preserve the narrower description. This relation review asserts
-        no new source observation or learner achievement.
-      fingerprint: sha256:38adbd1d9a768eaeca6e1f599e6a2e8f55cafb5ddb55e3a56376e1b0b26a82d3
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Polars book - Session 2 route'' against the stage ''Horizontal
+        logic, folds, conditionals, and literals'': the row narrows the route to this stage''s purpose.
+        This relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:e1f85f371c07227c4d32ab2a42546a329e8501337089fb261da067b4c6565023
+  - id: resource-polars-horizontal-sheet
+    kind: practise
+    label: Stage exercise sheet - Kleene tables, fold seeds, branch validity, dropna core
+    locator: attachments/s2c-exercises-p2.md - Fixture F4, then Tasks 1-6
+    angle: Supplies the verified truth tables the dropna translation is derived from, plus the version
+      fact the docs get wrong here.
+    angle_detail: 'Task 2 is the concrete instance of this module''s abstract warning about live documentation:
+      `ignore_nulls` is not a keyword `any_horizontal` accepts in 2.0, and the sheet asserts the TypeError.
+      Task 3 puts `fold` and `sum_horizontal` on the same null-bearing data and they disagree, which is
+      the skipna mapping. Task 5''s case 5d is the silent one: an Int64 branch and a String branch unify
+      to String and the numbers arrive stringified, with no error.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises-p2.md
+  - id: resource-polars-horizontal-sheet-check
+    kind: practise
+    label: Answer-key self-check - 32 assertions including the dropna divergence
+    locator: attachments/s2c-check-p2.py - run after Tasks 1-5, then again after Task 6
+    angle: Pins the Kleene tables and the exact row-count divergence between the two dropna implementations.
+    angle_detail: It asserts that the Polars predicate keeps two rows where pandas keeps one, and that
+      the difference is exactly the NaN row. Keeping this runnable is how you notice if a later refactor
+      of the predicate quietly adopts pandas semantics — the counts move and the test says so.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-check-p2.py
+  - id: resource-polars-horizontal-dropna-core
+    kind: practise
+    label: Derive the dropna predicate core
+    locator: Sheet Task 6 - how='any', how='all', and thresh over a dynamic subset
+    angle: 'The stage''s payload: the predicate Session 4''s DROPNA translation is built from.'
+    angle_detail: Implement `thresh` as a non-null count compared to n, not as a chain of any/all — the
+      chain reintroduces the fold seed problem and breaks on an empty subset. The fixture deliberately
+      contains a real NaN that is not a null, and that single row is what makes pandas and Polars return
+      different row counts for `how='any'`. Decide which semantics `dropna` has at the boundary and record
+      it; `how='all'` agrees either way and will hide the choice.
+    scope_triage: required-now
+  - id: resource-polars-when
+    kind: read
+    label: polars.when
+    locator: Branch validity, expression inputs, literals, and chained when/then/otherwise
+    angle: The API reference for the conditional, read for what it does not say about branch typing.
+    angle_detail: It documents the chaining and the literal handling. The two behaviours you need — that
+      an unselected branch is still evaluated for validity, and that branches of different types are unified
+      to a supertype rather than rejected — are visible only by execution, which is Task 5.
+    scope_triage: reference-only
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.when.html
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises.md
     label: Exercise sheet - Kleene tables, folds, branch validity, dropna core
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-check.py
     label: Answer-key self-check (32 assertions)
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-check-p2.py
+    label: Self-check for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises-p2.md
+    label: Exercise sheet for Polars 2.0
   source_feedback: []
 - id: stage-polars-expr-assignmap-lowering
   knowledge_node_id: knowledge-polars-expr-lowering
   number: 4
-  title: Translate pandas assign into native expression trees
+  title: pandas assign versus with_columns
   status: pending
-  objective: Lower foldable pandas assign operations into a single Polars with_columns expression list
-    while preserving sequential visibility and recognizing when opaque fallback is required.
+  objective: Translate pandas assign chains into Polars without silent wrong answers, and know when one
+    with_columns is enough and when it takes several.
   done_when:
-  - The twelve-case translation matrix completed, each row classified native / staged / fallback / rejected
-    with an executed comparison of values and dtype.
-  - 'Case 5 demonstrated both ways: the naive single-context lowering produces plausible wrong numbers
-    and raises nothing, while case 4 raises — and you can say why case 5 is the more dangerous of the
-    two.'
-  - The property that prevents case 5 from shipping is named and its check point identified in the translator.
-  - 'The read-set boundary settled: which of the five lambda forms admit static analysis, what the translator
-    does past that boundary, and why `Expr.meta.root_names()` has no pandas equivalent.'
-  - The six Task 4 operations classified, including the one that looks like fallback but has a native
-    expression and the one that looks native but does not survive the pinned version.
-  - '`classify(assign_entries)` implemented, reproducing the hand-computed layer counts and REFUSING rather
-    than assuming an empty read set on a non-analyzable entry.'
-  - '`s2d-check.py` passes (24 assertions).'
+  - The twelve cases run, each compared on values and dtype.
+  - 'Case 5 shown both ways: a plausible wrong answer that raises nothing, and case 4 that raises. You
+    can say why case 5 is worse.'
   exam_critical: false
   concepts:
   - concept-python
@@ -478,53 +478,17 @@ stages:
   - concept-dispatch
   scope_triage: required-now
   resources:
-  - id: resource-polars-assign-sheet
-    kind: practise
-    label: Stage exercise sheet - the lowering algorithm and the inputs that break it
-    locator: attachments/s2d-exercises.md - the stated algorithm, then Tasks 1-5
-    angle: States the lowering algorithm in five steps and then asks you to find the input that falsifies
-      each step.
-    angle_detail: 'Task 3 is the one that changes the design: the dependency graph needs each entry''s
-      read set, and for a pandas lambda that set is only recoverable for the simplest two forms. Past
-      that boundary the correct behaviour is to refuse, because assuming an empty read set turns an unknown
-      dependency into a declared independence — which is case 5 again, arriving through a different door.'
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises.md
-  - id: resource-polars-assign-sheet-check
-    kind: practise
-    label: Answer-key self-check - 24 assertions across the matrix
-    locator: attachments/s2d-check.py - run after Task 1 and again after Task 5
-    angle: Asserts both halves of case 5 side by side, so the wrong lowering is visible as data rather
-      than as a warning.
-    angle_detail: It also pins the two Task 4 surprises — `map_elements` giving a native home to an element-wise
-      callable, and `rolling_mean` agreeing with pandas only on the rows pandas defines — plus the empty-frame
-      condition on row 12. Run it before you trust a classification you made from reading.
-    scope_triage: required-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-check.py
-  - id: resource-polars-assignmap-matrix
-    kind: practise
-    label: AssignMap translation matrix
-    locator: Sheet Task 1 - twelve cases spanning constants, overwrites, dependencies, external operands,
-      aggregations
-    angle: The evidence table the lowering rules have to satisfy, with the two rows that break a naive
-      design.
-    angle_detail: 'Rows 4 and 5 are the pair that matters: identical shape, one raises and one silently
-      returns wrong numbers. Row 6 turns out never to reach pandas at all (duplicate keyword arguments
-      are a Python SyntaxError), which lets you treat entry keys as unique — record that as a stated assumption
-      rather than an unexamined one. Row 12 is native only conditionally, because the reduction it contains
-      decides whether the empty-frame case still agrees.'
-    scope_triage: required-now
   - id: resource-note-assignmapop
     kind: read
     label: Stratum AssignMapOp note
     locator: Foldability rules, ordered entries, leaf operands, and the fallback conditions
-    angle: Your own record of the intended lowering - the design this stage's twelve cases are a test
+    angle: Your own record of the intended translation - the design this stage's twelve cases are a test
       suite for.
     angle_detail: Read it before the matrix and check its foldability rules against cases 4, 5 and 12
       specifically. The note's ordered-entries requirement is what case 5 justifies; if the note does
       not yet distinguish 'depends on a new column' from 'depends on an overwritten name', that gap is
       the finding and belongs back in the note as evidence.
-    scope_triage: required-now
+    scope_triage: helpful-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignmapop.md
   - id: resource-note-assignop
     kind: read
@@ -537,12 +501,60 @@ stages:
       and the two are easy to conflate in a rule written from examples.
     scope_triage: helpful-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignop.md
+  - id: resource-stratum-assign-exec
+    kind: reference
+    label: Stratum's Polars assign
+    locator: Stratum/stratum/optimizer/physical/_map_execs.py, class PolarsAssignMapOp
+    angle: The real translation, in about fifteen lines.
+    angle_detail: 'Read after the twelve cases and say what makes it correct. Read-only: never edit, add
+      or run anything that writes inside Stratum.'
+    scope_triage: helpful-now
+  - id: resource-polars-assign-sheet
+    kind: practise
+    label: Stage exercise sheet - the translation algorithm and the inputs that break it
+    locator: attachments/s2d-exercises-p2.md - Task 1 is the core; Tasks 2-5 are optional
+    angle: States the translation algorithm in five steps and then asks you to find the input that falsifies
+      each step.
+    angle_detail: 'Task 3 is the one that changes the design: the dependency graph needs each entry''s
+      read set, and for a pandas lambda that set is only recoverable for the simplest two forms. Past
+      that boundary the correct behaviour is to refuse, because assuming an empty read set turns an unknown
+      dependency into a declared independence — which is case 5 again, arriving through a different door.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises-p2.md
+  - id: resource-polars-assign-sheet-check
+    kind: practise
+    label: Answer-key self-check - 24 assertions across the matrix
+    locator: attachments/s2d-check-p2.py - run after Task 1 and again after Task 5
+    angle: Asserts both halves of case 5 side by side, so the wrong translation is visible as data rather
+      than as a warning.
+    angle_detail: It also pins the two Task 4 surprises — `map_elements` giving a native home to an element-wise
+      callable, and `rolling_mean` agreeing with pandas only on the rows pandas defines — plus the empty-frame
+      condition on row 12. Run it before you trust a classification you made from reading.
+    scope_triage: deferred
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-check-p2.py
+  - id: resource-polars-assignmap-matrix
+    kind: practise
+    label: AssignMap translation matrix
+    locator: Sheet Task 1 - twelve cases spanning constants, overwrites, dependencies, external operands,
+      aggregations
+    angle: The evidence table the translation rules have to satisfy, with the two rows that break a naive
+      design.
+    angle_detail: 'Rows 4 and 5 are the pair that matters: identical shape, one raises and one silently
+      returns wrong numbers. Row 6 turns out never to reach pandas at all (duplicate keyword arguments
+      are a Python SyntaxError), which lets you treat entry keys as unique — record that as a stated assumption
+      rather than an unexamined one. Row 12 is native only conditionally, because the reduction it contains
+      decides whether the empty-frame case still agrees.'
+    scope_triage: deferred
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/notes.md
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises.md
     label: Exercise sheet - twelve-case assign lowering matrix
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-check.py
     label: Answer-key self-check (24 assertions)
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-check-p2.py
+    label: Self-check for Polars 2.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises-p2.md
+    label: Exercise sheet for Polars 2.0
   source_feedback: []
 shelving:
   state: none

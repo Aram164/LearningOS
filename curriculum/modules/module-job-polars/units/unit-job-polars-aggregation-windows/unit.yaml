@@ -4,12 +4,12 @@ module_id: module-job-polars
 kind: topic
 title: Session 6 - Aggregation and windows
 order: 6
-scope: Implement grouped reductions and same-cardinality window transforms while preserving flags, shape,
-  order, and missing-value semantics.
+scope: Write grouped reductions and same-height window expressions, and predict where pandas defaults
+  for keys, nulls, NaN and counts give a different answer.
 status: ready
 knowledge_map:
-  summary: Implement grouped reductions and same-cardinality window transforms while preserving flags,
-    shape, order, and missing-value semantics.
+  summary: Write grouped reductions and same-height window expressions, and predict where pandas defaults
+    for keys, nulls, NaN and counts give a different answer.
   nodes:
   - id: knowledge-polars-aggregation
     title: Grouped aggregation
@@ -46,6 +46,8 @@ scope_sources:
 - source_id: source-polars-definitive-guide
   authority: reference
 - source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-polars-benchmark
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-aggregation-windows

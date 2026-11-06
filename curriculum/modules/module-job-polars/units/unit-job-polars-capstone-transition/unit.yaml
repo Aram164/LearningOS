@@ -2,14 +2,14 @@ id: unit-job-polars-capstone-transition
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 10 - Capstone and controlled version transition
-order: 10
-scope: Implement one mirrored backend operation end to end, prove its contract with adversarial and generated
-  tests, and keep future Polars-version assessment isolated from today's production baseline.
+title: Session 11 - Show fluency on real queries and one pipeline
+order: 11
+scope: Write Polars from pandas originals using the PDS queries Stratum is tested against, then rewrite
+  one full ML pipeline.
 status: ready
 knowledge_map:
-  summary: Implement one mirrored backend operation end to end, prove its contract with adversarial and
-    generated tests, and keep future Polars-version assessment isolated from today's production baseline.
+  summary: Write Polars from pandas originals using the PDS queries Stratum is tested against, then rewrite
+    one full ML pipeline.
   nodes:
   - id: knowledge-polars-capstone
     title: Mirrored-operation capstone
@@ -44,6 +44,8 @@ scope_sources:
 - source_id: source-python-depth-drills
   authority: reference
 - source_id: source-stratum-paper
+  authority: reference
+- source_id: source-polars-benchmark
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-capstone-transition

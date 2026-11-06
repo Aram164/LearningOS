@@ -2,16 +2,14 @@ id: unit-job-polars-selection-backend
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 3 - Selection backend clinic
-order: 3
-scope: 'Use the attached SelectionOp implementation as a real backend clinic: resolve runtime operands,
-  translate parameters, compose native Polars expressions, and make fallbacks and unsupported behavior
-  explicit.'
+title: Session 4 - Selecting rows and columns
+order: 4
+scope: Select, limit, sample, de-duplicate and drop missing rows natively in Polars, and know where pandas'
+  label-based answers differ.
 status: ready
 knowledge_map:
-  summary: 'Use the attached SelectionOp implementation as a real backend clinic: resolve runtime operands,
-    translate parameters, compose native Polars expressions, and make fallbacks and unsupported behavior
-    explicit.'
+  summary: Select, limit, sample, de-duplicate and drop missing rows natively in Polars, and know where
+    pandas' label-based answers differ.
   nodes:
   - id: knowledge-polars-selection-contract
     title: Selection versus projection

@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261106-200635-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-11-06T20:06:35+01:00'
+snapshot_before: sha256:df90965c61b0b015eca069f0a2a3af91c685ea2b1de7dddd1d1157dae04f6710
+snapshot_after: sha256:d813d1fc1c6d24e3c8970b043c4c31081eb54fcbbbe861f150bd8d795c34c6b9
+expected_revisions:
+  study-map-job-polars-lazy-udf-interop: 7
+  unit-job-polars-lazy-udf-interop: 9
+artifact_revisions:
+  study-map-job-polars-lazy-udf-interop:
+    before: 7
+    after: 8
+  unit-job-polars-lazy-udf-interop:
+    before: 9
+    after: 10
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-check-p2.py
+  sha256_before: null
+  sha256_after: 6eb3dfff078f2ea75b341306f827081583f84a61cc0e466c52b7308b8bfaa8bd
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  sha256_before: 17b7d64ebea70ce046a4f2d77f67fef84c69fa226a3a7aa250b1f0777d98ed78
+  sha256_after: 38a292d2e47333365430e969d12f814aaab1fddb66626c5d11b0618723b52980
+  created: false
+metadata:
+  data_roots_sha256: sha256:70035218ec9aeddec5916cff0b0df88f746a388731ee9a945180d87a9e413f27
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-polars-plan-att-892d5850f983-c0c3f61b
+  idempotency_key: polars-plan-att-892d5850f983
+  intent_sha256: sha256:8084e74e18d661f67ca0c1eb412838ef8e512309619fa0c35f71737b710d49e5
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8084e74e18d661f67ca0c1eb412838ef8e512309619fa0c35f71737b710d49e5

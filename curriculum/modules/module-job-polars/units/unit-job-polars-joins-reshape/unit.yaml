@@ -4,12 +4,12 @@ module_id: module-job-polars
 kind: topic
 title: Session 7 - Joins, concatenation, and reshaping
 order: 7
-scope: Specify key cardinality, null matching, suffixes, coalescing, output order, and shape before lowering
-  joins, concatenation, and reshape operations.
+scope: Predict join row counts from key multiplicity, and know how the libraries differ on null keys,
+  suffixes, key columns, concatenation and reshaping.
 status: ready
 knowledge_map:
-  summary: Specify key cardinality, null matching, suffixes, coalescing, output order, and shape before
-    lowering joins, concatenation, and reshape operations.
+  summary: Predict join row counts from key multiplicity, and know how the libraries differ on null keys,
+    suffixes, key columns, concatenation and reshaping.
   nodes:
   - id: knowledge-polars-join-semantics
     title: Join semantics
@@ -43,6 +43,10 @@ scope_sources:
 - source_id: source-polars-definitive-guide
   authority: reference
 - source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-modern-polars
+  authority: reference
+- source_id: source-polars-benchmark
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-joins-reshape

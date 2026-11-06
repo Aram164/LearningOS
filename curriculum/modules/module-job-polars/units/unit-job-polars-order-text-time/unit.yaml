@@ -2,14 +2,14 @@ id: unit-job-polars-order-text-time
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 5 - Ordering, text, and temporal operations
+title: Session 5 - Ordering, text, and dates
 order: 5
-scope: Make row order and determinism explicit, then translate string and temporal namespace operations
-  without assuming pandas accessor names or calendar conventions carry over.
+scope: Make row order explicit, including the streaming default in Polars 2.0, and translate string and
+  date operations without assuming pandas names or conventions carry over.
 status: ready
 knowledge_map:
-  summary: Make row order and determinism explicit, then translate string and temporal namespace operations
-    without assuming pandas accessor names or calendar conventions carry over.
+  summary: Make row order explicit, including the streaming default in Polars 2.0, and translate string
+    and date operations without assuming pandas names or conventions carry over.
   nodes:
   - id: knowledge-polars-ordering
     title: Ordering and determinism
@@ -29,6 +29,10 @@ scope_sources:
 - source_id: source-polars-definitive-guide
   authority: reference
 - source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-modern-polars
+  authority: reference
+- source_id: source-narwhals-concepts
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-order-text-time

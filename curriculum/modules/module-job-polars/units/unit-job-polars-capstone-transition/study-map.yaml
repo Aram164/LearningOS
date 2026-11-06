@@ -12,15 +12,16 @@ stages:
 - id: stage-polars-18-capstone-specify-implement-and-prove-a-mirrored
   knowledge_node_id: knowledge-polars-capstone
   number: 1
-  title: Capstone - specify, implement, and prove a mirrored operation
+  title: Write Polars from pandas originals
   status: pending
-  objective: 'Implement Capstone: specify, implement, and prove a mirrored backend op in both pandas and
-    Polars, explain the semantic differences, and prove parity or document divergence with adversarial
-    tests.'
+  objective: 'Show fluency: take PDS queries you have not read, write Polars from the pandas file without
+    looking anything up where you can, and compare with the official Polars version. Then explain from
+    memory where pandas intuition breaks.'
   done_when:
-  - 'A concrete artifact demonstrates Capstone: specify, implement, and prove a mirrored backend op.'
-  - Every divergence found is classified against the eight axes and has a failing case committed to the
-    parity harness.
+  - Q10, Q12, Q16 and Q18 written in Polars from the pandas originals, and each compared with the official
+    version.
+  - For each, you note every lookup you needed. The count should fall as you go.
+  - A ten-minute closed-book walkthrough of where pandas intuition breaks, from your differences sheet.
   exam_critical: false
   concepts:
   - concept-python
@@ -29,166 +30,84 @@ stages:
   - concept-dataframe-semantics
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Required core — python-polars-the-definitive-guide.pdf
-    id: resource-polars-16-01-required-core-python-polars-the-defini
-    locator: Revisit Chs. 3, 5, 14, 17, 18 and the exact local pandas notebooks assigned to the chosen
-      operation
-    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
-    scope_triage: required-now
-    source_id: source-polars-definitive-guide
-    angle: Polars-first explanation and worked examples for this stage.
-    angle_detail: Use Revisit Chs. 3, 5, 14, 17, 18 and the exact local pandas notebooks assigned to the
-      chosen operation to build the native Polars model for Capstone - specify, implement, and prove a
-      mirrored operation; the book is an early-release edition, so confirm callable names and defaults
-      against the pinned 1.36.0 environment.
-  - kind: read
-    label: Local material — Pandas_cheatsheet.pdf
-    id: resource-polars-16-02-local-material-pandas-cheatsheet-pdf
-    source_id: source-python-cheatsheets
-    locator: Pandas quick reference and testing shelf
-    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
-    scope_triage: required-now
-    angle: Fast pandas API recall, not current semantic authority.
-    angle_detail: Use the two-page 2017 sheet at Pandas quick reference and testing shelf to discover
-      operations for Capstone - specify, implement, and prove a mirrored operation; verify dtype, null,
-      order, index, and failure behavior with pandas 3.0.2 fixtures.
-  - kind: read
-    label: Local material — SHELF.md
-    id: resource-polars-16-03-local-material-shelf-md
-    source_id: source-python-depth-drills
-    locator: Pandas quick reference and testing shelf
-    vault_path: material://source-python-depth-drills/SHELF.md
-    scope_triage: required-now
-    angle: Python testing or dispatch mechanics that support backend implementation.
-    angle_detail: Use only Pandas quick reference and testing shelf for the Python mechanism needed by
-      Capstone - specify, implement, and prove a mirrored operation. It strengthens implementation judgment
-      but does not define dataframe semantics.
-  - kind: reference
-    label: Official reference — docs.pola.rs — index.html
-    id: resource-polars-16-04-official-reference-docs-pola-rs-index
-    locator: Use the exact Polars, pandas, and testing references from the operation's earlier stages
-    url: https://docs.pola.rs/api/python/stable/reference/index.html
-    scope_triage: reference-only
-    angle: Official Polars reference for the native operation.
-    angle_detail: Read Use the exact Polars, pandas, and testing references from the operation's earlier
-      stages for Capstone - specify, implement, and prove a mirrored operation, then run the example under
-      Polars 1.36.0 because the live documentation can move ahead of Stratum's lockfile.
-  - kind: reference
-    label: Official reference — pandas.pydata.org — index.html
-    id: resource-polars-16-05-official-reference-pandas-pydata-org-i
-    locator: Use the exact Polars, pandas, and testing references from the operation's earlier stages
-    url: https://pandas.pydata.org/docs/reference/index.html
-    scope_triage: reference-only
-    angle: Official pandas reference for the observable oracle contract.
-    angle_detail: Read Use the exact Polars, pandas, and testing references from the operation's earlier
-      stages for Capstone - specify, implement, and prove a mirrored operation and encode the promised
-      behavior in pandas 3.0.2 fixtures; unspecified behavior remains evidence, not a universal contract.
-  - kind: practise
-    label: Guided exercises — Complete the capstone specification, paired implementations, cross-backend
-      adversarial suite, explain-plan analysis, and unsupported-contract decision.
-    id: resource-polars-16-06-guided-exercises-complete-the-capstone
-    locator: Complete the capstone specification, paired implementations, cross-backend adversarial suite,
-      explain-plan analysis, and unsupported-contract decision.
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Complete the capstone specification, paired implementations, cross-backend
-      adversarial suite, explain-plan analysis, and unsupported-contract decision. before consulting an
-      answer. Record values, dtype/schema, cardinality, row order, missing-value behavior, warnings, and
-      exceptions separately whenever they apply.
-  - kind: practise
-    label: Retrieval — Before reading, reproduce the operation's Session 1 contract model, Session 8 lazy-plan
-      rules, and five edge cases from memory.
-    id: resource-polars-16-07-retrieval-before-reading-reproduce-the
-    locator: Before reading, reproduce the operation's Session 1 contract model, Session 8 lazy-plan rules,
-      and five edge cases from memory.
-    scope_triage: helpful-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Before reading, reproduce the operation's Session 1 contract model, Session
-      8 lazy-plan rules, and five edge cases from memory. before consulting an answer. Record values,
-      dtype/schema, cardinality, row order, missing-value behavior, warnings, and exceptions separately
-      whenever they apply.
-  - kind: practise
-    label: Write a one-page operation contract covering accepted inputs, output schema, ordering, missing
-      values, duplicate behavior, and failures.
-    id: resource-polars-16-08-write-a-one-page-operation-contract-co
-    locator: Exercise 1
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Implement both executors from a blank file without copying Stratum.
-    id: resource-polars-16-09-implement-both-executors-from-a-blank
-    locator: Exercise 2
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 2 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Pass at least 25 named parity cases and three deliberate-refusal cases.
-    id: resource-polars-16-10-pass-at-least-25-named-parity-cases-an
-    locator: Exercise 3
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 3 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Add five randomized/property cases and three mutation tests that demonstrate test sensitivity.
-    id: resource-polars-16-11-add-five-randomized-property-cases-and
-    locator: Exercise 4
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 4 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Produce an annotated Polars explain plan and a fair microbenchmark separating construction,
-      conversion, planning, and execution.
-    id: resource-polars-16-12-produce-an-annotated-polars-explain-pl
-    locator: Exercise 5
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 5 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Give a 10-minute closed-book walkthrough of where pandas intuition breaks and how Stratum’s
-      physical binding contains the difference. Done when all artifacts exist and the walkthrough reveals
-      no untested semantic claim.
-    id: resource-polars-16-13-give-a-10-minute-closed-book-walkthrou
-    locator: Exercise 6
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Exercise 6 before consulting an answer. Record values, dtype/schema, cardinality,
-      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
-  - kind: practise
-    label: Axis pass — classify every divergence found this session against the eight axes, then add one
-      harness case per divergence and re-run the whole harness.
-    id: resource-polars-18-99-axis-pass
-    locator: Closing pass, every session
-    scope_triage: required-now
-    angle: Active retrieval and implementation evidence for this stage.
-    angle_detail: Complete Closing pass, every session before consulting an answer. Record values, dtype/schema,
-      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
-      apply.
-  - id: resource-polars-18-capstone-specify-implement-and-prove-a-mirrored-migrated-guide
+  - material_ref:
+      route_id: route-polars-benchmark-s11
+      inherit:
+      - source_id
+      - url
+    id: resource-pds-ladder
     kind: read
-    label: Migrated authored stage guide
-    locator: Complete guide retained from the original monolithic plan
-    angle: Preserves the deeper mental model and traps written for the original stage.
-    angle_detail: Read after the stage objective and before the closed-book drill. The guide remains at
-      its original path as migration evidence while this session owns the active stage.
-    scope_triage: helpful-now
-    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-18-capstone-specify-implement-and-prove-a-mirrored/notes.md
+    label: PDS query ladder
+    locator: queries/pandas/q10.py, q12.py, q16.py, q18.py, then q21.py and q22.py if you want more; compare
+      with the same names under queries/polars/
+    angle: The query set Stratum itself is tested against, written by the Polars team.
+    angle_detail: Real queries with real joins, windows and conditional aggregates. The official Polars
+      version is your answer key. Stratum's tests/application/pds files have small fixtures, read-only.
+    scope_triage: required-now
+    route_id: route-polars-benchmark-s11
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''PDS query ladder Q10, Q12, Q16, Q18, Q21, Q22'' against the stage
+        ''Write Polars from pandas originals'': the row narrows the route to this stage''s purpose. This
+        relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:279fdd6cd03da224ae5a84440d6b11a1d6a656f0539d373d8084993a34b56d3b
+  - id: resource-capstone-walkthrough
+    kind: reference
+    label: Ten-minute closed-book walkthrough
+    locator: Your differences sheet, then close it
+    angle: Retrieval from memory is the proof that the differences stuck.
+    angle_detail: Say where pandas intuition breaks and what to write instead. Reread only what you missed.
+    scope_triage: required-now
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-18-capstone-specify-implement-and-prove-a-mirrored/notes.md
+- id: stage-polars-capstone-one-pipeline
+  knowledge_node_id: knowledge-polars-capstone
+  number: 2
+  title: Rewrite one full ML pipeline
+  status: pending
+  objective: Take one real ML pipeline from pandas to Polars end to end, from reading to a model score,
+    and explain every place the two differ.
+  done_when:
+  - The make_orders pipeline runs in Polars in your own scratch file, from CSV to a fitted model.
+  - The score agrees with the pandas version, or you can explain why it does not.
+  - Each difference you hit is already in your sheet, or you add it now.
+  exam_critical: false
+  concepts:
+  - concept-dataframe-semantics
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - id: resource-stratum-orders-capstone
+    kind: reference
+    label: The pipeline to rewrite
+    locator: Stratum/tests/application/test_frame_ops_pipeline.py, make_orders and the pipeline built
+      from it
+    angle: A realistic pipeline covering filters, derived columns, projection, encoding and a model.
+    angle_detail: 'Copy the idea into your own scratch file, never the other way. Read-only: never edit,
+      add or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-capstone-pipeline
+    kind: reference
+    label: Rewrite and compare
+    locator: Exercise 1
+    angle: Everything in the module used at once.
+    angle_detail: Read a CSV, filter, derive, split, encode, fit and score, in Polars. Then compare with
+      pandas on the same split.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-capstone-one-pipeline/notes.md
+  attachments: []
+  source_feedback: []
 - id: stage-polars-capstone-property-stress
   knowledge_node_id: knowledge-polars-property-stress
-  number: 2
-  title: Property and adversarial stress pass
+  number: 3
+  title: 'Optional: property and stress testing'
   status: pending
-  objective: Stress the capstone across schema, missingness, cardinality, order, and failure boundaries,
-    then turn every found counterexample into a durable named regression.
+  objective: 'Deferred 2026-11-02: testing technique, not fluency. Stress the capstone across schema,
+    missingness, cardinality, order, and failure boundaries, then turn every found counterexample into
+    a durable named regression.'
   done_when:
   - Generated tests span empty/wide frames, duplicate keys, mixed null/NaN, boundary sizes, and relevant
     dtypes.
@@ -200,7 +119,7 @@ stages:
   - concept-python
   - concept-dataframe-semantics
   - concept-dispatch
-  scope_triage: required-now
+  scope_triage: deferred
   resources:
   - id: resource-polars-testing-capstone
     kind: read
@@ -235,11 +154,12 @@ stages:
   source_feedback: []
 - id: stage-polars-version-transition-lab
   knowledge_node_id: knowledge-polars-version-transition
-  number: 3
-  title: Version transition lab - 1.36 baseline versus newer Polars
+  number: 4
+  title: 'Optional: version transition lab'
   status: pending
-  objective: Keep the production study target on Polars 1.36.0 while rehearsing a controlled upgrade assessment
-    for ordering, streaming, concat, explode, casting/coercion, and selector changes.
+  objective: 'Deferred 2026-11-02: its reason has gone, because Stratum already moved to Polars 2.0. Keep
+    the production study target on Polars 1.36.0 while rehearsing a controlled upgrade assessment for
+    ordering, streaming, concat, explode, casting/coercion, and selector changes.'
   done_when:
   - Run the capstone suite unchanged under the candidate version in an isolated environment.
   - Produce a behavior delta table; no newer behavior is copied into the 1.36 contract without a Stratum
@@ -250,7 +170,7 @@ stages:
   - concept-python
   - concept-dataframe-semantics
   - concept-dispatch
-  scope_triage: required-now
+  scope_triage: deferred
   resources:
   - id: resource-polars-upgrade-2
     kind: read
