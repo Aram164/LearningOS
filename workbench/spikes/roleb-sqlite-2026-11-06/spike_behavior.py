@@ -58,7 +58,9 @@ check("read_state on empty root is {}", spike.read_state(empty) == {})
 check("read open creates nothing (derived_dir absent)", not spike.derived_dir(empty).exists())
 
 spike.publish_staged_states(fresh_root(), {})
-check("empty publish creates nothing", not spike.db_path(fresh_root()).exists() or True)
+probe = fresh_root()
+spike.publish_staged_states(probe, {})
+check("empty publish creates nothing on a fresh root", not spike.db_path(probe).exists())
 root3 = fresh_root()
 spike.publish_staged_states(root3, {})
 check("empty publish creates no DB", not spike.db_path(root3).exists())
@@ -205,6 +207,82 @@ check("invalidate drops one entry, keeps the other",
       spike.lookup(root, "a") is None and spike.lookup(root, "b") is not None)
 check("invalidate leaves the blob row as a harmless orphan",
       spike.sweep_unreferenced_blobs(root)["deleted"] == 1)
+
+print("== Adversarial (review round 2): identity, foreign stores, corruption ==")
+
+
+def _snapshot(root):
+    """Full store content snapshot: nodes, meta, blobs - for proving that a
+    refused or mismatched database was NOT modified by any attempt."""
+    with with_db_rows(root) as conn:
+        return (conn.execute("SELECT node_id, node_key, output_sha256 FROM nodes"
+                             " ORDER BY node_id").fetchall(),
+                conn.execute("SELECT key, value FROM meta ORDER BY key").fetchall(),
+                conn.execute("SELECT sha256 FROM blobs ORDER BY sha256").fetchall())
+
+
+# (a) invalid schema_version in the DB: reads refuse to serve and the
+# mismatched database is not modified by those reads.
+root = fresh_root()
+spike.store_node(root, "n", node_key="k", value={"v": 1})
+before = _snapshot(root)
+with with_db_rows(root) as conn:
+    conn.execute("UPDATE meta SET value = '999' WHERE key = 'schema_version'")
+    conn.commit()
+mismatched = _snapshot(root)
+check("invalid schema_version: read_state is a miss", spike.read_state(root) == {})
+check("invalid schema_version: lookup is a miss", spike.lookup(root, "n") is None)
+check("mismatched DB not modified by the reads", _snapshot(root) == mismatched)
+spike.store_node(root, "n2", node_key="k", value={"v": 2})
+check("invalid schema_version: write rebuilds (only the new entry survives)",
+      set(spike.read_state(root)) == {"n2"})
+
+# (b) symlinked derived-state/ pointing at a FOREIGN store: every attempt
+# refuses or misses, and the foreign store is untouched.
+foreign = fresh_root()
+spike.store_node(foreign, "victim", node_key="fk", value={"secret": True})
+foreign_before = _snapshot(foreign)
+root = fresh_root()
+(root / "generated").mkdir(parents=True)
+(root / "generated" / "derived-state").symlink_to(foreign / "generated" / "derived-state")
+check("symlinked derived-state: read_state is a miss (no traversal)",
+      spike.read_state(root) == {})
+check("symlinked derived-state: lookup is a miss", spike.lookup(root, "x") is None)
+try:
+    spike.store_node(root, "local", node_key="lk", value={"v": 1})
+    refused = False
+    detail = "store_node succeeded through the symlink"
+except Exception as exc:
+    refused = "TransactionFailure" in type(exc).__name__
+    detail = f"{type(exc).__name__}: {str(exc)[:60]}"
+check("symlinked derived-state: write refused (TransactionFailure)", refused, detail)
+try:
+    spike.sweep_unreferenced_blobs(root)
+    swept = False
+    detail = "sweep succeeded through the symlink"
+except Exception as exc:
+    swept = "TransactionFailure" in type(exc).__name__
+    detail = f"{type(exc).__name__}: {str(exc)[:60]}"
+check("symlinked derived-state: sweep refused (never deletes rows abroad)", swept, detail)
+check("foreign store untouched by every attempt", _snapshot(foreign) == foreign_before)
+
+# (c) corrupt DB file: reads are misses that do not touch the file; the
+# write path rebuilds atomically (build-to-temp, verify, rename).
+root = fresh_root()
+spike.store_node(root, "n", node_key="k", value={"v": 1})
+db = spike.db_path(root)
+db.write_bytes(b"garbage")
+corrupt_bytes = db.read_bytes()
+check("corrupt DB: read_state is a miss", spike.read_state(root) == {})
+check("corrupt DB: lookup is a miss", spike.lookup(root, "n") is None)
+check("corrupt DB unmodified by the reads", db.read_bytes() == corrupt_bytes)
+spike.store_node(root, "n2", node_key="k", value={"v": 2})
+check("corrupt DB: write rebuilds atomically and serves",
+      spike.lookup(root, "n2") is not None)
+check("atomic rebuild left no .rebuild temp",
+      not (spike.derived_dir(root) / "state-v1.db.rebuild").exists())
+check("sweep after rebuild reports zeros on the fresh store",
+      spike.sweep_unreferenced_blobs(root, dry_run=True)["deleted"] == 0)
 
 print()
 passed = sum(1 for ok, _, _ in _results if ok)
