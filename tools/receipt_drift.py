@@ -10,14 +10,23 @@ report-only:
 
 - ``DRIFT`` — a file whose current sha256 differs from the ``sha256_after``
   of the last receipt that wrote it, including a file deleted after a
-  receipt recorded bytes for it.
+  receipt recorded bytes for it, and a canonical record that is a symlink
+  (byte-identical content is not provenance: the ledger cannot vouch for
+  where a symlink's bytes live).
 - ``UNTRACKED`` — a plan or module record under the declared plan globs that
   appears in no receipt row: written before the ledger began, or never
   through any declared path. The 2026-11-05 sizing run attributed these to
   the pre-ledger era (the earliest receipt is 2026-08-06), not to hand
   edits — the class sizes history, it does not accuse.
 - ``MALFORMED`` — a file in the ledger directory that is not a readable
-  transaction receipt.
+  transaction receipt, or one whose authority-relevant shape violates
+  ``system/schema/transaction-receipt.schema.json``: an ``id`` outside the
+  schema's pattern (the id sort is only chronological for canonical ids), a
+  ``writes`` value that is not a list of objects carrying a non-empty string
+  ``path`` and a 64-hex-or-null ``sha256_after``, or two write rows for one
+  path in a single receipt (the journal refuses that at commit time; this
+  re-checks the ledger after the fact). A malformed receipt never
+  contributes last-write authority.
 
 Snapshot contiguity between consecutive receipts is deliberately NOT a
 finding class: the sizing run found 123 non-contiguous pairs in ordinary
@@ -36,6 +45,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -53,6 +63,44 @@ RECEIPT_DIR = "operations/transactions"
 #: module.create writes a receipt, so a legitimate module record is tracked.
 RECORD_GLOBS = (*PLAN_PATHS, "curriculum/modules/*/module.yaml")
 
+#: The receipt schema (system/schema/transaction-receipt.schema.json) pins
+#: the id to zero-padded timestamps and every write path/hash to exact
+#: shapes. Enforcing that slice here is what makes "sort by id" mean
+#: "order by commit time", and makes last-write-wins well-defined.
+_ID_PATTERN = re.compile(r"^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$")
+_HASH_PATTERN = re.compile(r"^[a-f0-9]{64}$")
+
+
+def _receipt_shape_ok(receipt: dict) -> bool:
+    """The authority-relevant slice of the receipt schema, re-checked.
+
+    The drift verdict trusts exactly three things about a receipt: its id
+    (ordering authority), its write rows (path and sha256_after), and one
+    write per path. Anything else the schema constrains does not change the
+    verdict and is left to the schema validator.
+    """
+    receipt_id = receipt.get("id")
+    if not isinstance(receipt_id, str) or not _ID_PATTERN.match(receipt_id):
+        return False
+    writes = receipt.get("writes")
+    if not isinstance(writes, list):
+        return False
+    seen: set[str] = set()
+    for row in writes:
+        if not isinstance(row, dict):
+            return False
+        path = row.get("path")
+        if not isinstance(path, str) or not path:
+            return False
+        sha_after = row.get("sha256_after")
+        if sha_after is not None and (not isinstance(sha_after, str)
+                                      or not _HASH_PATTERN.match(sha_after)):
+            return False
+        if path in seen:
+            return False
+        seen.add(path)
+    return True
+
 
 def _sha256(path: Path) -> str | None:
     digest = hashlib.sha256()
@@ -63,7 +111,13 @@ def _sha256(path: Path) -> str | None:
 
 
 def load_receipts(root: Path) -> tuple[list[dict], list[str]]:
-    """Parse every receipt in id order; collect unparseable ones by name."""
+    """Parse every receipt in id order; collect unusable ones by name.
+
+    Unusable = unparseable, not a transaction receipt, or failing
+    :func:`_receipt_shape_ok`. The sort is lexicographic on the id, which is
+    chronological only because the schema pins the id shape — the shape gate
+    is what makes the sort safe.
+    """
     receipts: list[dict] = []
     malformed: list[str] = []
     directory = root / RECEIPT_DIR
@@ -75,7 +129,8 @@ def load_receipts(root: Path) -> tuple[list[dict], list[str]]:
         except (OSError, yaml.YAMLError):
             malformed.append(path.name)
             continue
-        if isinstance(raw, dict) and raw.get("type") == "transaction-receipt":
+        if (isinstance(raw, dict) and raw.get("type") == "transaction-receipt"
+                and _receipt_shape_ok(raw)):
             receipts.append(raw)
         else:
             malformed.append(path.name)
@@ -88,7 +143,9 @@ def last_writes(receipts: list[dict]) -> tuple[dict[str, tuple[str | None, str]]
 
     Only ``status: committed`` receipts count as the last-write authority; a
     non-committed ledger row is not yet a guarantee, and its hashes must not
-    shadow the committed ones. Returns the skipped count separately.
+    shadow the committed ones. Returns the skipped count separately. Rows
+    arrive shape-validated from load_receipts, so ``row.get`` cannot raise
+    here and a counted receipt always carries well-formed rows.
     """
     last: dict[str, tuple[str | None, str]] = {}
     skipped = 0
@@ -128,6 +185,12 @@ def report(root: Path) -> dict:
                               "note": "file deleted after the receipt recorded it"})
             continue
         actual = _sha256(actual_path)
+        if actual_path.is_symlink():
+            drift.append({"path": path, "receipt": receipt_id,
+                          "expected": expected, "actual": actual,
+                          "note": "canonical record is a symlink; the ledger "
+                                  "cannot vouch for where its bytes live"})
+            continue
         if expected is None:
             drift.append({"path": path, "receipt": receipt_id,
                           "expected": None, "actual": actual,
@@ -163,7 +226,7 @@ def _print(findings: dict) -> None:
     for path in findings["untracked"]:
         print(f"UNTRACKED {path} — in no receipt row")
     for name in findings["malformed_receipts"]:
-        print(f"MALFORMED {name} — not a readable transaction receipt")
+        print(f"MALFORMED {name} — not a readable, schema-shaped transaction receipt")
     total = (len(findings["drift"]) + len(findings["untracked"])
              + len(findings["malformed_receipts"]))
     print(f"report-only: {total} finding(s); this tool gates nothing")

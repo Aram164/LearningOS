@@ -15,18 +15,26 @@ def _sha(path: Path) -> str:
 
 
 def _receipt(root: Path, receipt_id: str, before: str, after: str,
-             writes: list[dict]) -> None:
+             writes: list[dict], *, status: str = "committed") -> None:
     directory = root / "operations" / "transactions"
     directory.mkdir(parents=True, exist_ok=True)
     (directory / f"{receipt_id}.yaml").write_text(yaml.safe_dump({
         "schema_version": 1,
         "id": receipt_id,
         "type": "transaction-receipt",
-        "status": "committed",
+        "status": status,
         "snapshot_before": f"sha256:{before}",
         "snapshot_after": f"sha256:{after}",
         "writes": writes,
     }, sort_keys=False), encoding="utf-8")
+
+
+def _write_receipt_file(root: Path, name: str, receipt: dict) -> None:
+    """Write one ledger file verbatim, for receipts the helper cannot build."""
+    directory = root / "operations" / "transactions"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / name).write_text(yaml.safe_dump(receipt, sort_keys=False),
+                                  encoding="utf-8")
 
 
 def _run(root: Path) -> dict:
@@ -120,3 +128,122 @@ def test_non_receipt_documents_in_the_ledger_are_malformed(tmp_path):
     (directory / "transaction-broken.yaml").write_text("::: not yaml", encoding="utf-8")
     findings = _run(tmp_path)
     assert findings["malformed_receipts"] == ["transaction-broken.yaml"]
+
+
+def test_malformed_writes_shape_is_reported_not_raised(tmp_path):
+    """A typed-but-wrong ``writes`` is MALFORMED, never a traceback.
+
+    Before the shape gate, ``writes: {…}`` or ``writes: [str]`` reached the
+    drift loop and crashed on ``row.get`` / ``root / path`` — in --json mode
+    with no JSON at all.
+    """
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-001.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-001",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": {"curriculum/x.yaml": "a" * 64}})
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-002.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-002",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": ["curriculum/x.yaml"]})
+    findings = _run(tmp_path)
+    assert findings["drift"] == []
+    assert findings["receipts"] == 0
+    assert sorted(findings["malformed_receipts"]) == [
+        "transaction-20261106-000001-001.yaml",
+        "transaction-20261106-000001-002.yaml"]
+
+
+def test_nonconforming_receipt_id_is_malformed(tmp_path):
+    """Lexicographic id order is chronological only for schema-shaped ids."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-003.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-13",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": [{"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+                    "sha256_before": "a" * 64, "sha256_after": _sha(plan),
+                    "created": False}]})
+    findings = _run(tmp_path)
+    assert findings["malformed_receipts"] == ["transaction-20261106-000001-003.yaml"]
+    assert findings["receipts"] == 0
+    assert findings["untracked"] == [
+        "curriculum/modules/module-demo/units/unit-demo/study-map.yaml"]
+
+
+def test_bad_write_path_or_hash_shape_is_malformed(tmp_path):
+    """Non-string/empty paths and hash-shaped violations cannot reach the
+    drift loop; they are named in malformed_receipts instead."""
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-004.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-004",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": [{"path": 7, "sha256_before": None, "sha256_after": "a" * 64,
+                    "created": False}]})
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-005.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-005",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": [{"path": "", "sha256_before": None, "sha256_after": "a" * 64,
+                    "created": False}]})
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-006.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-006",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": [{"path": "curriculum/x.yaml", "sha256_before": None,
+                    "sha256_after": "not-a-hash", "created": False}]})
+    findings = _run(tmp_path)
+    assert sorted(findings["malformed_receipts"]) == [
+        "transaction-20261106-000001-004.yaml",
+        "transaction-20261106-000001-005.yaml",
+        "transaction-20261106-000001-006.yaml"]
+
+
+def test_duplicate_paths_within_one_receipt_are_malformed(tmp_path):
+    """The journal refuses a twice-written path at commit time; the detector
+    re-checks the ledger after the fact, so a forged duplicate cannot quietly
+    redefine the after-hash by file order."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-007.yaml", {
+        "schema_version": 1, "id": "transaction-20261106-000001-007",
+        "type": "transaction-receipt", "status": "committed",
+        "writes": [
+            {"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+             "sha256_before": "a" * 64, "sha256_after": _sha(plan), "created": False},
+            {"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+             "sha256_before": None, "sha256_after": "f" * 64, "created": True}]})
+    findings = _run(tmp_path)
+    assert findings["malformed_receipts"] == ["transaction-20261106-000001-007.yaml"]
+    assert findings["tracked_paths"] == 0
+
+
+def test_symlinked_record_is_drift_even_when_bytes_match(tmp_path, tmp_path_factory):
+    """A symlink to byte-identical content outside the root hashes to the
+    receipted value; provenance is still broken and is reported."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    _receipt(tmp_path, "transaction-20261106-000001-008",
+             "b" * 64, "c" * 64,
+             [{"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+               "sha256_before": "a" * 64, "sha256_after": _sha(plan),
+               "created": False}])
+    outside = tmp_path_factory.mktemp("outside-root")
+    real = outside / "study-map.yaml"
+    real.write_text("stages: []\n", encoding="utf-8")
+    plan.unlink()
+    plan.symlink_to(real)
+    findings = _run(tmp_path)
+    assert len(findings["drift"]) == 1
+    assert "symlink" in findings["drift"][0]["note"]
+
+
+def test_non_committed_receipt_is_skipped_and_surfaced(tmp_path):
+    """A non-committed row is not authority: counted, skipped, surfaced —
+    and the path it would have vouched for stays untracked."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    _receipt(tmp_path, "transaction-20261106-000001-009",
+             "b" * 64, "c" * 64,
+             [{"path": "curriculum/modules/module-demo/units/unit-demo/study-map.yaml",
+               "sha256_before": "a" * 64, "sha256_after": _sha(plan),
+               "created": False}],
+             status="pending")
+    findings = _run(tmp_path)
+    assert findings["receipts"] == 1
+    assert findings["non_committed_skipped"] == 1
+    assert findings["tracked_paths"] == 0
+    assert findings["untracked"] == [
+        "curriculum/modules/module-demo/units/unit-demo/study-map.yaml"]
