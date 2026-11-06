@@ -3,8 +3,10 @@ module_id: module-job-polars
 sources:
 - source_id: source-polars-definitive-guide
   role: spine
-  why: Local Polars-first spine; expression chapters are promoted ahead of I/O and API catalogues.
-  priority: 0
+  why: The best long-form Polars text, used for selected chapters only. Your copy is Early Release 8 on
+    Polars 1.13.1; read it with the 2.0 errata page. The current user guide is the authority where they
+    differ.
+  priority: 1
   unit_routes:
   - id: route-polars-definitive-guide-s01
     unit_id: unit-job-polars-pandas-fluency
@@ -12,7 +14,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-version-contract
     - knowledge-polars-divergence-axes
@@ -27,7 +29,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-expr-contexts
     - knowledge-polars-expr-expansion
@@ -43,7 +45,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-selection-contract
     - knowledge-polars-runtime-operands
@@ -59,7 +61,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-schema-construction
     - knowledge-polars-casting
@@ -74,7 +76,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-ordering
     - knowledge-polars-text-temporal
@@ -88,7 +90,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-aggregation
     - knowledge-polars-aggregation-flags
@@ -103,7 +105,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-join-semantics
     - knowledge-polars-join-compatibility
@@ -118,7 +120,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-lazy-plans
     - knowledge-polars-udf-boundary
@@ -133,7 +135,7 @@ sources:
     format: book
     angle: Polars-native explanation and worked examples for this session.
     angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
-      Polars 1.36.0 because the local book is an early-release edition.
+      Polars 2.0 (see the errata page) because the local book is an early-release edition.
     covers:
     - knowledge-polars-capstone
     - knowledge-polars-property-stress
@@ -145,8 +147,8 @@ sources:
     vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
 - source_id: source-pydata-handbook
   role: reference
-  why: Local pandas example corpus used to generate oracle questions; it is too old to define pandas 3.0.2
-    semantics.
+  why: 2016 notebooks, kept only as optional old examples of index behaviour. They predate pandas 3.0
+    and are no longer on the study path; the pandas docs replaced them.
   priority: 2
   unit_routes:
   - id: route-pydata-handbook-s01
@@ -272,8 +274,8 @@ sources:
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
 - source_id: source-python-cheatsheets
   role: reference
-  why: Two-page 2017 pandas operation index; retained for recall and explicitly demoted from semantic
-    authority.
+  why: 2017 two-page sheet, kept only for quick recall of pandas verbs. Not on the study path and never
+    an authority.
   priority: 3
   unit_routes:
   - id: route-python-cheatsheets-s01
@@ -484,3 +486,273 @@ sources:
     scope: complementary
     locator: Sections 4.2-4.3, PDF viewer pages 5-7; Sections 5.1-5.2.3, viewer pages 10-12
     vault_path: material://source-scalable-dataframe-systems-paper/Towards Scalable Dataframe Systems.pdf
+- source_id: source-polars-docs
+  role: spine
+  why: Official and the only long-form source that tracks the current release; the authority for Polars
+    behaviour.
+  priority: 0
+  unit_routes:
+  - id: route-polars-docs-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars user guide - Getting started
+    format: documentation
+    angle: The shortest official path from nothing to a working pipeline.
+    angle_detail: Always matches the current release, which the book cannot. Reading it first means your
+      first Polars is 2.0 Polars. It stops short of any comparison with pandas.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: orientation
+    scope: current
+    locator: User guide, section 'Getting started', whole page
+    url: https://docs.pola.rs/user-guide/getting-started/
+  - id: route-polars-docs-upgrade2
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars 2.0 release post and upgrade guide
+    format: documentation
+    angle: What changed in the version you are actually running, and so which older material to distrust.
+    angle_detail: Read the release post once now. Use the upgrade guide later as the way to judge any
+      tutorial written before October 2026. Do not study its tables.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    depth: orientation
+    scope: current
+    locator: '''Release of Polars 2.0'' post; upgrade guide §''Behavior changes'''
+    url: https://pola.rs/posts/release-polars-2
+  - id: route-polars-docs-s09
+    unit_id: unit-job-polars-ml-pipeline
+    title: Polars API pages used in pipelines
+    format: documentation
+    angle: 'The exact behaviour of the crossing points: to_numpy, to_pandas, from_pandas, to_dummies.'
+    angle_detail: Reference only. Look these up when a task needs them; nothing here is to be memorised.
+    covers:
+    - knowledge-polars-ml-boundary
+    depth: practice
+    scope: current
+    locator: API pages 'DataFrame.to_numpy', 'DataFrame.to_pandas', 'polars.from_pandas', 'DataFrame.to_dummies'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.to_numpy.html
+- source_id: source-modern-polars
+  role: first-exposure
+  why: Free side-by-side book of idiomatic pandas and Polars, maintained against Polars 1.41 and pandas
+    3.0; the closest material to this module's goal.
+  priority: 0
+  unit_routes:
+  - id: route-modern-polars-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Modern Polars - Indexing (Or Lack Thereof)
+    format: website
+    angle: The same real analysis written in idiomatic pandas and Polars, focused on what the index does
+      and what replaces it.
+    angle_detail: Uses a real flights dataset, not toy frames, and pairs every step. The author openly
+      prefers Polars, so read its verdicts as opinion and its code as evidence. Targets Polars 1.41.2,
+      so it predates 2.0.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: implementation
+    scope: current
+    locator: Chapter 1, 'Indexing (Or Lack Thereof)'
+    url: https://kevinheavey.github.io/modern-polars/indexing.html
+  - id: route-modern-polars-s02
+    unit_id: unit-job-polars-expressions
+    title: Modern Polars - Method Chaining
+    format: website
+    angle: Shows the style that makes both libraries readable, and what pandas needs lambdas for where
+      Polars uses expressions.
+    angle_detail: Good on style and on why assign and with_columns feel alike but are not. It teaches
+      no expression semantics, which the book and user guide cover.
+    covers:
+    - knowledge-polars-expr-contexts
+    depth: implementation
+    scope: current
+    locator: Chapter 2, 'Method Chaining'
+    url: https://kevinheavey.github.io/modern-polars/method_chaining.html
+  - id: route-modern-polars-s05
+    unit_id: unit-job-polars-order-text-time
+    title: Modern Polars - Timeseries
+    format: website
+    angle: Date handling, resampling and rolling windows side by side on real data.
+    angle_detail: Stronger than the book on the pandas comparison, weaker on the string namespace, which
+      it barely touches.
+    covers:
+    - knowledge-polars-text-temporal
+    depth: implementation
+    scope: current
+    locator: Chapter 5, 'Timeseries'
+    url: https://kevinheavey.github.io/modern-polars/timeseries.html
+  - id: route-modern-polars-s07
+    unit_id: unit-job-polars-joins-reshape
+    title: Modern Polars - Reshaping and Tidy Data
+    format: website
+    angle: Melt, pivot and joins side by side, on the same data in both libraries.
+    angle_detail: Shows both libraries' reshaping idioms on one worked problem, which the book's Polars-only
+      chapter cannot.
+    covers:
+    - knowledge-polars-reshape
+    depth: implementation
+    scope: current
+    locator: Chapter 4, 'Reshaping and Tidy Data'
+    url: https://kevinheavey.github.io/modern-polars/tidy.html
+  - id: route-modern-polars-s08
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Modern Polars - Performance and Scaling
+    format: website
+    angle: A practical view of lazy queries and scanning, compared with what pandas does for the same
+      job.
+    angle_detail: Its timings are from one machine and an older release; use it for the method, not the
+      numbers.
+    covers:
+    - knowledge-polars-lazy-plans
+    depth: implementation
+    scope: complementary
+    locator: Chapter 3, 'Performance'; Chapter 6, 'Scaling'
+    url: https://kevinheavey.github.io/modern-polars/performance.html
+- source_id: source-narwhals-concepts
+  role: reference
+  why: Short, precise pages written by people whose job is making pandas and Polars code agree.
+  priority: 1
+  unit_routes:
+  - id: route-narwhals-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Narwhals - What about the pandas Index?
+    format: documentation
+    angle: A compact account of how to write code that behaves the same with and without an index.
+    angle_detail: Narwhals is itself a compatibility layer, so this is the same problem Stratum faces,
+      stated in one page. You do not need to use Narwhals.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: orientation
+    scope: complementary
+    locator: Concepts, 'What about the pandas Index?'
+    url: https://narwhals-dev.github.io/narwhals/concepts/pandas_index/
+  - id: route-narwhals-s03
+    unit_id: unit-job-polars-schema-missing-types
+    title: Narwhals - Null/NaN handling
+    format: documentation
+    angle: The clearest short table of null and NaN across pandas and Polars.
+    angle_detail: Covers the behaviour, not why. Read after the Polars missing-data page.
+    covers:
+    - knowledge-polars-missing-model
+    depth: orientation
+    scope: complementary
+    locator: Concepts, 'Null/NaN handling'
+    url: https://narwhals-dev.github.io/narwhals/concepts/null_handling/
+  - id: route-narwhals-s05
+    unit_id: unit-job-polars-order-text-time
+    title: Narwhals - Order-dependence
+    format: documentation
+    angle: Names exactly which operations depend on row order, which is what a lazy engine cannot assume.
+    angle_detail: Short and general. It frames the rule that the Polars 2.0 streaming default now makes
+      practical.
+    covers:
+    - knowledge-polars-ordering
+    depth: orientation
+    scope: complementary
+    locator: Concepts, 'Order-dependence'
+    url: https://narwhals-dev.github.io/narwhals/concepts/order_dependence/
+- source_id: source-pandas-docs
+  role: spine
+  why: The authority for pandas behaviour. Replaces the 2016 handbook and the 2017 cheat sheet, which
+    predate pandas 3.0.
+  priority: 0
+  unit_routes:
+  - id: route-pandas-docs-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: pandas 3.0 release notes and migration guide
+    format: documentation
+    angle: 'The pandas you are modelling is new too: str dtype, Copy-on-Write, inferred datetime units.'
+    angle_detail: Anything written before pandas 3.0, including your older notebooks, describes different
+      defaults. The stable docs site now shows 3.1; Stratum pins 3.0.2, so check the release notes when
+      a detail matters.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    depth: orientation
+    scope: current
+    locator: What's new in 3.0.0, §'Dedicated string data type' and §'Consistent copy/view behaviour'
+    url: https://pandas.pydata.org/docs/whatsnew/v3.0.0.html
+- source_id: source-polars-benchmark
+  role: practice
+  why: 22 real analytical queries written by the Polars team in both pandas and Polars. Stratum's own
+    PDS tests are ported from these files.
+  priority: 0
+  unit_routes:
+  - id: route-polars-benchmark-s06
+    unit_id: unit-job-polars-aggregation-windows
+    title: PDS queries Q1 and Q6
+    format: code
+    angle: A real aggregation query in both libraries, on one screen.
+    angle_detail: Q1 is computed columns plus grouped aggregates; Q6 is a filtered total. Read the pandas
+      file, write the Polars yourself, then compare. The repo pins pandas 2.3.3 and Polars 1.41.2, so
+      its pandas side predates 3.0.
+    covers:
+    - knowledge-polars-aggregation
+    depth: practice
+    scope: complementary
+    locator: queries/pandas/q1.py and queries/polars/q1.py; q6.py
+    url: https://github.com/pola-rs/polars-benchmark/tree/main/queries
+  - id: route-polars-benchmark-s07
+    unit_id: unit-job-polars-joins-reshape
+    title: PDS queries Q3, Q5, Q13 and Q4
+    format: code
+    angle: Multi-table joins, a left join with counts, and a semi join, in both libraries.
+    angle_detail: Q3 and Q5 are chains of inner joins, Q13 is a left join, Q4 is a semi join that pandas
+      has to spell out. Same reading method as the aggregation queries.
+    covers:
+    - knowledge-polars-join-semantics
+    depth: practice
+    scope: complementary
+    locator: queries/pandas/q3.py, q5.py, q13.py, q4.py and the same names under queries/polars/
+    url: https://github.com/pola-rs/polars-benchmark/tree/main/queries
+  - id: route-polars-benchmark-s11
+    unit_id: unit-job-polars-capstone-transition
+    title: PDS query ladder Q10, Q12, Q16, Q18, Q21, Q22
+    format: code
+    angle: Harder queries for writing Polars cold from a pandas original.
+    angle_detail: Q12 conditional aggregates, Q16 anti join with string filters, Q18 semi join after a
+      threshold, Q21 and Q22 long pipelines. Stratum's tests under tests/application/pds hold small fixtures
+      for these; read them, do not edit them.
+    covers:
+    - knowledge-polars-capstone
+    depth: practice
+    scope: current
+    locator: queries/pandas/q10.py, q12.py, q16.py, q18.py, q21.py, q22.py and the same names under queries/polars/
+    url: https://github.com/pola-rs/polars-benchmark/tree/main/queries
+- source_id: source-skrub
+  role: implementation
+  why: The library Stratum replaces and is driven through; shows what an ML pipeline asks of a dataframe.
+  priority: 1
+  unit_routes:
+  - id: route-skrub-s09
+    unit_id: unit-job-polars-ml-pipeline
+    title: skrub - selectors, TableVectorizer, DataOps
+    format: documentation
+    angle: Dtype-based column selection and table-to-features, on both pandas and Polars frames.
+    angle_detail: The user guide says skrub works with both libraries but has no dedicated Polars section,
+      so run the examples on a Polars frame yourself. Stratum pins skrub 0.11.0; the site shows the current
+      stable release.
+    covers:
+    - knowledge-polars-ml-features
+    - knowledge-polars-ml-boundary
+    depth: implementation
+    scope: current
+    locator: 'User guide: ''Skrub Selectors''; ''Transforming a table into an array of numeric features'';
+      ''Quick overview of DataOps'''
+    url: https://skrub-data.org/stable/modules/multi_column_operations/selectors.html
+- source_id: source-sklearn-user-guide
+  role: reference
+  why: The consumer of every feature table; defines what crosses the model boundary.
+  priority: 1
+  unit_routes:
+  - id: route-sklearn-s09
+    unit_id: unit-job-polars-ml-pipeline
+    title: scikit-learn - Polars output with set_output
+    format: documentation
+    angle: How a transformer returns a Polars frame, and how feature names travel through a pipeline.
+    angle_detail: The page's worked example uses pandas; only one line says how to ask for Polars. Stratum
+      pins scikit-learn 1.8 while the site shows a newer release.
+    covers:
+    - knowledge-polars-ml-boundary
+    depth: implementation
+    scope: current
+    locator: User guide §'Pandas/Polars Output for Transformers with set_output API'
+    url: https://scikit-learn.org/stable/modules/df_output_transform.html

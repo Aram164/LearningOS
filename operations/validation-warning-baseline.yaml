@@ -22,10 +22,14 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-11-05'
-note: 'Ratchet adopted repairs: inherited paydown since 2026-10-26 plus the HYGIENE-VIEWS
-  repair after regenerating views on codex/review-shortcomings-20261105'
-total: 574
+recorded: '2026-11-06'
+note: 'Polars revision restored 2026-11-06: the plan Aram reviewed and applied live
+  on 2026-11-02 (receipt transaction-20261102-220738-001) never reached main, so the
+  2026-11-06 ratchet lowered unit-job-polars-pandas-fluency to 8. Re-applied byte-identical
+  through the gateway; its two Polars-first drill rows point at attachments filed
+  under the sibling stage stage-polars-01, which the attachment exemption does not
+  recognise. Adopted deliberately (8 -> 10); still below the 16 it passed under.'
+total: 570
 distinct_signatures: 32
 signatures:
 - code: RESOURCE-SCOPE-UNBOUND
@@ -84,10 +88,10 @@ signatures:
   count: 12
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
-  count: 7
+  count: 5
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
-  count: 7
+  count: 3
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
   count: 9
@@ -102,7 +106,7 @@ signatures:
   count: 6
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
-  count: 8
+  count: 10
 - code: RESOURCE-SCOPE-UNBOUND
   path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
   count: 9

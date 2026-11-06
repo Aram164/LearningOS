@@ -4,12 +4,12 @@ module_id: module-job-polars
 kind: topic
 title: Session 2 - Polars expression fluency
 order: 2
-scope: Build and compose Polars expressions from intent, with explicit context, shape, schema, dependency,
-  and failure reasoning before any backend operator clinic.
+scope: Build and compose Polars expressions from intent, reasoning about context, output shape and schema,
+  and see why pandas assign does not map onto one with_columns.
 status: ready
 knowledge_map:
-  summary: Build and compose Polars expressions from intent, with explicit context, shape, schema, dependency,
-    and failure reasoning before any backend operator clinic.
+  summary: Build and compose Polars expressions from intent, reasoning about context, output shape and
+    schema, and see why pandas assign does not map onto one with_columns.
   nodes:
   - id: knowledge-polars-expr-contexts
     title: Expression contexts
@@ -53,6 +53,8 @@ scope_sources:
 - source_id: source-polars-definitive-guide
   authority: reference
 - source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-modern-polars
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-expressions

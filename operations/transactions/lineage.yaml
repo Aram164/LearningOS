@@ -5272,6 +5272,339 @@ records:
         idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
       reviewed_by: ''
       status: supported
+  covers:route-modern-polars-s01:
+    claim_id: covers:route-modern-polars-s01
+    claim_kind: route-covers
+    statement: route-modern-polars-s01 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-modern-polars-s01: sha256:53b457b95d3edca2b4c3620637a051775d7bdba6aadb745673830daf022ef6d2
+        source-material:source-modern-polars: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://kevinheavey.github.io/modern-polars/indexing.html -- trail:
+        opened 2026-11-02: page resolves (HTTP 200) and its content matches this route''s
+        locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-modern-polars-s02:
+    claim_id: covers:route-modern-polars-s02
+    claim_kind: route-covers
+    statement: route-modern-polars-s02 covers knowledge-polars-expr-contexts
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-expr-contexts: sha256:07fda42453c0b5233bc84959c80b8c226cdea8eeebf1645976c07507d49d8ebf
+        route-content:route-modern-polars-s02: sha256:8bab6231661b41f262d80327df8da33bed5fe5b6b31ae5888b43ad2b5322762a
+        source-material:source-modern-polars: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://kevinheavey.github.io/modern-polars/method_chaining.html
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-modern-polars-s05:
+    claim_id: covers:route-modern-polars-s05
+    claim_kind: route-covers
+    statement: route-modern-polars-s05 covers knowledge-polars-text-temporal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-text-temporal: sha256:bbf81233a510ef374bda02aeb6f7b514636677fa37c709e6eff7466ebc751fa4
+        route-content:route-modern-polars-s05: sha256:623d3dd9b2f1e17ee7df8dca481e784760bb72ff8ce2d566364b81bb1d942e48
+        source-material:source-modern-polars: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://kevinheavey.github.io/modern-polars/timeseries.html -- trail:
+        opened 2026-11-02: page resolves (HTTP 200) and its content matches this route''s
+        locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-modern-polars-s07:
+    claim_id: covers:route-modern-polars-s07
+    claim_kind: route-covers
+    statement: route-modern-polars-s07 covers knowledge-polars-reshape
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-reshape: sha256:6b03173ce84fad07a92918f0d77dbcf72fb8e9cc74e466df7ba879a49cfd8291
+        route-content:route-modern-polars-s07: sha256:5566d110218eb4fc85c44bdd2ce4a14264cebbfbc2f966176659b2445e802e90
+        source-material:source-modern-polars: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://kevinheavey.github.io/modern-polars/tidy.html -- trail:
+        opened 2026-11-02: page resolves (HTTP 200) and its content matches this route''s
+        locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-modern-polars-s08:
+    claim_id: covers:route-modern-polars-s08
+    claim_kind: route-covers
+    statement: route-modern-polars-s08 covers knowledge-polars-lazy-plans
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-lazy-plans: sha256:3b0140618887a27ebe39670c1a9f592e3f81f6a3451a99cae716ac2975e8943e
+        route-content:route-modern-polars-s08: sha256:650910280dfae65deb9a7bc21861bb3562d9155c2b057be9a20348f0b71db9c6
+        source-material:source-modern-polars: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://kevinheavey.github.io/modern-polars/performance.html --
+        trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-narwhals-s01:
+    claim_id: covers:route-narwhals-s01
+    claim_kind: route-covers
+    statement: route-narwhals-s01 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-narwhals-s01: sha256:13bee0e326dff0a26f7e0ec31775e4f6c44a673bf9a2a752eceae13f31c4ad5f
+        source-material:source-narwhals-concepts: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://narwhals-dev.github.io/narwhals/concepts/pandas_index/ --
+        trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-narwhals-s03:
+    claim_id: covers:route-narwhals-s03
+    claim_kind: route-covers
+    statement: route-narwhals-s03 covers knowledge-polars-missing-model
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-missing-model: sha256:bee5481ad78f87b72845fd3a61f273e54a41e81aeb2123d1ef6ac063ac5ed4b0
+        route-content:route-narwhals-s03: sha256:04f4245d241abba27904e0ba8bd34402185680e766d473b4902ea957cfbf6f13
+        source-material:source-narwhals-concepts: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://narwhals-dev.github.io/narwhals/concepts/null_handling/
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-narwhals-s05:
+    claim_id: covers:route-narwhals-s05
+    claim_kind: route-covers
+    statement: route-narwhals-s05 covers knowledge-polars-ordering
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-ordering: sha256:d1c107da98faf5cc030d30ff31d83fa580bb85be3b36719ee912a137cc3d2007
+        route-content:route-narwhals-s05: sha256:057d8a56a3a5d5c25cdde39ca6acaacf6098baf479e2c6184ad2b6c4cd3dd7a6
+        source-material:source-narwhals-concepts: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://narwhals-dev.github.io/narwhals/concepts/order_dependence/
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-pandas-docs-s01:
+    claim_id: covers:route-pandas-docs-s01
+    claim_kind: route-covers
+    statement: route-pandas-docs-s01 covers knowledge-polars-divergence-axes, knowledge-polars-version-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        node-content:knowledge-polars-version-contract: sha256:c36921a1a700b3359f94e149f675c41acda14a733b1615ea17b2dd4cb2ab98ec
+        route-content:route-pandas-docs-s01: sha256:d3ae5d42eb7196b3b452aca1d66bb26bc37298277e4b689482e16906b396e718
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/whatsnew/v3.0.0.html -- trail: opened
+        2026-11-02: page resolves (HTTP 200) and its content matches this route''s
+        locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-benchmark-s06:
+    claim_id: covers:route-polars-benchmark-s06
+    claim_kind: route-covers
+    statement: route-polars-benchmark-s06 covers knowledge-polars-aggregation
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-aggregation: sha256:c97497b3c5df0aca6254710b64250944eb6caeed854d1a5c6629b5a700f97374
+        route-content:route-polars-benchmark-s06: sha256:5700cbb94d02d3cc27c3cc918c45303f7e9a445e15a62c02dd2755b9c1a12178
+        source-material:source-polars-benchmark: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pola-rs/polars-benchmark/tree/main/queries --
+        trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-benchmark-s07:
+    claim_id: covers:route-polars-benchmark-s07
+    claim_kind: route-covers
+    statement: route-polars-benchmark-s07 covers knowledge-polars-join-semantics
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-join-semantics: sha256:554105ab78c9a8f83cb43c2f7b0cb86cc20c76678acc3f0454b21081c3e2769f
+        route-content:route-polars-benchmark-s07: sha256:9ee9378d08c5f3215053a6fa2be5eea7955dd3a66af83d385dc2cab4caa3c86b
+        source-material:source-polars-benchmark: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pola-rs/polars-benchmark/tree/main/queries --
+        trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-benchmark-s11:
+    claim_id: covers:route-polars-benchmark-s11
+    claim_kind: route-covers
+    statement: route-polars-benchmark-s11 covers knowledge-polars-capstone
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-capstone: sha256:1199e73c6a1c162a3c30d5fb03159e162955e346727d0021bc2f432570b79cec
+        route-content:route-polars-benchmark-s11: sha256:27f677beb8cad93dcc73ede977e713f1c317c4b5342efbd60b65ca32b3ab97c6
+        source-material:source-polars-benchmark: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pola-rs/polars-benchmark/tree/main/queries --
+        trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-docs-s01:
+    claim_id: covers:route-polars-docs-s01
+    claim_kind: route-covers
+    statement: route-polars-docs-s01 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-polars-docs-s01: sha256:f7c10b5d2f95fcab8603238b6a57a180dce117d2a22b7a7deb98690fb3b4f0d7
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/getting-started/ -- trail: opened
+        2026-11-02: page resolves (HTTP 200) and its content matches this route''s
+        locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-docs-s09:
+    claim_id: covers:route-polars-docs-s09
+    claim_kind: route-covers
+    statement: route-polars-docs-s09 covers knowledge-polars-ml-boundary
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-ml-boundary: sha256:3d2396c062198d3e4abb2df384b25331f7247be1cdd3d1bcb9d1f3d46847ba35
+        route-content:route-polars-docs-s09: sha256:e7dee65839d589a474ce7c42aa76753c65664f673604b2a6812d5675d354e6fa
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.to_numpy.html
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-polars-docs-upgrade2:
+    claim_id: covers:route-polars-docs-upgrade2
+    claim_kind: route-covers
+    statement: route-polars-docs-upgrade2 covers knowledge-polars-divergence-axes,
+      knowledge-polars-version-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        node-content:knowledge-polars-version-contract: sha256:c36921a1a700b3359f94e149f675c41acda14a733b1615ea17b2dd4cb2ab98ec
+        route-content:route-polars-docs-upgrade2: sha256:1057f1c52c31e59476cb8c6ea098acf2f9ebc67f8ddfca89fa3cdd7222c4c61e
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pola.rs/posts/release-polars-2 -- trail: opened 2026-11-02:
+        page resolves (HTTP 200) and its content matches this route''s locator and
+        covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
   covers:route-python-classes-inheritance-ep-1:
     claim_id: covers:route-python-classes-inheritance-ep-1
     claim_kind: route-covers
@@ -12088,3 +12421,48 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-sklearn-s09:
+    claim_id: covers:route-sklearn-s09
+    claim_kind: route-covers
+    statement: route-sklearn-s09 covers knowledge-polars-ml-boundary
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-ml-boundary: sha256:3d2396c062198d3e4abb2df384b25331f7247be1cdd3d1bcb9d1f3d46847ba35
+        route-content:route-sklearn-s09: sha256:5fe2a8148cfd18ccda399d526433ed9df27344d5cdec14b3ca8df4d1cb99572f
+        source-material:source-sklearn-user-guide: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://scikit-learn.org/stable/modules/df_output_transform.html
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported
+  covers:route-skrub-s09:
+    claim_id: covers:route-skrub-s09
+    claim_kind: route-covers
+    statement: route-skrub-s09 covers knowledge-polars-ml-boundary, knowledge-polars-ml-features
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-ml-boundary: sha256:3d2396c062198d3e4abb2df384b25331f7247be1cdd3d1bcb9d1f3d46847ba35
+        node-content:knowledge-polars-ml-features: sha256:37f33a0d98e19f2319e55e9d04f8b3eb4f5962fb225abc66e96ba9983f146781
+        route-content:route-skrub-s09: sha256:4b0e8c55abda67a66cd50e8997283cde16dafab5683e11a894b9b5e5567395c2
+        source-material:source-skrub: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://skrub-data.org/stable/modules/multi_column_operations/selectors.html
+        -- trail: opened 2026-11-02: page resolves (HTTP 200) and its content matches
+        this route''s locator and covered topic.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
+      idempotency_key: reviewed-8b303ff1e102427da1f372752e2deef0
+    reviewed_by: ''
+    status: supported

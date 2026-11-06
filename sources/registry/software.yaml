@@ -893,3 +893,69 @@ sources:
     possible_use: Project environments, locks, dependencies and running commands.
   thematic_group_ids:
   - thematic-group-software
+- id: source-modern-polars
+  title: 'Modern Polars: a side-by-side comparison of Polars and pandas'
+  type: book
+  authors:
+  - Kevin Heavey
+  url: https://kevinheavey.github.io/modern-polars/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://kevinheavey.github.io/modern-polars/
+    observed: '2026-11-02'
+    possible_use: Free side-by-side pandas and Polars book, targeting Polars 1.41.2 and pandas 3.0.3.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-narwhals-concepts
+  title: 'Narwhals documentation: concepts pages on index, nulls and row order'
+  type: documentation
+  organization: Narwhals
+  url: https://narwhals-dev.github.io/narwhals/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://narwhals-dev.github.io/narwhals/concepts/null_handling/
+    observed: '2026-11-02'
+    possible_use: Short pages on pandas and Polars behaviour differences.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pandas-docs
+  title: 'pandas documentation: user guide and release notes'
+  type: documentation
+  organization: pandas
+  url: https://pandas.pydata.org/docs/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pandas.pydata.org/docs/whatsnew/v3.0.0.html
+    observed: '2026-11-02'
+    possible_use: Current authority for pandas behaviour.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-polars-benchmark
+  title: 'polars-benchmark: PDS queries in pandas and Polars'
+  type: website
+  organization: Polars
+  url: https://github.com/pola-rs/polars-benchmark
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/pola-rs/polars-benchmark
+    observed: '2026-11-02'
+    possible_use: 22 queries in both libraries; the origin of Stratum's PDS tests.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-polars-docs
+  title: 'Polars documentation: user guide, API reference and upgrade guides'
+  type: documentation
+  organization: Polars
+  url: https://docs.pola.rs/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.pola.rs/user-guide/getting-started/
+    observed: '2026-11-02'
+    possible_use: Current authority for Polars behaviour.
+  thematic_group_ids:
+  - thematic-group-software

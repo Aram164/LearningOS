@@ -1,0 +1,382 @@
+id: study-map-job-polars-ml-pipeline
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-ml-pipeline
+status: ready
+current_stage: stage-polars-ml-features
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-fluency-coverage-audit-2026-11-02.md
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-ml-features
+  knowledge_node_id: knowledge-polars-ml-features
+  number: 1
+  title: Feature columns
+  status: pending
+  objective: 'Turn a raw table into feature columns in both libraries: derived columns, date parts, dtype-based
+    selection, imputation, and group statistics fitted on training rows only.'
+  done_when:
+  - You rewrote the feature steps of make_orders in Polars, and they agree with pandas.
+  - A group statistic fitted on train rows and joined onto test rows, with a decision for unseen categories.
+  - You can say why fill_null misses the NaN from 0/0, and what that does to a feature.
+  exam_critical: false
+  concepts:
+  - concept-dataframe-semantics
+  - concept-map-family
+  - concept-projection-family
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-skrub-s09
+      inherit:
+      - source_id
+      - url
+    id: resource-skrub-selectors
+    kind: read
+    label: skrub - Selectors
+    locator: '''Skrub Selectors'' and ''Selecting based on dtype or data properties'''
+    angle: How an ML pipeline picks columns by type rather than by name.
+    angle_detail: Compare with Polars selectors from Session 2 and pandas select_dtypes. Run on a Polars
+      frame yourself.
+    scope_triage: required-now
+    route_id: route-skrub-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''skrub - selectors, TableVectorizer, DataOps'' against the stage
+        ''Feature columns'': the row narrows the route to this stage''s purpose. This relation review
+        asserts no new source observation or learner achievement.'
+      fingerprint: sha256:39f0826fbde17cb11c6c7175d3efa24cfcc9a9563be3fecacbe11664ab8e8ccd
+  - kind: reference
+    label: Polars selectors reference
+    id: resource-polars-selectors-api
+    locator: Reference page
+    url: https://docs.pola.rs/api/python/stable/reference/selectors.html
+    scope_triage: reference-only
+    angle: Look-up for dtype-based column selection.
+    angle_detail: Reference only.
+  - id: resource-stratum-orders-pipeline
+    kind: reference
+    label: A real feature pipeline
+    locator: Stratum/tests/application/test_frame_ops_pipeline.py, make_orders and the pipeline built
+      from it
+    angle: Filter, assign, date parts and dtype split, exactly what this stage practises.
+    angle_detail: 'Read it as the worked example, then write the same steps in your own scratch file.
+      Read-only: never edit, add or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-ml-features-1
+    kind: reference
+    label: Rewrite the feature steps in Polars
+    locator: Exercise 1
+    angle: Fluency on the operations pipelines really use.
+    angle_detail: Filter, derived total, month and weekday from a parsed date, select by dtype. Compare
+      with pandas. Watch the weekday numbering.
+    scope_triage: required-now
+  - id: resource-ml-features-2
+    kind: reference
+    label: Fit a group statistic without leaking
+    locator: Exercise 2
+    angle: The classic pipeline bug, in dataframe form.
+    angle_detail: Compute a per-category mean on train rows only, join to test, and decide what an unseen
+      category gets. Compare with an over() on all rows, and say which leaks.
+    scope_triage: required-now
+  - id: resource-ml-features-3
+    kind: reference
+    label: Impute after a division
+    locator: Exercise 3
+    angle: Where the null and NaN difference hits features.
+    angle_detail: Compute a/b with a 0/0 row, then impute. Do it in both libraries and explain the difference.
+      This is the gap Stratum's FIXME(#216) records.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-ml-pipeline/stages/stage-polars-ml-features/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-ml-splits
+  knowledge_node_id: knowledge-polars-ml-splits
+  number: 2
+  title: Splits and row alignment
+  status: pending
+  objective: Keep X and y paired without an index, and see what pandas label alignment does for you, and
+    to you, that Polars does not.
+  done_when:
+  - A train/test split done on a Polars frame with scikit-learn indices.
+  - The same split done natively with with_row_index, sample and an anti join.
+  - You can show a pandas assignment that aligns by label where the same Polars code pairs by position
+    or raises.
+  exam_critical: false
+  concepts:
+  - concept-dataframe-semantics
+  - concept-selection-family
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: scikit-learn - Cross-validation
+    id: resource-sklearn-cv
+    locator: §'Computing cross-validated metrics' and §'Cross validation iterators'
+    url: https://scikit-learn.org/stable/modules/cross_validation.html
+    scope_triage: required-now
+    angle: 'What the splitters hand you: positions, not labels.'
+    angle_detail: That is why a splitter works on a Polars frame at all.
+  - kind: reference
+    label: scikit-learn - Common pitfalls
+    id: resource-sklearn-pitfalls
+    locator: §'Data leakage'
+    url: https://scikit-learn.org/stable/common_pitfalls.html
+    scope_triage: helpful-now
+    angle: Why feature statistics must be fitted inside the split.
+    angle_detail: Short. Read before Exercise 2 of the previous stage if the idea is new.
+  - id: resource-stratum-split
+    kind: reference
+    label: Stratum's split
+    locator: Stratum/stratum/optimizer/logical/_split_ops.py, class SplitOp, method process
+    angle: 'iloc on pandas, plain indexing on Polars: the difference in two lines.'
+    angle_detail: 'Read-only: never edit, add or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-ml-splits-1
+    kind: reference
+    label: Split a Polars frame two ways
+    locator: Exercise 1
+    angle: Both the scikit-learn route and the native route.
+    angle_detail: train_test_split or KFold indices on a Polars frame, then with_row_index, sample and
+      an anti join. Check that no row is lost or duplicated.
+    scope_triage: required-now
+  - id: resource-ml-splits-2
+    kind: reference
+    label: Break X and y on purpose
+    locator: Exercise 2
+    angle: Makes the alignment difference impossible to forget.
+    angle_detail: In pandas, filter X, leave y, assign a Series with a shuffled index and read the result.
+      Write the same in Polars. Add the result to your differences sheet.
+    scope_triage: required-now
+  - id: resource-ml-splits-3
+    kind: reference
+    label: Same seed, different rows
+    locator: Exercise 3
+    angle: Reproducibility across libraries is not a thing to assume.
+    angle_detail: Sample with one seed in both libraries and compare. Then say what a test may and may
+      not assert.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-ml-pipeline/stages/stage-polars-ml-splits/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-ml-model-boundary
+  knowledge_node_id: knowledge-polars-ml-boundary
+  number: 3
+  title: Encoding and the model boundary
+  status: pending
+  objective: Encode categoricals and cross into scikit-learn and skrub from a Polars frame, knowing what
+    happens to dtypes and missing values on the way.
+  done_when:
+  - to_dummies and get_dummies compared on names, dtypes and a missing category.
+  - A scikit-learn pipeline run with set_output(transform='polars').
+  - skrub TableVectorizer run on a Polars frame.
+  - You can say what to_numpy does to an integer column with a null, and what a to_pandas and from_pandas
+    round trip changes.
+  exam_critical: false
+  concepts:
+  - concept-dataframe-semantics
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-sklearn-s09
+      inherit:
+      - source_id
+      - url
+    id: resource-sklearn-set-output
+    kind: read
+    label: scikit-learn - set_output
+    locator: §'Pandas/Polars Output for Transformers with set_output API'
+    angle: How transformers return a Polars frame.
+    angle_detail: The worked example is pandas; try it with transform='polars'.
+    scope_triage: required-now
+    route_id: route-sklearn-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''scikit-learn - Polars output with set_output'' against the stage
+        ''Encoding and the model boundary'': the row narrows the route to this stage''s purpose. This
+        relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:fce3c229e19f602a7ebc54b1258d39f35ae5fafe6ed350a73d4ae730f3d2e10c
+  - kind: reference
+    label: scikit-learn - Pipelines and ColumnTransformer
+    id: resource-sklearn-compose
+    locator: §'ColumnTransformer for heterogeneous data'
+    url: https://scikit-learn.org/stable/modules/compose.html
+    scope_triage: required-now
+    angle: How columns get routed to encoders in a pipeline.
+    angle_detail: Selecting by name or dtype connects to the selectors stage.
+  - material_ref:
+      route_id: route-skrub-s09
+      inherit:
+      - source_id
+      - url
+    id: resource-skrub-tablevectorizer
+    kind: read
+    label: skrub - TableVectorizer and DataOps
+    locator: '''Transforming a table into an array of numeric features''; ''Quick overview of DataOps'''
+    angle: What Stratum's pipelines are built from.
+    angle_detail: DataOps is the interface Stratum captures, so the quick overview also prepares Session
+      10.
+    scope_triage: required-now
+    route_id: route-skrub-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''skrub - selectors, TableVectorizer, DataOps'' against the stage
+        ''Encoding and the model boundary'': the row narrows the route to this stage''s purpose. This
+        relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:441339e364c2136c7fd7f81319b4a17f55d1b2131f57c698ea1faed755fd941c
+  - kind: reference
+    label: Polars user guide - Categorical data and enums
+    id: resource-polars-categorical
+    locator: Whole page
+    url: https://docs.pola.rs/user-guide/expressions/categorical-data-and-enums/
+    scope_triage: required-now
+    angle: Categorical versus Enum, which pandas has no direct equivalent for.
+    angle_detail: Enum fixes the categories up front, which is what you want between train and test.
+  - material_ref:
+      route_id: route-polars-docs-s09
+      inherit:
+      - source_id
+      - url
+    id: resource-polars-boundary-api
+    kind: read
+    label: Polars API pages at the boundary
+    locator: API pages 'DataFrame.to_numpy', 'DataFrame.to_pandas', 'polars.from_pandas', 'DataFrame.to_dummies'
+    angle: Look-ups for the crossing points.
+    angle_detail: Reference only.
+    scope_triage: reference-only
+    route_id: route-polars-docs-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Polars API pages used in pipelines'' against the stage ''Encoding
+        and the model boundary'': the row narrows the route to this stage''s purpose. This relation review
+        asserts no new source observation or learner achievement.'
+      fingerprint: sha256:471fa11c489c3c6908c03b731b388d51e93cd479df94572161af148814633e2b
+  - kind: reference
+    label: pandas.get_dummies
+    id: resource-pandas-get-dummies
+    locator: Reference page
+    url: https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html
+    scope_triage: reference-only
+    angle: Look-up for the pandas side.
+    angle_detail: Reference only.
+  - id: resource-stratum-conversion-ml
+    kind: reference
+    label: Stratum's conversion
+    locator: Stratum/stratum/optimizer/physical/_conversion.py, functions to_polars and to_pandas
+    angle: What Stratum actually does at the boundary.
+    angle_detail: 'Read-only: never edit, add or run anything that writes inside Stratum.'
+    scope_triage: helpful-now
+  - id: resource-ml-boundary-1
+    kind: reference
+    label: Encode both ways
+    locator: Exercise 1
+    angle: Names and dtypes differ, and tests notice.
+    angle_detail: to_dummies against get_dummies on a column with a null and a category absent from test.
+      Say what you would do at inference time.
+    scope_triage: required-now
+  - id: resource-ml-boundary-2
+    kind: reference
+    label: Cross into a model
+    locator: Exercise 2
+    angle: The end of every pipeline.
+    angle_detail: Fit a Ridge from a Polars frame, once with to_numpy and once through a ColumnTransformer
+      with Polars output. Inspect the dtypes and feature names.
+    scope_triage: required-now
+  - id: resource-ml-boundary-3
+    kind: reference
+    label: Round-trip a frame
+    locator: Exercise 3
+    angle: Finds what conversion silently changes.
+    angle_detail: Int with null, string, date and categorical through to_pandas and from_pandas. Record
+      each dtype before and after.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-ml-pipeline/stages/stage-polars-ml-model-boundary/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-ml-time-features
+  knowledge_node_id: knowledge-polars-ml-time
+  number: 4
+  title: Time-aware features
+  status: pending
+  objective: Build lags, rolling statistics, as-of joins and resampled features per entity, knowing that
+    row order is part of their meaning.
+  done_when:
+  - Lag and rolling features per entity in both libraries, correct after the rows are shuffled.
+  - An as-of join in both libraries, with a statement of what stops it leaking the future.
+  - A resample in both libraries.
+  exam_critical: false
+  concepts:
+  - concept-dataframe-semantics
+  - concept-aggregation-family
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Polars user guide - Grouping by time windows
+    id: resource-polars-rolling
+    locator: Whole page
+    url: https://docs.pola.rs/user-guide/transformations/time-series/rolling/
+    scope_triage: required-now
+    angle: Fixed and rolling time windows.
+    angle_detail: Read with the next page.
+  - kind: reference
+    label: Polars user guide - Resampling
+    id: resource-polars-resampling
+    locator: Whole page
+    url: https://docs.pola.rs/user-guide/transformations/time-series/resampling/
+    scope_triage: required-now
+    angle: Upsampling and downsampling.
+    angle_detail: Compare with pandas resample.
+  - kind: reference
+    label: Polars user guide - Joins
+    id: resource-polars-asof
+    locator: §'Asof join'
+    url: https://docs.pola.rs/user-guide/transformations/joins/
+    scope_triage: required-now
+    angle: Join each row to the most recent earlier row.
+    angle_detail: The natural way to attach point-in-time features.
+  - kind: reference
+    label: pandas.merge_asof
+    id: resource-pandas-merge-asof
+    locator: Reference page
+    url: https://pandas.pydata.org/docs/reference/api/pandas.merge_asof.html
+    scope_triage: reference-only
+    angle: The pandas counterpart.
+    angle_detail: Reference only.
+  - kind: reference
+    label: pandas user guide - Time series
+    id: resource-pandas-timeseries-ml
+    locator: §'Resampling'
+    url: https://pandas.pydata.org/docs/user_guide/timeseries.html
+    scope_triage: helpful-now
+    angle: The pandas side of resampling.
+    angle_detail: Read only the named section.
+  - id: resource-ml-time-1
+    kind: reference
+    label: Lag and rolling features per entity
+    locator: Exercise 1
+    angle: Shows order is part of the meaning.
+    angle_detail: Compute a lag and rolling mean per entity, shuffle the rows, and make the result stay
+      right.
+    scope_triage: required-now
+  - id: resource-ml-time-2
+    kind: reference
+    label: Attach a point-in-time feature
+    locator: Exercise 2
+    angle: The time-series version of the leak in the first stage.
+    angle_detail: join_asof and merge_asof on the same data. Say what happens with a null key and with
+      unsorted input.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-ml-pipeline/stages/stage-polars-ml-time-features/notes.md
+  attachments: []
+  source_feedback: []
+shelving:
+  state: none

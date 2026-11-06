@@ -1,0 +1,60 @@
+id: unit-job-polars-ml-pipeline
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 9 - ML-pipeline operations in Polars
+order: 9
+scope: 'The dataframe operations an ML pipeline actually uses, in Polars and pandas: feature columns,
+  train/test splits and row alignment, encoding, crossing into scikit-learn and skrub, and time-aware
+  features.'
+status: ready
+knowledge_map:
+  summary: 'From a raw table to model input: features, splits, encoding, the model boundary, and time-aware
+    features.'
+  nodes:
+  - id: knowledge-polars-ml-features
+    title: Feature columns
+    summary: Filtering, derived columns, dtype-based selection, imputation, and group statistics fitted
+      on training rows only.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-map-family
+    - concept-projection-family
+  - id: knowledge-polars-ml-splits
+    title: Splits and row alignment
+    summary: Keeping X and y paired without an index, and what pandas label alignment does that Polars
+      does not.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-selection-family
+    builds_on:
+    - knowledge-polars-ml-features
+  - id: knowledge-polars-ml-boundary
+    title: Encoding and the model boundary
+    summary: Categoricals and encoding, what crosses to NumPy, scikit-learn and skrub, and what conversion
+      does to dtypes.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-python
+    builds_on:
+    - knowledge-polars-ml-splits
+  - id: knowledge-polars-ml-time
+    title: Time-aware features
+    summary: Lags, rolling statistics, as-of joins and resampling, and why row order is part of their
+      meaning.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-aggregation-family
+    builds_on:
+    - knowledge-polars-ml-features
+scope_sources:
+- source_id: source-skrub
+  authority: reference
+- source_id: source-sklearn-user-guide
+  authority: reference
+- source_id: source-polars-docs
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-ml-pipeline
+artifacts: {}
+workspace_ids: []

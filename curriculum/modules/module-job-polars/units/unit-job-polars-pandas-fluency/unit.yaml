@@ -2,14 +2,14 @@ id: unit-job-polars-pandas-fluency
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 1 - Backend contracts and parity harness
+title: Session 1 - Polars first, then what changes from pandas
 order: 1
-scope: Specify observable pandas behavior at the operation boundary, target Polars 1.36.0, and create
-  the cumulative executable harness used by every later session.
+scope: 'Write small Polars pipelines from intent on Polars 2.0, then meet the largest differences from
+  pandas 3.0: no index, null versus NaN, strict types, expressions.'
 status: ready
 knowledge_map:
-  summary: Specify observable pandas behavior at the operation boundary, target Polars 1.36.0, and create
-    the cumulative executable harness used by every later session.
+  summary: 'Write small Polars pipelines from intent on Polars 2.0, then meet the largest differences
+    from pandas 3.0: no index, null versus NaN, strict types, expressions.'
   nodes:
   - id: knowledge-polars-version-contract
     title: Pinned backend contract
@@ -47,6 +47,14 @@ scope_sources:
 - source_id: source-stratum-paper
   authority: reference
 - source_id: source-scalable-dataframe-systems-paper
+  authority: reference
+- source_id: source-modern-polars
+  authority: reference
+- source_id: source-narwhals-concepts
+  authority: reference
+- source_id: source-pandas-docs
+  authority: reference
+- source_id: source-polars-docs
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-pandas-fluency

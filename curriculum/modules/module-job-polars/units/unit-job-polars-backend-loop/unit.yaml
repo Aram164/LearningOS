@@ -2,14 +2,14 @@ id: unit-job-polars-backend-loop
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 9 - Repeated Stratum backend implementation loop
-order: 9
-scope: Repeat the full logical-to-physical workflow across Selection, Map/Projection, Aggregation, and
-  Join so the skill transfers to new ML-pipeline operations rather than remaining tied to one file.
+title: Session 10 - Read how Stratum models pandas in Polars
+order: 10
+scope: Read Stratum's real Polars code, without changing it, and say which pandas behaviour each translation
+  line reproduces.
 status: ready
 knowledge_map:
-  summary: Repeat the full logical-to-physical workflow across Selection, Map/Projection, Aggregation,
-    and Join so the skill transfers to new ML-pipeline operations rather than remaining tied to one file.
+  summary: Read Stratum's real Polars code, without changing it, and say which pandas behaviour each translation
+    line reproduces.
   nodes:
   - id: knowledge-polars-stratum-lifecycle
     title: Stratum operation lifecycle

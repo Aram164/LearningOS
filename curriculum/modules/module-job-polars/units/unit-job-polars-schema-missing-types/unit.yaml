@@ -2,14 +2,14 @@ id: unit-job-polars-schema-missing-types
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Session 4 - Schema, dtypes, and missing values
-order: 4
-scope: Predict and preserve schema, coercion, null/NaN, construction, I/O, and failure behavior across
-  the pinned backends.
+title: Session 3 - Schema, dtypes, and missing values
+order: 3
+scope: Decide where a schema comes from, predict type promotion and casting, and settle the null and NaN
+  model in both libraries. Comes before selection and grouping because both depend on it.
 status: ready
 knowledge_map:
-  summary: Predict and preserve schema, coercion, null/NaN, construction, I/O, and failure behavior across
-    the pinned backends.
+  summary: Decide where a schema comes from, predict type promotion and casting, and settle the null and
+    NaN model in both libraries. Comes before selection and grouping because both depend on it.
   nodes:
   - id: knowledge-polars-schema-construction
     title: Construction and schema
@@ -37,6 +37,8 @@ scope_sources:
 - source_id: source-polars-definitive-guide
   authority: reference
 - source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-narwhals-concepts
   authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-schema-missing-types

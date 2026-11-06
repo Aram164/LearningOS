@@ -12,16 +12,19 @@ stages:
 - id: stage-polars-backend-trace-lifecycle
   knowledge_node_id: knowledge-polars-stratum-lifecycle
   number: 1
-  title: Trace capture, logical rewrite, selection, and execution
+  title: Read Stratum's Polars code
   status: pending
-  objective: Follow one pandas call from captured DataOp through specialized logical IR and late physical
-    backend selection, naming the semantic owner at every boundary.
+  objective: Read Stratum's real Polars translation and name the pandas behaviour each line reproduces.
+    Afterwards you should find the differences in your sheet in real code, and be able to spot one that
+    is not handled yet.
   done_when:
-  - Produce traces for SelectionOp, AssignMapOp, AggregateOp, and JoinOp using current Stratum files.
-  - For each trace, identify which facts exist at plan time and which require runtime inputs or fit-time
-    schema.
-  - Explain why Stratum's DAG-level laziness and a Polars physical kernel are related but not identical
-    abstractions.
+  - 'For PolarsAggregateOp.process you can say why each of these is there: fill_nan(None), the null-key
+    filter, maintain_order, the final sort with nulls_last, and pl.len().'
+  - For _polars_fillna, _polars_isna and _polars_map you can say which pandas behaviour each models, and
+    reproduce the FIXME(#216) gap in your own scratch file.
+  - You can say why polars-to-pandas conversion is only admitted with a default index.
+  - You have read one compatibility test and can say what it would catch.
+  - 'Nothing inside Stratum has changed: git status there is as you left it.'
   exam_critical: false
   concepts:
   - concept-python
@@ -30,64 +33,72 @@ stages:
   - concept-dispatch
   scope_triage: required-now
   resources:
-  - material_ref:
-      route_id: route-stratum-paper-s09
-      inherit:
-      - vault_path
-      - source_id
-    id: resource-stratum-paper-architecture
-    kind: read
+  - id: resource-stratum-read-aggregate
+    kind: reference
+    label: Aggregation
+    locator: Stratum/stratum/optimizer/physical/_aggregation_execs.py, class PolarsAggregateOp, method
+      process
+    angle: Five lines, each reproducing one pandas default from Session 6.
+    angle_detail: 'The densest example of the module''s goal in the codebase. Read-only: never edit, add
+      or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-stratum-read-translate
+    kind: reference
+    label: Column methods
+    locator: 'Stratum/stratum/optimizer/physical/_polars_translate.py, section ''column methods'': _polars_fillna,
+      _polars_isna, _polars_notna, _polars_where, _polars_map'
+    angle: Null and NaN, type promotion and missing lookups, with honest FIXME notes.
+    angle_detail: 'The FIXME(#216) comments record real gaps between the backends. Reproducing one in
+      a scratch file is the best test of Session 3. Read-only: never edit, add or run anything that writes
+      inside Stratum.'
+    scope_triage: required-now
+  - id: resource-stratum-read-conversion
+    kind: reference
+    label: Crossing between libraries
+    locator: Stratum/stratum/optimizer/physical/_conversion.py, whole file
+    angle: How an index-free library hands data to an index-based one.
+    angle_detail: 'Connects Session 9''s boundary to why row order and index lineage matter. Read-only:
+      never edit, add or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-stratum-read-tests
+    kind: reference
+    label: How Stratum tests parity
+    locator: Stratum/tests/optimizer/physical/compatibility/test_missing_comparison.py, then test_sort_values.py
+      and test_string_methods.py
+    angle: Real parity tests, so you do not need to build your own harness.
+    angle_detail: 'Short and readable. Each one is a difference from your sheet turned into a test. Read-only:
+      never edit, add or run anything that writes inside Stratum.'
+    scope_triage: required-now
+  - id: resource-stratum-read-selection
+    kind: reference
+    label: Selection
+    locator: Stratum/stratum/optimizer/physical/_selection_execs.py, functions get_polars_sample_kwargs
+      and _present_count_predicate, and the Polars duplicate classes
+    angle: Sampling, dropna and duplicates as Stratum actually does them.
+    angle_detail: 'Replaces the SelectionOp note, which describes a SelectionKind enum that no longer
+      exists in the code. Read-only: never edit, add or run anything that writes inside Stratum.'
+    scope_triage: helpful-now
+  - id: resource-stratum-paper-architecture
+    kind: reference
     label: stratum paper - architecture
     locator: Sections 4.1-4.3, PDF viewer pages 4-5
-    angle: The authoritative system-level reason for logical operators and late physical selection.
-    angle_detail: Trace the paper's declarative abstraction, operator lowering, and operator selection
-      into the current repository; do not infer unimplemented behavior.
-    scope_triage: required-now
-    route_id: route-stratum-paper-s09
-    angle_review:
-      kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'stratum paper - Session 9 architecture route' against the stage 'Trace
-        capture, logical rewrite, selection, and execution'. The stage description selects that stage's
-        task or reading purpose from the broader route; preserve the narrower description. This relation
-        review asserts no new source observation or learner achievement.
-      fingerprint: sha256:71355baf35944dadbcfde2517ba0711766401169670e2200df41c038d7c2e9bb
-  - id: resource-note-extract-dataframe-op
-    kind: read
-    label: extract_dataframe_op dispatch map
-    locator: Complete frame-like branch dispatch map
-    angle: Shows exactly how generic Python operations become specialized dataframe IR.
-    angle_detail: Reproduce four branches from a blank diagram and verify them against current source.
-    scope_triage: required-now
-    vault_path: knowledge/notes/data-systems/stratum/note-stratum-extract-dataframe-op.md
-  - id: resource-note-selectionop-loop
-    kind: read
-    label: SelectionOp logical note
-    locator: Complete note
-    angle: First of four repeated implementation-loop anchors.
-    angle_detail: Use the same checklist later for AssignMapOp, AggregateOp, and JoinOp.
-    scope_triage: required-now
-    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-selectionop.md
-  - id: resource-backend-four-traces
-    kind: practise
-    label: Four operator lifecycle traces
-    locator: Exercise 1 - capture -> rewrite -> support -> select -> resolve -> execute -> compare
-    angle: Produces executable evidence instead of familiarity from reading.
-    angle_detail: Each trace names inputs, logical fields, support decision, runtime resolutions, physical
-      kernel, fallback, and parity tests.
-    scope_triage: required-now
+    angle: Why a pandas call can end up running on Polars at all.
+    angle_detail: Optional context. Use it for intent, and check details against the code.
+    scope_triage: helpful-now
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+    source_id: source-stratum-paper
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-trace-lifecycle/notes.md
   attachments: []
   source_feedback: []
 - id: stage-polars-backend-decision-loop
   knowledge_node_id: knowledge-polars-implementation-decision
   number: 2
-  title: Apply the backend implementation decision loop
+  title: 'Optional: backend decision loop'
   status: pending
-  objective: 'Use one repeatable decision procedure for every physical operation: normalize the pandas
-    contract, check support on raw logical fields, resolve runtime operands, choose native/adapt/fallback/unsupported,
-    execute, and compare through the parity harness.'
+  objective: 'Deferred 2026-11-02: backend engineering, not fluency. Use one repeatable decision procedure
+    for every physical operation: normalize the pandas contract, check support on raw logical fields,
+    resolve runtime operands, choose native/adapt/fallback/unsupported, execute, and compare through the
+    parity harness.'
   done_when:
   - Write the decision loop as a review checklist and apply it to four operator families.
   - Demonstrate one bug caused by resolving too early and one caused by checking support too late.
@@ -98,7 +109,7 @@ stages:
   - concept-dispatch
   - concept-logical-ir
   - concept-dataframe-semantics
-  scope_triage: required-now
+  scope_triage: deferred
   resources:
   - material_ref:
       route_id: route-python-depth-drills-s09
@@ -116,13 +127,12 @@ stages:
     route_id: route-python-depth-drills-s09
     angle_review:
       kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'Python Depth Drills - Session 9 support route' against the stage
-        'Apply the backend implementation decision loop'. The stage description selects that stage's task
-        or reading purpose from the broader route; preserve the narrower description. This relation review
-        asserts no new source observation or learner achievement.
-      fingerprint: sha256:17454a4bbcd8c5929197f20a77c3e21c29c0f6970452412af966c02f88fa8a10
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Python Depth Drills - Session 9 support route'' against the stage
+        ''Optional: backend decision loop'': the row narrows the route to this stage''s purpose. This
+        relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:e2bfb5a4fbaa5c14772bfa9889c25be85aea0e509af569d8772c1b19a8be5ba8
   - id: resource-note-joinop-loop
     kind: read
     label: JoinOp logical note
@@ -145,10 +155,11 @@ stages:
 - id: stage-polars-backend-family-transfer
   knowledge_node_id: knowledge-polars-family-transfer
   number: 3
-  title: Transfer the loop across four logical families
+  title: 'Optional: rebuild kernels across families'
   status: pending
-  objective: Implement or reconstruct one small Polars kernel in Selection, Map/Projection, Aggregation,
-    and Join to prove expression fluency transfers beyond the motivating file.
+  objective: 'Deferred 2026-11-02: backend engineering, not fluency. Implement or reconstruct one small
+    Polars kernel in Selection, Map/Projection, Aggregation, and Join to prove expression fluency transfers
+    beyond the motivating file.'
   done_when:
   - Close the implementation and rebuild one bounded kernel per family from the logical contract and tests.
   - Each kernel has adversarial tests and a declared fallback/unsupported surface.
@@ -162,7 +173,7 @@ stages:
   - concept-aggregation-family
   - concept-join-family
   - concept-op-rewriting
-  scope_triage: required-now
+  scope_triage: deferred
   resources:
   - id: resource-note-assignmapop-loop
     kind: read
@@ -202,10 +213,11 @@ stages:
 - id: stage-polars-backend-regression-policy
   knowledge_node_id: knowledge-polars-regression-policy
   number: 4
-  title: Failure policy and regression gate
+  title: 'Optional: failure policy and regression gate'
   status: pending
-  objective: Turn semantic decisions into maintainable regression tests that distinguish unsupported input,
-    fallback, translation bugs, Polars execution errors, and intentional divergences.
+  objective: 'Deferred 2026-11-02: backend engineering, not fluency. Turn semantic decisions into maintainable
+    regression tests that distinguish unsupported input, fallback, translation bugs, Polars execution
+    errors, and intentional divergences.'
   done_when:
   - Define a failure taxonomy and assert exception type/message only where the contract owns them.
   - Parameter mapping, expression construction, engine execution, and normalized comparison can fail independently
@@ -216,7 +228,7 @@ stages:
   - concept-python
   - concept-dataframe-semantics
   - concept-dispatch
-  scope_triage: required-now
+  scope_triage: deferred
   resources:
   - id: resource-polars-parametric-testing
     kind: read
@@ -241,13 +253,12 @@ stages:
     route_id: route-python-depth-drills-s09
     angle_review:
       kind: refinement
-      reviewed_by: Codex under Aram cleanup authorization
-      reviewed_on: '2026-09-30'
-      rationale: Reviewed the route 'Python Depth Drills - Session 9 support route' against the stage
-        'Failure policy and regression gate'. The stage description selects that stage's task or reading
-        purpose from the broader route; preserve the narrower description. This relation review asserts
-        no new source observation or learner achievement.
-      fingerprint: sha256:605f94ae713fd6dea7b6d7e981c39afb327067caf64b548157f07a220655aa06
+      reviewed_by: Claude Opus 5.5 under Aram's plan request
+      reviewed_on: '2026-11-02'
+      rationale: 'Reviewed the route ''Python Depth Drills - Session 9 support route'' against the stage
+        ''Optional: failure policy and regression gate'': the row narrows the route to this stage''s purpose.
+        This relation review asserts no new source observation or learner achievement.'
+      fingerprint: sha256:f30ad8da901497dd2a8d34139a2b521a844b4761844985da17c9168040648a18
   - id: resource-regression-generated-case
     kind: practise
     label: Generated-edge regression lab

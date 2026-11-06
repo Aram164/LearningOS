@@ -1,0 +1,54 @@
+schema_version: 2
+id: transaction-20261106-200501-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-06T20:05:01+01:00'
+snapshot_before: sha256:7e0ff181f3f554912ffc0880b063d1815329cb75abc0cc9b50f2bb472a06f177
+snapshot_after: sha256:e52b0578f79ba3f5b6179052b68067cb51c63975968b6ccb74f88c8d807e76db
+expected_revisions:
+  source-modern-polars: 0
+  source-narwhals-concepts: 0
+  source-pandas-docs: 0
+  source-polars-benchmark: 0
+  source-polars-docs: 0
+artifact_revisions:
+  source-modern-polars:
+    before: 0
+    after: 1
+  source-narwhals-concepts:
+    before: 0
+    after: 1
+  source-pandas-docs:
+    before: 0
+    after: 1
+  source-polars-benchmark:
+    before: 0
+    after: 1
+  source-polars-docs:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: a321d89495fd53a8203b5f960950af2f93893eb74642132e3651d72d649c7941
+  sha256_after: 8c3942d9494f05211a67aebff52ae517988bd7d536038ef248585b229369c01b
+  created: false
+metadata:
+  data_roots_sha256: sha256:666bfb3ce43e332a50d956e4bceb04056e338cf47982fdc1d8cf986163728b5c
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-polars-plan-intake-740d9ba7
+  idempotency_key: polars-plan-intake
+  intent_sha256: sha256:43cecb74fb0f8c785ee045c583aa60136e282899c33f9185c6db79edba1700fe
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:43cecb74fb0f8c785ee045c583aa60136e282899c33f9185c6db79edba1700fe
