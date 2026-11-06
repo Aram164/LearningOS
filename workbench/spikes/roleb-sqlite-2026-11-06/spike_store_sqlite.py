@@ -34,6 +34,8 @@ import hashlib
 import json
 import os
 import sqlite3
+import stat
+import tempfile
 from contextlib import closing
 from pathlib import Path
 from typing import Any
@@ -116,20 +118,31 @@ def _open_for_read(root: Path) -> sqlite3.Connection | None:
 
 
 def _rebuild_database(root: Path, db: Path) -> None:
-    """Rebuild per brief 6.4: build the replacement database in a temp file
-    in the same directory, bind identity, verify, then os.replace() onto the
-    live path. No in-place clears; no unlink-before-recreate.
+    """Rebuild per brief 6.4 with a secure temp (review round 3):
+    tempfile.mkstemp in the store's own directory - exclusive, unpredictable,
+    created by us, so a pre-planted symlink cannot occupy the name - then
+    lstat-verified as a plain regular file before use, built, bound, and
+    re-verified before the atomic os.replace onto the live path. No fixed
+    temp name; no in-place clears; no unlink-before-recreate.
 
-    Failure points: any error during build or verification leaves the old
-    database untouched and raises TransactionFailure; a crash before the
-    rename leaves the old database plus an orphaned `.rebuild` temp (removed
-    by the next rebuild attempt). The old store is retired only at the
-    rename, which is atomic."""
-    tmp = db.with_name(db.name + ".rebuild")
-    if tmp.exists():
-        tmp.unlink()  # our own naming convention; single-writer assumption
+    Failure points: any error during creation, build, or verification leaves
+    the old database untouched and raises TransactionFailure (the temp is
+    removed); a crash before the rename leaves the old database plus an
+    orphaned mkstemp temp (unpredictable name - nothing to plant, nothing
+    that collides). The old store is retired only at the rename, which is
+    atomic and does not follow a destination symlink."""
+    gen = root / "generated"
+    if gen.is_symlink() or (db.exists() and db.is_symlink()):
+        raise TransactionFailure("derived-state path is not a plain store location")
+    handle, tmp_name = tempfile.mkstemp(prefix=db.name + ".", suffix=".rebuild",
+                                        dir=str(db.parent))
+    os.close(handle)
+    tmp = Path(tmp_name)
     conn = None
     try:
+        st = os.lstat(tmp)
+        if not stat.S_ISREG(st.st_mode) or st.st_nlink != 1:
+            raise TransactionFailure("rebuild temp is not a plain regular file")
         conn = sqlite3.connect(tmp, timeout=5.0)
         conn.executescript(_SCHEMA)
         conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES ('schema_version', ?)",
@@ -138,18 +151,39 @@ def _rebuild_database(root: Path, db: Path) -> None:
                      (_root_fingerprint(root),))
         conn.commit()
         if not _identity_ok(conn, root):
-            raise sqlite3.DatabaseError("rebuilt database failed identity verification")
+            raise TransactionFailure("rebuilt database failed identity verification")
         conn.close()
         conn = None
+        # Re-verify before publish: the temp is still the plain regular file
+        # we built, the destination still passes path safety, and the temp's
+        # own meta still carries the bound identity.
+        st = os.lstat(tmp)
+        if not stat.S_ISREG(st.st_mode) or st.st_nlink != 1:
+            raise TransactionFailure("rebuild temp changed identity before publish")
+        if gen.is_symlink() or (db.exists() and db.is_symlink()):
+            raise TransactionFailure("store location changed before publish")
+        check = sqlite3.connect(tmp, timeout=5.0)
+        try:
+            if not _identity_ok(check, root):
+                raise TransactionFailure("temp identity drifted before publish")
+        finally:
+            check.close()
         os.replace(tmp, db)
+    except TransactionFailure:
+        if conn is not None:
+            conn.close()
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
     except (sqlite3.DatabaseError, OSError) as exc:
         if conn is not None:
             conn.close()
-        if tmp.exists():
-            try:
-                tmp.unlink()
-            except OSError:
-                pass
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
         raise TransactionFailure(
             "derived-state database rebuild failed; old store untouched: %s" % exc) from exc
 

@@ -10,11 +10,12 @@ Output is the evidence: every scenario prints its observed result.
 """
 
 import hashlib
+import os
 import shutil
 import sqlite3
-import sys
 import tempfile
 from contextlib import closing, contextmanager
+import sys
 from pathlib import Path
 
 sys.path.insert(0, "tools")
@@ -283,6 +284,26 @@ check("atomic rebuild left no .rebuild temp",
       not (spike.derived_dir(root) / "state-v1.db.rebuild").exists())
 check("sweep after rebuild reports zeros on the fresh store",
       spike.sweep_unreferenced_blobs(root, dry_run=True)["deleted"] == 0)
+
+# (d) predictable temp name attack (review round 3): a dangling symlink at
+# the historical fixed temp path is inert - mkstemp creates its own
+# unpredictable exclusive file and never touches the planted name.
+root = fresh_root()
+spike.store_node(root, "n", node_key="k", value={"v": 1})
+db = spike.db_path(root)
+old_tmp = spike.derived_dir(root) / "state-v1.db.rebuild"
+foreign_target = fresh_root() / "outside.db"
+old_tmp.symlink_to(foreign_target)          # dangling: the target does not exist
+db.write_bytes(b"garbage")                  # force a rebuild on the next write
+spike.store_node(root, "n2", node_key="k", value={"v": 2})
+check("planted temp symlink: store rebuilt and serves",
+      spike.lookup(root, "n2") is not None)
+check("planted temp symlink: never followed or replaced",
+      old_tmp.is_symlink() and not old_tmp.exists())
+check("planted temp symlink: external target never created",
+      not foreign_target.exists())
+check("planted temp symlink: live store is a plain regular file, not a link",
+      not os.path.islink(db))
 
 print()
 passed = sum(1 for ok, _, _ in _results if ok)
