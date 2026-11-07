@@ -1,0 +1,27 @@
+schema_version: 1
+type: artifact-revision-retirements
+retirements:
+  - transaction: transaction-20260928-191223-001
+    artifacts:
+      - source-dennis-sun-probability
+    cause: rolled-back
+    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
+    decided_by: operator
+    decided_on: '2026-11-07'
+  - transaction: transaction-20260928-192027-001
+    artifacts:
+      - unit-m2-sad-l06
+      - unit-m2-sad-l07
+      - unit-m2-sad-l08
+      - module-hu-m2-statistik-analysis
+    cause: rolled-back
+    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
+    decided_by: operator
+    decided_on: '2026-11-07'
+  - transaction: transaction-20260929-043750-001
+    artifacts:
+      - module-hu-m2-statistik-analysis
+    cause: rolled-back
+    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
+    decided_by: operator
+    decided_on: '2026-11-07'

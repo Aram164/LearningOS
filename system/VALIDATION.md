@@ -329,3 +329,38 @@ receipt.
 - **E** `TRANSACTION-IDEMPOTENCY`: `operations/transactions/idempotency.yaml`
   parses when present (a missing file is fine: no gateway writes yet); an
   unreadable ledger fails closed at commit time and is an error here.
+
+### Committed history against the revision ledger
+
+The gateway raises an artifact's revision only by one, under the operator
+lock, in the same atomic commit as the receipt that records the step, and it
+never removes a ledger key (a deletion raises the revision too). A receipt
+the ledger contradicts therefore proves the ledger was moved outside the
+gateway — a git stash, reset or checkout that took `revisions.yaml` back
+while the receipt stayed. Both checks cover every committed receipt, v1 and
+v2, and read the per-receipt cache, never re-parsing a receipt. Replay checks
+the same floor for one receipt, but only when its idempotency row is
+resubmitted, and a rollback removes that row with the ledger.
+
+- **E** `TRANSACTION-REVISION-FLOOR`: for every artifact, the live ledger
+  stands at or above the highest revision any receipt recorded for it. The
+  error names the receipt holding that revision.
+- **E** `TRANSACTION-REVISION-REUSED`: no two receipts record one artifact
+  reaching the same revision. A write after a rollback raises the ledger
+  again and so satisfies the floor; the duplicate claim is then the only
+  trace of the rollback left. The error names the later receipt and, in its
+  message, the earlier one.
+- **E** `TRANSACTION-RETIREMENT`: `operations/revision-retirements.yaml`
+  (schema `artifact-revision-retirements`) parses, matches its schema, and
+  names only real claims: each entry's `transaction` is one committed receipt
+  and each of its `artifacts` is a revision that receipt recorded, retired
+  once. A malformed record retires nothing.
+
+A retirement entry is how a rollback that cannot be undone is recorded
+instead of hidden. It removes the named claims of one receipt from both
+checks; every other claim on the same artifacts, including any later
+receipt's, is still checked. Retiring a claim accepts the loss of what that
+transaction wrote, so the learner decides it, like closing a critique point.
+First restore the rolled-back state if it still exists, for example from a
+stash. A redo through the gateway records the same revision again, so the
+original claim must be retired before the redo can commit.

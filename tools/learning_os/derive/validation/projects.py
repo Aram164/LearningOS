@@ -6,6 +6,7 @@ import yaml
 
 from learning_os.derive.validation.advisories import workspace_neglect_issues
 from learning_os.derive.validation.receipt_cache import receipt_file_issues
+from learning_os.derive.validation.revision_ledger import revision_ledger_issues
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.validation import REQUIRED_WORKSPACE_SECTIONS, id_list_items
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
@@ -171,7 +172,10 @@ class ChecksProjects:
                 str(exc),
                 "operations/transactions/idempotency.yaml",
             )
-        receipt_file_issues(self)
+        # Committed history against the live ledger: the receipt pass hands
+        # back each receipt's cached revision claims, so this re-parses
+        # nothing (system/VALIDATION.md, TRANSACTION-REVISION-*).
+        revision_ledger_issues(self, receipt_file_issues(self))
 
     def check_ai_action_requests(self):
         from learning_os.store.ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE

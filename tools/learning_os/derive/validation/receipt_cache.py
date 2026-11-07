@@ -4,12 +4,15 @@ Committed receipts are immutable, but ``check_transaction_receipts``
 re-read, re-parsed and schema-checked every one of them on every
 validation (244 ms at 328 receipts, growing with each write). This
 module memoizes the per-receipt result — parse/schema issues plus the
-receipt id and idempotency key — in one derived node per receipt, keyed
+receipt id, idempotency key and the artifact revisions it recorded — in
+one derived node per receipt, keyed
 on the live content hash, recomputed in each process through the shared
 digest layer. Stat equality across processes never proves receipt
 immutability. Only new or changed receipts pay the full check; the
 cross-receipt duplicate-id and duplicate-idempotency-key checks run
-over the cached ids and keys every run, in the same order.
+over the cached ids and keys every run, in the same order, and the
+revision claims are handed back for the ledger cross-check
+(``revision_ledger``), so that check re-parses nothing.
 
 A cold node (absent state, corrupt blob, or pinned to different code,
 runtime, format providers, or receipt-schema bytes) falls back to
@@ -22,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
@@ -67,8 +71,10 @@ SIDECAR_RELATIVE = Path("generated/reports/validation-report-receipts.cache.json
 RECEIPT_CACHE_FORMAT = 2
 
 #: Per-receipt derived nodes (SPEC §14, D-12): one node per artifact, so an
-#: expensive receipt never invalidates an unrelated one.
-RECEIPT_NODE_VERSION = 1
+#: expensive receipt never invalidates an unrelated one. Version 2 adds the
+#: receipt's revision claims to the verdict; a version-1 blob lacks them and
+#: is rebuilt rather than served.
+RECEIPT_NODE_VERSION = 2
 RECEIPT_PRODUCER_FILES = (
     "tools/learning_os/derive/validation/receipt_cache.py",
     *DERIVED_SUBSTRATE_FILES,
@@ -81,6 +87,44 @@ _RECEIPT_GLOBAL_INPUT_IDS = {
     "validator_runtime_digest": "cache.receipt.validator_runtime_digest",
     "receipt_schema": "cache.receipt.schema",
 }
+
+
+@dataclass(frozen=True)
+class ReceiptClaims:
+    """One readable receipt: where it is, its id, and what it recorded.
+
+    ``revisions`` maps each artifact to the revision this transaction
+    recorded it reaching (``artifact_revisions[*].after``). Only well-formed
+    claims of a committed receipt appear; a malformed row is the schema
+    check's to report, and an unparseable receipt yields no row at all.
+    """
+
+    rel: str
+    transaction_id: Any
+    revisions: dict[str, int]
+
+
+def _revision_claims(data: Any) -> dict[str, int]:
+    """``artifact -> after`` for each well-formed claim of a committed receipt."""
+    if not isinstance(data, dict) or data.get("status") != "committed":
+        return {}
+    rows = data.get("artifact_revisions")
+    if not isinstance(rows, dict):
+        return {}
+    claims: dict[str, int] = {}
+    for artifact, entry in rows.items():
+        after = entry.get("after") if isinstance(entry, dict) else None
+        if isinstance(artifact, str) and isinstance(after, int) \
+                and not isinstance(after, bool):
+            claims[artifact] = after
+    return claims
+
+
+def _valid_claims(value: Any) -> bool:
+    return isinstance(value, dict) and all(
+        isinstance(artifact, str) and isinstance(after, int)
+        and not isinstance(after, bool)
+        for artifact, after in value.items())
 
 
 def _receipt_node_id(rel: str) -> str:
@@ -168,19 +212,20 @@ def _valid_verdict(value: Any) -> bool:
                 or not isinstance(issue.get("path"), str):
             return False
     return "id" in value and "idempotency_key" in value \
-        and _json_safe(value["id"]) and _json_safe(value["idempotency_key"])
+        and _json_safe(value["id"]) and _json_safe(value["idempotency_key"]) \
+        and _valid_claims(value.get("revisions"))
 
 
 def _validate_fresh(
     validator: ReceiptValidator, path: Path, rel: str,
-) -> tuple[list[Issue], Any, Any, bool, str | None]:
-    """Today's per-receipt body: parse, schema-check, extract id and key.
+) -> tuple[list[Issue], Any, Any, bool, str | None, dict[str, int]]:
+    """Today's per-receipt body: parse, schema-check, extract id, key and claims.
 
     Schema issues append to the validator as they always have; the
     returned issues are the same objects, for the sidecar entry. An
     unparseable receipt reports and stops here (``parse_failed``), as
     the ``continue`` in the old loop did — it never joins the
-    duplicate checks.
+    duplicate checks, and it records no revision claims.
     """
     mark = len(validator.issues)
     content_hash = None
@@ -199,13 +244,13 @@ def _validate_fresh(
         data = yaml.load(content.decode("utf-8"), Loader=UniqueKeySafeLoader) or {}
     except Exception as exc:  # noqa: BLE001 - report as validation issue
         validator.err("TRANSACTION-RECEIPT", f"cannot parse receipt: {exc}", rel)
-        return list(validator.issues[mark:]), None, None, True, content_hash
+        return list(validator.issues[mark:]), None, None, True, content_hash, {}
     validator._schema_check("transaction-receipt", data, rel)
     fresh = list(validator.issues[mark:])
     transaction_id = data.get("id") if isinstance(data, dict) else None
     request = data.get("request") if isinstance(data, dict) else None
     key = request.get("idempotency_key") if isinstance(request, dict) else None
-    return fresh, transaction_id, key, False, content_hash
+    return fresh, transaction_id, key, False, content_hash, _revision_claims(data)
 
 
 def _restore(issues: list[dict]) -> list[Issue]:
@@ -246,7 +291,7 @@ def _make_pure_build(validator: ReceiptValidator, path: Path, rel: str):
     def build(_ctx: BuildContext) -> Any:
         mark = len(validator.issues)
         try:
-            issues, transaction_id, key, parse_failed, content_hash = _validate_fresh(
+            issues, transaction_id, key, parse_failed, content_hash, claims = _validate_fresh(
                 validator, path, rel)
         finally:
             del validator.issues[mark:]
@@ -255,12 +300,13 @@ def _make_pure_build(validator: ReceiptValidator, path: Path, rel: str):
             "parse_failed": parse_failed,
             "id": transaction_id,
             "idempotency_key": key,
+            "revisions": claims,
             "issues": _freeze(issues),
         }
     return build
 
 
-def receipt_file_issues(validator: ReceiptValidator) -> None:
+def receipt_file_issues(validator: ReceiptValidator) -> list[ReceiptClaims]:
     """Per-receipt parse/schema issues plus cross-receipt duplicates.
 
     Only new or changed receipts pay the full check; everything else is
@@ -268,6 +314,9 @@ def receipt_file_issues(validator: ReceiptValidator) -> None:
     the live (cached or fresh) ids and keys, in sorted-path order, so
     their issues — including which path each names as the first
     occurrence — match the full pass exactly.
+
+    Returns every parseable receipt's revision claims in that same
+    sorted-path order, cached or fresh, for the revision-ledger check.
     """
     root = validator.repo.root
     directory = root / "operations" / "transactions"
@@ -341,6 +390,7 @@ def receipt_file_issues(validator: ReceiptValidator) -> None:
                 verdicts[rel] = value
     seen: set = set()
     seen_keys: dict[str, str] = {}
+    claimed: list[ReceiptClaims] = []
     for path, rel, _digest in rows:
         verdict = verdicts.get(rel)
         if verdict is not None:
@@ -348,12 +398,15 @@ def receipt_file_issues(validator: ReceiptValidator) -> None:
             transaction_id = verdict["id"]
             key = verdict["idempotency_key"]
             parse_failed = verdict["parse_failed"]
+            claims = dict(verdict["revisions"])
             validator.issues.extend(issues)
         else:
-            _issues, transaction_id, key, parse_failed, _content = _validate_fresh(
+            _issues, transaction_id, key, parse_failed, _content, claims = _validate_fresh(
                 validator, path, rel)
         if parse_failed:
             continue
+        claimed.append(ReceiptClaims(rel=rel, transaction_id=transaction_id,
+                                     revisions=claims))
         # Two committed receipts sharing one idempotency key is genuinely
         # ambiguous: replay can prove at most one of them. Ledger loss
         # followed by key reuse produces exactly this (JF-13/L4).
@@ -367,3 +420,4 @@ def receipt_file_issues(validator: ReceiptValidator) -> None:
                 validator.err("TRANSACTION-RECEIPT",
                               f"duplicate idempotency key '{key}' also committed "
                               f"in {first}", rel)
+    return claimed

@@ -173,11 +173,12 @@ def test_node_specs_cover_the_independent_inventory():
     spec = vc.validation_spec()
     assert spec.id == "cache.validation-static" and spec.version == 1
     assert len(spec.direct_inputs) == len(VALIDATION_INPUTS) == 6
-    assert rc.RECEIPT_NODE_VERSION == 1
+    # 2: verdicts carry the receipt's revision claims (TRANSACTION-REVISION-*).
+    assert rc.RECEIPT_NODE_VERSION == 2
     assert "tools/learning_os/derive/validation/receipt_cache.py" in rc.RECEIPT_PRODUCER_FILES
     rel = "operations/transactions/transaction-x.yaml"
     rspec = rc._receipt_spec(rel)
-    assert rspec.id == f"cache.receipt:{rel}" and rspec.version == 1
+    assert rspec.id == f"cache.receipt:{rel}" and rspec.version == 2
     # Four globals plus this receipt's own content hash, nothing else.
     assert len(rspec.direct_inputs) == len(RECEIPT_GLOBAL_INPUTS) + 1 == 5
 

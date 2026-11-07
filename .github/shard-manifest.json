@@ -51,6 +51,7 @@
    "tests/test_receipt_drift.py",
    "tests/test_recovery_conflicts.py",
    "tests/test_resume_pointer.py",
+   "tests/test_revision_ledger_rule.py",
    "tests/test_route_identity_migration.py",
    "tests/test_runtime_efficiency.py",
    "tests/test_session_compiler.py",

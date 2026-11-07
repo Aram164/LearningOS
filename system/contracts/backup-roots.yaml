@@ -49,6 +49,11 @@ roots:
       # Handler-owned decisions and frozen audit samples are recovery evidence;
       # the domain loader does not read them, so read observation cannot cover it.
       - operations/goal-ledger.yaml
+      # Read by the validator, not the loader, so read observation cannot see
+      # it either. Receipts are backed up with operations/transactions; without
+      # their retirements a restored tree fails TRANSACTION-REVISION-* and
+      # blocks every canonical write.
+      - operations/revision-retirements.yaml
       - curriculum/resume.yaml
       # Explicit canonical metadata that interfaces may never infer from titles,
       # paths or identifiers — so nothing in a restore can reconstruct it. It was

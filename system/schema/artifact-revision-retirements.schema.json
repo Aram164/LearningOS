@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/artifact-revision-retirements.schema.json",
+  "title": "Retired artifact revision claims",
+  "description": "Committed transactions whose recorded artifact revisions the live revision ledger deliberately no longer honors. One entry per transaction; it retires only the named claims of that receipt, never an artifact's later history. Read by the validator's revision-ledger check (system/VALIDATION.md).",
+  "x-governs": "record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "retirements"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "artifact-revision-retirements"},
+    "retirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["transaction", "artifacts", "cause", "reason", "decided_by", "decided_on"],
+        "properties": {
+          "transaction": {"type": "string", "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"},
+          "artifacts": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "cause": {
+            "description": "rolled-back: the transaction's ledger and canonical writes were undone outside the gateway and are not restored. migrated: a recorded migration under tools/migrations/ rewrote these ledger keys (none does today).",
+            "enum": ["rolled-back", "migrated"]
+          },
+          "reason": {"type": "string", "minLength": 20},
+          "evidence": {"type": "string", "minLength": 1},
+          "decided_by": {"type": "string", "minLength": 1},
+          "decided_on": {"type": "string", "format": "date"}
+        }
+      }
+    }
+  }
+}

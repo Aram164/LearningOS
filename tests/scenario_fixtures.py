@@ -419,9 +419,8 @@ def _add_lineage_claim(root: Path) -> str:
         "status": "committed", "capability": "module.plan.import",
         "committed_at": "2020-01-02T03:04:05+00:00",
         "snapshot_before": intent, "snapshot_after": intent,
-        "expected_revisions": {"module-demo": 0, "unit-demo-l01": 0},
+        "expected_revisions": {"unit-demo-l01": 0},
         "artifact_revisions": {
-            "module-demo": {"before": 0, "after": 1},
             "unit-demo-l01": {"before": 0, "after": 1}},
         "request": {"channel": "operator", "request_id": "request-demo",
                     "idempotency_key": "demo-key",

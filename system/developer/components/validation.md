@@ -27,6 +27,8 @@ Used by: `ai-delivery`, `backup`, `learner-derivations`, `operation-handlers`, `
 ## Pinning tests
 
 - `tests/test_validation.py`
+- `tests/test_revision_ledger_rule.py` — committed receipts against the live
+  revision ledger, and the retirement record.
 
 ## Binding ADRs
 
