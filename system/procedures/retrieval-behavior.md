@@ -12,9 +12,11 @@ what explains it, open the note bodies, read the source's
 evaluations, find exam artifacts by role and concept, show the
 trails behind worked-through questions, answer exam questions from
 the owning module, and orient operational questions from the brief
-and coordination. All reads; nothing here writes. The generated
-fallbacks (domain atlas, `FILES.txt`, health report) are absent
-from the fixture, so those conditional branches stop pinned.
+and coordination. All reads; none writes a canonical record. The
+fixture ships without the generated fallbacks (domain atlas,
+`FILES.txt`, health report), so those conditional branches stay
+unpinned. The first read finds no current projection and publishes
+it as generation would, so the generated views exist after it.
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
 the `LOS_REPO` environment variable the test sets.
 
@@ -71,6 +73,21 @@ Never rely solely on folder names.
 
 ```scrut
 $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
+```
+
+## The fixture ships without the generated fallbacks
+
+```scrut
+$ $H/los-assert-file generated/domain-atlas.md --absent
+```
+
+```scrut
+$ test ! -e "$(dirname "$LOS_FX")/materials/FILES.txt" && echo "FILES.txt absent"
+FILES.txt absent
+```
+
+```scrut
+$ $H/los-assert-file generated/reports/health.md --absent
 ```
 
 ## Resolve the concept through its alias
@@ -162,24 +179,17 @@ $ los inspect coordination
 {"id":"coordination","path":"work/COORDINATION.md","sections":{"Commitments":"(none)","Deferrals":"- Demo module deferred to 2. Termin (date lives in records/modules.yaml)","Dependencies":"(none)","Priorities":"(none)"},"type":"coordination","content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","section_sha256":{"Commitments":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Deferrals":"sha256:c7fd808ba806ad0f53559df2a76f3f3afb32b3cd79e3227ed0d6133abdc962b2","Dependencies":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Priorities":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a"}}
 ```
 
-## The generated fallbacks are absent from the fixture
+## Reads write no canonical record
+
+The first read published the missing projection, so the views exist
+now. That clears the fixture's one `HYGIENE-VIEWS` warning (views
+absent) and changes nothing else.
 
 ```scrut
-$ $H/los-assert-file generated/domain-atlas.md --absent
+$ $H/los-assert-file generated/domain-atlas.md --exists
 ```
-
-```scrut
-$ test ! -e "$(dirname "$LOS_FX")/materials/FILES.txt" && echo "FILES.txt absent"
-FILES.txt absent
-```
-
-```scrut
-$ $H/los-assert-file generated/reports/health.md --absent
-```
-
-## Reads change nothing
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 14 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```

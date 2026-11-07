@@ -11,10 +11,12 @@ task-shaped entry, start from one bootstrap read, enter material
 maintenance through the guarded route context, look records up
 directly, resume interrupted study instead of re-deriving it, and
 enter an authorized mutation through the capability contract. All
-reads; nothing here writes. The fixture ships no repository-root
-`CLAUDE.md`, so the single-copy rule has no link to show.
-`tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
-the `LOS_REPO` environment variable the test sets.
+reads; none writes a canonical record. The first read finds no
+current projection and publishes it as generation would. The
+fixture ships no repository-root `CLAUDE.md`, so the single-copy
+rule has no link to show. `tests/test_procedures.py` runs it with
+Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
+test sets.
 
 ## Shared operating rules
 
@@ -225,7 +227,11 @@ system/DEVELOPER.md contract binding developer
 $ $H/los-assert-file CLAUDE.md --absent
 ```
 
-## Reads change nothing
+## Reads write no canonical record
+
+The first read published the missing projection. That clears the
+fixture's one `HYGIENE-VIEWS` warning (views absent) and changes
+nothing else.
 
 ```scrut
 $ los validate | tail -n 1
