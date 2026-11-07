@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-from learning_os.derive.routes import exact_selection_matches, iter_route_references
+from learning_os.derive.routes import iter_route_references
 from learning_os.domain.validation import (
     WORKSPACE_TOKEN_RE,
     id_list_items,
@@ -58,6 +58,36 @@ def classify_markdown_link(target: str) -> ClassifiedLink:
         return ClassifiedLink("uri", target)
     relative = target.split("#", 1)[0]
     return ClassifiedLink("relative" if relative else "skip", relative)
+
+
+# The route guard comparison shared by the material-synthesis, unit-selection
+# and study-map-resource checks below and by their legacy selection match.
+# `exact_selection_matches` in derive/routes.py still makes the same comparison
+# for its projection caller; moving it onto this helper is a separate change.
+_UNCOMPARED = object()
+
+
+def route_guard_mismatches(route_ref, *, unit_id=_UNCOMPARED,
+                           source_id=_UNCOMPARED, locator=_UNCOMPARED):
+    """Compare a route reference against declared guard values.
+
+    Every provided value is compared strictly, exactly as the authored ifs
+    did (a record whose field is absent reads as None and mismatches a real
+    route value); an omitted attribute (sentinel) is not compared - that is
+    family policy, expressed by the caller (the study-map resource family
+    compares no locator, and its source guard fires only when sid is truthy).
+    Returns the mismatches in authored order, as
+    (kind, route_value, declared_value) with kind in {"unit", "source",
+    "locator"}.
+    """
+    out = []
+    if unit_id is not _UNCOMPARED and route_ref.unit_id != unit_id:
+        out.append(("unit", route_ref.unit_id, unit_id))
+    if source_id is not _UNCOMPARED and route_ref.source_id != source_id:
+        out.append(("source", route_ref.source_id, source_id))
+    if locator is not _UNCOMPARED and route_ref.locator != locator:
+        out.append(("locator", route_ref.locator, locator))
+    return out
 
 
 class ChecksReferences:
@@ -115,27 +145,35 @@ class ChecksReferences:
                     )
                     continue
                 route_ref = matches[0]
-                if route_ref.unit_id != synthesis_unit:
-                    self.err(
-                        "SYNTHESIS-ROUTE-OWNER",
-                        f"material synthesis '{synthesis_id}' uses route "
-                        f"'{route_id}' owned by '{route_ref.unit_id}'",
-                        where,
-                    )
-                if route_ref.source_id != assessment.get("source_id"):
-                    self.err(
-                        "SYNTHESIS-SOURCE-GUARD",
-                        f"material synthesis route '{route_id}' source guard "
-                        "does not match the current route",
-                        where,
-                    )
-                if route_ref.locator != assessment.get("locator"):
-                    self.err(
-                        "SYNTHESIS-LOCATOR-GUARD",
-                        f"material synthesis route '{route_id}' locator guard "
-                        "does not match the current route",
-                        where,
-                    )
+                # The authored guard trio, expressed through the one shared
+                # comparison helper; emission order is the helper's return
+                # order - identical to the authored if-order.
+                for kind, route_value, _declared in route_guard_mismatches(
+                        route_ref,
+                        unit_id=synthesis_unit,
+                        source_id=assessment.get("source_id"),
+                        locator=assessment.get("locator")):
+                    if kind == "unit":
+                        self.err(
+                            "SYNTHESIS-ROUTE-OWNER",
+                            f"material synthesis '{synthesis_id}' uses route "
+                            f"'{route_id}' owned by '{route_value}'",
+                            where,
+                        )
+                    elif kind == "source":
+                        self.err(
+                            "SYNTHESIS-SOURCE-GUARD",
+                            f"material synthesis route '{route_id}' source guard "
+                            "does not match the current route",
+                            where,
+                        )
+                    else:
+                        self.err(
+                            "SYNTHESIS-LOCATOR-GUARD",
+                            f"material synthesis route '{route_id}' locator guard "
+                            "does not match the current route",
+                            where,
+                        )
                 for concept_id in id_list_items(assessment.get("concept_ids")):
                     if concept_id not in r.concepts:
                         self.err(
@@ -313,34 +351,49 @@ class ChecksReferences:
                         )
                     elif len(id_matches) == 1:
                         route_ref = id_matches[0]
-                        if route_ref.unit_id != uid:
-                            self.err(
-                                "SELECTION-ROUTE-OWNER",
-                                f"unit '{uid}' selects route '{route_id}' owned by "
-                                f"'{route_ref.unit_id}'",
-                                where,
-                            )
-                        if route_ref.source_id != selection.get("source_id"):
-                            self.err(
-                                "SELECTION-SOURCE-GUARD",
-                                f"selection route '{route_id}' belongs to source "
-                                f"'{route_ref.source_id}', not "
-                                f"'{selection.get('source_id')}'",
-                                where,
-                            )
-                        if route_ref.locator != selection.get("locator"):
-                            self.err(
-                                "SELECTION-LOCATOR-GUARD",
-                                f"selection route '{route_id}' locator no longer "
-                                "matches its stored guard",
-                                where,
-                            )
+                        # Shared guard helper; emission order identical to
+                        # the authored if-order.
+                        for kind, route_value, declared in route_guard_mismatches(
+                                route_ref,
+                                unit_id=uid,
+                                source_id=selection.get("source_id"),
+                                locator=selection.get("locator")):
+                            if kind == "unit":
+                                self.err(
+                                    "SELECTION-ROUTE-OWNER",
+                                    f"unit '{uid}' selects route '{route_id}' owned by "
+                                    f"'{route_value}'",
+                                    where,
+                                )
+                            elif kind == "source":
+                                self.err(
+                                    "SELECTION-SOURCE-GUARD",
+                                    f"selection route '{route_id}' belongs to source "
+                                    f"'{route_value}', not "
+                                    f"'{declared}'",
+                                    where,
+                                )
+                            else:
+                                self.err(
+                                    "SELECTION-LOCATOR-GUARD",
+                                    f"selection route '{route_id}' locator no longer "
+                                    "matches its stored guard",
+                                    where,
+                                )
                 else:
-                    legacy_matches = exact_selection_matches(
-                        route_refs,
-                        unit_id=uid,
-                        selection=selection,
-                    )
+                    # The legacy matcher is the same three strict comparisons
+                    # expressed as a filter via the shared helper (the
+                    # route_id clause in routes.py is dead at this call site:
+                    # the legacy branch runs only when the selection has no
+                    # route_id).
+                    legacy_matches = [
+                        route for route in route_refs
+                        if not route_guard_mismatches(
+                            route,
+                            unit_id=uid,
+                            source_id=selection.get("source_id"),
+                            locator=selection.get("locator"))
+                    ]
                     # A legacy string edge has no route locator to match and
                     # remains valid evidence. Warn only when migration has one
                     # exact rich-route answer; unresolved/ambiguous cases stay
@@ -438,22 +491,29 @@ class ChecksReferences:
                             )
                         elif len(id_matches) == 1:
                             route_ref = id_matches[0]
-                            if route_ref.unit_id != study_map.unit_id:
-                                self.err(
-                                    "RESOURCE-ROUTE-OWNER",
-                                    f"study map '{smid}' resource route "
-                                    f"'{route_id}' belongs to "
-                                    f"'{route_ref.unit_id}'",
-                                    where,
-                                )
-                            if sid and sid != route_ref.source_id:
-                                self.err(
-                                    "RESOURCE-SOURCE-GUARD",
-                                    f"study map '{smid}' resource route "
-                                    f"'{route_id}' belongs to source "
-                                    f"'{route_ref.source_id}', not '{sid}'",
-                                    where,
-                                )
+                            # Shared guard helper. Family policy kept: no
+                            # locator comparison here, and the source guard
+                            # fires only when sid is truthy.
+                            for kind, route_value, declared in route_guard_mismatches(
+                                    route_ref,
+                                    unit_id=study_map.unit_id,
+                                    **({"source_id": sid} if sid else {})):
+                                if kind == "unit":
+                                    self.err(
+                                        "RESOURCE-ROUTE-OWNER",
+                                        f"study map '{smid}' resource route "
+                                        f"'{route_id}' belongs to "
+                                        f"'{route_value}'",
+                                        where,
+                                    )
+                                else:
+                                    self.err(
+                                        "RESOURCE-SOURCE-GUARD",
+                                        f"study map '{smid}' resource route "
+                                        f"'{route_id}' belongs to source "
+                                        f"'{route_value}', not '{declared}'",
+                                        where,
+                                    )
                 for feedback in stage.get("source_feedback", []) or []:
                     sid = feedback.get("source_id") if isinstance(feedback, dict) else None
                     if sid and sid not in r.sources:
