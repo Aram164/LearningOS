@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-from learning_os.derive.routes import iter_route_references  # exact_selection_matches call site replaced by the shared helper below
+from learning_os.derive.routes import iter_route_references
 from learning_os.domain.validation import (
     WORKSPACE_TOKEN_RE,
     id_list_items,
@@ -60,10 +60,10 @@ def classify_markdown_link(target: str) -> ClassifiedLink:
     return ClassifiedLink("relative" if relative else "skip", relative)
 
 
-# The ONE implementation of the route guard comparison, replacing three authored
-# copies in this file (synthesis 118-138, selection 316-337, study-map resource
-# 441-456) and the legacy-matcher call site (routes.py:64-88 keeps its filter
-# role for the projection caller, derive/projection/projection/records_curriculum.py:141).
+# The route guard comparison shared by the material-synthesis, unit-selection
+# and study-map-resource checks below and by their legacy selection match.
+# `exact_selection_matches` in derive/routes.py still makes the same comparison
+# for its projection caller; moving it onto this helper is a separate change.
 _UNCOMPARED = object()
 
 
@@ -148,7 +148,7 @@ class ChecksReferences:
                 # The authored guard trio, expressed through the one shared
                 # comparison helper; emission order is the helper's return
                 # order - identical to the authored if-order.
-                for kind, route_value, declared in route_guard_mismatches(
+                for kind, route_value, _declared in route_guard_mismatches(
                         route_ref,
                         unit_id=synthesis_unit,
                         source_id=assessment.get("source_id"),
