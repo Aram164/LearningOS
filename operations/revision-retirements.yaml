@@ -5,8 +5,15 @@ retirements:
     artifacts:
       - source-dennis-sun-probability
     cause: rolled-back
-    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
-    decided_by: operator
+    reason: >-
+      This intake's revision 1 is in neither the revision ledger nor any source
+      registry. It was lost outside the gateway, most likely in the same rollback
+      as the next two entries. History before snapshot 1d32c91 is squashed, so how
+      it was lost cannot be traced.
+    evidence: >-
+      operations/transactions/revisions.yaml has no source-dennis-sun-probability
+      row, and no file under sources/registry/ names it.
+    decided_by: Aram
     decided_on: '2026-11-07'
   - transaction: transaction-20260928-192027-001
     artifacts:
@@ -15,13 +22,26 @@ retirements:
       - unit-m2-sad-l08
       - module-hu-m2-statistik-analysis
     cause: rolled-back
-    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
-    decided_by: operator
+    reason: >-
+      The revision ledger was moved back outside the gateway. Later receipts
+      record the same revisions again, which places the rollback between
+      2026-09-29 04:37 and 2026-09-30 01:21 (CEST). History before snapshot
+      1d32c91 is squashed, so how cannot be traced.
+    evidence: >-
+      Revisions 24, 21 and 24 of unit-m2-sad-l06, l07 and l08 are recorded again
+      by transaction-20260930-012131-001, -012138-001 and -012146-001; revision 60
+      of module-hu-m2-statistik-analysis by transaction-20261003-013006-001.
+    decided_by: Aram
     decided_on: '2026-11-07'
   - transaction: transaction-20260929-043750-001
     artifacts:
       - module-hu-m2-statistik-analysis
     cause: rolled-back
-    reason: Git stash or reset on 2026-09-29 rolled back revisions.yaml while this receipt stayed.
-    decided_by: operator
+    reason: >-
+      Lost in the same rollback as transaction-20260928-192027-001, which this
+      transaction followed.
+    evidence: >-
+      Revision 61 of module-hu-m2-statistik-analysis is recorded again by
+      transaction-20261003-155641-001.
+    decided_by: Aram
     decided_on: '2026-11-07'
