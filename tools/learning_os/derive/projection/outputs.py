@@ -37,15 +37,28 @@ from learning_os.store.derived.store import DERIVED_TOP_DIR
 from learning_os.store.manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
 
 
-def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
+def generate_all(repo: Repo, generated_at: str | None = None, *,
+                 backlinks: dict | None = None,
+                 manifest: dict | None = None) -> dict[str, str]:
     """Build all outputs; returns {relative path: content}.
 
     The default timestamp is the last-commit time (stable_generated_at), so
     repeated generation over the same committed tree is byte-for-byte identical.
+
+    A read that has just rebuilt the projection passes the ``backlinks`` and
+    ``manifest`` it built from this same ``repo`` and ``generated_at``, so
+    publishing them does not build them twice. Both or neither: they are one
+    build, and a pair stamped with another timestamp is refused.
     """
     generated_at = generated_at or stable_generated_at(repo.root)
-    backlinks = build_backlinks(repo, generated_at)
-    manifest = build_manifest(repo, generated_at, backlinks)
+    if (backlinks is None) != (manifest is None):
+        raise ValueError("generate_all takes a prebuilt backlinks and manifest together")
+    if manifest is None:
+        backlinks = build_backlinks(repo, generated_at)
+        manifest = build_manifest(repo, generated_at, backlinks)
+    elif (backlinks.get("_generated", {}).get("generated_at") != generated_at
+          or manifest.get("_generated", {}).get("generated_at") != generated_at):
+        raise ValueError("prebuilt projection was stamped with another generated_at")
     outputs = {
         # These are machine projections. Keep their complete data and stable
         # key order without paying for indentation on every read/publication.

@@ -5,7 +5,7 @@ stored ``generated/manifest.json`` described exactly the current state.
 ``generate_all`` now also publishes ``generated/manifest.identity.json``,
 a sidecar pinning every input the manifest bytes depend on; reads serve
 the stored manifest only when all of them still match, and otherwise
-rebuild exactly as before.
+rebuild, and publish when the read escalated.
 
 Pinned inputs (all must match; anything else rebuilds):
 
@@ -162,6 +162,26 @@ def operations_digest(root: Path) -> str:
     return digest_matching_files(root, files)
 
 
+def observe_inputs(root: Path) -> dict:
+    """Every pinned manifest input except the snapshot and the output bytes.
+
+    ``build_identity`` stamps these beside a just-built manifest. A read that
+    publishes its own rebuild observes them once more before it loads and
+    publishes only when both observations agree, so an input that moves
+    while the projection builds costs a later rebuild, never a stale hit.
+    """
+    return {
+        "contract_version": declared_version(root),
+        "schema_sha256": declared_schema_sha256(root),
+        "generator": f"learning_os v{__version__}",
+        "code_identity": digest_code_identity(root),
+        "runtime_digest": runtime_digest(),
+        "built_date": observations.today().isoformat(),
+        "operations_digest": operations_digest(root),
+        "materials_digest": materials_digest(root),
+    }
+
+
 def build_identity(root: Path, manifest: dict) -> dict:
     """Pin every manifest input for a just-built manifest.
 
@@ -176,14 +196,7 @@ def build_identity(root: Path, manifest: dict) -> dict:
         },
         "format": IDENTITY_FORMAT,
         "snapshot_id": generated.get("snapshot_id"),
-        "contract_version": declared_version(root),
-        "schema_sha256": declared_schema_sha256(root),
-        "generator": f"learning_os v{__version__}",
-        "code_identity": digest_code_identity(root),
-        "runtime_digest": runtime_digest(),
-        "built_date": observations.today().isoformat(),
-        "operations_digest": operations_digest(root),
-        "materials_digest": materials_digest(root),
+        **observe_inputs(root),
         # The exact manifest bytes this identity describes. Every other pin
         # is an input; this one binds the output, so a sidecar published
         # beside a different manifest.json — a crash or a concurrent read

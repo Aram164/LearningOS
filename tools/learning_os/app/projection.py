@@ -28,6 +28,7 @@ from learning_os.store.manifest_identity import (
     bytes_sha256,
     check_identity,
     manifest_text,
+    observe_inputs,
 )
 
 
@@ -129,7 +130,9 @@ def fresh_manifest_and_repo(
     """A current manifest plus the repo it was built from.
 
     The manifest is served from the stored build when it is provably
-    current, otherwise rebuilt exactly as before. ``restamp`` refreshes
+    current, otherwise rebuilt exactly as before; a read that rebuilt under
+    its own escalated lock then publishes the rebuild the way generation
+    does, so the next read is served by reuse. ``restamp`` refreshes
     the served ``_generated`` runtime metadata (git state, timestamp) to
     what a fresh build would stamp; pass it only when the caller surfaces
     ``_generated`` (today: full bootstrap) — it costs several git queries
@@ -168,15 +171,55 @@ def fresh_manifest_and_repo(
         reused = _try_reuse_manifest(root, live, restamp=restamp)
         if reused is not None:
             return reused, _LazyRepo(root)
+        # Observed before anything is loaded, so an input that moves during
+        # the build can only cost a later rebuild, never a stale hit.
+        inputs_before = observe_inputs(root) if dropped else None
         repo = load_repo(root)
         if snapshot_id is not None:
             seed_source_fingerprint(repo, live)
         generated_at = stable_generated_at(root)
         backlinks = build_backlinks(repo, generated_at)
+        manifest = build_manifest(repo, generated_at, backlinks)
+        if inputs_before is not None:
+            published = _publish_rebuild(
+                repo, generated_at, backlinks, manifest, live, inputs_before)
+            if published is not None:
+                return json.loads(published), repo
         # Match the published manifest representation, including nested key order,
         # so the single CLI encoder produces identical bytes on cache hit and miss.
-        manifest = build_manifest(repo, generated_at, backlinks)
         return json.loads(manifest_text(manifest)), repo
+
+
+def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
+                     live: str, inputs_before: dict) -> str | None:
+    """Publish a read's rebuild exactly as generation would; its manifest text.
+
+    Only a read that escalated its own shared lock gets here: it holds the
+    exclusive lock, so no gateway write interleaves, and it is never inside a
+    writer's transaction (a caller that already held the lock exclusive
+    publishes through its own commit). It publishes only a build of one
+    instant: the stamped snapshot is the one hashed under the exclusive lock
+    before loading, and every other identity input observed after the build
+    equals its value before loading. Anything else — a moved input, a view
+    that refuses or fails, an unwritable ``generated/`` — publishes nothing
+    and returns None, leaving the stored pair exactly as stale as it was: the
+    cost is a later rebuild, never a stale hit, and the read's own answer is
+    the one it would have served without publishing.
+    """
+    if (manifest.get("_generated") or {}).get("snapshot_id") != live:
+        return None
+    try:
+        outputs = generate_all(repo, generated_at, backlinks=backlinks, manifest=manifest)
+        identity = json.loads(outputs[IDENTITY_FILENAME])
+        if any(identity.get(key) != value for key, value in inputs_before.items()):
+            return None
+        write_outputs(repo, outputs)
+    except Exception:
+        # Publication refreshes disposable derived files; the same builders
+        # run unguarded on every canonical write and `make views`, which
+        # surface a real defect loudly. A read must not fail because of it.
+        return None
+    return outputs["manifest.json"]
 
 
 def fresh_manifest(root: Path, *, snapshot_id: str | None = None,

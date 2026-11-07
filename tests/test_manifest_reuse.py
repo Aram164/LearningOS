@@ -329,3 +329,141 @@ def test_a_manifest_the_sidecar_does_not_describe_is_rebuilt(mini_repo, monkeypa
     assert len(builds) == 1
     assert "_stale_build_marker" not in manifest
     assert _without_generated(manifest) == _without_generated(stored)
+
+
+# ---------------------------------------------------------------------------
+# A rebuilding read publishes, so the next read of the same state reuses.
+# The clock moves through LOS_OBSERVATIONS, the same override characterization
+# uses: a previous-day build is stale by date alone, every other pin matching.
+
+
+def _clock(monkeypatch, tmp_path, day: str) -> None:
+    path = tmp_path / f"clock-{day}.json"
+    path.write_text(json.dumps({"now": f"{day}T09:00:00"}), encoding="utf-8")
+    monkeypatch.setenv("LOS_OBSERVATIONS", str(path))
+
+
+def _stored_pair(root) -> tuple[bytes, bytes]:
+    gen = root / "generated"
+    return (gen / "manifest.json").read_bytes(), (gen / IDENTITY_FILENAME).read_bytes()
+
+
+def _yesterdays_build(root, monkeypatch, tmp_path) -> tuple[bytes, bytes]:
+    _clock(monkeypatch, tmp_path, "2026-11-06")
+    _generate(root)
+    _clock(monkeypatch, tmp_path, "2026-11-07")
+    ok, reason = check_identity(root, _stored_manifest(root), _stored_identity(root),
+                                live_snapshot=_live_snapshot(root))
+    assert (ok, reason) == (False, "stored build is from a previous day")
+    return _stored_pair(root)
+
+
+def test_first_read_of_a_day_publishes_and_the_second_reuses(mini_repo, monkeypatch, tmp_path):
+    _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    builds = _counted(monkeypatch, "build_manifest")
+
+    first = plumbing.fresh_manifest(mini_repo)
+    assert len(builds) == 1
+    assert _stored_identity(mini_repo)["built_date"] == "2026-11-07"
+    second = plumbing.fresh_manifest(mini_repo)
+
+    assert len(builds) == 1
+    assert second == first == _stored_manifest(mini_repo)
+
+
+def test_a_rebuilding_read_publishes_exactly_what_generation_does(mini_repo, monkeypatch, tmp_path):
+    _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    plumbing.fresh_manifest(mini_repo)
+    gen = mini_repo / "generated"
+    published = {p.relative_to(gen).as_posix(): p.read_bytes()
+                 for p in gen.rglob("*") if p.is_file()}
+
+    expected = generate_all(load_repo(mini_repo))
+
+    assert {rel: published.get(rel) for rel in expected} == {
+        rel: text.encode("utf-8") for rel, text in expected.items()}
+
+
+def test_a_caller_already_holding_the_lock_exclusive_does_not_publish(
+        mini_repo, monkeypatch, tmp_path):
+    from learning_os.app.lock import operator_lock
+
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    builds = _counted(monkeypatch, "build_manifest")
+    with operator_lock(mini_repo):
+        plumbing.fresh_manifest(mini_repo)
+    assert len(builds) == 1
+    assert _stored_pair(mini_repo) == before
+
+
+@pytest.mark.parametrize("failure", ["unwritable", "view-defect"])
+def test_a_failed_publication_keeps_the_pair_and_the_answer(
+        mini_repo, monkeypatch, tmp_path, failure):
+    from learning_os.derive.projection import outputs
+
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+
+    def broken(*_args, **_kwargs):
+        raise (OSError("read-only file system") if failure == "unwritable"
+               else KeyError("a defect in one Markdown view"))
+
+    if failure == "unwritable":
+        monkeypatch.setattr(plumbing, "write_outputs", broken)
+    else:
+        monkeypatch.setattr(outputs, "build_module_view", broken)
+    served = plumbing.fresh_manifest(mini_repo)
+
+    assert _stored_pair(mini_repo) == before
+    assert _without_generated(served) == _without_generated(_stored_manifest(mini_repo))
+
+
+@pytest.mark.parametrize("mover", ["materials", "clock"])
+def test_an_input_that_moves_during_the_build_is_not_published(
+        mini_repo, monkeypatch, tmp_path, mover):
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    real = plumbing.build_backlinks
+
+    def moving(repo, generated_at):
+        if mover == "materials":
+            (mini_repo.parent / "materials" / "added-mid-build.pdf").write_bytes(b"%PDF new")
+        else:
+            _clock(monkeypatch, tmp_path, "2026-11-08")  # midnight passes mid-build
+        return real(repo, generated_at)
+
+    monkeypatch.setattr(plumbing, "build_backlinks", moving)
+    plumbing.fresh_manifest(mini_repo)
+    assert _stored_pair(mini_repo) == before
+
+
+def test_a_canonical_edit_during_an_unseeded_build_is_not_published(
+        mini_repo, monkeypatch, tmp_path):
+    """Content loaded before the edit, stamp hashed after it: published, the
+    pair would pass the next read's snapshot check while describing the
+    pre-edit text. The pre-load hash must equal the build's own stamp."""
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    real = plumbing.load_repo
+
+    def load_then_edit(root):
+        repo = real(root)
+        note.write_text(note.read_text(encoding="utf-8") + "\nEdited mid-build.\n",
+                        encoding="utf-8")
+        return repo
+
+    monkeypatch.setattr(plumbing, "load_repo", load_then_edit)
+    plumbing.fresh_manifest(mini_repo)
+    assert _stored_pair(mini_repo) == before
+
+
+def test_generate_all_accepts_one_prebuilt_build_only(mini_repo):
+    from learning_os.derive.projection import build_backlinks, build_manifest
+
+    repo = load_repo(mini_repo)
+    backlinks = build_backlinks(repo, "T1")
+    manifest = build_manifest(repo, "T1", backlinks)
+    assert generate_all(repo, "T1", backlinks=backlinks, manifest=manifest) == generate_all(
+        repo, "T1")
+    with pytest.raises(ValueError, match="another generated_at"):
+        generate_all(repo, "T2", backlinks=backlinks, manifest=manifest)
+    with pytest.raises(ValueError, match="together"):
+        generate_all(repo, "T1", manifest=manifest)

@@ -229,5 +229,5 @@ $ $H/los-assert-file CLAUDE.md --absent
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 14 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```

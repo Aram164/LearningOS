@@ -136,3 +136,4 @@ sequenceDiagram
 The UI boundary was traced in sibling `src/infrastructure/los-runtime.ts` at
 UI `f7dbc1f`. This Core-only checker does not validate TypeScript symbols.
 The read shown is an example; it does not claim every UI read is bootstrap.
+A stale read publishes through the generation path above, so the next read reuses.
