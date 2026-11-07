@@ -455,6 +455,26 @@ def test_a_canonical_edit_during_an_unseeded_build_is_not_published(
     assert _stored_pair(mini_repo) == before
 
 
+def test_an_unobservable_input_still_serves_the_read(mini_repo, monkeypatch, tmp_path):
+    """Observing the pins reads inputs the rebuild never touches (here, a code
+    tree that cannot be read). The read still answers what it answered before
+    publication existed, and publishes nothing."""
+    from learning_os.store.derived.model import DerivedError
+
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+
+    def unreadable(_root):
+        raise DerivedError("code tree unreadable")
+
+    monkeypatch.setattr(plumbing, "observe_inputs", unreadable)
+    builds = _counted(monkeypatch, "build_manifest")
+    served = plumbing.fresh_manifest(mini_repo)
+
+    assert len(builds) == 1
+    assert _stored_pair(mini_repo) == before
+    assert _without_generated(served) == _without_generated(_stored_manifest(mini_repo))
+
+
 def test_generate_all_accepts_one_prebuilt_build_only(mini_repo):
     from learning_os.derive.projection import build_backlinks, build_manifest
 

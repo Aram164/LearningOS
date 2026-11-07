@@ -173,7 +173,7 @@ def fresh_manifest_and_repo(
             return reused, _LazyRepo(root)
         # Observed before anything is loaded, so an input that moves during
         # the build can only cost a later rebuild, never a stale hit.
-        inputs_before = observe_inputs(root) if dropped else None
+        inputs_before = _observe_before_publishing(root) if dropped else None
         repo = load_repo(root)
         if snapshot_id is not None:
             seed_source_fingerprint(repo, live)
@@ -188,6 +188,20 @@ def fresh_manifest_and_repo(
         # Match the published manifest representation, including nested key order,
         # so the single CLI encoder produces identical bytes on cache hit and miss.
         return json.loads(manifest_text(manifest)), repo
+
+
+def _observe_before_publishing(root: Path) -> dict | None:
+    """The identity inputs before a publishing rebuild loads; None if unobservable.
+
+    Observation reads inputs the rebuild itself never touches (the code tree,
+    the operations bundles, ``materials/``). A read that cannot observe them
+    still answers exactly as it would without publication; it only publishes
+    nothing, so the next read rebuilds as before.
+    """
+    try:
+        return observe_inputs(root)
+    except Exception:
+        return None
 
 
 def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
