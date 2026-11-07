@@ -78,6 +78,7 @@ files = [
   "tools/learning_os/app/project_migration.py",
   "tools/learning_os/app/python_sessions_migration.py",
   "tools/learning_os/adapters/agent_workers.py",
+  "tools/learning_os/derive/validation/revision_ledger.py",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).

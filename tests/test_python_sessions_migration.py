@@ -20,6 +20,13 @@ from learning_os.store.warning_baseline import signatures_from_issues, write_bas
 def python_plan(mini_repo):
     root = mini_repo
     add_curriculum(root)
+    # Exercise this retired migration in its supported disposable generation.
+    # Current schemas remain in use (v64 only adds the optional revision
+    # retirements root); production must keep refusing the migration on v64+.
+    contract_path = root / "system/contracts/data-contract.yaml"
+    contract = yaml.safe_load(contract_path.read_text())
+    contract["contract_version"] = 63
+    write_yaml(contract_path, contract)
     module = {"id": migration.MODULE, "type": "module", "kind": "skill",
               "area_id": "program-bachelors", "title": "Synthetic Python",
               "status": "active", "source_map": "source-map.yaml",

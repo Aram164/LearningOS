@@ -41,6 +41,7 @@ from learning_os.derive.semantics.restamp import (
     analyze,
     claims_list_sha256,
 )
+from learning_os.store.revisions import dump_revisions, load_revisions, revision_ledger_path
 from learning_os.store.session import githistory
 
 
@@ -267,6 +268,14 @@ def _judged_repo(tmp_path, *, evidence=(), receipt_id="transaction-20200102-0000
                  (root / unit_rel).read_bytes()).hexdigest()},
         ],
     })
+    # The committed receipt raised both artifacts to revision 1, so the
+    # ledger stands there too, as the gateway leaves it
+    # (TRANSACTION-REVISION-FLOOR).
+    revisions = load_revisions(root)
+    for artifact in ("module-demo", "unit-demo-l01"):
+        revisions[artifact] = max(revisions.get(artifact, 0), 1)
+    revision_ledger_path(root).parent.mkdir(parents=True, exist_ok=True)
+    revision_ledger_path(root).write_text(dump_revisions(revisions), encoding="utf-8")
     _git(root, "init")
     _git(root, "add", "-A")
     _git(root, "commit", "-m", "judge one covers claim")
