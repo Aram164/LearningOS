@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-search-v1",
+  "title": "Material search response",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "contract",
+    "status",
+    "query",
+    "has_more",
+    "hits"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "contract": {
+      "const": "material-search-v1"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "unavailable"
+      ]
+    },
+    "query": {
+      "type": "string"
+    },
+    "has_more": {
+      "type": "boolean"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reason": {
+      "enum": [
+        "index_missing",
+        "index_corrupt",
+        "index_incompatible"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matches_text_cache",
+        "changed_shas"
+      ],
+      "properties": {
+        "matches_text_cache": {
+          "type": "boolean"
+        },
+        "changed_shas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documents_indexed",
+        "documents_total",
+        "pages_indexed",
+        "pages_without_text",
+        "pages_total",
+        "documents_without_text",
+        "excluded_cache_entries",
+        "unindexed_route_materials",
+        "scope_complete"
+      ],
+      "properties": {
+        "documents_indexed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documents_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages_indexed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages_without_text": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documents_without_text": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sha256",
+              "material",
+              "pages_total",
+              "pages_without_text"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "material": {
+                "type": "string"
+              },
+              "pages_total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pages_without_text": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "excluded_cache_entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sha256",
+              "material",
+              "reason"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "material": {
+                "type": "string"
+              },
+              "reason": {
+                "enum": [
+                  "cache-entry-invalid",
+                  "extractor-mismatch"
+                ]
+              }
+            }
+          }
+        },
+        "unindexed_route_materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sha256",
+              "material",
+              "reason",
+              "bindings",
+              "bindings_total"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "material": {
+                "type": "string"
+              },
+              "reason": {
+                "enum": [
+                  "not-in-text-cache",
+                  "cache-entry-invalid",
+                  "no-text"
+                ]
+              },
+              "bindings": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "module",
+                    "unit",
+                    "route",
+                    "single_file"
+                  ],
+                  "properties": {
+                    "module": {
+                      "type": "string"
+                    },
+                    "unit": {
+                      "type": "string"
+                    },
+                    "route": {
+                      "type": "string"
+                    },
+                    "single_file": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "bindings_total": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "scope_complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rank",
+          "sha256",
+          "page",
+          "snippet",
+          "score",
+          "material",
+          "title",
+          "is_mapped",
+          "bindings",
+          "bindings_total",
+          "span_reference"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "material": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "is_mapped": {
+            "type": "boolean"
+          },
+          "bindings": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "module",
+                "unit",
+                "route",
+                "single_file"
+              ],
+              "properties": {
+                "module": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "route": {
+                  "type": "string"
+                },
+                "single_file": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "bindings_total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "span_reference": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "unit",
+              "route",
+              "pages",
+              "extract",
+              "file_sha256"
+            ],
+            "properties": {
+              "unit": {
+                "type": "string"
+              },
+              "route": {
+                "type": "string"
+              },
+              "pages": {
+                "type": "string"
+              },
+              "extract": {
+                "const": true
+              },
+              "file_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

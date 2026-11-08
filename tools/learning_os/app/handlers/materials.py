@@ -1532,45 +1532,111 @@ def material_context(ctx: OpContext, req: dict) -> Result:
 
 @register("material.search", kind="query", effects=OperationEffects.READ)
 def material_search(ctx: OpContext, req: dict) -> Result:
-    """Search local learning materials via fast FTS5 index and return candidate references."""
-    root = ctx.root
-    query = (req.get("query") or "").strip()
-    if not query:
-        raise WriteRefused("material.search requires a nonempty query", site=f"{ctx.operation}.empty-query", exit_code=2)
+    """Search local learning materials and return bounded candidate references."""
+    from learning_os.store.materials.search_index import (
+        DEFAULT_SEARCH_LIMIT,
+        MAX_QUERY_LENGTH,
+        MAX_QUERY_TERMS,
+        MAX_SEARCH_LIMIT,
+        MAX_SEARCH_OFFSET,
+        execute_search,
+        normalize_query_terms,
+    )
 
-    limit = req.get("limit") or 10
-    offset = req.get("offset") or 0
+    root = ctx.root
+    raw_query = req.get("query") or ""
+    if not isinstance(raw_query, str) or not raw_query.strip():
+        raise WriteRefused(
+            "material.search requires a nonempty query",
+            site=f"{ctx.operation}.empty-query",
+            prefixed=True,
+            exit_code=2,
+        )
+    if len(raw_query) > MAX_QUERY_LENGTH:
+        raise WriteRefused(
+            f"query length {len(raw_query)} exceeds maximum of {MAX_QUERY_LENGTH} characters",
+            site=f"{ctx.operation}.query-too-long",
+            prefixed=True,
+            exit_code=2,
+        )
+
+    limit = req.get("limit") if req.get("limit") is not None else DEFAULT_SEARCH_LIMIT
+    offset = req.get("offset") if req.get("offset") is not None else 0
+    if (
+        not isinstance(offset, int)
+        or isinstance(offset, bool)
+        or not isinstance(limit, int)
+        or isinstance(limit, bool)
+        or offset < 0
+        or offset > MAX_SEARCH_OFFSET
+        or not (1 <= limit <= MAX_SEARCH_LIMIT)
+    ):
+        raise WriteRefused(
+            f"offset must be between 0 and {MAX_SEARCH_OFFSET} and limit between 1 and {MAX_SEARCH_LIMIT}",
+            site=f"{ctx.operation}.offset-too-large",
+            prefixed=True,
+            exit_code=2,
+        )
+
+    clean_query = raw_query.strip()
+    terms = normalize_query_terms(clean_query)
+    if not terms:
+        raise WriteRefused(
+            "material.search query contains no searchable terms after normalization",
+            site=f"{ctx.operation}.no-terms",
+            prefixed=True,
+            exit_code=2,
+        )
+    if len(terms) > MAX_QUERY_TERMS:
+        raise WriteRefused(
+            f"material.search query has {len(terms)} terms after normalization (maximum is {MAX_QUERY_TERMS})",
+            site=f"{ctx.operation}.too-many-terms",
+            prefixed=True,
+            exit_code=2,
+        )
+
     unit_filter = req.get("unit")
     module_filter = req.get("module")
-    allow_stale = bool(req.get("allow_stale"))
-
     repo = ctx.repo()
-    sha_to_route = {}
-    for _unit_id, unit in repo.units.items():
-        sm = repo.module_source_maps.get(unit.module_id)
-        if not sm:
-            continue
-        for r in unit_routes(sm, unit.module_id, unit.id):
-            files = resolve_route_material_files(repo, r)
-            for f in files:
-                sha = sha256_file(Path(f.path)).removeprefix("sha256:")
-                if sha not in sha_to_route:
-                    sha_to_route[sha] = (unit.id, r.get("id"), unit.module_id)
 
-    from learning_os.store.materials.search_index import execute_search
+    if unit_filter and unit_filter not in repo.units:
+        complaint = with_suggestions(
+            f"unknown unit: {unit_filter!r}", unit_filter, repo.units
+        )
+        raise NotFound(
+            "unit",
+            unit_filter,
+            repo.units,
+            message=complaint,
+            site=f"{ctx.operation}.unknown-unit",
+            gateway_message=f"los: {complaint}",
+            exit_code=2,
+        )
+    if module_filter and module_filter not in repo.modules:
+        complaint = with_suggestions(
+            f"unknown module: {module_filter!r}", module_filter, repo.modules
+        )
+        raise NotFound(
+            "module",
+            module_filter,
+            repo.modules,
+            message=complaint,
+            site=f"{ctx.operation}.unknown-module",
+            gateway_message=f"los: {complaint}",
+            exit_code=2,
+        )
 
     search_res = execute_search(
         repo_root=root,
-        query=query,
+        query=clean_query,
         limit=limit,
         offset=offset,
         unit_id=unit_filter,
         module_id=module_filter,
-        sha_to_route=sha_to_route,
-        allow_stale=allow_stale,
+        repo=repo,
     )
 
-    snapshot_val = _snapshot(root, req.get("expected_snapshot"))
+    snapshot_val = _snapshot(root)
     payload = search_res.to_dict()
     payload["snapshot_id"] = snapshot_val
 

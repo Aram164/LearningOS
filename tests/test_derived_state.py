@@ -405,8 +405,12 @@ def test_invalidate_missing_entry_is_a_noop(tmp_path: Path):
 # ---------------------------------------------------------------------------
 
 def test_derived_state_survives_stale_removal(tmp_path: Path):
+    from learning_os.store.materials.search_index import SEARCH_TOP_DIR
+
     assert DERIVED_TOP_DIR == "derived-state"
     assert DERIVED_TOP_DIR in _KEEP_TOP_DIRS
+    assert SEARCH_TOP_DIR == "material-search"
+    assert SEARCH_TOP_DIR in _KEEP_TOP_DIRS
     gen = tmp_path / "generated"
     (gen / "derived-state" / "blobs").mkdir(parents=True)
     keep = gen / "derived-state" / "state-v1.json"

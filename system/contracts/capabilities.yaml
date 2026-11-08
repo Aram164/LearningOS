@@ -121,15 +121,15 @@ queries:
     cli_command: material-search
     kind: query
     result: material-search-v1
-    schema: system/schema/requests/material.search.schema.json
+    schema: system/schema/material-search.schema.json
     invariants:
     - read-only; touches no repository file and mutates no canonical data
-    - searches local learning materials using SQLite FTS5 index generations with unicode61 tokenization
-    - readers pin a single immutable generation in read-only mode (mode=ro)
-    - ranked using stopword-filtered tiered queries (exact phrase, content AND, content OR)
-    - returns bounded candidate references with physical PDF page numbers, text snippets, and mapped LearningOS route references
-    - unmapped material candidates stay explicit and report is_mapped false without inferred routes
-    - missing, stale, or corrupt index generations report explicit unavailable status with structured reason code
+    - queries a disposable, self-describing read-only index of the page-text cache opened in mode=ro
+    - normalizes queries with Unicode NFC and casefold before tokenization; refuses empty, punctuation-only, overlong (>500 chars or >32 terms), and out-of-range offset/limit requests
+    - ranks candidates deterministically by BM25 tier (exact phrase, stopword-filtered AND, stopword-filtered OR) and breaks ties by (rank, sha256, page_no); reports has_more pagination
+    - resolves route bindings and verifies live material file bytes per call (stat first, sha256 on mismatch); excludes indexed SHAs whose live file bytes changed or disappeared
+    - applies --unit and --module filters over complete SHA binding sets inside SQL before LIMIT, and refuses unknown unit or module ids
+    - discloses text-cache freshness (matches_text_cache and changed_shas) and corpus coverage (documents without text, excluded cache entries, unindexed route materials, and scope_complete) on every ok response; reports unavailable only for index_missing, index_corrupt, or index_incompatible
   plan.template:
     handler: plan_template
     result: plan-template-v1

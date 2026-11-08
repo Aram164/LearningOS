@@ -219,33 +219,6 @@ class ProductionFTS5Evaluator:
         self.repo_root = repo_root
         self.sha_to_route = sha_to_route
         self.index_file = index_file
-        self._temp_dir: pathlib.Path | None = None
-        self._effective_root = self.repo_root
-
-        if self.index_file is not None:
-            self._setup_temp_root()
-
-    def _setup_temp_root(self):
-        assert self.index_file is not None
-        self._temp_dir = pathlib.Path(tempfile.mkdtemp(prefix="los_eval_fts5_"))
-        gen_dir = self._temp_dir / "generated" / "material-search" / "generations" / "gen_eval"
-        gen_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(self.index_file, gen_dir / "search.sqlite3")
-
-        with open(self._temp_dir / "generated" / "material-search" / "current.json", "w") as f:
-            json.dump({"generation_id": "gen_eval"}, f)
-        with open(gen_dir / "generation.json", "w") as f:
-            json.dump(
-                {"generation_id": "gen_eval", "schema_version": 1, "extractor": "pdftotext+pypdf"},
-                f,
-            )
-
-        # Symlink text-cache
-        text_cache_src = self.repo_root / "generated" / "text-cache"
-        if text_cache_src.exists():
-            (self._temp_dir / "generated" / "text-cache").symlink_to(text_cache_src)
-
-        self._effective_root = self._temp_dir
 
     def run_query(self, query_entry: dict[str, Any]) -> dict[str, Any]:
         t0_e2e = time.perf_counter()
@@ -256,7 +229,11 @@ class ProductionFTS5Evaluator:
         # Execute search through production entrypoint
         t0_sql = time.perf_counter()
         search_res = prod.execute_search(
-            self._effective_root, raw_query, limit=5, allow_stale=True
+            self.repo_root,
+            raw_query,
+            limit=5,
+            repo=self.repo,
+            index_path=self.index_file,
         )
         t_sql_ms = (time.perf_counter() - t0_sql) * 1000.0
 
@@ -266,19 +243,19 @@ class ProductionFTS5Evaluator:
         for h in hits:
             # Handle both dict and object hits
             if isinstance(h, dict):
-                sha = h.get("source_sha256", "")
-                page = int(h.get("physical_page", 0))
+                sha = str(h.get("sha256") or h.get("source_sha256", ""))
+                page = int(h.get("page") or h.get("physical_page", 0))
                 score = float(h.get("score", 0.0))
-                snippet = h.get("snippet", "")
+                snippet = str(h.get("snippet", ""))
                 is_mapped = bool(h.get("is_mapped", False))
-                title = h.get("title", "")
+                title = str(h.get("title", ""))
             else:
-                sha = getattr(h, "source_sha256", "")
-                page = int(getattr(h, "physical_page", 0))
+                sha = str(getattr(h, "sha256", None) or getattr(h, "source_sha256", ""))
+                page = int(getattr(h, "page", None) or getattr(h, "physical_page", 0))
                 score = float(getattr(h, "score", 0.0))
-                snippet = getattr(h, "snippet", "")
+                snippet = str(getattr(h, "snippet", ""))
                 is_mapped = bool(getattr(h, "is_mapped", False))
-                title = getattr(h, "title", "")
+                title = str(getattr(h, "title", ""))
 
             final_candidates.append(
                 {
@@ -370,9 +347,8 @@ class ProductionFTS5Evaluator:
             "is_index_detected": is_index_detected,
         }
 
-    def close(self):
-        if self._temp_dir is not None and self._temp_dir.exists():
-            shutil.rmtree(self._temp_dir)
+    def close(self) -> None:
+        pass
 
 
 def run_benchmark(

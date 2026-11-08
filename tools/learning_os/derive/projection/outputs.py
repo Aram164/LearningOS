@@ -35,6 +35,7 @@ from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.snapshot import Repo
 from learning_os.store.derived.store import DERIVED_TOP_DIR
 from learning_os.store.manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
+from learning_os.store.materials.search_index import SEARCH_TOP_DIR
 
 
 def generate_all(repo: Repo, generated_at: str | None = None, *,
@@ -105,7 +106,7 @@ _KEEP_NAMES = {".gitkeep", ".DS_Store"}
 #: tools with their own invalidation; a rebuild of the projection must
 #: leave them alone.
 _KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
-                            DERIVED_TOP_DIR})
+                            DERIVED_TOP_DIR, SEARCH_TOP_DIR})
 
 
 _KEEP_REPORT_PREFIX = "validation-report"

@@ -31,7 +31,8 @@
     },
     "query": {
       "type": "string",
-      "description": "search query terms or phrase",
+      "maxLength": 500,
+      "description": "search query terms or phrase (at most 500 characters and 32 normalized terms)",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -74,7 +75,8 @@
     "offset": {
       "type": "integer",
       "minimum": 0,
-      "description": "result offset for pagination (default: 0)",
+      "maximum": 200,
+      "description": "result offset for pagination (default: 0, max: 200)",
       "x-los-cli": {
         "flags": [
           "--offset"
@@ -134,32 +136,11 @@
         "transport_only": false,
         "envelope_owned": false
       }
-    },
-    "allow_stale": {
-      "type": "boolean",
-      "description": "allow querying a stale index if corpus has changed since index build",
-      "x-los-cli": {
-        "flags": [
-          "--allow-stale"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
     }
   },
   "x-los-cli-command": {
     "name": "material-search",
-    "help": "search local learning materials using fast FTS5 index and return candidate references",
+    "help": "search local learning materials and return bounded candidate references",
     "description": null,
     "epilog": null,
     "mutually_exclusive": [],

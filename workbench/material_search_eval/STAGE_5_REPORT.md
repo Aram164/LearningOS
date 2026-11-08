@@ -98,3 +98,16 @@ Evaluation of the newly built production index generation (`gen_d054a3d02c25715e
 ### Decision Outcome
 
 **FTS5 stays as the production backend.** Proceed to Phase 4 (Index Identity & Lifecycle) and Phase 5 (Query Path).
+
+---
+
+## 5. Phase 5 Latency & Bounded-Cost Verification (Steps 5.6 & 5.8)
+
+Measured against the redesigned self-describing index (`index-4ed250ab63629926.sqlite3`, 71,120 indexed pages, 242.6 MB) in the live-like scratch world:
+
+| Check | Target | Before Fix (Audit) | Measured After Fix | Status |
+|---|---|---|---|---|
+| **In-process handler p50** (27 dev queries, full `material.search` handler including `ctx.repo()` load) | $\le 1,500\text{ ms}$ | $5,190\text{ ms}$ | **$529.7\text{ ms}$** (p95: $593.2\text{ ms}$) | **PASS** |
+| **In-process `execute_search` p50** (27 dev queries, preloaded `Repo` snapshot + stat table) | $\le 1,500\text{ ms}$ | $4,220\text{ ms}$ | **$122.0\text{ ms}$** (p95: $125.3\text{ ms}$) | **PASS** |
+| **Worst allowed query** (32 single-character common terms, `offset=200`, `limit=50`, deferred `snippet()`) | $\le 2,000\text{ ms}$ | $285,900\text{ ms}$ | **$638.2\text{ ms}$** (~1.97M VM steps; budget = 20M steps) | **PASS** |
+
