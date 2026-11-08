@@ -157,7 +157,8 @@
               "reason": {
                 "enum": [
                   "cache-entry-invalid",
-                  "extractor-mismatch"
+                  "extractor-mismatch",
+                  "legacy — run --refresh"
                 ]
               }
             }
@@ -187,6 +188,7 @@
                 "enum": [
                   "not-in-text-cache",
                   "cache-entry-invalid",
+                  "legacy — run --refresh",
                   "no-text"
                 ]
               },

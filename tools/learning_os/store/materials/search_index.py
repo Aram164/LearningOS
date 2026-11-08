@@ -780,7 +780,12 @@ def _build_coverage_block(
         doc_rec = reader.docs.get(sha)
         reason: str | None = None
         if sha in excluded_by_sha:
-            reason = "cache-entry-invalid"
+            ex_reason = excluded_by_sha[sha].reason
+            reason = (
+                "legacy — run --refresh"
+                if ex_reason == "legacy — run --refresh"
+                else "cache-entry-invalid"
+            )
         elif doc_rec is None:
             reason = "not-in-text-cache"
         elif doc_rec.pages_indexed == 0:
@@ -859,18 +864,8 @@ def _select_span_reference(
     }
 
 
-def execute_search(
-    repo_root: Path,
-    query: str,
-    limit: int = DEFAULT_SEARCH_LIMIT,
-    offset: int = 0,
-    unit_id: str | None = None,
-    module_id: str | None = None,
-    repo: Repo | None = None,
-    index_path: Path | None = None,
-    vm_step_budget: int = DEFAULT_VM_STEP_BUDGET,
-) -> SearchResult:
-    """Execute a bounded search query over the self-describing FTS5 index."""
+def _validate_search_request(query: str, limit: int, offset: int) -> str:
+    """Validate bounded search arguments and return the stripped query string."""
     if not isinstance(query, str) or not query.strip():
         raise WriteRefused(
             "material.search requires a nonempty query",
@@ -878,7 +873,6 @@ def execute_search(
             prefixed=True,
             exit_code=2,
         )
-
     if len(query) > MAX_QUERY_LENGTH:
         raise WriteRefused(
             f"query length {len(query)} exceeds maximum of {MAX_QUERY_LENGTH} characters",
@@ -886,7 +880,6 @@ def execute_search(
             prefixed=True,
             exit_code=2,
         )
-
     if (
         not isinstance(offset, int)
         or isinstance(offset, bool)
@@ -912,7 +905,6 @@ def execute_search(
             prefixed=True,
             exit_code=2,
         )
-
     if len(terms) > MAX_QUERY_TERMS:
         raise WriteRefused(
             f"material.search query has {len(terms)} terms after normalization (maximum is {MAX_QUERY_TERMS})",
@@ -920,7 +912,13 @@ def execute_search(
             prefixed=True,
             exit_code=2,
         )
+    return clean_query
 
+
+def _load_and_validate_repo(
+    repo_root: Path, repo: Repo | None, unit_id: str | None, module_id: str | None
+) -> Repo | None:
+    """Load the Repo if needed and refuse unknown unit_id / module_id filters."""
     loaded_repo = repo
     if loaded_repo is None and (repo_root / "curriculum").is_dir():
         try:
@@ -953,6 +951,190 @@ def execute_search(
                 gateway_message=f"los: {complaint}",
                 exit_code=2,
             )
+    return loaded_repo
+
+
+def _resolve_live_bindings_and_scope(
+    repo_root: Path,
+    loaded_repo: Repo | None,
+    reader: IndexReader,
+    unit_id: str | None,
+    module_id: str | None,
+) -> tuple[
+    dict[str, list[MaterialBinding]],
+    dict[str, str],
+    set[str],
+    set[str] | None,
+]:
+    """Compute live route bindings, dead SHAs, and optional scope filter SHAs."""
+    memo: dict[Path, str] = {}
+    bindings_by_sha: dict[str, list[MaterialBinding]] = {}
+    route_sha_to_path: dict[str, str] = {}
+    if loaded_repo is not None:
+        bindings_by_sha, route_sha_to_path = material_bindings_with_paths(
+            loaded_repo, files=reader.files, memo=memo
+        )
+
+    materials_root = repo_root.parent / "materials"
+    dead_shas: set[str] = set()
+    if materials_root.is_dir() and (reader.files or bindings_by_sha):
+        live_shas: set[str] = set(bindings_by_sha.keys())
+        for rel_path in reader.files:
+            pdf_path = materials_root / rel_path
+            if pdf_path.is_file() and not pdf_path.is_symlink():
+                try:
+                    live_shas.add(resolve_file_sha256(pdf_path, materials_root, reader.files, memo))
+                except OSError:
+                    continue
+        dead_shas = set(reader.docs.keys()) - live_shas
+
+    allowed_shas: set[str] | None = None
+    if unit_id is not None or module_id is not None:
+        allowed_shas = {
+            sha
+            for sha, b_list in bindings_by_sha.items()
+            if sha not in dead_shas
+            and any(
+                (unit_id is None or b.unit == unit_id)
+                and (module_id is None or b.module == module_id)
+                for b in b_list
+            )
+        }
+    return bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas
+
+
+def _query_fts_hits(
+    reader: IndexReader,
+    clean_query: str,
+    limit: int,
+    offset: int,
+    unit_id: str | None,
+    module_id: str | None,
+    bindings_by_sha: Mapping[str, Sequence[MaterialBinding]],
+    route_sha_to_path: Mapping[str, str],
+    dead_shas: set[str],
+    allowed_shas: set[str] | None,
+    vm_step_budget: int,
+) -> tuple[bool, list[dict[str, object]]]:
+    """Run tiered FTS5 queries with a VM-step budget and materialize page snippets."""
+    con = reader.connect()
+    steps_taken = 0
+    budget_exceeded = False
+    step_interval = min(VM_STEP_CALLBACK_INTERVAL, max(1, vm_step_budget))
+
+    def _progress_handler() -> int:
+        nonlocal steps_taken, budget_exceeded
+        steps_taken += step_interval
+        if steps_taken > vm_step_budget:
+            budget_exceeded = True
+            return 1
+        return 0
+
+    con.set_progress_handler(_progress_handler, step_interval)
+    cur = con.cursor()
+
+    where_parts = ["material_fts MATCH ?"]
+    filter_params: list[str] = []
+    if allowed_shas is not None:
+        sorted_allowed = sorted(allowed_shas)
+        where_parts.append(f"sha256 IN ({', '.join('?' for _ in sorted_allowed)})")
+        filter_params.extend(sorted_allowed)
+    if dead_shas:
+        sorted_dead = sorted(dead_shas)
+        where_parts.append(f"sha256 NOT IN ({', '.join('?' for _ in sorted_dead)})")
+        filter_params.extend(sorted_dead)
+
+    rank_sql = (
+        f"SELECT rowid, sha256, page_no, bm25(material_fts) AS score "
+        f"FROM material_fts WHERE {' AND '.join(where_parts)} "
+        f"ORDER BY rank, sha256, page_no LIMIT ?;"
+    )
+    snippet_sql = (
+        "SELECT snippet(material_fts, 0, '[', ']', ' … ', 20) "
+        "FROM material_fts WHERE material_fts MATCH ? AND rowid = ?;"
+    )
+
+    fetch_cap = offset + limit + 1
+    raw_candidates: list[tuple[int, str, int, float, str]] = []
+    seen_keys: set[tuple[str, int]] = set()
+
+    try:
+        for _tier_name, fts_expr in build_tiered_queries(clean_query):
+            if len(raw_candidates) >= fetch_cap:
+                break
+            cur.execute(rank_sql, (fts_expr, *filter_params, fetch_cap))
+            for row in cur.fetchall():
+                rowid, sha, page_no, score = int(row[0]), str(row[1]), int(row[2]), float(row[3])
+                key = (sha, page_no)
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    raw_candidates.append((rowid, sha, page_no, score, fts_expr))
+                    if len(raw_candidates) >= fetch_cap:
+                        break
+
+        has_more = len(raw_candidates) > (offset + limit)
+        hits: list[dict[str, object]] = []
+        for rank_idx, (rowid, sha, page_no, score, fts_expr) in enumerate(
+            raw_candidates[offset : offset + limit], start=offset + 1
+        ):
+            cur.execute(snippet_sql, (fts_expr, rowid))
+            snip_row = cur.fetchone()
+            snippet_text = str(snip_row[0]) if snip_row and snip_row[0] is not None else ""
+            doc_rec = reader.docs.get(sha)
+            material_rel = (
+                doc_rec.material
+                if doc_rec is not None and doc_rec.material
+                else route_sha_to_path.get(sha, "")
+            )
+            sha_bindings = bindings_by_sha.get(sha, [])
+            hit = SearchHit(
+                rank=rank_idx,
+                sha256=sha,
+                page=page_no,
+                snippet=snippet_text,
+                score=round(score, 4),
+                material=material_rel,
+                title=derive_title_from_material(material_rel, sha),
+                is_mapped=len(sha_bindings) > 0,
+                bindings=[b.to_dict() for b in sha_bindings[:MAX_BINDINGS_RETURNED]],
+                bindings_total=len(sha_bindings),
+                span_reference=_select_span_reference(
+                    sha=sha,
+                    page=page_no,
+                    bindings=sha_bindings,
+                    unit_id=unit_id,
+                    module_id=module_id,
+                ),
+            )
+            hits.append(hit.to_dict())
+        return has_more, hits
+    except sqlite3.DatabaseError as exc:
+        if budget_exceeded:
+            raise WriteRefused(
+                "material.search query exceeded the VM-step budget; narrow the query terms",
+                site="material.search.query-too-expensive",
+                prefixed=True,
+                exit_code=2,
+            ) from exc
+        raise GenerationError(
+            "index_corrupt", f"Database error during search query: {exc}"
+        ) from exc
+
+
+def execute_search(
+    repo_root: Path,
+    query: str,
+    limit: int = DEFAULT_SEARCH_LIMIT,
+    offset: int = 0,
+    unit_id: str | None = None,
+    module_id: str | None = None,
+    repo: Repo | None = None,
+    index_path: Path | None = None,
+    vm_step_budget: int = DEFAULT_VM_STEP_BUDGET,
+) -> SearchResult:
+    """Execute a bounded search query over the self-describing FTS5 index."""
+    clean_query = _validate_search_request(query, limit, offset)
+    loaded_repo = _load_and_validate_repo(repo_root, repo, unit_id, module_id)
 
     try:
         reader = open_index(repo_root, index_path=index_path)
@@ -965,41 +1147,9 @@ def execute_search(
         )
 
     try:
-        memo: dict[Path, str] = {}
-        bindings_by_sha: dict[str, list[MaterialBinding]] = {}
-        route_sha_to_path: dict[str, str] = {}
-        if loaded_repo is not None:
-            bindings_by_sha, route_sha_to_path = material_bindings_with_paths(
-                loaded_repo, files=reader.files, memo=memo
-            )
-
-        materials_root = repo_root.parent / "materials"
-        dead_shas: set[str] = set()
-        if materials_root.is_dir() and (reader.files or bindings_by_sha):
-            live_shas: set[str] = set(bindings_by_sha.keys())
-            for rel_path in reader.files:
-                pdf_path = materials_root / rel_path
-                if pdf_path.is_file() and not pdf_path.is_symlink():
-                    try:
-                        sha = resolve_file_sha256(pdf_path, materials_root, reader.files, memo)
-                        live_shas.add(sha)
-                    except OSError:
-                        continue
-            dead_shas = set(reader.docs.keys()) - live_shas
-
-        allowed_shas: set[str] | None = None
-        if unit_id is not None or module_id is not None:
-            allowed_shas = set()
-            for sha, b_list in bindings_by_sha.items():
-                if sha in dead_shas:
-                    continue
-                if any(
-                    (unit_id is None or b.unit == unit_id)
-                    and (module_id is None or b.module == module_id)
-                    for b in b_list
-                ):
-                    allowed_shas.add(sha)
-
+        bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas = (
+            _resolve_live_bindings_and_scope(repo_root, loaded_repo, reader, unit_id, module_id)
+        )
         freshness = _compute_text_cache_freshness(repo_root, reader.cache_records)
         coverage = _build_coverage_block(
             reader=reader,
@@ -1010,7 +1160,7 @@ def execute_search(
             module_id=module_id,
         )
 
-        if allowed_shas is not None and len(allowed_shas) == 0:
+        if allowed_shas is not None and not allowed_shas:
             return SearchResult(
                 status="ok",
                 query=clean_query,
@@ -1021,125 +1171,25 @@ def execute_search(
                 coverage=coverage,
             )
 
-        con = reader.connect()
-        steps_taken = 0
-        budget_exceeded = False
-        step_interval = min(VM_STEP_CALLBACK_INTERVAL, max(1, vm_step_budget))
-
-        def _progress_handler() -> int:
-            nonlocal steps_taken, budget_exceeded
-            steps_taken += step_interval
-            if steps_taken > vm_step_budget:
-                budget_exceeded = True
-                return 1
-            return 0
-
-        con.set_progress_handler(_progress_handler, step_interval)
-        cur = con.cursor()
-
-        tiers = build_tiered_queries(clean_query)
-        fetch_cap = offset + limit + 1
-        raw_candidates: list[tuple[int, str, int, float, str]] = []
-        seen_keys: set[tuple[str, int]] = set()
-
-        where_parts = ["material_fts MATCH ?"]
-        filter_params: list[str] = []
-        if allowed_shas is not None:
-            sorted_allowed = sorted(allowed_shas)
-            placeholders = ", ".join("?" for _ in sorted_allowed)
-            where_parts.append(f"sha256 IN ({placeholders})")
-            filter_params.extend(sorted_allowed)
-        if dead_shas:
-            sorted_dead = sorted(dead_shas)
-            placeholders = ", ".join("?" for _ in sorted_dead)
-            where_parts.append(f"sha256 NOT IN ({placeholders})")
-            filter_params.extend(sorted_dead)
-
-        where_clause = " AND ".join(where_parts)
-        rank_sql = (
-            f"SELECT rowid, sha256, page_no, bm25(material_fts) AS score "
-            f"FROM material_fts WHERE {where_clause} "
-            f"ORDER BY rank, sha256, page_no LIMIT ?;"
-        )
-
         try:
-            for _tier_name, fts_expr in tiers:
-                if len(raw_candidates) >= fetch_cap:
-                    break
-                cur.execute(rank_sql, (fts_expr, *filter_params, fetch_cap))
-                for row in cur.fetchall():
-                    rowid = int(row[0])
-                    sha = str(row[1])
-                    page_no = int(row[2])
-                    score = float(row[3])
-                    key = (sha, page_no)
-                    if key not in seen_keys:
-                        seen_keys.add(key)
-                        raw_candidates.append((rowid, sha, page_no, score, fts_expr))
-                        if len(raw_candidates) >= fetch_cap:
-                            break
-
-            has_more = len(raw_candidates) > (offset + limit)
-            paged_candidates = raw_candidates[offset : offset + limit]
-
-            snippet_sql = (
-                "SELECT snippet(material_fts, 0, '[', ']', ' … ', 20) "
-                "FROM material_fts WHERE material_fts MATCH ? AND rowid = ?;"
+            has_more, hits = _query_fts_hits(
+                reader=reader,
+                clean_query=clean_query,
+                limit=limit,
+                offset=offset,
+                unit_id=unit_id,
+                module_id=module_id,
+                bindings_by_sha=bindings_by_sha,
+                route_sha_to_path=route_sha_to_path,
+                dead_shas=dead_shas,
+                allowed_shas=allowed_shas,
+                vm_step_budget=vm_step_budget,
             )
-
-            hits: list[dict[str, object]] = []
-            for rank_idx, (rowid, sha, page_no, score, fts_expr) in enumerate(
-                paged_candidates, start=offset + 1
-            ):
-                cur.execute(snippet_sql, (fts_expr, rowid))
-                snip_row = cur.fetchone()
-                snippet_text = str(snip_row[0]) if snip_row and snip_row[0] is not None else ""
-
-                doc_rec = reader.docs.get(sha)
-                material_rel = (
-                    doc_rec.material
-                    if doc_rec is not None and doc_rec.material
-                    else route_sha_to_path.get(sha, "")
-                )
-                title = derive_title_from_material(material_rel, sha)
-
-                sha_bindings = bindings_by_sha.get(sha, [])
-                is_mapped = len(sha_bindings) > 0
-                span_ref = _select_span_reference(
-                    sha=sha,
-                    page=page_no,
-                    bindings=sha_bindings,
-                    unit_id=unit_id,
-                    module_id=module_id,
-                )
-
-                hit = SearchHit(
-                    rank=rank_idx,
-                    sha256=sha,
-                    page=page_no,
-                    snippet=snippet_text,
-                    score=round(score, 4),
-                    material=material_rel,
-                    title=title,
-                    is_mapped=is_mapped,
-                    bindings=[b.to_dict() for b in sha_bindings[:MAX_BINDINGS_RETURNED]],
-                    bindings_total=len(sha_bindings),
-                    span_reference=span_ref,
-                )
-                hits.append(hit.to_dict())
-
-        except sqlite3.DatabaseError as exc:
-            if budget_exceeded:
-                raise WriteRefused(
-                    "material.search query exceeded the VM-step budget; narrow the query terms",
-                    site="material.search.query-too-expensive",
-                    prefixed=True,
-                    exit_code=2,
-                ) from exc
+        except GenerationError as err:
             return SearchResult(
                 status="unavailable",
-                reason="index_corrupt",
-                message=f"Database error during search query: {exc}",
+                reason=err.reason,
+                message=err.message,
                 query=clean_query,
             )
 

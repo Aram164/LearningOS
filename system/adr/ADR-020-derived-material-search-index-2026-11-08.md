@@ -74,8 +74,13 @@ validated text-cache entries (71,120 indexed pages, 1,079 pages without text):
     exact two-sided McNemar $p = 0.0010$).
 
 Both clauses of the pre-registered decision rule in
-`workbench/material_search_eval/PREREGISTRATION.md` passed with margin (+6 queries
-over the $\ge \text{Scan} - 2$ floor and $3.4\times$ faster E2E p50).
+`workbench/material_search_eval/PREREGISTRATION.md` passed ($\text{Strict R@5} \ge
+\text{Scan} - 2$ and $\text{p50} < \text{Scan p50}$). Because a helper subagent
+wrote `questions_heldout_v2.yaml` after the development results were already
+seen and the paired recall difference has $p = 0.0703$, the 13/20 vs 7/20 result
+is treated only as satisfying the pre-registered non-inferiority gate (no more
+than 2 worse on recall and faster), not as proof that FTS5 beats the scan on
+recall.
 
 ## Residual corruption risk (D14) and review trigger
 

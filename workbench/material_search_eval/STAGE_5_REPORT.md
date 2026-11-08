@@ -87,7 +87,7 @@ Evaluation of the newly built production index generation (`gen_d054a3d02c25715e
 
 1. **Condition 1 — Strict Recall@5:**
    $$\text{Strict R@5}(\text{FTS5}) = 13/20 \ge \text{Strict R@5}(\text{Grep Scan}) - 2 = 7/20 - 2/20 = 5/20$$
-   FTS5 exceeded the Grep Scan by $+6$ strict hits (+30 percentage points). **PASS.**
+   FTS5 met the pre-registered non-inferiority floor (at most 2 fewer hits than Scan). Because a helper subagent authored `questions_heldout_v2.yaml` after the development results had already been seen and the exact two-sided McNemar test gives $p = 0.0703$, 13/20 vs 7/20 is recorded strictly as satisfying the pre-registered decision rule ($\ge \text{Scan} - 2$), not as proof that FTS5 beats the scan on recall. **PASS.**
 2. **Condition 2 — p50 Latency:**
    $$\text{p50 Latency}(\text{FTS5}) < \text{p50 Latency}(\text{Grep Scan})$$
    Both SQL query p50 (`43.33 ms`) and end-to-end retrieval p50 (`1,994.52 ms`) are strictly below Grep Scan p50 (`6,836.91 ms`). **PASS.**

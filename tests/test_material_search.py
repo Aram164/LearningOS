@@ -592,6 +592,58 @@ def test_open_reader_survives_prune_and_search_writes_no_file(world: Path) -> No
     assert before_state == after_state
 
 
+@needs_pdftotext
+def test_legacy_cache_records_labeled_and_empty_index_refused(
+    world: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Legacy cache entries (missing pages_sha256) are labeled 'legacy — run --refresh',
+    and the builder refuses to publish when no valid cache record remains.
+    """
+    res_initial = execute_search(world, "Chebyshev", limit=5)
+    lecture_sha = str(res_initial.hits[0]["sha256"])
+    cache_dir = world / "generated" / "text-cache"
+
+    # Add a second valid PDF so one valid record remains when lecture_sha is made legacy
+    second_pdf = world.parent / "materials" / "source-demo-book" / "second-valid.pdf"
+    write_minimal_pdf(second_pdf, ["Second valid textbook page"])
+    _refresh_manifest_and_text_cache(world)
+
+    # Strip pages_sha256 from lecture_sha's index.json to simulate a pre-refresh legacy record
+    lecture_idx = cache_dir / lecture_sha / "index.json"
+    lecture_data = json.loads(lecture_idx.read_text(encoding="utf-8"))
+    del lecture_data["pages_sha256"]
+    lecture_idx.write_text(json.dumps(lecture_data), encoding="utf-8")
+
+    builder.build_index_generation(world, force=True)
+    res_mixed = execute_search(world, "Second", limit=5)
+    _validate_response(res_mixed.to_dict())
+    assert res_mixed.status == "ok"
+    assert any(
+        ex["sha256"] == lecture_sha and ex["reason"] == "legacy — run --refresh"
+        for ex in res_mixed.coverage["excluded_cache_entries"]
+    )
+    assert any(
+        u["sha256"] == lecture_sha and u["reason"] == "legacy — run --refresh"
+        for u in res_mixed.coverage["unindexed_route_materials"]
+    )
+
+    # Now make every cache entry legacy (no pages_sha256) -> builder must refuse to publish
+    active_db = open_index(world).db_path
+    for entry in cache_dir.iterdir():
+        idx = entry / "index.json"
+        if idx.is_file():
+            data = json.loads(idx.read_text(encoding="utf-8"))
+            data.pop("pages_sha256", None)
+            idx.write_text(json.dumps(data), encoding="utf-8")
+
+    capsys.readouterr()
+    rc = builder.main(["--root", str(world), "--force"])
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert "legacy — run --refresh" in captured.err
+    assert active_db.is_file()
+
+
 @pytest.mark.live_install
 def test_live_install_smoke() -> None:
     """Optional live-install smoke test (skipped under -m 'not live_install' in CI)."""

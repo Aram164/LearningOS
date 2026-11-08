@@ -234,13 +234,7 @@ def build_index_generation(
 
             pages_val = record.get("pages")
             pages_sha_val = record.get("pages_sha256")
-            if (
-                not isinstance(pages_val, int)
-                or isinstance(pages_val, bool)
-                or pages_val < 0
-                or not isinstance(pages_sha_val, list)
-                or not all(isinstance(x, str) for x in pages_sha_val)
-            ):
+            if not isinstance(pages_val, int) or isinstance(pages_val, bool) or pages_val < 0:
                 excluded_records.append(
                     ExcludedRecord(
                         sha256=sha,
@@ -250,7 +244,21 @@ def build_index_generation(
                 )
                 continue
 
-            if not _index_valid(cache_dir, sha, pages_val):
+            if pages_sha_val is None:
+                excluded_records.append(
+                    ExcludedRecord(
+                        sha256=sha,
+                        material=material_rel,
+                        reason="legacy — run --refresh",
+                    )
+                )
+                continue
+
+            if (
+                not isinstance(pages_sha_val, list)
+                or not all(isinstance(x, str) for x in pages_sha_val)
+                or not _index_valid(cache_dir, sha, pages_val)
+            ):
                 excluded_records.append(
                     ExcludedRecord(
                         sha256=sha,
@@ -324,6 +332,20 @@ def build_index_generation(
             )
 
         excluded_records.sort(key=lambda r: r.sha256)
+        if not doc_records:
+            legacy_count = sum(
+                1 for ex in excluded_records if ex.reason == "legacy — run --refresh"
+            )
+            detail = (
+                f"{len(excluded_records)} excluded ({legacy_count} legacy — run --refresh)"
+                if legacy_count
+                else f"{len(excluded_records)} excluded"
+            )
+            raise SystemExit(
+                f"Refusing to publish an empty material search index: no valid text-cache "
+                f"records found ({detail}). Run `python tools/material_text.py --refresh` first."
+            )
+
         fingerprint = compute_text_cache_fingerprint(
             still_valid_fp,
             [(ex.sha256, ex.reason) for ex in excluded_records],
@@ -598,7 +620,9 @@ def main(argv: list[str] | None = None) -> int:
     except SystemExit as exc:
         if isinstance(exc.code, int):
             return exc.code
-        raise
+        if exc.code:
+            print(exc.code, file=sys.stderr)
+        return 1
     return 0
 
 
