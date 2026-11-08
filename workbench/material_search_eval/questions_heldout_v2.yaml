@@ -1,0 +1,319 @@
+- id: HELD2-01
+  question: How does the Gale-Shapley algorithm solve the stable matching problem?
+  category: algorithms
+  expected_status: answerable
+  targets:
+  - material: materials/algo2/books/Kleinberg, Tardos - 2006 - Algorithm Design.pdf
+    source_sha256: e11753413dd47283a293c0317f750f7fa658ab7c6148ecde705bd038f2f9a5a1
+    physical_page: 13
+    evidence_quote: '1.1 A First Problem: Stable Matching'
+    has_route: true
+    route:
+      module_id: module-hu-algo2
+      unit_id: unit-algo2-exam-prep
+      route_id: route-68ef8ceadd9c6341d3e09d73
+- id: HELD2-02
+  question: Wie wählt der Edmonds-Karp-Algorithmus augmentierende Pfade im Flussnetzwerk?
+  category: algorithms
+  expected_status: answerable
+  targets:
+  - material: materials/algo2/slides/6-Maximaler Fluss.pdf
+    source_sha256: 4498e92c87830c9f5c8763336907bf0a7531a89b74f9951940fca793126057b7
+    physical_page: 37
+    evidence_quote: Der Edmonds-Karp-Algorithmus
+    has_route: false
+    route: null
+- id: HELD2-03
+  question: How does off-policy Q-learning update action-value estimates in reinforcement
+    learning?
+  category: algorithms
+  expected_status: answerable
+  targets:
+  - material: materials/aml/books/Reinforcement Learning An Introduction (2nd Edition)
+      - Richard S. Sutton and Andrew G. Barto.pdf
+    source_sha256: 27315c19a012518bf483bcb1c00e0768bd9047bb61d36f79e036e202c1fca8dc
+    physical_page: 153
+    evidence_quote: known as Q-learning (Watkins, 1989)
+    has_route: false
+    route: null
+- id: HELD2-04
+  question: Wie reduziert der Algorithmus von Hopcroft und Karp maximale bipartite
+    Matchings auf Flüsse oder augmentierende Pfade?
+  category: algorithms
+  expected_status: answerable
+  targets:
+  - material: materials/algo2/books/Ottmann, Widmayer - 2017 - Algorithmen und Datenstrukturen.pdf
+    source_sha256: dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf
+    physical_page: 665
+    evidence_quote: 9.8.1 Maximale Zuordnungen in bipartiten Graphen
+    has_route: true
+    route:
+      module_id: module-hu-algo2
+      unit_id: unit-algo2-exam-prep
+      route_id: route-520f63344f33115bd302d37b
+- id: HELD2-05
+  question: Wie sind Lorenzkurve und Gini-Koeffizient als Maße relativer Konzentration
+    definiert?
+  category: german_terms
+  expected_status: answerable
+  targets:
+  - material: materials/sad/books/Fahrmeir et al. - 2016 - Statistik.pdf
+    source_sha256: f65389b9a2e65ba6178380fb7eb985c28003cf9d258036a80b1c77ebf1322c31
+    physical_page: 93
+    evidence_quote: 'Relative Konzentration: Lorenzkurve und Gini-Koeﬃzient'
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-sad-exam-prep
+      route_id: route-5ef907d26eefddbfc3abd22c
+- id: HELD2-06
+  question: Was versteht man unter universellem Hashing und 2-universellen Familien?
+  category: german_terms
+  expected_status: answerable
+  targets:
+  - material: materials/algo2/books/Dietzfelbinger et al. - 2014 - Diskrete Mathematik
+      für Studierende der Informatik Grundwerkzeuge.pdf
+    source_sha256: 69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5
+    physical_page: 119
+    evidence_quote: 4.2 Universelles Hashing
+    has_route: true
+    route:
+      module_id: module-hu-algo2
+      unit_id: unit-algo2-exam-prep
+      route_id: route-854918de47c2f87b0a09f74c
+- id: HELD2-07
+  question: Wie funktioniert das Beweisschema für einen Widerspruchsbeweis in mathematischen
+    Beweisen?
+  category: german_terms
+  expected_status: answerable
+  targets:
+  - material: materials/analysis/books/Ohlbach, Eisinger - Design Patterns für mathematische
+      Beweise.pdf
+    source_sha256: 271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e
+    physical_page: 55
+    evidence_quote: Beweisschema 30 (Widerspruchsbeweis)
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+- id: HELD2-08
+  question: Wie lautet die arithmetische Summenformel bzw. Gaußsche Summenformel im
+    Analysis-Skript?
+  category: german_terms
+  expected_status: answerable
+  targets:
+  - material: materials/analysis/skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 16
+    evidence_quote: arithmetische Summe (Gaußsche Summenformel
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+- id: HELD2-09
+  question: How does the GroupBy context operate on expressions in Python Polars?
+  category: english_terms
+  expected_status: answerable
+  targets:
+  - material: materials/polars/books/Python Polars The Definitive Guide.pdf
+    source_sha256: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+    physical_page: 371
+    evidence_quote: GroupBy Context
+    has_route: true
+    route:
+      module_id: module-job-polars
+      unit_id: unit-job-polars-aggregation-windows
+      route_id: route-polars-definitive-guide-s06
+- id: HELD2-10
+  question: How does functools.cache work as a memoization decorator in modern Python?
+  category: english_terms
+  expected_status: answerable
+  targets:
+  - material: materials/python/books/Fluent Python 2e.pdf
+    source_sha256: db97c77518c68ce3db19da8f65e9f8dd8f9494fcbba59dddb0ed1796973f7e35
+    physical_page: 334
+    evidence_quote: The caching decorator functools.cache—new in Python 3.9
+    has_route: true
+    route:
+      module_id: module-job-python-engineering
+      unit_id: unit-job-python-decorators-registration
+      route_id: route-python-decorators-registration-fp-1
+- id: HELD2-11
+  question: How does an SSTable (Sorted String Table) structure segment files and
+    log-structured storage engines?
+  category: english_terms
+  expected_status: answerable
+  targets:
+  - material: materials/cs-general/books/Designing Data-Intensive Applications.pdf
+    source_sha256: 3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394
+    physical_page: 98
+    evidence_quote: We call this format Sorted String Table, or SSTable for short.
+    has_route: false
+    route: null
+- id: HELD2-12
+  question: Wie ist eine obere Schranke für eine Teilmenge reeller Zahlen im MfNF
+    Analysis-1 Skript definiert?
+  category: definitions
+  expected_status: answerable
+  targets:
+  - material: materials/analysis/books/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 32
+    evidence_quote: Sei M eine Teilmenge von R. Dann nennt man eine Zahl u, die größer
+      gleich
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-analysis-ch02
+      route_id: route-an-ch02-mfnfanalysis1
+- id: HELD2-13
+  question: Wie lauten die definierenden Eigenschaften eines B-Baums nach Cormen et
+    al.?
+  category: definitions
+  expected_status: answerable
+  targets:
+  - material: materials/algo2/books/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 513
+    evidence_quote: 18.1 Die Deﬁnition von B-Bäumen
+    has_route: true
+    route:
+      module_id: module-hu-algo2
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+- id: HELD2-14
+  question: How is expected test MSE decomposed into variance, bias, and irreducible
+    error in ISLP?
+  category: definitions
+  expected_status: answerable
+  targets:
+  - material: materials/aml/books/An Introduction to Statistical Learning with Applications
+      in Python - Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani,
+      Jonathan Taylor.pdf
+    source_sha256: 278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60
+    physical_page: 42
+    evidence_quote: always be decomposed into the sum of three fundamental quantities
+    has_route: true
+    route:
+      module_id: module-hu-aml
+      unit_id: unit-aml-l01
+      route_id: route-21f9795d5af805470f6b7aa8
+- id: HELD2-15
+  question: How is Bayes rule stated formally for conditional probabilities in Blitzstein
+    and Hwang?
+  category: math_notation
+  expected_status: answerable
+  targets:
+  - material: materials/sad/books/Blitzstein, Hwang - 2019 - Introduction to probability.pdf
+    source_sha256: 822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf
+    physical_page: 70
+    evidence_quote: Theorem 2.3.3 (Bayes’ rule).
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-sad-exam-prep
+      route_id: route-d24a91f3c931a404ae77ff90
+- id: HELD2-16
+  question: How does Ross formalize the countably additive axiom of probability for
+    mutually exclusive events?
+  category: math_notation
+  expected_status: answerable
+  targets:
+  - material: materials/sad/books/Ross - 2010 - A first course in probability.pdf
+    source_sha256: e9377336bf485e9ddbde51ce2078489a52561149d1adb353c4b3d643896cb67d
+    physical_page: 55
+    evidence_quote: For any sequence of mutually exclusive events
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-sad-l04
+      route_id: route-8de21f881a829cb3dec1d55d
+- id: HELD2-17
+  question: How is the formal epsilon-N limit of a real sequence defined in Stewart
+    Calculus?
+  category: math_notation
+  expected_status: answerable
+  targets:
+  - material: materials/analysis/books/Stewart - Calculus.pdf
+    source_sha256: a0d90ace7476d1a940e2e5ccea25a08fd97639bfcc6e1a0cce2c6544ff8fc54f
+    physical_page: 728
+    evidence_quote: 1 Definition A sequence ha n j has the limit L and we write
+    has_route: true
+    route:
+      module_id: module-hu-m2-statistik-analysis
+      unit_id: unit-m2-analysis-ch03
+      route_id: route-an-ch03-stewartcalculus
+- id: HELD2-18
+  question: How does ESL derive nearest-neighbor methods as an approximation to regression
+    and compare them to least squares?
+  category: derivations
+  expected_status: answerable
+  targets:
+  - material: materials/aml/books/The Elements of Statistical Learning - Trevor Hastie,
+      Robert Tibshirani, Jerome Friedman.pdf
+    source_sha256: 8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f
+    physical_page: 35
+    evidence_quote: 2.3.3 From Least Squares to Nearest Neighbors
+    has_route: true
+    route:
+      module_id: module-hu-aml
+      unit_id: unit-aml-l02
+      route_id: route-f57ab8d5f480edd3bc6cf623
+- id: HELD2-19
+  question: How is Nesterov Accelerated Gradient momentum derived and formulated in
+    Hands-On Machine Learning?
+  category: derivations
+  expected_status: answerable
+  targets:
+  - material: materials/aml/books/Hands-On Machine Learning with Scikit-Learn, Keras,
+      and TensorFlow (3rd Edition) - Aurelien Geron.pdf
+    source_sha256: 99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa
+    physical_page: 488
+    evidence_quote: Equation 11-6. Nesterov accelerated gradient algorithm
+    has_route: true
+    route:
+      module_id: module-hu-aml
+      unit_id: unit-aml-exam-prep
+      route_id: route-53277505603f22eedc9d81b7
+- id: HELD2-20
+  question: How is Newton optimization method derived using the Hessian matrix in
+    Murphy PML1?
+  category: derivations
+  expected_status: answerable
+  targets:
+  - material: materials/aml/books/Probabilistic Machine Learning An Introduction -
+      Kevin P. Murphy.pdf
+    source_sha256: 89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf
+    physical_page: 319
+    evidence_quote: The classic second-order method is Newton’s method.
+    has_route: true
+    route:
+      module_id: module-hu-aml
+      unit_id: unit-aml-exam-prep
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+- id: HELD2-21
+  question: How do syndrome measurements detect bit-flip and phase-flip errors in
+    surface code quantum error correction?
+  category: unanswerable
+  expected_status: unanswerable
+  targets: []
+- id: HELD2-22
+  question: What conformational changes in Cas9 endonuclease induce double-strand
+    DNA cleavage at target protospacer adjacent motifs?
+  category: unanswerable
+  expected_status: unanswerable
+  targets: []
+- id: HELD2-23
+  question: How was damnum iniuria datum defined under chapter three of the Lex Aquilia
+    in classical Roman delict law?
+  category: unanswerable
+  expected_status: unanswerable
+  targets: []
+- id: HELD2-24
+  question: How does the Polonius borrow checker validate non-lexical lifetimes across
+    match guard evaluations in Rust?
+  category: unanswerable
+  expected_status: unanswerable
+  targets: []

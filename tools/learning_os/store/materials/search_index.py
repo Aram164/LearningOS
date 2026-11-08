@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = 1
-INDEX_TOKENIZER = "unicode61"
+INDEX_TOKENIZER = "unicode61 remove_diacritics 2"
 EXTRACTOR_NAME = "pdftotext+pypdf"
 DEFAULT_SEARCH_LIMIT = 10
 MAX_SEARCH_LIMIT = 50
@@ -30,29 +30,12 @@ MAX_QUERY_LENGTH = 500
 # High-frequency grammatical function words (German & English)
 # Kept identical to the validated Stage-3c benchmark
 STOPWORDS = frozenset({
-    # German stopwords
-    "der", "die", "das", "ein", "eine", "einer", "einem", "einen", "eines",
-    "und", "oder", "aber", "denn", "weil", "wenn", "als", "wie", "so",
-    "in", "im", "an", "am", "auf", "aus", "bei", "beim", "mit", "nach",
-    "von", "vom", "zu", "zum", "zur", "über", "unter", "vor", "zwischen",
-    "durch", "für", "gegen", "ohne", "um", "ist", "sind", "war", "waren",
-    "wird", "werden", "wurde", "wurden", "hat", "haben", "hatte", "hatten",
-    "kann", "können", "konnte", "muss", "müssen", "musste", "soll", "sollte",
-    "nicht", "kein", "keine", "keinem", "keinen", "keiner", "keines",
-    "ich", "du", "er", "sie", "es", "wir", "ihr", "man", "sich", "was", "wer",
-    "wo", "wann", "warum", "welche", "welcher", "welches", "welchem",
-    "diese", "dieser", "dieses", "diesem", "diesen", "jenes", "jener",
-    # English stopwords
-    "the", "a", "and", "or", "but", "if", "then", "else", "when",
-    "at", "by", "for", "with", "about", "against", "between", "into",
-    "through", "during", "before", "after", "above", "below", "to", "from",
-    "up", "down", "out", "on", "off", "over", "under", "again",
-    "is", "are", "were", "be", "been", "being", "have", "has", "had",
-    "having", "do", "does", "did", "doing", "can", "could", "shall", "should",
-    "will", "would", "may", "might", "must", "not", "no", "nor", "too",
-    "very", "just", "where", "how", "all", "any", "both", "each", "few",
-    "more", "most", "other", "some", "such", "than", "that", "this", "these",
-    "those", "what", "which", "who", "whom", "why"
+    "der", "die", "das", "des", "dem", "den", "ein", "eine", "einer", "eines", "einem", "einen",
+    "in", "im", "von", "vom", "zu", "zum", "zur", "mit", "auf", "an", "am", "aus", "bei", "beim",
+    "und", "oder", "aber", "nach", "über", "uber", "unter", "vor", "zwischen", "durch", "für", "fur",
+    "ist", "sind", "wird", "werden", "wie", "wo", "wer", "was",
+    "the", "a", "an", "and", "or", "in", "on", "at", "to", "for", "of", "with", "by", "from",
+    "is", "are", "was", "were", "be", "been", "that", "this", "which",
 })
 
 
@@ -344,12 +327,12 @@ def execute_search(
             if len(raw_candidates) >= (offset + limit * 3):
                 break
             sql = """
-            SELECT source_sha256, page_no, source_id, title,
+            SELECT source_sha256, page_no, source_id,
                    bm25(material_fts) AS score,
-                   snippet(material_fts, 4, '[', ']', ' … ', 20) AS excerpt
+                   snippet(material_fts, 3, '[', ']', ' … ', 20) AS excerpt
             FROM material_fts
             WHERE material_fts MATCH ?
-            ORDER BY rank
+            ORDER BY rank, source_sha256, page_no
             LIMIT ?;
             """
             try:
@@ -363,9 +346,9 @@ def execute_search(
                                 "source_sha256": r[0],
                                 "physical_page": int(r[1]),
                                 "source_id": r[2],
-                                "title": r[3],
-                                "score": float(r[4]),
-                                "snippet": r[5],
+                                "title": "",
+                                "score": float(r[3]),
+                                "snippet": r[4],
                             }
                         )
             except sqlite3.OperationalError:

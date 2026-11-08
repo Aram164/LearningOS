@@ -363,7 +363,7 @@ class BaselineBEvaluator:
 
         t_retrieval_e2e_ms = (time.perf_counter() - t0_e2e) * 1000.0
 
-        for c in final_candidates:
+        for c in candidates:
             if "_body" in c:
                 c["body_chars"] = len(c.pop("_body"))
             if "snippet" in c:

@@ -157,15 +157,14 @@ def build_index_generation(repo_root: Path, force: bool = False) -> tuple[str, P
         source_sha256 UNINDEXED,
         page_no UNINDEXED,
         source_id UNINDEXED,
-        title,
         body,
         tokenize = '{INDEX_TOKENIZER}'
     );
     """)
 
     insert_sql = """
-    INSERT INTO material_fts (source_sha256, page_no, source_id, title, body)
-    VALUES (?, ?, ?, ?, ?);
+    INSERT INTO material_fts (source_sha256, page_no, source_id, body)
+    VALUES (?, ?, ?, ?);
     """
 
     total_pages_scanned = 0
@@ -213,7 +212,7 @@ def build_index_generation(repo_root: Path, force: bool = False) -> tuple[str, P
                         }
                     )
                     continue
-                batch.append((sha, page_no, doc_source_id, doc_title, body_text))
+                batch.append((sha, page_no, doc_source_id, body_text))
                 if len(batch) >= BATCH_SIZE:
                     cur.executemany(insert_sql, batch)
                     con.commit()
