@@ -50,3 +50,51 @@ Evaluation of the newly built production index generation (`gen_d054a3d02c25715e
 | **Strict R@3** | 0.22 (2/9) | **0.22 (2/9)** | 0.00 |
 | **Strict R@5** | 0.56 (5/9) | **0.56 (5/9)** | 0.00 (5/9 preserved) |
 | **Topical R@5** | 0.56 (5/9) | **0.56 (5/9)** | 0.00 |
+
+---
+
+## 4. Pre-Registered Fresh Held-Out v2 Benchmark (Step 3.4 & 3.5)
+
+- **Dataset:** `workbench/material_search_eval/questions_heldout_v2.yaml` (24 queries: 20 answerable + 4 unanswerable controls).
+- **Pre-Registration Commit:** `4d60b81` (`PREREGISTRATION.md`, pinned to SHA256 `aab7d34bc258a643ffdbc157008e5e576e8173fe4142e5289dc38fe21f58a20a` before execution).
+- **Result File:** `workbench/material_search_eval/stage_5_results_heldout_v2.json` (B3 compliant: character counts only, zero page text).
+
+### Aggregate Results Across Competing Arms
+
+| Metric | FTS5 Production | Baseline B (Grep Scan) | Baseline A (Official Workflow) |
+|---|---|---|---|
+| **Strict R@1** | **0.25 (5/20)** | 0.15 (3/20) | 0.00 (0/20) |
+| **Strict R@3** | **0.45 (9/20)** | 0.35 (7/20) | 0.05 (1/20) |
+| **Strict R@5** | **0.65 (13/20)** | 0.35 (7/20) | 0.10 (2/20) |
+| **Strict MRR** | **0.3892** | 0.2333 | 0.0267 |
+| **Verified Target Evidence @5** | **0.40 (8/20)** | 0.25 (5/20) | 0.00 (0/20) |
+| **Avg Tool Calls** | 3.75 | 2.63 | 4.00 |
+| **Avg Bytes Transferred** | **11,701.2 B** | 12,447.5 B | 15,623.8 B |
+| **Index Query p50 Latency** | **43.33 ms** (p95: 81.67 ms) | N/A (full scan) | N/A |
+| **E2E Retrieval p50 Latency** | **1,994.52 ms** (p95: 3,600.66 ms) | 6,836.91 ms (p95: 8,300.37 ms) | 2,745.29 ms (p95: 3,318.75 ms) |
+
+### Paired Comparison: Exact McNemar Test (Strict R@5 on 20 Answerable Queries)
+
+| Cell | Count | Queries |
+|---|---|---|
+| **Both Hit (FTS5+ / Grep+)** | 6 | `HELD2-10`, `HELD2-11`, `HELD2-12`, `HELD2-14`, `HELD2-15`, `HELD2-20` |
+| **FTS5 Only ($b$: FTS5+ / Grep-)** | **7** | `HELD2-01`, `HELD2-02`, `HELD2-05`, `HELD2-06`, `HELD2-08`, `HELD2-09`, `HELD2-16` |
+| **Grep Only ($c$: Grep+ / FTS5-)** | **1** | `HELD2-07` |
+| **Both Miss (FTS5- / Grep-)** | 6 | `HELD2-03`, `HELD2-04`, `HELD2-13`, `HELD2-17`, `HELD2-18`, `HELD2-19` |
+| **Exact Two-Sided McNemar $p$-value** | **0.0703** (`0.0703125`) | — |
+
+### Evaluation of Pre-Registered Decision Rule
+
+1. **Condition 1 — Strict Recall@5:**
+   $$\text{Strict R@5}(\text{FTS5}) = 13/20 \ge \text{Strict R@5}(\text{Grep Scan}) - 2 = 7/20 - 2/20 = 5/20$$
+   FTS5 exceeded the Grep Scan by $+6$ strict hits (+30 percentage points). **PASS.**
+2. **Condition 2 — p50 Latency:**
+   $$\text{p50 Latency}(\text{FTS5}) < \text{p50 Latency}(\text{Grep Scan})$$
+   Both SQL query p50 (`43.33 ms`) and end-to-end retrieval p50 (`1,994.52 ms`) are strictly below Grep Scan p50 (`6,836.91 ms`). **PASS.**
+3. **Product Viability Gate — Baseline A Comparison:**
+   $$\text{Strict R@3}(\text{FTS5}) = 0.45 > \text{Strict R@3}(\text{Baseline A}) = 0.05$$
+   FTS5 beats Baseline A by $+40$ percentage points on Strict R@3 while transferring fewer average bytes (`11,701 B` vs `15,624 B`). **PASS.**
+
+### Decision Outcome
+
+**FTS5 stays as the production backend.** Proceed to Phase 4 (Index Identity & Lifecycle) and Phase 5 (Query Path).
