@@ -80,30 +80,94 @@ DEFAULT_VM_STEP_BUDGET = 20_000_000
 _HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
 _INDEX_FILE_RE = re.compile(r"^index-([0-9a-f]{16})\.sqlite3$")
 
-REQUIRED_META_KEYS = frozenset({
-    "schema_version",
-    "tokenizer",
-    "fingerprint",
-    "extractor",
-    "built_at",
-    "documents_indexed",
-    "documents_total",
-    "documents_without_text",
-    "pages_indexed",
-    "pages_without_text",
-    "pages_total",
-})
+REQUIRED_META_KEYS = frozenset(
+    {
+        "schema_version",
+        "tokenizer",
+        "fingerprint",
+        "extractor",
+        "built_at",
+        "documents_indexed",
+        "documents_total",
+        "documents_without_text",
+        "pages_indexed",
+        "pages_without_text",
+        "pages_total",
+    }
+)
 
 # High-frequency grammatical function words (German & English)
 # Kept identical to the validated Stage-3c benchmark (fts5_reranker.py:20)
-STOPWORDS = frozenset({
-    "der", "die", "das", "des", "dem", "den", "ein", "eine", "einer", "eines", "einem", "einen",
-    "in", "im", "von", "vom", "zu", "zum", "zur", "mit", "auf", "an", "am", "aus", "bei", "beim",
-    "und", "oder", "aber", "nach", "über", "uber", "unter", "vor", "zwischen", "durch", "für", "fur",
-    "ist", "sind", "wird", "werden", "wie", "wo", "wer", "was",
-    "the", "a", "and", "or", "on", "at", "to", "for", "of", "with", "by", "from",
-    "is", "are", "were", "be", "been", "that", "this", "which",
-})
+STOPWORDS = frozenset(
+    {
+        "der",
+        "die",
+        "das",
+        "des",
+        "dem",
+        "den",
+        "ein",
+        "eine",
+        "einer",
+        "eines",
+        "einem",
+        "einen",
+        "in",
+        "im",
+        "von",
+        "vom",
+        "zu",
+        "zum",
+        "zur",
+        "mit",
+        "auf",
+        "an",
+        "am",
+        "aus",
+        "bei",
+        "beim",
+        "und",
+        "oder",
+        "aber",
+        "nach",
+        "über",
+        "uber",
+        "unter",
+        "vor",
+        "zwischen",
+        "durch",
+        "für",
+        "fur",
+        "ist",
+        "sind",
+        "wird",
+        "werden",
+        "wie",
+        "wo",
+        "wer",
+        "was",
+        "the",
+        "a",
+        "and",
+        "or",
+        "on",
+        "at",
+        "to",
+        "for",
+        "of",
+        "with",
+        "by",
+        "from",
+        "is",
+        "are",
+        "were",
+        "be",
+        "been",
+        "that",
+        "this",
+        "which",
+    }
+)
 
 
 def norm_token(text: str) -> str:
@@ -429,7 +493,9 @@ class IndexReader:
             meta: dict[str, str] = {}
             for k, v in meta_rows:
                 if not isinstance(k, str) or not isinstance(v, str):
-                    raise GenerationError("index_corrupt", "Index meta table contains non-text values.")
+                    raise GenerationError(
+                        "index_corrupt", "Index meta table contains non-text values."
+                    )
                 meta[k] = v
 
             if not REQUIRED_META_KEYS.issubset(meta.keys()):
@@ -623,7 +689,9 @@ def check_index_integrity(
     con_fts: sqlite3.Connection | None = None
     try:
         con_fts = sqlite3.connect(str(db_path), timeout=5.0)
-        con_fts.execute("INSERT INTO material_fts(material_fts, rank) VALUES('integrity-check', 1);")
+        con_fts.execute(
+            "INSERT INTO material_fts(material_fts, rank) VALUES('integrity-check', 1);"
+        )
     except sqlite3.DatabaseError as exc:
         raise GenerationError("index_corrupt", f"FTS5 integrity-check failed: {exc}") from exc
     finally:
@@ -682,12 +750,14 @@ def _build_coverage_block(
     for sha in sorted(reader.docs.keys()):
         doc = reader.docs[sha]
         if doc.pages_indexed == 0:
-            docs_without_text.append({
-                "sha256": doc.sha256,
-                "material": doc.material,
-                "pages_total": doc.pages_total,
-                "pages_without_text": doc.pages_without_text,
-            })
+            docs_without_text.append(
+                {
+                    "sha256": doc.sha256,
+                    "material": doc.material,
+                    "pages_total": doc.pages_total,
+                    "pages_without_text": doc.pages_without_text,
+                }
+            )
 
     excluded_entries: list[dict[str, object]] = [
         {
@@ -719,13 +789,15 @@ def _build_coverage_block(
         if reason is not None:
             unindexed_route_shas.add(sha)
             b_list = bindings_by_sha[sha]
-            unindexed_route_materials.append({
-                "sha256": sha,
-                "material": mat_path,
-                "reason": reason,
-                "bindings": [b.to_dict() for b in b_list[:MAX_BINDINGS_RETURNED]],
-                "bindings_total": len(b_list),
-            })
+            unindexed_route_materials.append(
+                {
+                    "sha256": sha,
+                    "material": mat_path,
+                    "reason": reason,
+                    "bindings": [b.to_dict() for b in b_list[:MAX_BINDINGS_RETURNED]],
+                    "bindings_total": len(b_list),
+                }
+            )
 
     if unit_id is not None or module_id is not None:
         scope_complete = True
@@ -858,9 +930,7 @@ def execute_search(
 
     if loaded_repo is not None:
         if unit_id is not None and unit_id not in loaded_repo.units:
-            complaint = with_suggestions(
-                f"unknown unit: {unit_id!r}", unit_id, loaded_repo.units
-            )
+            complaint = with_suggestions(f"unknown unit: {unit_id!r}", unit_id, loaded_repo.units)
             raise NotFound(
                 "unit",
                 unit_id,

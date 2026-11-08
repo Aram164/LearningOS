@@ -46,14 +46,10 @@ from learning_os.store.materials.search_index import (  # noqa: E402
     open_index,
 )
 
-needs_pdftotext = pytest.mark.skipif(
-    shutil.which("pdftotext") is None, reason="pdftotext missing"
-)
+needs_pdftotext = pytest.mark.skipif(shutil.which("pdftotext") is None, reason="pdftotext missing")
 
 RESPONSE_SCHEMA = json.loads(
-    (REPO_ROOT / "system" / "schema" / "material-search.schema.json").read_text(
-        encoding="utf-8"
-    )
+    (REPO_ROOT / "system" / "schema" / "material-search.schema.json").read_text(encoding="utf-8")
 )
 DUMMY_SNAPSHOT = "sha256:" + "0" * 64
 
@@ -135,9 +131,7 @@ def test_build_search_and_span_reference_integration(world: Path) -> None:
         invocation="query",
         gateway=None,
     )
-    outcome = REGISTRY["material.search"].handler(
-        ctx_search, {"query": "Chebyshev", "limit": 5}
-    )
+    outcome = REGISTRY["material.search"].handler(ctx_search, {"query": "Chebyshev", "limit": 5})
     assert outcome is not None
     payload = outcome.payload
     _validate_response(payload)
@@ -407,9 +401,7 @@ def test_os_replace_failure_preserves_old_index_and_busy_lock_exits_3(
 
     assert active_db.is_file()
     leftovers = [
-        p.name
-        for p in get_search_base_dir(world).iterdir()
-        if p.name.startswith(".build-")
+        p.name for p in get_search_base_dir(world).iterdir() if p.name.startswith(".build-")
     ]
     assert leftovers == []
 
@@ -447,10 +439,7 @@ def test_shared_pdf_across_units_and_sql_pre_limit_filtering(world: Path) -> Non
     distractor_pdf = world.parent / "materials" / "source-demo-book" / "distractor.pdf"
     write_minimal_pdf(
         distractor_pdf,
-        [
-            f"Expected Expected Expected Expected distractor page {i}"
-            for i in range(1, 21)
-        ],
+        [f"Expected Expected Expected Expected distractor page {i}" for i in range(1, 21)],
     )
     _refresh_manifest_and_text_cache(world)
     builder.build_index_generation(world, force=True)

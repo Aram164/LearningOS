@@ -1289,6 +1289,20 @@ documents:
     summary: >-
       Developer architecture documentation for ADR-019-operator-developer-documentation-2026-10-25.
 
+  - path: system/adr/ADR-020-derived-material-search-index-2026-11-08.md
+    audience: developer
+    applies_to: []
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Permits one disposable, rebuildable, read-only SQLite FTS5 search index
+      under generated/material-search/ over the local PDF page-text cache,
+      preserving the ban on any database or server as a store of record.
+    amends:
+      - system/ARCHITECTURE.md
+
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build bounded searchable views over already-loaded knowledge.
+Build bounded searchable views over already-loaded knowledge (for full-text search over local PDF material pages, see [materials](materials.md)).
 
 ## Owned paths
 
@@ -31,3 +31,4 @@ Used by: `operation-handlers`.
 ## Binding ADRs
 
 - `system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md`
+- `system/adr/ADR-020-derived-material-search-index-2026-11-08.md`

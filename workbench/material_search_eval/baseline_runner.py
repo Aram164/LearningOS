@@ -67,18 +67,22 @@ class BaselineAEvaluator:
                 file_shas = [sha256_file(Path(f.path)).removeprefix("sha256:") for f in files]
                 locator = r.get("locator", "")
                 title = r.get("title", "")
-                self.routes_catalog.append({
-                    "unit_id": unit.id,
-                    "route_id": r.get("id"),
-                    "module_id": unit.module_id,
-                    "source_id": r.get("source_id"),
-                    "locator": locator,
-                    "title": title,
-                    "file_shas": file_shas,
-                    "searchable_text": norm(f"{title} {locator} {r.get('id')}")
-                })
+                self.routes_catalog.append(
+                    {
+                        "unit_id": unit.id,
+                        "route_id": r.get("id"),
+                        "module_id": unit.module_id,
+                        "source_id": r.get("source_id"),
+                        "locator": locator,
+                        "title": title,
+                        "file_shas": file_shas,
+                        "searchable_text": norm(f"{title} {locator} {r.get('id')}"),
+                    }
+                )
 
-    def run_query(self, query_entry: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int, float, bool]:
+    def run_query(
+        self, query_entry: dict[str, Any]
+    ) -> tuple[list[dict[str, Any]], int, int, float, bool]:
         t0 = time.perf_counter()
         query_text = query_entry.get("query") or query_entry.get("question")
         targets = query_entry.get("targets", [])
@@ -91,11 +95,14 @@ class BaselineAEvaluator:
 
         # Step 1: Run material.context
         tool_calls += 1
-        req_payload = {
-            "query": query_text,
-            "limit": 10
-        }
-        ctx = OpContext(root=self.repo_root, operation="material.context", channel="cli", invocation="query", gateway=None)
+        req_payload = {"query": query_text, "limit": 10}
+        ctx = OpContext(
+            root=self.repo_root,
+            operation="material.context",
+            channel="cli",
+            invocation="query",
+            gateway=None,
+        )
         try:
             res_result = REGISTRY["material.context"].handler(ctx, req_payload)
             res_data = res_result.payload if res_result else {}
@@ -130,12 +137,14 @@ class BaselineAEvaluator:
         target_quotes = [t["evidence_quote"] for t in targets]
         for uid, rid in found_routes[:3]:
             tool_calls += 1
-            span_req = {
-                "unit_id": uid,
-                "route_id": rid,
-                "extract": True
-            }
-            ctx_span = OpContext(root=self.repo_root, operation="material.span", channel="cli", invocation="query", gateway=None)
+            span_req = {"unit_id": uid, "route_id": rid, "extract": True}
+            ctx_span = OpContext(
+                root=self.repo_root,
+                operation="material.span",
+                channel="cli",
+                invocation="query",
+                gateway=None,
+            )
             try:
                 span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                 span_data = span_res.payload if span_res else {}
@@ -153,12 +162,14 @@ class BaselineAEvaluator:
 
                     # Add candidates per page
                     for p in pages:
-                        candidates.append({
-                            "source_sha256": sha,
-                            "physical_page": p,
-                            "score": 1.0,
-                            "snippet_chars": len(excerpt[:100])
-                        })
+                        candidates.append(
+                            {
+                                "source_sha256": sha,
+                                "physical_page": p,
+                                "score": 1.0,
+                                "snippet_chars": len(excerpt[:100]),
+                            }
+                        )
 
                     # Check if evidence quote was verified
                     for tq in target_quotes:
@@ -201,7 +212,9 @@ class BaselineBEvaluator:
                 page_no = int(p.stem.split("-")[1])
                 self.index_entries.append((sha, page_no, p))
 
-    def run_query(self, query_entry: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int, float, bool]:
+    def run_query(
+        self, query_entry: dict[str, Any]
+    ) -> tuple[list[dict[str, Any]], int, int, float, bool]:
         t0 = time.perf_counter()
         query_text = query_entry.get("query") or query_entry.get("question")
         targets = query_entry.get("targets", [])
@@ -239,12 +252,14 @@ class BaselineBEvaluator:
 
         candidates = []
         for score, sha, page_no, snippet in matches[:5]:
-            candidates.append({
-                "source_sha256": sha,
-                "physical_page": page_no,
-                "score": score,
-                "snippet_chars": len(snippet[:100])
-            })
+            candidates.append(
+                {
+                    "source_sha256": sha,
+                    "physical_page": page_no,
+                    "score": score,
+                    "snippet_chars": len(snippet[:100]),
+                }
+            )
 
         # Measure bytes transferred (search output payload)
         bytes_transferred += len(json.dumps(candidates).encode("utf-8"))
@@ -264,9 +279,15 @@ class BaselineBEvaluator:
                     "unit_id": uid,
                     "route_id": rid,
                     "pages": f"pdf p. {page}",
-                    "extract": True
+                    "extract": True,
                 }
-                ctx_span = OpContext(root=REPO_ROOT, operation="material.span", channel="cli", invocation="query", gateway=None)
+                ctx_span = OpContext(
+                    root=REPO_ROOT,
+                    operation="material.span",
+                    channel="cli",
+                    invocation="query",
+                    gateway=None,
+                )
                 try:
                     span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                     span_data = span_res.payload if span_res else {}
@@ -299,10 +320,24 @@ class BaselineBEvaluator:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run Baseline A and B for LearningOS Material Search.")
-    parser.add_argument("--dataset", choices=["dev", "heldout", "all"], default="dev", help="Which dataset to evaluate.")
-    parser.add_argument("--arm", choices=["all", "baseline_a", "baseline_b"], default="all", help="Which baseline arm to run.")
-    parser.add_argument("--json-out", type=str, default="", help="Path to write JSON benchmark results.")
+    parser = argparse.ArgumentParser(
+        description="Run Baseline A and B for LearningOS Material Search."
+    )
+    parser.add_argument(
+        "--dataset",
+        choices=["dev", "heldout", "all"],
+        default="dev",
+        help="Which dataset to evaluate.",
+    )
+    parser.add_argument(
+        "--arm",
+        choices=["all", "baseline_a", "baseline_b"],
+        default="all",
+        help="Which baseline arm to run.",
+    )
+    parser.add_argument(
+        "--json-out", type=str, default="", help="Path to write JSON benchmark results."
+    )
     args = parser.parse_args()
 
     cache_dir = REPO_ROOT / "generated/text-cache"
@@ -344,17 +379,27 @@ def main() -> int:
                 bytes_transferred=bt,
                 t_sql_ms=0.0,
                 t_retrieval_e2e_ms=dur,
-                verified_span_success=ver
+                verified_span_success=ver,
             )
             evals_a.append(q_eval)
-            hit_flag = "✓ Strict@1" if q_eval.strict_hit_at_1 else ("✓ Top@3" if q_eval.topical_hit_at_3 else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss"))
+            hit_flag = (
+                "✓ Strict@1"
+                if q_eval.strict_hit_at_1
+                else (
+                    "✓ Top@3"
+                    if q_eval.topical_hit_at_3
+                    else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss")
+                )
+            )
             ver_flag = "✓ Ver" if ver else "–"
-            print(f"[{i:02d}/{len(queries)}] {qid} ({cat:15s}) -> {hit_flag} [{ver_flag}] in {dur:6.1f}ms ({tc} calls, {bt} B)")
+            print(
+                f"[{i:02d}/{len(queries)}] {qid} ({cat:15s}) -> {hit_flag} [{ver_flag}] in {dur:6.1f}ms ({tc} calls, {bt} B)"
+            )
 
         summary_a = calculate_summary_3b("Baseline A (LearningOS official)", evals_a)
         results_data["baseline_a"] = {
             "summary": summary_a.__dict__,
-            "queries": [e.__dict__ for e in evals_a]
+            "queries": [e.__dict__ for e in evals_a],
         }
 
     if args.arm in ("all", "baseline_b"):
@@ -373,17 +418,27 @@ def main() -> int:
                 bytes_transferred=bt,
                 t_sql_ms=0.0,
                 t_retrieval_e2e_ms=dur,
-                verified_span_success=ver
+                verified_span_success=ver,
             )
             evals_b.append(q_eval)
-            hit_flag = "✓ Strict@1" if q_eval.strict_hit_at_1 else ("✓ Top@3" if q_eval.topical_hit_at_3 else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss"))
+            hit_flag = (
+                "✓ Strict@1"
+                if q_eval.strict_hit_at_1
+                else (
+                    "✓ Top@3"
+                    if q_eval.topical_hit_at_3
+                    else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss")
+                )
+            )
             ver_flag = "✓ Ver" if ver else "–"
-            print(f"[{i:02d}/{len(queries)}] {qid} ({cat:15s}) -> {hit_flag} [{ver_flag}] in {dur:6.1f}ms ({tc} calls, {bt} B)")
+            print(
+                f"[{i:02d}/{len(queries)}] {qid} ({cat:15s}) -> {hit_flag} [{ver_flag}] in {dur:6.1f}ms ({tc} calls, {bt} B)"
+            )
 
         summary_b = calculate_summary_3b("Baseline B (Direct lexical grep)", evals_b)
         results_data["baseline_b"] = {
             "summary": summary_b.__dict__,
-            "queries": [e.__dict__ for e in evals_b]
+            "queries": [e.__dict__ for e in evals_b],
         }
 
     # Print summary comparison table
@@ -430,7 +485,13 @@ def main() -> int:
     ]
 
     for label, field_key, is_pct, is_ms in metrics:
-        print(row_fmt.format(label, sval("baseline_a", field_key, is_pct, is_ms), sval("baseline_b", field_key, is_pct, is_ms)))
+        print(
+            row_fmt.format(
+                label,
+                sval("baseline_a", field_key, is_pct, is_ms),
+                sval("baseline_b", field_key, is_pct, is_ms),
+            )
+        )
 
     print("=" * 92)
 

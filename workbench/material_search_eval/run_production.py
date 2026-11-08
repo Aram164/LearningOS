@@ -12,11 +12,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
 import pathlib
-import shutil
 import sys
-import tempfile
 import time
 import unicodedata
 from typing import Any
@@ -30,17 +27,20 @@ if str(TOOLS_DIR) not in sys.path:
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-import yaml
-from eval_metrics import calculate_summary_3c, evaluate_query_3c
-from fts5_reranker import is_index_or_toc_page
-from fts5_runner_3c import BaselineBEvaluator, build_sha_route_map
-from learning_os.app.context import OpContext
-from learning_os.app.registry import REGISTRY
-import learning_os.app.handlers  # noqa: F401
-from learning_os.domain.material_refs import unit_routes
-from learning_os.store.loading import load_repo
-from learning_os.store.materials import search_index as prod
-from learning_os.store.materials.resolution import resolve_route_material_files, sha256_file
+import yaml  # noqa: E402
+from eval_metrics import calculate_summary_3c, evaluate_query_3c  # noqa: E402
+from fts5_runner_3c import BaselineBEvaluator, build_sha_route_map  # noqa: E402
+
+import learning_os.app.handlers  # noqa: E402, F401
+from learning_os.app.context import OpContext  # noqa: E402
+from learning_os.app.registry import REGISTRY  # noqa: E402
+from learning_os.domain.material_refs import unit_routes  # noqa: E402
+from learning_os.store.loading import load_repo  # noqa: E402
+from learning_os.store.materials import search_index as prod  # noqa: E402
+from learning_os.store.materials.resolution import (  # noqa: E402
+    resolve_route_material_files,
+    sha256_file,
+)
 
 
 def norm(text: str) -> str:
@@ -65,25 +65,29 @@ class BaselineAEvaluator:
         self.repo = repo
         self.repo_root = repo_root
         self.routes_catalog: list[dict[str, Any]] = []
-        for unit_id, unit in repo.units.items():
+        for _unit_id, unit in repo.units.items():
             sm = repo.module_source_maps.get(unit.module_id)
             if not sm:
                 continue
             for r in unit_routes(sm, unit.module_id, unit.id):
                 files = resolve_route_material_files(repo, r)
-                file_shas = [sha256_file(pathlib.Path(f.path)).removeprefix("sha256:") for f in files]
+                file_shas = [
+                    sha256_file(pathlib.Path(f.path)).removeprefix("sha256:") for f in files
+                ]
                 locator = r.get("locator", "")
                 title = r.get("title", "")
-                self.routes_catalog.append({
-                    "unit_id": unit.id,
-                    "route_id": r.get("id"),
-                    "module_id": unit.module_id,
-                    "source_id": r.get("source_id"),
-                    "locator": locator,
-                    "title": title,
-                    "file_shas": file_shas,
-                    "searchable_text": norm(f"{title} {locator} {r.get('id')}")
-                })
+                self.routes_catalog.append(
+                    {
+                        "unit_id": unit.id,
+                        "route_id": r.get("id"),
+                        "module_id": unit.module_id,
+                        "source_id": r.get("source_id"),
+                        "locator": locator,
+                        "title": title,
+                        "file_shas": file_shas,
+                        "searchable_text": norm(f"{title} {locator} {r.get('id')}"),
+                    }
+                )
 
     def run_query(self, query_entry: dict[str, Any]) -> dict[str, Any]:
         t0_e2e = time.perf_counter()
@@ -98,11 +102,14 @@ class BaselineAEvaluator:
 
         # Step 1: Run material.context
         tool_calls += 1
-        req_payload = {
-            "query": raw_query,
-            "limit": 10
-        }
-        ctx = OpContext(root=self.repo_root, operation="material.context", channel="cli", invocation="query", gateway=None)
+        req_payload = {"query": raw_query, "limit": 10}
+        ctx = OpContext(
+            root=self.repo_root,
+            operation="material.context",
+            channel="cli",
+            invocation="query",
+            gateway=None,
+        )
         try:
             res_result = REGISTRY["material.context"].handler(ctx, req_payload)
             res_data = res_result.payload if res_result else {}
@@ -140,12 +147,14 @@ class BaselineAEvaluator:
 
         for uid, rid in found_routes[:3]:
             tool_calls += 1
-            span_req = {
-                "unit_id": uid,
-                "route_id": rid,
-                "extract": True
-            }
-            ctx_span = OpContext(root=self.repo_root, operation="material.span", channel="cli", invocation="query", gateway=None)
+            span_req = {"unit_id": uid, "route_id": rid, "extract": True}
+            ctx_span = OpContext(
+                root=self.repo_root,
+                operation="material.span",
+                channel="cli",
+                invocation="query",
+                gateway=None,
+            )
             try:
                 span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                 span_data = span_res.payload if span_res else {}
@@ -162,14 +171,16 @@ class BaselineAEvaluator:
                     pages = sp.get("pages", [])
 
                     for p in pages:
-                        candidates.append({
-                            "source_sha256": sha,
-                            "physical_page": p,
-                            "score": 1.0,
-                            "snippet_chars": len(excerpt[:100]),
-                            "is_mapped": True,
-                            "title": ""
-                        })
+                        candidates.append(
+                            {
+                                "source_sha256": sha,
+                                "physical_page": p,
+                                "score": 1.0,
+                                "snippet_chars": len(excerpt[:100]),
+                                "is_mapped": True,
+                                "title": "",
+                            }
+                        )
 
                     for tq in target_quotes:
                         if norm(tq) in norm(excerpt):
@@ -418,7 +429,9 @@ def main() -> int:
         "--arm", choices=["fts5", "grep", "baseline_a", "all"], default="all", help="Arm to run"
     )
     parser.add_argument("--json-out", type=pathlib.Path, default=None)
-    parser.add_argument("--check-parity", action="store_true", help="Check parity vs 3C frozen top-5")
+    parser.add_argument(
+        "--check-parity", action="store_true", help="Check parity vs 3C frozen top-5"
+    )
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
@@ -445,12 +458,19 @@ def main() -> int:
                 with open(ev / f"questions_{ds}.yaml") as f:
                     qs = yaml.safe_load(f)
                 with open(ev / f"stage_3c_results_{ds}.json") as f:
-                    stored = {e["query_id"]: e for e in json.load(f)["FTS5_Arm2_Tiered"]["evaluations"]}
+                    stored = {
+                        e["query_id"]: e for e in json.load(f)["FTS5_Arm2_Tiered"]["evaluations"]
+                    }
                 for q in qs:
                     total_queries += 1
                     raw_res = evaluator.run_query(q)
-                    st = [(c["source_sha256"], int(c["physical_page"])) for c in stored[q["id"]]["candidates"]]
-                    pr = [(c["source_sha256"], int(c["physical_page"])) for c in raw_res["candidates"]]
+                    st = [
+                        (c["source_sha256"], int(c["physical_page"]))
+                        for c in stored[q["id"]]["candidates"]
+                    ]
+                    pr = [
+                        (c["source_sha256"], int(c["physical_page"])) for c in raw_res["candidates"]
+                    ]
                     if st == pr:
                         same_count += 1
                     else:
@@ -584,8 +604,13 @@ def main() -> int:
                 for q in qs:
                     total_queries += 1
                     raw_res = evaluator.run_query(q)
-                    st = [(c["source_sha256"], int(c["physical_page"])) for c in stored[q["id"]]["candidates"]]
-                    pr = [(c["source_sha256"], int(c["physical_page"])) for c in raw_res["candidates"]]
+                    st = [
+                        (c["source_sha256"], int(c["physical_page"]))
+                        for c in stored[q["id"]]["candidates"]
+                    ]
+                    pr = [
+                        (c["source_sha256"], int(c["physical_page"])) for c in raw_res["candidates"]
+                    ]
                     if st == pr:
                         same_count += 1
                     else:

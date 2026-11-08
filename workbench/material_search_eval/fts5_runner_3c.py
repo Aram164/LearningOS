@@ -114,16 +114,18 @@ class FTS5Arm2Evaluator:
                     key = (r[0], int(r[1]))
                     if key not in seen_keys:
                         seen_keys.add(key)
-                        raw_candidates.append({
-                            "source_sha256": r[0],
-                            "physical_page": int(r[1]),
-                            "source_id": r[2],
-                            "title": r[3],
-                            "score": float(r[4]),
-                            "_body": r[5],
-                            "snippet": r[6],
-                            "tier": tier_name
-                        })
+                        raw_candidates.append(
+                            {
+                                "source_sha256": r[0],
+                                "physical_page": int(r[1]),
+                                "source_id": r[2],
+                                "title": r[3],
+                                "score": float(r[4]),
+                                "_body": r[5],
+                                "snippet": r[6],
+                                "tier": tier_name,
+                            }
+                        )
             except Exception:
                 pass
 
@@ -171,9 +173,15 @@ class FTS5Arm2Evaluator:
                     "unit_id": uid,
                     "route_id": rid,
                     "pages": f"pdf p. {page}",
-                    "extract": True
+                    "extract": True,
                 }
-                ctx_span = OpContext(root=REPO_ROOT, operation="material.span", channel="cli", invocation="query", gateway=None)
+                ctx_span = OpContext(
+                    root=REPO_ROOT,
+                    operation="material.span",
+                    channel="cli",
+                    invocation="query",
+                    gateway=None,
+                )
                 try:
                     span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                     span_data = span_res.payload if span_res else {}
@@ -197,7 +205,9 @@ class FTS5Arm2Evaluator:
 
             # Check verification
             norm_extracted = norm(extracted_text)
-            matches_any_quote = any(norm(tq) in norm_extracted for tq in target_quotes) if target_quotes else False
+            matches_any_quote = (
+                any(norm(tq) in norm_extracted for tq in target_quotes) if target_quotes else False
+            )
 
             # Diagnostic: legacy loose verification (did any top 3 hit match quote)
             if idx <= 3 and matches_any_quote:
@@ -231,7 +241,7 @@ class FTS5Arm2Evaluator:
             "target_verified_at_5": target_verified_at_5,
             "legacy_loose_verified": legacy_loose_verified,
             "target_route_unmapped": target_route_unmapped,
-            "is_index_detected": is_index_detected
+            "is_index_detected": is_index_detected,
         }
 
     def close(self):
@@ -292,12 +302,14 @@ class BaselineBEvaluator:
 
         candidates = []
         for score, sha, page_no, snippet in matches[:5]:
-            candidates.append({
-                "source_sha256": sha,
-                "physical_page": page_no,
-                "score": score,
-                "snippet_chars": len(snippet[:100])
-            })
+            candidates.append(
+                {
+                    "source_sha256": sha,
+                    "physical_page": page_no,
+                    "score": score,
+                    "snippet_chars": len(snippet[:100]),
+                }
+            )
 
         bytes_transferred += len(json.dumps(candidates).encode("utf-8"))
 
@@ -325,9 +337,15 @@ class BaselineBEvaluator:
                     "unit_id": uid,
                     "route_id": rid,
                     "pages": f"pdf p. {page}",
-                    "extract": True
+                    "extract": True,
                 }
-                ctx_span = OpContext(root=REPO_ROOT, operation="material.span", channel="cli", invocation="query", gateway=None)
+                ctx_span = OpContext(
+                    root=REPO_ROOT,
+                    operation="material.span",
+                    channel="cli",
+                    invocation="query",
+                    gateway=None,
+                )
                 try:
                     span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                     span_data = span_res.payload if span_res else {}
@@ -350,7 +368,9 @@ class BaselineBEvaluator:
                         extracted_text = ""
 
             norm_extracted = norm(extracted_text)
-            matches_any_quote = any(norm(tq) in norm_extracted for tq in target_quotes) if target_quotes else False
+            matches_any_quote = (
+                any(norm(tq) in norm_extracted for tq in target_quotes) if target_quotes else False
+            )
 
             if idx <= 3 and matches_any_quote:
                 legacy_loose_verified = True
@@ -382,14 +402,12 @@ class BaselineBEvaluator:
             "target_verified_at_5": target_verified_at_5,
             "legacy_loose_verified": legacy_loose_verified,
             "target_route_unmapped": target_route_unmapped,
-            "is_index_detected": is_index_detected
+            "is_index_detected": is_index_detected,
         }
 
 
 def run_evaluation(
-    evaluator,
-    arm_name: str,
-    questions: list[dict[str, Any]]
+    evaluator, arm_name: str, questions: list[dict[str, Any]]
 ) -> tuple[BenchmarkSummary, list[QueryEvaluation]]:
     evaluations: list[QueryEvaluation] = []
     print(f"\nEvaluating {arm_name} across {len(questions)} queries...")
@@ -407,15 +425,25 @@ def run_evaluation(
             target_verified_at_5=res["target_verified_at_5"],
             legacy_loose_verified=res["legacy_loose_verified"],
             route_unmapped_for_target=res["target_route_unmapped"],
-            is_index_page=res["is_index_detected"]
+            is_index_page=res["is_index_detected"],
         )
         evaluations.append(q_eval)
 
         ret_stat = q_eval.retrieval_status
         evi_stat = q_eval.evidence_status
-        hit_str = "✓ Top@3" if q_eval.topical_hit_at_3 else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss")
-        ver_str = "✓ Ver@3" if q_eval.verified_target_evidence_at_3 else ("✓ Ver@5" if q_eval.verified_target_evidence_at_5 else "–")
-        print(f"[{idx:02d}/{len(questions):02d}] {q['id']:10s} -> {hit_str:8s} [{ver_str:6s}] [Ret:{ret_stat:18s} Evi:{evi_stat:18s}] in {res['t_retrieval_e2e_ms']:5.1f}ms")
+        hit_str = (
+            "✓ Top@3"
+            if q_eval.topical_hit_at_3
+            else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss")
+        )
+        ver_str = (
+            "✓ Ver@3"
+            if q_eval.verified_target_evidence_at_3
+            else ("✓ Ver@5" if q_eval.verified_target_evidence_at_5 else "–")
+        )
+        print(
+            f"[{idx:02d}/{len(questions):02d}] {q['id']:10s} -> {hit_str:8s} [{ver_str:6s}] [Ret:{ret_stat:18s} Evi:{evi_stat:18s}] in {res['t_retrieval_e2e_ms']:5.1f}ms"
+        )
 
     summary = calculate_summary_3c(arm_name, evaluations)
     return summary, evaluations
@@ -497,7 +525,7 @@ def main():
         summary_b, evals_b = run_evaluation(base_b, "Baseline_B_Grep", questions)
         results["Baseline_B_Grep"] = {
             "summary": summary_b.__dict__,
-            "evaluations": [e.__dict__ for e in evals_b]
+            "evaluations": [e.__dict__ for e in evals_b],
         }
 
         # 2. FTS5 Arm 2
@@ -506,7 +534,7 @@ def main():
         fts5_evaluator.close()
         results["FTS5_Arm2_Tiered"] = {
             "summary": summary_fts5.__dict__,
-            "evaluations": [e.__dict__ for e in evals_fts5]
+            "evaluations": [e.__dict__ for e in evals_fts5],
         }
 
         # Print side-by-side table

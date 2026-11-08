@@ -36,7 +36,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `codex_obsidian.py` | compatibility/security adapter | Fail-closed wrapper retained for the existing Agentic Copilot boundary. |
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
-| `build_material_search_index.py` | bounded materials maintenance | Builds disposable, immutable SQLite FTS5 search index generations under `generated/material-search/` for `material.search`. |
+| `build_material_search_index.py` | bounded materials maintenance | Builds the disposable, self-describing read-only SQLite FTS5 search index (`generated/material-search/index-<F[:16]>.sqlite3`) over `generated/text-cache/` for `material.search`. |
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. Dry-run plan by default; acts only with `--apply`. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |

@@ -746,7 +746,7 @@ Learning OS v3 will not implement:
 - one note per concept;
 - mandatory module or semester ownership of notes;
 - mandatory `updated` timestamps;
-- a database or server;
+- a database or server as a store of record (one derived search index is permitted: ADR-020);
 - dependence on Obsidian or another proprietary interface.
 
 The goals/sessions non-goal concerns independent entities. It does not exclude

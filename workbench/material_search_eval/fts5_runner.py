@@ -74,7 +74,7 @@ def build_sha_route_map(repo) -> dict[str, tuple[str, str]]:
 
 def sanitize_query_unicode61(raw_q: str) -> str:
     """Sanitize and format query for standard FTS5 unicode61.
-    
+
     Generates exact phrase boost OR conjunct terms OR disjunct terms.
     """
     clean = re.sub(r"[^\w\s]", " ", raw_q).strip()
@@ -105,7 +105,7 @@ def sanitize_query_prefix(raw_q: str) -> str:
 
 def sanitize_query_trigram(raw_q: str) -> str:
     """Sanitize and format query for FTS5 trigram tokenizer.
-    
+
     Trigram requires tokens of length >= 3.
     """
     clean = re.sub(r"[^\w\s]", " ", raw_q).strip()
@@ -133,7 +133,7 @@ class FTS5ArmEvaluator:
         db_path: Path,
         query_sanitizer,
         repo,
-        sha_to_route: dict[str, tuple[str, str]]
+        sha_to_route: dict[str, tuple[str, str]],
     ):
         self.arm_name = arm_name
         self.db_path = db_path
@@ -170,14 +170,16 @@ class FTS5ArmEvaluator:
                 self.cur.execute(sql, (fts_query,))
                 rows = self.cur.fetchall()
                 for r in rows:
-                    candidates.append({
-                        "source_sha256": r[0],
-                        "physical_page": int(r[1]),
-                        "source_id": r[2],
-                        "title": r[3],
-                        "score": float(r[4]),
-                        "snippet_chars": len(r[5]) if r[5] else 0
-                    })
+                    candidates.append(
+                        {
+                            "source_sha256": r[0],
+                            "physical_page": int(r[1]),
+                            "source_id": r[2],
+                            "title": r[3],
+                            "score": float(r[4]),
+                            "snippet_chars": len(r[5]) if r[5] else 0,
+                        }
+                    )
         except Exception as e:
             # e.g. syntax error or empty
             pass
@@ -216,9 +218,15 @@ class FTS5ArmEvaluator:
                     "unit_id": uid,
                     "route_id": rid,
                     "pages": f"pdf pp. {page}",
-                    "extract": True
+                    "extract": True,
                 }
-                ctx_span = OpContext(root=REPO_ROOT, operation="material.span", channel="cli", invocation="query", gateway=None)
+                ctx_span = OpContext(
+                    root=REPO_ROOT,
+                    operation="material.span",
+                    channel="cli",
+                    invocation="query",
+                    gateway=None,
+                )
                 try:
                     span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                     span_data = span_res.payload if span_res else {}
@@ -251,7 +259,9 @@ class FTS5ArmEvaluator:
 
         # Check multi-target / topical match as well
         target_pairs = {(t["source_sha256"], int(t["physical_page"])) for t in targets}
-        retrieval_hit = any((c["source_sha256"], c["physical_page"]) in target_pairs for c in candidates[:5])
+        retrieval_hit = any(
+            (c["source_sha256"], c["physical_page"]) in target_pairs for c in candidates[:5]
+        )
 
         return {
             "query_id": query_entry["id"],
@@ -264,7 +274,7 @@ class FTS5ArmEvaluator:
             "tool_calls": tool_calls,
             "bytes_transferred": bytes_transferred,
             "verified_evidence": verified_evidence,
-            "retrieval_hit": retrieval_hit
+            "retrieval_hit": retrieval_hit,
         }
 
     def close(self):
@@ -277,7 +287,7 @@ def run_arm(
     sanitizer,
     questions: list[dict[str, Any]],
     repo,
-    sha_to_route: dict[str, tuple[str, str]]
+    sha_to_route: dict[str, tuple[str, str]],
 ) -> tuple[BenchmarkSummary, list[dict[str, Any]]]:
     """Execute complete evaluation benchmark for one FTS5 arm."""
     print(f"\n--- Running Benchmark: {arm_name} ---")
@@ -296,12 +306,14 @@ def run_arm(
             tool_calls=res["tool_calls"],
             bytes_transferred=res["bytes_transferred"],
             duration_ms=res["warm_latency_ms"],  # warm latency as standard query performance
-            verified_span_success=res["verified_evidence"]
+            verified_span_success=res["verified_evidence"],
         )
         query_evaluations.append(q_eval)
 
         status_str = "HIT" if q_eval.hit_at_3 or q_eval.unanswerable_correctly_rejected else "MISS"
-        print(f"[{idx:02d}/{len(questions):02d}] {q['id']} ({status_str}) cold: {res['cold_latency_ms']:.1f}ms, warm: {res['warm_latency_ms']:.1f}ms, top: {len(res['candidates'])} hits")
+        print(
+            f"[{idx:02d}/{len(questions):02d}] {q['id']} ({status_str}) cold: {res['cold_latency_ms']:.1f}ms, warm: {res['warm_latency_ms']:.1f}ms, top: {len(res['candidates'])} hits"
+        )
 
     evaluator.close()
     summary = calculate_summary(arm_name, query_evaluations)
@@ -323,11 +335,17 @@ def main():
 
     arms_to_run = []
     if args.arm in ("all", "unicode61"):
-        arms_to_run.append(("FTS5_unicode61", INDICES_DIR / "fts5_unicode61.sqlite3", sanitize_query_unicode61))
+        arms_to_run.append(
+            ("FTS5_unicode61", INDICES_DIR / "fts5_unicode61.sqlite3", sanitize_query_unicode61)
+        )
     if args.arm in ("all", "prefix"):
-        arms_to_run.append(("FTS5_prefix", INDICES_DIR / "fts5_prefix.sqlite3", sanitize_query_prefix))
+        arms_to_run.append(
+            ("FTS5_prefix", INDICES_DIR / "fts5_prefix.sqlite3", sanitize_query_prefix)
+        )
     if args.arm in ("all", "trigram"):
-        arms_to_run.append(("FTS5_trigram", INDICES_DIR / "fts5_trigram.sqlite3", sanitize_query_trigram))
+        arms_to_run.append(
+            ("FTS5_trigram", INDICES_DIR / "fts5_trigram.sqlite3", sanitize_query_trigram)
+        )
 
     all_summaries = {}
     all_details = {}
@@ -344,7 +362,7 @@ def main():
         "timestamp": time.time(),
         "total_dev_questions": len(questions),
         "summaries": all_summaries,
-        "details": all_details
+        "details": all_details,
     }
 
     out_file = SCRIPT_DIR / "fts5_spike_results.json"
@@ -361,7 +379,9 @@ def main():
         print(f"  Verified Evidence: {s['verified_evidence_rate']:.1%}")
         print(f"  False Source Rate: {s['false_source_rate']:.1%}")
         print(f"  Unanswerable Accuracy: {s['unanswerable_accuracy']:.1%}")
-        print(f"  Latency P50: {s['latency_p50_ms']:.2f} ms (Mean: {s['latency_mean_ms']:.2f} ms, P95: {s['latency_p95_ms']:.2f} ms)")
+        print(
+            f"  Latency P50: {s['latency_p50_ms']:.2f} ms (Mean: {s['latency_mean_ms']:.2f} ms, P95: {s['latency_p95_ms']:.2f} ms)"
+        )
 
 
 if __name__ == "__main__":

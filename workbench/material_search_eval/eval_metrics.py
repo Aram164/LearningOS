@@ -65,7 +65,9 @@ class QueryEvaluation:
     level_3_decision: str = "INSUFFICIENT_EVIDENCE_ABSTAIN"  # or "ANSWERABLE_WITH_EVIDENCE"
 
     # Orthogonal Taxonomy Dimensions
-    retrieval_status: str = "NO_MATCH"  # FOUND, RANKING_MISS, NO_MATCH, WRONG_SOURCE, INDEX_PAGE_CONFUSION
+    retrieval_status: str = (
+        "NO_MATCH"  # FOUND, RANKING_MISS, NO_MATCH, WRONG_SOURCE, INDEX_PAGE_CONFUSION
+    )
     evidence_status: str = "NOT_ATTEMPTED"  # VERIFIED, ROUTE_UNMAPPED, EXTRACTOR_DIVERGENCE, SPAN_FAILURE, NOT_ATTEMPTED
     details: str = ""
 
@@ -104,7 +106,9 @@ class BenchmarkSummary:
     # Three-Level Decision Model Summary
     level_1_retrieval_rate: float
     level_2_verification_rate: float
-    level_3_abstention_accuracy: float  # % of unanswerable queries correctly resulting in INSUFFICIENT_EVIDENCE_ABSTAIN
+    level_3_abstention_accuracy: (
+        float  # % of unanswerable queries correctly resulting in INSUFFICIENT_EVIDENCE_ABSTAIN
+    )
 
     # Operations & Performance
     avg_tool_calls: float
@@ -133,7 +137,7 @@ def evaluate_query_3c(
     target_verified_at_5: bool = False,
     legacy_loose_verified: bool = False,
     route_unmapped_for_target: bool = False,
-    is_index_page: bool = False
+    is_index_page: bool = False,
 ) -> QueryEvaluation:
     """Evaluate candidate rankings against primary and topical ground-truth targets."""
     qid = query_entry["id"]
@@ -167,7 +171,9 @@ def evaluate_query_3c(
         legacy_loose_verified=legacy_loose_verified,
         level_1_candidates_found=(len(retrieved_candidates) > 0),
         level_2_evidence_verified=target_verified_at_5,
-        level_3_decision="ANSWERABLE_WITH_EVIDENCE" if target_verified_at_5 else "INSUFFICIENT_EVIDENCE_ABSTAIN"
+        level_3_decision="ANSWERABLE_WITH_EVIDENCE"
+        if target_verified_at_5
+        else "INSUFFICIENT_EVIDENCE_ABSTAIN",
     )
 
     if expected_status == "unanswerable":
@@ -276,15 +282,23 @@ def calculate_summary_3c(arm_name: str, query_evals: list[QueryEvaluation]) -> B
 
     fsr = (sum(1 for q in ans if q.false_source) / n_ans) if n_ans else 0.0
 
-    unans_acc = (sum(1 for q in unans if q.unanswerable_correctly_rejected) / n_unans) if n_unans else 0.0
+    unans_acc = (
+        (sum(1 for q in unans if q.unanswerable_correctly_rejected) / n_unans) if n_unans else 0.0
+    )
     unans_fp = 1.0 - unans_acc
-    unjustified_ver = (sum(1 for q in unans if q.verified_target_evidence_at_5) / n_unans) if n_unans else 0.0
+    unjustified_ver = (
+        (sum(1 for q in unans if q.verified_target_evidence_at_5) / n_unans) if n_unans else 0.0
+    )
 
     # Three-Level Model
     lvl1_rate = (sum(1 for q in ans if q.level_1_candidates_found) / n_ans) if n_ans else 0.0
     lvl2_rate = ver_5
     # For unanswerables: did Level 3 correctly decide INSUFFICIENT_EVIDENCE_ABSTAIN?
-    lvl3_abstain_acc = (sum(1 for q in unans if q.level_3_decision == "INSUFFICIENT_EVIDENCE_ABSTAIN") / n_unans) if n_unans else 1.0
+    lvl3_abstain_acc = (
+        (sum(1 for q in unans if q.level_3_decision == "INSUFFICIENT_EVIDENCE_ABSTAIN") / n_unans)
+        if n_unans
+        else 1.0
+    )
 
     # Latencies
     sql_durs = sorted(q.t_sql_ms for q in query_evals)
@@ -320,7 +334,8 @@ def calculate_summary_3c(arm_name: str, query_evals: list[QueryEvaluation]) -> B
             "count": float(k),
             "topical_recall@3": sum(1 for x in items if x.topical_hit_at_3) / k,
             "topical_recall@5": sum(1 for x in items if x.topical_hit_at_5) / k,
-            "verified_target_evidence@5": sum(1 for x in items if x.verified_target_evidence_at_5) / k,
+            "verified_target_evidence@5": sum(1 for x in items if x.verified_target_evidence_at_5)
+            / k,
             "topical_mrr": sum(x.topical_reciprocal_rank for x in items) / k,
         }
 
@@ -358,5 +373,5 @@ def calculate_summary_3c(arm_name: str, query_evals: list[QueryEvaluation]) -> B
         t_retrieval_e2e_p95_ms=e2e_p95,
         retrieval_breakdown=ret_breakdown,
         evidence_breakdown=evi_breakdown,
-        per_category=per_cat
+        per_category=per_cat,
     )

@@ -53,7 +53,7 @@ def verify_file(yaml_path: Path, repo, cache_dir: Path) -> dict:
         "failed_quotes": 0,
         "route_verified": 0,
         "route_failed": 0,
-        "failures": []
+        "failures": [],
     }
 
     for q in data:
@@ -85,7 +85,9 @@ def verify_file(yaml_path: Path, repo, cache_dir: Path) -> dict:
                 results["verified_quotes"] += 1
             else:
                 results["failed_quotes"] += 1
-                results["failures"].append(f"[{qid}] Quote not found in {page_file.name}: '{quote[:30]}...'")
+                results["failures"].append(
+                    f"[{qid}] Quote not found in {page_file.name}: '{quote[:30]}...'"
+                )
 
             # 2. Verify route if claimed
             if has_route and route:
@@ -111,7 +113,9 @@ def verify_file(yaml_path: Path, repo, cache_dir: Path) -> dict:
                     results["route_verified"] += 1
                 else:
                     results["route_failed"] += 1
-                    results["failures"].append(f"[{qid}] Route file SHA mismatch: expected {sha[:8]}, got {file_shas}")
+                    results["failures"].append(
+                        f"[{qid}] Route file SHA mismatch: expected {sha[:8]}, got {file_shas}"
+                    )
             else:
                 results["without_route"] += 1
 
@@ -141,8 +145,12 @@ def main() -> int:
         print(f"\nVerification Results for {res['file']}:")
         print(f"  Total questions: {res['total_questions']}")
         print(f"  Answerable: {res['answerable']} | Unanswerable: {res['unanswerable']}")
-        print(f"  With Route: {res['with_route']} | Without Route (unmapped): {res['without_route']}")
-        print(f"  Verified Quotes: {res['verified_quotes']}/{res['verified_quotes'] + res['failed_quotes']}")
+        print(
+            f"  With Route: {res['with_route']} | Without Route (unmapped): {res['without_route']}"
+        )
+        print(
+            f"  Verified Quotes: {res['verified_quotes']}/{res['verified_quotes'] + res['failed_quotes']}"
+        )
         print(f"  Verified Routes: {res['route_verified']}/{res['with_route']}")
         if res["failures"]:
             all_passed = False

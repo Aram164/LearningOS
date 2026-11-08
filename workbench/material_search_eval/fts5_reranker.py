@@ -18,12 +18,75 @@ from typing import Any
 
 # Standard German and English stopwords (function words only, preserving domain terms)
 STOPWORDS = {
-    "der", "die", "das", "des", "dem", "den", "ein", "eine", "einer", "eines", "einem", "einen",
-    "in", "im", "von", "vom", "zu", "zum", "zur", "mit", "auf", "an", "am", "aus", "bei", "beim",
-    "und", "oder", "aber", "nach", "über", "uber", "unter", "vor", "zwischen", "durch", "für", "fur",
-    "ist", "sind", "wird", "werden", "wie", "wo", "wer", "was",
-    "the", "a", "an", "and", "or", "in", "on", "at", "to", "for", "of", "with", "by", "from",
-    "is", "are", "was", "were", "be", "been", "that", "this", "which"
+    "der",
+    "die",
+    "das",
+    "des",
+    "dem",
+    "den",
+    "ein",
+    "eine",
+    "einer",
+    "eines",
+    "einem",
+    "einen",
+    "in",
+    "im",
+    "von",
+    "vom",
+    "zu",
+    "zum",
+    "zur",
+    "mit",
+    "auf",
+    "an",
+    "am",
+    "aus",
+    "bei",
+    "beim",
+    "und",
+    "oder",
+    "aber",
+    "nach",
+    "über",
+    "uber",
+    "unter",
+    "vor",
+    "zwischen",
+    "durch",
+    "für",
+    "fur",
+    "ist",
+    "sind",
+    "wird",
+    "werden",
+    "wie",
+    "wo",
+    "wer",
+    "was",
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "in",
+    "on",
+    "at",
+    "to",
+    "for",
+    "of",
+    "with",
+    "by",
+    "from",
+    "is",
+    "are",
+    "was",
+    "were",
+    "be",
+    "been",
+    "that",
+    "this",
+    "which",
 }
 
 
@@ -42,7 +105,17 @@ def is_index_or_toc_page(body: str) -> bool:
         return False
 
     first_few = " ".join(lines[:5]).lower()
-    if any(h in first_few for h in ["sachregister", "stichwortverzeichnis", "symbolverzeichnis", "inhaltsverzeichnis", "author index", "subject index"]):
+    if any(
+        h in first_few
+        for h in [
+            "sachregister",
+            "stichwortverzeichnis",
+            "symbolverzeichnis",
+            "inhaltsverzeichnis",
+            "author index",
+            "subject index",
+        ]
+    ):
         return True
 
     # Check dot leader density (e.g. 'Chapter 1 . . . . . 12') or comma-number density
@@ -90,7 +163,7 @@ def apply_diversification_and_reranking(
     raw_candidates: list[dict[str, Any]],
     max_per_sha: int = 2,
     penalize_index_pages: bool = True,
-    limit: int = 5
+    limit: int = 5,
 ) -> list[dict[str, Any]]:
     """Rerank candidates with document diversification and index-page demotion."""
     # Annotate index pages

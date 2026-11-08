@@ -51,7 +51,11 @@ import learning_os.app.handlers
 from learning_os.app.context import OpContext
 from learning_os.app.registry import REGISTRY
 from eval_metrics import evaluate_query_3b, calculate_summary_3b, BenchmarkSummary, QueryEvaluation
-from fts5_reranker import build_tiered_queries, apply_diversification_and_reranking, is_index_or_toc_page
+from fts5_reranker import (
+    build_tiered_queries,
+    apply_diversification_and_reranking,
+    is_index_or_toc_page,
+)
 
 DB_FILE = SCRIPT_DIR / "indices" / "fts5_unicode61.sqlite3"
 QUESTIONS_DEV_FILE = SCRIPT_DIR / "questions_dev.yaml"
@@ -83,11 +87,7 @@ class Stage3bArmEvaluator:
     """Evaluates an FTS5 configuration under Stage 3b criteria."""
 
     def __init__(
-        self,
-        arm_name: str,
-        ranking_mode: str,
-        repo,
-        sha_to_route: dict[str, tuple[str, str]]
+        self, arm_name: str, ranking_mode: str, repo, sha_to_route: dict[str, tuple[str, str]]
     ):
         self.arm_name = arm_name
         self.ranking_mode = ranking_mode
@@ -126,15 +126,17 @@ class Stage3bArmEvaluator:
                 try:
                     self.cur.execute(sql, (fts_expr,))
                     for r in self.cur.fetchall():
-                        raw_candidates.append({
-                            "source_sha256": r[0],
-                            "physical_page": int(r[1]),
-                            "source_id": r[2],
-                            "title": r[3],
-                            "score": float(r[4]),
-                            "_body": r[5],
-                            "snippet": r[6]
-                        })
+                        raw_candidates.append(
+                            {
+                                "source_sha256": r[0],
+                                "physical_page": int(r[1]),
+                                "source_id": r[2],
+                                "title": r[3],
+                                "score": float(r[4]),
+                                "_body": r[5],
+                                "snippet": r[6],
+                            }
+                        )
                 except Exception:
                     pass
 
@@ -159,16 +161,18 @@ class Stage3bArmEvaluator:
                         key = (r[0], int(r[1]))
                         if key not in seen_keys:
                             seen_keys.add(key)
-                            raw_candidates.append({
-                                "source_sha256": r[0],
-                                "physical_page": int(r[1]),
-                                "source_id": r[2],
-                                "title": r[3],
-                                "score": float(r[4]),
-                                "_body": r[5],
-                                "snippet": r[6],
-                                "tier": tier_name
-                            })
+                            raw_candidates.append(
+                                {
+                                    "source_sha256": r[0],
+                                    "physical_page": int(r[1]),
+                                    "source_id": r[2],
+                                    "title": r[3],
+                                    "score": float(r[4]),
+                                    "_body": r[5],
+                                    "snippet": r[6],
+                                    "tier": tier_name,
+                                }
+                            )
                 except Exception:
                     pass
 
@@ -190,9 +194,13 @@ class Stage3bArmEvaluator:
         elif self.ranking_mode == "tiered_stopwords":
             final_candidates = raw_candidates[:5]
         elif self.ranking_mode == "tiered_diversified":
-            final_candidates = apply_diversification_and_reranking(raw_candidates, max_per_sha=2, penalize_index_pages=False, limit=5)
+            final_candidates = apply_diversification_and_reranking(
+                raw_candidates, max_per_sha=2, penalize_index_pages=False, limit=5
+            )
         elif self.ranking_mode == "optimized":
-            final_candidates = apply_diversification_and_reranking(raw_candidates, max_per_sha=2, penalize_index_pages=True, limit=5)
+            final_candidates = apply_diversification_and_reranking(
+                raw_candidates, max_per_sha=2, penalize_index_pages=True, limit=5
+            )
         else:
             final_candidates = raw_candidates[:5]
 
@@ -222,9 +230,15 @@ class Stage3bArmEvaluator:
                     "unit_id": uid,
                     "route_id": rid,
                     "pages": f"pdf p. {page}",
-                    "extract": True
+                    "extract": True,
                 }
-                ctx_span = OpContext(root=REPO_ROOT, operation="material.span", channel="cli", invocation="query", gateway=None)
+                ctx_span = OpContext(
+                    root=REPO_ROOT,
+                    operation="material.span",
+                    channel="cli",
+                    invocation="query",
+                    gateway=None,
+                )
                 try:
                     span_res = REGISTRY["material.span"].handler(ctx_span, span_req)
                     span_data = span_res.payload if span_res else {}
@@ -277,7 +291,7 @@ class Stage3bArmEvaluator:
             "bytes_transferred": bytes_transferred,
             "verified_evidence": verified_evidence,
             "target_route_unmapped": target_route_unmapped,
-            "is_index_detected": is_index_detected
+            "is_index_detected": is_index_detected,
         }
 
     def close(self):
@@ -289,7 +303,7 @@ def run_benchmark_arm(
     ranking_mode: str,
     questions: list[dict[str, Any]],
     repo,
-    sha_to_route: dict[str, tuple[str, str]]
+    sha_to_route: dict[str, tuple[str, str]],
 ) -> tuple[BenchmarkSummary, list[QueryEvaluation]]:
     """Execute complete Stage 3b evaluation for one arm."""
     print(f"\n============================================================")
@@ -310,14 +324,24 @@ def run_benchmark_arm(
             t_retrieval_e2e_ms=res["t_retrieval_e2e_ms"],
             verified_span_success=res["verified_evidence"],
             route_unmapped_for_target=res["target_route_unmapped"],
-            is_index_page=res["is_index_detected"]
+            is_index_page=res["is_index_detected"],
         )
         query_evaluations.append(q_eval)
 
         ret_stat = q_eval.retrieval_status
         evi_stat = q_eval.evidence_status
-        flag = "✓ Strict@1" if q_eval.strict_hit_at_1 else ("✓ Top@3" if q_eval.topical_hit_at_3 else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss"))
-        print(f"[{idx:02d}/{len(questions):02d}] {q['id']:6s} ({q['category']:14s}) -> {flag:10s} [Ret:{ret_stat:18s} Evi:{evi_stat:18s}] in {res['t_retrieval_e2e_ms']:5.1f}ms (SQL: {res['t_sql_ms']:4.1f}ms)")
+        flag = (
+            "✓ Strict@1"
+            if q_eval.strict_hit_at_1
+            else (
+                "✓ Top@3"
+                if q_eval.topical_hit_at_3
+                else ("✓ Top@5" if q_eval.topical_hit_at_5 else "✗ Miss")
+            )
+        )
+        print(
+            f"[{idx:02d}/{len(questions):02d}] {q['id']:6s} ({q['category']:14s}) -> {flag:10s} [Ret:{ret_stat:18s} Evi:{evi_stat:18s}] in {res['t_retrieval_e2e_ms']:5.1f}ms (SQL: {res['t_sql_ms']:4.1f}ms)"
+        )
 
     evaluator.close()
     summary = calculate_summary_3b(arm_name, query_evaluations)
@@ -326,7 +350,9 @@ def run_benchmark_arm(
 
 def main():
     parser = argparse.ArgumentParser(description="Run Stage 3b FTS5 Benchmarks")
-    parser.add_argument("--arm", choices=["all", "raw", "tiered", "diversified", "optimized"], default="all")
+    parser.add_argument(
+        "--arm", choices=["all", "raw", "tiered", "diversified", "optimized"], default="all"
+    )
     args = parser.parse_args()
 
     print("Loading LearningOS repository context...")
@@ -352,7 +378,7 @@ def main():
         summary, evals = run_benchmark_arm(arm_name, mode, questions, repo, sha_to_route)
         results[arm_name] = {
             "summary": summary.__dict__,
-            "evaluations": [e.__dict__ for e in evals]
+            "evaluations": [e.__dict__ for e in evals],
         }
 
     out_file = SCRIPT_DIR / "stage_3b_results.json"

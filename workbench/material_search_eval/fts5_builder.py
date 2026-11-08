@@ -46,7 +46,9 @@ def load_metadata_mapping(repo) -> dict[str, dict[str, str]]:
             for f in files:
                 sha = sha256_file(Path(f.path)).removeprefix("sha256:")
                 sid = r.get("source_id") or ""
-                title = r.get("title") or (repo.sources.get(sid, {}).get("title") if sid else "") or ""
+                title = (
+                    r.get("title") or (repo.sources.get(sid, {}).get("title") if sid else "") or ""
+                )
                 if sha not in sha_map or not sha_map[sha].get("title"):
                     sha_map[sha] = {"source_id": sid, "title": title}
     return sha_map
@@ -75,7 +77,7 @@ def build_index(
     pages: list[tuple[str, int, Path]],
     metadata_map: dict[str, dict[str, str]],
     dest_path: Path,
-    batch_size: int = 5000
+    batch_size: int = 5000,
 ) -> dict[str, Any]:
     """Build a specific FTS5 database variant."""
     INDICES_DIR.mkdir(parents=True, exist_ok=True)
@@ -177,9 +179,11 @@ def build_index(
         "build_time_seconds": round(elapsed, 3),
         "file_size_bytes": file_size_bytes,
         "file_size_mb": round(file_size_mb, 2),
-        "integrity_check": integrity
+        "integrity_check": integrity,
     }
-    print(f"[{variant}] Completed in {elapsed:.2f}s | Size: {file_size_mb:.2f} MB | Pages: {total_inserted} | Integrity: {integrity}")
+    print(
+        f"[{variant}] Completed in {elapsed:.2f}s | Size: {file_size_mb:.2f} MB | Pages: {total_inserted} | Integrity: {integrity}"
+    )
     return stats
 
 
@@ -189,7 +193,7 @@ def main():
         "--variant",
         choices=["unicode61", "prefix", "trigram", "all"],
         default="all",
-        help="Tokenizer variant to build"
+        help="Tokenizer variant to build",
     )
     args = parser.parse_args()
 
@@ -202,7 +206,9 @@ def main():
     pages = get_all_cached_pages()
     print(f"Found {len(pages)} pages across {len(set(p[0] for p in pages))} unique SHAs.")
 
-    variants_to_build = ["unicode61", "prefix", "trigram"] if args.variant == "all" else [args.variant]
+    variants_to_build = (
+        ["unicode61", "prefix", "trigram"] if args.variant == "all" else [args.variant]
+    )
     results = {}
 
     for var in variants_to_build:

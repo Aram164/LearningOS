@@ -260,9 +260,7 @@ def build_index_generation(
                 )
                 continue
 
-            valid_fp_inputs.append(
-                (sha, pages_val, rec_extractor, [str(x) for x in pages_sha_val])
-            )
+            valid_fp_inputs.append((sha, pages_val, rec_extractor, [str(x) for x in pages_sha_val]))
             valid_entries.append((sha, material_rel, pages_val))
 
         # Verify strict UTF-8 decoding and read page texts per valid entry
@@ -470,7 +468,9 @@ def build_index_generation(
                     "index_corrupt", f"Built index failed PRAGMA integrity_check: {integrity_rows}"
                 )
 
-            cur.execute("INSERT INTO material_fts(material_fts, rank) VALUES('integrity-check', 1);")
+            cur.execute(
+                "INSERT INTO material_fts(material_fts, rank) VALUES('integrity-check', 1);"
+            )
             count_row = cur.execute("SELECT count(*) FROM material_fts;").fetchone()
             actual_rows = int(count_row[0]) if count_row else -1
             if actual_rows != total_pages_indexed:
