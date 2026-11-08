@@ -1,0 +1,649 @@
+- id: DEV-01
+  category: german_terms
+  question: Wo wird die Definition und das Beweisprinzip der vollständigen Induktion
+    eingeführt?
+  query: Vollständige Induktion
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 12
+    evidence_quote: Beweisprinzip der vollständigen Induktion
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/foundations/ohlbach-eisinger/Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf
+    source_sha256: 271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e
+    physical_page: 74
+    evidence_quote: Beweisschema 42 (Vollständige Induktion über natürliche Zahlen,
+      Grundmuster)
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-ohlbach-eisinger-beweise
+      locator: Kap. 6 Vollständige Induktion p. 71
+    is_alternative: true
+- id: DEV-02
+  category: german_terms
+  question: Auf welcher Seite steht der Mittelwertsatz der Differentialrechnung?
+  query: Mittelwertsatz der Differentialrechnung
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 155
+    evidence_quote: Mittelwertsatz der Differentialrechnung
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/mfnf-analysis/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 311
+    evidence_quote: Der Mittelwertsatz der Differentialrechnung ist eine Verallgemeinerung
+      des Satzes von Rolle
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch06
+      route_id: route-an-ch06-mfnfanalysis1
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-mathe-fuer-nicht-freaks-analysis
+      locator: 'MfNF_Analysis-1.pdf Ableitung p. 273: Mittelwertsatz p. 309'
+    is_alternative: true
+- id: DEV-03
+  category: german_terms
+  question: Wo wird der Mittelwertsatz der Integralrechnung formuliert?
+  query: Mittelwertsatz der Integralrechnung
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 220
+    evidence_quote: Mittelwertsatz der Integralrechnung
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/mfnf-analysis/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 350
+    evidence_quote: Mittelwertsatz für Integrale
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch07
+      route_id: route-an-ch07-mfnfanalysis1
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-mathe-fuer-nicht-freaks-analysis
+      locator: Mittelwertsatz für Integrale p. 348
+    is_alternative: true
+- id: DEV-04
+  category: german_terms
+  question: Wo wird die Bernoulli-Ungleichung im Skript genannt?
+  query: Bernoulli-Ungleichung
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 15
+    evidence_quote: Bernoulli-Ungleichung
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/mfnf-analysis/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 85
+    evidence_quote: Bernoulli-Ungleichung
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch03
+      route_id: route-an-ch03-mfnfanalysis1
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-mathe-fuer-nicht-freaks-analysis
+      locator: MfNF_Analysis-1.pdf Folgen p. 51
+    is_alternative: true
+- id: DEV-05
+  category: german_terms
+  question: Wo wird der Satz von Rolle als Korollar formuliert?
+  query: Satz von Rolle
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 156
+    evidence_quote: Satz von Rolle
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/mfnf-analysis/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 306
+    evidence_quote: Kapitel 49 Satz von Rolle
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch06
+      route_id: route-an-ch06-mfnfanalysis1
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-mathe-fuer-nicht-freaks-analysis
+      locator: 'MfNF_Analysis-1.pdf Ableitung p. 273: Satz von Rolle p. 304'
+    is_alternative: true
+- id: DEV-06
+  category: english_terms
+  question: Where is stochastic gradient descent (SGD) described?
+  query: stochastic gradient descent
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/geron-handson/geron-copy2.pdf
+    source_sha256: 99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa
+    physical_page: 162
+    evidence_quote: stochastic gradient descent
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-53277505603f22eedc9d81b7
+      module_id: module-hu-aml
+      source_id: source-geron-handson
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176,
+        Ch 11 optimizers pdf pp. 485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention
+        pdf pp. 772–795
+- id: DEV-07
+  category: english_terms
+  question: Where does the text introduce the Multilayer Perceptron and Backpropagation?
+  query: Multilayer Perceptron Backpropagation
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/geron-handson/geron-copy2.pdf
+    source_sha256: 99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa
+    physical_page: 391
+    evidence_quote: Multilayer Perceptron and Backpropagation
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-53277505603f22eedc9d81b7
+      module_id: module-hu-aml
+      source_id: source-geron-handson
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176,
+        Ch 11 optimizers pdf pp. 485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention
+        pdf pp. 772–795
+- id: DEV-08
+  category: english_terms
+  question: Where is k-means clustering discussed alongside DBSCAN?
+  query: k-means DBSCAN
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/geron-handson/geron-copy2.pdf
+    source_sha256: 99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa
+    physical_page: 29
+    evidence_quote: k-means, DBSCAN
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-53277505603f22eedc9d81b7
+      module_id: module-hu-aml
+      source_id: source-geron-handson
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176,
+        Ch 11 optimizers pdf pp. 485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention
+        pdf pp. 772–795
+- id: DEV-09
+  category: english_terms
+  question: Where is Bayes' rule defined in Murphy PML1?
+  query: Bayes' rule
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/murphy-pml1/pml1.pdf
+    source_sha256: 89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf
+    physical_page: 10
+    evidence_quote: Bayes’ rule
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+      module_id: module-hu-aml
+      source_id: source-murphy-pml1
+      locator: pml1.pdf §8.1.3 pdf pp. 307-310, §8.3 pdf pp. 319-321, §8.4.6 pdf pp.
+        328-331; §15.4 pdf pp. 548-555, §15.5 pdf pp. 556-562; solutions-public.pdf
+        'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+        pdf p. 25 and 'Backpropagation for a 1 layer MLP' pdf p. 30
+  - material: mathematics/probability-statistics/blitzstein-hwang/blitzstein.pdf
+    source_sha256: 822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf
+    physical_page: 70
+    evidence_quote: Theorem 2.3.3 (Bayes’ rule)
+    has_route: true
+    route:
+      unit_id: unit-m2-sad-l04
+      route_id: route-b48ac5af55a8c900d68bb0c9
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-blitzstein-hwang
+      locator: PDF pp. 63–73
+    is_alternative: true
+- id: DEV-10
+  category: english_terms
+  question: Where is PageRank explained in Murphy PML1?
+  query: PageRank
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/murphy-pml1/pml1.pdf
+    source_sha256: 89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf
+    physical_page: 288
+    evidence_quote: PageRank
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+      module_id: module-hu-aml
+      source_id: source-murphy-pml1
+      locator: pml1.pdf §8.1.3 pdf pp. 307-310, §8.3 pdf pp. 319-321, §8.4.6 pdf pp.
+        328-331; §15.4 pdf pp. 548-555, §15.5 pdf pp. 556-562; solutions-public.pdf
+        'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+        pdf p. 25 and 'Backpropagation for a 1 layer MLP' pdf p. 30
+  - material: machine-learning/advanced/esl/esl.pdf
+    source_sha256: 8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f
+    physical_page: 595
+    evidence_quote: 14.10 The Google PageRank Algorithm
+    has_route: true
+    route:
+      unit_id: unit-aml-l02
+      route_id: route-f57ab8d5f480edd3bc6cf623
+      module_id: module-hu-aml
+      source_id: source-esl
+      locator: esl.pdf Chapter 14
+    is_alternative: true
+- id: DEV-11
+  category: math_notation
+  question: Auf welcher Seite steht die Formel der Bernoulli-Ungleichung (1+x)^n >=
+    1+nx?
+  query: (1 + x)n ≥ 1 + nx
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 15
+    evidence_quote: (1 + x)n ≥ 1 + nx
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-12
+  category: math_notation
+  question: Wo steht die Mittelwertgleichung f'(x0) = (f(b) - f(a)) / (b - a)?
+  query: f ′ (x0 ) =
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 156
+    evidence_quote: f ′ (x0 ) =
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-13
+  category: math_notation
+  question: 'Welche Bedingung gilt für Kantengewichte bei Dijkstra: w(u, v) >= 0?'
+  query: w(u, v) ≥ 0
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: algorithms/structures/clrs/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 690
+    evidence_quote: w(u, v) ≥ 0
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+      module_id: module-hu-algo2
+      source_id: source-clrs
+      locator: Ch. 17–19, 24–26, and 33 as stage-mapped
+- id: DEV-14
+  category: definitions
+  question: Wo werden die Standard-Zahlenmengen N, Z, Q, R definiert?
+  query: Zahlenmengen N Z Q R
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 12
+    evidence_quote: Zahlenmengen
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-15
+  category: definitions
+  question: Wo wird die Definition von Cauchy-Folgen in R gegeben?
+  query: Cauchy-Folgen in R
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 77
+    evidence_quote: Cauchy-Folgen in R
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-16
+  category: definitions
+  question: Wo wird Dijkstras Algorithmus für kürzeste Pfade definiert?
+  query: Dijkstras Algorithmus kürzeste-Pfade-Problem
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: algorithms/structures/clrs/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 690
+    evidence_quote: Dijkstras Algorithmus löst das kürzeste-Pfade-Problem
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+      module_id: module-hu-algo2
+      source_id: source-clrs
+      locator: Ch. 17–19, 24–26, and 33 as stage-mapped
+- id: DEV-17
+  category: algorithms
+  question: Wo wird die Funktionsweise und Pseudocode von Dijkstras Algorithmus beschrieben?
+  query: Dijkstras Algorithmus
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: algorithms/structures/clrs/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 690
+    evidence_quote: Dijkstras Algorithmus
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+      module_id: module-hu-algo2
+      source_id: source-clrs
+      locator: Ch. 17–19, 24–26, and 33 as stage-mapped
+  - material: algorithms/structures/clrs/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 691
+    evidence_quote: DIJKSTRA(G, w, s)
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+      module_id: module-hu-algo2
+      source_id: source-clrs
+      locator: Ch. 24.3 Dijkstras Algorithmus
+    is_alternative: true
+  - material: algorithms/structures/ottmann-widmayer/ottmann-widmayer.pdf
+    source_sha256: dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf
+    physical_page: 637
+    evidence_quote: von Dijkstra [40] bereits 1959 vorgeschlagene Algorithmus
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-520f63344f33115bd302d37b
+      module_id: module-hu-algo2
+      source_id: source-ottmann-widmayer
+      locator: Kapitel 7 Graphenalgorithmen
+    is_alternative: true
+- id: DEV-18
+  category: algorithms
+  question: Where is K-means clustering introduced?
+  query: K-means clustering
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: machine-learning/classical/geron-handson/geron-copy2.pdf
+    source_sha256: 99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa
+    physical_page: 29
+    evidence_quote: k-means
+    has_route: true
+    route:
+      unit_id: unit-aml-exam-prep
+      route_id: route-53277505603f22eedc9d81b7
+      module_id: module-hu-aml
+      source_id: source-geron-handson
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176,
+        Ch 11 optimizers pdf pp. 485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention
+        pdf pp. 772–795
+- id: DEV-19
+  category: derivations
+  question: Wo wird die Existenz der Zwischenstelle x0 im Mittelwertsatz über eine
+    Hilfsfunktion bewiesen?
+  query: Beweis Mittelwertsatz
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 156
+    evidence_quote: h ist stetig und nimmt daher auf [a, b] ein Maximum
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/mfnf-analysis/MfNF_Analysis-1.pdf
+    source_sha256: 3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd
+    physical_page: 312
+    evidence_quote: also der Formel des Mittelwertsatzes
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch06
+      route_id: route-an-ch06-mfnfanalysis1
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-mathe-fuer-nicht-freaks-analysis
+      locator: 'MfNF_Analysis-1.pdf Ableitung p. 273: Mittelwertsatz p. 309'
+    is_alternative: true
+- id: DEV-20
+  category: derivations
+  question: Wo wird gezeigt, dass f'(x0) = 0 an einer Extremstelle gilt (Lemma 6.11)?
+  query: Lemma 6.11
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 155
+    evidence_quote: Lemma 6.11
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 156
+    evidence_quote: nach Lemma 6.11
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 6 p. 156
+    is_alternative: true
+- id: DEV-21
+  category: examples
+  question: Wo wird an Beispielen gezeigt, warum Zahlbereiche von N nach Z und Q erweitert
+    werden?
+  query: Zahlbereiche erweitert Gleichung
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 12
+    evidence_quote: Die Gleichung x + a = b ist in Z immer lösbar
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-22
+  category: paraphrases
+  question: Wie beweist man eine mathematische Behauptung fuer alle natuerlichen Zahlen
+    schrittweise?
+  query: Beweisprinzip Induktionsanfang
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: mathematics/analysis/analysis-skript/unser skript.pdf
+    source_sha256: 628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939
+    physical_page: 12
+    evidence_quote: Induktionsanfang
+    has_route: true
+    route:
+      unit_id: unit-m2-analysis-ch01
+      route_id: route-an-ch01-analysisskript
+      module_id: module-hu-m2-statistik-analysis
+      source_id: source-analysis-skript
+      locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF
+        p. 16); §1.1 Zahlenmengen printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion
+        printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen in der Analysis printed
+        p. 5 (PDF p. 15)
+- id: DEV-23
+  category: paraphrases
+  question: Verfahren zur Ermittlung kuerzester Wege bei nichtnegativen Kantengewichten
+  query: kürzeste Pfade nichtnegativ Kantengewichte
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: algorithms/structures/clrs/clrs-de.pdf
+    source_sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
+    physical_page: 690
+    evidence_quote: Kantengewichte nichtnegativ sind
+    has_route: true
+    route:
+      unit_id: unit-algo2-exam-prep
+      route_id: route-ec998eafd215c3c4c994acd9
+      module_id: module-hu-algo2
+      source_id: source-clrs
+      locator: Ch. 17–19, 24–26, and 33 as stage-mapped
+- id: DEV-24
+  category: german_terms
+  question: Wo wird die Sweep-Line Methode fuer geometrische Algorithmen in AlgoDat
+    II eingefuehrt?
+  query: Sweep-Line Methode Geometrie
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: algorithms/structures/algo2-hu-materials/ad2_computationalgeometry.pdf
+    source_sha256: 6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff
+    physical_page: 2
+    evidence_quote: Die Sweep-Line Methode
+    has_route: false
+    route: null
+- id: DEV-25
+  category: english_terms
+  question: Where are data access methods in the AMLS lecture series introduced by
+    Matthias Boehm?
+  query: AMLS Data Access Methods Matthias Boehm
+  expected_status: answerable
+  is_heldout: false
+  targets:
+  - material: ml-systems/scale/amls-ss26-lectures/lecture-slides/09_DataAccess.pdf
+    source_sha256: 514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b
+    physical_page: 1
+    evidence_quote: 09 Data Access Methods
+    has_route: false
+    route: null
+- id: DEV-26
+  category: unanswerable
+  question: Wie funktioniert der Shor-Algorithmus zur Primfaktorzerlegung auf Quantencomputern?
+  query: Shor Algorithmus Quantencomputer
+  expected_status: unanswerable
+  is_heldout: false
+  targets: []
+- id: DEV-27
+  category: unanswerable
+  question: Welche Phasen unterscheidet das Raft-Konsensprotokoll bei der Log-Kompaktierung
+    mittels Chandy-Lamport-Snapshots?
+  query: Raft Konsensprotokoll Log-Kompaktierung
+  expected_status: unanswerable
+  is_heldout: false
+  targets: []

@@ -57,6 +57,7 @@ GROUPS: dict[str, list[str]] = {
         "test_material_editing.py",
         "test_material_locator_fallback.py",
         "test_material_observation_port.py",
+        "test_material_search.py",
         "test_material_slices.py",
         "test_material_span.py",
         "test_material_summaries.py",

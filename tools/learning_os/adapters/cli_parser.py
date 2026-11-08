@@ -44,6 +44,7 @@ _SUBCOMMAND_ORDER = (
     "capabilities",
     "bootstrap",
     "material-context",
+    "material-search",
     "ability-context",
     "material-span",
     "search",

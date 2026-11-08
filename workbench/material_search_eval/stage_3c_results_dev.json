@@ -1,0 +1,4047 @@
+{
+  "Baseline_B_Grep": {
+    "summary": {
+      "arm_name": "Baseline_B_Grep",
+      "total_queries": 27,
+      "answerable_queries": 25,
+      "unanswerable_queries": 2,
+      "strict_recall_at_1": 0.2,
+      "strict_recall_at_3": 0.48,
+      "strict_recall_at_5": 0.64,
+      "strict_mrr": 0.3493333333333333,
+      "topical_recall_at_1": 0.28,
+      "topical_recall_at_3": 0.56,
+      "topical_recall_at_5": 0.72,
+      "topical_mrr": 0.434,
+      "verified_target_evidence_rate_at_3": 0.44,
+      "verified_target_evidence_rate_at_5": 0.56,
+      "verified_evidence_rate": 0.56,
+      "legacy_loose_verified_rate": 0.76,
+      "false_source_rate": 0.56,
+      "unanswerable_accuracy": 0.0,
+      "unanswerable_false_positive_rate": 1.0,
+      "unjustified_verified_rate": 0.0,
+      "level_1_retrieval_rate": 1.0,
+      "level_2_verification_rate": 0.56,
+      "level_3_abstention_accuracy": 1.0,
+      "avg_tool_calls": 3.2962962962962963,
+      "avg_bytes_transferred": 13777.814814814816,
+      "t_sql_mean_ms": 0.0,
+      "t_sql_p50_ms": 0.0,
+      "t_sql_p95_ms": 0.0,
+      "t_retrieval_e2e_mean_ms": 6350.913236202258,
+      "t_retrieval_e2e_p50_ms": 6711.697084130719,
+      "t_retrieval_e2e_p95_ms": 8273.993666982278,
+      "retrieval_breakdown": {
+        "WRONG_SOURCE": 6,
+        "FOUND": 18,
+        "RANKING_MISS": 1
+      },
+      "evidence_breakdown": {
+        "NOT_ATTEMPTED": 7,
+        "VERIFIED": 14,
+        "EXTRACTOR_DIVERGENCE": 4
+      },
+      "per_category": {
+        "german_terms": {
+          "count": 6.0,
+          "topical_recall@3": 0.5,
+          "topical_recall@5": 0.8333333333333334,
+          "verified_target_evidence@5": 0.8333333333333334,
+          "topical_mrr": 0.48333333333333334
+        },
+        "english_terms": {
+          "count": 6.0,
+          "topical_recall@3": 0.5,
+          "topical_recall@5": 0.5,
+          "verified_target_evidence@5": 0.5,
+          "topical_mrr": 0.2222222222222222
+        },
+        "math_notation": {
+          "count": 3.0,
+          "topical_recall@3": 0.6666666666666666,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.5111111111111111
+        },
+        "definitions": {
+          "count": 3.0,
+          "topical_recall@3": 0.3333333333333333,
+          "topical_recall@5": 0.6666666666666666,
+          "verified_target_evidence@5": 0.6666666666666666,
+          "topical_mrr": 0.4166666666666667
+        },
+        "algorithms": {
+          "count": 2.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "derivations": {
+          "count": 2.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 1.0
+        },
+        "examples": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 1.0
+        },
+        "paraphrases": {
+          "count": 2.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 0.41666666666666663
+        }
+      }
+    },
+    "evaluations": [
+      {
+        "query_id": "DEV-01",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 23,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 24,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "15ac3ee69cc92b3138e31cccc35c9fb4f0eaca5a4c0216cbf9d4398cc63bb545",
+            "physical_page": 2,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2618d4ea051162c3168c70aa4328d394a607abdec7313d69ec395dcf8c669fd4",
+            "physical_page": 18,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2618d4ea051162c3168c70aa4328d394a607abdec7313d69ec395dcf8c669fd4",
+            "physical_page": 75,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 3,
+        "bytes_transferred": 13836,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 8533.023208146915,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-02",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 3,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 3,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 149,
+            "score": 13.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 16770,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6213.6579169891775,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-03",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 158,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 304,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 269,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 356,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 220,
+            "score": 13.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 16207,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6389.026707969606,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.2,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-04",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 323,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 85,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 88,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 15,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 33,
+            "score": 11.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 15313,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6573.488041060045,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-05",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 253,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 16,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 304,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 305,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 306,
+            "score": 13.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 13272,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6646.972125163302,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-06",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 44,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 45,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 258,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 259,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 416,
+            "score": 13.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 0,
+        "bytes_transferred": 1214,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 3673.310542013496,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-07",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 18,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 467,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 391,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1005,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1006,
+            "score": 3,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 13662,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7676.454833010212,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-08",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "7670d4ed7ee9c210e5da61988be2c9f68bbd6205e9c8b029db72c0f75f5a33bf",
+            "physical_page": 897,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 29,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 329,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 333,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 359,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 14975,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6731.588209047914,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-09",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "22786014ffb7d07931e984f212dbbd543094f83186d8a67cbbf36720e4a18f58",
+            "physical_page": 9,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "22786014ffb7d07931e984f212dbbd543094f83186d8a67cbbf36720e4a18f58",
+            "physical_page": 12,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "22786014ffb7d07931e984f212dbbd543094f83186d8a67cbbf36720e4a18f58",
+            "physical_page": 58,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "22786014ffb7d07931e984f212dbbd543094f83186d8a67cbbf36720e4a18f58",
+            "physical_page": 59,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "22786014ffb7d07931e984f212dbbd543094f83186d8a67cbbf36720e4a18f58",
+            "physical_page": 60,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 17133,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 8273.993666982278,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-10",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 5,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 16,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 17,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 19,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394",
+            "physical_page": 71,
+            "score": 11.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 7285,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4372.042583068833,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-11",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "2fef3846497fb2f44ff3949495ed9dab849d88d90455fedbf71e69e793cef15b",
+            "physical_page": 366,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "61bdd6578c8284d7d95c872ad41b63fff8e7efdaf518a977fbd26e12ca24c311",
+            "physical_page": 28,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 15,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "score": 13.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 15,
+            "score": 13.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 13652,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6711.697084130719,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-12",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 148,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 151,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 152,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 156,
+            "score": 11.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 19704,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7946.705624926835,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.2,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-13",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 737,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 621,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 655,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 659,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 22961,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 8180.7413750793785,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-14",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 175,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 13,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 14,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e",
+            "physical_page": 15,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e",
+            "physical_page": 56,
+            "score": 1,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 5244,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4155.421665869653,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-15",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 77,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 264,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 265,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 333,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 55,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 19991,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6741.395208053291,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-16",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 677,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 714,
+            "score": 3,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 23427,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7925.9252089541405,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-17",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 9,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 437,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 623,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 656,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 665,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 23384,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7771.252959035337,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-18",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "1719c3873d98786859feee60aeff71842cf3ca01ad7f2882f0857303a58f5c4d",
+            "physical_page": 4,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "1719c3873d98786859feee60aeff71842cf3ca01ad7f2882f0857303a58f5c4d",
+            "physical_page": 97,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "1719c3873d98786859feee60aeff71842cf3ca01ad7f2882f0857303a58f5c4d",
+            "physical_page": 100,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "1f4e9cf9b41e829d1c818dc94e87edc08250620a6062b212d5d2d0f9b766a0fd",
+            "physical_page": 94,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "25b07fbf374aeec409f128abd5f09883fb42854edbfab6e1c9891187b519277b",
+            "physical_page": 16,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 18588,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7193.995541892946,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-19",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 312,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 354,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 6,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 132,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 134,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 20993,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7214.168874779716,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-20",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 156,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 176,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "05f3cfcc51c12eea0537cb9892a9bc832f8f175fc507b2b0f8228b68e922996c",
+            "physical_page": 24,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 15267,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6997.152500087395,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-21",
+        "category": "examples",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 21,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 149,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 180,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 2,
+        "bytes_transferred": 8950,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 5209.484250051901,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-22",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271",
+            "physical_page": 7,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "66e05f5409231cbebfc7cc76596964f4caa53fbf606f2ae34dcdacb29a79b8d5",
+            "physical_page": 77,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "af782356e47c55d45a9b52177c8276e6a691188f85bfa40a35c61b6028fa44f8",
+            "physical_page": 26,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 2,
+        "bytes_transferred": 8845,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4949.590750038624,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-23",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 693,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 695,
+            "score": 4,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 23713,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 8219.364291988313,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-24",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 2,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 18,
+            "score": 3,
+            "snippet_chars": 50
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 19,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 20,
+            "score": 3,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 28,
+            "score": 3,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 0,
+        "bytes_transferred": 1183,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 3795.5617080442607,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-25",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "15bc9d87a4836e73d537581b97d6350e10bdce9fd876754faa0106185013d0ad",
+            "physical_page": 15,
+            "score": 6,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 1,
+            "score": 6,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 2,
+            "score": 6,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 3,
+            "score": 6,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 4,
+            "score": 6,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 0,
+        "bytes_transferred": 1235,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 3732.979292050004,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-26",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "37fa7400159bc8c48b186a4f3b86a1db667494e447e73a037218b7bfad5bba21",
+            "physical_page": 5,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 314,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 368,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 381,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 148,
+            "score": 2,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 3,
+        "bytes_transferred": 13972,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 5925.628792028874,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-27",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5",
+            "physical_page": 147,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5",
+            "physical_page": 148,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5",
+            "physical_page": 203,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5",
+            "physical_page": 268,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "07e54dc6f68ecd2adceb2a581a715013bf86ab00fe565d966c687b3dec1aa80f",
+            "physical_page": 38,
+            "score": 1,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 0,
+        "bytes_transferred": 1225,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 3720.0344169978052,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      }
+    ]
+  },
+  "FTS5_Arm2_Tiered": {
+    "summary": {
+      "arm_name": "FTS5_Arm2_Tiered",
+      "total_queries": 27,
+      "answerable_queries": 25,
+      "unanswerable_queries": 2,
+      "strict_recall_at_1": 0.04,
+      "strict_recall_at_3": 0.4,
+      "strict_recall_at_5": 0.52,
+      "strict_mrr": 0.22333333333333333,
+      "topical_recall_at_1": 0.12,
+      "topical_recall_at_3": 0.56,
+      "topical_recall_at_5": 0.76,
+      "topical_mrr": 0.3546666666666667,
+      "verified_target_evidence_rate_at_3": 0.48,
+      "verified_target_evidence_rate_at_5": 0.64,
+      "verified_evidence_rate": 0.64,
+      "legacy_loose_verified_rate": 0.84,
+      "false_source_rate": 0.48,
+      "unanswerable_accuracy": 0.0,
+      "unanswerable_false_positive_rate": 1.0,
+      "unjustified_verified_rate": 0.0,
+      "level_1_retrieval_rate": 1.0,
+      "level_2_verification_rate": 0.64,
+      "level_3_abstention_accuracy": 1.0,
+      "avg_tool_calls": 4.518518518518518,
+      "avg_bytes_transferred": 24838.925925925927,
+      "t_sql_mean_ms": 14.601192816540047,
+      "t_sql_p50_ms": 12.403457891196012,
+      "t_sql_p95_ms": 31.853915890678763,
+      "t_retrieval_e2e_mean_ms": 2848.131513800817,
+      "t_retrieval_e2e_p50_ms": 3265.944540966302,
+      "t_retrieval_e2e_p95_ms": 4255.836375057697,
+      "retrieval_breakdown": {
+        "FOUND": 19,
+        "WRONG_SOURCE": 2,
+        "RANKING_MISS": 3,
+        "INDEX_PAGE_CONFUSION": 1
+      },
+      "evidence_breakdown": {
+        "VERIFIED": 16,
+        "NOT_ATTEMPTED": 6,
+        "EXTRACTOR_DIVERGENCE": 3
+      },
+      "per_category": {
+        "german_terms": {
+          "count": 6.0,
+          "topical_recall@3": 0.5,
+          "topical_recall@5": 0.8333333333333334,
+          "verified_target_evidence@5": 0.8333333333333334,
+          "topical_mrr": 0.38055555555555554
+        },
+        "english_terms": {
+          "count": 6.0,
+          "topical_recall@3": 0.3333333333333333,
+          "topical_recall@5": 0.6666666666666666,
+          "verified_target_evidence@5": 0.6666666666666666,
+          "topical_mrr": 0.3055555555555555
+        },
+        "math_notation": {
+          "count": 3.0,
+          "topical_recall@3": 0.3333333333333333,
+          "topical_recall@5": 0.6666666666666666,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.19444444444444442
+        },
+        "definitions": {
+          "count": 3.0,
+          "topical_recall@3": 0.6666666666666666,
+          "topical_recall@5": 0.6666666666666666,
+          "verified_target_evidence@5": 0.6666666666666666,
+          "topical_mrr": 0.5
+        },
+        "algorithms": {
+          "count": 2.0,
+          "topical_recall@3": 0.5,
+          "topical_recall@5": 0.5,
+          "verified_target_evidence@5": 0.5,
+          "topical_mrr": 0.16666666666666666
+        },
+        "derivations": {
+          "count": 2.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 0.5
+        },
+        "examples": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.5
+        },
+        "paraphrases": {
+          "count": 2.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 0.41666666666666663
+        }
+      }
+    },
+    "evaluations": [
+      {
+        "query_id": "DEV-01",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 179,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -9.51051690848954,
+            "body_chars": 3470,
+            "snippet_chars": 246,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 75,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -9.264908012728874,
+            "body_chars": 1492,
+            "snippet_chars": 169,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 79,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -9.220832644570987,
+            "body_chars": 1852,
+            "snippet_chars": 173,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 77,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -9.05795877180132,
+            "body_chars": 2523,
+            "snippet_chars": 174,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 74,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -9.027574227227836,
+            "body_chars": 2118,
+            "snippet_chars": 165,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 39503,
+        "t_sql_ms": 16.179041005671024,
+        "t_retrieval_e2e_ms": 3658.69295806624,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-02",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 282,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -12.01421192278302,
+            "body_chars": 1337,
+            "snippet_chars": 124,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -11.950030958140404,
+            "body_chars": 1421,
+            "snippet_chars": 113,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -10.822630058973765,
+            "body_chars": 2529,
+            "snippet_chars": 165,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 88,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -9.929866173842973,
+            "body_chars": 1556,
+            "snippet_chars": 159,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 236,
+            "source_id": "",
+            "title": "",
+            "score": -9.871440385541046,
+            "body_chars": 1071,
+            "snippet_chars": 138,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 27261,
+        "t_sql_ms": 19.838915904983878,
+        "t_retrieval_e2e_ms": 3013.6362090706825,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-03",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -11.70882346762346,
+            "body_chars": 551,
+            "snippet_chars": 110,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 53,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -10.324019868044171,
+            "body_chars": 2139,
+            "snippet_chars": 152,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 197,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -9.861461656552779,
+            "body_chars": 892,
+            "snippet_chars": 112,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "66e05f5409231cbebfc7cc76596964f4caa53fbf606f2ae34dcdacb29a79b8d5",
+            "physical_page": 186,
+            "source_id": "source-forster-wessoly",
+            "title": "Forster/Wessoly \u00a71 Vollst\u00e4ndige Induktion",
+            "score": -9.31901730243576,
+            "body_chars": 992,
+            "snippet_chars": 138,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 211,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -9.095201094463528,
+            "body_chars": 1019,
+            "snippet_chars": 114,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 26215,
+        "t_sql_ms": 9.196041850373149,
+        "t_retrieval_e2e_ms": 3574.5200000237674,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-04",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 32,
+            "source_id": "",
+            "title": "",
+            "score": -12.454413344463449,
+            "body_chars": 1317,
+            "snippet_chars": 100,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -11.77517838183768,
+            "body_chars": 1332,
+            "snippet_chars": 110,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 85,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.544324743960036,
+            "body_chars": 1690,
+            "snippet_chars": 121,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 88,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -10.500940054841001,
+            "body_chars": 746,
+            "snippet_chars": 113,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 349,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -9.670054906117306,
+            "body_chars": 1481,
+            "snippet_chars": 142,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 24255,
+        "t_sql_ms": 18.974917009472847,
+        "t_retrieval_e2e_ms": 3152.474416187033,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-05",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 306,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -14.784603090949012,
+            "body_chars": 1053,
+            "snippet_chars": 122,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 307,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -13.577516290104587,
+            "body_chars": 1905,
+            "snippet_chars": 138,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 163,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -12.3712927932999,
+            "body_chars": 703,
+            "snippet_chars": 118,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 308,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -12.050970619364838,
+            "body_chars": 912,
+            "snippet_chars": 119,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 309,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.633884424345972,
+            "body_chars": 1400,
+            "snippet_chars": 127,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 26260,
+        "t_sql_ms": 12.66270806081593,
+        "t_retrieval_e2e_ms": 3934.9590421188623,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-06",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 55,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -11.588236602375883,
+            "body_chars": 351,
+            "snippet_chars": 153,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 58,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -11.523315756019745,
+            "body_chars": 426,
+            "snippet_chars": 135,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 59,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -11.523315756019745,
+            "body_chars": 380,
+            "snippet_chars": 153,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 54,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -11.395632121746127,
+            "body_chars": 463,
+            "snippet_chars": 72,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1041,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -10.846232180733747,
+            "body_chars": 1088,
+            "snippet_chars": 183,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 19339,
+        "t_sql_ms": 12.403457891196012,
+        "t_retrieval_e2e_ms": 3742.831249954179,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-07",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1005,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -30.754318911423624,
+            "body_chars": 1163,
+            "snippet_chars": 190,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1067,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -29.690279325945955,
+            "body_chars": 1438,
+            "snippet_chars": 208,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1036,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -28.911234281408174,
+            "body_chars": 1221,
+            "snippet_chars": 177,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1008,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -28.52837924245801,
+            "body_chars": 1076,
+            "snippet_chars": 212,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1011,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -28.422567508384635,
+            "body_chars": 1126,
+            "snippet_chars": 192,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 23881,
+        "t_sql_ms": 11.472709011286497,
+        "t_retrieval_e2e_ms": 4136.344750178978,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-08",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 36,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -12.634980530956582,
+            "body_chars": 999,
+            "snippet_chars": 156,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "7670d4ed7ee9c210e5da61988be2c9f68bbd6205e9c8b029db72c0f75f5a33bf",
+            "physical_page": 897,
+            "source_id": "",
+            "title": "",
+            "score": -10.804651613563944,
+            "body_chars": 1869,
+            "snippet_chars": 143,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 29,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -10.789765638859258,
+            "body_chars": 1574,
+            "snippet_chars": 127,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1016,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -20.205265395629993,
+            "body_chars": 1207,
+            "snippet_chars": 167,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1092,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -19.714249617653604,
+            "body_chars": 997,
+            "snippet_chars": 172,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 21308,
+        "t_sql_ms": 31.853915890678763,
+        "t_retrieval_e2e_ms": 3265.944540966302,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-09",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 84,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -11.245397099299915,
+            "body_chars": 2469,
+            "snippet_chars": 126,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 71,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -10.98158912360267,
+            "body_chars": 2505,
+            "snippet_chars": 117,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 264,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -10.723159464193316,
+            "body_chars": 2447,
+            "snippet_chars": 119,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 70,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -10.38114043759161,
+            "body_chars": 2283,
+            "snippet_chars": 108,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 227,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -10.340699086061031,
+            "body_chars": 1988,
+            "snippet_chars": 111,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 36748,
+        "t_sql_ms": 8.744042133912444,
+        "t_retrieval_e2e_ms": 4004.3092910200357,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-10",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 595,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -13.058035922462185,
+            "body_chars": 2470,
+            "snippet_chars": 129,
+            "tier": "single_word"
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 596,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.966297996090274,
+            "body_chars": 2318,
+            "snippet_chars": 105,
+            "tier": "single_word"
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 597,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.071374895021004,
+            "body_chars": 1523,
+            "snippet_chars": 98,
+            "tier": "single_word"
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 16,
+            "source_id": "",
+            "title": "",
+            "score": -11.81414261752403,
+            "body_chars": 2725,
+            "snippet_chars": 143,
+            "tier": "single_word"
+          },
+          {
+            "source_sha256": "58333143f04ac79d5716a075ca0b68a64925e5e79e01478ce8a99731df35b9b8",
+            "physical_page": 34,
+            "source_id": "",
+            "title": "",
+            "score": -11.745888499027304,
+            "body_chars": 1105,
+            "snippet_chars": 144,
+            "tier": "single_word"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 24746,
+        "t_sql_ms": 6.868582917377353,
+        "t_retrieval_e2e_ms": 2271.479208022356,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-11",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "2fef3846497fb2f44ff3949495ed9dab849d88d90455fedbf71e69e793cef15b",
+            "physical_page": 366,
+            "source_id": "source-velleman-how-to-prove-it",
+            "title": "Velleman \u2014 Mathematical Induction and the proof strategies behind it",
+            "score": -15.537254730400566,
+            "body_chars": 1066,
+            "snippet_chars": 105,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -12.412601848559097,
+            "body_chars": 1332,
+            "snippet_chars": 99,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 15,
+            "source_id": "",
+            "title": "",
+            "score": -12.390077640499106,
+            "body_chars": 1475,
+            "snippet_chars": 86,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 15,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -12.30079237696392,
+            "body_chars": 1475,
+            "snippet_chars": 86,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c2477c3c50d425df8fadbf9af92ba2b61c33fe16ed4bbabc8fe7144bc11282fb",
+            "physical_page": 165,
+            "source_id": "",
+            "title": "",
+            "score": -10.806590990580899,
+            "body_chars": 1008,
+            "snippet_chars": 82,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 18958,
+        "t_sql_ms": 28.944124933332205,
+        "t_retrieval_e2e_ms": 2387.6259580720216,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-12",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 150,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -11.42159176985782,
+            "body_chars": 1299,
+            "snippet_chars": 127,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 214,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -11.18765531419112,
+            "body_chars": 1275,
+            "snippet_chars": 85,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 134,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -11.18765531419112,
+            "body_chars": 1324,
+            "snippet_chars": 104,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 151,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -11.045093090232527,
+            "body_chars": 1560,
+            "snippet_chars": 123,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 238,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.02853015499613,
+            "body_chars": 2378,
+            "snippet_chars": 116,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 32272,
+        "t_sql_ms": 8.054082980379462,
+        "t_retrieval_e2e_ms": 4073.5824999865144,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-13",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 737,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.54328016518514,
+            "body_chars": 2762,
+            "snippet_chars": 99,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52",
+            "physical_page": 228,
+            "source_id": "",
+            "title": "",
+            "score": -10.186557854127091,
+            "body_chars": 1497,
+            "snippet_chars": 151,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -9.452347538374198,
+            "body_chars": 2012,
+            "snippet_chars": 112,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 764,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -9.129122326954624,
+            "body_chars": 1706,
+            "snippet_chars": 89,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 733,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -8.234137565685312,
+            "body_chars": 1771,
+            "snippet_chars": 94,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 28687,
+        "t_sql_ms": 21.12050005234778,
+        "t_retrieval_e2e_ms": 4166.952416067943,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-14",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -10.51002707929684,
+            "body_chars": 2733,
+            "snippet_chars": 315,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 3,
+            "source_id": "",
+            "title": "",
+            "score": -10.51002707929684,
+            "body_chars": 2735,
+            "snippet_chars": 315,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 58,
+            "source_id": "",
+            "title": "",
+            "score": -9.390076672589345,
+            "body_chars": 1415,
+            "snippet_chars": 116,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 53,
+            "source_id": "",
+            "title": "",
+            "score": -9.376754157429328,
+            "body_chars": 1413,
+            "snippet_chars": 112,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 43,
+            "source_id": "",
+            "title": "",
+            "score": -9.018485570511466,
+            "body_chars": 1684,
+            "snippet_chars": 116,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 13289,
+        "t_sql_ms": 41.14829213358462,
+        "t_retrieval_e2e_ms": 43.04187512025237,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "INDEX_PAGE_CONFUSION",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-15",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 264,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -9.791497217244338,
+            "body_chars": 1649,
+            "snippet_chars": 100,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 77,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -9.61124748787351,
+            "body_chars": 1824,
+            "snippet_chars": 113,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 265,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -9.392240947958467,
+            "body_chars": 2072,
+            "snippet_chars": 122,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 191,
+            "source_id": "",
+            "title": "",
+            "score": -18.28922857389009,
+            "body_chars": 2515,
+            "snippet_chars": 102,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 21,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -17.587472901581577,
+            "body_chars": 2348,
+            "snippet_chars": 161,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 32548,
+        "t_sql_ms": 21.53495792299509,
+        "t_retrieval_e2e_ms": 3143.8616248779,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-16",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -37.8914452663764,
+            "body_chars": 2012,
+            "snippet_chars": 172,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -37.80355448051101,
+            "body_chars": 2763,
+            "snippet_chars": 139,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -37.23474391141762,
+            "body_chars": 2298,
+            "snippet_chars": 156,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 739,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -33.523940181738595,
+            "body_chars": 3538,
+            "snippet_chars": 130,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 714,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -33.08982976359882,
+            "body_chars": 2059,
+            "snippet_chars": 120,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 38324,
+        "t_sql_ms": 18.24279106222093,
+        "t_retrieval_e2e_ms": 4335.447499994189,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-17",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 695,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -14.024427244022105,
+            "body_chars": 2831,
+            "snippet_chars": 119,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 696,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -13.005384820136648,
+            "body_chars": 2848,
+            "snippet_chars": 137,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -12.609239501272192,
+            "body_chars": 2012,
+            "snippet_chars": 158,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 692,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.919307439621061,
+            "body_chars": 2434,
+            "snippet_chars": 169,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 681,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -11.666145459848659,
+            "body_chars": 2267,
+            "snippet_chars": 161,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 37386,
+        "t_sql_ms": 7.56887486204505,
+        "t_retrieval_e2e_ms": 4255.836375057697,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-18",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 561,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -12.507112295172236,
+            "body_chars": 2650,
+            "snippet_chars": 124,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 527,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -12.166841175509925,
+            "body_chars": 2965,
+            "snippet_chars": 144,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 549,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -12.091643527746061,
+            "body_chars": 2439,
+            "snippet_chars": 122,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 753,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -11.884382936036806,
+            "body_chars": 1805,
+            "snippet_chars": 125,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "df00131839038aef70dac0891950f8741c3bf677a2fa7d841b2065987c412eb7",
+            "physical_page": 362,
+            "source_id": "source-zacharski-data-mining",
+            "title": "A Programmer's Guide to Data Mining \u2014 nearest-neighbour alternative",
+            "score": -11.477938334239095,
+            "body_chars": 429,
+            "snippet_chars": 131,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 31700,
+        "t_sql_ms": 7.934916066005826,
+        "t_retrieval_e2e_ms": 4117.774208076298,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-19",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 354,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.602822283424292,
+            "body_chars": 1099,
+            "snippet_chars": 146,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 312,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.29528164635349,
+            "body_chars": 1214,
+            "snippet_chars": 130,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 313,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -16.46377651605506,
+            "body_chars": 1257,
+            "snippet_chars": 150,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -16.311541006086973,
+            "body_chars": 1336,
+            "snippet_chars": 144,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 164,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -14.810562551144914,
+            "body_chars": 1449,
+            "snippet_chars": 113,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 28087,
+        "t_sql_ms": 3.6808340810239315,
+        "t_retrieval_e2e_ms": 3922.824458917603,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-20",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -13.883227398536002,
+            "body_chars": 551,
+            "snippet_chars": 149,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -9.98052591811112,
+            "body_chars": 1421,
+            "snippet_chars": 113,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 156,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -9.567708228646095,
+            "body_chars": 1495,
+            "snippet_chars": 104,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 176,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -9.232132189073951,
+            "body_chars": 1844,
+            "snippet_chars": 116,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "b5e782fed9b74714427321aa3f28bda6295730eaa9aab464718a107f0c83481e",
+            "physical_page": 3,
+            "source_id": "",
+            "title": "",
+            "score": -9.287028013276911,
+            "body_chars": 1484,
+            "snippet_chars": 227,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 24438,
+        "t_sql_ms": 16.6786250192672,
+        "t_retrieval_e2e_ms": 3182.8801659867167,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-21",
+        "category": "examples",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -20.665531457766544,
+            "body_chars": 1918,
+            "snippet_chars": 151,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -20.48619448303342,
+            "body_chars": 1918,
+            "snippet_chars": 151,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c",
+            "physical_page": 8,
+            "source_id": "",
+            "title": "",
+            "score": -16.434356224305162,
+            "body_chars": 1690,
+            "snippet_chars": 142,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 762,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -13.410382946068708,
+            "body_chars": 2015,
+            "snippet_chars": 145,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 23,
+            "source_id": "",
+            "title": "",
+            "score": -13.1915916145861,
+            "body_chars": 2014,
+            "snippet_chars": 128,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 3,
+        "bytes_transferred": 20823,
+        "t_sql_ms": 9.310583118349314,
+        "t_retrieval_e2e_ms": 1726.161832921207,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-22",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -18.355808892867667,
+            "body_chars": 1918,
+            "snippet_chars": 161,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -18.231915681176808,
+            "body_chars": 1918,
+            "snippet_chars": 161,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 40,
+            "source_id": "",
+            "title": "",
+            "score": -16.997677596347692,
+            "body_chars": 3274,
+            "snippet_chars": 184,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "b95544a53d33488441383d45e0b088387017cccde4c188ddb8ddb5cc2373c3ce",
+            "physical_page": 17,
+            "source_id": "",
+            "title": "",
+            "score": -16.39759800331946,
+            "body_chars": 1867,
+            "snippet_chars": 170,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271",
+            "physical_page": 7,
+            "source_id": "",
+            "title": "",
+            "score": -15.558527050480315,
+            "body_chars": 1850,
+            "snippet_chars": 131,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 2,
+        "bytes_transferred": 18632,
+        "t_sql_ms": 3.9853749331086874,
+        "t_retrieval_e2e_ms": 856.5587077755481,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-23",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -32.20732789619235,
+            "body_chars": 2587,
+            "snippet_chars": 176,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -31.87447575902376,
+            "body_chars": 2763,
+            "snippet_chars": 163,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -30.93873573495209,
+            "body_chars": 2012,
+            "snippet_chars": 148,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "cc2a43da6a215c3415fb73a285f73e3f2948cddf5a997b657d88187b1b015271",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -27.349040412218493,
+            "body_chars": 752,
+            "snippet_chars": 145,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 675,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -27.023396148140904,
+            "body_chars": 2154,
+            "snippet_chars": 148,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 30634,
+        "t_sql_ms": 5.493249977007508,
+        "t_retrieval_e2e_ms": 3531.5896249376237,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.3333333333333333,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.3333333333333333,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-24",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 19,
+            "source_id": "",
+            "title": "",
+            "score": -32.75723426146765,
+            "body_chars": 1005,
+            "snippet_chars": 145,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 18,
+            "source_id": "",
+            "title": "",
+            "score": -31.696819972978286,
+            "body_chars": 50,
+            "snippet_chars": 58,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 28,
+            "source_id": "",
+            "title": "",
+            "score": -31.07349307118177,
+            "body_chars": 845,
+            "snippet_chars": 166,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 2,
+            "source_id": "",
+            "title": "",
+            "score": -28.958316030492192,
+            "body_chars": 643,
+            "snippet_chars": 190,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 56,
+            "source_id": "",
+            "title": "",
+            "score": -26.43108008283574,
+            "body_chars": 674,
+            "snippet_chars": 150,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 5530,
+        "t_sql_ms": 14.273042092099786,
+        "t_retrieval_e2e_ms": 15.486916992813349,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-25",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 5,
+            "source_id": "",
+            "title": "",
+            "score": -34.89148680737714,
+            "body_chars": 133,
+            "snippet_chars": 145,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 21,
+            "source_id": "",
+            "title": "",
+            "score": -34.74784949544381,
+            "body_chars": 143,
+            "snippet_chars": 155,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 29,
+            "source_id": "",
+            "title": "",
+            "score": -34.49122106285471,
+            "body_chars": 854,
+            "snippet_chars": 165,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -34.16884934017125,
+            "body_chars": 231,
+            "snippet_chars": 152,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 24,
+            "source_id": "",
+            "title": "",
+            "score": -34.01088440938159,
+            "body_chars": 519,
+            "snippet_chars": 142,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 4083,
+        "t_sql_ms": 21.603333996608853,
+        "t_retrieval_e2e_ms": 22.78083306737244,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-26",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 148,
+            "source_id": "",
+            "title": "",
+            "score": -19.571799217654284,
+            "body_chars": 1247,
+            "snippet_chars": 166,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 191,
+            "source_id": "",
+            "title": "",
+            "score": -14.095747505091648,
+            "body_chars": 1572,
+            "snippet_chars": 177,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 188,
+            "source_id": "",
+            "title": "",
+            "score": -10.672047023761255,
+            "body_chars": 1134,
+            "snippet_chars": 145,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c",
+            "physical_page": 66,
+            "source_id": "",
+            "title": "",
+            "score": -9.509078171439961,
+            "body_chars": 2439,
+            "snippet_chars": 158,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "5e9faeb830a41bcc0745a436be863f2f8a2a7093c5dfdfd72f1a6c4aeb6a64fc",
+            "physical_page": 421,
+            "source_id": "",
+            "title": "",
+            "score": -9.408950939257764,
+            "body_chars": 1375,
+            "snippet_chars": 150,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 10576,
+        "t_sql_ms": 6.993290968239307,
+        "t_retrieval_e2e_ms": 9.291625116020441,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "DEV-27",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 496,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -13.373976102290635,
+            "body_chars": 2343,
+            "snippet_chars": 170,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "a36d417dac34c197195fef0267d033f95b618c4352b013f3a9f2734729665a22",
+            "physical_page": 604,
+            "source_id": "",
+            "title": "",
+            "score": -12.417519517926769,
+            "body_chars": 2034,
+            "snippet_chars": 98,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394",
+            "physical_page": 590,
+            "source_id": "",
+            "title": "",
+            "score": -11.551183170267457,
+            "body_chars": 2819,
+            "snippet_chars": 141,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 780,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -11.111241516797854,
+            "body_chars": 1720,
+            "snippet_chars": 189,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 779,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -10.940496978567808,
+            "body_chars": 1829,
+            "snippet_chars": 191,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 25168,
+        "t_sql_ms": 9.471000172197819,
+        "t_retrieval_e2e_ms": 2352.662584045902,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      }
+    ]
+  }
+}

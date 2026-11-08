@@ -28,6 +28,7 @@ ENTRYPOINTS = (
     "agent_run.py",
     "assemble_lecture_study_maps.py",
     "build_materials_index.py",
+    "build_material_search_index.py",
     "build_materials_tree.py",
     "capture_world.py",
     "check_shard_completeness.py",

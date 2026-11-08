@@ -116,6 +116,20 @@ queries:
     - source freshness is observed live per result; review state and resolution are reported, never inferred
     - empty results describe the searched records only, never the absence of an explanation
     - continuation requires the snapshot and observations_sha256 guards; changed canonical data, observed material bytes, or normalized filters refuse mixed pages, even when an assessment remains stale
+  material.search:
+    handler: material_search
+    cli_command: material-search
+    kind: query
+    result: material-search-v1
+    schema: system/schema/requests/material.search.schema.json
+    invariants:
+    - read-only; touches no repository file and mutates no canonical data
+    - searches local learning materials using SQLite FTS5 index generations with unicode61 tokenization
+    - readers pin a single immutable generation in read-only mode (mode=ro)
+    - ranked using stopword-filtered tiered queries (exact phrase, content AND, content OR)
+    - returns bounded candidate references with physical PDF page numbers, text snippets, and mapped LearningOS route references
+    - unmapped material candidates stay explicit and report is_mapped false without inferred routes
+    - missing, stale, or corrupt index generations report explicit unavailable status with structured reason code
   plan.template:
     handler: plan_template
     result: plan-template-v1

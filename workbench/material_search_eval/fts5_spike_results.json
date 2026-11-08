@@ -1,0 +1,4469 @@
+{
+  "timestamp": 1794096419.099478,
+  "total_dev_questions": 27,
+  "summaries": {
+    "FTS5_unicode61": {
+      "arm_name": "FTS5_unicode61",
+      "total_queries": 27,
+      "answerable_queries": 25,
+      "unanswerable_queries": 2,
+      "recall_at_1": 0.04,
+      "recall_at_3": 0.32,
+      "recall_at_5": 0.52,
+      "mrr": 0.21466666666666664,
+      "verified_evidence_rate": 0.24,
+      "false_source_rate": 0.64,
+      "unanswerable_accuracy": 0.0,
+      "avg_tool_calls": 3.074074074074074,
+      "avg_bytes_transferred": 2023.888888888889,
+      "latency_mean_ms": 12.63052987130244,
+      "latency_p50_ms": 5.300555688639482,
+      "latency_p95_ms": 50.86672205167512,
+      "per_category": {
+        "algorithms": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.16666666666666666
+        },
+        "definitions": {
+          "count": 3,
+          "recall@1": 0.3333333333333333,
+          "recall@3": 0.6666666666666666,
+          "mrr": 0.5
+        },
+        "derivations": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.25
+        },
+        "english_terms": {
+          "count": 6,
+          "recall@1": 0.0,
+          "recall@3": 0.0,
+          "mrr": 0.041666666666666664
+        },
+        "examples": {
+          "count": 1,
+          "recall@1": 0.0,
+          "recall@3": 1.0,
+          "mrr": 0.5
+        },
+        "german_terms": {
+          "count": 6,
+          "recall@1": 0.0,
+          "recall@3": 0.16666666666666666,
+          "mrr": 0.16666666666666666
+        },
+        "math_notation": {
+          "count": 3,
+          "recall@1": 0.0,
+          "recall@3": 0.0,
+          "mrr": 0.15
+        },
+        "paraphrases": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 1.0,
+          "mrr": 0.41666666666666663
+        }
+      }
+    },
+    "FTS5_prefix": {
+      "arm_name": "FTS5_prefix",
+      "total_queries": 27,
+      "answerable_queries": 25,
+      "unanswerable_queries": 2,
+      "recall_at_1": 0.04,
+      "recall_at_3": 0.32,
+      "recall_at_5": 0.48,
+      "mrr": 0.196,
+      "verified_evidence_rate": 0.28,
+      "false_source_rate": 0.64,
+      "unanswerable_accuracy": 0.0,
+      "avg_tool_calls": 3.111111111111111,
+      "avg_bytes_transferred": 2039.7407407407406,
+      "latency_mean_ms": 64.5398260784094,
+      "latency_p50_ms": 12.85054131100575,
+      "latency_p95_ms": 370.4183748923242,
+      "per_category": {
+        "algorithms": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.16666666666666666
+        },
+        "definitions": {
+          "count": 3,
+          "recall@1": 0.3333333333333333,
+          "recall@3": 0.6666666666666666,
+          "mrr": 0.5
+        },
+        "derivations": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.25
+        },
+        "english_terms": {
+          "count": 6,
+          "recall@1": 0.0,
+          "recall@3": 0.0,
+          "mrr": 0.03333333333333333
+        },
+        "examples": {
+          "count": 1,
+          "recall@1": 0.0,
+          "recall@3": 1.0,
+          "mrr": 0.5
+        },
+        "german_terms": {
+          "count": 6,
+          "recall@1": 0.0,
+          "recall@3": 0.16666666666666666,
+          "mrr": 0.15833333333333333
+        },
+        "math_notation": {
+          "count": 3,
+          "recall@1": 0.0,
+          "recall@3": 0.3333333333333333,
+          "mrr": 0.19444444444444442
+        },
+        "paraphrases": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.16666666666666666
+        }
+      }
+    },
+    "FTS5_trigram": {
+      "arm_name": "FTS5_trigram",
+      "total_queries": 27,
+      "answerable_queries": 25,
+      "unanswerable_queries": 2,
+      "recall_at_1": 0.08,
+      "recall_at_3": 0.28,
+      "recall_at_5": 0.36,
+      "mrr": 0.17600000000000002,
+      "verified_evidence_rate": 0.32,
+      "false_source_rate": 0.52,
+      "unanswerable_accuracy": 0.0,
+      "avg_tool_calls": 2.740740740740741,
+      "avg_bytes_transferred": 1230.7407407407406,
+      "latency_mean_ms": 41.71439509746837,
+      "latency_p50_ms": 37.14379101681212,
+      "latency_p95_ms": 102.7434029771636,
+      "per_category": {
+        "algorithms": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.16666666666666666
+        },
+        "definitions": {
+          "count": 3,
+          "recall@1": 0.3333333333333333,
+          "recall@3": 0.3333333333333333,
+          "mrr": 0.39999999999999997
+        },
+        "derivations": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.0,
+          "mrr": 0.0
+        },
+        "english_terms": {
+          "count": 6,
+          "recall@1": 0.0,
+          "recall@3": 0.16666666666666666,
+          "mrr": 0.05555555555555555
+        },
+        "examples": {
+          "count": 1,
+          "recall@1": 0.0,
+          "recall@3": 1.0,
+          "mrr": 0.5
+        },
+        "german_terms": {
+          "count": 6,
+          "recall@1": 0.16666666666666666,
+          "recall@3": 0.3333333333333333,
+          "mrr": 0.2833333333333333
+        },
+        "math_notation": {
+          "count": 3,
+          "recall@1": 0.0,
+          "recall@3": 0.0,
+          "mrr": 0.0
+        },
+        "paraphrases": {
+          "count": 2,
+          "recall@1": 0.0,
+          "recall@3": 0.5,
+          "mrr": 0.16666666666666666
+        }
+      }
+    }
+  },
+  "details": {
+    "FTS5_unicode61": [
+      {
+        "query_id": "DEV-01",
+        "query": "Vollst\u00e4ndige Induktion",
+        "fts_query": "\"Vollst\u00e4ndige Induktion\" OR (\"Vollst\u00e4ndige\" AND \"Induktion\") OR (\"Vollst\u00e4ndige\" OR \"Induktion\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 179,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -42.61099420493635,
+            "snippet_chars": 244
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 177,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -41.35009585169594,
+            "snippet_chars": 222
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 9,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.67508641541929,
+            "snippet_chars": 214
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 75,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.523720115590685,
+            "snippet_chars": 169
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 183,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.40714181494869,
+            "snippet_chars": 159
+          }
+        ],
+        "cold_latency_ms": 18.604916986078024,
+        "warm_latency_ms": 1.4366526156663895,
+        "tool_calls": 4,
+        "bytes_transferred": 2620,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-02",
+        "query": "Mittelwertsatz der Differentialrechnung",
+        "fts_query": "\"Mittelwertsatz der Differentialrechnung\" OR (\"Mittelwertsatz\" AND \"der\" AND \"Differentialrechnung\") OR (\"Mittelwertsatz\" OR \"der\" OR \"Differentialrechnung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -51.80600019614267,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -50.619645118582774,
+            "snippet_chars": 113
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -50.302976043218166,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 282,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -49.112399095569984,
+            "snippet_chars": 124
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 149,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -48.84225526621429,
+            "snippet_chars": 132
+          }
+        ],
+        "cold_latency_ms": 24.447999894618988,
+        "warm_latency_ms": 12.702944688498974,
+        "tool_calls": 4,
+        "bytes_transferred": 2188,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-03",
+        "query": "Mittelwertsatz der Integralrechnung",
+        "fts_query": "\"Mittelwertsatz der Integralrechnung\" OR (\"Mittelwertsatz\" AND \"der\" AND \"Integralrechnung\") OR (\"Mittelwertsatz\" OR \"der\" OR \"Integralrechnung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -54.0423615311186,
+            "snippet_chars": 112
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 197,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -49.869817862660426,
+            "snippet_chars": 112
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 53,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -49.49536253878386,
+            "snippet_chars": 152
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 220,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -47.71542327444134,
+            "snippet_chars": 117
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 158,
+            "source_id": "source-fritzsche-trainingsbuch",
+            "title": "Fritzsche \u00a7\u00a71.1-1.2 \u2014 Mengen von Zahlen, Induktion",
+            "score": -47.456416804095724,
+            "snippet_chars": 143
+          }
+        ],
+        "cold_latency_ms": 17.51837506890297,
+        "warm_latency_ms": 12.675305673231682,
+        "tool_calls": 4,
+        "bytes_transferred": 2148,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-04",
+        "query": "Bernoulli-Ungleichung",
+        "fts_query": "\"Bernoulli Ungleichung\" OR (\"Bernoulli\" AND \"Ungleichung\") OR (\"Bernoulli\" OR \"Ungleichung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 32,
+            "source_id": "",
+            "title": "",
+            "score": -44.63270854346644,
+            "snippet_chars": 134
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 85,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -41.855663774098446,
+            "snippet_chars": 123
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -39.697725436430645,
+            "snippet_chars": 110
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 33,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -37.395216100666765,
+            "snippet_chars": 134
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 349,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -36.16892450776236,
+            "snippet_chars": 145
+          }
+        ],
+        "cold_latency_ms": 8.428333094343543,
+        "warm_latency_ms": 0.9484033410747846,
+        "tool_calls": 1,
+        "bytes_transferred": 1999,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-05",
+        "query": "Satz von Rolle",
+        "fts_query": "\"Satz von Rolle\" OR (\"Satz\" AND \"von\" AND \"Rolle\") OR (\"Satz\" OR \"von\" OR \"Rolle\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 306,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -50.24818770953858,
+            "snippet_chars": 122
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 307,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -46.478649958002194,
+            "snippet_chars": 138
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 163,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -41.391576112239854,
+            "snippet_chars": 118
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 378,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -41.02563358070939,
+            "snippet_chars": 102
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -40.39686658275987,
+            "snippet_chars": 150
+          }
+        ],
+        "cold_latency_ms": 20.00725013203919,
+        "warm_latency_ms": 12.710986115659276,
+        "tool_calls": 4,
+        "bytes_transferred": 2057,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-06",
+        "query": "stochastic gradient descent",
+        "fts_query": "\"stochastic gradient descent\" OR (\"stochastic\" AND \"gradient\" AND \"descent\") OR (\"stochastic\" OR \"gradient\" OR \"descent\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1041,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -61.87689667828497,
+            "snippet_chars": 184
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 58,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -61.7932578337089,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 54,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -61.18607381108782,
+            "snippet_chars": 143
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 55,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -61.02971073892315,
+            "snippet_chars": 153
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 59,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -60.687803630016795,
+            "snippet_chars": 153
+          }
+        ],
+        "cold_latency_ms": 7.335499860346317,
+        "warm_latency_ms": 2.0445560415585837,
+        "tool_calls": 4,
+        "bytes_transferred": 2326,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-07",
+        "query": "Multilayer Perceptron Backpropagation",
+        "fts_query": "\"Multilayer Perceptron Backpropagation\" OR (\"Multilayer\" AND \"Perceptron\" AND \"Backpropagation\") OR (\"Multilayer\" OR \"Perceptron\" OR \"Backpropagation\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1005,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -61.50863782284725,
+            "snippet_chars": 190
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1067,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -59.38055865189191,
+            "snippet_chars": 208
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1036,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -57.82246856281635,
+            "snippet_chars": 177
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1008,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -57.056758484916024,
+            "snippet_chars": 212
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1011,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -56.84513501676927,
+            "snippet_chars": 192
+          }
+        ],
+        "cold_latency_ms": 4.225791897624731,
+        "warm_latency_ms": 0.7829859387129545,
+        "tool_calls": 4,
+        "bytes_transferred": 2416,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-08",
+        "query": "k-means DBSCAN",
+        "fts_query": "\"k means DBSCAN\" OR (\"k\" AND \"means\" AND \"DBSCAN\") OR (\"k\" OR \"means\" OR \"DBSCAN\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 36,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -44.72585880564548,
+            "snippet_chars": 156
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1016,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -40.41053079125999,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1092,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -39.42849923530721,
+            "snippet_chars": 172
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 283,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -39.24176236291174,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1018,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -37.622590935073795,
+            "snippet_chars": 178
+          }
+        ],
+        "cold_latency_ms": 23.58704200014472,
+        "warm_latency_ms": 12.897680280730128,
+        "tool_calls": 4,
+        "bytes_transferred": 2233,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-09",
+        "query": "Bayes' rule",
+        "fts_query": "\"Bayes  rule\" OR (\"Bayes\" AND \"rule\") OR (\"Bayes\" OR \"rule\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 84,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -37.92682427532991,
+            "snippet_chars": 126
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 264,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -37.845846977117695,
+            "snippet_chars": 121
+          },
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 71,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -37.03709146746644,
+            "snippet_chars": 117
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 227,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -36.961618148890715,
+            "snippet_chars": 127
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 75,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -36.206097493051566,
+            "snippet_chars": 115
+          }
+        ],
+        "cold_latency_ms": 6.837707944214344,
+        "warm_latency_ms": 2.9741666900614896,
+        "tool_calls": 4,
+        "bytes_transferred": 2031,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-10",
+        "query": "PageRank",
+        "fts_query": "\"PageRank\"",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 595,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -13.058035922462185,
+            "snippet_chars": 129
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 596,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.966297996090274,
+            "snippet_chars": 105
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 597,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.071374895021004,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 16,
+            "source_id": "",
+            "title": "",
+            "score": -11.81414261752403,
+            "snippet_chars": 143
+          },
+          {
+            "source_sha256": "58333143f04ac79d5716a075ca0b68a64925e5e79e01478ce8a99731df35b9b8",
+            "physical_page": 34,
+            "source_id": "",
+            "title": "",
+            "score": -11.745888499027304,
+            "snippet_chars": 144
+          }
+        ],
+        "cold_latency_ms": 2.40762485191226,
+        "warm_latency_ms": 0.14177795189122358,
+        "tool_calls": 4,
+        "bytes_transferred": 1801,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-11",
+        "query": "(1 + x)n \u2265 1 + nx",
+        "fts_query": "\"1   x n   1   nx\" OR (\"1\" AND \"x\" AND \"n\" AND \"1\" AND \"nx\") OR (\"1\" OR \"x\" OR \"n\" OR \"1\" OR \"nx\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "2fef3846497fb2f44ff3949495ed9dab849d88d90455fedbf71e69e793cef15b",
+            "physical_page": 366,
+            "source_id": "source-velleman-how-to-prove-it",
+            "title": "Velleman \u2014 Mathematical Induction and the proof strategies behind it",
+            "score": -43.06562332151205,
+            "snippet_chars": 115
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -33.36282062545276,
+            "snippet_chars": 105
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 15,
+            "source_id": "",
+            "title": "",
+            "score": -33.17696382198147,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 15,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -32.96770711193652,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "c2477c3c50d425df8fadbf9af92ba2b61c33fe16ed4bbabc8fe7144bc11282fb",
+            "physical_page": 165,
+            "source_id": "",
+            "title": "",
+            "score": -29.09333987751276,
+            "snippet_chars": 90
+          }
+        ],
+        "cold_latency_ms": 85.53441590629518,
+        "warm_latency_ms": 69.30949989085396,
+        "tool_calls": 3,
+        "bytes_transferred": 1879,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-12",
+        "query": "f \u2032 (x0 ) =",
+        "fts_query": "\"f    x0\" OR (\"f\" AND \"x0\") OR (\"f\" OR \"x0\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 150,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -33.91677962875068,
+            "snippet_chars": 135
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 214,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -33.503764323631835,
+            "snippet_chars": 93
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 149,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -33.36432288791514,
+            "snippet_chars": 116
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 151,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -33.231222552734465,
+            "snippet_chars": 133
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 134,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -33.09970286448338,
+            "snippet_chars": 104
+          }
+        ],
+        "cold_latency_ms": 14.811000088229775,
+        "warm_latency_ms": 12.065402697771788,
+        "tool_calls": 4,
+        "bytes_transferred": 2165,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-13",
+        "query": "w(u, v) \u2265 0",
+        "fts_query": "\"w u  v    0\" OR (\"w\" AND \"u\" AND \"v\" AND \"0\") OR (\"w\" OR \"u\" OR \"v\" OR \"0\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 737,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -36.08124319849205,
+            "snippet_chars": 105
+          },
+          {
+            "source_sha256": "c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52",
+            "physical_page": 228,
+            "source_id": "",
+            "title": "",
+            "score": -35.3862191582843,
+            "snippet_chars": 155
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 764,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -34.63456957412861,
+            "snippet_chars": 113
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 733,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -33.041981246659624,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -28.91262067395289,
+            "snippet_chars": 116
+          }
+        ],
+        "cold_latency_ms": 47.7459579706192,
+        "warm_latency_ms": 40.04341666586697,
+        "tool_calls": 3,
+        "bytes_transferred": 1786,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-14",
+        "query": "Zahlenmengen N Z Q R",
+        "fts_query": "\"Zahlenmengen N Z Q R\" OR (\"Zahlenmengen\" AND \"N\" AND \"Z\" AND \"Q\" AND \"R\") OR (\"Zahlenmengen\" OR \"N\" OR \"Z\" OR \"Q\" OR \"R\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -48.222076411021234,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 3,
+            "source_id": "",
+            "title": "",
+            "score": -48.222076411021234,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 43,
+            "source_id": "",
+            "title": "",
+            "score": -45.129339002777286,
+            "snippet_chars": 118
+          },
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 48,
+            "source_id": "",
+            "title": "",
+            "score": -44.07915041736039,
+            "snippet_chars": 118
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -43.63876298453979,
+            "snippet_chars": 122
+          }
+        ],
+        "cold_latency_ms": 39.104083087295294,
+        "warm_latency_ms": 32.10709732957184,
+        "tool_calls": 1,
+        "bytes_transferred": 1675,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-15",
+        "query": "Cauchy-Folgen in R",
+        "fts_query": "\"Cauchy Folgen in R\" OR (\"Cauchy\" AND \"Folgen\" AND \"in\" AND \"R\") OR (\"Cauchy\" OR \"Folgen\" OR \"in\" OR \"R\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 264,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -44.884975190010515,
+            "snippet_chars": 102
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 77,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -42.170746663822406,
+            "snippet_chars": 135
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 265,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -41.91324362442727,
+            "snippet_chars": 124
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 191,
+            "source_id": "",
+            "title": "",
+            "score": -36.57846003455702,
+            "snippet_chars": 134
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 21,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -35.17494926810375,
+            "snippet_chars": 144
+          }
+        ],
+        "cold_latency_ms": 58.21887496858835,
+        "warm_latency_ms": 50.86672205167512,
+        "tool_calls": 4,
+        "bytes_transferred": 2011,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-16",
+        "query": "Dijkstras Algorithmus k\u00fcrzeste-Pfade-Problem",
+        "fts_query": "\"Dijkstras Algorithmus k\u00fcrzeste Pfade Problem\" OR (\"Dijkstras\" AND \"Algorithmus\" AND \"k\u00fcrzeste\" AND \"Pfade\" AND \"Problem\") OR (\"Dijkstras\" OR \"Algorithmus\" OR \"k\u00fcrzeste\" OR \"Pfade\" OR \"Problem\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -75.7828905327528,
+            "snippet_chars": 172
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -75.60710896102202,
+            "snippet_chars": 139
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -74.46948782283523,
+            "snippet_chars": 156
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 739,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -67.04788036347719,
+            "snippet_chars": 130
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 714,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -66.17965952719763,
+            "snippet_chars": 120
+          }
+        ],
+        "cold_latency_ms": 14.563707867637277,
+        "warm_latency_ms": 8.822639007121325,
+        "tool_calls": 4,
+        "bytes_transferred": 1989,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-17",
+        "query": "Dijkstras Algorithmus",
+        "fts_query": "\"Dijkstras Algorithmus\" OR (\"Dijkstras\" AND \"Algorithmus\") OR (\"Dijkstras\" OR \"Algorithmus\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 695,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -55.61255783951875,
+            "snippet_chars": 119
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 696,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -51.486366960546846,
+            "snippet_chars": 137
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -50.81017495762963,
+            "snippet_chars": 162
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 681,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -48.47302258284875,
+            "snippet_chars": 177
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 692,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -47.6914565873472,
+            "snippet_chars": 169
+          }
+        ],
+        "cold_latency_ms": 2.241667127236724,
+        "warm_latency_ms": 1.7218056600540876,
+        "tool_calls": 4,
+        "bytes_transferred": 2013,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-18",
+        "query": "K-means clustering",
+        "fts_query": "\"K means clustering\" OR (\"K\" AND \"means\" AND \"clustering\") OR (\"K\" OR \"means\" OR \"clustering\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 527,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -45.59512556239702,
+            "snippet_chars": 146
+          },
+          {
+            "source_sha256": "df00131839038aef70dac0891950f8741c3bf677a2fa7d841b2065987c412eb7",
+            "physical_page": 362,
+            "source_id": "source-zacharski-data-mining",
+            "title": "A Programmer's Guide to Data Mining \u2014 nearest-neighbour alternative",
+            "score": -45.19752820127261,
+            "snippet_chars": 141
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 561,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -45.19332109652042,
+            "snippet_chars": 126
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 549,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -45.05155183922437,
+            "snippet_chars": 124
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 753,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -44.59641945304548,
+            "snippet_chars": 121
+          }
+        ],
+        "cold_latency_ms": 14.709000010043383,
+        "warm_latency_ms": 13.059971931700906,
+        "tool_calls": 4,
+        "bytes_transferred": 1988,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-19",
+        "query": "Beweis Mittelwertsatz",
+        "fts_query": "\"Beweis Mittelwertsatz\" OR (\"Beweis\" AND \"Mittelwertsatz\") OR (\"Beweis\" OR \"Mittelwertsatz\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 354,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -38.72317801983692,
+            "snippet_chars": 119
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 312,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -38.17931811691573,
+            "snippet_chars": 132
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 313,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -32.92755303211012,
+            "snippet_chars": 150
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -32.623082012173946,
+            "snippet_chars": 144
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 164,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -29.621125102289827,
+            "snippet_chars": 113
+          }
+        ],
+        "cold_latency_ms": 4.345875000581145,
+        "warm_latency_ms": 3.1308893424769244,
+        "tool_calls": 4,
+        "bytes_transferred": 2117,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-20",
+        "query": "Lemma 6.11",
+        "fts_query": "\"Lemma 6 11\" OR (\"Lemma\" AND \"6\" AND \"11\") OR (\"Lemma\" OR \"6\" OR \"11\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -30.74662835430483,
+            "snippet_chars": 140
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -22.452764868275032,
+            "snippet_chars": 115
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 156,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -21.848163220644395,
+            "snippet_chars": 104
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 176,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -21.039882163396125,
+            "snippet_chars": 116
+          },
+          {
+            "source_sha256": "b5e782fed9b74714427321aa3f28bda6295730eaa9aab464718a107f0c83481e",
+            "physical_page": 3,
+            "source_id": "",
+            "title": "",
+            "score": -18.57405602655382,
+            "snippet_chars": 227
+          }
+        ],
+        "cold_latency_ms": 28.229125076904893,
+        "warm_latency_ms": 22.84549968317151,
+        "tool_calls": 4,
+        "bytes_transferred": 2055,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-21",
+        "query": "Zahlbereiche erweitert Gleichung",
+        "fts_query": "\"Zahlbereiche erweitert Gleichung\" OR (\"Zahlbereiche\" AND \"erweitert\" AND \"Gleichung\") OR (\"Zahlbereiche\" OR \"erweitert\" OR \"Gleichung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -41.33106291553308,
+            "snippet_chars": 151
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -40.97238896606684,
+            "snippet_chars": 151
+          },
+          {
+            "source_sha256": "f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c",
+            "physical_page": 8,
+            "source_id": "",
+            "title": "",
+            "score": -16.434356224305162,
+            "snippet_chars": 142
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 762,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -13.410382946068708,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 23,
+            "source_id": "",
+            "title": "",
+            "score": -13.1915916145861,
+            "snippet_chars": 128
+          }
+        ],
+        "cold_latency_ms": 4.129584180191159,
+        "warm_latency_ms": 1.4133336177716653,
+        "tool_calls": 1,
+        "bytes_transferred": 1897,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-22",
+        "query": "Beweisprinzip Induktionsanfang",
+        "fts_query": "\"Beweisprinzip Induktionsanfang\" OR (\"Beweisprinzip\" AND \"Induktionsanfang\") OR (\"Beweisprinzip\" OR \"Induktionsanfang\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -36.711617785735335,
+            "snippet_chars": 161
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -36.463831362353616,
+            "snippet_chars": 161
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 40,
+            "source_id": "",
+            "title": "",
+            "score": -33.995355192695385,
+            "snippet_chars": 184
+          },
+          {
+            "source_sha256": "b95544a53d33488441383d45e0b088387017cccde4c188ddb8ddb5cc2373c3ce",
+            "physical_page": 17,
+            "source_id": "",
+            "title": "",
+            "score": -32.79519600663892,
+            "snippet_chars": 170
+          },
+          {
+            "source_sha256": "33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271",
+            "physical_page": 7,
+            "source_id": "",
+            "title": "",
+            "score": -31.11705410096063,
+            "snippet_chars": 131
+          }
+        ],
+        "cold_latency_ms": 1.0761250741779804,
+        "warm_latency_ms": 0.49529201351106167,
+        "tool_calls": 1,
+        "bytes_transferred": 1920,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-23",
+        "query": "k\u00fcrzeste Pfade nichtnegativ Kantengewichte",
+        "fts_query": "\"k\u00fcrzeste Pfade nichtnegativ Kantengewichte\" OR (\"k\u00fcrzeste\" AND \"Pfade\" AND \"nichtnegativ\" AND \"Kantengewichte\") OR (\"k\u00fcrzeste\" OR \"Pfade\" OR \"nichtnegativ\" OR \"Kantengewichte\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -64.4146557923847,
+            "snippet_chars": 176
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -63.74895151804752,
+            "snippet_chars": 163
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -61.87747146990419,
+            "snippet_chars": 148
+          },
+          {
+            "source_sha256": "cc2a43da6a215c3415fb73a285f73e3f2948cddf5a997b657d88187b1b015271",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -27.349040412218493,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 675,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -27.023396148140904,
+            "snippet_chars": 148
+          }
+        ],
+        "cold_latency_ms": 2.4651670828461647,
+        "warm_latency_ms": 0.8330416555205981,
+        "tool_calls": 4,
+        "bytes_transferred": 2001,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-24",
+        "query": "Sweep-Line Methode Geometrie",
+        "fts_query": "\"Sweep Line Methode Geometrie\" OR (\"Sweep\" AND \"Line\" AND \"Methode\" AND \"Geometrie\") OR (\"Sweep\" OR \"Line\" OR \"Methode\" OR \"Geometrie\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 19,
+            "source_id": "",
+            "title": "",
+            "score": -65.5144685229353,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 18,
+            "source_id": "",
+            "title": "",
+            "score": -63.39363994595657,
+            "snippet_chars": 58
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 28,
+            "source_id": "",
+            "title": "",
+            "score": -62.14698614236354,
+            "snippet_chars": 166
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 2,
+            "source_id": "",
+            "title": "",
+            "score": -57.916632060984384,
+            "snippet_chars": 190
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 56,
+            "source_id": "",
+            "title": "",
+            "score": -52.862160165671476,
+            "snippet_chars": 150
+          }
+        ],
+        "cold_latency_ms": 9.901958983391523,
+        "warm_latency_ms": 5.300555688639482,
+        "tool_calls": 1,
+        "bytes_transferred": 1738,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-25",
+        "query": "AMLS Data Access Methods Matthias Boehm",
+        "fts_query": "\"AMLS Data Access Methods Matthias Boehm\" OR (\"AMLS\" AND \"Data\" AND \"Access\" AND \"Methods\" AND \"Matthias\" AND \"Boehm\") OR (\"AMLS\" OR \"Data\" OR \"Access\" OR \"Methods\" OR \"Matthias\" OR \"Boehm\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 5,
+            "source_id": "",
+            "title": "",
+            "score": -69.78297361475428,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 21,
+            "source_id": "",
+            "title": "",
+            "score": -69.49569899088762,
+            "snippet_chars": 155
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 29,
+            "source_id": "",
+            "title": "",
+            "score": -68.98244212570944,
+            "snippet_chars": 165
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -68.33769868034251,
+            "snippet_chars": 152
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 24,
+            "source_id": "",
+            "title": "",
+            "score": -68.02176881876318,
+            "snippet_chars": 142
+          }
+        ],
+        "cold_latency_ms": 19.859750056639314,
+        "warm_latency_ms": 15.987194376066327,
+        "tool_calls": 1,
+        "bytes_transferred": 1777,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-26",
+        "query": "Shor Algorithmus Quantencomputer",
+        "fts_query": "\"Shor Algorithmus Quantencomputer\" OR (\"Shor\" AND \"Algorithmus\" AND \"Quantencomputer\") OR (\"Shor\" OR \"Algorithmus\" OR \"Quantencomputer\")",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 148,
+            "source_id": "",
+            "title": "",
+            "score": -19.571799217654284,
+            "snippet_chars": 166
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 191,
+            "source_id": "",
+            "title": "",
+            "score": -14.095747505091648,
+            "snippet_chars": 177
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 188,
+            "source_id": "",
+            "title": "",
+            "score": -10.672047023761255,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c",
+            "physical_page": 66,
+            "source_id": "",
+            "title": "",
+            "score": -9.509078171439961,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "5e9faeb830a41bcc0745a436be863f2f8a2a7093c5dfdfd72f1a6c4aeb6a64fc",
+            "physical_page": 421,
+            "source_id": "",
+            "title": "",
+            "score": -9.408950939257764,
+            "snippet_chars": 150
+          }
+        ],
+        "cold_latency_ms": 3.527750028297305,
+        "warm_latency_ms": 1.6416526244332392,
+        "tool_calls": 1,
+        "bytes_transferred": 1799,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-27",
+        "query": "Raft Konsensprotokoll Log-Kompaktierung",
+        "fts_query": "\"Raft Konsensprotokoll Log Kompaktierung\" OR (\"Raft\" AND \"Konsensprotokoll\" AND \"Log\" AND \"Kompaktierung\") OR (\"Raft\" OR \"Konsensprotokoll\" OR \"Log\" OR \"Kompaktierung\")",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 496,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -13.373976102290635,
+            "snippet_chars": 170
+          },
+          {
+            "source_sha256": "a36d417dac34c197195fef0267d033f95b618c4352b013f3a9f2734729665a22",
+            "physical_page": 604,
+            "source_id": "",
+            "title": "",
+            "score": -12.417519517926769,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394",
+            "physical_page": 590,
+            "source_id": "",
+            "title": "",
+            "score": -11.551183170267457,
+            "snippet_chars": 141
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 780,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -11.111241516797854,
+            "snippet_chars": 189
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 779,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -10.940496978567808,
+            "snippet_chars": 191
+          }
+        ],
+        "cold_latency_ms": 5.093417130410671,
+        "warm_latency_ms": 2.064832951873541,
+        "tool_calls": 2,
+        "bytes_transferred": 2016,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      }
+    ],
+    "FTS5_prefix": [
+      {
+        "query_id": "DEV-01",
+        "query": "Vollst\u00e4ndige Induktion",
+        "fts_query": "\"Vollst\u00e4ndige Induktion\" OR (\"Vollst\u00e4ndige\"* AND \"Induktion\"*) OR (\"Vollst\u00e4ndige\"* OR \"Induktion\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 179,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.519804971152915,
+            "snippet_chars": 229
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 79,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.05062066231375,
+            "snippet_chars": 173
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 75,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.99884749379784,
+            "snippet_chars": 169
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 74,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.4486109075674,
+            "snippet_chars": 205
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 77,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.359970865747165,
+            "snippet_chars": 160
+          }
+        ],
+        "cold_latency_ms": 20.738374907523394,
+        "warm_latency_ms": 3.049680575107535,
+        "tool_calls": 4,
+        "bytes_transferred": 2524,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-02",
+        "query": "Mittelwertsatz der Differentialrechnung",
+        "fts_query": "\"Mittelwertsatz der Differentialrechnung\" OR (\"Mittelwertsatz\"* AND \"der\"* AND \"Differentialrechnung\"*) OR (\"Mittelwertsatz\"* OR \"der\"* OR \"Differentialrechnung\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -51.60909233590641,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -49.243977106788776,
+            "snippet_chars": 113
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -48.899425486667546,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 282,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -47.57937801768803,
+            "snippet_chars": 124
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 149,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -47.39572960467591,
+            "snippet_chars": 132
+          }
+        ],
+        "cold_latency_ms": 42.98591706901789,
+        "warm_latency_ms": 16.424569689358275,
+        "tool_calls": 4,
+        "bytes_transferred": 2187,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-03",
+        "query": "Mittelwertsatz der Integralrechnung",
+        "fts_query": "\"Mittelwertsatz der Integralrechnung\" OR (\"Mittelwertsatz\"* AND \"der\"* AND \"Integralrechnung\"*) OR (\"Mittelwertsatz\"* OR \"der\"* OR \"Integralrechnung\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -52.63729338526136,
+            "snippet_chars": 112
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 197,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -48.279809481582305,
+            "snippet_chars": 112
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 53,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -47.91729025783812,
+            "snippet_chars": 152
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 220,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -46.29941148619364,
+            "snippet_chars": 117
+          },
+          {
+            "source_sha256": "0cddb538f0364fb3aec4e6d1430c4e9b50934ad6a76299705f62b0fbefd90796",
+            "physical_page": 158,
+            "source_id": "source-fritzsche-trainingsbuch",
+            "title": "Fritzsche \u00a7\u00a71.1-1.2 \u2014 Mengen von Zahlen, Induktion",
+            "score": -45.72633340073562,
+            "snippet_chars": 143
+          }
+        ],
+        "cold_latency_ms": 20.196584053337574,
+        "warm_latency_ms": 16.338346991688013,
+        "tool_calls": 4,
+        "bytes_transferred": 2148,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-04",
+        "query": "Bernoulli-Ungleichung",
+        "fts_query": "\"Bernoulli Ungleichung\" OR (\"Bernoulli\"* AND \"Ungleichung\"*) OR (\"Bernoulli\"* OR \"Ungleichung\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 32,
+            "source_id": "",
+            "title": "",
+            "score": -45.478977614306004,
+            "snippet_chars": 134
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 85,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -42.91539778217238,
+            "snippet_chars": 123
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 33,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -40.12416500141341,
+            "snippet_chars": 134
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -38.96417745418555,
+            "snippet_chars": 110
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 349,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -35.530171670008684,
+            "snippet_chars": 145
+          }
+        ],
+        "cold_latency_ms": 5.80587494187057,
+        "warm_latency_ms": 1.3712781171003978,
+        "tool_calls": 1,
+        "bytes_transferred": 1998,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-05",
+        "query": "Satz von Rolle",
+        "fts_query": "\"Satz von Rolle\" OR (\"Satz\"* AND \"von\"* AND \"Rolle\"*) OR (\"Satz\"* OR \"von\"* OR \"Rolle\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 306,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -48.332433917184495,
+            "snippet_chars": 122
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 307,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -44.73651062116423,
+            "snippet_chars": 138
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 378,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -43.86018764762917,
+            "snippet_chars": 104
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -39.91366078153486,
+            "snippet_chars": 150
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 163,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -39.82054956924686,
+            "snippet_chars": 118
+          }
+        ],
+        "cold_latency_ms": 27.408875059336424,
+        "warm_latency_ms": 13.228930377711853,
+        "tool_calls": 4,
+        "bytes_transferred": 2058,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-06",
+        "query": "stochastic gradient descent",
+        "fts_query": "\"stochastic gradient descent\" OR (\"stochastic\"* AND \"gradient\"* AND \"descent\"*) OR (\"stochastic\"* OR \"gradient\"* OR \"descent\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1041,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -60.91280164417037,
+            "snippet_chars": 200
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 58,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -60.65466418871193,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 54,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -60.057691782574,
+            "snippet_chars": 143
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 55,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -59.91918750912281,
+            "snippet_chars": 153
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 59,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -59.58350189106538,
+            "snippet_chars": 153
+          }
+        ],
+        "cold_latency_ms": 12.31458317488432,
+        "warm_latency_ms": 3.626166687657436,
+        "tool_calls": 4,
+        "bytes_transferred": 2339,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-07",
+        "query": "Multilayer Perceptron Backpropagation",
+        "fts_query": "\"Multilayer Perceptron Backpropagation\" OR (\"Multilayer\"* AND \"Perceptron\"* AND \"Backpropagation\"*) OR (\"Multilayer\"* OR \"Perceptron\"* OR \"Backpropagation\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1005,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -61.1026883546143,
+            "snippet_chars": 190
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1067,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -59.97044995106944,
+            "snippet_chars": 208
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1036,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -57.44630438316397,
+            "snippet_chars": 177
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1008,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -56.69806700998448,
+            "snippet_chars": 212
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1011,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -56.487907354820926,
+            "snippet_chars": 192
+          }
+        ],
+        "cold_latency_ms": 5.214459029957652,
+        "warm_latency_ms": 1.14772228213648,
+        "tool_calls": 4,
+        "bytes_transferred": 2415,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-08",
+        "query": "k-means DBSCAN",
+        "fts_query": "\"k means DBSCAN\" OR (\"k\"* AND \"means\"* AND \"DBSCAN\"*) OR (\"k\"* OR \"means\"* OR \"DBSCAN\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 36,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -39.443394529722,
+            "snippet_chars": 156
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1016,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -36.44620713067936,
+            "snippet_chars": 169
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 283,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -36.140528597959516,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1092,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -33.9608411538201,
+            "snippet_chars": 174
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1018,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -32.66735246729528,
+            "snippet_chars": 178
+          }
+        ],
+        "cold_latency_ms": 94.32379086501896,
+        "warm_latency_ms": 75.39531937800348,
+        "tool_calls": 4,
+        "bytes_transferred": 2234,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-09",
+        "query": "Bayes' rule",
+        "fts_query": "\"Bayes  rule\" OR (\"Bayes\"* AND \"rule\"*) OR (\"Bayes\"* OR \"rule\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 84,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -35.357119457232486,
+            "snippet_chars": 126
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 264,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -35.24087344840118,
+            "snippet_chars": 121
+          },
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 71,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -34.527669858598145,
+            "snippet_chars": 117
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 227,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -34.39774090474573,
+            "snippet_chars": 127
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 812,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -34.19285068367361,
+            "snippet_chars": 125
+          }
+        ],
+        "cold_latency_ms": 8.843959076330066,
+        "warm_latency_ms": 4.524014424532652,
+        "tool_calls": 4,
+        "bytes_transferred": 2045,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-10",
+        "query": "PageRank",
+        "fts_query": "\"PageRank\"*",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 596,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -13.624902931773471,
+            "snippet_chars": 105
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 595,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -13.017980078188213,
+            "snippet_chars": 129
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 16,
+            "source_id": "",
+            "title": "",
+            "score": -12.465154918218571,
+            "snippet_chars": 143
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 597,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.034345657558429,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "58333143f04ac79d5716a075ca0b68a64925e5e79e01478ce8a99731df35b9b8",
+            "physical_page": 34,
+            "source_id": "",
+            "title": "",
+            "score": -11.709857699037915,
+            "snippet_chars": 144
+          }
+        ],
+        "cold_latency_ms": 1.7266669310629368,
+        "warm_latency_ms": 0.16470827783147493,
+        "tool_calls": 3,
+        "bytes_transferred": 1800,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-11",
+        "query": "(1 + x)n \u2265 1 + nx",
+        "fts_query": "\"1   x n   1   nx\" OR (\"1\"* AND \"x\"* AND \"n\"* AND \"1\"* AND \"nx\"*) OR (\"1\"* OR \"x\"* OR \"n\"* OR \"1\"* OR \"nx\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "2fef3846497fb2f44ff3949495ed9dab849d88d90455fedbf71e69e793cef15b",
+            "physical_page": 366,
+            "source_id": "source-velleman-how-to-prove-it",
+            "title": "Velleman \u2014 Mathematical Induction and the proof strategies behind it",
+            "score": -37.85694453175165,
+            "snippet_chars": 115
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 34,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -28.591951393252554,
+            "snippet_chars": 107
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 15,
+            "source_id": "",
+            "title": "",
+            "score": -28.407782571501585,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 15,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -28.210484037441596,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "c2477c3c50d425df8fadbf9af92ba2b61c33fe16ed4bbabc8fe7144bc11282fb",
+            "physical_page": 165,
+            "source_id": "",
+            "title": "",
+            "score": -24.71524548068679,
+            "snippet_chars": 90
+          }
+        ],
+        "cold_latency_ms": 428.95995802246034,
+        "warm_latency_ms": 398.04418043543893,
+        "tool_calls": 3,
+        "bytes_transferred": 1888,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-12",
+        "query": "f \u2032 (x0 ) =",
+        "fts_query": "\"f    x0\" OR (\"f\"* AND \"x0\"*) OR (\"f\"* OR \"x0\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 150,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -27.913852219101273,
+            "snippet_chars": 137
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 214,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -27.512338520423473,
+            "snippet_chars": 93
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 149,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -27.406295955709666,
+            "snippet_chars": 116
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 151,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -27.280813815863667,
+            "snippet_chars": 133
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 41,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -27.17111647103669,
+            "snippet_chars": 143
+          }
+        ],
+        "cold_latency_ms": 197.6937500294298,
+        "warm_latency_ms": 191.42786134034395,
+        "tool_calls": 4,
+        "bytes_transferred": 2198,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-13",
+        "query": "w(u, v) \u2265 0",
+        "fts_query": "\"w u  v    0\" OR (\"w\"* AND \"u\"* AND \"v\"* AND \"0\"*) OR (\"w\"* OR \"u\"* OR \"v\"* OR \"0\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 737,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.543295474531183,
+            "snippet_chars": 107
+          },
+          {
+            "source_sha256": "c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52",
+            "physical_page": 228,
+            "source_id": "",
+            "title": "",
+            "score": -10.18657430895362,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -9.452361786773146,
+            "snippet_chars": 126
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 764,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -9.129138909458492,
+            "snippet_chars": 113
+          },
+          {
+            "source_sha256": "3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83",
+            "physical_page": 733,
+            "source_id": "source-thomas-calculus",
+            "title": "Thomas \u00a710.1 Sequences",
+            "score": -8.234154400884712,
+            "snippet_chars": 101
+          }
+        ],
+        "cold_latency_ms": 397.0753338653594,
+        "warm_latency_ms": 370.4183748923242,
+        "tool_calls": 3,
+        "bytes_transferred": 1813,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-14",
+        "query": "Zahlenmengen N Z Q R",
+        "fts_query": "\"Zahlenmengen N Z Q R\" OR (\"Zahlenmengen\"* AND \"N\"* AND \"Z\"* AND \"Q\"* AND \"R\"*) OR (\"Zahlenmengen\"* OR \"N\"* OR \"Z\"* OR \"Q\"* OR \"R\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -36.06325303223267,
+            "snippet_chars": 160
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 3,
+            "source_id": "",
+            "title": "",
+            "score": -36.06325303223267,
+            "snippet_chars": 160
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 43,
+            "source_id": "",
+            "title": "",
+            "score": -32.332760695737235,
+            "snippet_chars": 120
+          },
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 48,
+            "source_id": "",
+            "title": "",
+            "score": -31.58836002874726,
+            "snippet_chars": 120
+          },
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 58,
+            "source_id": "",
+            "title": "",
+            "score": -28.319290567023238,
+            "snippet_chars": 118
+          }
+        ],
+        "cold_latency_ms": 302.7369580231607,
+        "warm_latency_ms": 292.05748594055575,
+        "tool_calls": 1,
+        "bytes_transferred": 1736,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-15",
+        "query": "Cauchy-Folgen in R",
+        "fts_query": "\"Cauchy Folgen in R\" OR (\"Cauchy\"* AND \"Folgen\"* AND \"in\"* AND \"R\"*) OR (\"Cauchy\"* OR \"Folgen\"* OR \"in\"* OR \"R\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 264,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -32.00115870251764,
+            "snippet_chars": 102
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 77,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -31.299950063093657,
+            "snippet_chars": 137
+          },
+          {
+            "source_sha256": "dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739",
+            "physical_page": 265,
+            "source_id": "source-grieser-analysis1",
+            "title": "Grieser Kap. 2 und Kap. 5 \u2014 reelle Zahlen und Vollst\u00e4ndigkeit",
+            "score": -28.321672743970932,
+            "snippet_chars": 124
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 149,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -26.13053962323842,
+            "snippet_chars": 150
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 152,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.830088018509514,
+            "snippet_chars": 126
+          }
+        ],
+        "cold_latency_ms": 159.8373749293387,
+        "warm_latency_ms": 151.99097230409583,
+        "tool_calls": 4,
+        "bytes_transferred": 2092,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-16",
+        "query": "Dijkstras Algorithmus k\u00fcrzeste-Pfade-Problem",
+        "fts_query": "\"Dijkstras Algorithmus k\u00fcrzeste Pfade Problem\" OR (\"Dijkstras\"* AND \"Algorithmus\"* AND \"k\u00fcrzeste\"* AND \"Pfade\"* AND \"Problem\"*) OR (\"Dijkstras\"* OR \"Algorithmus\"* OR \"k\u00fcrzeste\"* OR \"Pfade\"* OR \"Problem\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -77.29473826133982,
+            "snippet_chars": 172
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -75.61552836159454,
+            "snippet_chars": 139
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -72.67463668325155,
+            "snippet_chars": 156
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 714,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -68.40636230190471,
+            "snippet_chars": 147
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -67.99133568994517,
+            "snippet_chars": 162
+          }
+        ],
+        "cold_latency_ms": 20.82991600036621,
+        "warm_latency_ms": 15.609319709862271,
+        "tool_calls": 4,
+        "bytes_transferred": 2052,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-17",
+        "query": "Dijkstras Algorithmus",
+        "fts_query": "\"Dijkstras Algorithmus\" OR (\"Dijkstras\"* AND \"Algorithmus\"*) OR (\"Dijkstras\"* OR \"Algorithmus\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 695,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -55.6032330518118,
+            "snippet_chars": 119
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 696,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -51.4777773425099,
+            "snippet_chars": 137
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -50.801244267887405,
+            "snippet_chars": 162
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 681,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -48.46377132885264,
+            "snippet_chars": 177
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 692,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -47.68324329668899,
+            "snippet_chars": 169
+          }
+        ],
+        "cold_latency_ms": 3.1277500092983246,
+        "warm_latency_ms": 2.106194073955218,
+        "tool_calls": 4,
+        "bytes_transferred": 2012,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-18",
+        "query": "K-means clustering",
+        "fts_query": "\"K means clustering\" OR (\"K\"* AND \"means\"* AND \"clustering\"*) OR (\"K\"* OR \"means\"* OR \"clustering\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 527,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -39.744016666758355,
+            "snippet_chars": 146
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 561,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -39.32066980762986,
+            "snippet_chars": 126
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 549,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -39.197450304440686,
+            "snippet_chars": 128
+          },
+          {
+            "source_sha256": "df00131839038aef70dac0891950f8741c3bf677a2fa7d841b2065987c412eb7",
+            "physical_page": 362,
+            "source_id": "source-zacharski-data-mining",
+            "title": "A Programmer's Guide to Data Mining \u2014 nearest-neighbour alternative",
+            "score": -39.09633619898138,
+            "snippet_chars": 141
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 753,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -38.874196333711915,
+            "snippet_chars": 121
+          }
+        ],
+        "cold_latency_ms": 80.7937087956816,
+        "warm_latency_ms": 78.38484730261068,
+        "tool_calls": 4,
+        "bytes_transferred": 1995,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-19",
+        "query": "Beweis Mittelwertsatz",
+        "fts_query": "\"Beweis Mittelwertsatz\" OR (\"Beweis\"* AND \"Mittelwertsatz\"*) OR (\"Beweis\"* OR \"Mittelwertsatz\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 312,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -38.404240172852184,
+            "snippet_chars": 132
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 354,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -37.33022742568718,
+            "snippet_chars": 119
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 313,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -33.022041472141446,
+            "snippet_chars": 171
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -32.91917105435575,
+            "snippet_chars": 144
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 353,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -29.29825540357241,
+            "snippet_chars": 120
+          }
+        ],
+        "cold_latency_ms": 7.894083159044385,
+        "warm_latency_ms": 5.977597010011475,
+        "tool_calls": 4,
+        "bytes_transferred": 2119,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-20",
+        "query": "Lemma 6.11",
+        "fts_query": "\"Lemma 6 11\" OR (\"Lemma\"* AND \"6\"* AND \"11\"*) OR (\"Lemma\"* OR \"6\"* OR \"11\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -28.01434550514567,
+            "snippet_chars": 140
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -20.233366202403214,
+            "snippet_chars": 115
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 156,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -19.483786692040233,
+            "snippet_chars": 104
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 176,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -18.789104823149856,
+            "snippet_chars": 116
+          },
+          {
+            "source_sha256": "b5e782fed9b74714427321aa3f28bda6295730eaa9aab464718a107f0c83481e",
+            "physical_page": 81,
+            "source_id": "",
+            "title": "",
+            "score": -16.49216411231105,
+            "snippet_chars": 100
+          }
+        ],
+        "cold_latency_ms": 57.298875181004405,
+        "warm_latency_ms": 47.33202769421041,
+        "tool_calls": 4,
+        "bytes_transferred": 1947,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-21",
+        "query": "Zahlbereiche erweitert Gleichung",
+        "fts_query": "\"Zahlbereiche erweitert Gleichung\" OR (\"Zahlbereiche\"* AND \"erweitert\"* AND \"Gleichung\"*) OR (\"Zahlbereiche\"* OR \"erweitert\"* OR \"Gleichung\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -37.45998984175444,
+            "snippet_chars": 151
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -37.13309443252345,
+            "snippet_chars": 151
+          },
+          {
+            "source_sha256": "c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52",
+            "physical_page": 7,
+            "source_id": "",
+            "title": "",
+            "score": -16.172255258355996,
+            "snippet_chars": 178
+          },
+          {
+            "source_sha256": "43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e",
+            "physical_page": 200,
+            "source_id": "",
+            "title": "",
+            "score": -15.645843333389427,
+            "snippet_chars": 172
+          },
+          {
+            "source_sha256": "f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c",
+            "physical_page": 8,
+            "source_id": "",
+            "title": "",
+            "score": -15.500161086275819,
+            "snippet_chars": 144
+          }
+        ],
+        "cold_latency_ms": 11.321333004161716,
+        "warm_latency_ms": 2.825110607470075,
+        "tool_calls": 1,
+        "bytes_transferred": 1887,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-22",
+        "query": "Beweisprinzip Induktionsanfang",
+        "fts_query": "\"Beweisprinzip Induktionsanfang\" OR (\"Beweisprinzip\"* AND \"Induktionsanfang\"*) OR (\"Beweisprinzip\"* OR \"Induktionsanfang\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "b6740aef9acd9211d4158f9d53c515a033c04b37947219eef1561df40226ffd3",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -42.749451806206984,
+            "snippet_chars": 127
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -37.79641063272837,
+            "snippet_chars": 163
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -37.57032043617812,
+            "snippet_chars": 163
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 40,
+            "source_id": "",
+            "title": "",
+            "score": -33.396478198975615,
+            "snippet_chars": 184
+          },
+          {
+            "source_sha256": "b95544a53d33488441383d45e0b088387017cccde4c188ddb8ddb5cc2373c3ce",
+            "physical_page": 17,
+            "source_id": "",
+            "title": "",
+            "score": -32.09780903620148,
+            "snippet_chars": 170
+          }
+        ],
+        "cold_latency_ms": 2.155583119019866,
+        "warm_latency_ms": 0.6526108675946792,
+        "tool_calls": 1,
+        "bytes_transferred": 1915,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-23",
+        "query": "k\u00fcrzeste Pfade nichtnegativ Kantengewichte",
+        "fts_query": "\"k\u00fcrzeste Pfade nichtnegativ Kantengewichte\" OR (\"k\u00fcrzeste\"* AND \"Pfade\"* AND \"nichtnegativ\"* AND \"Kantengewichte\"*) OR (\"k\u00fcrzeste\"* OR \"Pfade\"* OR \"nichtnegativ\"* OR \"Kantengewichte\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 733,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -75.18940660470084,
+            "snippet_chars": 156
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -67.83772025601601,
+            "snippet_chars": 176
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -67.37691058048641,
+            "snippet_chars": 147
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -66.27808435102025,
+            "snippet_chars": 159
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 739,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -65.51758393709571,
+            "snippet_chars": 139
+          }
+        ],
+        "cold_latency_ms": 3.75766702927649,
+        "warm_latency_ms": 1.5964581010242302,
+        "tool_calls": 4,
+        "bytes_transferred": 2037,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-24",
+        "query": "Sweep-Line Methode Geometrie",
+        "fts_query": "\"Sweep Line Methode Geometrie\" OR (\"Sweep\"* AND \"Line\"* AND \"Methode\"* AND \"Geometrie\"*) OR (\"Sweep\"* OR \"Line\"* OR \"Methode\"* OR \"Geometrie\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 19,
+            "source_id": "",
+            "title": "",
+            "score": -57.82046390771218,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 18,
+            "source_id": "",
+            "title": "",
+            "score": -56.68851401826403,
+            "snippet_chars": 58
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 28,
+            "source_id": "",
+            "title": "",
+            "score": -55.03779502853837,
+            "snippet_chars": 166
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1052,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -52.887587397793084,
+            "snippet_chars": 132
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 2,
+            "source_id": "",
+            "title": "",
+            "score": -52.12843816452351,
+            "snippet_chars": 190
+          }
+        ],
+        "cold_latency_ms": 71.90754218026996,
+        "warm_latency_ms": 12.85054131100575,
+        "tool_calls": 1,
+        "bytes_transferred": 1768,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-25",
+        "query": "AMLS Data Access Methods Matthias Boehm",
+        "fts_query": "\"AMLS Data Access Methods Matthias Boehm\" OR (\"AMLS\"* AND \"Data\"* AND \"Access\"* AND \"Methods\"* AND \"Matthias\"* AND \"Boehm\"*) OR (\"AMLS\"* OR \"Data\"* OR \"Access\"* OR \"Methods\"* OR \"Matthias\"* OR \"Boehm\"*)",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 5,
+            "source_id": "",
+            "title": "",
+            "score": -68.13408675793653,
+            "snippet_chars": 145
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 21,
+            "source_id": "",
+            "title": "",
+            "score": -67.8536000842969,
+            "snippet_chars": 155
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 29,
+            "source_id": "",
+            "title": "",
+            "score": -67.62419105463736,
+            "snippet_chars": 167
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 24,
+            "source_id": "",
+            "title": "",
+            "score": -67.2029808904375,
+            "snippet_chars": 142
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -66.63462989254434,
+            "snippet_chars": 152
+          }
+        ],
+        "cold_latency_ms": 74.96033306233585,
+        "warm_latency_ms": 24.931861087679863,
+        "tool_calls": 1,
+        "bytes_transferred": 1777,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-26",
+        "query": "Shor Algorithmus Quantencomputer",
+        "fts_query": "\"Shor Algorithmus Quantencomputer\" OR (\"Shor\"* AND \"Algorithmus\"* AND \"Quantencomputer\"*) OR (\"Shor\"* OR \"Algorithmus\"* OR \"Quantencomputer\"*)",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 188,
+            "source_id": "",
+            "title": "",
+            "score": -17.10347560080135,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c",
+            "physical_page": 66,
+            "source_id": "",
+            "title": "",
+            "score": -12.932519986983543,
+            "snippet_chars": 158
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 725,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.29047545284783,
+            "snippet_chars": 202
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.28245830242249,
+            "snippet_chars": 119
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 148,
+            "source_id": "",
+            "title": "",
+            "score": -11.139541962309547,
+            "snippet_chars": 166
+          }
+        ],
+        "cold_latency_ms": 26.901709148660302,
+        "warm_latency_ms": 4.641111008822918,
+        "tool_calls": 2,
+        "bytes_transferred": 2090,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-27",
+        "query": "Raft Konsensprotokoll Log-Kompaktierung",
+        "fts_query": "\"Raft Konsensprotokoll Log Kompaktierung\" OR (\"Raft\"* AND \"Konsensprotokoll\"* AND \"Log\"* AND \"Kompaktierung\"*) OR (\"Raft\"* OR \"Konsensprotokoll\"* OR \"Log\"* OR \"Kompaktierung\"*)",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 496,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -13.373976102290635,
+            "snippet_chars": 170
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 780,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -13.331873643306539,
+            "snippet_chars": 189
+          },
+          {
+            "source_sha256": "a36d417dac34c197195fef0267d033f95b618c4352b013f3a9f2734729665a22",
+            "physical_page": 604,
+            "source_id": "",
+            "title": "",
+            "score": -11.855785801053091,
+            "snippet_chars": 98
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 779,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -10.940496978567808,
+            "snippet_chars": 191
+          },
+          {
+            "source_sha256": "a36d417dac34c197195fef0267d033f95b618c4352b013f3a9f2734729665a22",
+            "physical_page": 605,
+            "source_id": "",
+            "title": "",
+            "score": -10.287225297279813,
+            "snippet_chars": 116
+          }
+        ],
+        "cold_latency_ms": 13.191834092140198,
+        "warm_latency_ms": 6.458013628919919,
+        "tool_calls": 3,
+        "bytes_transferred": 1999,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      }
+    ],
+    "FTS5_trigram": [
+      {
+        "query_id": "DEV-01",
+        "query": "Vollst\u00e4ndige Induktion",
+        "fts_query": "\"Vollst\u00e4ndige Induktion\" OR (\"Vollst\u00e4ndige\" AND \"Induktion\") OR (\"Vollst\u00e4ndige\" OR \"Induktion\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 75,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.85373336623919,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 79,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -40.33273861745659,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 74,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.822695102746046,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 123,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.724440575556955,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 77,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -39.71510588679887,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 128.77812492661178,
+        "warm_latency_ms": 30.00556972498695,
+        "tool_calls": 4,
+        "bytes_transferred": 1639,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-02",
+        "query": "Mittelwertsatz der Differentialrechnung",
+        "fts_query": "\"Mittelwertsatz der Differentialrechnung\" OR (\"Mittelwertsatz\" AND \"der\" AND \"Differentialrechnung\") OR (\"Mittelwertsatz\" OR \"der\" OR \"Differentialrechnung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 155,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -49.37428640826938,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -48.36009990584446,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 149,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -47.851158229207435,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "b5752b2a527e63b2761a879b354595decea2056432e92bd66dfd5d3aed1c05c0",
+            "physical_page": 282,
+            "source_id": "source-analysis-drill-blaetter-extern",
+            "title": "IngMath2 Kap. 10.1-10.5 \u2014 computational sequence technique at volume",
+            "score": -47.786202083833984,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -46.626724038696956,
+            "snippet_chars": 28
+          }
+        ],
+        "cold_latency_ms": 202.23745796829462,
+        "warm_latency_ms": 89.10111136113603,
+        "tool_calls": 4,
+        "bytes_transferred": 1568,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-03",
+        "query": "Mittelwertsatz der Integralrechnung",
+        "fts_query": "\"Mittelwertsatz der Integralrechnung\" OR (\"Mittelwertsatz\" AND \"der\" AND \"Integralrechnung\") OR (\"Mittelwertsatz\" OR \"der\" OR \"Integralrechnung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8",
+            "physical_page": 2,
+            "source_id": "source-analysis-skript",
+            "title": "kleine_beweise.pdf \u2014 the seven Chapter 3 proofs the tutors named",
+            "score": -49.30606544521465,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 220,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -48.04297012812567,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 197,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -47.396871355589326,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 53,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -47.302382013413734,
+            "snippet_chars": 28
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 252,
+            "source_id": "",
+            "title": "",
+            "score": -42.826078841212656,
+            "snippet_chars": 28
+          }
+        ],
+        "cold_latency_ms": 132.725500036031,
+        "warm_latency_ms": 102.7434029771636,
+        "tool_calls": 4,
+        "bytes_transferred": 1466,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-04",
+        "query": "Bernoulli-Ungleichung",
+        "fts_query": "\"Bernoulli Ungleichung\" OR (\"Bernoulli\" AND \"Ungleichung\") OR (\"Bernoulli\" OR \"Ungleichung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 70,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -34.069374933374284,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 31,
+            "source_id": "",
+            "title": "",
+            "score": -33.09227381679902,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 32,
+            "source_id": "",
+            "title": "",
+            "score": -32.940866915941875,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 32,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -32.735019113684395,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 85,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -31.59818619668823,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 54.60795806720853,
+        "warm_latency_ms": 23.53902766481042,
+        "tool_calls": 2,
+        "bytes_transferred": 1344,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-05",
+        "query": "Satz von Rolle",
+        "fts_query": "\"Satz von Rolle\" OR (\"Satz\" AND \"von\" AND \"Rolle\") OR (\"Satz\" OR \"von\" OR \"Rolle\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 306,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -43.42612980749741,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 378,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -42.375573634629454,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 307,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -40.07801662122521,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 163,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -37.58204694914845,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c7553dec531680e2b579df6a936a7c1cfa0c01b6467ab860eff98eada2db4e9d",
+            "physical_page": 43,
+            "source_id": "source-analysis-klausuren-extern",
+            "title": "TUM Ferienkurs \u00a71.3 \u2014 Supremum und Infimum",
+            "score": -37.126838199647096,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 69.28941700607538,
+        "warm_latency_ms": 37.14379101681212,
+        "tool_calls": 4,
+        "bytes_transferred": 1547,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-06",
+        "query": "stochastic gradient descent",
+        "fts_query": "\"stochastic gradient descent\" OR (\"stochastic\" AND \"gradient\" AND \"descent\") OR (\"stochastic\" OR \"gradient\" OR \"descent\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 55,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -59.91954053740451,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 59,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -59.687361154680744,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 58,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -59.62724156375556,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "e383a77f1ef5dc9792a126a7ef4e2473d521b03b4a8b232a08db55395c40676e",
+            "physical_page": 54,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Older L06 lecture variant",
+            "score": -59.32983821833131,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1041,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -58.6136654419832,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 85.13404102995992,
+        "warm_latency_ms": 45.14731940192481,
+        "tool_calls": 4,
+        "bytes_transferred": 1413,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-07",
+        "query": "Multilayer Perceptron Backpropagation",
+        "fts_query": "\"Multilayer Perceptron Backpropagation\" OR (\"Multilayer\" AND \"Perceptron\" AND \"Backpropagation\") OR (\"Multilayer\" OR \"Perceptron\" OR \"Backpropagation\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1005,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -58.72231709579144,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1067,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -56.90003414178168,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1036,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -54.982653660861,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1008,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -54.40343983153473,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1011,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -53.98629577401795,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 87.309957947582,
+        "warm_latency_ms": 36.25447233207524,
+        "tool_calls": 4,
+        "bytes_transferred": 1577,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-08",
+        "query": "k-means DBSCAN",
+        "fts_query": "\"k means DBSCAN\" OR (\"means\" AND \"DBSCAN\") OR (\"means\" OR \"DBSCAN\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 283,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -36.05693443556036,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1016,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -35.07283782101706,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 354,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -32.79684666602458,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1092,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -32.55667039185465,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 284,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -31.744155225839574,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 44.14583300240338,
+        "warm_latency_ms": 11.818707920610905,
+        "tool_calls": 4,
+        "bytes_transferred": 1572,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-09",
+        "query": "Bayes' rule",
+        "fts_query": "\"Bayes  rule\" OR (\"Bayes\" AND \"rule\") OR (\"Bayes\" OR \"rule\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 812,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -24.91536722370021,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e",
+            "physical_page": 264,
+            "source_id": "source-tijms-understanding-probability",
+            "title": "Tijms \u2014 simulation-first probability intuition",
+            "score": -24.643692116671904,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 191,
+            "source_id": "",
+            "title": "",
+            "score": -24.56280870067258,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf",
+            "physical_page": 84,
+            "source_id": "source-blitzstein-hwang",
+            "title": "Blitzstein \u2014 conditioning and strategic counting",
+            "score": -24.349255240303886,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 75,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -24.214701671174918,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 19.59491684101522,
+        "warm_latency_ms": 8.944680681452155,
+        "tool_calls": 3,
+        "bytes_transferred": 1495,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-10",
+        "query": "PageRank",
+        "fts_query": "\"PageRank\"",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 596,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -13.77795195429188,
+            "snippet_chars": 27
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 595,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.982552671085852,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2",
+            "physical_page": 16,
+            "source_id": "",
+            "title": "",
+            "score": -12.287936367292946,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 597,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -12.023758338391897,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 119,
+            "source_id": "",
+            "title": "",
+            "score": -11.748511276137338,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 12.381667038425803,
+        "warm_latency_ms": 4.104833661889036,
+        "tool_calls": 3,
+        "bytes_transferred": 1291,
+        "verified_evidence": true,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-11",
+        "query": "(1 + x)n \u2265 1 + nx",
+        "fts_query": "\"1   x n   \"",
+        "expected_status": "answerable",
+        "candidates": [],
+        "cold_latency_ms": 3.8843329530209303,
+        "warm_latency_ms": 0.06354165573914845,
+        "tool_calls": 1,
+        "bytes_transferred": 2,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-12",
+        "query": "f \u2032 (x0 ) =",
+        "fts_query": "\"f    x0\"",
+        "expected_status": "answerable",
+        "candidates": [],
+        "cold_latency_ms": 3.0577080324292183,
+        "warm_latency_ms": 0.06033293902873993,
+        "tool_calls": 1,
+        "bytes_transferred": 2,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-13",
+        "query": "w(u, v) \u2265 0",
+        "fts_query": "\"w u  v    \"",
+        "expected_status": "answerable",
+        "candidates": [],
+        "cold_latency_ms": 2.0639579743146896,
+        "warm_latency_ms": 0.08337510128815968,
+        "tool_calls": 1,
+        "bytes_transferred": 2,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-14",
+        "query": "Zahlenmengen N Z Q R",
+        "fts_query": "\"Zahlenmengen\"",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 13,
+            "source_id": "",
+            "title": "",
+            "score": -10.512789103037322,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab",
+            "physical_page": 43,
+            "source_id": "",
+            "title": "",
+            "score": -9.736492711180277,
+            "snippet_chars": 27
+          },
+          {
+            "source_sha256": "7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63",
+            "physical_page": 48,
+            "source_id": "",
+            "title": "",
+            "score": -9.535116614593289,
+            "snippet_chars": 27
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -9.395095432894275,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -9.330779670787107,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 44.07154186628759,
+        "warm_latency_ms": 6.114694212252895,
+        "tool_calls": 1,
+        "bytes_transferred": 1177,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-15",
+        "query": "Cauchy-Folgen in R",
+        "fts_query": "\"Cauchy Folgen in R\" OR (\"Cauchy\" AND \"Folgen\") OR (\"Cauchy\" OR \"Folgen\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 147,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.84458543116445,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 149,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.71655045438475,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 152,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.454422847341334,
+            "snippet_chars": 29
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 150,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.20080940750068,
+            "snippet_chars": 29
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 148,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -25.05467109596133,
+            "snippet_chars": 29
+          }
+        ],
+        "cold_latency_ms": 83.85420893318951,
+        "warm_latency_ms": 45.09256950890025,
+        "tool_calls": 4,
+        "bytes_transferred": 1491,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-16",
+        "query": "Dijkstras Algorithmus k\u00fcrzeste-Pfade-Problem",
+        "fts_query": "\"Dijkstras Algorithmus k\u00fcrzeste Pfade Problem\" OR (\"Dijkstras\" AND \"Algorithmus\" AND \"k\u00fcrzeste\" AND \"Pfade\" AND \"Problem\") OR (\"Dijkstras\" OR \"Algorithmus\" OR \"k\u00fcrzeste\" OR \"Pfade\" OR \"Problem\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -76.70758664296966,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 717,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -74.31387277158225,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -71.09753611595781,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 714,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -68.65302122475462,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -66.89098567483892,
+            "snippet_chars": 34
+          }
+        ],
+        "cold_latency_ms": 155.25437495671213,
+        "warm_latency_ms": 76.58155565150082,
+        "tool_calls": 4,
+        "bytes_transferred": 1391,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-17",
+        "query": "Dijkstras Algorithmus",
+        "fts_query": "\"Dijkstras Algorithmus\" OR (\"Dijkstras\" AND \"Algorithmus\") OR (\"Dijkstras\" OR \"Algorithmus\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 695,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -54.70311206756694,
+            "snippet_chars": 27
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 696,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -50.01243681243586,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -49.94089816962002,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 692,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -47.660684255074386,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 681,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -46.552941899065814,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 97.41016593761742,
+        "warm_latency_ms": 24.51366667325298,
+        "tool_calls": 4,
+        "bytes_transferred": 1359,
+        "verified_evidence": false,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-18",
+        "query": "K-means clustering",
+        "fts_query": "\"K means clustering\" OR (\"means\" AND \"clustering\") OR (\"means\" OR \"clustering\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 753,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -37.16775497588689,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 24,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -34.97781355993784,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 752,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -32.723817744463474,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 757,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -30.320293242562297,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 549,
+            "source_id": "source-islp",
+            "title": "ISLP Chapter 2 \u2014 statistical learning",
+            "score": -28.064908891175932,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 123.8374998793006,
+        "warm_latency_ms": 60.30468029590944,
+        "tool_calls": 4,
+        "bytes_transferred": 1514,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-19",
+        "query": "Beweis Mittelwertsatz",
+        "fts_query": "\"Beweis Mittelwertsatz\" OR (\"Beweis\" AND \"Mittelwertsatz\") OR (\"Beweis\" OR \"Mittelwertsatz\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 313,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -33.12309575859481,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 311,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -32.86964611187252,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 353,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -29.370643718264017,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 163,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -29.125086053697224,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450",
+            "physical_page": 164,
+            "source_id": "source-labs-schreyer-mathe-informatiker",
+            "title": "Labs/Schreyer \u2014 Logik, Beweismethoden, Mengen und Abbildungen",
+            "score": -28.74895123177872,
+            "snippet_chars": 27
+          }
+        ],
+        "cold_latency_ms": 85.77004191465676,
+        "warm_latency_ms": 28.071819338947535,
+        "tool_calls": 4,
+        "bytes_transferred": 1571,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-20",
+        "query": "Lemma 6.11",
+        "fts_query": "\"Lemma\"",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "df57615ac5f13357e870c456ee625f417aedb64a879f044811d4349292237896",
+            "physical_page": 31,
+            "source_id": "",
+            "title": "",
+            "score": -6.858197222171669,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "6393facd6ef0016dede53575c98409563eb285e61a20593d82fdff09bd179919",
+            "physical_page": 25,
+            "source_id": "",
+            "title": "",
+            "score": -6.837109751162417,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "0f14a4bbc0a8360410c3ad676fcd67c2749fc1e126fad218669f3c0d39ec8591",
+            "physical_page": 56,
+            "source_id": "",
+            "title": "",
+            "score": -6.8207656030169765,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "271e4d6456517a47563ae53152622ced1af9fab3603c380ad1a4a26db5e9076e",
+            "physical_page": 58,
+            "source_id": "source-ohlbach-eisinger-beweise",
+            "title": "Ohlbach/Eisinger \u2014 Beweismuster und vollst\u00e4ndige Induktion",
+            "score": -6.7900731909642795,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "6393facd6ef0016dede53575c98409563eb285e61a20593d82fdff09bd179919",
+            "physical_page": 21,
+            "source_id": "",
+            "title": "",
+            "score": -6.697291095480304,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 14.196750009432435,
+        "warm_latency_ms": 2.6949033296356597,
+        "tool_calls": 1,
+        "bytes_transferred": 1222,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-21",
+        "query": "Zahlbereiche erweitert Gleichung",
+        "fts_query": "\"Zahlbereiche erweitert Gleichung\" OR (\"Zahlbereiche\" AND \"erweitert\" AND \"Gleichung\") OR (\"Zahlbereiche\" OR \"erweitert\" OR \"Gleichung\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -35.592131484934676,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -35.28515725786008,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52",
+            "physical_page": 7,
+            "source_id": "",
+            "title": "",
+            "score": -14.456503861046796,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e",
+            "physical_page": 200,
+            "source_id": "",
+            "title": "",
+            "score": -14.390580019184203,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c",
+            "physical_page": 8,
+            "source_id": "",
+            "title": "",
+            "score": -14.328221756089306,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 353.10454200953245,
+        "warm_latency_ms": 123.49837521711986,
+        "tool_calls": 1,
+        "bytes_transferred": 1188,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-22",
+        "query": "Beweisprinzip Induktionsanfang",
+        "fts_query": "\"Beweisprinzip Induktionsanfang\" OR (\"Beweisprinzip\" AND \"Induktionsanfang\") OR (\"Beweisprinzip\" OR \"Induktionsanfang\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "b6740aef9acd9211d4158f9d53c515a033c04b37947219eef1561df40226ffd3",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -42.322245645009296,
+            "snippet_chars": 27
+          },
+          {
+            "source_sha256": "6df93ef0585916b8809cbb4e7784cffaf26df040bf88a6e1f0cd148b21987852",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -37.32229667118993,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "628dc0963ee5d08d5d144c46a60406c598ab442fad7a1fc18ee436ee1cb45939",
+            "physical_page": 12,
+            "source_id": "source-analysis-skript",
+            "title": "unser skript.pdf Kapitel 1 \u2014 the scope authority",
+            "score": -37.103752417518294,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65",
+            "physical_page": 40,
+            "source_id": "",
+            "title": "",
+            "score": -32.5501126482466,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "b95544a53d33488441383d45e0b088387017cccde4c188ddb8ddb5cc2373c3ce",
+            "physical_page": 17,
+            "source_id": "",
+            "title": "",
+            "score": -32.54595175093902,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 106.78687505424023,
+        "warm_latency_ms": 51.92452762275934,
+        "tool_calls": 1,
+        "bytes_transferred": 1191,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-23",
+        "query": "k\u00fcrzeste Pfade nichtnegativ Kantengewichte",
+        "fts_query": "\"k\u00fcrzeste Pfade nichtnegativ Kantengewichte\" OR (\"k\u00fcrzeste\" AND \"Pfade\" AND \"nichtnegativ\" AND \"Kantengewichte\") OR (\"k\u00fcrzeste\" OR \"Pfade\" OR \"nichtnegativ\" OR \"Kantengewichte\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 733,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -75.00487649328907,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 678,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -68.3626933862717,
+            "snippet_chars": 29
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 683,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -66.53169370688146,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 715,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -64.96439301437198,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 739,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -63.79921536555523,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 129.62283287197351,
+        "warm_latency_ms": 53.39991673827171,
+        "tool_calls": 4,
+        "bytes_transferred": 1379,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-24",
+        "query": "Sweep-Line Methode Geometrie",
+        "fts_query": "\"Sweep Line Methode Geometrie\" OR (\"Sweep\" AND \"Line\" AND \"Methode\" AND \"Geometrie\") OR (\"Sweep\" OR \"Line\" OR \"Methode\" OR \"Geometrie\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 18,
+            "source_id": "",
+            "title": "",
+            "score": -53.31784846367632,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 19,
+            "source_id": "",
+            "title": "",
+            "score": -53.01964440884135,
+            "snippet_chars": 31
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 28,
+            "source_id": "",
+            "title": "",
+            "score": -50.51458395133029,
+            "snippet_chars": 31
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1052,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -48.8479695407765,
+            "snippet_chars": 32
+          },
+          {
+            "source_sha256": "6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff",
+            "physical_page": 2,
+            "source_id": "",
+            "title": "",
+            "score": -47.39870452318068,
+            "snippet_chars": 34
+          }
+        ],
+        "cold_latency_ms": 116.6015830822289,
+        "warm_latency_ms": 74.63227802266677,
+        "tool_calls": 1,
+        "bytes_transferred": 1167,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-25",
+        "query": "AMLS Data Access Methods Matthias Boehm",
+        "fts_query": "\"AMLS Data Access Methods Matthias Boehm\" OR (\"AMLS\" AND \"Data\" AND \"Access\" AND \"Methods\" AND \"Matthias\" AND \"Boehm\") OR (\"AMLS\" OR \"Data\" OR \"Access\" OR \"Methods\" OR \"Matthias\" OR \"Boehm\")",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 5,
+            "source_id": "",
+            "title": "",
+            "score": -67.38185580484648,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 21,
+            "source_id": "",
+            "title": "",
+            "score": -67.14376262401554,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 1,
+            "source_id": "",
+            "title": "",
+            "score": -65.94001674242529,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 24,
+            "source_id": "",
+            "title": "",
+            "score": -65.82856289393695,
+            "snippet_chars": 34
+          },
+          {
+            "source_sha256": "514fe49ca0e8eb8172fd74ea7de1f32980822d18e8f0c8360e94f3917bb68d3b",
+            "physical_page": 10,
+            "source_id": "",
+            "title": "",
+            "score": -64.47811827422376,
+            "snippet_chars": 34
+          }
+        ],
+        "cold_latency_ms": 233.57858299277723,
+        "warm_latency_ms": 77.67393067479134,
+        "tool_calls": 1,
+        "bytes_transferred": 1137,
+        "verified_evidence": true,
+        "retrieval_hit": true
+      },
+      {
+        "query_id": "DEV-26",
+        "query": "Shor Algorithmus Quantencomputer",
+        "fts_query": "\"Shor Algorithmus Quantencomputer\" OR (\"Shor\" AND \"Algorithmus\" AND \"Quantencomputer\") OR (\"Shor\" OR \"Algorithmus\" OR \"Quantencomputer\")",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 188,
+            "source_id": "",
+            "title": "",
+            "score": -15.770671961672154,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c",
+            "physical_page": 66,
+            "source_id": "",
+            "title": "",
+            "score": -12.993090865794896,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.007504863045927,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 725,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -10.971128046801867,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8",
+            "physical_page": 148,
+            "source_id": "",
+            "title": "",
+            "score": -10.828180567689108,
+            "snippet_chars": 32
+          }
+        ],
+        "cold_latency_ms": 175.41983304545283,
+        "warm_latency_ms": 70.55787548112373,
+        "tool_calls": 2,
+        "bytes_transferred": 1216,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      },
+      {
+        "query_id": "DEV-27",
+        "query": "Raft Konsensprotokoll Log-Kompaktierung",
+        "fts_query": "\"Raft Konsensprotokoll Log Kompaktierung\" OR (\"Raft\" AND \"Konsensprotokoll\" AND \"Log\" AND \"Kompaktierung\") OR (\"Raft\" OR \"Konsensprotokoll\" OR \"Log\" OR \"Kompaktierung\")",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 496,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -12.680219640045403,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 780,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -11.600958882800134,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "e0270742e141bf2d063a107ed031a99c6e121be8ac759a20b811b04417a962ce",
+            "physical_page": 734,
+            "source_id": "",
+            "title": "",
+            "score": -10.525761241351278,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "eb3885d72fdb7c27a6a3531b06d69ae71c90f4c9c7a0e79f517654bad402baf5",
+            "physical_page": 333,
+            "source_id": "",
+            "title": "",
+            "score": -9.9950845423627,
+            "snippet_chars": 30
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 779,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -9.940191050494333,
+            "snippet_chars": 30
+          }
+        ],
+        "cold_latency_ms": 103.59650012105703,
+        "warm_latency_ms": 42.217708425596356,
+        "tool_calls": 3,
+        "bytes_transferred": 1309,
+        "verified_evidence": false,
+        "retrieval_hit": false
+      }
+    ]
+  }
+}

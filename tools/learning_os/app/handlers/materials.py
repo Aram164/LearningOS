@@ -1528,3 +1528,51 @@ def material_context(ctx: OpContext, req: dict) -> Result:
             str(exc), site=f"{ctx.operation}.read-failed",
             prefixed=True, exit_code=2,
         ) from exc
+
+
+@register("material.search", kind="query", effects=OperationEffects.READ)
+def material_search(ctx: OpContext, req: dict) -> Result:
+    """Search local learning materials via fast FTS5 index and return candidate references."""
+    root = ctx.root
+    query = (req.get("query") or "").strip()
+    if not query:
+        raise WriteRefused("material.search requires a nonempty query", site=f"{ctx.operation}.empty-query", exit_code=2)
+
+    limit = req.get("limit") or 10
+    offset = req.get("offset") or 0
+    unit_filter = req.get("unit")
+    module_filter = req.get("module")
+    allow_stale = bool(req.get("allow_stale"))
+
+    repo = ctx.repo()
+    sha_to_route = {}
+    for _unit_id, unit in repo.units.items():
+        sm = repo.module_source_maps.get(unit.module_id)
+        if not sm:
+            continue
+        for r in unit_routes(sm, unit.module_id, unit.id):
+            files = resolve_route_material_files(repo, r)
+            for f in files:
+                sha = sha256_file(Path(f.path)).removeprefix("sha256:")
+                if sha not in sha_to_route:
+                    sha_to_route[sha] = (unit.id, r.get("id"), unit.module_id)
+
+    from learning_os.store.materials.search_index import execute_search
+
+    search_res = execute_search(
+        repo_root=root,
+        query=query,
+        limit=limit,
+        offset=offset,
+        unit_id=unit_filter,
+        module_id=module_filter,
+        sha_to_route=sha_to_route,
+        allow_stale=allow_stale,
+    )
+
+    snapshot_val = _snapshot(root, req.get("expected_snapshot"))
+    payload = search_res.to_dict()
+    payload["snapshot_id"] = snapshot_val
+
+    return Result(payload)
+

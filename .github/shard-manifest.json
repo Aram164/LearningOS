@@ -107,6 +107,7 @@
    "tests/test_material_editing.py",
    "tests/test_material_locator_fallback.py",
    "tests/test_material_observation_port.py",
+   "tests/test_material_search.py",
    "tests/test_material_text_cache.py",
    "tests/test_materials_catalogue.py",
    "tests/test_migration_lifecycle.py",

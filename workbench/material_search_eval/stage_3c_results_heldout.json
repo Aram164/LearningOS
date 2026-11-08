@@ -1,0 +1,1612 @@
+{
+  "Baseline_B_Grep": {
+    "summary": {
+      "arm_name": "Baseline_B_Grep",
+      "total_queries": 10,
+      "answerable_queries": 9,
+      "unanswerable_queries": 1,
+      "strict_recall_at_1": 0.3333333333333333,
+      "strict_recall_at_3": 0.3333333333333333,
+      "strict_recall_at_5": 0.3333333333333333,
+      "strict_mrr": 0.3333333333333333,
+      "topical_recall_at_1": 0.3333333333333333,
+      "topical_recall_at_3": 0.3333333333333333,
+      "topical_recall_at_5": 0.3333333333333333,
+      "topical_mrr": 0.3333333333333333,
+      "verified_target_evidence_rate_at_3": 0.1111111111111111,
+      "verified_target_evidence_rate_at_5": 0.1111111111111111,
+      "verified_evidence_rate": 0.1111111111111111,
+      "legacy_loose_verified_rate": 0.5555555555555556,
+      "false_source_rate": 0.6666666666666666,
+      "unanswerable_accuracy": 0.0,
+      "unanswerable_false_positive_rate": 1.0,
+      "unjustified_verified_rate": 0.0,
+      "level_1_retrieval_rate": 1.0,
+      "level_2_verification_rate": 0.1111111111111111,
+      "level_3_abstention_accuracy": 1.0,
+      "avg_tool_calls": 2.6,
+      "avg_bytes_transferred": 10179.8,
+      "t_sql_mean_ms": 0.0,
+      "t_sql_p50_ms": 0.0,
+      "t_sql_p95_ms": 0.0,
+      "t_retrieval_e2e_mean_ms": 5995.459183282219,
+      "t_retrieval_e2e_p50_ms": 6269.412582973018,
+      "t_retrieval_e2e_p95_ms": 9694.393750047311,
+      "retrieval_breakdown": {
+        "RANKING_MISS": 1,
+        "FOUND": 3,
+        "WRONG_SOURCE": 5
+      },
+      "evidence_breakdown": {
+        "NOT_ATTEMPTED": 6,
+        "VERIFIED": 1,
+        "EXTRACTOR_DIVERGENCE": 2
+      },
+      "per_category": {
+        "german_terms": {
+          "count": 2.0,
+          "topical_recall@3": 0.5,
+          "topical_recall@5": 0.5,
+          "verified_target_evidence@5": 0.5,
+          "topical_mrr": 0.5
+        },
+        "english_terms": {
+          "count": 2.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "math_notation": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 1.0
+        },
+        "definitions": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "algorithms": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 1.0
+        },
+        "derivations": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "paraphrases": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        }
+      }
+    },
+    "evaluations": [
+      {
+        "query_id": "HELD-01",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271",
+            "physical_page": 65,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 237,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 256,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 687,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 688,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 18182,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 9694.393750047311,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-02",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 154,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1243,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1244,
+            "score": 11.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 304,
+            "score": 11.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 3,
+        "bytes_transferred": 12279,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6269.412582973018,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-03",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 541,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05",
+            "physical_page": 216,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 545,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 125,
+            "score": 4,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 5336,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4248.927792068571,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-04",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05",
+            "physical_page": 14,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05",
+            "physical_page": 296,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05",
+            "physical_page": 298,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 8,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 350,
+            "score": 4,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 2,
+        "bytes_transferred": 11410,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 5336.190750123933,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-05",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 10,
+            "score": 14.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 79,
+            "score": 14.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 81,
+            "score": 14.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8",
+            "physical_page": 7,
+            "score": 14.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8",
+            "physical_page": 56,
+            "score": 14.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 15665,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7554.420707980171,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-06",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba",
+            "physical_page": 80,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 54,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 56,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 230,
+            "score": 12.0,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 231,
+            "score": 12.0,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 14969,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 6534.857624908909,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-07",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 162,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 129,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 92,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "8761863075463eb739119d8c7fd001ac5874169a25f6938c1e68d4fec7a0f14a",
+            "physical_page": 39,
+            "score": 1,
+            "snippet_chars": 58
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 153,
+            "score": 1,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 14201,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 7540.424000006169,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-08",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 541,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05",
+            "physical_page": 216,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60",
+            "physical_page": 545,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 125,
+            "score": 4,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 5336,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4763.867042027414,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-09",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 1014,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 104,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc",
+            "physical_page": 134,
+            "score": 4,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 289,
+            "score": 4,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 3215,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 4258.697749814019,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-10",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 246,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 247,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 319,
+            "score": 2,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "08709a87567d8311d6fd29c4f4a5386801153e71450e628c4a5a5d7e85feda8b",
+            "physical_page": 24,
+            "score": 1,
+            "snippet_chars": 100
+          },
+          {
+            "source_sha256": "08709a87567d8311d6fd29c4f4a5386801153e71450e628c4a5a5d7e85feda8b",
+            "physical_page": 786,
+            "score": 1,
+            "snippet_chars": 100
+          }
+        ],
+        "tool_calls": 0,
+        "bytes_transferred": 1205,
+        "t_sql_ms": 0.0,
+        "t_retrieval_e2e_ms": 3753.399832872674,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      }
+    ]
+  },
+  "FTS5_Arm2_Tiered": {
+    "summary": {
+      "arm_name": "FTS5_Arm2_Tiered",
+      "total_queries": 10,
+      "answerable_queries": 9,
+      "unanswerable_queries": 1,
+      "strict_recall_at_1": 0.1111111111111111,
+      "strict_recall_at_3": 0.2222222222222222,
+      "strict_recall_at_5": 0.5555555555555556,
+      "strict_mrr": 0.23888888888888887,
+      "topical_recall_at_1": 0.1111111111111111,
+      "topical_recall_at_3": 0.2222222222222222,
+      "topical_recall_at_5": 0.5555555555555556,
+      "topical_mrr": 0.23888888888888887,
+      "verified_target_evidence_rate_at_3": 0.1111111111111111,
+      "verified_target_evidence_rate_at_5": 0.3333333333333333,
+      "verified_evidence_rate": 0.3333333333333333,
+      "legacy_loose_verified_rate": 0.7777777777777778,
+      "false_source_rate": 0.7777777777777778,
+      "unanswerable_accuracy": 0.0,
+      "unanswerable_false_positive_rate": 1.0,
+      "unjustified_verified_rate": 0.0,
+      "level_1_retrieval_rate": 1.0,
+      "level_2_verification_rate": 0.3333333333333333,
+      "level_3_abstention_accuracy": 1.0,
+      "avg_tool_calls": 4.8,
+      "avg_bytes_transferred": 25346.0,
+      "t_sql_mean_ms": 16.796341398730874,
+      "t_sql_p50_ms": 13.376875082030892,
+      "t_sql_p95_ms": 40.14166700653732,
+      "t_retrieval_e2e_mean_ms": 3033.4233125904575,
+      "t_retrieval_e2e_p50_ms": 3778.732875129208,
+      "t_retrieval_e2e_p95_ms": 4134.250875096768,
+      "retrieval_breakdown": {
+        "FOUND": 5,
+        "RANKING_MISS": 3,
+        "INDEX_PAGE_CONFUSION": 1
+      },
+      "evidence_breakdown": {
+        "VERIFIED": 3,
+        "NOT_ATTEMPTED": 4,
+        "EXTRACTOR_DIVERGENCE": 2
+      },
+      "per_category": {
+        "german_terms": {
+          "count": 2.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 0.225
+        },
+        "english_terms": {
+          "count": 2.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "math_notation": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.2
+        },
+        "definitions": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "algorithms": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 1.0
+        },
+        "derivations": {
+          "count": 1.0,
+          "topical_recall@3": 0.0,
+          "topical_recall@5": 0.0,
+          "verified_target_evidence@5": 0.0,
+          "topical_mrr": 0.0
+        },
+        "paraphrases": {
+          "count": 1.0,
+          "topical_recall@3": 1.0,
+          "topical_recall@5": 1.0,
+          "verified_target_evidence@5": 1.0,
+          "topical_mrr": 0.5
+        }
+      }
+    },
+    "evaluations": [
+      {
+        "query_id": "HELD-01",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5",
+            "physical_page": 256,
+            "source_id": "source-dms-grundwerkzeuge",
+            "title": "DMS \u2014 Chapters 1 and 4",
+            "score": -11.092382349950327,
+            "body_chars": 2502,
+            "snippet_chars": 140,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 687,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -10.630619608033518,
+            "body_chars": 2687,
+            "snippet_chars": 124,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 614,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -9.414248074139843,
+            "body_chars": 1533,
+            "snippet_chars": 134,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf",
+            "physical_page": 617,
+            "source_id": "source-ottmann-widmayer",
+            "title": "Ottmann/Widmayer \u2014 mapped sections",
+            "score": -9.01301624709021,
+            "body_chars": 1772,
+            "snippet_chars": 125,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 690,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -8.557138581612023,
+            "body_chars": 2012,
+            "snippet_chars": 141,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 33540,
+        "t_sql_ms": 15.689166029915214,
+        "t_retrieval_e2e_ms": 4134.250875096768,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.2,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-02",
+        "category": "german_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 304,
+            "source_id": "",
+            "title": "",
+            "score": -14.443617230981257,
+            "body_chars": 2229,
+            "snippet_chars": 168,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1243,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -11.001842046542597,
+            "body_chars": 1124,
+            "snippet_chars": 134,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 1244,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -9.62804737406199,
+            "body_chars": 1810,
+            "snippet_chars": 127,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445",
+            "physical_page": 154,
+            "source_id": "source-clrs",
+            "title": "CLRS \u2014 mapped Algo 2 chapters",
+            "score": -8.253842901968767,
+            "body_chars": 2682,
+            "snippet_chars": 141,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c",
+            "physical_page": 303,
+            "source_id": "",
+            "title": "",
+            "score": -12.153796983212139,
+            "body_chars": 2703,
+            "snippet_chars": 131,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 25588,
+        "t_sql_ms": 26.81083302013576,
+        "t_retrieval_e2e_ms": 2624.941333895549,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.25,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.25,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-03",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 293,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -10.628145900163835,
+            "body_chars": 656,
+            "snippet_chars": 112,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1100,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -10.368427726984008,
+            "body_chars": 1134,
+            "snippet_chars": 185,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 289,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -10.255639827783774,
+            "body_chars": 2264,
+            "snippet_chars": 126,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ac12dd2e7911319dfdb7dd334a387703c14d2ed81c5925e96c075bf2b696bd55",
+            "physical_page": 251,
+            "source_id": "",
+            "title": "",
+            "score": -9.734105934139077,
+            "body_chars": 895,
+            "snippet_chars": 123,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "source_id": "",
+            "title": "",
+            "score": -9.104026698218252,
+            "body_chars": 3577,
+            "snippet_chars": 134,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 19322,
+        "t_sql_ms": 40.14166700653732,
+        "t_retrieval_e2e_ms": 2382.343249861151,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-04",
+        "category": "english_terms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 1,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -9.919704397201302,
+            "body_chars": 2549,
+            "snippet_chars": 153,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 273,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -28.342636360189278,
+            "body_chars": 1899,
+            "snippet_chars": 156,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 217,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -27.86291353819332,
+            "body_chars": 1882,
+            "snippet_chars": 146,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 296,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -27.6741890835033,
+            "body_chars": 2372,
+            "snippet_chars": 145,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "8d098d65cf53925ba0fc13a52a2790d48a32433223cbd876d0a527cd1afe2e0f",
+            "physical_page": 624,
+            "source_id": "source-esl",
+            "title": "ESL flexibility spectrum: least squares to k-NN",
+            "score": -27.619394945057387,
+            "body_chars": 1517,
+            "snippet_chars": 131,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 32046,
+        "t_sql_ms": 19.218625035136938,
+        "t_retrieval_e2e_ms": 3938.843375071883,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-05",
+        "category": "math_notation",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8",
+            "physical_page": 56,
+            "source_id": "source-dekking-mips",
+            "title": "Dekking \u2014 descriptive review and answer-backed exercises",
+            "score": -12.703251722471842,
+            "body_chars": 1706,
+            "snippet_chars": 127,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 79,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -12.299013634121543,
+            "body_chars": 2060,
+            "snippet_chars": 148,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8",
+            "physical_page": 7,
+            "source_id": "source-dekking-mips",
+            "title": "Dekking \u2014 descriptive review and answer-backed exercises",
+            "score": -10.786098685358056,
+            "body_chars": 3376,
+            "snippet_chars": 280,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 81,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -9.61404603147466,
+            "body_chars": 1334,
+            "snippet_chars": 110,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 10,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -9.124281668569964,
+            "body_chars": 1707,
+            "snippet_chars": 118,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 27851,
+        "t_sql_ms": 12.711165938526392,
+        "t_retrieval_e2e_ms": 3778.732875129208,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.2,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.2,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-06",
+        "category": "definitions",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 56,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -13.16917066442216,
+            "body_chars": 897,
+            "snippet_chars": 117,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 54,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.17061441446154,
+            "body_chars": 1546,
+            "snippet_chars": 142,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 122,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -11.068172899569111,
+            "body_chars": 1678,
+            "snippet_chars": 132,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 53,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -10.998741128762209,
+            "body_chars": 1819,
+            "snippet_chars": 133,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "3ee9e5cea99e7f71409759a8054e64f4f8496616f13eb27c9b760886fe86c8dd",
+            "physical_page": 147,
+            "source_id": "source-mfnf-analysis1",
+            "title": "Mathe f\u00fcr Nicht-Freaks \u2014 Supremum und Infimum",
+            "score": -10.97895203817064,
+            "body_chars": 1100,
+            "snippet_chars": 136,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 28120,
+        "t_sql_ms": 9.658790891990066,
+        "t_retrieval_e2e_ms": 4088.6116249021143,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "INDEX_PAGE_CONFUSION",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-07",
+        "category": "algorithms",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 162,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -22.339853525245456,
+            "body_chars": 1464,
+            "snippet_chars": 139,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 129,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -20.27917494874166,
+            "body_chars": 2227,
+            "snippet_chars": 120,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "8761863075463eb739119d8c7fd001ac5874169a25f6938c1e68d4fec7a0f14a",
+            "physical_page": 39,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "\u00dcbung 04 \u2014 nonlinear regression and regularization",
+            "score": -13.648548371192646,
+            "body_chars": 58,
+            "snippet_chars": 60,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 116,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -13.313557101779136,
+            "body_chars": 2027,
+            "snippet_chars": 130,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "736a1ca0c02160152de25939d325813a23926a1ec4deab2f5c7b8a04c4a9ed90",
+            "physical_page": 92,
+            "source_id": "source-aml-ss26-lectures",
+            "title": "Current L06 lecture deck",
+            "score": -12.385424769715577,
+            "body_chars": 135,
+            "snippet_chars": 137,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 6,
+        "bytes_transferred": 23288,
+        "t_sql_ms": 8.664000080898404,
+        "t_retrieval_e2e_ms": 3876.0184589773417,
+        "strict_hit_at_1": true,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 1.0,
+        "topical_hit_at_1": true,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 1.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "FOUND",
+        "evidence_status": "EXTRACTOR_DIVERGENCE",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-08",
+        "category": "derivations",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 293,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -10.628145900163835,
+            "body_chars": 656,
+            "snippet_chars": 112,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 1100,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -10.368427726984008,
+            "body_chars": 1134,
+            "snippet_chars": 185,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf",
+            "physical_page": 289,
+            "source_id": "source-murphy-pml1",
+            "title": "Murphy \u2014 the derivation bank behind the two repair clusters",
+            "score": -10.255639827783774,
+            "body_chars": 2264,
+            "snippet_chars": 126,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "ac12dd2e7911319dfdb7dd334a387703c14d2ed81c5925e96c075bf2b696bd55",
+            "physical_page": 251,
+            "source_id": "",
+            "title": "",
+            "score": -9.734105934139077,
+            "body_chars": 895,
+            "snippet_chars": 123,
+            "tier": "exact_phrase"
+          },
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "source_id": "",
+            "title": "",
+            "score": -9.104026698218252,
+            "body_chars": 3577,
+            "snippet_chars": 134,
+            "tier": "exact_phrase"
+          }
+        ],
+        "tool_calls": 4,
+        "bytes_transferred": 19322,
+        "t_sql_ms": 13.376875082030892,
+        "t_retrieval_e2e_ms": 2289.541041944176,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": true,
+        "false_source": false,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "RANKING_MISS",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-09",
+        "category": "paraphrases",
+        "expected_status": "answerable",
+        "candidates": [
+          {
+            "source_sha256": "0ab104e1994537107a93c17ab3007f870eb1d58bdf9993c4708771d9391bad31",
+            "physical_page": 539,
+            "source_id": "",
+            "title": "",
+            "score": -23.08727866062449,
+            "body_chars": 3577,
+            "snippet_chars": 140,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 203,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -20.733289987442017,
+            "body_chars": 2088,
+            "snippet_chars": 151,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 145,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -19.080482165152628,
+            "body_chars": 2575,
+            "snippet_chars": 160,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "99ad11dd820a5a6c6e59b00806072235e85558dce44cd72cb8b0717b2b01baaa",
+            "physical_page": 309,
+            "source_id": "source-geron-handson",
+            "title": "G\u00e9ron 3rd ed. \u2014 the executable half of both repair clusters",
+            "score": -18.347620495001348,
+            "body_chars": 1869,
+            "snippet_chars": 151,
+            "tier": "conjunction"
+          },
+          {
+            "source_sha256": "ef03dc392e000d1dc27d92ac668014b069017214debd61ca8dcbb350f4b30de0",
+            "physical_page": 249,
+            "source_id": "source-geron-handson",
+            "title": "Geron Ch 9 - k-means plus the density family and cluster evaluation",
+            "score": -18.102934429470732,
+            "body_chars": 1894,
+            "snippet_chars": 151,
+            "tier": "conjunction"
+          }
+        ],
+        "tool_calls": 5,
+        "bytes_transferred": 31553,
+        "t_sql_ms": 12.363499961793423,
+        "t_retrieval_e2e_ms": 3209.7232500091195,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": true,
+        "strict_hit_at_5": true,
+        "strict_reciprocal_rank": 0.5,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": true,
+        "topical_hit_at_5": true,
+        "topical_reciprocal_rank": 0.5,
+        "verified_target_evidence_at_3": true,
+        "verified_target_evidence_at_5": true,
+        "verified_evidence": true,
+        "legacy_loose_verified": true,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": true,
+        "level_3_decision": "ANSWERABLE_WITH_EVIDENCE",
+        "retrieval_status": "FOUND",
+        "evidence_status": "VERIFIED",
+        "details": ""
+      },
+      {
+        "query_id": "HELD-10",
+        "category": "unanswerable",
+        "expected_status": "unanswerable",
+        "candidates": [
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 246,
+            "source_id": "",
+            "title": "",
+            "score": -20.860682991283507,
+            "body_chars": 1862,
+            "snippet_chars": 137,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 247,
+            "source_id": "",
+            "title": "",
+            "score": -16.25654172663236,
+            "body_chars": 2584,
+            "snippet_chars": 129,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 220,
+            "source_id": "",
+            "title": "",
+            "score": -13.996160340455768,
+            "body_chars": 2507,
+            "snippet_chars": 113,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 12,
+            "source_id": "",
+            "title": "",
+            "score": -13.781797219137637,
+            "body_chars": 1318,
+            "snippet_chars": 126,
+            "tier": "disjunction"
+          },
+          {
+            "source_sha256": "67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44",
+            "physical_page": 213,
+            "source_id": "",
+            "title": "",
+            "score": -13.571496753999952,
+            "body_chars": 2221,
+            "snippet_chars": 126,
+            "tier": "disjunction"
+          }
+        ],
+        "tool_calls": 1,
+        "bytes_transferred": 12830,
+        "t_sql_ms": 9.328790940344334,
+        "t_retrieval_e2e_ms": 11.227041017264128,
+        "strict_hit_at_1": false,
+        "strict_hit_at_3": false,
+        "strict_hit_at_5": false,
+        "strict_reciprocal_rank": 0.0,
+        "topical_hit_at_1": false,
+        "topical_hit_at_3": false,
+        "topical_hit_at_5": false,
+        "topical_reciprocal_rank": 0.0,
+        "verified_target_evidence_at_3": false,
+        "verified_target_evidence_at_5": false,
+        "verified_evidence": false,
+        "legacy_loose_verified": false,
+        "false_source": true,
+        "unanswerable_correctly_rejected": false,
+        "level_1_candidates_found": true,
+        "level_2_evidence_verified": false,
+        "level_3_decision": "INSUFFICIENT_EVIDENCE_ABSTAIN",
+        "retrieval_status": "WRONG_SOURCE",
+        "evidence_status": "NOT_ATTEMPTED",
+        "details": ""
+      }
+    ]
+  }
+}
