@@ -1,0 +1,22 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"contract\":\"material-search-v1\",\"status\":\"unavailable\",\"query\":\"Chebyshev\",\"has_more\":false,\"hits\":[],\"reason\":\"index_missing\",\"message\":\"Search index has not been built. Run `python tools/build_material_search_index.py`.\",\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\"}\n",
+  "stdout_json": {
+    "contract": "material-search-v1",
+    "has_more": false,
+    "hits": [],
+    "message": "Search index has not been built. Run `python tools/build_material_search_index.py`.",
+    "query": "Chebyshev",
+    "reason": "index_missing",
+    "schema_version": 1,
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
+    "status": "unavailable"
+  }
+}

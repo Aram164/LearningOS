@@ -101,8 +101,8 @@ STOPWORDS = frozenset({
     "in", "im", "von", "vom", "zu", "zum", "zur", "mit", "auf", "an", "am", "aus", "bei", "beim",
     "und", "oder", "aber", "nach", "über", "uber", "unter", "vor", "zwischen", "durch", "für", "fur",
     "ist", "sind", "wird", "werden", "wie", "wo", "wer", "was",
-    "the", "a", "an", "and", "or", "in", "on", "at", "to", "for", "of", "with", "by", "from",
-    "is", "are", "was", "were", "be", "been", "that", "this", "which",
+    "the", "a", "and", "or", "on", "at", "to", "for", "of", "with", "by", "from",
+    "is", "are", "were", "be", "been", "that", "this", "which",
 })
 
 
@@ -907,7 +907,7 @@ def execute_search(
         dead_shas: set[str] = set()
         if materials_root.is_dir() and (reader.files or bindings_by_sha):
             live_shas: set[str] = set(bindings_by_sha.keys())
-            for rel_path, snap in reader.files.items():
+            for rel_path in reader.files:
                 pdf_path = materials_root / rel_path
                 if pdf_path.is_file() and not pdf_path.is_symlink():
                     try:

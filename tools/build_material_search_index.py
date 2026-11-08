@@ -33,6 +33,9 @@ REPO_ROOT = TOOLS_DIR.parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
+from material_text import EXTRACTOR, _index_valid, cache_index  # noqa: E402
+from materials_manifest import load_manifest  # noqa: E402
+
 from learning_os.store.materials.resolution import sha256_file  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
     INDEX_TOKENIZER,
@@ -46,8 +49,6 @@ from learning_os.store.materials.search_index import (  # noqa: E402
     get_search_base_dir,
     open_index,
 )
-from material_text import EXTRACTOR, _index_valid, cache_index  # noqa: E402
-from materials_manifest import load_manifest  # noqa: E402
 
 BATCH_SIZE = 5000
 _HEX64_RE = re.compile(r"^[0-9a-f]{64}$")

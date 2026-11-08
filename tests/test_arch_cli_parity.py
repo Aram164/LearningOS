@@ -38,11 +38,17 @@ def _retired_choice_text(text: str) -> str:
 
 
 def _without_stage6_choice(actual: dict) -> dict:
-    """Only the approved added verb is absent from frozen historical errors."""
+    """Only the approved added verbs are absent from frozen historical errors."""
     actual = copy.deepcopy(actual)
     for key, value in actual.get("error", {}).items():
         if isinstance(value, str) and ("usage: los" in value or "choose from" in value):
-            actual["error"][key] = value.replace(",study-sequence", "").replace(", 'study-sequence'", "").replace(", study-sequence", "")
+            for verb in ("study-sequence", "material-search"):
+                actual["error"][key] = (
+                    actual["error"][key]
+                    .replace(f",{verb}", "")
+                    .replace(f", '{verb}'", "")
+                    .replace(f", {verb}", "")
+                )
     return actual
 
 
@@ -497,9 +503,10 @@ def test_generated_parser_matches_baseline_structure():
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     live = _normalize_describe(arch_cli_describe.describe(los.build_parser()))
     expected = _normalize_describe(baseline)
-    assert "study-sequence" in live["subparsers"]
-    live["order"].remove("study-sequence")
-    live["subparsers"].pop("study-sequence")
+    for added in ("study-sequence", "material-search"):
+        assert added in live["subparsers"]
+        live["order"].remove(added)
+        live["subparsers"].pop(added)
     expected["order"] = [name for name in expected["order"] if name not in RETIRED_PROJECT_COMMANDS]
     for name in RETIRED_PROJECT_COMMANDS:
         expected["subparsers"].pop(name)

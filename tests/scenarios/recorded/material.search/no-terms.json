@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: material.search query contains no searchable terms after normalization\n",
+  "stdout": "",
+  "stdout_json": null
+}
