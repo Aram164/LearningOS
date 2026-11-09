@@ -2,7 +2,7 @@
 """Reconcile the old learning-resource lists against the source registry.
 
 A bounded, read-only audit tool for the two-pass source intake
-(``work/active/workspace-library-reconciliation``). It answers "where did each
+(``archive/workspaces/2026/workspace-library-reconciliation``). It answers "where did each
 old item go?" occurrence by occurrence rather than trusting a registered-source
 count, which OPERATOR rule 14 forbids as evidence of completeness.
 
