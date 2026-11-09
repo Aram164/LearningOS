@@ -46,8 +46,8 @@ ENTRYPOINTS = (
     "library_reconciliation.py",
     "los.py",
     "manifest_contract.py",
-    "migrations/projects_to_modules_v62.py",
-    "migrations/python_topic_sessions_v63.py",
+    "migrations/curriculum_v2.py",
+    "migrations/route_identity_v13.py",
     "material_text.py",
     "material_toc.py",
     "material_summarize.py",
@@ -79,32 +79,13 @@ PACKAGE_ROOTS: Mapping[str, str] = {
 }
 
 # Completed migrations stay executable as historical evidence, but are not
-# standing runtime dependencies.  Current data-contract v14 makes each listed
-# migration's apply path fail closed through migration_lifecycle.py.  A live
-# one-shot migration executed directly by the operator (never imported) is
-# listed here instead, with its lifecycle bound, until it retires the same way.
-UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
-    "migrations.summaries_to_notes_v1": (
-        "one-shot summary migration, directly executed (through v35)"
-    ),
-    "migrations.curriculum_v2": "retired module-first migration (through v0)",
-    "migrations.job_quarantine_collapse": (
-        "completed migration; runtime wiring retired by PLAN D13 (ADR-018)"
-    ),
-    "migrations.lift_angle_out_of_locator": (
-        "completed locator/angle repair (through v12); LOCATOR-ANGLE-FUSED now refuses the defect"
-    ),
-    "migrations.library_taxonomy_v1": "retired taxonomy migration (through v1)",
-    "migrations.projects_v1": "retired project migration (through v0)",
-    "migrations.registry_partition_v1": "retired registry migration (through v1)",
-    "migrations.route_identity_v13": (
-        "completed migration; runtime wiring retired by PLAN D13 (ADR-018)"
-    ),
-    "migrations.standardize_job_plans_v1": "retired Job plan migration (through v10)",
-    "migrations.standardize_plan_template_v10": (
-        "retired plan-template migration (through v10)"
-    ),
-}
+# standing runtime dependencies.  The two kept migrations
+# (curriculum_v2, route_identity_v13) are declared entrypoints above: they
+# are executed directly by the operator, and their import keeps
+# migration_lifecycle.py reachable.  Nothing else production-retained is
+# unreachable, so this allowlist is empty; a new entry needs the same
+# lifecycle-bound justification the retired programs once had.
+UNREACHABLE_ALLOWLIST: Mapping[str, str] = {}
 
 
 @dataclass(frozen=True)

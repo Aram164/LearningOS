@@ -45,12 +45,3 @@ def test_project_cli_resolves_to_the_canonical_module(repo_root: Path):
         payload = json.loads(result.stdout)
         assert payload["id"] == "module-project-bachelor-thesis"
         assert payload.get("resolved_from") == (identity if identity.startswith("project-") else None)
-
-
-def test_project_migration_is_retired_on_current_contract(repo_root: Path):
-    result = subprocess.run(
-        [sys.executable, str(repo_root / "tools/migrations/projects_v1.py"), "--apply", "--root", str(repo_root)],
-        cwd=repo_root, text=True, capture_output=True,
-    )
-    assert result.returncode == 2
-    assert "migration projects-v1 is retired" in result.stdout

@@ -82,17 +82,7 @@ contract is newer than the last generation it understands.
 | Migration | Status at data-contract v14 | Current relationship |
 |---|---|---|
 | `curriculum_v2.py` | retired after v0 | Historical module-first migration and fixture evidence. |
-| `library_taxonomy_v1.py` | retired after v1 | Historical taxonomy migration. |
-| `projects_v1.py` | retired after v0 | Historical project migration/rollback evidence. |
-| `registry_partition_v1.py` | retired after v1 | Historical source-registry partition migration. |
-| `lift_angle_out_of_locator.py` | retired after v12 | Historical un-fusing of locator and angle (3,885 study-map rows); `LOCATOR-ANGLE-FUSED` now refuses the defect. |
-| `standardize_job_plans_v1.py` | retired after v10 | Historical Job plan standardization. |
-| `standardize_plan_template_v10.py` | retired after v10 | Historical plan-template standardization. |
 | `route_identity_v13.py` | apply retired after v13; compatibility planner retained | The public compatibility command still imports its deterministic planner and fails closed on current apply. |
-| `job_quarantine_collapse.py` | compatibility planner; direct apply always refused | The gateway-bound legacy Job capability reuses its plan and before-image verification. |
-| `summaries_to_notes_v1.py` | one-shot; direct operator execution through v35 | Freeze, map, and migrate legacy summary-cache entries to durable analysis notes via note.analysis.save; refuses changed inputs and retires by lifecycle after v35. |
-| `projects_to_modules_v62.py` | one-shot through v62; dry-run default | Exact reviewed thesis consolidation through the application controller, declared migration authority and shared transaction receipt/recovery. |
-| `python_topic_sessions_v63.py` | one-shot through v63; dry-run default | Rehomes the sixteen existing Python topics into individual sessions, preserves ten deferred stages in a paused history unit, and records exact before-images through the shared transaction engine. |
 
 When the current contract needs a data rewrite, add a new migration with a new
 identifier and supported-through declaration.  Do not revive or broaden a

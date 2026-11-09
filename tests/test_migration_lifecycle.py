@@ -9,6 +9,9 @@ from pathlib import Path
 import pytest
 import yaml
 
+from learning_os.store.contracts.capability_catalog import (
+    domain_capability_definitions,
+)
 from learning_os.store.contracts.migration_lifecycle import (
     MigrationLifecycleError,
     retired_migration,
@@ -50,10 +53,7 @@ def test_unreadable_contract_never_enables_migration_replay(tmp_path: Path):
     "command",
     [
         ["tools/migrations/curriculum_v2.py", "--apply", "--root", "."],
-        ["tools/migrations/library_taxonomy_v1.py", "--apply"],
-        ["tools/migrations/registry_partition_v1.py", "--apply"],
-        ["tools/migrations/projects_v1.py", "--apply", "--root", "."],
-        ["tools/migrations/standardize_plan_template_v10.py", "--apply", "--root", "."],
+        ["tools/migrations/route_identity_v13.py", "--apply", "--root", "."],
     ],
 )
 def test_completed_migration_refuses_live_apply_without_writes(
@@ -71,3 +71,28 @@ def test_completed_migration_refuses_live_apply_without_writes(
     assert result.returncode == 2, result.stderr or result.stdout
     assert "is retired" in result.stdout
     assert canonical_fingerprint(repo_root) == before
+
+
+@pytest.mark.parametrize(
+    ("capability", "supported_through"),
+    [
+        ("migration.projects-to-modules-v62", 62),
+        ("migration.python-topic-sessions-v63", 63),
+    ],
+)
+def test_retired_migration_capability_replay_is_refused_as_retired(
+    repo_root: Path, capability: str, supported_through: int,
+):
+    """A10: an exact replay names a retired migration, never the ledger.
+
+    The two domain capabilities were deleted with their programs (rev3
+    Group 9). The catalogue no longer declares them, and the lifecycle
+    guard still classifies each id as retired on the live contract, so a
+    replay request is refused as a retired migration instead of being
+    answered from committed receipts.
+    """
+    assert capability not in domain_capability_definitions(repo_root)
+    retired = retired_migration(
+        repo_root, capability, supported_through=supported_through)
+    assert retired is not None
+    assert "retired" in retired.message()

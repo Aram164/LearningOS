@@ -269,18 +269,7 @@ def test_production_edges_are_clean_with_no_allowlist_growth():
     report = analyse(ROOT / "tools")
     assert report.configuration_errors == ()
     assert report.ok
-    assert set(UNREACHABLE_ALLOWLIST) == {
-        "migrations.curriculum_v2",
-        "migrations.job_quarantine_collapse",
-        "migrations.library_taxonomy_v1",
-        "migrations.lift_angle_out_of_locator",
-        "migrations.projects_v1",
-        "migrations.registry_partition_v1",
-        "migrations.route_identity_v13",
-        "migrations.standardize_job_plans_v1",
-        "migrations.standardize_plan_template_v10",
-        "migrations.summaries_to_notes_v1",
-    }
+    assert set(UNREACHABLE_ALLOWLIST) == set()
     assert set(report.allowed_unreachable) == set(UNREACHABLE_ALLOWLIST)
 
 

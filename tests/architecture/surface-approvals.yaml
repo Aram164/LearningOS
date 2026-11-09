@@ -1,5 +1,7 @@
 schema: 1
 approvals:
+  - {key: "catalog.domain_capabilities.migration.projects-to-modules-v62", change: removed, plan_ref: "rev3 Group 9 (D17)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.domain_capabilities.migration.python-topic-sessions-v63", change: removed, plan_ref: "rev3 Group 9 (D17)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
   - {key: "catalog.domain_capabilities.migration.python-topic-sessions-v63", change: added, plan_ref: "tools/migrations/python_topic_sessions_v63.py", pre_approved_by: "Codex 2026-11-04 under Aram's explicit Python-session split, fix, merge and install request; Codex selected the recorded migration mechanism"}
   - {key: "cli.route-identity-migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "cli.job-learning-migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

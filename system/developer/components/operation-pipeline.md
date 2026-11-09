@@ -12,8 +12,6 @@ Admit, lock, dispatch and settle one operation through the shared application bo
 - `tools/learning_os/app/admission.py`
 - `tools/learning_os/app/claim_admission.py`
 - `tools/learning_os/app/commit.py`
-- `tools/learning_os/app/project_migration.py`
-- `tools/learning_os/app/python_sessions_migration.py`
 - `tools/learning_os/app/context.py`
 - `tools/learning_os/app/lock.py`
 - `tools/learning_os/app/outcomes.py`
@@ -45,10 +43,6 @@ Depends on: `backup`, `contracts`, `derived-store`, `diagnostics`, `domain`, `ev
 
 Used by: `ai-delivery`, `cli-adapter`, `operation-handlers`, `plan-gate`.
 <!-- system-map:end -->
-
-The one-shot `app/project_migration.py` controller implements OPERATOR boundary 16 through data-contract v62. It takes the shared operator lock and uses the shared transaction service with the exact `migration.projects-to-modules-v62` authority. Ordinary operation proposals retain their gateway requirement. Pinning: `tests/test_projects_to_modules_migration.py`.
-
-`app/python_sessions_migration.py` is the generation-v63 recorded exception for moving the existing Python topic stages between units. Its dry run validates the staged split; application binds the exact plan, snapshot, working-note bytes and revisions, retains before-images, and uses the shared transaction receipt/recovery. Pinning: `tests/test_python_sessions_migration.py`.
 
 ## Invariants
 

@@ -226,22 +226,6 @@ checks:
   A9-refusal-sites: []
   A19-owners: []
   A18-callbacks:
-  - signature: tools/learning_os/app/python_sessions_migration.py::apply::validate_state
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-11-04: requested the Python-session split; Codex selected the existing transaction validation callback under that product scope"
-  - signature: tools/learning_os/app/python_sessions_migration.py::apply::transaction_writes
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-11-04: requested the Python-session split; Codex selected the existing transaction marker callback under that product scope"
-  - signature: tools/learning_os/app/project_migration.py::apply::validate_state
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-29: go ahead with Stage 4B migration and safety tests under the accepted Stage 4A authority decision"
-  - signature: tools/learning_os/app/project_migration.py::apply::transaction_writes
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-29: go ahead with Stage 4B migration and safety tests under the accepted Stage 4A authority decision"
   - signature: ai-action.delivery.apply::publish
     count: 1
     since: approved

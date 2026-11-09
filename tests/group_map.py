@@ -261,13 +261,9 @@ GROUPS: dict[str, list[str]] = {
     "migrations": [
         "test_contract_rebump.py",
         "test_format_fixtures.py",
-        "test_job_quarantine_collapse.py",
         "test_legacy_exit_review.py",
         "test_migration_lifecycle.py",
-        "test_projects_to_modules_migration.py",
-        "test_python_sessions_migration.py",
         "test_route_identity_migration.py",
-        "test_summaries_migration.py",
     ],
 }
 
@@ -297,7 +293,6 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/materials_index/", frozenset({"materials"})),
     ("tools/materials_manifest.py", frozenset({"materials"})),
     ("tools/normalise_material_uris.py", frozenset({"materials"})),
-    ("tools/migrations/lift_angle_out_of_locator.py", frozenset({"materials", "studyplan"})),
     ("tools/assemble_lecture_study_maps.py", frozenset({"studyplan"})),
     ("tools/verify_plan_receipt.py", frozenset({"studyplan"})),
     ("tools/plan_write_audit.py", frozenset({"studyplan"})),
@@ -373,8 +368,6 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/learning_os/app/handlers/passthrough.py", frozenset({"gateway"})),
     ("tools/learning_os/app/handlers/_shared.py", frozenset({"studyplan", "materials", "gateway"})),
     ("tools/learning_os/app/agent_", frozenset({"gateway", "synthesis"})),
-    ("tools/learning_os/app/project_migration.py", frozenset({"migrations", "gateway"})),
-    ("tools/learning_os/app/python_sessions_migration.py", frozenset({"migrations", "gateway"})),
     ("tools/learning_os/app/projection", frozenset({"generation", "gateway"})),
     ("tools/learning_os/app/read_session.py", frozenset({"gateway"})),
     ("tools/learning_os/app/ranking.py", frozenset({"gateway"})),
