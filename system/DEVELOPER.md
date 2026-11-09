@@ -31,6 +31,7 @@ historical page gains no authority by being useful to a developer.
 | Add an executable tool | `tools/code_reachability.py` entry points, `tools/README.md`, `build_parser()` | tool entry-point and reachability tests |
 | Add a test file | `tests/group_map.py` and `.github/shard-manifest.json` | group/CI population checks |
 | Run development gates | `Makefile`, `tests/architecture/`, [changing contracts](developer/changing-contracts.md) | focused tests, commit-check; full system-check upstream on the exact Core/UI pair |
+| Plan an architecture or contract change | `system/ARCHITECTURE.md`, the owning ADR in `system/adr/`, and `system/contracts/`. An open point in `system/CRITIQUE-POINTS.md` is acted on only on Aram's word. | a plan reviewed against the workspace `AGENTS.md` at the `semestercontext/` root, plus an ADR when a binding contract changes |
 
 ## Before calling a change complete
 

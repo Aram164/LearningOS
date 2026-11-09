@@ -27,6 +27,8 @@ An agent assigned operator work must reduce organizational burden while preservi
 
 ---
 
+§2 (bootstrap order) and §7 (retrieval behaviour) are executable routes kept in `system/CLAUDE.md`.
+
 ## 3. Automatic permissions
 
 Claude may perform the following without separate approval:

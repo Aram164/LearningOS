@@ -31,7 +31,7 @@ Modellwahl aus dem Argument, bevor du den Befehl baust:
 
 | Argument beginnt mit | Modell | Effort |
 | --- | --- | --- |
-| nichts davon (Default) | `gpt-5.6-sol` | `ultra` |
+| nichts davon (Default) | `gpt-5.6-sol` | `max` |
 | `--fast` | `gpt-5.6-terra` | `high` |
 | `--model <name>` | `<name>` | `high` |
 
