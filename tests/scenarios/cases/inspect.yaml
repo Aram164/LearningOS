@@ -1,4 +1,4 @@
-operation: project.inspect
+operation: inspect
 fixture: rich_world
 observations:
   now: '2026-10-01T09:00:00+02:00'
@@ -13,7 +13,7 @@ cases:
   transport: cli
   argv:
   - inspect
-  - project-demo
+  - note-demo
   a5_base: true
   expect:
     site: null
@@ -22,8 +22,8 @@ cases:
   transport: cli
   argv:
   - inspect
-  - project-demo
   - note-demo
+  - module-demo
   a5_base: true
   expect:
     site: null
@@ -42,14 +42,14 @@ cases:
   - inspect
   - nope-id
   expect:
-    site: project.inspect.unknown-id
+    site: inspect.unknown-id
 - id: batch-too-many
   kind: refusal
   transport: cli
   argv:
   - inspect
-  - project-demo
   - note-demo
+  - module-demo
   - x03
   - x04
   - x05
@@ -70,22 +70,22 @@ cases:
   - x20
   - x21
   expect:
-    site: project.inspect.too-many-ids
+    site: inspect.too-many-ids
 - id: batch-unknown-member
   kind: refusal
   transport: cli
   argv:
   - inspect
-  - project-demo
+  - note-demo
   - nope-id
   expect:
-    site: project.inspect.unknown-id
+    site: inspect.unknown-id
 - id: cli-inspect-record
   kind: success
   transport: cli
   argv:
   - inspect
-  - project-demo
+  - note-demo
   expect:
     site: null
 - id: cli-inspect-batch
@@ -93,8 +93,8 @@ cases:
   transport: cli
   argv:
   - inspect
-  - project-demo
   - note-demo
+  - module-demo
   expect:
     site: null
 - id: cli-inspect-structural
@@ -112,14 +112,14 @@ cases:
   - inspect
   - nope-id
   expect:
-    site: project.inspect.unknown-id
+    site: inspect.unknown-id
 - id: cli-batch-too-many
   kind: refusal
   transport: cli
   argv:
   - inspect
-  - project-demo
   - note-demo
+  - module-demo
   - x03
   - x04
   - x05
@@ -140,18 +140,18 @@ cases:
   - x20
   - x21
   expect:
-    site: project.inspect.too-many-ids
+    site: inspect.too-many-ids
 - id: cli-batch-unknown-member
   kind: refusal
   transport: cli
   argv:
   - inspect
-  - project-demo
+  - note-demo
   - nope-id
   expect:
-    site: project.inspect.unknown-id
+    site: inspect.unknown-id
 untriggered:
-- site: project.inspect.read-failed
+- site: inspect.read-failed
   reason: os-error-only
-- site: project.inspect.stale-snapshot
+- site: inspect.stale-snapshot
   reason: race-only

@@ -7,7 +7,6 @@ are never hidden by expected-failure handling.
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
@@ -145,30 +144,14 @@ def test_m04_validation_owns_its_report(tmp_path):
     assert report.is_file()
 
 
-def test_m05_complete_path_workspace_in_place(tmp_path):
+def test_workspace_completes_in_place(tmp_path):
     root = _world(tmp_path)
     context = root / "work/active/workspace-demo/CONTEXT.md"
-    # Disposable-fixture setup, not an assertion that a completion capability exists.
     text = context.read_text()
     assert "status: active" in text
     context.write_text(text.replace("status: active", "status: complete", 1))
     repo = load_repo(root)
     assert repo.workspaces["workspace-demo"].meta["status"] == "complete"
-    assert not repo.learning_paths["path-demo"].archived
     proc = run_los(root, "validate")
     assert proc.returncode == 0, proc.stdout
     assert context.is_file()
-
-
-def test_m05_unchanged_path_workspace_move_remains_rejected(tmp_path):
-    root = _world(tmp_path)
-    source = root / "work/active/workspace-demo"
-    target = root / "archive/workspaces/2026/workspace-demo"
-    target.parent.mkdir(parents=True)
-    shutil.move(str(source), str(target))
-    before = _state(root)
-    proc = run_los(root, "validate")
-    assert proc.returncode == 1, proc.stdout
-    errors = [line for line in proc.stdout.splitlines() if line.startswith("E ")]
-    assert len(errors) == 1 and errors[0].startswith("E PATH-NOTE-OWNER:"), proc.stdout
-    assert _state(root) == before

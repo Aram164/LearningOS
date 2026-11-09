@@ -57,7 +57,6 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
     records = project_manifest_records(
         repo,
         projected_revision,
-        prerequisites["unit_to_projects"],
         prerequisites["source_maps"],
         prerequisites["unit_material_syntheses"],
     )
@@ -77,8 +76,6 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
         units_v2=collections["units"],
         study_maps_v2=collections["study_maps"],
         source_maps_v2=collections["module_source_maps"],
-        projects_v2=collections["projects"],
-        project_relationships_v2=collections["project_relationships"],
         unit_material_syntheses_v2=prerequisites["unit_material_syntheses"],
         module_concept_edges=module_concept_edges,
     )
@@ -92,7 +89,6 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
         thematic_groups=prerequisites["thematic_groups"],
         topics_v2=prerequisites["topics"],
         topic_packs_v2=collections["topic_packs"],
-        projects_v2=collections["projects"],
         programs_v2=collections["programs"],
         modules_v2=collections["modules"],
         units_v2=collections["units"],

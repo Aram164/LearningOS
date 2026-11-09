@@ -1,33 +1,176 @@
 {
   "steps": [
     {
-      "canonical_changed": {},
-      "exit": 1,
-      "idempotency_changed": {},
+      "canonical_changed": {
+        "curriculum/modules/module-demo/module.yaml": "702a3b573f50c32525cc4dad78032dea3f6c43d19e62bd36263168c1953492fa"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "module.plan.import",
+              "channel": "operator",
+              "intent_sha256": "INTENT1",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "module-demo": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
       "operation": "module.plan.import",
-      "outcome": "refused",
-      "receipts": [],
-      "revisions_changed": {},
-      "session_ledger_changed": null,
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "module-demo": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "module.plan.import",
+                "declared_writes": [
+                  "curriculum/modules/**",
+                  "work/active/**",
+                  "sources/sources.yaml",
+                  "sources/registry/**",
+                  "curriculum/quarantine/masters-planning/catalog.yaml",
+                  "curriculum/quarantine/masters-planning/promotions/**",
+                  "operations/transactions/lineage.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "module.plan.import",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "module-demo": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:2e621ba1ac15b4ef3cd433ae3feeb0b1ec7649a2a590366e619d9d1e2609d64b",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "INTENT1"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "INTENT1",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": false,
+              "path": "curriculum/modules/module-demo/module.yaml",
+              "sha256_after": "702a3b573f50c32525cc4dad78032dea3f6c43d19e62bd36263168c1953492fa",
+              "sha256_before": "4ae2ad31254f0d470993f4566c83a4f4056b20fc19c4317bd57c52b0ea809e19"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "module-demo": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/modules/module-demo/module.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "702a3b573f50c32525cc4dad78032dea3f6c43d19e62bd36263168c1953492fa",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "LEDGER1",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "LEDGER2",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "LEDGER3",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
       "stderr": "",
-      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: module plan validation preflight failed; no canonical files were written\\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\"retryable\":false,\"details\":{}}}\n",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"module.plan.import\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"module_id\":\"module-demo\",\"units_written\":[],\"files_written\":1,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"module-demo\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
       "stdout_json": {
         "capability": "module.plan.import",
-        "error": {
-          "code": "INVALID_REQUEST",
-          "details": {},
-          "message": "los: module plan validation preflight failed; no canonical files were written\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
-          "retryable": false
-        },
+        "error": null,
         "idempotency_key": "KEY2",
-        "ok": false,
-        "receipt_path": null,
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
         "replayed": false,
         "request_id": "KEY1",
-        "result": {},
+        "result": {
+          "artifact_revisions": {
+            "module-demo": 1
+          },
+          "files_written": 1,
+          "mode": "apply",
+          "module_id": "module-demo",
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1",
+          "units_written": []
+        },
         "schema_version": 2,
-        "snapshot_after": null,
-        "transaction_id": null
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
       },
       "step": 0,
       "transport": "gateway"

@@ -73,33 +73,6 @@ class Workspace:
 
 
 @dataclass
-class LearningPath:
-    """A temporary, ordered route through one subtopic.
-
-    Learning paths are operational state owned by a workspace. They are not a
-    second knowledge graph: stage notes remain scratch until the operator and
-    learner approve a shelving proposal.
-    """
-    id: str
-    path: Path
-    data: dict
-    workspace_id: str
-    archived: bool = False
-
-    @property
-    def title(self) -> str:
-        return str(self.data.get("title", self.id))
-
-    @property
-    def status(self) -> str:
-        return str(self.data.get("status", ""))
-
-    @property
-    def current_stage(self) -> str:
-        return str(self.data.get("current_stage", ""))
-
-
-@dataclass
 class Program:
     """A top-level academic program, active area, or boundary card."""
     id: str
@@ -130,14 +103,6 @@ class StudyMap:
 
 
 @dataclass
-class Project:
-    """A first-class thesis, research, software, writing, or other project."""
-    id: str
-    path: Path
-    data: dict
-
-
-@dataclass
 class Coordination:
     path: Path
     meta: dict
@@ -164,12 +129,8 @@ class Repo:
     thematic_groups_path: Path | None = None
     topics: dict[str, dict] = field(default_factory=dict)
     topics_path: Path | None = None
-    projects: dict[str, Project] = field(default_factory=dict)
-    project_origins: dict[str, Path] = field(default_factory=dict)
     project_aliases: dict[str, str] = field(default_factory=dict)
     project_aliases_path: Path | None = None
-    project_relations: list[dict] = field(default_factory=list)
-    project_relations_path: Path | None = None
     programs: dict[str, Program] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
     module_origins: dict[str, Path] = field(default_factory=dict)
@@ -185,7 +146,6 @@ class Repo:
     notes: dict[str, Note] = field(default_factory=dict)
     garden_notes: list[GardenNote] = field(default_factory=list)
     workspaces: dict[str, Workspace] = field(default_factory=dict)
-    learning_paths: dict[str, LearningPath] = field(default_factory=dict)
     coordination: Coordination | None = None
     duplicate_ids: list[tuple[str, str, Path]] = field(default_factory=list)
     parse_failures: list[tuple[Path, str]] = field(default_factory=list)
@@ -216,9 +176,6 @@ class Repo:
 
     def archived_workspaces(self) -> list[Workspace]:
         return [w for w in self.workspaces.values() if w.archived]
-
-    def active_learning_paths(self) -> list[LearningPath]:
-        return [p for p in self.learning_paths.values() if not p.archived]
 
 
 def register(repo: Repo, family: dict, rec_id: str, record, origin: Path,

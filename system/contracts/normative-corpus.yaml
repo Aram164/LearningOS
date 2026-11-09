@@ -779,18 +779,6 @@ documents:
       through the task-shaped reads across concepts, notes,
       sources, modules, and coordination.
 
-  - path: system/procedures/mismatch-archive-probe.md
-    audience: developer
-    applies_to: []
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      PARTIAL Scrut mismatch evidence for M-05 (NOT complete procedure
-      coverage): the unchanged archive move fails validation and the
-      repaired pointer fails the schema.
-
   - path: system/procedures/start-a-workspace.md
     audience: operator
     applies_to: []

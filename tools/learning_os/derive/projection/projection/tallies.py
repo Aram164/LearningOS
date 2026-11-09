@@ -30,7 +30,7 @@ def build_progress(modules_v2: list[dict], units_v2: list[dict],
 
 
 def build_counts(repo: Repo, *, thematic_groups: list[dict], topics_v2: list[dict],
-                 topic_packs_v2: list[dict], projects_v2: list[dict],
+                 topic_packs_v2: list[dict],
                  programs_v2: list[dict], modules_v2: list[dict], units_v2: list[dict],
                  stages_v2: list[dict], inbox_items: int,
                  garden_entries: list, ai_requests: list, adoption: dict) -> dict:
@@ -42,13 +42,9 @@ def build_counts(repo: Repo, *, thematic_groups: list[dict], topics_v2: list[dic
         "topics": len(topics_v2),
         "sources_with_topics": sum(
             1 for s in repo.sources.values() if s.get("topics")),
-        "projects": len(projects_v2),
         "modules": len(modules_v2),
         "workspaces_active": len(repo.active_workspaces()),
         "workspaces_archived": len(repo.archived_workspaces()),
-        "learning_paths": len(repo.learning_paths),
-        "learning_paths_active": sum(
-            1 for p in repo.active_learning_paths() if p.status == "active"),
         "programs": len(programs_v2),
         "units": len(repo.units),
         "study_maps": len(repo.study_maps),

@@ -26,7 +26,6 @@ from repo_builders import (
     run_los,
     write_yaml,
 )
-from test_learning_paths import add_path
 
 from learning_os.app.handlers.notes import NOTE_FIELDS
 from learning_os.domain.failures import WriteRefused
@@ -349,20 +348,6 @@ def test_stage_writes_suggest_unit_ids(mini_repo):
     assert "unit-demo-l01" in result.stderr
 
 
-def test_path_writes_suggest_path_and_stage_ids(mini_repo):
-    add_path(mini_repo)
-    stage = run_los(mini_repo, "path-note", "path-demo-probability", "stage-on",
-                    "--text", "x")
-    assert stage.returncode == 2
-    assert "stage not found: stage-on" in stage.stderr
-    assert "stage-one" in stage.stderr
-    path = run_los(mini_repo, "path-note", "path-demo-probabilit", "stage-one",
-                   "--text", "x")
-    assert path.returncode == 2
-    assert "active learning path not found: path-demo-probabilit" in path.stderr
-    assert "path-demo-probability" in path.stderr
-
-
 def test_route_patch_suggests_the_units_route_ids(mini_repo):
     repo, rid, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id
@@ -571,7 +556,7 @@ def test_generated_payloads_carry_no_transport_annotations(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 48
+    assert len(schemas) == 45  # 48 minus the three retired path.* capabilities (rev3 Group 11)
     for name, schema in schemas.items():
         assert list(_transport_keys(schema)) == [], name
     assert "x-los-id-kind" not in schemas["unit.note.append"][

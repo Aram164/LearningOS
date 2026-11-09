@@ -191,9 +191,7 @@ repository/
 ├── sources/               the source registry and its collections
 │   ├── registry/          partitioned source records
 │   └── collections/       shelves and topic packs
-├── projects/              historical Project records and direct owner aliases
-│   ├── registry/          one record per historical project
-│   └── relations/         historical project-to-record relations
+├── projects/              direct owner aliases for retired project identities
 ├── operations/            the transaction ledger and everything the gateway writes
 │   ├── transactions/      one receipt per applied transaction
 │   ├── gateway-requests/  request envelopes
@@ -767,9 +765,8 @@ in their existing workspace context; they do not redefine study-map ordering or
 academic facts. The separate Projects interface and its authoring capabilities
 are retired.
 
-Historical records under `projects/registry/` and `projects/relations/` remain
-readable. Direct aliases in `projects/aliases.yaml` preserve old identities by
-resolving to canonical Module, Unit or workspace owners. The manifest retains
-its historical Project collections for read compatibility; the migrated thesis
-has no active Project record. Producer/consumer change mechanics:
+Direct aliases in `projects/aliases.yaml` preserve old identities by
+resolving to canonical Module, Unit or workspace owners; a broken alias still
+fails validation. The historical Project collections and their manifest keys
+are retired. Producer/consumer change mechanics:
 [projection component](developer/components/projection.md).

@@ -254,9 +254,11 @@ class ChecksReferences:
                 if mid not in r.modules:
                     self.err("REF-MODULE", f"workspace '{ws.id}' references unknown module '{mid}'", where)
             project_id = ws.meta.get("project_id")
-            if project_id and project_id not in r.projects:
-                self.err("REF-PROJECT",
-                         f"workspace '{ws.id}' references unknown project '{project_id}'", where)
+            if project_id:
+                resolved_project = r.project_aliases.get(project_id, project_id)
+                if resolved_project not in r.units and resolved_project not in r.workspaces and resolved_project not in r.modules and resolved_project not in r.programs:
+                    self.err("REF-PROJECT",
+                             f"workspace '{ws.id}' references unknown project '{project_id}'", where)
             for uid in id_list_items(ws.meta.get("unit_ids")):
                 if uid not in r.units:
                     self.err("REF-UNIT", f"workspace '{ws.id}' references unknown unit '{uid}'", where)
@@ -530,35 +532,6 @@ class ChecksReferences:
                 self.err("REF-STUDY-MAP", "resume pointer references an unknown study map", where)
             elif pointer.get("stage_id") not in {s.get("id") for s in sm.data.get("stages", []) or []}:
                 self.err("REF-STAGE", "resume pointer references an unknown stage", where)
-        for path in r.learning_paths.values():
-            where = self._rel(path.path)
-            data = path.data
-            declared = data.get("workspace_id")
-            if declared not in r.workspaces:
-                self.err("REF-WORKSPACE",
-                         f"learning path '{path.id}' references unknown workspace '{declared}'",
-                         where)
-            elif declared != path.workspace_id:
-                self.err("PATH-OWNER",
-                         f"learning path declares '{declared}' but lives under '{path.workspace_id}'",
-                         where)
-            module_id = data.get("module_id")
-            if module_id and module_id not in r.modules:
-                self.err("REF-MODULE",
-                         f"learning path '{path.id}' references unknown module '{module_id}'",
-                         where)
-            for stage in data.get("stages", []) or []:
-                for cid in stage.get("concepts", []) or []:
-                    if cid not in r.concepts:
-                        self.err("REF-CONCEPT",
-                                 f"learning path '{path.id}' references unknown concept '{cid}'",
-                                 where)
-                for resource in stage.get("resources", []) or []:
-                    sid = resource.get("source_id") if isinstance(resource, dict) else None
-                    if sid and sid not in r.sources:
-                        self.err("REF-SOURCE",
-                                 f"learning path '{path.id}' references unknown source '{sid}'",
-                                 where)
         for concept in r.concepts.values():
             rb = concept.get("replaced_by")
             if rb and rb not in r.concepts:

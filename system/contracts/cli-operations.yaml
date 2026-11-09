@@ -57,7 +57,7 @@ operations:
   inbox.content:
     cli_command: inbox-read
     kind: query
-  project.inspect:
+  inspect:
     cli_command: inspect
     kind: query
   intelligence.scan:
@@ -95,9 +95,6 @@ operations:
     kind: query
   program.list:
     cli_command: program-list
-    kind: query
-  project.list:
-    cli_command: project-list
     kind: query
   related.read:
     cli_command: related

@@ -174,7 +174,6 @@
    "tests/test_githistory.py",
    "tests/test_goal_proposals.py",
    "tests/test_inbox_resolve.py",
-   "tests/test_learning_paths.py",
    "tests/test_lineage_restamp.py",
    "tests/test_lineage_writer_interpositions.py",
    "tests/test_manifest_contract.py",

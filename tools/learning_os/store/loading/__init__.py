@@ -11,20 +11,16 @@ depend on registry partitioning):
   - units:     curriculum/modules/<module-id>/units/<unit-id>/unit.yaml
   - study maps: one optional study-map.yaml beside each unit.yaml
   - module source maps: curriculum/modules/<module-id>/source-map.yaml
-  - projects:  projects/registry/project-*.yaml
-  - project relations: projects/relations/project-relations.yaml
   - project aliases: projects/aliases.yaml
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
   - garden:    knowledge/garden/**/*.md           (free-form, no schema — §14)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
-  - learning paths: <workspace>/paths/path-*.yaml (operational, workspace-owned)
   - coordination: work/COORDINATION.md
 
 One walk, one ``Repo``. ``load_repo`` below is the whole control flow: each
 domain owns a module, and the sequence here is the only place the order between
-domains is stated. The order is load-bearing in two places — modules must come
-after their programs, and learning paths are discovered inside the workspace
-walk — but everything else is grouped for reading, not for dependency.
+domains is stated. The order is load-bearing in one place — modules must come
+after their programs — but everything else is grouped for reading, not for dependency.
 
 Snapshot values are owned by ``learning_os.domain.snapshot``, vocabulary by
 ``learning_os.domain.vocabulary`` and ``md_section`` by
@@ -54,11 +50,7 @@ from learning_os.store.loading.knowledge import (
     load_relations,
 )
 from learning_os.store.loading.library import load_collections, load_sources, load_topics
-from learning_os.store.loading.projects import (
-    load_project_aliases,
-    load_project_relations,
-    load_projects,
-)
+from learning_os.store.loading.projects import load_project_aliases
 from learning_os.store.loading.work import load_coordination, load_workspaces
 from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
 
@@ -68,7 +60,7 @@ __all__ = [
     # domain loaders
     "load_collections", "load_concepts", "load_coordination", "load_garden",
     "load_modules", "load_notes", "load_programs", "load_project_aliases",
-    "load_project_relations", "load_projects", "load_quarantine_boundary",
+    "load_quarantine_boundary",
     "load_relations", "load_resume_pointer", "load_sources",
     "load_thematic_groups", "load_topics", "load_workspaces",
     # entry point
@@ -105,9 +97,7 @@ def load_repo(root: Path | str) -> Repo:
     load_thematic_groups(repo, root)
     load_topics(repo, root)
 
-    load_projects(repo, root)
     load_project_aliases(repo, root)
-    load_project_relations(repo, root)
 
     load_programs(repo, root)
     load_modules(repo, root)

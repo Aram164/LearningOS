@@ -139,12 +139,6 @@ queries:
     - always the current plan-template version, never a copy of an existing plan
     - the generated record is validated against its own domain schema before it is answered
     - curriculum requires unit_id and module_id
-  project.list:
-    handler: project_list
-    result: project-list
-  project.inspect:
-    handler: inspect
-    result: record
   health.report:
     handler: health_report
     result: health-report-v1
@@ -1000,33 +994,6 @@ commands:
     invariants:
     - explicit approval
     - selected proposal is atomic
-  path.note.write:
-    handler: path_note
-    cli_command: path-note
-    kind: command
-    writes:
-    - work/active/**
-    invariants:
-    - workspace-owned scratch only
-    - GatewayEnvelopeV2 carries note text inline and never reads it from stdin
-  path.progress.update:
-    handler: path_progress
-    cli_command: path-progress
-    kind: command
-    writes:
-    - work/active/**
-    invariants:
-    - one active stage
-  path.attachment.add:
-    handler: path_attach
-    cli_command: path-attach
-    kind: command
-    writes:
-    - work/active/**
-    invariants:
-    - source file is copied
-    - never moved
-    - the external attachment is bound to its exact bytes by SHA-256 before use
   coordination.section.revise:
     handler: coordination_section_revise
     cli_command: coordination-section-revise

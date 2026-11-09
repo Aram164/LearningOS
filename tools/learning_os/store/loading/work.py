@@ -1,44 +1,15 @@
-"""work/ and archive/ — operational state: workspaces, learning paths, coordination.
-
-Learning paths live inside and are owned by the workspace directory, so they
-are loaded from within the workspace walk rather than from a registry of their
-own. Nothing here is a second knowledge graph.
-"""
+"""work/ and archive/ — operational state: workspaces and coordination."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from learning_os.domain.snapshot import Coordination, LearningPath, Repo, Workspace
+from learning_os.domain.snapshot import Coordination, Repo, Workspace
 from learning_os.domain.snapshot import register as _register
 from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
 from learning_os.store.loading.yamlio import load_yaml as _load_yaml
 from learning_os.store.loading.yamlio import read_text as _read_text
 from learning_os.store.loading.yamlio import record_id as _record_id
-
-
-def _load_learning_paths(repo: Repo, context_file: Path, workspace_id: str,
-                         archived: bool) -> None:
-    """The workspace directory, not a duplicated field, determines ownership;
-    the schema still carries workspace_id so projections and agents can verify
-    that the declaration agrees with location."""
-    paths_dir = context_file.parent / "paths"
-    if not paths_dir.is_dir():
-        return
-    for pf in sorted(paths_dir.glob("path-*.yaml")):
-        try:
-            data = _load_yaml(pf, repo.root)
-        except LoaderError as exc:
-            repo.parse_failures.append((pf, str(exc)))
-            continue
-        pid = _record_id(data)
-        if pid is None:
-            repo.parse_failures.append(
-                (pf, f"{pf}: learning path with missing or empty id — skipped"))
-            continue
-        learning_path = LearningPath(
-            id=pid, path=pf, data=data, workspace_id=workspace_id, archived=archived)
-        _register(repo, repo.learning_paths, pid, learning_path, pf, "learning-path")
 
 
 def load_workspaces(repo: Repo, root: Path) -> None:
@@ -67,8 +38,7 @@ def load_workspaces(repo: Repo, root: Path) -> None:
                 continue
             wid = str(meta.get("id", f.parent.name))
             ws = Workspace(id=wid, path=f, meta=meta, body=body, archived=archived)
-            if _register(repo, repo.workspaces, wid, ws, f, "workspace"):
-                _load_learning_paths(repo, f, wid, archived)
+            _register(repo, repo.workspaces, wid, ws, f, "workspace")
 
 
 def load_coordination(repo: Repo, root: Path) -> None:

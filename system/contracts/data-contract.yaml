@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 64
-schema_fingerprint: sha256:90e9487dfd1544219081dd9eda26dd7e24766bafb51c4a0f8b5075827463fe0c
-record_schemas: 37
+contract_version: 65
+schema_fingerprint: sha256:549b28c8069814f0c39dfb2630dfe6500d454fab6f09a3b59b660d9957349744
+record_schemas: 36
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -462,5 +462,11 @@ history:
   note: 'Additive: operations/revision-retirements.yaml (artifact-revision-retirements
     v1) records committed transactions whose revision claims the ledger deliberately
     no longer honors; optional file, no existing record changes shape, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v63/
+- version: 65
+  adopted: '2026-11-09'
+  note: Retire the learning-path record schema; learning paths are removed, no stored
+    path records remain and no migration is required
   migration: null
   fixture: tests/fixtures/formats/v63/

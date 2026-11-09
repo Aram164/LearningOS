@@ -56,7 +56,7 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:ca09545ae37728afb3615dcbc652b6d4fc31ba8b0e456ec0757d299db4e6e8ed",
+            "data_roots_sha256": "sha256:c4024da53b5f739b713158b060ff56941e24c1324f38c9568beedb89079f90b9",
             "fingerprint_definition": 2
           },
           "request": {
@@ -216,7 +216,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\"ok\":true,\"touched\":[\"operations/transactions/idempotency.yaml\",\"operations/transactions/revisions.yaml\",\"operations/transactions/TX1.yaml\",\"work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"],\"owned_changes\":[\" M operations/transactions/revisions.yaml\",\"?? operations/transactions/idempotency.yaml\",\"?? operations/transactions/TX1.yaml\",\"?? work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"],\"unrelated_changes\":[\"?? operations/diagnostics/traces.jsonl\"],\"committed\":true,\"pushed\":false,\"validation\":\"0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md\",\"ownership_conflicts\":[],\"session_id\":\"channel:operator\",\"client\":null,\"stale_paths\":[],\"stale_hours\":24,\"other_sessions\":{},\"session_closed\":true}\n",
+      "stdout": "{\"ok\":true,\"touched\":[\"operations/transactions/idempotency.yaml\",\"operations/transactions/revisions.yaml\",\"operations/transactions/TX1.yaml\",\"work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"],\"owned_changes\":[\" M operations/transactions/revisions.yaml\",\"?? operations/transactions/idempotency.yaml\",\"?? operations/transactions/TX1.yaml\",\"?? work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"],\"unrelated_changes\":[\"?? operations/diagnostics/traces.jsonl\"],\"committed\":true,\"pushed\":false,\"validation\":\"0 error(s), 12 warning(s) — OK; warning list: generated/reports/validation-report.md\",\"ownership_conflicts\":[],\"session_id\":\"channel:operator\",\"client\":null,\"stale_paths\":[],\"stale_hours\":24,\"other_sessions\":{},\"session_closed\":true}\n",
       "stdout_json": {
         "client": null,
         "committed": true,
@@ -243,7 +243,7 @@
         "unrelated_changes": [
           "?? operations/diagnostics/traces.jsonl"
         ],
-        "validation": "0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md"
+        "validation": "0 error(s), 12 warning(s) — OK; warning list: generated/reports/validation-report.md"
       },
       "step": 1,
       "transport": "cli"

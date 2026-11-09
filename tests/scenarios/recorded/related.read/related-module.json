@@ -1,0 +1,51 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"id\":\"unit-demo-l01\",\"type\":\"unit\",\"title\":\"Expected value\",\"path\":\"curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml\",\"via\":[\"backlink:module_to_units\",\"unit_order\"]},{\"id\":\"unit-demo-l02\",\"type\":\"unit\",\"title\":\"Variance\",\"path\":\"curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml\",\"via\":[\"backlink:module_to_units\",\"unit_order\"]},{\"id\":\"program-bachelors\",\"type\":\"program\",\"title\":\"Bachelor’s\",\"path\":\"curriculum/programs/program-bachelors.yaml\",\"via\":[\"area_id\"]},{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"via\":[\"backlink:module_to_workspaces\"]}]\n",
+  "stdout_json": [
+    {
+      "id": "unit-demo-l01",
+      "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+      "title": "Expected value",
+      "type": "unit",
+      "via": [
+        "backlink:module_to_units",
+        "unit_order"
+      ]
+    },
+    {
+      "id": "unit-demo-l02",
+      "path": "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml",
+      "title": "Variance",
+      "type": "unit",
+      "via": [
+        "backlink:module_to_units",
+        "unit_order"
+      ]
+    },
+    {
+      "id": "program-bachelors",
+      "path": "curriculum/programs/program-bachelors.yaml",
+      "title": "Bachelor’s",
+      "type": "program",
+      "via": [
+        "area_id"
+      ]
+    },
+    {
+      "id": "workspace-demo",
+      "path": "work/active/workspace-demo/CONTEXT.md",
+      "title": "Demo workspace",
+      "type": "workspace",
+      "via": [
+        "backlink:module_to_workspaces"
+      ]
+    }
+  ]
+}

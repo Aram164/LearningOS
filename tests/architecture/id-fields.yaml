@@ -108,7 +108,7 @@ fields:
   lookup: false
   decision: 'Builder Task 78 (cx) D-6 2026-10-12: goal session_id is an ownership-window
     identity; never a known-ID lookup'
-- operation: project.inspect
+- operation: inspect
   pointer: /properties/id
   kind: null
   lookup: true
@@ -116,7 +116,7 @@ fields:
   owner_shape: scalar
   decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
     owner executed in test_arch_idroundtrip'
-- operation: project.inspect
+- operation: inspect
   pointer: /properties/more_ids/items
   kind: null
   lookup: true
@@ -326,34 +326,6 @@ fields:
 - operation: note.revise
   pointer: /properties/note_id
   kind: note
-  lookup: true
-- operation: path.attachment.add
-  pointer: /properties/file_sha256
-  kind: digest
-  lookup: false
-- operation: path.attachment.add
-  pointer: /properties/path_id
-  kind: path
-  lookup: true
-- operation: path.attachment.add
-  pointer: /properties/stage_id
-  kind: stage
-  lookup: true
-- operation: path.note.write
-  pointer: /properties/path_id
-  kind: path
-  lookup: true
-- operation: path.note.write
-  pointer: /properties/stage_id
-  kind: stage
-  lookup: true
-- operation: path.progress.update
-  pointer: /properties/path_id
-  kind: path
-  lookup: true
-- operation: path.progress.update
-  pointer: /properties/stage_id
-  kind: stage
   lookup: true
 - operation: review.apply
   pointer: /properties/unit_id

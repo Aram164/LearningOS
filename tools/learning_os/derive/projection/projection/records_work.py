@@ -39,32 +39,6 @@ def project_workspaces(repo: Repo, revision: Revision) -> list[dict]:
     return records
 
 
-def project_learning_paths(
-    repo: Repo, revision: Revision, git_table: dict[str, str] | None = None
-) -> list[dict]:
-    records = []
-    for learning_path in sorted(repo.learning_paths.values(), key=lambda p: p.id):
-        data = learning_path.data
-        records.append({
-            "id": learning_path.id, "type": "learning-path",
-            "revision": revision(learning_path.id, data),
-            "title": data.get("title", ""),
-            "path": str(learning_path.path.relative_to(repo.root)),
-            "workspace_id": learning_path.workspace_id,
-            "area": data.get("area", "university"),
-            "module_id": data.get("module_id"),
-            "status": data.get("status", ""),
-            "current_stage": data.get("current_stage", ""),
-            "created": data.get("created"), "updated": data.get("updated"),
-            "objective": data.get("objective", ""),
-            "source_plan": data.get("source_plan"),
-            "stages": project_stages(repo, data, "notes_path", (), git_table),
-            "shelving": dict(data.get("shelving", {}) or {}),
-            "archived": learning_path.archived,
-        })
-    return records
-
-
 def project_coordination(repo: Repo) -> list[dict]:
     if repo.coordination is None:
         return []

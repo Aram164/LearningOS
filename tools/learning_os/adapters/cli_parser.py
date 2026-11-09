@@ -63,7 +63,6 @@ _SUBCOMMAND_ORDER = (
     "plan-template",
     "module-list",
     "unit-list",
-    "project-list",
     "capability",
     "validate",
     "generate",
@@ -129,11 +128,8 @@ _SUBCOMMAND_ORDER = (
     "shelving-prepare",
     "shelving-apply",
     "session-end",
-    "path-note",
-    "path-progress",
     "coordination-section-revise",
     "workspace-next-action",
-    "path-attach",
     "operations",
 )
 

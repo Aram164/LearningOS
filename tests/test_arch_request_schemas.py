@@ -96,7 +96,7 @@ def test_required_and_defaults_preserved_through_alias():
                 subschema["x-los-cli"]["default"], f"{alias}::{prop}"
 
 
-def test_exactly_95_cli_bindings_and_union():
+def test_exactly_91_cli_bindings_and_union():
     import los
     from learning_os.store.contracts.payloads import subparsers
 
@@ -104,7 +104,7 @@ def test_exactly_95_cli_bindings_and_union():
     aliases = _aliases()
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 95, len(with_cli)
+    assert len(with_cli) == 91, len(with_cli)  # 95 minus 5 retired, plus inspect rename net -4 (rev3 Group 11)
     assert len(with_cli) == len(primaries), (len(with_cli), len(primaries))
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)
@@ -123,15 +123,15 @@ def test_forbidden_reference_forms_rejected(tmp_path: Path):
 
     work = tmp_path / "repo"
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
-    base_primary = "project.inspect"
+    base_primary = "inspect"
     assert (work / "system/schema/requests" / f"{base_primary}.schema.json").is_file()
     bad_refs = [
-        "sub/project.inspect.schema.json",
-        "sub\\project.inspect.schema.json",
-        "../project.inspect.schema.json",
-        "https://example.com/project.inspect.schema.json",
-        "project.inspect.schema.json#/$defs/x",
-        "project.inspect.schema.json ",
+        "sub/inspect.schema.json",
+        "sub\\inspect.schema.json",
+        "../inspect.schema.json",
+        "https://example.com/inspect.schema.json",
+        "inspect.schema.json#/$defs/x",
+        "inspect.schema.json ",
     ]
     for index, ref in enumerate(bad_refs):
         alias = f"alias.bad{index}"
@@ -168,10 +168,10 @@ def test_scheme_ref_targets_rejected_despite_literal_file(tmp_path: Path):
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
     directory = work / "system/schema/requests"
     for index, scheme in enumerate(("file", "urn")):
-        target = f"{scheme}:project.inspect.schema.json"
+        target = f"{scheme}:inspect.schema.json"
         literal = directory / target
         literal.write_text(
-            (directory / "project.inspect.schema.json").read_text(
+            (directory / "inspect.schema.json").read_text(
                 encoding="utf-8"),
             encoding="utf-8")
         assert literal.is_file()
@@ -196,7 +196,7 @@ def test_reference_chains_and_cycles_rejected(tmp_path: Path):
     (directory / "alias.inner.schema.json").write_text(json.dumps({
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "learningos/requests/alias.inner", "x-governs": "artifact",
-        "$ref": "project.inspect.schema.json",
+        "$ref": "inspect.schema.json",
     }), encoding="utf-8")
     (directory / "alias.chain.schema.json").write_text(json.dumps({
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -228,15 +228,15 @@ def test_canary_propagates_through_effective_alias(tmp_path: Path):
 
     work = tmp_path / "repo"
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
-    primary_path = work / "system/schema/requests/project.inspect.schema.json"
+    primary_path = work / "system/schema/requests/inspect.schema.json"
     primary = json.loads(primary_path.read_text(encoding="utf-8"))
     primary["properties"]["id"]["description"] = "CANARY-DESCRIPTION"
     primary["properties"]["id"]["x-los-cli"]["default"] = "CANARY-DEFAULT"
     primary_path.write_text(json.dumps(primary, indent=2), encoding="utf-8")
-    effective = request_schema(work, "project.inspect")
+    effective = request_schema(work, "inspect")
     assert effective["properties"]["id"]["description"] == "CANARY-DESCRIPTION"
     assert effective["properties"]["id"]["x-los-cli"]["default"] == "CANARY-DEFAULT"
-    assert effective["$id"] == "learningos/requests/project.inspect"
+    assert effective["$id"] == "learningos/requests/inspect"
 
 
 def _navigate(doc, pointer):
@@ -279,7 +279,7 @@ def _owner_annotation_ok(row: dict, operation: str) -> bool:
 
     Returns True only when the inventory row carries the exact approved
     owner metadata and the effective schema node (resolved through the
-    alias loader, so project.inspect rows cover the primary annotation)
+    alias loader, so inspect rows cover the primary annotation)
     carries the exact ``x-los-id-owner``/``x-los-lookup`` pair with the
     approved scalar/container shape. Every other null kind stays skipped.
     """
@@ -549,11 +549,11 @@ def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
         def edit(doc):
             del doc["properties"]["id"]["x-los-id-owner"]
         _rewrite_schema_json(
-            root / "system/schema/requests/project.inspect.schema.json", edit)
+            root / "system/schema/requests/inspect.schema.json", edit)
 
     message = delta(strip_cli_id_owner)
-    assert "project.inspect::/properties/id::id-annotation" in message
-    assert "project.inspect::/properties/id::id-annotation" in message
+    assert "inspect::/properties/id::id-annotation" in message
+    assert "inspect::/properties/id::id-annotation" in message
 
     def truthy_lookup(root):
         def edit(doc):
@@ -569,29 +569,29 @@ def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
             doc["properties"]["more_ids"]["items"]["x-los-id-owner"] = (
                 "invented-owner")
         _rewrite_schema_json(
-            root / "system/schema/requests/project.inspect.schema.json", edit)
+            root / "system/schema/requests/inspect.schema.json", edit)
 
     message = delta(wrong_owner)
-    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
-    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "inspect::/properties/more_ids/items::id-annotation" in message
+    assert "inspect::/properties/more_ids/items::id-annotation" in message
 
     def wrong_shape(root):
         def edit(doc):
             doc["properties"]["more_ids"]["items"]["type"] = "integer"
         _rewrite_schema_json(
-            root / "system/schema/requests/project.inspect.schema.json", edit)
+            root / "system/schema/requests/inspect.schema.json", edit)
 
     message = delta(wrong_shape)
-    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "inspect::/properties/more_ids/items::id-annotation" in message
 
     def deleted_node(root):
         def edit(doc):
             del doc["properties"]["more_ids"]["items"]
         _rewrite_schema_json(
-            root / "system/schema/requests/project.inspect.schema.json", edit)
+            root / "system/schema/requests/inspect.schema.json", edit)
 
     message = delta(deleted_node)
-    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "inspect::/properties/more_ids/items::id-annotation" in message
 
     def inventory_owner(root):
         path = root / "tests/architecture/id-fields.yaml"

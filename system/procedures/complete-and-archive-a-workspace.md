@@ -6,16 +6,13 @@ defaults:
 
 # Complete and archive a workspace (WORKFLOWS §11)
 
-Executable transcript of completing the path-owning demo workspace in
-place: its durable knowledge already landed as a linked note, no
-coordination dependency references it, its status flips to complete,
-generated files are rebuilt and validated, and it stays at its existing
-location — the path schema and ownership validator do not support
-relocating its notes, attachments and shelving references (M-05 in
-`tests/architecture/mismatches.yaml` pins the refused move; no gateway
-capability archives a workspace). `tests/test_procedures.py` runs it
-with Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
-test sets.
+Executable transcript of completing the demo workspace in place: its
+durable knowledge already landed as a linked note, no coordination
+dependency references it, its status flips to complete, generated files
+are rebuilt and validated, and it stays at its existing location (no
+gateway capability archives a workspace). `tests/test_procedures.py`
+runs it with Scrut; `<REPO>` comes from the `LOS_REPO` environment
+variable the test sets.
 
 ## Build the fixture
 
@@ -32,12 +29,8 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 5. clear dependencies referencing this workspace from `COORDINATION.md`;
 6. set `status: complete`;
 7. rebuild and validate generated files;
-8. a workspace without learning paths may move whole to
-   `archive/workspaces/<year>/<workspace-id>/`, after checking explicit path
-   links. A workspace that owns learning paths stays at its existing location
-   with `status: complete`: the path schema and ownership validator do not
-   support relocating its notes, attachments and shelving references to the
-   archive. Never attempt an unchanged move or hand-repair those pointers.
+8. a workspace moves whole to `archive/workspaces/<year>/<workspace-id>/`
+   only after its explicit path links are checked.
 
 ```scrut
 $ los inspect note-demo | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["id"], d["title"])'

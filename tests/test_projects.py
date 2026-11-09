@@ -27,8 +27,8 @@ def test_ordinary_module_listing_preserves_its_exclusions(kind, status, compatib
 
 
 def test_bachelor_thesis_is_an_ordinary_module(real_manifest):
-    assert real_manifest["projects"] == []
-    assert real_manifest["project_relationships"] == []
+    assert "projects" not in real_manifest
+    assert "project_relationships" not in real_manifest
     module = next(row for row in real_manifest["modules"] if row["id"] == "module-project-bachelor-thesis")
     assert module["kind"] == "project" and module["area_id"] == "program-bachelors"
     assert real_manifest["project_aliases"]["project-bachelor-thesis"] == module["id"]
@@ -45,3 +45,20 @@ def test_project_cli_resolves_to_the_canonical_module(repo_root: Path):
         payload = json.loads(result.stdout)
         assert payload["id"] == "module-project-bachelor-thesis"
         assert payload.get("resolved_from") == (identity if identity.startswith("project-") else None)
+
+
+def test_broken_project_alias_still_fails_validation(mini_repo: Path):
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    aliases = mini_repo / "projects" / "aliases.yaml"
+    aliases.parent.mkdir(parents=True, exist_ok=True)
+    aliases.write_text(
+        "aliases:\n  old-broken-demo: module-does-not-exist\n",
+        encoding="utf-8",
+    )
+    issues = validate(load_repo(mini_repo))
+    codes = [issue.code for issue in issues]
+    assert "REF-PROJECT" in codes or "PROJECT-ALIAS" in codes
+    broken = [i for i in issues if i.code in ("REF-PROJECT", "PROJECT-ALIAS")]
+    assert any("old-broken-demo" in i.message for i in broken)

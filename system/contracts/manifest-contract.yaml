@@ -46,7 +46,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 16
+contract_version: 17
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -62,8 +62,6 @@ top_level_keys:
 - programs
 - progress
 - project_aliases
-- project_relationships
-- projects
 - records
 - relations
 - resume_pointer
@@ -93,9 +91,6 @@ index_keys:
 - module_to_concepts
 - module_to_units
 - project_aliases
-- project_to_relationships
-- project_to_units
-- project_to_workspaces
 - source_to_modules
 - source_to_units
 - unit_to_concepts
@@ -103,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v16.schema.json
-schema_sha256: sha256:b417ce7295711108d0825901907536f83dd11e8e579e311252647dd3421cadad
+schema_path: system/contracts/manifest-v17.schema.json
+schema_sha256: sha256:fbb36ea2d86abfeac746af6c2dcc12b5d02d2bbd76659d019bbf73cee8382ff7
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -203,3 +198,7 @@ history:
   adopted: '2026-10-29'
   note: Compatibility aliases may resolve to canonical Module, Unit or workspace owners
   mirrored_in_ui: contracts/manifest-v16.lock.json
+- version: 17
+  adopted: '2026-11-09'
+  note: 'v17: retire learning paths and the empty project collections'
+  mirrored_in_ui: contracts/manifest-v17.lock.json

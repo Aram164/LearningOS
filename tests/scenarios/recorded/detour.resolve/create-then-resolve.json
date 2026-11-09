@@ -63,7 +63,7 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:c9903ad79112ffa1d1f940f5ef1726710e4cb85bad6bcc0725a552901a5a827a",
+            "data_roots_sha256": "sha256:f56a199faa45418de121067e10387bf23713db912c5737c561bcfb1b0fe355d9",
             "fingerprint_definition": 2
           },
           "request": {
@@ -289,7 +289,7 @@
           },
           "id": "TX2",
           "metadata": {
-            "data_roots_sha256": "sha256:54fc173f496904c34dbf4561e7a80af1464029c880b7c1723473341a8af82f77",
+            "data_roots_sha256": "sha256:ce87910a93b2f7d88eeec38189396e2db9639aea6b52fef53837e2422334acde",
             "fingerprint_definition": 2
           },
           "request": {

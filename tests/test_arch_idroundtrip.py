@@ -492,8 +492,8 @@ def test_current_exceptions_are_recorded():
 SUPPORTED_OWNER_ROWS: dict[tuple[str, str], tuple[str, str]] = {
 
 
-    ("project.inspect", "/properties/id"): ("inspect-reference", "scalar"),
-    ("project.inspect", "/properties/more_ids/items"): ("inspect-reference", "scalar"),
+    ("inspect", "/properties/id"): ("inspect-reference", "scalar"),
+    ("inspect", "/properties/more_ids/items"): ("inspect-reference", "scalar"),
     ("ai-action.delivery.apply", "/properties/delivery_id"):
         ("ai-delivery-exchange", "scalar"),
     ("ai-action.delivery.apply", "/properties/artifact_sha256"):
@@ -702,17 +702,10 @@ def _synthetic_manifest():
 
 
 def _synthetic_repo():
-    """A repo stub carrying one learning-path stage (SPEC (ay))."""
+    """A repo stub with no learning paths (retired in rev3 Group 11)."""
     from types import SimpleNamespace
 
-    return SimpleNamespace(learning_paths={
-        "path-demo": SimpleNamespace(
-            id="path-demo",
-            data={"stages": [{"id": "stage-path-1"}]},
-            workspace_id="workspace-demo",
-            archived=False,
-        ),
-    })
+    return SimpleNamespace()
 
 
 def test_owner_table_matches_the_inventory_exactly():
@@ -838,10 +831,10 @@ def test_owner_selection_covers_scalar_items_and_mapping_values():
                "artifact_sha256": {"b.md": "sha256:" + "b" * 64,
                                    "a.md": "sha256:" + "a" * 64}}
     assert owner_selected_values(
-        "project.inspect", "/properties/id", request) == [
+        "inspect", "/properties/id", request) == [
             ("/properties/id", "note-demo")]
     assert owner_selected_values(
-        "project.inspect", "/properties/more_ids/items", request) == [
+        "inspect", "/properties/more_ids/items", request) == [
             ("/properties/more_ids/items/0", "stage-l01"),
             ("/properties/more_ids/items/1", "detour-1")]
     assert owner_selected_values(
@@ -851,10 +844,10 @@ def test_owner_selection_covers_scalar_items_and_mapping_values():
             ("/properties/artifact_sha256/a.md", "sha256:" + "a" * 64)]
     # The alias rows select through the same shapes as the primary.
     assert owner_selected_values(
-        "project.inspect", "/properties/id", request) == [
+        "inspect", "/properties/id", request) == [
             ("/properties/id", "note-demo")]
     assert owner_selected_values(
-        "project.inspect", "/properties/more_ids/items", request) == [
+        "inspect", "/properties/more_ids/items", request) == [
             ("/properties/more_ids/items/0", "stage-l01"),
             ("/properties/more_ids/items/1", "detour-1")]
 
@@ -865,17 +858,17 @@ def test_owner_selection_fails_closed():
     with pytest.raises(AssertionError):
         owner_selected_values("note.search", "/properties/id", request)
     with pytest.raises(AssertionError):
-        owner_selected_values("project.inspect", "/properties/id", {})
+        owner_selected_values("inspect", "/properties/id", {})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "project.inspect", "/properties/id", {"id": ["note-demo"]})
+            "inspect", "/properties/id", {"id": ["note-demo"]})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "project.inspect", "/properties/more_ids/items",
+            "inspect", "/properties/more_ids/items",
             {"more_ids": "stage-l01"})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "project.inspect", "/properties/more_ids/items",
+            "inspect", "/properties/more_ids/items",
             {"more_ids": ["ok", 7]})
     with pytest.raises(AssertionError):
         owner_selected_values(
@@ -895,12 +888,12 @@ def test_inspect_owner_resolves_every_class_alias_and_order():
     assert candidates == [
         "note-demo", "project-demo", "stage-l01", "detour-1", "shared-x",
         "step-top", "step-nested", "workstream-1", "shared-x",
-        "milestone-1", "stage-path-1",
+        "milestone-1",
     ]
     executed = []
     # Every candidate resolves through the real owner, in requested order.
     requested = ["note-demo", "stage-l01", "detour-1", "step-nested",
-                 "workstream-1", "milestone-1", "stage-path-1", "shared-x"]
+                 "workstream-1", "milestone-1", "shared-x"]
     payloads = [
         check_owner_value(
             "inspect-reference", f"/properties/more_ids/items/{i}", value,
@@ -917,10 +910,8 @@ def test_inspect_owner_resolves_every_class_alias_and_order():
     assert payloads[4]["structural_kind"] == "project-node"
     assert payloads[5]["structural_kind"] == "project-milestone"
     assert payloads[5]["project_id"] == "project-demo"
-    assert payloads[6]["structural_kind"] == "path-stage"
-    assert payloads[6]["path_id"] == "path-demo"
-    assert payloads[7]["structural_kind"] == "ambiguous"
-    assert [c["structural_kind"] for c in payloads[7]["candidates"]] == [
+    assert payloads[6]["structural_kind"] == "ambiguous"
+    assert [c["structural_kind"] for c in payloads[6]["candidates"]] == [
         "detour", "project-node"]
     # Alias equivalence: the old alias resolves to the same record.
     status, aliased = check_owner_value(
@@ -934,7 +925,7 @@ def test_inspect_owner_resolves_every_class_alias_and_order():
         "/properties/more_ids/items/0", "/properties/more_ids/items/1",
         "/properties/more_ids/items/2", "/properties/more_ids/items/3",
         "/properties/more_ids/items/4", "/properties/more_ids/items/5",
-        "/properties/more_ids/items/6", "/properties/more_ids/items/7",
+        "/properties/more_ids/items/6",
         "/properties/id",
     ]
     assert manifest == frozen, f"A6 the inspect owner mutated its input — {FIX}"
@@ -1177,8 +1168,8 @@ def test_six_owner_rows_resolved_and_eleven_reviews_retained():
     removed = {
         "ai-action.delivery.apply::/properties/artifact_sha256::review",
         "ai-action.delivery.apply::/properties/delivery_id::review",
-        "project.inspect::/properties/id::review",
-        "project.inspect::/properties/more_ids/items::review",
+        "inspect::/properties/id::review",
+        "inspect::/properties/more_ids/items::review",
 
         # Task 73 decision 4: decided nonlookup, not under review.
         "session.end::/properties/session_id::review",
@@ -1227,7 +1218,7 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
             manifest=manifest, repo=repo, candidates=candidates)
         assert status == "resolved", f"A6 fixture id {value!r} misses — {FIX}"
     # Requested batch order and the unknown-id refusal through the handler.
-    ctx = OpContext(root=mini_repo, operation="project.inspect",
+    ctx = OpContext(root=mini_repo, operation="inspect",
                     channel="operator", invocation="query", gateway=None)
     first, second = candidates[0], candidates[-1]
     batch = platform_handlers.inspect(

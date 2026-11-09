@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: showing 2 of 15 matches; continue with --offset 2, or use --page for totals and a snapshot-bound continuation\n",
+  "stderr": "los: showing 2 of 12 matches; continue with --offset 2, or use --page for totals and a snapshot-bound continuation\n",
   "stdout": "[{\"id\":\"module-demo\",\"type\":\"module\",\"title\":\"Demo Module\",\"path\":\"curriculum/modules/module-demo/module.yaml\",\"status\":\"enrolled\",\"state\":null,\"deprecated\":null},{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"status\":\"active\",\"state\":null,\"deprecated\":null}]\n",
   "stdout_json": [
     {

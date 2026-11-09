@@ -765,61 +765,54 @@ def test_inbox_list_lists_names_without_reading_bytes(mini_repo):
     assert all(row["age_days"] == 0 for row in rows)
 
 
-def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_repo):
-    # Milestones and structure nodes resolve structurally since Item 4, so
-    # the hint cases use advertised-but-dangling cross-refs instead (the
-    # only advertised ids inspect still misses). The validator would refuse
+def test_inspect_miss_on_advertised_unresolved_id_names_referring_record(mini_repo):
+    # The hint cases use advertised-but-dangling cross-refs (the only
+    # advertised ids inspect still misses). The validator would refuse
     # these dangling refs; inspect reads without validating.
-    write_yaml(mini_repo / "projects/registry/project-demo.yaml", {
-        "schema_version": 1, "id": "project-demo", "type": "project",
-        "title": "Demo project", "project_type": "software",
-        "status": "active", "root_uri": "project://demo",
-        "objective": "Demonstrate the shadow graph.",
-        "milestone_ids": ["milestone-demo-alpha"],
-        "linked_module_ids": [], "unit_ids": ["unit-demo-ghost"],
-        "workspace_ids": ["workspace-demo-ghost"],
-        "thematic_group_ids": [],
-        "boundaries": {"confidentiality": "private",
-                       "external_code_access": "approved"},
-        "structure": {"kind": "linear", "nodes": [
-            {"id": "step-demo-alpha", "title": "Alpha", "kind": "milestone",
-             "status": "active"}]},
-    })
+    add_curriculum(mini_repo)
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["workspace_ids"] = ["workspace-demo", "workspace-demo-ghost"]
+    write_yaml(unit_path, unit)
+    context = mini_repo / "work/active/workspace-demo/CONTEXT.md"
+    text = context.read_text(encoding="utf-8")
+    head, rest = text.split("---\n", 2)[1], text.split("---\n", 2)[2]
+    meta = yaml.safe_load(head)
+    meta["unit_ids"] = ["unit-demo-l01", "unit-demo-ghost"]
+    context.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False) + "---\n" + rest, encoding="utf-8")
     missing = run_los(mini_repo, "inspect", "workspace-demo-ghost")
     assert missing.returncode == 2, missing.stderr
     assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
-    assert "project-demo" in missing.stderr
+    assert "unit-demo-l01" in missing.stderr
     assert "workspace_ids" in missing.stderr
     node = run_los(mini_repo, "inspect", "unit-demo-ghost")
     assert node.returncode == 2, node.stderr
-    assert "project-demo" in node.stderr
+    assert "workspace-demo" in node.stderr
     assert "unit_ids" in node.stderr
     unknown = run_los(mini_repo, "inspect", "note-no-such-note")
     assert unknown.returncode == 2, unknown.stderr
-    assert "project-demo" not in unknown.stderr
+    assert "unit-demo-l01" not in unknown.stderr
 
 
 def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
     # The hint names the referrer, and the miss keeps exit 2: a referrer id
     # containing "snapshot" once turned a batch miss into exit 3 (chosen
     # from the message text); the converted refusal classifies by type.
-    write_yaml(mini_repo / "projects/registry/project-snapshot-lab.yaml", {
-        "schema_version": 1, "id": "project-snapshot-lab", "type": "project",
-        "title": "Snapshot lab", "project_type": "software",
-        "status": "active", "root_uri": "project://snapshot-lab",
-        "objective": "Reference a workspace that does not exist.",
-        "milestone_ids": [], "linked_module_ids": [], "unit_ids": [],
-        "workspace_ids": ["workspace-demo-ghost"], "thematic_group_ids": [],
-        "boundaries": {"confidentiality": "private",
-                       "external_code_access": "approved"},
-    })
+    add_curriculum(mini_repo)
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["id"] = "unit-snapshot-lab"
+    # Keep the authored id consistent with its directory-independent loader id:
+    # the loader keys units by their authored id, so this rename is the referrer.
+    unit["workspace_ids"] = ["workspace-demo-ghost"]
+    write_yaml(unit_path, unit)
     single = run_los(mini_repo, "inspect", "workspace-demo-ghost")
     batch = run_los(mini_repo, "inspect", "workspace-demo-ghost",
-                    "project-snapshot-lab")
+                    "unit-snapshot-lab")
     for missing in (single, batch):
         assert missing.returncode == 2, missing.stderr
         assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
-        assert ("los: hint: referenced by project-snapshot-lab (project) "
+        assert ("los: hint: referenced by unit-snapshot-lab (unit) "
                 "in workspace_ids") in missing.stderr
 
 

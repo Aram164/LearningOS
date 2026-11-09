@@ -56,10 +56,10 @@ MANIFEST_NODES = [
     "project_collections", "project_concepts", "project_coordination",
     "project_learning_paths", "project_module_source_maps", "project_modules",
     "project_notes", "project_programs", "project_project_aliases",
-    "project_project_relationships", "project_projects", "project_sources",
+    "project_sources",
     "project_stages", "project_study_maps", "project_thematic_groups",
     "project_topics", "project_unit_material_syntheses", "project_units",
-    "project_workspaces", "unit_to_project_ids",
+    "project_workspaces",
 ]
 
 

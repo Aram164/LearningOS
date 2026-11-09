@@ -127,18 +127,12 @@ def test_backlink_tables_are_walked_both_ways():
 
 def test_relations_walk_both_ways_with_alias_resolution():
     manifest = _manifest(
-        [_record("project-a", "project"), _record("project-b", "project"),
-         _record("concept-a", "concept"), _record("concept-b", "concept")],
+        [_record("concept-a", "concept"), _record("concept-b", "concept")],
         relations=[{"from": "concept-a", "to": "concept-b", "type": "builds-on"}],
-        project_relationships=[
-            {"from_project_id": "project-a", "to_id": "project-b",
-             "type": "depends-on"},
-        ],
-        project_aliases={"alias-a": "project-a"},
+        project_aliases={"alias-a": "concept-a"},
     )
-    assert [row["id"] for row in related_records(manifest, "alias-a")] == ["project-b"]
-    assert related_records(manifest, "alias-a") == related_records(manifest, "project-a")
-    assert related_records(manifest, "project-b")[0]["via"] == ["project_relationship"]
+    assert [row["id"] for row in related_records(manifest, "alias-a")] == ["concept-b"]
+    assert related_records(manifest, "alias-a") == related_records(manifest, "concept-a")
     assert related_records(manifest, "concept-a")[0]["id"] == "concept-b"
     assert related_records(manifest, "concept-b")[0]["id"] == "concept-a"
 

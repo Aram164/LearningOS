@@ -8,7 +8,7 @@ from learning_os.derive.validation.advisories import workspace_neglect_issues
 from learning_os.derive.validation.receipt_cache import receipt_file_issues
 from learning_os.derive.validation.revision_ledger import revision_ledger_issues
 from learning_os.domain.failures import TransactionFailure
-from learning_os.domain.validation import REQUIRED_WORKSPACE_SECTIONS, id_list_items
+from learning_os.domain.validation import REQUIRED_WORKSPACE_SECTIONS
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import load_revisions
 
@@ -17,56 +17,7 @@ class ChecksProjects:
     """Mixed into Validator; see rules/core.py."""
     def check_projects(self):
         r = self.repo
-
-        def project_file_resolves(value) -> bool:
-            if not isinstance(value, str) or not value.strip():
-                return False
-            candidate = (r.root / value).resolve()
-            try:
-                candidate.relative_to(r.root.resolve())
-            except ValueError:
-                return False
-            return candidate.exists()
-
-        relation_ids: set[str] = set()
-        for project_id, project in r.projects.items():
-            data = project.data
-            where = self._rel(project.path)
-            for module_id in id_list_items(data.get("linked_module_ids")):
-                if module_id not in r.modules or r.modules[module_id].get("compatibility_only"):
-                    self.err("REF-MODULE",
-                             f"project '{project_id}' references unknown active module '{module_id}'", where)
-            for unit_id in id_list_items(data.get("unit_ids")):
-                if unit_id not in r.units:
-                    self.err("REF-UNIT",
-                             f"project '{project_id}' references unknown unit '{unit_id}'", where)
-            for workspace_id in id_list_items(data.get("workspace_ids")):
-                if workspace_id not in r.workspaces:
-                    self.err("REF-WORKSPACE",
-                             f"project '{project_id}' references unknown workspace '{workspace_id}'", where)
-            for group_id in id_list_items(data.get("thematic_group_ids")):
-                if group_id not in r.thematic_groups:
-                    self.err("REF-THEMATIC-GROUP",
-                             f"project '{project_id}' references unknown thematic group '{group_id}'", where)
-            root_uri = str(data.get("root_uri", ""))
-            if root_uri:
-                self._check_uri(root_uri, where)
-            for row in data.get("files", []) or []:
-                path = row.get("path") if isinstance(row, dict) else None
-                if isinstance(path, str) and not path.startswith(("project://", "github://")):
-                    candidate = (r.root / path).resolve()
-                    try:
-                        candidate.relative_to(r.root.resolve())
-                    except ValueError:
-                        self.err("PROJECT-FILE",
-                                 f"project '{project_id}' file path escapes the repository: '{path}'", where)
-                    else:
-                        if not candidate.exists():
-                            self.warn("PROJECT-FILE",
-                                      f"project '{project_id}' file does not exist: '{path}'", where)
-
-        canonical = {**dict.fromkeys(r.projects, "project"),
-                     **dict.fromkeys(r.units, "unit"),
+        canonical = {**dict.fromkeys(r.units, "unit"),
                      **dict.fromkeys(r.workspaces, "workspace"),
                      **{key: "module" for key, row in r.modules.items()
                         if not row.get("compatibility_only")}}
@@ -82,9 +33,6 @@ class ChecksProjects:
                 for child in value:
                     remember_identities(child)
 
-        for project in r.projects.values():
-            remember_identities(project.data)
-        remember_identities(r.project_relations)
         for old_id, target_id in r.project_aliases.items():
             where = self._rel(r.project_aliases_path) if r.project_aliases_path else "projects/aliases.yaml"
             if target_id not in canonical:
@@ -96,31 +44,6 @@ class ChecksProjects:
             if old_id in shadowed:
                 self.err("PROJECT-ALIAS",
                          f"compatibility alias '{old_id}' shadows a canonical owner", where)
-
-        resolvers = {
-            "module": lambda value: value in r.modules and not r.modules[value].get("compatibility_only"),
-            "source": lambda value: value in r.sources,
-            "topic-pack": lambda value: value in r.collections
-                and r.collections[value].get("collection_kind") == "topic-pack",
-            "note": lambda value: value in r.notes,
-            "file": project_file_resolves,
-        }
-        for relation in r.project_relations:
-            relation_id = relation.get("id")
-            where = self._rel(r.project_relations_path) if r.project_relations_path else "projects/relations/project-relations.yaml"
-            if relation_id in relation_ids:
-                self.err("PROJECT-REL-DUP", f"duplicate project relationship '{relation_id}'", where)
-            relation_ids.add(str(relation_id))
-            project_id = relation.get("from_project_id")
-            if project_id not in r.projects:
-                self.err("REF-PROJECT",
-                         f"relationship '{relation_id}' references unknown project '{project_id}'", where)
-            to_type = relation.get("to_type")
-            target = relation.get("path") if to_type == "file" and relation.get("path") else relation.get("to_id")
-            resolver = resolvers.get(to_type)
-            if resolver is None or not resolver(target):
-                self.err("PROJECT-REL-ENDPOINT",
-                         f"relationship '{relation_id}' target does not resolve: {to_type} '{target}'", where)
 
     def check_workspaces(self):
         r = self.repo

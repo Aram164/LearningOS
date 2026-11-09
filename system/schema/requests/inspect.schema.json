@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "learningos/requests/project.inspect",
+  "$id": "learningos/requests/inspect",
   "x-governs": "artifact",
   "type": "object",
   "additionalProperties": false,
@@ -31,7 +31,7 @@
     },
     "id": {
       "type": "string",
-      "description": "id of the record, curriculum stage, path stage, detour, project node or milestone to inspect",
+      "description": "id of the record, curriculum stage, detour, project node or milestone to inspect",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -82,7 +82,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.adapters.cli.invoke:project.inspect",
+    "handler": "learning_os.adapters.cli.invoke:inspect",
     "parser_factory": false
   }
 }

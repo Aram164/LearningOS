@@ -120,7 +120,6 @@ def test_frozen_format_parses_into_the_expected_record_families(version, repo_ro
         "study_maps": repo.study_maps,
         "workspaces": repo.workspaces,
         "programs": repo.programs,
-        "projects": repo.projects,
     }
     empty = sorted(name for name, records in populated.items() if not records)
     assert empty == [], f"format {version} fixture covers no {empty}"

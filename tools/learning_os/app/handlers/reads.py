@@ -207,7 +207,7 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
         fields = ("id", "title", "status", "module_id", "program_id", "unit_id",
                   "current_study_map", "current_stage", "needs_study_map")
         collections = {}
-        for name in ("programs", "modules", "projects", "units", "study_maps"):
+        for name in ("programs", "modules", "units", "study_maps"):
             rows = sorted(manifest.get(name, []), key=lambda row: row["id"])
             items = [{key: row[key] for key in fields if key in row}
                      for row in rows[offset:offset + limit]]
@@ -402,7 +402,6 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "snapshot": manifest.get("_generated", {}),
         "programs": manifest.get("programs", []),
         "modules": manifest.get("modules", []),
-        "projects": manifest.get("projects", []),
         "units": manifest.get("units", []),
         "active_study_maps": [m for m in manifest.get("study_maps", [])
                               if m.get("status") in {"active", "paused", "ready"}],
@@ -430,7 +429,7 @@ def _human_status(payload: dict) -> str:
         f"  notes {c['notes']} · concepts {c['concepts']} · "
         f"relations {c['concept_relations']} · sources {c['sources']}",
         f"  programs {c['programs']} · modules {c['modules']} "
-        f"({c['modules_enrolled']} enrolled) · projects {c['projects']} · units {c['units']} · "
+        f"({c['modules_enrolled']} enrolled) · units {c['units']} · "
         f"study maps {c['study_maps']} · "
         f"workspaces {c['active_workspaces']} active "
         f"({c['standing_workspaces']} standing), "
@@ -525,7 +524,6 @@ def status(ctx: OpContext, req: dict) -> Result:
             "programs_quarantined": len(repo.programs) - len(programs),
             "modules": len(modules),
             "modules_compatibility_only": len(repo.modules) - len(modules),
-            "projects": len(repo.projects),
             "modules_enrolled": sum(
                 1 for m in modules.values() if m.get("status") == "enrolled"),
             "active_workspaces": len(active),
@@ -1177,13 +1175,6 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
                 link(unit_id, reason)
             if resolved == unit_id:
                 link(concept_id, reason)
-    for relation in manifest.get("project_relationships", []) or []:
-        if not isinstance(relation, dict):
-            continue
-        if relation.get("from_project_id") == resolved:
-            link(relation.get("to_id"), "project_relationship")
-        if relation.get("to_id") == resolved:
-            link(relation.get("from_project_id"), "project_relationship")
     if repo is not None:
         tallies = _use_evidence(repo)
     elif tallies is None:

@@ -6,10 +6,7 @@ from learning_os.derive.validation.advisories import inbox_stale_issues
 from learning_os.domain.validation import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
 from learning_os.domain.vocabulary import (
     ID_RE,
-    PATH_ID_RE,
     PROGRAM_ID_RE,
-    PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE,
     STUDY_MAP_ID_RE,
     UNIT_ID_RE,
 )
@@ -63,8 +60,6 @@ class ChecksStructure:
             self._schema_check("note", note.meta, self._rel(note.path))
         for ws in r.workspaces.values():
             self._schema_check("workspace", ws.meta, self._rel(ws.path))
-        for path in r.learning_paths.values():
-            self._schema_check("learning-path", path.data, self._rel(path.path))
         if r.coordination is not None:
             self._schema_check("coordination", r.coordination.meta, "work/COORDINATION.md")
         for name, doc in r.collections.items():
@@ -75,17 +70,10 @@ class ChecksStructure:
                 {"thematic_groups": list(r.thematic_groups.values())},
                 self._rel(r.thematic_groups_path),
             )
-        for project in r.projects.values():
-            self._schema_check("project", project.data, self._rel(project.path))
         if r.project_aliases_path is not None:
             self._schema_check(
                 "project-aliases", {"aliases": dict(r.project_aliases)},
                 self._rel(r.project_aliases_path),
-            )
-        if r.project_relations_path is not None:
-            self._schema_check(
-                "project-relations", {"relations": list(r.project_relations)},
-                self._rel(r.project_relations_path),
             )
 
     def check_identity(self):
@@ -110,18 +98,6 @@ class ChecksStructure:
                               f"{family} id '{rec_id}' carries a numeric suffix without a "
                               f"collision counterpart '{m.group('base')}' (suffixes are collision-only)",
                               where)
-        for project_id in self.repo.projects:
-            if not PROJECT_ID_RE.match(project_id):
-                self.err("ID-PATTERN",
-                         f"project id '{project_id}' does not match the ID pattern",
-                         self._origin_for("project", project_id))
-        for relation in self.repo.project_relations:
-            relation_id = relation.get("id")
-            if not isinstance(relation_id, str) or not PROJECT_RELATION_ID_RE.match(relation_id):
-                self.err("ID-PATTERN",
-                         f"project relationship id '{relation_id}' does not match the ID pattern",
-                         self._rel(self.repo.project_relations_path)
-                         if self.repo.project_relations_path else "projects/relations/project-relations.yaml")
         for pid in self.repo.programs:
             if not PROGRAM_ID_RE.match(pid):
                 self.err("ID-PATTERN", f"program id '{pid}' does not match the ID pattern",
@@ -134,12 +110,6 @@ class ChecksStructure:
             if not STUDY_MAP_ID_RE.match(smid):
                 self.err("ID-PATTERN", f"study map id '{smid}' does not match the ID pattern",
                          self._origin_for("study-map", smid))
-        for path_id, learning_path in self.repo.learning_paths.items():
-            where = self._rel(learning_path.path)
-            if not PATH_ID_RE.match(path_id):
-                self.err("ID-PATTERN",
-                         f"learning path id '{path_id}' does not match the ID pattern",
-                         where)
 
     def check_files(self):
         r = self.repo

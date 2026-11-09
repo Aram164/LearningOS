@@ -366,34 +366,8 @@ def add_manifest_fixtures(root: Path) -> None:
     lacks, so the shadow mutation matrix can touch each one. Behaviour
     matches the probe that derived the expected closures.
     """
-    write_yaml(root / "projects/registry/project-demo.yaml", {
-        "schema_version": 1, "id": "project-demo", "type": "project",
-        "title": "Demo project", "project_type": "software",
-        "status": "active", "root_uri": "project://demo",
-        "objective": "Demonstrate the shadow graph.",
-        "milestone_ids": [], "linked_module_ids": ["module-demo"],
-        "unit_ids": ["unit-demo-l01"], "workspace_ids": ["workspace-demo"],
-        "thematic_group_ids": [],
-        "boundaries": {"confidentiality": "private",
-                       "external_code_access": "approved"},
-    })
-    write_yaml(root / "projects/relations/project-relations.yaml", {
-        "relations": [{"id": "relationship-demo",
-                       "from_project_id": "project-demo",
-                       "to_id": "module-demo", "to_type": "module",
-                       "relation_type": "informs", "reason": "Demo.",
-                       "contribution": "Demo shelf."}],
-    })
     write_yaml(root / "projects/aliases.yaml",
-               {"aliases": {"old-demo": "project-demo"}})
-    write_yaml(root / "work/active/workspace-demo/paths/path-demo.yaml", {
-        "id": "path-demo", "title": "Demo path", "status": "active",
-        "workspace_id": "workspace-demo", "current_stage": "stage-demo-path",
-        "created": "2026-09-01",
-        "stages": [{"id": "stage-demo-path", "title": "First step",
-                    "status": "active", "objective": "Begin.",
-                    "done_when": ["Started."]}],
-    })
+               {"aliases": {"old-demo": "module-demo"}})
     write_yaml(root / "sources/collections/shelf.yaml", {
         "id": "shelf", "collection_kind": "catalogue", "title": "Shelf",
         "entries": [{"source": "source-demo-book"}],

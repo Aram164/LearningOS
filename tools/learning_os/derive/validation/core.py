@@ -188,9 +188,6 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         if family == "program":
             p = r.programs.get(rec_id)
             return self._rel(p.path) if p else ""
-        if family == "project":
-            project = r.projects.get(rec_id)
-            return self._rel(project.path) if project else ""
         if family == "unit":
             u = r.units.get(rec_id)
             return self._rel(u.path) if u else ""
@@ -250,7 +247,6 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             self.check_ai_action_requests,
             self.check_files,
             self.check_workspaces,
-            self.check_learning_paths,
             self.check_plan_rigor,
             self.check_study_maps,
             self.check_links,

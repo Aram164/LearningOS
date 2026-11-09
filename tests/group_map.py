@@ -27,7 +27,6 @@ GROUPS: dict[str, list[str]] = {
         "test_curriculum_v2.py",
         "test_creation_capabilities.py",
         "test_lecture_study_map_assembly.py",
-        "test_learning_paths.py",
         "test_learning_plan_contract.py",
         "test_master_promotion.py",
         "test_module_lifecycle.py",

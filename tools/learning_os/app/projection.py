@@ -46,16 +46,12 @@ class _LazyRepo:
     ``_fresh_manifest_and_repo`` serves the stored manifest without parsing
     canonical inputs; callers that only read the manifest never pay for the
     load (measured: load 0.24 s of a 2.0 s read). The first attribute access
-    loads once; afterwards this answers exactly like the real repo. The
-    workspace-owned learning_paths registry has its own partial load. Reads
-    that need repo-only state (path-stage lookup, use evidence) trigger the
-    load implicitly and stay correct.
+    loads once; afterwards this answers exactly like the real repo.
     """
 
     def __init__(self, root: Path) -> None:
         self._lazy_root = root
         self._lazy_repo = None
-        self._lazy_paths = None
 
     def _resolve(self):
         if self._lazy_repo is None:
@@ -67,16 +63,6 @@ class _LazyRepo:
                 session.loads += 1
                 session.model = self._lazy_repo
         return self._lazy_repo
-
-    @property
-    def learning_paths(self):
-        if self._lazy_repo is not None:
-            return self._lazy_repo.learning_paths
-        if self._lazy_paths is None:
-            partial = Repo(root=self._lazy_root)
-            load_workspaces(partial, self._lazy_root)
-            self._lazy_paths = partial.learning_paths
-        return self._lazy_paths
 
     def __getattr__(self, name: str):
         return getattr(self._resolve(), name)

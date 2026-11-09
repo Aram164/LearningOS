@@ -13,8 +13,7 @@ from learning_os.domain.snapshot import Repo
 
 def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
                   units_v2: list[dict], study_maps_v2: list[dict],
-                  source_maps_v2: list[dict], projects_v2: list[dict],
-                  project_relationships_v2: list[dict],
+                  source_maps_v2: list[dict],
                   unit_material_syntheses_v2: list[dict],
                   module_concept_edges: list[dict]) -> dict:
     module_to_units = {
@@ -32,19 +31,6 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
     source_to_units: dict[str, list[str]] = {}
     workspace_to_modules: dict[str, list[str]] = {}
     workspace_to_units: dict[str, list[str]] = {}
-    project_to_units: dict[str, list[str]] = {
-        project["id"]: list(project.get("unit_ids", []) or []) for project in projects_v2
-    }
-    project_to_workspaces: dict[str, list[str]] = {
-        project["id"]: list(project.get("workspace_ids", []) or []) for project in projects_v2
-    }
-    project_to_relationships: dict[str, list[str]] = {
-        project["id"]: [
-            relation["id"] for relation in project_relationships_v2
-            if relation.get("from_project_id") == project["id"]
-        ]
-        for project in projects_v2
-    }
     # All four concept tables are derived from one place: the published
     # `module_concept_edges`. Until 2026-08-28 `unit_to_concepts` and
     # `concept_to_units` were computed here from knowledge-map nodes alone, and
@@ -105,8 +91,7 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
         workspace_to_modules[workspace["id"]] = list(workspace.get("module_ids", []) or [])
         workspace_to_units[workspace["id"]] = list(workspace.get("unit_ids", []) or [])
     for table in (component_to_units, source_to_modules, source_to_units,
-                  workspace_to_modules, workspace_to_units, project_to_units,
-                  project_to_workspaces, project_to_relationships):
+                  workspace_to_modules, workspace_to_units):
         for key in table:
             table[key] = sorted(set(table[key]))
     return {
@@ -141,8 +126,5 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
         "source_to_units": dict(sorted(source_to_units.items())),
         "workspace_to_modules": dict(sorted(workspace_to_modules.items())),
         "workspace_to_units": dict(sorted(workspace_to_units.items())),
-        "project_to_units": dict(sorted(project_to_units.items())),
-        "project_to_workspaces": dict(sorted(project_to_workspaces.items())),
-        "project_to_relationships": dict(sorted(project_to_relationships.items())),
         "project_aliases": dict(sorted(repo.project_aliases.items())),
     }

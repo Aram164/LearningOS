@@ -49,11 +49,9 @@ def _loaded_http_urls(repo) -> set[str]:
         repo.module_source_maps,
         repo.thematic_groups,
         repo.topics,
-        repo.projects,
         repo.programs,
         repo.units,
         repo.study_maps,
-        repo.learning_paths,
         repo.notes,
         repo.workspaces,
     )

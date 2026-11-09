@@ -60,7 +60,6 @@ INITIAL_WARNING_SIGNATURES: Counter = Counter({
      "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml"): 1,
     ("RUNTIME-REVIEW-MISSING",
      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 1,
-    ("URI-PROJECT", "projects/registry/project-demo.yaml"): 1,
     ("LOCATOR-VAGUE",
      "curriculum/modules/module-demo/source-map.yaml"): 2,
     ("ROUTE-ANGLE-DETAIL-MISSING",
@@ -93,14 +92,8 @@ COVERAGE_AUDIT_TEXT = (
 
 def _repair_manifest_fixtures(root: Path) -> None:
     # add_manifest_fixtures serves the shadow suites, which never validate:
-    # its path row lacks two required keys, and four of its extra rows are
-    # schema-invalid. Repair the required path; drop the invalid extras,
+    # four of its extra rows are schema-invalid. Drop the invalid extras,
     # none of which is a §5.1 family.
-    path_file = root / "work/active/workspace-demo/paths/path-demo.yaml"
-    data = yaml.safe_load(path_file.read_text(encoding="utf-8"))
-    data["type"] = "learning-path"
-    data["area"] = "university"
-    write_yaml(path_file, data)
     for rel in ("sources/collections/shelf.yaml",
                 "curriculum/thematic-groups.yaml",
                 "projects/aliases.yaml",
@@ -207,37 +200,6 @@ def _add_analysis_note(root: Path, book: Path) -> None:
     path = root / "knowledge/notes/mathematics" / f"{ANALYSIS_NOTE_ID}.md"
     path.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip()
                     + "\n---\n\n" + body, encoding="utf-8")
-
-
-def _add_path_stage_note(root: Path) -> None:
-    # Amendment (w): the path stage carries a notes_path naming an existing,
-    # non-empty note, so path.note.write has a success case. The note stays
-    # inside the owning workspace (rules/curriculum.py PATH-NOTE-OWNER).
-    path_file = root / "work/active/workspace-demo/paths/path-demo.yaml"
-    data = yaml.safe_load(path_file.read_text(encoding="utf-8"))
-    note_rel = "work/active/workspace-demo/paths/stage-demo-path-notes.md"
-    for stage in data["stages"]:
-        if stage.get("id") == "stage-demo-path":
-            stage["notes_path"] = note_rel
-    write_yaml(path_file, data)
-    (root / note_rel).write_text(
-        "# First step — path notes\n\nBegun.\n", encoding="utf-8")
-
-
-def _add_second_path_stage(root: Path) -> None:
-    # Amendment (w), second stage: the same learning path keeps a pending
-    # stage with no notes_path, so the path.py:43 refusal stays reachable.
-    # current_stage still names the active stage-demo-path.
-    path_file = root / "work/active/workspace-demo/paths/path-demo.yaml"
-    data = yaml.safe_load(path_file.read_text(encoding="utf-8"))
-    data["stages"].append({
-        "id": "stage-demo-path-next",
-        "title": "Second step",
-        "status": "pending",
-        "objective": "Continue the path.",
-        "done_when": ["Continued."],
-    })
-    write_yaml(path_file, data)
 
 
 def _add_runtime_target(root: Path) -> None:
@@ -579,8 +541,6 @@ def rich_world(root: Path) -> dict:
     _repair_manifest_fixtures(root)
     _add_pending_stage(root)
     _add_runtime_target(root)
-    _add_path_stage_note(root)
-    _add_second_path_stage(root)
     _add_second_workspace(root)
     _add_inbox_drops(root)
     book = _add_fixture_book(root)
@@ -609,8 +569,6 @@ def rich_world(root: Path) -> dict:
         "source": "source-demo-book",
         "workspace": "workspace-demo",
         "workspace_second": SECOND_WORKSPACE_ID,
-        "path": "path-demo",
-        "project": "project-demo",
         "ability": ABILITY_ID,
         "ability_second": SECOND_ABILITY_ID,
         "lineage_claim": claim_id,

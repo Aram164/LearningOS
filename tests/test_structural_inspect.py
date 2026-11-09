@@ -30,15 +30,6 @@ def _stage(sid, unit="unit-a", sm="map-a", module="module-a", **extra):
     return row
 
 
-def _path(pid, ws="workspace-a", stages=(), archived=False):
-    return SimpleNamespace(id=pid, workspace_id=ws, archived=archived,
-                           data={"stages": list(stages)})
-
-
-def _repo(*paths):
-    return SimpleNamespace(learning_paths={path.id: path for path in paths})
-
-
 def test_curriculum_stage_answers_with_owners_and_edit_route():
     manifest = _manifest(stages=[_stage("stage-a")])
     payload = structural_payload(manifest, "stage-a")
@@ -57,26 +48,6 @@ def test_duplicate_stage_ids_answer_every_candidate_in_order():
     assert payload["structural_kind"] == "ambiguous"
     assert [candidate["unit_id"] for candidate in payload["candidates"]] == [
         "unit-a", "unit-b"]
-
-
-def test_path_stage_needs_the_repo_and_loses_to_no_one():
-    manifest = _manifest()
-    assert structural_payload(manifest, "stage-p") is None
-    repo = _repo(_path("path-a", stages=[{"id": "stage-p", "title": "P"}]))
-    payload = structural_payload(manifest, "stage-p", repo)
-    assert payload["structural_kind"] == "path-stage"
-    assert payload["path_id"] == "path-a"
-    assert payload["workspace_id"] == "workspace-a"
-    assert payload["archived"] is False
-
-
-def test_curriculum_and_path_collision_lists_both():
-    manifest = _manifest(stages=[_stage("stage-both")])
-    repo = _repo(_path("path-a", stages=[{"id": "stage-both"}]))
-    payload = structural_payload(manifest, "stage-both", repo)
-    assert payload["structural_kind"] == "ambiguous"
-    assert [candidate["structural_kind"] for candidate in payload["candidates"]] == [
-        "curriculum-stage", "path-stage"]
 
 
 def test_detour_answers_with_owners():
@@ -146,21 +117,10 @@ def test_unknown_id_answers_none():
 def _fixture_repo(mini_repo):
     add_curriculum(mini_repo)
     add_manifest_fixtures(mini_repo)
-    project_file = mini_repo / "projects/registry/project-demo.yaml"
-    project = yaml.safe_load(project_file.read_text(encoding="utf-8"))
-    project["milestone_ids"] = ["milestone-demo-ship"]
-    project["structure"] = {"kind": "linear", "nodes": [{
-        "id": "workstream-demo", "title": "Demo stream", "kind": "workstream",
-        "status": "active", "children": [{
-            "id": "step-demo-ship", "title": "Ship it", "kind": "step",
-            "status": "active",
-        }],
-    }]}
-    write_yaml(project_file, project)
     return mini_repo
 
 
-def test_cli_inspect_resolves_curriculum_and_path_stages(mini_repo):
+def test_cli_inspect_resolves_curriculum_stages(mini_repo):
     root = _fixture_repo(mini_repo)
     curriculum = run_los(root, "inspect", "stage-demo")
     assert curriculum.returncode == 0, curriculum.stderr
@@ -168,25 +128,6 @@ def test_cli_inspect_resolves_curriculum_and_path_stages(mini_repo):
     assert payload["structural_kind"] == "curriculum-stage"
     assert payload["unit_id"] == "unit-demo-l01"
     assert payload["edit_via"] == "plan-edit-context unit-demo-l01 --stage-id stage-demo"
-    path = run_los(root, "inspect", "stage-demo-path")
-    assert path.returncode == 0, path.stderr
-    staged = json.loads(path.stdout)
-    assert staged["structural_kind"] == "path-stage"
-    assert staged["path_id"] == "path-demo"
-
-
-def test_cli_inspect_resolves_project_nodes_and_milestones(mini_repo):
-    root = _fixture_repo(mini_repo)
-    node = run_los(root, "inspect", "step-demo-ship")
-    assert node.returncode == 0, node.stderr
-    payload = json.loads(node.stdout)
-    assert payload["structural_kind"] == "project-node"
-    assert payload["node_path"] == ["workstream-demo", "step-demo-ship"]
-    milestone = run_los(root, "inspect", "milestone-demo-ship")
-    assert milestone.returncode == 0, milestone.stderr
-    owned = json.loads(milestone.stdout)
-    assert owned["structural_kind"] == "project-milestone"
-    assert owned["project_id"] == "project-demo"
 
 
 def test_cli_inspect_batch_mixes_records_and_structural_ids(mini_repo):
@@ -203,22 +144,19 @@ def test_cli_inspect_unknown_structural_id_names_the_search(mini_repo):
     root = _fixture_repo(mini_repo)
     missing = run_los(root, "inspect", "stage-missing")
     assert missing.returncode == 2
-    assert "no curriculum stage, path stage" in missing.stderr
+    assert "no curriculum stage, detour" in missing.stderr
     assert "record not found: stage-missing" in missing.stderr
     plain = run_los(root, "inspect", "note-missing")
     assert plain.returncode == 2
     assert plain.stderr.strip() == "los: INVALID_REQUEST: record not found: note-missing"
 
 
-def test_overnight_inspection_loads_only_workspaces_and_keeps_collisions(mini_repo, monkeypatch):
+def test_overnight_inspection_loads_only_workspaces(mini_repo, monkeypatch):
     from repo_builders import write_yaml
 
     from learning_os.app import projection
-    path = mini_repo / "work/active/workspace-demo/paths/path-demo.yaml"
-    write_yaml(path, {"id": "path-demo", "type": "learning-path", "workspace_id": "workspace-demo",
-                      "stages": [{"id": "stage-both"}]})
     def forbidden(_root):
         raise AssertionError("inspect must not load the full repo")
     monkeypatch.setattr(projection, "load_repo", forbidden)
     payload = structural_payload(_manifest(stages=[_stage("stage-both")]), "stage-both", projection._LazyRepo(mini_repo))
-    assert payload["structural_kind"] == "ambiguous"
+    assert payload["structural_kind"] == "curriculum-stage"

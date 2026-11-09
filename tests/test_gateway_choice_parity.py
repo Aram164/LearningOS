@@ -42,15 +42,6 @@ CASES = [
                               "status": v},
     },
     {
-        "capability": "path.progress.update",
-        "command": "path-progress",
-        "field": "status",
-        "valid": ["active", "complete", "skipped"],
-        "argv": lambda v: ["path-x", "stage-x", v],
-        "payload": lambda v: {"path_id": "path-x", "stage_id": "stage-x",
-                              "status": v},
-    },
-    {
         "capability": "learner.observation.append",
         "command": "observation-append",
         "field": "result",
@@ -315,38 +306,6 @@ def test_stage_handler_refuses_an_unknown_status(mini_repo: Path):
         stage_progress(ctx, {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
                              "status": "done"})
     assert caught.value.site == "stage.progress.update.unknown-status"
-    assert caught.value.exit_code == 2
-
-
-def test_path_handler_refuses_an_unknown_status(mini_repo: Path):
-    from learning_os.app.context import OpContext
-    from learning_os.app.handlers.learner import path_progress
-    from learning_os.domain.failures import WriteRefused
-
-    path_file = (mini_repo / "work" / "active" / "workspace-demo"
-                 / "paths" / "path-demo-probability.yaml")
-    path_file.parent.mkdir(parents=True)
-    path_file.write_text(yaml.safe_dump({
-        "id": "path-demo-probability", "type": "learning-path",
-        "title": "Demo probability", "workspace_id": "workspace-demo",
-        "area": "university", "module_id": "module-demo", "status": "active",
-        "current_stage": "stage-one", "created": "2026-08-03",
-        "stages": [
-            {"id": "stage-one", "title": "One", "status": "active",
-             "objective": "Do one.", "concepts": ["concept-expected-value"],
-             "resources": [{"kind": "read", "label": "Demo Book",
-                            "source_id": "source-demo-book"}],
-             "done_when": ["Explain one."],
-             "notes_path": "work/active/workspace-demo/scratch/paths/"
-                           "path-demo-probability/stage-one.md"},
-        ],
-    }, sort_keys=False), encoding="utf-8")
-    ctx = OpContext(root=mini_repo, operation="path.progress.update",
-                    channel="operator", invocation="command", gateway=None)
-    with pytest.raises(WriteRefused, match="unknown path status") as caught:
-        path_progress(ctx, {"path_id": "path-demo-probability",
-                            "stage_id": "stage-one", "status": "done"})
-    assert caught.value.site == "path.progress.update.unknown-status"
     assert caught.value.exit_code == 2
 
 

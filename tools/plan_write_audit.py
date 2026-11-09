@@ -40,7 +40,6 @@ REPO = Path(__file__).resolve().parents[1]
 PLAN_PATHS = (
     "curriculum/modules/*/units/*/study-map.yaml",
     "curriculum/modules/*/source-map.yaml",
-    "curriculum/paths/*.yaml",
 )
 RECEIPT_PATH = "operations/transactions"
 

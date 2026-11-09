@@ -604,11 +604,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
     from the delivery directory entries; digests from the request's
     own real digest at the row's pointer. SPEC (bv) item 1 adds:
     detours from the unit's current
-    study map as ``detour_resolve`` lists them; paths from the
-    non-archived ``repo.learning_paths`` keys as
-    ``require_path_or_error`` lists them; path stages from the
-    path's own stage list resolved from ``path_id`` (those requests
-    carry no ``unit_id``); sources from ``repo.sources`` as both
+    study map as ``detour_resolve`` lists them; sources from ``repo.sources`` as both
     source handlers pass it; resources from the stage's own resource
     list as the feedback handler lists it (SPEC (bz) item 1);
     abilities from ``repo.abilities`` as ``ability_context``
@@ -659,17 +655,6 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = list(repo.units)
         return ordered, set(ordered)
-    if kind == "stage" and "path_id" in request:
-        # The path operations carry no unit_id; the stage list is the
-        # path's own, resolved from path_id exactly as
-        # ``require_path_or_error`` plus ``require_stage`` resolve it
-        # (SPEC (bv) item 1).
-        repo = load_repo(ctx.root)
-        learning_path = repo.learning_paths[request["path_id"]]
-        ordered = [str(row["id"])
-                   for row in learning_path.data.get("stages", []) or []
-                   if isinstance(row, dict) and row.get("id")]
-        return ordered, set(ordered)
     if kind == "stage":
         repo = load_repo(ctx.root)
         unit = repo.units[request["unit_id"]]
@@ -687,13 +672,6 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = [row.get("id")
                    for row in study_map.data.get("detours", []) or []
                    if isinstance(row, dict) and row.get("id")]
-        return ordered, set(ordered)
-    if kind == "path":
-        # require_path_or_error passes the non-archived path keys
-        # (SPEC (bv) item 1).
-        repo = load_repo(ctx.root)
-        ordered = [key for key, row in repo.learning_paths.items()
-                   if not row.archived]
         return ordered, set(ordered)
     if kind == "source":
         # Both source handlers pass repo.sources (SPEC (bv) item 1).
@@ -1134,18 +1112,6 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("detour.resolve.unknown-detour", "unknown-detour"),
     ("detour.resolve", "/properties/unit_id"):
         ("detour.resolve.unknown-unit", "unknown-unit"),
-    ("path.attachment.add", "/properties/path_id"):
-        ("path.attachment.add.unknown-path", "unknown-path"),
-    ("path.attachment.add", "/properties/stage_id"):
-        ("path.attachment.add.unknown-stage", "unknown-stage"),
-    ("path.note.write", "/properties/path_id"):
-        ("path.note.write.unknown-path", "unknown-path"),
-    ("path.note.write", "/properties/stage_id"):
-        ("path.note.write.unknown-stage", "unknown-stage"),
-    ("path.progress.update", "/properties/path_id"):
-        ("path.progress.update.unknown-path", "unknown-path"),
-    ("path.progress.update", "/properties/stage_id"):
-        ("path.progress.update.unknown-stage", "unknown-stage"),
     ("source.feedback.record", "/properties/source_id"):
         ("source.feedback.record.unknown-source", "unknown-source"),
     ("source.feedback.record", "/properties/stage_id"):
@@ -1286,17 +1252,6 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("detour.create", "/properties/stage_id"): ("prefixed", "stage"),
     ("detour.resolve", "/properties/unit_id"): ("prefixed", "unit"),
     ("detour.resolve", "/properties/detour_id"): ("prefixed", "detour"),
-    ("path.attachment.add", "/properties/path_id"):
-        ("prefixed", "active learning path"),
-    ("path.attachment.add", "/properties/stage_id"):
-        ("prefixed", "stage"),
-    ("path.note.write", "/properties/path_id"):
-        ("prefixed", "active learning path"),
-    ("path.note.write", "/properties/stage_id"): ("prefixed", "stage"),
-    ("path.progress.update", "/properties/path_id"):
-        ("prefixed", "active learning path"),
-    ("path.progress.update", "/properties/stage_id"):
-        ("prefixed", "stage"),
     ("source.feedback.record", "/properties/resource_id"):
         ("legacy-lines-suggested",
          "los: resource not found on stage stage-demo: {miss}\n"
@@ -1407,8 +1362,8 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
 INSPECT_REFUSAL_CASE: dict[tuple[str, str], str] = {
 
 
-    ("project.inspect", "/properties/id"): "unknown-id",
-    ("project.inspect", "/properties/more_ids/items"): "batch-unknown-member",
+    ("inspect", "/properties/id"): "unknown-id",
+    ("inspect", "/properties/more_ids/items"): "batch-unknown-member",
 }
 
 #: The two CLI sequence anchors (SPEC (cb), oracle (cd)): their
@@ -1916,12 +1871,6 @@ def test_message_form_cli_sequence_concept_dropped_line_fails(
 #: The (bv) 1 S1 pointers: one per new domain branch kind.
 _DOMAIN_SELF_CHECK_POINTERS = (
     ("detour.resolve", "/properties/detour_id"),
-    ("path.attachment.add", "/properties/path_id"),
-    ("path.attachment.add", "/properties/stage_id"),
-    ("path.note.write", "/properties/path_id"),
-    ("path.note.write", "/properties/stage_id"),
-    ("path.progress.update", "/properties/path_id"),
-    ("path.progress.update", "/properties/stage_id"),
     ("source.feedback.record", "/properties/source_id"),
     ("unit.source-selection.set", "/properties/source_id"),
 )

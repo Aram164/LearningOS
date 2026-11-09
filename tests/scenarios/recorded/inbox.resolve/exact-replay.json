@@ -63,7 +63,7 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:1e4d6d2e7657dbf9498bd36822f89f5aaf74da7add65c464d7c7711f4d5f74f8",
+            "data_roots_sha256": "sha256:b6978b91f3ed0c52899990c8023d0eaf8e8821ba264725a871bdae1649dbb705",
             "fingerprint_definition": 2,
             "routed_to": [
               "note-demo"

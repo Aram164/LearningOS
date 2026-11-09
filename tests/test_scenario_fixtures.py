@@ -83,20 +83,10 @@ def test_every_family_is_present(tmp_path):
             "material_analysis", {}).get("resolution") == "resolved"
     assert "concept-expected-value" in repo.concepts and repo.relations
     assert {"workspace-demo", "workspace-second"} <= set(repo.workspaces)
-    assert "path-demo" in repo.learning_paths
-    assert any(stage.get("notes_path")
-               and (root / stage["notes_path"]).is_file()
-               and (root / stage["notes_path"]).stat().st_size > 0
-               for stage in repo.learning_paths["path-demo"].data["stages"])
-    assert any(stage.get("id") == "stage-demo-path-next"
-               and not stage.get("notes_path")
-               for stage in repo.learning_paths["path-demo"].data["stages"])
-    assert repo.learning_paths["path-demo"].data["current_stage"] == "stage-demo-path"
     assert [req["id"] for req in collect_requirements(repo)] == ["req-demo-l01-demo"]
     assert (root / "work/inbox/note-drop.md").is_file() \
         and (root / "work/inbox/pack/one.md").is_file()
     assert len(repo.garden_notes) >= 1
-    assert "project-demo" in repo.projects
     ledger = yaml.safe_load(
         (root / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
     assert set(ledger["decisions"]) == {"goal-demo-deferred", "goal-demo-rejected"}

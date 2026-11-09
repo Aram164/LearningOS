@@ -1,7 +1,6 @@
 """Platform-area converted handlers: the shared inspect unit (PLAN D4).
 
-``cli.inspect`` and ``project.inspect`` are one conversion unit (SPEC §12.7):
-both names register on the one moved handler. The inspect-only helpers moved
+``inspect`` is the generic inspect handler (SPEC §12.7). The inspect-only helpers moved
 with the unit from ``commands.reads`` (SPEC (az) item 2).
 """
 
@@ -161,17 +160,6 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
                 "edit_via": (f"plan-edit-context {unit_id} "
                              f"--stage-id {record_id}"),
             })
-    if repo is not None and record_id.startswith("stage-"):
-        for path in sorted(getattr(repo, "learning_paths", {}).values(),
-                           key=lambda candidate: candidate.id):
-            for stage in path.data.get("stages", []) or []:
-                if isinstance(stage, dict) and stage.get("id") == record_id:
-                    matches.append({
-                        "id": record_id, "structural_kind": "path-stage",
-                        "stage": dict(stage), "path_id": path.id,
-                        "workspace_id": path.workspace_id,
-                        "archived": bool(path.archived),
-                    })
     for study_map in manifest.get("study_maps", []) or []:
         if not isinstance(study_map, dict):
             continue
@@ -234,17 +222,13 @@ def _inspect_candidates(manifest: dict, repo=None, *, include_paths=True) -> lis
         ids.extend(node["id"] for node, _ in _structure_nodes(record.get("structure")))
         ids.extend(mid for mid in record.get("milestone_ids", []) or []
                    if isinstance(mid, str))
-    if repo is not None and include_paths:
-        for path in getattr(repo, "learning_paths", {}).values():
-            ids.extend(stage.get("id") for stage in path.data.get("stages", []) or []
-                       if isinstance(stage, dict) and isinstance(stage.get("id"), str))
     return ids
 
 
 def inspect_not_found(record_id: str, candidates=()) -> str:
     if isinstance(record_id, str) and record_id.startswith(STRUCTURAL_PREFIXES):
         return with_suggestions(
-            f"record not found: {record_id} (no curriculum stage, path stage, "
+            f"record not found: {record_id} (no curriculum stage, "
             "detour, project node, or milestone carries this id)",
             record_id, candidates)
     return not_found("record", record_id, candidates)
@@ -335,7 +319,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("project.inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ)
+@register("inspect", kind="query", parallel_safe=True, memo_profile="manifest", read_session_profile="manifest", effects=OperationEffects.READ)
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):
@@ -360,19 +344,6 @@ def inspect(ctx: OpContext, req: dict) -> Result:
         )
     payload = with_coordination_digests(root, payload)
     return Result(payload)
-
-
-# ---------------------------------------------------------------------------
-# Historical Project reads remain available; authoring is retired.
-
-@register("project.list", kind="query", effects=OperationEffects.READ)
-def project_list(ctx: OpContext, req: dict) -> Result:
-    """List first-class projects, optionally filtered by status."""
-    manifest = _fresh_manifest(ctx.root)
-    rows = manifest.get("projects", [])
-    if req.get("status"):
-        rows = [row for row in rows if row.get("status") == req.get("status")]
-    return Result(rows)
 
 
 # ---------------------------------------------------------------------------

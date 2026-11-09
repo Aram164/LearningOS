@@ -29,12 +29,18 @@ FIX = "Generated parser drifted from the recorded CLI surface (PLAN D2)."
 # Stage 4C deliberately retires exactly these two authoring verbs. Preserve the
 # old corpus bytes and keep parity for every remaining verb and argument.
 RETIRED_PROJECT_COMMANDS = {"project-create", "project-update"}
+RETIRED_G11_COMMANDS = {"path-attach", "path-note", "path-progress", "project-list"}
 
 
 def _retired_choice_text(text: str) -> str:
-    return text.replace("project-create,project-update,", "").replace(
+    text = text.replace("project-create,project-update,", "").replace(
         "'project-create', 'project-update', ", "").replace(
         "project-create, project-update, ", "")
+    for verb in sorted(RETIRED_G11_COMMANDS):
+        text = (text.replace(f", {verb},", ",").replace(f",{verb},", ",")
+                .replace(f", '{verb}',", ",").replace(f"{verb},", "")
+                .replace(f"'{verb}', ", "").replace(f"{verb}, ", ""))
+    return text
 
 
 def _without_stage6_choice(actual: dict) -> dict:
@@ -62,7 +68,8 @@ def _current_recorded_errors(recorded: dict) -> dict:
 
 
 def _retired_command(argv: list[str]) -> str | None:
-    return next((value for value in argv if value in RETIRED_PROJECT_COMMANDS), None)
+    return next((value for value in argv
+                 if value in RETIRED_PROJECT_COMMANDS or value in RETIRED_G11_COMMANDS), None)
 
 
 def _assert_retired_refusal(actual: dict, command: str) -> None:
@@ -215,9 +222,6 @@ BF_HELP_PAIRS: dict[str, set[str]] = {
                      "assistance", "expected_snapshot"},
     "note-evidence": {"note_id", "evidence_type", "expected_snapshot"},
     "note-revise": {"note_id", "approve", "expected_snapshot"},
-    "path-attach": {"path_id", "stage_id", "label"},
-    "path-note": {"path_id", "stage_id"},
-    "path-progress": {"path_id", "stage_id", "status"},
     "source-feedback": {"unit_id", "stage_id", "source_id", "feedback",
                         "note", "expected_snapshot"},
     "stage-attach": {"unit_id", "stage_id", "label",
@@ -245,7 +249,6 @@ BF_HELP_PAIRS: dict[str, set[str]] = {
     "observe": {"activity", "assistance", "result", "tags"},
     "plan-edit-context": {"expected_snapshot", "unit_id"},
     "plan-template": {"module_id", "profile", "title", "unit_id"},
-    "project-list": {"status"},
     "related": {"id"},
     "runtime-session": {"context_json", "event", "expected_snapshot",
                         "requirement"},
@@ -286,7 +289,7 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "route-patch": "route.patch",
     "stage-progress": "stage.progress.update",
     "ai-action-apply-delivery": "ai-action.delivery.apply",
-    "inspect": "project.inspect",
+    "inspect": "inspect",
     "ai-action-append-slices": "ai-action.append-slices",
     "ai-action-import-delivery": "ai-action.delivery.import",
     "ai-action-prepare": "ai-action.prepare",
@@ -299,9 +302,6 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "stage-result": "learner.stage-result.append",
     "note-evidence": "note.evidence.add",
     "note-revise": "note.revise",
-    "path-attach": "path.attachment.add",
-    "path-note": "path.note.write",
-    "path-progress": "path.progress.update",
     "source-feedback": "source.feedback.record",
     "stage-attach": "stage.attachment.add",
     "stage-note": "stage.note.write",
@@ -323,7 +323,6 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "observe": "learner.observe",
     "plan-edit-context": "plan.edit-context",
     "plan-template": "plan.template",
-    "project-list": "project.list",
     "related": "related.read",
     "runtime-session": "runtime.session",
     "search": "note.search",
@@ -377,16 +376,16 @@ def _normalize_bf_help(expected: dict) -> dict:
 
 def test_registered_normalization_with_synthetic_handler():
     # No production registration exists in S12; prove the future rule.
-    handler = "learning_os.adapters.cli.invoke:project.inspect"
+    handler = "learning_os.adapters.cli.invoke:inspect"
     recorded = {"func": "learning_os.commands.query.cmd_inspect", "id": "X"}
     normalized = _normalize_registered_namespace(recorded, handler)
     assert normalized["func"] == "learning_os.adapters.cli.invoke"
-    assert normalized["_operation"] == "project.inspect"
+    assert normalized["_operation"] == "inspect"
     assert normalized["id"] == "X"
     defaults = {"func": "learning_os.commands.query.cmd_inspect"}
     normalized_defaults = _normalize_registered_defaults(defaults, handler)
     assert normalized_defaults["func"] == "learning_os.adapters.cli.invoke"
-    assert normalized_defaults["_operation"] == repr("project.inspect")
+    assert normalized_defaults["_operation"] == repr("inspect")
 
 
 def _normalize_describe(doc: dict) -> dict:
@@ -459,10 +458,10 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
     """
     directory = tmp_path / "requests"
     directory.mkdir()
-    (directory / "project.inspect.schema.json").write_text(json.dumps({
+    (directory / "inspect.schema.json").write_text(json.dumps({
         "x-los-cli-command": {
             "name": "inspect",
-            "handler": "learning_os.adapters.cli.invoke:project.inspect",
+            "handler": "learning_os.adapters.cli.invoke:inspect",
         },
     }), encoding="utf-8")
     monkeypatch.setattr("test_arch_cli_parity.REQUESTS_DIR", directory)
@@ -478,13 +477,13 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
     subcommand = recorded.get("namespace", {}).get("command")
     assert subcommand == "inspect"
     handler = _handler_for_subcommand(subcommand)
-    assert handler == "learning_os.adapters.cli.invoke:project.inspect"
+    assert handler == "learning_os.adapters.cli.invoke:inspect"
     normalized = _normalize_registered_namespace(
         _normalize_namespace(recorded["namespace"]), handler)
     assert normalized == {
         "command": "inspect", "id": "note-demo",
         "func": "learning_os.adapters.cli.invoke",
-        "_operation": "project.inspect",
+        "_operation": "inspect",
         "_parser_factory": "los.build_parser", "root": "/tmp/x",
     }
     normalized_defaults = _normalize_registered_defaults(
@@ -492,7 +491,7 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
          "_parser_factory": "los.build_parser"}, handler)
     assert normalized_defaults == {
         "func": "learning_os.adapters.cli.invoke",
-        "_operation": repr("project.inspect"),
+        "_operation": repr("inspect"),
         "_parser_factory": "los.build_parser",
     }
 
@@ -507,9 +506,10 @@ def test_generated_parser_matches_baseline_structure():
         assert added in live["subparsers"]
         live["order"].remove(added)
         live["subparsers"].pop(added)
-    expected["order"] = [name for name in expected["order"] if name not in RETIRED_PROJECT_COMMANDS]
-    for name in RETIRED_PROJECT_COMMANDS:
-        expected["subparsers"].pop(name)
+    expected["order"] = [name for name in expected["order"]
+                          if name not in RETIRED_PROJECT_COMMANDS and name not in RETIRED_G11_COMMANDS]
+    for name in RETIRED_PROJECT_COMMANDS | RETIRED_G11_COMMANDS:
+        expected["subparsers"].pop(name, None)
     # Future registered subcommands (none yet) normalize per (u) item 2.
     for name, sub in expected.get("subparsers", {}).items():
         handler = _handler_for_subcommand(name)
@@ -572,7 +572,7 @@ def test_bf_help_normalization_touches_only_the_listed_pairs():
     assert sorted(changed) == sorted(
         (sub, dest) for sub, dests in BF_HELP_PAIRS.items()
         for dest in dests), changed
-    assert len(changed) == 12 + 83 + 122 - 3, changed  # pilot 12 + wave 1 (bi) 6 + final wave (cc)
+    assert len(changed) == 12 + 83 + 122 - 3 - 9, changed  # pilot 12 + wave 1 (bi) 6 + final wave (cc), minus 9 G11-retired pairs
     # Control: a baseline whose listed help is already a real string —
     # not the placeholder's None — must fail normalization.
     poisoned = copy.deepcopy(baseline)

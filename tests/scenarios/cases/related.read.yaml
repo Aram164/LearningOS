@@ -17,12 +17,12 @@ cases:
   a5_base: true
   expect:
     site: null
-- id: related-project
+- id: related-module
   kind: success
   transport: cli
   argv:
   - related
-  - project-demo
+  - module-demo
   expect:
     site: null
 - id: unknown-id

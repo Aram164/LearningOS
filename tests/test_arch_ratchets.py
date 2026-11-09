@@ -973,7 +973,7 @@ def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
     # stays retired and let test_surface_diffs_have_approvals govern
     # approved schema evolutions on the primary.
     mapping = json.loads((ARCH / "operation-moves.json").read_text())
-    assert len(mapping) == 40 and len(set(mapping.values())) == 40
+    assert len(mapping) == 39 and len(set(mapping.values())) == 39  # 40 minus retired cli.project-list (rev3 Group 11)
     for old_name, new_name in mapping.items():
         rel = f"system/schema/requests/{old_name}.schema.json"
         new_rel = f"system/schema/requests/{new_name}.schema.json"

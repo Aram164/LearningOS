@@ -1,5 +1,20 @@
 schema: 1
 approvals:
+  - {key: "request_schemas.inspect.schema.json", change: added, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "cli.path-attach", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "cli.path-note", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "cli.path-progress", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "cli.project-list", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.commands.path.attachment.add", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.commands.path.note.write", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.commands.path.progress.update", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.queries.project.inspect", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "catalog.queries.project.list", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "request_schemas.path.attachment.add.schema.json", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "request_schemas.path.note.write.schema.json", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "request_schemas.path.progress.update.schema.json", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "request_schemas.project.inspect.schema.json", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
+  - {key: "request_schemas.project.list.schema.json", change: removed, plan_ref: "rev3 Group 11 (D13-D15)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
   - {key: "catalog.domain_capabilities.migration.projects-to-modules-v62", change: removed, plan_ref: "rev3 Group 9 (D17)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
   - {key: "catalog.domain_capabilities.migration.python-topic-sessions-v63", change: removed, plan_ref: "rev3 Group 9 (D17)", pre_approved_by: "Aram 2026-11-09: I authorize everything — the R5 removals in rev3 Groups 9 and 11"}
   - {key: "catalog.domain_capabilities.migration.python-topic-sessions-v63", change: added, plan_ref: "tools/migrations/python_topic_sessions_v63.py", pre_approved_by: "Codex 2026-11-04 under Aram's explicit Python-session split, fix, merge and install request; Codex selected the recorded migration mechanism"}

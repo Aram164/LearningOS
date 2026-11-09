@@ -242,30 +242,6 @@
      "knowledge/notes/**"
     ]
    },
-   "path.attachment.add": {
-    "admission": null,
-    "cli_command": "path-attach",
-    "handler": "path_attach",
-    "writes": [
-     "work/active/**"
-    ]
-   },
-   "path.note.write": {
-    "admission": null,
-    "cli_command": "path-note",
-    "handler": "path_note",
-    "writes": [
-     "work/active/**"
-    ]
-   },
-   "path.progress.update": {
-    "admission": null,
-    "cli_command": "path-progress",
-    "handler": "path_progress",
-    "writes": [
-     "work/active/**"
-    ]
-   },
    "program.semester.update": {
     "admission": null,
     "cli_command": "program-semester-update",
@@ -487,14 +463,6 @@
    "plan.template": {
     "cli_command": null,
     "handler": "plan_template"
-   },
-   "project.inspect": {
-    "cli_command": null,
-    "handler": "inspect"
-   },
-   "project.list": {
-    "cli_command": null,
-    "handler": "project_list"
    },
    "runtime.session": {
     "cli_command": null,
@@ -5969,317 +5937,6 @@
     "type": null
    }
   ],
-  "path-attach": [
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "path_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "stage_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file"
-    ],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "file_sha256",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--file-sha256"
-    ],
-    "required": false,
-    "type": "sha256_value"
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "label",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--label"
-    ],
-    "required": false,
-    "type": null
-   }
-  ],
-  "path-note": [
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "path_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "stage_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "replace",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--replace"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "text",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--text"
-    ],
-    "required": false,
-    "type": null
-   }
-  ],
-  "path-progress": [
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "path_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "stage_id",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": [
-     "active",
-     "complete",
-     "skipped"
-    ],
-    "default_repr": "None",
-    "dest": "status",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [],
-    "required": true,
-    "type": null
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   }
-  ],
   "plan-edit-context": [
    {
     "action": "store",
@@ -6623,48 +6280,6 @@
     "nargs": 0,
     "option_strings": [
      "--json"
-    ],
-    "required": false,
-    "type": null
-   }
-  ],
-  "project-list": [
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "json",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--json"
-    ],
-    "required": false,
-    "type": null
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "status",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--status"
     ],
     "required": false,
     "type": null
@@ -9500,6 +9115,7 @@
   "inbox.content.schema.json": "b956e7822531c67d13d4143b2c50cce2ff22e0e86bbbab5f63af18aaf4f998f4",
   "inbox.list.schema.json": "e7c01475bec27d2a5cd1e957a41b899a218c79ecb0e7099bb26c1f191ec8f55d",
   "inbox.resolve.schema.json": "1ffa96d3077615e4ec86e4c942af946fb65f454dd903b16dc2a7a58c61855097",
+  "inspect.schema.json": "7c0ae760fbd05f17f60b4d79860e1819feca7c52aaa282a749bd7a7b7654d1c1",
   "intelligence.scan.schema.json": "a86e0aeaee6f8219e0271f085f7349cd20084e8635ffaaaef694a8bf1f04a196",
   "learner.ability-observation.append.schema.json": "f716a721bbc6e780ea21e535b19748b45b9ba165c8cadfb64115480bcf02eba1",
   "learner.observation.append.schema.json": "99eeaee15866beeb246139c36549e614239b43934cc2050d9033294740c63ca8",
@@ -9531,15 +9147,10 @@
   "note.search.schema.json": "6759422fa9493501961f528a1b996d819505655903e1ee79c229ba8b51de16b5",
   "operations.read.schema.json": "0860328c5ba0012f63e0572a160b623a11e4bbabd1e2bbaaa2ccde8e18c3483f",
   "operator.bootstrap.schema.json": "2f858fc476164b3ff56eb95ea2fff5bb9bf8f03c7986aa1289af112858bb7e27",
-  "path.attachment.add.schema.json": "bd0b88c9af93b5529f83dd8ddc74a1f580b33d8de4bd229668c0c131aef6caf9",
-  "path.note.write.schema.json": "0028a6bc3097dda853326d9f92ff2f4c4921adb109959372d218a6b85e311308",
-  "path.progress.update.schema.json": "e3b41826488d41dfadec61a037847a915583404ca4d7487bdf507bc36d19821b",
   "plan.edit-context.schema.json": "42e249f897c5b3cf2fad884c2260f5c37ba207e352079e6910321fc7fd020602",
   "plan.template.schema.json": "1c532b6ed114dbfd914a206019055da000eaf2d356d299fa28146d0c1dba5bf7",
   "program.list.schema.json": "1c6989676b267ba1c4b5d70c58c5099a4a2af841211d8e01af6574c59c80b365",
   "program.semester.update.schema.json": "fc100aa9cbfce8c13ac5a4f288d22e4bdff17ee1237bfbd382b14db832857526",
-  "project.inspect.schema.json": "e402d151940ad6ef46140bf7f6367bb78b804dde9f03cb77d46ce8711002314b",
-  "project.list.schema.json": "21515ab76275ae9c009f014e72b2ed5ebc4546467b8ae65e839b01a1d9011c04",
   "projection.generate.schema.json": "b2fc48a34025bf4306eca85ccafe93e81692a9b865b354d150c5c8cb776d08ce",
   "projection.observe.schema.json": "6c846a118a81d9bbb7f8153007542f3587b50ef90ee23b80cd0d59e837c8abe6",
   "related.read.schema.json": "bed0d80d693eaa35143226b0da7849f1c0e2620fdb17216e86842b06c0ce994e",

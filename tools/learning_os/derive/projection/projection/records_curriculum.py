@@ -120,7 +120,6 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
 
 
 def project_units(repo: Repo, revision: Revision,
-                  unit_to_projects: dict[str, list[str]],
                   git_table: dict[str, str] | None = None) -> list[dict]:
     records = []
     route_refs = list(iter_route_references(repo))
@@ -169,10 +168,6 @@ def project_units(repo: Repo, revision: Revision,
             "scope_sources": data.get("scope_sources") or [],
             "revision": revision(unit.id, data),
             "path": str(unit.path.relative_to(repo.root)),
-            # Projects own units explicitly in the Project record. The legacy
-            # module_id remains for compatibility until Gate F, while interfaces
-            # receive the first-class ownership edge directly from the core.
-            "project_ids": unit_to_projects.get(unit.id, []),
             # The producer answers the obligation once so the count, the badge
             # and the Review queue cannot disagree about it.
             "needs_study_map": _needs_study_map(

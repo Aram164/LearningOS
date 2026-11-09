@@ -89,13 +89,6 @@ def _add_manifest_project(root):
         "credential",
     ),
     (
-        lambda manifest: manifest["projects"][0]["boundaries"].update({
-            "absolute_private_path": "/Users/example/private",
-        }),
-        "/projects/0/boundaries",
-        "absolute_private_path",
-    ),
-    (
         lambda manifest: manifest["ai_actions"]["available"][0].update({
             "raw_prompt": "undeclared",
         }),

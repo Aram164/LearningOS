@@ -37,15 +37,9 @@ from learning_os.derive.projection.projection.records_library import (
     project_collections,
     project_sources,
 )
-from learning_os.derive.projection.projection.records_projects import (
-    project_project_aliases,
-    project_project_relationships,
-    project_projects,
-    unit_to_project_ids,
-)
+from learning_os.derive.projection.projection.records_aliases import project_project_aliases
 from learning_os.derive.projection.projection.records_work import (
     project_coordination,
-    project_learning_paths,
     project_workspaces,
 )
 from learning_os.derive.projection.projection.stages import project_stages
@@ -55,12 +49,12 @@ __all__ = [
     "build_counts", "build_indexes", "build_module_concept_edges",
     "build_progress", "cross_module_concepts", "module_lifecycle",
     "ordered_thematic_group_ids", "project_collections", "project_concepts",
-    "project_coordination", "project_learning_paths", "project_module_source_maps",
+    "project_coordination", "project_module_source_maps",
     "project_modules", "project_notes", "project_programs",
-    "project_project_aliases", "project_project_relationships", "project_projects",
+    "project_project_aliases",
     "project_sources", "project_stages", "project_study_maps",
     "project_unit_material_syntheses",
     "project_thematic_groups", "project_topics", "project_units",
     "source_thematic_groups", "unit_note_sections",
-    "unit_to_project_ids", "project_workspaces",
+    "project_workspaces",
 ]
