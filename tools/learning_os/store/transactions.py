@@ -310,16 +310,39 @@ def _discard_stale_projection(root: Path, problems: list[str]) -> None:
     manifest = root / "generated" / "manifest.json"
     if not manifest.is_file():
         return
+
+    def _problem(exc: BaseException) -> None:
+        problems.append(
+            f"a rolled-back transaction left generated/manifest.json describing the "
+            f"undone state, and it could not be discarded ({exc}); run `make views`")
+
     try:
         stored = json.loads(manifest.read_text(encoding="utf-8"))
-        published = (stored.get("_generated") or {}).get("source_fingerprint")
+    except OSError as exc:
+        _problem(exc)
+        return
+    except ValueError:
+        stored = None
+    generated = stored.get("_generated") if isinstance(stored, dict) else None
+    if isinstance(stored, dict) and generated is None:
+        generated = {}
+    if not isinstance(generated, dict):
+        # Not valid UTF-8 JSON, or the document or its `_generated` block is
+        # not an object: the manifest vouches for nothing, so discarding it
+        # gives the honest "projection unavailable" state rather than a
+        # problem the next run can never clear.
+        try:
+            manifest.unlink()
+        except OSError as exc:
+            _problem(exc)
+        return
+    try:
+        published = generated.get("source_fingerprint")
         if published and published == canonical_fingerprint(root):
             return
         manifest.unlink()
     except (OSError, ValueError) as exc:
-        problems.append(
-            f"a rolled-back transaction left generated/manifest.json describing the "
-            f"undone state, and it could not be discarded ({exc}); run `make views`")
+        _problem(exc)
 
 
 def _invalidate_projection(root: Path) -> str | None:

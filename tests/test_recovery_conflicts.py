@@ -1116,6 +1116,78 @@ def test_recovery_conflict_invalidates_matching_projection(tmp_path: Path):
         "a matching fingerprint must not whitewash ambiguous bytes"
 
 
+def test_unwind_discards_non_json_manifest(tmp_path: Path):
+    """An unparseable manifest vouches for nothing: discard, don't conflict."""
+    root = tmp_path / "recovery-non-json-manifest"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-202",
+        [("work/mod.md", b"old\n", b"new\n")])
+    manifest = root / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_bytes(b"\xff\xfe not json")
+
+    reconcile_inflight_transactions(root)
+
+    assert target.read_bytes() == b"old\n"
+    assert not manifest.exists()
+    assert not tx_dir.exists()
+
+
+def test_unwind_discards_non_object_manifest(tmp_path: Path):
+    """A JSON array is valid JSON but no manifest: discard, don't conflict."""
+    root = tmp_path / "recovery-array-manifest"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-203",
+        [("work/mod.md", b"old\n", b"new\n")])
+    manifest = root / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("[1, 2]\n", encoding="utf-8")
+
+    reconcile_inflight_transactions(root)
+
+    assert target.read_bytes() == b"old\n"
+    assert not manifest.exists()
+    assert not tx_dir.exists()
+
+
+def test_unwind_conflicts_when_stale_manifest_cannot_be_discarded(
+        tmp_path: Path):
+    """A stale but valid manifest that cannot be unlinked stays a conflict:
+    a readable stale manifest is the hazard, so the journal is preserved."""
+    root = tmp_path / "recovery-undiscardable-manifest"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-204",
+        [("work/mod.md", b"old\n", b"new\n")])
+    manifest = _write_manifest(root, "0" * 64)
+    os.chmod(manifest.parent, 0o555)
+    try:
+        with pytest.raises(TransactionRecoveryConflict) as caught:
+            reconcile_inflight_transactions(root)
+    finally:
+        os.chmod(manifest.parent, 0o755)
+
+    assert caught.value.conflicts[0] == {
+        "path": "generated/manifest.json",
+        "reason": "RESTORE_IO_FAILED",
+        "detail": "stale projection could not be discarded",
+    }
+    assert all(
+        conflict["path"] == "generated/manifest.json"
+        and conflict["reason"] == "RESTORE_IO_FAILED"
+        for conflict in caught.value.conflicts)
+    assert manifest.exists()
+    assert tx_dir.exists()
+
+
 def test_recovery_contradiction_invalidates_projection(mini_repo: Path):
     """Every unresolvable journal — including receipt contradiction — drops it."""
     _context, result = _commit_capture(mini_repo, "receipt-contra")
