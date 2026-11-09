@@ -87,7 +87,7 @@ def test_payload_records_rejects_a_capability_without_a_cli_binding(
 
 def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
                                                            tmp_path: Path):
-    """The 47-schema derivation reads the live request scalar (S12 Task 4).
+    """The 45-schema derivation reads the live request scalar (S12 Task 4).
 
     Corrupting one scalar in a scratch copy makes the real derivation
     disagree with the checked-in bytes; restoring it (the committed tree)
@@ -101,7 +101,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     from learning_os.store.contracts.payloads import all_payload_schemas
 
     published = sorted((repo_root / SCHEMA_DIR).glob("*.schema.json"))
-    assert len(published) == 48
+    assert len(published) == 45
     before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
               for path in published}
     work = tmp_path / "repo"
@@ -116,7 +116,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     corrupted_path.write_text(json.dumps(corrupted), encoding="utf-8")
     drifted = all_payload_schemas(
         work, command_definitions(work), payload_records=resolve_all(work))
-    assert len(drifted) == 48
+    assert len(drifted) == 45
     on_disk = json.loads(
         (repo_root / SCHEMA_DIR / "capture.create.schema.json").read_text(
             encoding="utf-8"))

@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import yaml
 from gateway_helpers import approved_v2_call
-from repo_builders import run_los
+from repo_builders import add_curriculum, run_los
 
 from learning_os.derive.abilities import (
     ability_context,
@@ -25,6 +25,7 @@ from learning_os.store.loader import load_repo
 
 @pytest.fixture
 def ability_root(mini_repo: Path) -> Path:
+    add_curriculum(mini_repo)
     conditions = ["one predictor with nonzero variance", "intercept included"]
     source = "knowledge/notes/mathematics/note-demo.md"
     source_sha256 = "sha256:" + hashlib.sha256((mini_repo / source).read_bytes()).hexdigest()

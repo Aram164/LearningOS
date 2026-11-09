@@ -273,7 +273,7 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
         return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}, None
 
     monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo", manifest)
-    ctx = OpContext(root=mini_repo, operation="project.inspect",
+    ctx = OpContext(root=mini_repo, operation="inspect",
                     channel="operator", invocation="query", gateway=None)
     result = platform_handlers.inspect(
         ctx, {"id": "old", "more_ids": ["new", "old"]})
@@ -294,7 +294,7 @@ def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monke
                         lambda root, **kwargs: ({"records": [{"id": "a"}]}, None))
     fingerprints = iter(["a" * 64, "b" * 64])
     monkeypatch.setattr(plumbing, "canonical_fingerprint", lambda root: next(fingerprints))
-    ctx = OpContext(root=mini_repo, operation="project.inspect",
+    ctx = OpContext(root=mini_repo, operation="inspect",
                     channel="operator", invocation="query", gateway=None)
     with pytest.raises(StaleSnapshot, match="snapshot changed"):
         platform_handlers.inspect(ctx, {"id": "a", "more_ids": ["a"]})
@@ -318,7 +318,7 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
     outputs = []
     for stream in (terminal, pipe):
         with redirect_stdout(stream):
-            outcome = run_cli(mini_repo, "project.inspect", args)
+            outcome = run_cli(mini_repo, "inspect", args)
         assert outcome.exit_code == 0, outcome.stderr
         outputs.append(outcome.stdout)
     terminal_out, pipe_out = outputs
@@ -348,7 +348,7 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
         repo = load_repo(mini_repo)
         args = SimpleNamespace(root=str(mini_repo), id=next(iter(repo.notes)),
                                more_ids=[next(iter(repo.concepts))])
-        outcome = run_cli(mini_repo, "project.inspect", args)
+        outcome = run_cli(mini_repo, "inspect", args)
         assert outcome.exit_code == 0, outcome.stderr
         payload = json.loads(outcome.stdout)
     else:

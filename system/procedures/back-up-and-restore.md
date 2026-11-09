@@ -90,7 +90,7 @@ three roots and declared plugin assets included
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
 $BACKUP_ENTRIES
 $BACKUP_AGGREGATE
-64
+65
 True None
 ```
 
@@ -174,5 +174,5 @@ exit=1
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 14 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```

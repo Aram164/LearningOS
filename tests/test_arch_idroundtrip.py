@@ -1227,7 +1227,7 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
     assert batch.payload["requested_ids"] == [first, second]
     with pytest.raises(WriteRefused) as raised:
         platform_handlers.inspect(ctx, {"id": "note-no-such-record"})
-    assert raised.value.site == "project.inspect.unknown-id"
+    assert raised.value.site == "inspect.unknown-id"
     assert raised.value.exit_code == 2
     assert str(raised.value).startswith(
         "record not found: note-no-such-record")

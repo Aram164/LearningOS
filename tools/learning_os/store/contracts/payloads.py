@@ -54,7 +54,6 @@ NOT_A_PAYLOAD_FIELD = frozenset({"help", "func", "command", "root", "json"})
 # payload schemas require the content inline (or, for capture, the separately
 # hash-bound file alternative).
 _GATEWAY_INLINE_REQUIRED = {
-    "path.note.write": ("text",),
     "stage.note.write": ("text",),
     "unit.note.append": ("text",),
     "unit.plan.revise": ("record",),

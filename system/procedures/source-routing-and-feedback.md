@@ -160,7 +160,7 @@ seal_envelope: source not found: source-nope; fix the payload and seal again
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 12 warning(s) — OK
+0 error(s), 11 warning(s) — OK
 ```
 
 ```scrut

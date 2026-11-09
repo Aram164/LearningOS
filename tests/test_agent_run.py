@@ -18,7 +18,7 @@ agent_run = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(agent_run)
 INDEX = {"verbs": ["bootstrap", "capture", "inspect"],
          "verb_to_operation": {"bootstrap": "operator.bootstrap", "capture": "capture.create",
-                               "inspect": "project.inspect"},
+                               "inspect": "inspect"},
          "task_to_use": {"open-work-or-priority-question": "bootstrap"}}
 
 
@@ -780,11 +780,11 @@ def test_write_classification_is_conservative_and_independent_of_task_resolution
     from learning_os.app.registry import REGISTRY, OperationEffects
 
     executor = agent_run._cli_executor_factory(mini_repo.resolve())
-    original = REGISTRY["project.inspect"]
+    original = REGISTRY["inspect"]
     if kind is None:
-        monkeypatch.delitem(REGISTRY, "project.inspect")
+        monkeypatch.delitem(REGISTRY, "inspect")
     else:
-        monkeypatch.setitem(REGISTRY, "project.inspect", replace(original, kind=kind, effects=OperationEffects(effects)))
+        monkeypatch.setitem(REGISTRY, "inspect", replace(original, kind=kind, effects=OperationEffects(effects)))
     direct = agent_run.build_index(mini_repo, executor, resolve_tasks=False)
     expanded = agent_run.build_index(mini_repo, executor, resolve_tasks=True)
     assert set(direct["write_verbs"]) == set(expanded["write_verbs"])

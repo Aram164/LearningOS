@@ -137,9 +137,12 @@ def test_attachment_inside_its_dir_is_accepted(mini_repo):
 # ------------------------------------------------------- item 8: date types
 def test_mixed_type_attempt_dates_do_not_crash(mini_repo):
     """A bare-year int next to an ISO string must not raise on sorted()."""
-    f = mini_repo / "records" / "modules.yaml"
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    f = mini_repo / "curriculum" / "modules" / "module-demo" / "module.yaml"
     data = yaml.safe_load(f.read_text())
-    data["modules"][0]["attempts"] = [
+    data["attempts"] = [
         {"termin": 1, "date": 2027, "result": "withdrawn"},        # int
         {"termin": 2, "date": "2026-10-09", "result": "registered"},  # str
     ]

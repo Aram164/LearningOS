@@ -437,7 +437,7 @@ clean tree and a readable record of everything it touched.
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 13 warning(s) — OK
+0 error(s), 12 warning(s) — OK
 ```
 
 ```scrut

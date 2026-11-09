@@ -81,7 +81,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ```scrut
 $ los capabilities --compact --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract_version"]); print(len(d["queries"]), len(d["commands"])); print(d["operator_contract"])'
 2
-22 48
+20 45
 system/OPERATOR.md
 ```
 
@@ -235,5 +235,5 @@ nothing else.
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 13 warning(s) — OK
+0 error(s), 12 warning(s) — OK
 ```

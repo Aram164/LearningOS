@@ -19,6 +19,7 @@ from learning_os.store.loader import load_repo
 
 # ----------------------------------------------------------------- status
 def test_status_json_shape_and_counts(mini_repo):
+    add_curriculum(mini_repo)
     proc = run_los(mini_repo, "status", "--json")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
@@ -244,6 +245,7 @@ def test_generate_delegates_and_writes_reading_room(mini_repo):
 
 # ------------------------------------------- reading room & adoption view
 def test_reading_room_composes_the_views(mini_repo):
+    add_curriculum(mini_repo)
     outputs = generate_all(load_repo(mini_repo), generated_at="T1")
     room = outputs["reading-room.md"]
     assert "2026-10-09" in room                      # exam spine (registered)
@@ -368,7 +370,6 @@ JSON_NOOP_COMMANDS = [
     ("operations", []),
     ("plan-edit-context", ["unit-demo-l01"]),
     ("program-list", []),
-    ("project-list", []),
     ("related", ["note-demo"]),
     ("runtime-session", ["--requirement", "req-demo"]),
     ("search", ["demo"]),
@@ -471,7 +472,7 @@ def test_no_capability_schema_gains_a_json_property(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 48
+    assert len(schemas) == 45
     for name, schema in schemas.items():
         assert "json" not in schema["properties"], name
 
@@ -662,7 +663,7 @@ def test_production_bindings_and_baseline_stay_frozen(repo_root):
     corpus = json.loads(
         (repo_root / "tests/architecture/cli-parity-corpus.json")
         .read_text(encoding="utf-8"))
-    assert len(corpus["cases"]) == 1786
+    assert len(corpus["cases"]) == 1781  # 1786 minus 5 retired mismatch-archive-probe entries
 
 
 def test_parser_cache_observes_schema_edits_and_isolates_defaults(tmp_path, monkeypatch):
@@ -673,7 +674,7 @@ def test_parser_cache_observes_schema_edits_and_isolates_defaults(tmp_path, monk
     schemas = tmp_path / 'system/schema/requests'
     shutil.copytree(cli_parser._repository_root() / 'system/schema/requests', schemas)
     monkeypatch.setattr(cli_parser, '_repository_root', lambda: tmp_path)
-    path = schemas / 'project.inspect.schema.json'
+    path = schemas / 'inspect.schema.json'
     original = json.loads(path.read_text())
     command = original['x-los-cli-command']['name']
     original['x-los-cli-command']['defaults']['cache_probe'] = {'nested': ['fresh']}

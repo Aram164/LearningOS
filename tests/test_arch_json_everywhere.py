@@ -509,8 +509,8 @@ def test_s13_base_marks_every_d16_approval_new():
         assert sum(entry.get("plan_ref") == D16_PLAN_REF
                    and entry["key"].startswith(prefix) for entry in historical) == 53
     new_cli, new_schemas = _new_d16_approvals(S13_BASE)
-    assert len(new_cli) == 51, len(new_cli)
-    assert len(new_schemas) == 51, len(new_schemas)
+    assert len(new_cli) == 48, len(new_cli)  # 51 minus 3 retired path.* (rev3 Group 11)
+    assert len(new_schemas) == 48, len(new_schemas)
     base_flat, live_flat = _surface_flats(S13_BASE)
     _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
     _assert_only_json_added_to_request_schemas(S13_BASE, new_schemas)

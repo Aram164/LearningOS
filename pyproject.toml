@@ -77,6 +77,7 @@ files = [
   "tools/learning_os/app/agent_plans.py",
   "tools/learning_os/adapters/agent_workers.py",
   "tools/learning_os/derive/validation/revision_ledger.py",
+  "tools/learning_os/derive/projection/projection/records_aliases.py",
   "tools/learning_os/store/materials/search_index.py",
 ]
 

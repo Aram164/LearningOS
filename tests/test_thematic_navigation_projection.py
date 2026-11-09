@@ -10,6 +10,7 @@ import yaml
 from learning_os.derive.projection import generate_all
 from learning_os.derive.validation import Validator
 from learning_os.store.loader import load_repo
+from repo_builders import add_curriculum
 
 
 def _write_navigation_fixture(root):
@@ -35,12 +36,11 @@ def _write_navigation_fixture(root):
         encoding="utf-8",
     )
 
-    modules_path = root / "records" / "modules.yaml"
-    modules = yaml.safe_load(modules_path.read_text(encoding="utf-8"))
-    modules["modules"][0]["thematic_group_ids"] = [
-        "thematic-group-machine-learning"
-    ]
-    modules_path.write_text(yaml.safe_dump(modules, sort_keys=False), encoding="utf-8")
+    add_curriculum(root)
+    modules_path = root / "curriculum" / "modules" / "module-demo" / "module.yaml"
+    module = yaml.safe_load(modules_path.read_text(encoding="utf-8"))
+    module["thematic_group_ids"] = ["thematic-group-machine-learning"]
+    modules_path.write_text(yaml.safe_dump(module, sort_keys=False), encoding="utf-8")
 
     # A source's Domain is explicit source-owned classification. Module routing
     # and collection curation are separate contextual relationships and must
@@ -125,10 +125,10 @@ def test_topic_packs_are_distinct_ordered_records_with_explicit_purpose(mini_rep
 
 def test_validator_rejects_unknown_thematic_group_references(mini_repo):
     _write_navigation_fixture(mini_repo)
-    modules_path = mini_repo / "records" / "modules.yaml"
-    modules = yaml.safe_load(modules_path.read_text(encoding="utf-8"))
-    modules["modules"][0]["thematic_group_ids"] = ["thematic-group-does-not-exist"]
-    modules_path.write_text(yaml.safe_dump(modules, sort_keys=False), encoding="utf-8")
+    modules_path = mini_repo / "curriculum" / "modules" / "module-demo" / "module.yaml"
+    module = yaml.safe_load(modules_path.read_text(encoding="utf-8"))
+    module["thematic_group_ids"] = ["thematic-group-does-not-exist"]
+    modules_path.write_text(yaml.safe_dump(module, sort_keys=False), encoding="utf-8")
 
     issues = Validator(load_repo(mini_repo)).run()
     assert any(issue.code == "REF-THEMATIC-GROUP" for issue in issues)

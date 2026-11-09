@@ -104,7 +104,7 @@ def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
     assert compact.returncode == 0, compact.stderr
     data = json.loads(compact.stdout)
     full = json.loads(run_los(mini_repo, "bootstrap").stdout)
-    for name in ("programs", "modules", "projects", "units"):
+    for name in ("programs", "modules", "units"):
         assert data["collections"][name]["total"] == len(full[name])
         for row in data["collections"][name]["items"]:
             detail = run_los(mini_repo, "inspect", row["id"])

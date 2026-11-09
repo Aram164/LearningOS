@@ -15,14 +15,31 @@ from learning_os.store.loader import load_repo
 def test_scenario_7_exam_attempt_lifecycle(mini_repo):
     """registered -> withdrawn -> registered (2. Termin): representable, renders,
     and the dates appear canonically nowhere else."""
-    f = mini_repo / "records" / "modules.yaml"
-    data = yaml.safe_load(f.read_text())
-    data["modules"][0]["attempts"] = [
+    # Group 10 partitioned the module records (rev3 G10): attempts live in the
+    # module's own module.yaml, so the scenario migrates the fixture's legacy
+    # entry there exactly as the real records were migrated.
+    legacy = yaml.safe_load((mini_repo / "records" / "modules.yaml").read_text())
+    module = legacy["modules"][0]
+    module.update({"type": "module", "kind": "academic",
+                   "area_id": "program-bachelors", "semester": "sose-2026",
+                   "unit_order": [], "source_map": "source-map.yaml"})
+    module["attempts"] = [
         {"termin": 1, "date": "2026-07-22", "result": "withdrawn",
          "notes": "Ruecktritt via AGNES"},
         {"termin": 2, "date": "2026-09-30", "result": "registered"},
     ]
-    f.write_text(yaml.safe_dump(data))
+    module_dir = mini_repo / "curriculum" / "modules" / "module-demo"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.yaml").write_text(yaml.safe_dump(module))
+    (module_dir / "source-map.yaml").write_text(yaml.safe_dump(
+        {"type": "module-source-map", "module_id": "module-demo", "sources": []}))
+    programs = mini_repo / "curriculum" / "programs"
+    programs.mkdir(parents=True)
+    (programs / "program-bachelors.yaml").write_text(yaml.safe_dump(
+        {"id": "program-bachelors", "type": "program", "title": "Demo program",
+         "kind": "academic", "status": "active", "default": True,
+         "semester_bound": True}))
+    (mini_repo / "records" / "modules.yaml").unlink()
     repo = load_repo(mini_repo)
     issues = validate(repo)
     assert [i for i in issues if i.severity == "E"] == []

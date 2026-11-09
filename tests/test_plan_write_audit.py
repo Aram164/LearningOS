@@ -109,11 +109,11 @@ def test_receipt_rename_is_not_a_new_addition(audit, original):
 
 def test_migration_and_direct_edit_are_listed_without_claiming_bypass(audit, capsys):
     _commit(audit.REPO, "recorded migration", {
-        "curriculum/paths/old-path.yaml": "title: old layout\n",
+        "curriculum/modules/mod-a/source-map.yaml": "title: old layout\n",
         "tools/migrations/demo.py": "# recorded migration\n",
     })
     _write(audit.REPO, PLAN, "title: moved plan\n")
-    _git(audit.REPO, "rm", "curriculum/paths/old-path.yaml")
+    _git(audit.REPO, "rm", "curriculum/modules/mod-a/source-map.yaml")
     _commit(audit.REPO, "move into partitioned layout", {})
     _commit(audit.REPO, "direct plan edit", {PLAN: "title: changed plan\n"})
     assert len(audit.commits_touching(audit.PLAN_PATHS)) == 3
