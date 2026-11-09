@@ -431,8 +431,8 @@ placed. The helper copies only the entrypoint and refuses any
 destination outside the transcript `TMPDIR`.
 
 ```scrut
-$ mkdir -p "$TMPDIR/audit-pair/repo" && export AUDIT_REPO="$(realpath "$TMPDIR/audit-pair/repo")" && $H/los-anchored-copy plan_write_audit "$AUDIT_REPO"
-sha256:1b59de3de42e6c27c6a5d0a67a4166ada5631c2368b29023cb9b21703f94d410 tools/plan_write_audit.py
+$ mkdir -p "$TMPDIR/audit-pair/repo" && export AUDIT_REPO="$(realpath "$TMPDIR/audit-pair/repo")" && $H/los-anchored-copy plan_write_audit "$AUDIT_REPO" | cut -d' ' -f2
+tools/plan_write_audit.py
 ```
 
 ## Commit the fixture's real plans and receipts
