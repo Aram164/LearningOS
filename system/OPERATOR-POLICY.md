@@ -9,7 +9,7 @@
 > If context is tight and you read nothing else in this repository, obey these:
 >
 > 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`.venv/bin/python tools/generate.py`).
-> 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** `records/modules.yaml` is a frozen compatibility snapshot. Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
+> 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
 > 5. **Captures go to their routed destination — the identified stage's note, `work/inbox/`, `knowledge/garden/`, or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions. The full destination contract is OPERATOR.md's capture-routing section.

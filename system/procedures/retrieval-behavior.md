@@ -53,7 +53,7 @@ show trails.
 
 When asked about **exams, registrations, or grades**: answer from the owning
 partitioned academic module (`inspect MODULE_ID` carries its attempts and
-sittings) — never from `records/modules.yaml` or prose copies.
+sittings) — never from frozen snapshots or prose copies.
 
 When a topic **explodes into prerequisites** (scope explosion): propose a triage — *required now / helpful now / defer / reference only* — sized to the workspace objective, record accepted deferrals in the workspace `Deferred` section, and recommend the smallest useful next source or prerequisite. Preserve the wider graph in concept relations without forcing it into the current scope.
 

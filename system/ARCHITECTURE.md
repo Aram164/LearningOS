@@ -187,7 +187,7 @@ repository/
 │   ├── programs/          active areas and quarantine boundaries
 │   ├── modules/           module.yaml, source-map.yaml and units/<unit-id>/ beneath each
 │   └── quarantine/        excluded content, boundary index only
-├── records/               frozen compatibility inputs and the materials manifest
+├── records/               the materials manifest
 ├── sources/               the source registry and its collections
 │   ├── registry/          partitioned source records
 │   └── collections/       shelves and topic packs
@@ -244,7 +244,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
 | Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
 
-| Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
+| Legacy module snapshot | `migration/curriculum-v2/records-modules-snapshot-2026-07-25.yaml` | frozen migration evidence; owns nothing |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
 | Agent friction notes | `work/complaints/` | dated Markdown, one file per issue; never in the inbox |

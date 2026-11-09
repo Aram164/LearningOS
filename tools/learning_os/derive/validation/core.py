@@ -184,7 +184,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             return self._rel(o) if o else "sources/sources.yaml"
         if family == "module":
             o = r.module_origins.get(rec_id)
-            return self._rel(o) if o else "records/modules.yaml"
+            return self._rel(o) if o else ""
         if family == "program":
             p = r.programs.get(rec_id)
             return self._rel(p.path) if p else ""

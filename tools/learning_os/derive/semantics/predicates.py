@@ -52,10 +52,9 @@ UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({
 #: attach to them.
 ACADEMIC_MODULE_KINDS = frozenset({"academic"})
 
-#: Where a module's administrative facts live (OPERATOR.md boundary 5). A
-#: module known only through the frozen compatibility mirror
-#: `records/modules.yaml` has no owning record: that file owns nothing, and
-#: a record written before the unit model cannot owe initial units.
+#: Where a module's administrative facts live (OPERATOR.md boundary 5):
+#: only the partitioned record under ``curriculum/modules/`` owns a module;
+#: a module with no such record has no owning record at all.
 MODULE_OWNER_PREFIX = "curriculum/modules/"
 
 #: Route scopes the schema knows. `unevaluated` is assessed-nothing: the
@@ -137,10 +136,9 @@ def needs_study_map(
 def module_record_is_owned(owner_path: str | None) -> bool:
     """Whether a module's owning record is a partitioned module record.
 
-    The compatibility mirror `records/modules.yaml` owns nothing (its own
-    header says so, and OPERATOR.md boundary 5 puts module facts in
-    `curriculum/modules/<module-id>/module.yaml`). A module known only
-    through the mirror has no owning record at all, so no fact about it can
+    OPERATOR.md boundary 5 puts module facts in
+    `curriculum/modules/<module-id>/module.yaml`). A module with no
+    partitioned record has no owning record at all, so no fact about it can
     be answered from an owned location. Fallback: never guess.
     """
     return bool(owner_path) and str(owner_path).startswith(MODULE_OWNER_PREFIX)

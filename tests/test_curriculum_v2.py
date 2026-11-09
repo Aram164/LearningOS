@@ -1407,9 +1407,10 @@ def test_stage_ids_must_be_unique_across_study_maps(mini_repo):
 def test_an_impossible_calendar_date_fails_validation(mini_repo):
     """`format: date` is declared in the schemas but was never enforced, so a
     transposed exam date validated clean."""
-    registry = mini_repo / "records" / "modules.yaml"
+    add_curriculum(mini_repo)
+    registry = mini_repo / "curriculum/modules/module-demo/module.yaml"
     data = yaml.safe_load(registry.read_text(encoding="utf-8"))
-    data["modules"][0]["attempts"][0]["date"] = "2026-13-45"
+    data["attempts"][0]["date"] = "2026-13-45"
     write_yaml(registry, data)
     proc = run_los(mini_repo, "validate")
     assert proc.returncode != 0
@@ -1629,7 +1630,7 @@ def test_amls_reading_list_still_matches_checked_in_inventory():
 
 @pytest.mark.full_repo
 def test_live_migration_preserves_rollback_evidence(repo_root):
-    original = repo_root / "records/modules.yaml"
+    original = repo_root / "migration/curriculum-v2/records-modules-snapshot-2026-07-25.yaml"
     backup = repo_root / "migration/curriculum-v2/originals/records-modules.yaml"
     mapping = yaml.safe_load(
         (repo_root / "migration/curriculum-v2/old-to-new.yaml").read_text(encoding="utf-8"))
@@ -1637,7 +1638,7 @@ def test_live_migration_preserves_rollback_evidence(repo_root):
 
     # Rollback evidence means the DATA has not drifted from the pre-migration
     # snapshot — not that the deprecated file is forbidden a deprecation banner.
-    # `records/modules.yaml` is a frozen compatibility snapshot (CLAUDE.md hard
+    # The frozen module snapshot (CLAUDE.md hard
     # rule #2), so its records must stay byte-identical to the backup, while its
     # comment header is allowed to say loudly that it owns nothing. Byte-equality
     # on the whole file would forbid exactly that warning. Normalization pass,
@@ -1648,13 +1649,13 @@ def test_live_migration_preserves_rollback_evidence(repo_root):
 
     assert yaml.safe_load(original.read_text(encoding="utf-8")) == \
         yaml.safe_load(backup.read_text(encoding="utf-8")), \
-        "records/modules.yaml data drifted from the rollback snapshot"
+        "the frozen module snapshot data drifted from the rollback snapshot"
     assert _records_only(original) == _records_only(backup), \
-        "records/modules.yaml changed outside its comment header"
+        "the frozen module snapshot changed outside its comment header"
     assert "FROZEN COMPATIBILITY SNAPSHOT" in original.read_text(encoding="utf-8"), \
         "the frozen-snapshot banner regressed; the file would again read as an owner"
     assert "single canonical owner" not in original.read_text(encoding="utf-8"), \
-        "records/modules.yaml is claiming ownership again"
+        "the frozen module snapshot is claiming ownership again"
     pairs = {(row["old"], row["new"]) for row in mapping["mappings"]}
     assert ("work/active/workspace-degree-planning",
             "curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning") in pairs

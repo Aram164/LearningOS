@@ -1,10 +1,10 @@
 """curriculum/ — thematic groups, programs, modules, units, study maps.
 
-Modules are loaded from two inputs that must stay distinguishable: the
-partitioned records under ``curriculum/modules/`` are authoritative once they
-exist, while ``records/modules.yaml`` is kept loaded separately so migration
-completeness can be proven without double-owning administrative facts. That
-coupling is why both live in one function rather than two.
+Modules load only from the partitioned records under
+``curriculum/modules/``. The former monolithic module input is retired
+(rev3 Group 10); its frozen snapshot lives under ``migration/curriculum-v2/``
+as evidence, and the kept ``curriculum_v2`` migration reads that historical
+file itself on pre-contract roots.
 """
 
 from __future__ import annotations
@@ -76,39 +76,6 @@ def load_programs(repo: Repo, root: Path) -> None:
                 (f, f"{f}: program with missing or empty id — skipped"))
             continue
         _register(repo, repo.programs, pid, Program(pid, f, data), f, "program")
-
-
-def _load_legacy_modules(repo: Repo, modules_file: Path) -> None:
-    """Backward-compatible monolithic module input."""
-    if not modules_file.exists():
-        return
-    try:
-        data = _load_yaml(modules_file, repo.root)
-    except LoaderError as exc:
-        repo.parse_failures.append((modules_file, str(exc)))
-        data = {}
-    items = data.get("modules", [])
-    if items is None:
-        items = []
-    if not isinstance(items, list):
-        repo.parse_failures.append(
-            (modules_file, f"{modules_file}: 'modules' must be a list"))
-        items = []
-    for i, rec in enumerate(items):
-        if not isinstance(rec, dict):
-            repo.parse_failures.append(
-                (modules_file, f"{modules_file}: modules[{i}] is not a mapping — skipped"))
-            continue
-        mid = _record_id(rec)
-        if mid is None:
-            repo.parse_failures.append(
-                (modules_file,
-                 f"{modules_file}: module record with missing or empty id — skipped"))
-            continue
-        if mid in repo.legacy_modules:
-            repo.duplicate_ids.append(("legacy-module", mid, modules_file))
-            continue
-        repo.legacy_modules[mid] = rec
 
 
 def _load_study_map(repo: Repo, unit_file: Path, module_id: str, unit_id: str) -> None:
@@ -205,16 +172,7 @@ def _load_module_source_map(repo: Repo, module_file: Path, module_id: str) -> No
 
 def load_modules(repo: Repo, root: Path) -> None:
     """Modules and everything a module owns: source map, units, study maps."""
-    modules_file = root / "records" / "modules.yaml"
-    _load_legacy_modules(repo, modules_file)
-
     partitioned_modules = sorted((root / "curriculum" / "modules").glob("*/module.yaml"))
-    if not partitioned_modules:
-        for mid, rec in repo.legacy_modules.items():
-            _register(repo, repo.modules, mid, rec, modules_file, "module")
-            repo.module_origins.setdefault(mid, modules_file)
-        return
-
     for f in partitioned_modules:
         try:
             rec = _load_yaml(f, root)

@@ -65,7 +65,7 @@ def project_modules(repo: Repo, revision: Revision) -> list[dict]:
         records.append({
             "id": mid, "type": "module", "title": m.get("title", ""),
             "revision": revision(mid, m),
-            "path": str(origin.relative_to(repo.root)) if origin else "records/modules.yaml",
+            "path": str(origin.relative_to(repo.root)) if origin else "",
             "kind": m.get("kind", "academic"), "area_id": m.get("area_id"),
             "thematic_group_ids": ordered_thematic_group_ids(
                 repo, m.get("thematic_group_ids", []) or []),

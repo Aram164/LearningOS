@@ -94,7 +94,7 @@ directories:
 
   - path: records
     owner: records
-    purpose: frozen compatibility inputs and the materials manifest
+    purpose: the materials manifest
 
   - path: sources
     owner: sources

@@ -149,6 +149,23 @@ SOURCE_KEYWORDS = [
 ]
 
 
+
+def _legacy_modules(root: Path) -> dict:
+    """The pre-partition module records on a historical root, if present.
+
+    The live loader retired this input (rev3 Group 10), so the migration
+    reads the historical file itself; post-move roots simply have none.
+    """
+    path = root / "records/modules.yaml"
+    if not path.exists():
+        return {}
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    out = {}
+    for rec in data.get("modules") or []:
+        if isinstance(rec, dict) and isinstance(rec.get("id"), str) and rec["id"].strip():
+            out[rec["id"]] = rec
+    return out
+
 def dump_yaml(data: dict) -> str:
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
 
@@ -477,6 +494,8 @@ class Migration:
 def run(root: Path, apply: bool) -> Migration:
     migration = Migration(root, apply)
     before = load_repo(root)
+    legacy_modules = _legacy_modules(root)
+
     source_ids = set(before.sources)
     source_map_defs = source_maps(source_ids)
 
@@ -490,7 +509,7 @@ def run(root: Path, apply: bool) -> Migration:
 
     modules: dict[str, dict] = {}
     units_by_module: dict[str, list[tuple[dict, dict | None]]] = {}
-    for mid, legacy in before.legacy_modules.items():
+    for mid, legacy in legacy_modules.items():
         # Partitioned modules become authoritative after the first migration.
         # Re-running the compatibility migrator must preserve later canonical
         # additions (for example structured sittings/registration windows)
@@ -783,11 +802,11 @@ def run(root: Path, apply: bool) -> Migration:
     if apply:
         original = root / "records/modules.yaml"
         backup = root / "migration/curriculum-v2/originals/records-modules.yaml"
-        if not backup.exists():
+        if original.exists() and not backup.exists():
             backup.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(original, backup)
             migration.actions.append("copy records/modules.yaml -> migration/curriculum-v2/originals/records-modules.yaml")
-    elif not (root / "migration/curriculum-v2/originals/records-modules.yaml").exists():
+    elif (root / "records/modules.yaml").exists() and not (root / "migration/curriculum-v2/originals/records-modules.yaml").exists():
         migration.actions.append("copy records/modules.yaml -> migration/curriculum-v2/originals/records-modules.yaml")
 
     mappings = {
@@ -805,7 +824,7 @@ def run(root: Path, apply: bool) -> Migration:
             "# Curriculum v2 migration report", "",
             "> Mechanical, idempotent migration. No durable note body, source ID, concept ID, or relation ID was changed.", "",
             f"- Programs/boundaries: {len(PROGRAMS)}",
-            f"- Modules: {len(modules)} ({len(before.legacy_modules)} academic + {len(modules) - len(before.legacy_modules)} universal)",
+            f"- Modules: {len(modules)} ({len(legacy_modules)} academic + {len(modules) - len(legacy_modules)} universal)",
             f"- Units: {sum(len(v) for v in units_by_module.values())}",
             f"- Mini Plans converted: {len(MINI_PLANS)}",
             "- SaD L04 resume state: `stage-event-spaces` active (copied exactly)",

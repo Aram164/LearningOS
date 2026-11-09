@@ -173,7 +173,6 @@ class Repo:
     programs: dict[str, Program] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
     module_origins: dict[str, Path] = field(default_factory=dict)
-    legacy_modules: dict[str, dict] = field(default_factory=dict)
     module_source_maps: dict[str, dict] = field(default_factory=dict)
     module_source_map_origins: dict[str, Path] = field(default_factory=dict)
     unit_material_syntheses: dict[str, dict] = field(default_factory=dict)

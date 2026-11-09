@@ -18,7 +18,7 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] Concept registry owns identities and aliases; relation registry contains only concept-to-concept edges.
 - [ ] Source registry owns source identity and evaluations.
 - [ ] Every partitioned academic `module.yaml` owns its module facts;
-  `records/modules.yaml` is migration compatibility only; **no exam date,
+  **no exam date,
   registration, withdrawal, or grade appears canonically elsewhere**.
 - [ ] `COORDINATION.md` contains only commitments, explicit priorities, cross-workspace dependencies, and deferrals — no workspace lists, statuses, or computed recommendations.
 - [ ] Workspaces own active operational state.

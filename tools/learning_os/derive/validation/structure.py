@@ -36,8 +36,6 @@ class ChecksStructure:
                            "knowledge/concept-relations.yaml")
         self._schema_check("sources", {"sources": list(r.sources.values())},
                            "sources/sources.yaml")
-        self._schema_check("modules", {"modules": list(r.legacy_modules.values())},
-                           "records/modules.yaml")
         for program in r.programs.values():
             self._schema_check("program", program.data, self._rel(program.path))
         for mid, module in r.modules.items():

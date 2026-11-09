@@ -7,8 +7,7 @@ depend on registry partitioning):
   - sources:   sources/sources.yaml               or sources/registry/*.yaml
   - collections: sources/collections/*.yaml       (one curated list per file)
   - programs:  curriculum/programs/*.yaml
-  - modules:   curriculum/modules/<module-id>/module.yaml, with
-               records/modules.yaml as a backward-compatible migration input
+  - modules:   curriculum/modules/<module-id>/module.yaml
   - units:     curriculum/modules/<module-id>/units/<unit-id>/unit.yaml
   - study maps: one optional study-map.yaml beside each unit.yaml
   - module source maps: curriculum/modules/<module-id>/source-map.yaml

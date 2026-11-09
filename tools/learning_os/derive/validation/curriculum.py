@@ -83,11 +83,6 @@ class ChecksCurriculum:
             self.err("QUARANTINE-MASTERS",
                      "Master's Planning workspace is loaded as current work instead of quarantined",
                      self._origin_for("workspace", "workspace-degree-planning"))
-        missing_legacy = sorted(set(r.legacy_modules) - set(r.modules))
-        if missing_legacy:
-            self.err("MODULE-MIGRATION",
-                     "partitioned records do not cover legacy module ids: " + ", ".join(missing_legacy),
-                     "records/modules.yaml")
         for mid, module in r.modules.items():
             where = self._origin_for("module", mid)
             if module.get("kind") == "academic":
