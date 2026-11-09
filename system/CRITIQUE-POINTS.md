@@ -454,3 +454,6 @@ Status unchanged: open. Closing it is Aram's.
   documents in the working tree. Last measured 2026-09-30 at 71% (41 of 58).
   The tool measures commit co-occurrence, not gateway mediation or per-write
   provenance, so the share is evidence, not proof the gateway path is used.
+- Caveat: 11/11 covers only history since 1d32c91 (2026-10-19); the
+  2026-09-30 figure 41/58 covered earlier history, so the two shares are not
+  comparable.

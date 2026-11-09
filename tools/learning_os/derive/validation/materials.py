@@ -128,7 +128,8 @@ class ChecksMaterials:
                       f"{physical_form} material:// reference(s) name the physical "
                       "topic path instead of the id-based material://source-<id>/… "
                       "form; they resolve today but will break silently the next "
-                      "time build_materials_tree.py re-homes that folder",
+                      "time build_materials_tree.py re-homes that folder; repair "
+                      "with `.venv/bin/python tools/normalise_material_uris.py`",
                       "records/materials-manifest.yaml")
 
         for uri in unresolvable[:_MAX_LISTED]:

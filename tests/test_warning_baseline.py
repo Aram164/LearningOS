@@ -64,6 +64,23 @@ def test_a_shrunk_signature_is_a_repair_not_a_failure():
     assert len(repairs) == 1
 
 
+def test_a_row_moved_between_scope_codes_is_one_regression_naming_the_new_code():
+    """D2: moving a row between RESOURCE-SCOPE codes trades signatures.
+
+    Recording a disposition without its route moves the row from
+    NO-DISPOSITION to NO-ROUTE at the same path: the total is unchanged,
+    but the NO-ROUTE signature is new, so the write gate refuses it and
+    the refusal names the new code. Bind the row completely in one write.
+    """
+    path = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    before = Counter({("RESOURCE-SCOPE-NO-DISPOSITION", path): 1})
+    after = Counter({("RESOURCE-SCOPE-NO-ROUTE", path): 1})
+    assert sum(before.values()) == sum(after.values())
+    regressions, repairs = wb.delta(before, after)
+    assert len(regressions) == 1 and "RESOURCE-SCOPE-NO-ROUTE" in regressions[0]
+    assert len(repairs) == 1
+
+
 def test_an_equal_total_does_not_hide_a_trade():
     """The property a count does not have, and the reason for the signature."""
     before = Counter({("LOCATOR-VAGUE", "a.yaml"): 2, ("LOCATOR-VAGUE", "b.yaml"): 2})

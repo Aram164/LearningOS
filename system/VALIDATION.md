@@ -189,6 +189,7 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `RESOURCE-SCOPE-UNADOPTED` — a stage resource names a source the module's source map does not declare.
 - **W** `RESOURCE-SCOPE-NO-DISPOSITION` — the module declares the source, but the unit has no recorded source disposition for it.
 - **W** `RESOURCE-SCOPE-NO-ROUTE` — the unit's source disposition is recorded, but no route for this unit matches the resource's source and locator.
+- A write that moves a row between scope codes counts as a new signature; bind the row completely in one write.
 - **W** `ANGLE-DIVERGES-FROM-ROUTE` — a stage's angle differs from its route
   without a current `angle_review`. A reviewed refinement preserves the
   deliberate stage purpose; a correction additionally names inspected local
