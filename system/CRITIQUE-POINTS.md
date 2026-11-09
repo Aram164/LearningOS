@@ -442,3 +442,15 @@ and answered **"Approve closing 2 and 3"** and **"Keep point 1 open"**.
   the guided gateway path do not make arbitrary filesystem edits impossible.
   The historical receipt measurements remain evidence, not a retroactive
   acceptance or a reason to fabricate provenance.
+
+### Re-measurement — 2026-11-09 (architecture plan Group 4; point 1 only)
+
+Status unchanged: open. Closing it is Aram's.
+
+- `tools/receipt_drift.py` re-run against current bytes: 35 findings,
+  report-only — 7 DRIFT, 28 UNTRACKED, 0 MALFORMED. The tool gates nothing.
+- `tools/plan_write_audit.py` re-run: 11 commits have changed a plan record,
+  11 of them also add a receipt document (100%), 0 without; 418 receipt
+  documents in the working tree. Last measured 2026-09-30 at 71% (41 of 58).
+  The tool measures commit co-occurrence, not gateway mediation or per-write
+  provenance, so the share is evidence, not proof the gateway path is used.
