@@ -41,7 +41,7 @@ LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 #: debt; without it every plan gate in every fixture would read the
 #: fixture's own content as a regression it introduced.
 DEMO_WARNING_SIGNATURES: Counter = Counter({
-    ("RESOURCE-SCOPE-UNBOUND",
+    ("RESOURCE-SCOPE-NO-ROUTE",
      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 3,
 })
 

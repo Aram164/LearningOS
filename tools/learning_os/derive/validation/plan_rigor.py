@@ -800,7 +800,7 @@ class ChecksPlanRigor:
             if scope["ids"].get(material_route_id) == unit_id:
                 return
             self.warn(
-                "RESOURCE-SCOPE-UNBOUND",
+                "RESOURCE-SCOPE-ROUTE-UNDECLARED",
                 f"study map '{smid}' stage '{stage.get('id')}' teaches route "
                 f"'{material_route_id}' — the module's source map declares no "
                 f"such route for unit '{unit_id}'; bind the resource to a "
@@ -813,16 +813,19 @@ class ChecksPlanRigor:
         if isinstance(source_id, str) and (unit_id, source_id, locator) in scope["pairs"]:
             return
         if not source_id:
+            code = "RESOURCE-SCOPE-NO-SOURCE"
             reason = (
                 "no source_id is named, so module adoption cannot be checked; "
                 "name the source and bind the resource to a route for this unit"
             )
         elif source_id not in scope["sources"]:
+            code = "RESOURCE-SCOPE-UNADOPTED"
             reason = (
                 "the module's source map does not declare this source; adopt "
                 "the source in that map and declare a route for this unit"
             )
         elif source_id not in disposed_sources:
+            code = "RESOURCE-SCOPE-NO-DISPOSITION"
             reason = (
                 "the module declares this source, but this unit has no recorded "
                 "source disposition and no matching route; record it as selected, "
@@ -830,13 +833,14 @@ class ChecksPlanRigor:
                 "resource to a route for this unit"
             )
         else:
+            code = "RESOURCE-SCOPE-NO-ROUTE"
             reason = (
                 "the unit's source disposition is recorded, but no route for "
                 "this unit matches this source and locator; bind the resource "
                 "to a declared route or review the missing route"
             )
         self.warn(
-            "RESOURCE-SCOPE-UNBOUND",
+            code,
             f"study map '{smid}' stage '{stage.get('id')}' teaches "
             f"{source_id or 'material without a source'} at '{locator[:60]}' — "
             f"{reason}",

@@ -266,7 +266,7 @@ def test_a_resource_naming_a_source_the_module_never_adopted_is_reported():
         }],
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNADOPTED"]
     assert "source-probe-offmap" in checker.warnings[0][1]
 
 
@@ -311,7 +311,7 @@ def test_spelling_a_sibling_units_material_does_not_bypass_route_ownership():
         }],
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-DISPOSITION"]
 
 
 def test_shared_material_still_resolves_when_the_owning_unit_declares_it():
@@ -338,7 +338,7 @@ def test_scope_message_preserves_the_units_recorded_disposition(field):
         unit_data={field: [{"source_id": "source-demo-book"}]},
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-ROUTE"]
     assert "source disposition is recorded" in checker.warnings[0][1]
     assert "no route for this unit" in checker.warnings[0][1]
 
@@ -351,6 +351,7 @@ def test_scope_message_distinguishes_module_adoption_from_unit_disposition():
         }],
     )
     checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-DISPOSITION"]
     message = checker.warnings[0][1]
     assert "module declares this source" in message
     assert "unit has no recorded source disposition" in message
@@ -363,6 +364,7 @@ def test_scope_message_does_not_claim_an_unnamed_source_was_not_adopted():
         resources=[{"kind": "exercise", "locator": "attachments/own-work.md"}],
     )
     checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-SOURCE"]
     assert "no source_id is named" in checker.warnings[0][1]
     assert "module adoption cannot be checked" in checker.warnings[0][1]
 
@@ -430,7 +432,7 @@ def test_a_compact_row_naming_a_route_of_another_module_is_reported():
         }]}]},
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-ROUTE-UNDECLARED"]
     assert foreign in checker.warnings[0][1]
 
 
@@ -760,7 +762,7 @@ def test_a_practise_row_naming_an_unadopted_source_is_still_reported():
         }],
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNADOPTED"]
 
 
 def test_a_practise_row_with_a_material_path_is_still_reported():
@@ -772,7 +774,7 @@ def test_a_practise_row_with_a_material_path_is_still_reported():
         }],
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-SOURCE"]
 
 
 def test_a_read_row_without_a_source_is_still_reported():
@@ -781,7 +783,7 @@ def test_a_read_row_without_a_source_is_still_reported():
         resources=[{"kind": "read", "locator": "attachments/own-work.md"}],
     )
     checker.check_plan_rigor()
-    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert _codes(checker) == ["RESOURCE-SCOPE-NO-SOURCE"]
 
 
 # ------------------------------------------------------- angle-review binding

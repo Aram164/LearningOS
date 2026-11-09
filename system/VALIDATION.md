@@ -92,6 +92,7 @@ rule as current, which is indistinguishable from the rule being wrong.
 - **E** Workspace IDs cited in COORDINATION.md dependencies resolve to active workspaces.
 - **E** Evidence refs use a valid URI scheme (`note://`, `source://`, `concept://`, `workspace://`, `material://`, `project://`, `github://`, or https URL).
 - **W** `material://` or `project://` URI does not resolve on disk (reported, not fatal — media may be offline).
+- **E** `RESOURCE-ROUTE-OWNER` — a stage resource names a route that belongs to another unit.
 
 ## Registries
 
@@ -183,6 +184,11 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
   `angle_detail` for the hover.
 - **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
+- **W** `RESOURCE-SCOPE-ROUTE-UNDECLARED` — a stage resource teaches an authored material route that the module's source map does not declare for this unit (undeclared, or owned by another unit).
+- **W** `RESOURCE-SCOPE-NO-SOURCE` — a stage resource names no `source_id`, so module adoption cannot be checked.
+- **W** `RESOURCE-SCOPE-UNADOPTED` — a stage resource names a source the module's source map does not declare.
+- **W** `RESOURCE-SCOPE-NO-DISPOSITION` — the module declares the source, but the unit has no recorded source disposition for it.
+- **W** `RESOURCE-SCOPE-NO-ROUTE` — the unit's source disposition is recorded, but no route for this unit matches the resource's source and locator.
 - **W** `ANGLE-DIVERGES-FROM-ROUTE` — a stage's angle differs from its route
   without a current `angle_review`. A reviewed refinement preserves the
   deliberate stage purpose; a correction additionally names inspected local

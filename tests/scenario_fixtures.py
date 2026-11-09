@@ -70,7 +70,7 @@ INITIAL_WARNING_SIGNATURES: Counter = Counter({
     # The scope rule reports stage resources the module's source map does
     # not declare at route level: the three demo-stage rows plus the
     # pending stage's own row.
-    ("RESOURCE-SCOPE-UNBOUND",
+    ("RESOURCE-SCOPE-NO-ROUTE",
      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 4,
 })
 
