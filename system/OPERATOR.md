@@ -82,7 +82,8 @@ always names its file. Fix the defect; do not route around the guard.
 | Open work or priority question | `bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination | [Read operational state](procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief) |
 | Known record or stage note | `inspect ID`, including a batch of known IDs | [Read one record](procedures/start-here.md#read-one-named-record), [read one stage note](procedures/start-here.md#read-one-named-stage-with-its-working-note-content) |
 | Note body or saved reasoning | `note-read NOTE_ID` | [Read saved reasoning](procedures/start-here.md#search-beyond-note-summaries-then-read-the-saved-reasoning) |
-| Material or concept explanation | `material-context`, then an exact `material-span` when needed | [Retrieve explanations](procedures/retrieval-behavior.md#read-what-explains-it) |
+| Material or concept explanation | `material-context`, then an exact `material-span` when needed; on a whole-book or long-chapter route, `material-search` first | [Retrieve explanations](procedures/retrieval-behavior.md#read-what-explains-it) |
+| Find where a topic sits inside a unit's PDF materials | `material-search --unit UNIT_ID "terms"`, then `material-span` with the hit's `span_reference` pages | [Find the page](procedures/retrieval-behavior.md#find-the-page-inside-a-wide-route) |
 | Resume recorded study | `resume` or `resume --study` | [Resume without moving state](procedures/start-here.md#the-study-suggestion-never-moves-the-resume-pointer) |
 | Changes awaiting a decision | `intelligence-scan --brief --json` | [Read the decision queue](procedures/start-here.md#read-what-wants-a-decision) |
 | Ability evidence | `ability-context` horizon, then a known ability | [Read a bounded ability](procedures/start-here.md#read-one-ability-through-the-bounded-horizon) |

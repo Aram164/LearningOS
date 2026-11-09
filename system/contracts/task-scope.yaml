@@ -166,10 +166,20 @@ tasks:
 
   - id: material-or-concept-explanation
     task: Material or concept explanation
-    entry_read: '`material-context`, then an exact `material-span` when needed'
+    entry_read: '`material-context`, then an exact `material-span` when needed; on a whole-book or long-chapter route, `material-search` first'
     procedures:
       - label: Retrieve explanations
         target: system/procedures/retrieval-behavior.md#read-what-explains-it
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#26-source-routing-and-feedback
+
+  - id: find-a-page-in-unit-materials
+    task: Find where a topic sits inside a unit's PDF materials
+    entry_read: '`material-search --unit UNIT_ID "terms"`, then `material-span` with the hit''s `span_reference` pages'
+    procedures:
+      - label: Find the page
+        target: system/procedures/retrieval-behavior.md#find-the-page-inside-a-wide-route
     scope:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#26-source-routing-and-feedback

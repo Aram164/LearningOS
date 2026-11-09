@@ -4,6 +4,11 @@
 
 Build bounded searchable views over already-loaded knowledge (for full-text search over local PDF material pages, see [materials](materials.md)).
 
+`material-search` (see [materials](materials.md)) searches the text of PDF
+materials only; video transcripts, notebooks and scanned pages are not
+searched. The learner's own notes are searched over their full bodies with
+`search QUERY --type note --content`.
+
 ## Owned paths
 
 - `tools/learning_os/derive/search/*`

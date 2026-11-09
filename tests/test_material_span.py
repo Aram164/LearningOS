@@ -475,3 +475,67 @@ def test_span_binding_round_trips_through_prepare(mini_repo: Path, tmp_path: Pat
     stored = load_repo(mini_repo).notes[note_id].meta["material_analysis"]
     assert stored["material"] == "demo/lecture-01.pdf"
     assert stored["recorded_source_digest"] == binding["recorded_source_digest"]
+
+
+def test_cut_off_pdf_extract_points_at_material_search(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    result = run_los(mini_repo, "material-span", "unit-demo-l01",
+                     route_id, "--extract")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["spans"][0]["extraction"] == "truncated"
+    hint = data["next_action"]
+    assert hint is not None
+    assert "This excerpt is cut off" in hint
+    assert 'material-search --unit unit-demo-l01 "terms"' in hint
+    assert f"material-span unit-demo-l01 {route_id}" in hint
+    assert "UNIT_ID" not in hint
+
+
+def test_located_pages_extract_carries_no_hint(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    result = run_los(mini_repo, "material-span", "unit-demo-l01",
+                     route_id, "--extract", "--pages", "pdf pp. 21-26")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["spans"][0]["extraction"] == "complete"
+    assert data["next_action"] is None
+
+
+def test_short_pdf_extract_carries_no_hint(mini_repo: Path):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    material = mini_repo.parent / "materials/demo/lecture-01.pdf"
+    write_minimal_pdf(material, ["A worked expected value example"])
+    result = run_los(mini_repo, "material-span", "unit-demo-l01",
+                     _route(mini_repo), "--extract")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["spans"][0]["extraction"] == "complete"
+    assert data["next_action"] is None
+
+
+def test_plain_text_extract_carries_no_hint(mini_repo: Path):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"][0]["locator"] = "lecture-01.md"
+    write_yaml(map_path, source_map)
+    material = mini_repo.parent / "materials/demo/lecture-01.md"
+    material.parent.mkdir(parents=True, exist_ok=True)
+    material.write_text("# Section 1\n\nFirst point\nSecond point\n", encoding="utf-8")
+    result = run_los(mini_repo, "material-span", "unit-demo-l01", _route(mini_repo),
+                     "--extract")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["spans"][0]["format"] != "pdf"
+    assert data["next_action"] is None

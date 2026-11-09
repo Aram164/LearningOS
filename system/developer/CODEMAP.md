@@ -34,6 +34,11 @@ every package. `tools/README.md` classifies the separate executable tools.
 - `plan-gate` — Preflight reviewed plan packages and bind proposed learning changes to their evidence.
 - `projection` — Publish deterministic views and the producer-owned manifest from loaded state.
 - `search` — Build bounded searchable views over already-loaded knowledge (for full-text search over local PDF material pages, see [materials](materials.md)).
+
+`material-search` (see [materials](materials.md)) searches the text of PDF
+materials only; video transcripts, notebooks and scanned pages are not
+searched. The learner's own notes are searched over their full bodies with
+`search QUERY --type note --content`.
 - `semantics` — Interpret evidence through predicates, policy, lineage, dossiers and proposals.
 - `session-ledger` — Track session-owned touched files and closure boundaries separately from learner content.
 - `transactions` — Own atomic canonical commits, artifact revisions, before-images and receipts.

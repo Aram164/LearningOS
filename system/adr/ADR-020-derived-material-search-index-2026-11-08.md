@@ -107,3 +107,38 @@ page-cache scan tying or beating FTS5 within interactive latency bounds, or if
 the post-landing headless-agent study evaluation does not meet its pre-registered
 threshold, replace the FTS5 backend inside `execute_search` while keeping the
 `material-search-v1` response contract unchanged.
+
+## 2026-11-08: product answers
+
+Aram answered the routing plan's two product questions on 2026-11-08; they
+are recorded here because they bound what this index will ever cover.
+
+**Q1 — no OCR now (D18).** The live text cache holds six scanned documents:
+351/351, 118/118, 11/12, 8/8, 6/6 and 1/1 blank pages. Only the 11/12
+document (a handwritten scan) is route-bound, and its locator already says
+"scanned, weak text layer"; the rest are unrouted. OCR would make exactly
+one routed document searchable, and that document is handwriting, which OCR
+reads worst. Revisit trigger: a scanned PDF gains a route whose `role` is
+not `reference`. OCR then becomes its own producer (`material_ocr`
+writing `generated/ocr-cache/`), never part of `tools/material_text.py`
+(N2). Until then, every route-bound document without text is disclosed in
+the response under `coverage.unindexed_route_materials` (reason `no-text`)
+with `scope_complete: false`.
+
+**Q2 — only Aram's own notes (D19).** The notes under `knowledge/notes/`
+(152 files, about 1.5 MB) are already searchable over their full bodies
+with `search QUERY --type note --content` and already routed through the
+`note-body-or-saved-reasoning` task. They are deliberately not added to
+this FTS index: they are canonical records that change often, so a derived
+index would serve them stale, and substring search over 1.5 MB is already
+exact and fast. Video transcripts, notebooks, HTML and other non-PDF
+materials stay unsearched; the coverage arithmetic ignores non-PDF
+materials entirely.
+
+**Disclosure over a response field (D21).** That coverage limit is stated
+in the route docs, not added as a response field: the `material-search-v1`
+schema closes its objects with `additionalProperties: false`, and a schema
+bump for a gap one sentence can state is not warranted. Revisit trigger: a
+discoverability transcript shows an agent reading a PDF-only result as
+"the unit has nothing on this", or skipping the `material-span` cut-off
+hint.

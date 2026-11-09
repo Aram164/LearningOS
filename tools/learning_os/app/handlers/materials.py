@@ -846,6 +846,20 @@ def material_span(ctx: OpContext, req: dict) -> Result:
                 except (SliceResolutionError, OSError, UnicodeError) as exc:
                     entry.update({"extraction": "unreadable", "reason": str(exc)})
             spans.append(entry)
+        if (req.get("extract") and req.get("pages") is None
+                and status == "local-observed" and next_action is None
+                and any(span.get("format") == "pdf"
+                        and (span.get("extraction") == "truncated"
+                             or span.get("excerpt_truncated"))
+                        for span in spans)):
+            # A cut-off extract is exactly where the unit-scoped page search
+            # helps; route the operator there from the output itself.
+            next_action = (
+                'This excerpt is cut off. Locate the page first: '
+                f'material-search --unit {unit.id} "terms", '
+                f"then rerun material-span {unit.id} {route['id']}{placement_flags} "
+                '--extract --pages "<the hit\'s span_reference pages>".'
+            )
         payload = {
             "contract": "material-span-v1", "unit_id": unit.id,
             "module_id": unit.module_id, "route_id": route["id"],

@@ -120,6 +120,29 @@ analysis-note note-demo-analysis Expected value — analysis of Demo Book §1
 source-demo-book/book.pdf [1, 1] current
 ```
 
+## Find the page inside a wide route
+
+On a whole-book or long-chapter route, do not read the route end to end and
+do not settle for a cut-off `material-span --extract` excerpt. Locate the
+page first: run `material-search --unit UNIT_ID "terms"` with one to three
+content terms from the question, then rerun `material-span` with the hit's
+`span_reference` pages, for example
+`material-span UNIT_ID ROUTE_ID --extract --pages "pdf pp. 21-26"`.
+
+`material-search` searches the text of PDF materials only. Video
+transcripts, notebooks and scanned pages are not searched: an empty result,
+or one with PDF hits only, says nothing about them. When `material-span`
+returns a cut-off extract, its `next_action` carries this same instruction.
+
+The learner's own notes are searched separately, over their full bodies:
+
+```scrut
+$ los search --type note --content "expected value" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["total"]); [print(i["id"], i["path"]) for i in d["items"]]'
+note-content-search 2
+note-demo knowledge/notes/mathematics/note-demo.md
+note-demo-analysis knowledge/notes/mathematics/note-demo-analysis.md
+```
+
 ## Open the explaining note body
 
 ```scrut
