@@ -209,7 +209,7 @@ repository/
 ├── work/                  the coordination layer and its queues
 │   ├── inbox/             the drop-anything home; the operator routes what lands here
 │   ├── complaints/        tracked agent friction notes; the inbox stays for learner captures
-│   ├── active/            one folder per active workspace, each with a CONTEXT.md
+│   ├── active/            workspace folders, each with a CONTEXT.md, plus output bundles and files that canonical records cite by path; only a folder with a CONTEXT.md is loaded as a workspace
 │   └── proposals/         approved proposals and their phase records; nothing here authorizes itself
 ├── archive/               completed workspaces and resolved inbox drops, retained and never deleted
 │   ├── workspaces/        one folder per year

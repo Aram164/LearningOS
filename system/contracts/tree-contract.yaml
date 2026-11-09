@@ -153,7 +153,7 @@ directories:
       - path: work/complaints
         purpose: tracked agent friction notes; the inbox stays for learner captures
       - path: work/active
-        purpose: one folder per active workspace, each with a CONTEXT.md
+        purpose: workspace folders, each with a CONTEXT.md, plus output bundles and files that canonical records cite by path; only a folder with a CONTEXT.md is loaded as a workspace
       - path: work/proposals
         purpose: approved proposals and their phase records; nothing here authorizes itself
 

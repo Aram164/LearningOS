@@ -142,3 +142,5 @@ bump for a gap one sentence can state is not warranted. Revisit trigger: a
 discoverability transcript shows an agent reading a PDF-only result as
 "the unit has nothing on this", or skipping the `material-span` cut-off
 hint.
+
+A search hit is retrieval evidence, not coverage evidence.
