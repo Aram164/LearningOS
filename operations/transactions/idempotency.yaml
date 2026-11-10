@@ -4226,6 +4226,187 @@ entries:
       unit-m2-sad-l05: 6
     snapshot_before: sha256:c0a6199c8c48eb0e1c9b5c7427dfba9a2b644a6673742cf79190d3fc24101917
     snapshot_after: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
+  source-plan-repair-amls-l01-2026-11-10:
+    request_id: request-source-plan-repair-amls-l01-2026-11-10-05519809
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:3cffed9a69f802c91cee7b5f23df007a58821906c25d8cb5babecf794b401c5f
+    transaction_id: transaction-20261110-052520-001
+    receipt_path: operations/transactions/transaction-20261110-052520-001.yaml
+    revisions:
+      module-hu-amls: 1
+      study-map-amls-l01: 1
+      unit-amls-l01: 1
+    snapshot_before: sha256:028ce9ff9ce7358659bcbb3a3504b202f466cf7c36f6921bbba7502b7b6d9346
+    snapshot_after: sha256:ee5149ef3bcd4da5e76b9aab49cd4c1a1e096b37b50a144c5f86efea239c0961
+  source-plan-repair-unit-algo2-exam-prep-2026-11-10:
+    request_id: request-source-plan-repair-unit-algo2-exam-prep-2026-11-10-94177251
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:2e4729d2fbcedade986399a489a6d6449eb5cd45e43ae683535cf7e5823b4b63
+    transaction_id: transaction-20261110-052756-001
+    receipt_path: operations/transactions/transaction-20261110-052756-001.yaml
+    revisions:
+      study-map-algo2-exam-prep: 1
+      unit-algo2-exam-prep: 3
+    snapshot_before: sha256:be8d7afe627f24ca2f112e349c0ae5429356c9da5b28c92589ab73440a37b284
+    snapshot_after: sha256:c6f61bd0fa7c1ed64f2d06c2351f7b96c976ad16902a96566e3556173cd8c3a2
+  source-plan-repair-unit-amls-l02-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l02-2026-11-10-c1c0c5db
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:efbe78cac018cc8b6be09f5d5f12a249445ecb40344555c0d82413d4b0d64a35
+    transaction_id: transaction-20261110-052544-001
+    receipt_path: operations/transactions/transaction-20261110-052544-001.yaml
+    revisions:
+      study-map-amls-l02: 1
+      unit-amls-l02: 1
+    snapshot_before: sha256:ee5149ef3bcd4da5e76b9aab49cd4c1a1e096b37b50a144c5f86efea239c0961
+    snapshot_after: sha256:4b821682fae26bb0a8400c4225bc7255b17bd242bb15e3b3d1cd4fdff7b797a5
+  source-plan-repair-unit-amls-l03-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l03-2026-11-10-fce25c3a
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:147979e15f2103f62caee46c73ef948f2a0d071ce953c388b13e85f7de7042a8
+    transaction_id: transaction-20261110-052554-001
+    receipt_path: operations/transactions/transaction-20261110-052554-001.yaml
+    revisions:
+      study-map-amls-l03: 1
+      unit-amls-l03: 1
+    snapshot_before: sha256:4b821682fae26bb0a8400c4225bc7255b17bd242bb15e3b3d1cd4fdff7b797a5
+    snapshot_after: sha256:24c7382f399000f5606389b5885e075521cc89c63a751b334d0dc163bb75159c
+  source-plan-repair-unit-amls-l04-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l04-2026-11-10-24c3da6f
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:6037d886ee10f809bc92b09246dd77189fc1cb42d359f4ec2661bab2e030c888
+    transaction_id: transaction-20261110-052604-001
+    receipt_path: operations/transactions/transaction-20261110-052604-001.yaml
+    revisions:
+      study-map-amls-l04: 1
+      unit-amls-l04: 1
+    snapshot_before: sha256:24c7382f399000f5606389b5885e075521cc89c63a751b334d0dc163bb75159c
+    snapshot_after: sha256:5eb843d837d90e206c9a7489fccb993e7312b71917bcc4004bc2d1f42e0c8b07
+  source-plan-repair-unit-amls-l05-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l05-2026-11-10-7e46cbb0
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:73c91564de640439e52cab701fa20217b596899a59f2dbe328253f643001afff
+    transaction_id: transaction-20261110-052614-001
+    receipt_path: operations/transactions/transaction-20261110-052614-001.yaml
+    revisions:
+      study-map-amls-l05: 1
+      unit-amls-l05: 1
+    snapshot_before: sha256:5eb843d837d90e206c9a7489fccb993e7312b71917bcc4004bc2d1f42e0c8b07
+    snapshot_after: sha256:5f0cc114eee75575e322eba2fec332942b5d07722342b7307f1a2319e61ed12f
+  source-plan-repair-unit-amls-l06-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l06-2026-11-10-227bb08f
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:14432dcac4966cf5a0f6cc0ac34439387158e57d878baab77e6eef189cd0ea63
+    transaction_id: transaction-20261110-052625-001
+    receipt_path: operations/transactions/transaction-20261110-052625-001.yaml
+    revisions:
+      study-map-amls-l06: 1
+      unit-amls-l06: 1
+    snapshot_before: sha256:5f0cc114eee75575e322eba2fec332942b5d07722342b7307f1a2319e61ed12f
+    snapshot_after: sha256:cea1364d3c2c41b81309adf5deff5b2890c9d6931fe585a9daa933940110624f
+  source-plan-repair-unit-amls-l07-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l07-2026-11-10-ee9e0d5d
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:66843e40fcf63e586aa5386c3928a43853db2c8d20b0e118ddb9150514f73d4b
+    transaction_id: transaction-20261110-052634-001
+    receipt_path: operations/transactions/transaction-20261110-052634-001.yaml
+    revisions:
+      study-map-amls-l07: 1
+      unit-amls-l07: 1
+    snapshot_before: sha256:cea1364d3c2c41b81309adf5deff5b2890c9d6931fe585a9daa933940110624f
+    snapshot_after: sha256:29c46934fb7207c91b22df17c6e08f6bfd5aee558558c29350d22ad41cc9ddd1
+  source-plan-repair-unit-amls-l08-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l08-2026-11-10-e3dae378
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:3c02cba0b2824fe41c47c89bd8f69d1fdd600ac828c259e9bf4927850adfe590
+    transaction_id: transaction-20261110-052645-001
+    receipt_path: operations/transactions/transaction-20261110-052645-001.yaml
+    revisions:
+      study-map-amls-l08: 1
+      unit-amls-l08: 1
+    snapshot_before: sha256:29c46934fb7207c91b22df17c6e08f6bfd5aee558558c29350d22ad41cc9ddd1
+    snapshot_after: sha256:3643a0ff6b55c06ce46e0aef32ccfa83a827c386491fc5bd8fa2799009233c45
+  source-plan-repair-unit-amls-l09-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l09-2026-11-10-5166bdf9
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:ddc4aac1ae17056a11ce801e2447a1e9f8a5f9571045e5c60ca489f6340ceb2f
+    transaction_id: transaction-20261110-052655-001
+    receipt_path: operations/transactions/transaction-20261110-052655-001.yaml
+    revisions:
+      study-map-amls-l09: 1
+      unit-amls-l09: 1
+    snapshot_before: sha256:3643a0ff6b55c06ce46e0aef32ccfa83a827c386491fc5bd8fa2799009233c45
+    snapshot_after: sha256:665155e56283554c5ff7e44ca2690068449c831993af5507a06fd4102115ef9e
+  source-plan-repair-unit-amls-l10-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l10-2026-11-10-c0cb1e90
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:7ff02a5dce67949e40906809bbbf3391753768fb2ef786d3239a4bafc4b022ac
+    transaction_id: transaction-20261110-052705-001
+    receipt_path: operations/transactions/transaction-20261110-052705-001.yaml
+    revisions:
+      study-map-amls-l10: 1
+      unit-amls-l10: 1
+    snapshot_before: sha256:665155e56283554c5ff7e44ca2690068449c831993af5507a06fd4102115ef9e
+    snapshot_after: sha256:acc3fada8a04ced5a22d6df7e546e49dff6cf4f016d6a60777b45b87a1db2425
+  source-plan-repair-unit-amls-l11-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l11-2026-11-10-a25aae29
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:979d06a5ae0987d90ad46e55f8dee3c14a950059aba6ed08dd8eeb2c29762b2f
+    transaction_id: transaction-20261110-052715-001
+    receipt_path: operations/transactions/transaction-20261110-052715-001.yaml
+    revisions:
+      study-map-amls-l11: 1
+      unit-amls-l11: 1
+    snapshot_before: sha256:acc3fada8a04ced5a22d6df7e546e49dff6cf4f016d6a60777b45b87a1db2425
+    snapshot_after: sha256:dd4326d75fa31794320321850079b3c8bbcd59cda308a3bb63d20e2e02d4e736
+  source-plan-repair-unit-amls-l12-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l12-2026-11-10-eed1d673
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:0fafdd1f825febe773fd76e40df82d3dfd4e924e4e291b8bb5faf01e04357c3f
+    transaction_id: transaction-20261110-052725-001
+    receipt_path: operations/transactions/transaction-20261110-052725-001.yaml
+    revisions:
+      study-map-amls-l12: 1
+      unit-amls-l12: 1
+    snapshot_before: sha256:dd4326d75fa31794320321850079b3c8bbcd59cda308a3bb63d20e2e02d4e736
+    snapshot_after: sha256:db69d50f4943217dc592512714bc17552e18444b2070cd88afaeedc04a9c40c5
+  source-plan-repair-unit-amls-l13-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-l13-2026-11-10-2a4fe2d8
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:cdf6bb9895765925633b09c8bf29b5cb15d9bab0800fc840fce63bd21726d706
+    transaction_id: transaction-20261110-052735-001
+    receipt_path: operations/transactions/transaction-20261110-052735-001.yaml
+    revisions:
+      study-map-amls-l13: 1
+      unit-amls-l13: 1
+    snapshot_before: sha256:db69d50f4943217dc592512714bc17552e18444b2070cd88afaeedc04a9c40c5
+    snapshot_after: sha256:4ac14bc6493146ab8c620b8373a86d8ff4c9f959fd8257be17bb257b1c60ef6d
+  source-plan-repair-unit-amls-theory-2026-11-10:
+    request_id: request-source-plan-repair-unit-amls-theory-2026-11-10-60d45ca7
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:60e4d6f52059ec0cb82ff6a8911ec4085a8822d4f6a7793edc5f1b531febcb6d
+    transaction_id: transaction-20261110-052745-001
+    receipt_path: operations/transactions/transaction-20261110-052745-001.yaml
+    revisions:
+      study-map-amls-exam-synthesis: 1
+      unit-amls-theory: 1
+    snapshot_before: sha256:4ac14bc6493146ab8c620b8373a86d8ff4c9f959fd8257be17bb257b1c60ef6d
+    snapshot_after: sha256:be8d7afe627f24ca2f112e349c0ae5429356c9da5b28c92589ab73440a37b284
   step6-catalog-populate-20260923:
     request_id: request-step6-catalog-populate-20260923
     capability: masters-planning.catalog.update

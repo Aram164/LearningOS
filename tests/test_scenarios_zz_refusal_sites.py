@@ -824,14 +824,14 @@ def _prove_cli_read_failed(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["inspect", "project-demo", "note-demo"])
-        outcome = pipeline_module.run_cli(mini_repo, "project.inspect", args)
+        outcome = pipeline_module.run_cli(mini_repo, "inspect", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 2
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "project.inspect", "kind": "failure",
-                        "site": "project.inspect.read-failed",
+    assert lines[0] == {"operation": "inspect", "kind": "failure",
+                        "site": "inspect.read-failed",
                         "class": "WriteRefused", "exit_code": 2}
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -874,14 +874,14 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["inspect", "project-demo", "note-demo"])
-        outcome = pipeline_module.run_cli(mini_repo, "project.inspect", args)
+        outcome = pipeline_module.run_cli(mini_repo, "inspect", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 3
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "project.inspect", "kind": "failure",
-                        "site": "project.inspect.stale-snapshot",
+    assert lines[0] == {"operation": "inspect", "kind": "failure",
+                        "site": "inspect.stale-snapshot",
                         "class": "StaleSnapshot", "exit_code": 3}
     assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
 
@@ -951,8 +951,8 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
 #: so each site's proof node carries the site id and the same-session
 #: `-k` over operation names selects it.
 _PROOF_FNS = {
-    "project.inspect.read-failed": _prove_cli_read_failed,
-    "project.inspect.stale-snapshot": _prove_cli_stale_snapshot,
+    "inspect.read-failed": _prove_cli_read_failed,
+    "inspect.stale-snapshot": _prove_cli_stale_snapshot,
     "stage.progress.update.unknown-status":
         _prove_stage_unknown_status_guarded,
 }
@@ -1072,21 +1072,6 @@ def _prove_detour_unknown_classification_guarded(mini_repo: Path,
                "title": "Revisit expectation",
                "classification": "required-now"},
         key="a9-proof-unknown-classification")
-
-
-def _prove_path_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
-                                       monkeypatch) -> None:
-    """The status guards refuse ``bogus`` first (R-A9-3)."""
-    _prove_guarded_enum(
-        mini_repo, tmp_path, monkeypatch,
-        site="path.progress.update.unknown-status",
-        operation="path.progress.update",
-        cli_argv=["path-progress", "path-demo", "stage-demo-path",
-                  "bogus"],
-        field="status",
-        valid={"path_id": "path-demo", "stage_id": "stage-demo-path",
-               "status": "complete"},
-        key="a9-proof-path-unknown-status")
 
 
 def _prove_selection_unknown_action_guarded(mini_repo: Path,
@@ -1312,8 +1297,6 @@ def _prove_evidence_unreadable_frontmatter(mini_repo: Path, tmp_path: Path,
 _PROOF_FNS.update({
     "detour.create.unknown-classification":
         _prove_detour_unknown_classification_guarded,
-    "path.progress.update.unknown-status":
-        _prove_path_unknown_status_guarded,
     "unit.source-selection.set.unknown-action":
         _prove_selection_unknown_action_guarded,
     "stage.note.write.no-working-note": _prove_stage_no_working_note,
@@ -3468,12 +3451,12 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
     outside = json.dumps({"operation": "route.patch", "kind": "failure",
                           "site": "route.patch.unknown-route",
                           "class": "NotFound", "exit_code": 2})
-    inside = json.dumps({"operation": "project.inspect", "kind": "failure",
-                         "site": "project.inspect.unknown-id",
+    inside = json.dumps({"operation": "inspect", "kind": "failure",
+                         "site": "inspect.unknown-id",
                          "class": "WriteRefused", "exit_code": 2})
     dest.write_text(outside + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
-    with harness._case_site_witnesses("project.inspect", "a9-control"):
+    with harness._case_site_witnesses("inspect", "a9-control"):
         private = os.environ[SITE_WITNESS_ENV]
         assert private != str(dest)
         with open(private, "a", encoding="utf-8") as handle:
@@ -3482,8 +3465,8 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
     assert not Path(private).exists()
     assert dest.read_text(encoding="utf-8").splitlines() == [outside, inside]
     attributed = harness.CASE_SITE_WITNESSES.pop(
-        (str(dest), "project.inspect:a9-control"))
-    assert attributed == {("project.inspect", "project.inspect.unknown-id")}
+        (str(dest), "inspect:a9-control"))
+    assert attributed == {("inspect", "inspect.unknown-id")}
     assert not [key for key in harness.CASE_SITE_WITNESSES
                 if key[0] == str(dest)]
 
@@ -3495,22 +3478,22 @@ def test_control_failed_append_leaves_the_case_unattributed(tmp_path,
 
     dest = tmp_path / "no-such-dir" / "sites.jsonl"
     monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
-    with harness._case_site_witnesses("project.inspect", "a9-control-fail"):
+    with harness._case_site_witnesses("inspect", "a9-control-fail"):
         with open(os.environ[SITE_WITNESS_ENV], "a",
                   encoding="utf-8") as handle:
             handle.write(json.dumps({
-                "operation": "project.inspect", "kind": "failure",
-                "site": "project.inspect.unknown-id", "class": "WriteRefused",
+                "operation": "inspect", "kind": "failure",
+                "site": "inspect.unknown-id", "class": "WriteRefused",
                 "exit_code": 2}) + "\n")
     assert os.environ[SITE_WITNESS_ENV] == str(dest)
     assert not dest.exists()
-    assert (str(dest), "project.inspect:a9-control-fail") \
+    assert (str(dest), "inspect:a9-control-fail") \
         not in harness.CASE_SITE_WITNESSES
 
 
 def test_control_unshared_excluded_name_fails():
     with pytest.raises(AssertionError, match="shares its handler with no"):
-        _assert_shares_entry_point_handler("project.inspect",
+        _assert_shares_entry_point_handler("inspect",
                                            {"route.patch"})
 
 
@@ -3541,10 +3524,10 @@ def test_control_site_entry_with_where_fails(tmp_path, monkeypatch):
 
     cases = tmp_path / "cases"
     cases.mkdir()
-    (cases / "project.inspect.yaml").write_text(yaml.safe_dump({
-        "operation": "project.inspect",
+    (cases / "inspect.yaml").write_text(yaml.safe_dump({
+        "operation": "inspect",
         "untriggered": [{
-            "site": "project.inspect.read-failed",
+            "site": "inspect.read-failed",
             "where": "tools/learning_os/app/handlers/platform.py:325",
             "reason": "os-error-only",
         }],
@@ -3660,8 +3643,6 @@ def test_control_twin_template_keeps_called_operations():
     # _shared.py twins over their static callers.
     assert ("stage.note.write",
             "stage.note.write.unknown-stage") in declared
-    assert ("path.note.write",
-            "path.note.write.unknown-path") in declared
     assert ("detour.resolve",
             "detour.resolve.unknown-unit") in declared
     # In-handler templates count for their own handler.
@@ -3680,8 +3661,6 @@ def test_control_twin_template_drops_never_called_operations():
     # The learner never-called _shared.py expansions.
     assert ("unit.source-selection.set",
             "unit.source-selection.set.unknown-stage") not in declared
-    assert ("path.note.write",
-            "path.note.write.unknown-unit") not in declared
     assert ("stage.progress.update",
             "stage.progress.update.unknown-path") not in declared
     # In-handler templates do not leak across operations.
@@ -3778,7 +3757,7 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
     """
     import scenario_harness as harness
 
-    doc = harness.load_case_file(CASES_DIR / "project.inspect.yaml")
+    doc = harness.load_case_file(CASES_DIR / "inspect.yaml")
     bare_case = next(item for item in doc["cases"]
                      if item["id"] == "unknown-id")
     case = {"fixture": doc.get("fixture", "rich_world"),
@@ -3788,21 +3767,21 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
             **bare_case}
     witness = tmp_path / "sites.jsonl"
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
-    with_witness = harness.run_case(case, "project.inspect",
+    with_witness = harness.run_case(case, "inspect",
                                    tmp_path / "with-witness")
     assert with_witness["exit"] == 2
     lines = witness.read_text(encoding="utf-8").splitlines()
     assert len(lines) == 1, lines
     assert json.loads(lines[0]) == {
-        "operation": "project.inspect", "kind": "failure",
-        "site": "project.inspect.unknown-id", "class": "WriteRefused",
+        "operation": "inspect", "kind": "failure",
+        "site": "inspect.unknown-id", "class": "WriteRefused",
         "exit_code": 2}
     # SPEC (bh): the real case run is attributed to exactly that case.
     assert harness.CASE_SITE_WITNESSES.pop(
-        (str(witness), "project.inspect:unknown-id")) == {
-        ("project.inspect", "project.inspect.unknown-id")}
+        (str(witness), "inspect:unknown-id")) == {
+        ("inspect", "inspect.unknown-id")}
     monkeypatch.delenv(SITE_WITNESS_ENV)
-    bare = harness.run_case(case, "project.inspect", tmp_path / "bare")
+    bare = harness.run_case(case, "inspect", tmp_path / "bare")
     assert bare == with_witness
 
 
@@ -4030,8 +4009,8 @@ def test_control_failed_witness_write_is_swallowed(tmp_path, monkeypatch):
         monkeypatch.setenv(
             SITE_WITNESS_ENV,
             str(tmp_path / "no-such-dir" / "sites.jsonl"))
-        sys.audit("learningos.refusal", "project.inspect", "failure",
-                  "project.inspect.unknown-id", "WriteRefused", 2)
+        sys.audit("learningos.refusal", "inspect", "failure",
+                  "inspect.unknown-id", "WriteRefused", 2)
     finally:
         arch_audit_hook.uninstall()
     assert not (tmp_path / "no-such-dir").exists()
@@ -4081,8 +4060,8 @@ def test_control_malformed_witness_line_fails(tmp_path, monkeypatch):
     """A line outside the item 8.1 shapes fails the read."""
     witness = tmp_path / "sites.jsonl"
     witness.write_text(
-        json.dumps({"operation": "project.inspect",
-                    "site": "project.inspect.unknown-id"})
+        json.dumps({"operation": "inspect",
+                    "site": "inspect.unknown-id"})
         + "\n",
         encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
@@ -4101,9 +4080,9 @@ def test_control_failed_append_is_reported_unwitnessed(mini_repo, tmp_path,
     assert refused.returncode == 2
     assert "record not found: nope-id" in refused.stderr
     with pytest.raises(AssertionError, match="unwitnessed"):
-        _assert_matched("project.inspect", "project.inspect.unknown-id",
+        _assert_matched("inspect", "inspect.unknown-id",
                         "a9-control:1", set(),
-                        {"project.inspect.unknown-id": "project.inspect:unknown-id"})
+                        {"inspect.unknown-id": "inspect:unknown-id"})
 
 
 def test_control_diagnostic_line_never_supplies_a_site(tmp_path, monkeypatch):

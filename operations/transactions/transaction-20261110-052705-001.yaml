@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261110-052705-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-11-10T05:27:05+01:00'
+snapshot_before: sha256:665155e56283554c5ff7e44ca2690068449c831993af5507a06fd4102115ef9e
+snapshot_after: sha256:acc3fada8a04ced5a22d6df7e546e49dff6cf4f016d6a60777b45b87a1db2425
+expected_revisions:
+  study-map-amls-l10: 0
+  unit-amls-l10: 0
+artifact_revisions:
+  study-map-amls-l10:
+    before: 0
+    after: 1
+  unit-amls-l10:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-amls/units/unit-amls-l10/study-map.yaml
+  sha256_before: b26b4707cd7cdf45e7bfe0debbce3bd28ae238249072bc91cc449998b278d84d
+  sha256_after: 0e28223e025ce4b903a6baa407f062bac48d4097dc029cc8fdfa48479f89f59e
+  created: false
+metadata:
+  data_roots_sha256: sha256:df709a4cbdafb2931b0f2d01c5a5aabe12476060ff32ddec073479f39aec7898
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-source-plan-repair-unit-amls-l10-2026-11-10-c0cb1e90
+  idempotency_key: source-plan-repair-unit-amls-l10-2026-11-10
+  intent_sha256: sha256:7ff02a5dce67949e40906809bbbf3391753768fb2ef786d3239a4bafc4b022ac
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:7ff02a5dce67949e40906809bbbf3391753768fb2ef786d3239a4bafc4b022ac

@@ -23,9 +23,9 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: 'SOURCE-PLAN-PATH-MISSING: adopt 15 pre-existing danglers'
-total: 585
-distinct_signatures: 63
+note: 'SOURCE-PLAN-PATH-MISSING: 15 danglers repaired via unit.plan.revise'
+total: 570
+distinct_signatures: 48
 signatures:
 - code: RESOURCE-SCOPE-NO-DISPOSITION
   path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
@@ -171,48 +171,3 @@ signatures:
 - code: RESOURCE-SCOPE-UNADOPTED
   path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
   count: 8
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l01/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l02/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l03/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l04/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l05/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l06/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l07/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l08/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l09/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l10/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l11/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l12/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-l13/study-map.yaml
-  count: 1
-- code: SOURCE-PLAN-PATH-MISSING
-  path: curriculum/modules/module-hu-amls/units/unit-amls-theory/study-map.yaml
-  count: 1

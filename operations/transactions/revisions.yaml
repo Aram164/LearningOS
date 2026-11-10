@@ -48,6 +48,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 15
+  module-hu-amls: 1
   module-hu-betriebssysteme: 2
   module-hu-icop: 2
   module-hu-m2-statistik-analysis: 62
@@ -316,6 +317,7 @@ revisions:
   stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi: 1
   stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end: 1
   stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
+  study-map-algo2-exam-prep: 1
   study-map-aml-exam-prep: 1
   study-map-aml-l01: 3
   study-map-aml-l02: 3
@@ -328,6 +330,20 @@ revisions:
   study-map-aml-l09: 4
   study-map-aml-l10: 5
   study-map-aml-l11: 3
+  study-map-amls-exam-synthesis: 1
+  study-map-amls-l01: 1
+  study-map-amls-l02: 1
+  study-map-amls-l03: 1
+  study-map-amls-l04: 1
+  study-map-amls-l05: 1
+  study-map-amls-l06: 1
+  study-map-amls-l07: 1
+  study-map-amls-l08: 1
+  study-map-amls-l09: 1
+  study-map-amls-l10: 1
+  study-map-amls-l11: 1
+  study-map-amls-l12: 1
+  study-map-amls-l13: 1
   study-map-bs-cpu-scheduling: 1
   study-map-bs-processes: 1
   study-map-job-engineering-tools-fluency: 2
@@ -383,7 +399,7 @@ revisions:
   study-map-m2-sad-l14: 6
   study-map-m2-sad-l15: 7
   study-map-python-intermediate-roadmap: 1
-  unit-algo2-exam-prep: 2
+  unit-algo2-exam-prep: 3
   unit-aml-exam-prep: 10
   unit-aml-l01: 6
   unit-aml-l02: 7
@@ -396,6 +412,20 @@ revisions:
   unit-aml-l09: 6
   unit-aml-l10: 8
   unit-aml-l11: 7
+  unit-amls-l01: 1
+  unit-amls-l02: 1
+  unit-amls-l03: 1
+  unit-amls-l04: 1
+  unit-amls-l05: 1
+  unit-amls-l06: 1
+  unit-amls-l07: 1
+  unit-amls-l08: 1
+  unit-amls-l09: 1
+  unit-amls-l10: 1
+  unit-amls-l11: 1
+  unit-amls-l12: 1
+  unit-amls-l13: 1
+  unit-amls-theory: 1
   unit-bs-cpu-scheduling: 1
   unit-bs-os-structure: 1
   unit-bs-processes: 1

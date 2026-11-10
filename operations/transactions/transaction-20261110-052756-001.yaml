@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261110-052756-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-11-10T05:27:56+01:00'
+snapshot_before: sha256:be8d7afe627f24ca2f112e349c0ae5429356c9da5b28c92589ab73440a37b284
+snapshot_after: sha256:c6f61bd0fa7c1ed64f2d06c2351f7b96c976ad16902a96566e3556173cd8c3a2
+expected_revisions:
+  study-map-algo2-exam-prep: 0
+  unit-algo2-exam-prep: 2
+artifact_revisions:
+  study-map-algo2-exam-prep:
+    before: 0
+    after: 1
+  unit-algo2-exam-prep:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
+  sha256_before: 9a8e31f8dc06aa65be3275fb2c847c6806a1680786acf968342211cde466b969
+  sha256_after: f7aea4c8cf3d70b44ccd8e2e85dc94020b6c499bf6f8fbf789901adc75f18d9e
+  created: false
+metadata:
+  data_roots_sha256: sha256:9fb9c6cb5a9a3480d3e24e3dd03156e54cc7dee9a4d0c2e53d3396aa61196df6
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-source-plan-repair-unit-algo2-exam-prep-2026-11-10-94177251
+  idempotency_key: source-plan-repair-unit-algo2-exam-prep-2026-11-10
+  intent_sha256: sha256:2e4729d2fbcedade986399a489a6d6449eb5cd45e43ae683535cf7e5823b4b63
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:2e4729d2fbcedade986399a489a6d6449eb5cd45e43ae683535cf7e5823b4b63
