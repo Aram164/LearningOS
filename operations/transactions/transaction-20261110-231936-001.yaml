@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261110-231936-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-11-10T23:19:36+01:00'
+snapshot_before: sha256:ca36ab76dee0ebb08736f766aee48b9e6eac76eb03d954fd0e5c0bcd765161e7
+snapshot_after: sha256:ae547a1ffc836f4dedafd675184f79a1dcf2ef84ba2a431cf52ed72ede0f5d38
+expected_revisions:
+  study-map-bs-cpu-scheduling: 1
+  unit-bs-cpu-scheduling: 1
+artifact_revisions:
+  study-map-bs-cpu-scheduling:
+    before: 1
+    after: 2
+  unit-bs-cpu-scheduling:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-cpu-scheduling/study-map.yaml
+  sha256_before: 48252646aad9fec91d95b71a0f147d65500bcf768d930204210e4b2d1211adfd
+  sha256_after: 371e1a69a52e8896c59e91bc999cf2a9c59cdc7ad5b081bfe2becdaaa3858c32
+  created: false
+metadata:
+  data_roots_sha256: sha256:472130a5c78f519428a482f9b7f117ee717a0c8b696acaf19bd34edd6f00ce54
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-be48cd312cd84ae2a3964e0a144f070b
+  idempotency_key: reviewed-855fd128174f4a91a8678a34a2ea4348
+  intent_sha256: sha256:4f680756e48926fc881df899a42e9fbaaba4e372463b02b09a7fad207ac3781a
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:4f680756e48926fc881df899a42e9fbaaba4e372463b02b09a7fad207ac3781a

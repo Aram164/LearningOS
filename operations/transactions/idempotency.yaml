@@ -3245,6 +3245,18 @@ entries:
       unit-m2-sad-l03: 24
     snapshot_before: sha256:c3c4427950ee563a2cc091e0dd113f55788ff4bb02499f66183b39c90800ada9
     snapshot_after: sha256:10ce827c0336c6f6a81de6878e2456f1fb7e5ce9e7946488a33fadc39c72b6c5
+  reviewed-10507687e3a846d98af5b5a45f88c317:
+    request_id: request-reviewed-cfcd368067e04a8b9e0bf300daf41277
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:b5360b3e0e1b6efb661f5a85a8ea2db79af47c9ed7f1e7c84ac94edc811e918a
+    transaction_id: transaction-20261110-232019-001
+    receipt_path: operations/transactions/transaction-20261110-232019-001.yaml
+    revisions:
+      study-map-icop-l01-linear-programming: 1
+      unit-icop-l01-linear-programming: 3
+    snapshot_before: sha256:1daeae920f9921e4981669f2cb603ddf8c1568fd5e7ff3f4c4161ef91c05a873
+    snapshot_after: sha256:a7f595a70361964498fed65c80fa8c64013e716fa193688edcf6441c48bab0da
   reviewed-11d40b2dad8a428ea47524505058460c:
     request_id: request-reviewed-1ae2a388431643b298513a16ac78050d
     capability: unit.map.import
@@ -3363,6 +3375,18 @@ entries:
       unit-m2-sad-l06: 22
     snapshot_before: sha256:fc446c77624ff56b7cb9bbd725b3c4b80acbaca697ef280933c62946af3e05aa
     snapshot_after: sha256:625b57a4cc62abfa965b3a1d23fe70f567f59745a6376dd44c5f1b4eb3e9a2cd
+  reviewed-3d1d037f938845fca27dc949903d36fb:
+    request_id: request-reviewed-73afdf46df3a4407bbea1cdcc11437d9
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:69a874d7f56b8d147a022d45e9f2a625570ea532a6ac63face249a0083173c04
+    transaction_id: transaction-20261110-231906-001
+    receipt_path: operations/transactions/transaction-20261110-231906-001.yaml
+    revisions:
+      study-map-bs-processes: 2
+      unit-bs-processes: 2
+    snapshot_before: sha256:fbf365a840ddbb77eaee0b9dcc4106e0d66228078bb040931a0148fb3896debd
+    snapshot_after: sha256:ca36ab76dee0ebb08736f766aee48b9e6eac76eb03d954fd0e5c0bcd765161e7
   reviewed-3e0150dc37214db281a77a69b24cffd2:
     request_id: request-reviewed-7af3bb893fb54d00b70f634fb130f264
     capability: unit.map.import
@@ -3656,6 +3680,18 @@ entries:
       unit-job-polars-pandas-fluency: 12
     snapshot_before: sha256:b0a43c85b5a0ba24a479b67abf250a8eb9f0a17621081c36b3ee5d5499e43196
     snapshot_after: sha256:718ce5ffbfa8e57203a431c5c2c359be97807047bb36170ad7e2f04794f1d228
+  reviewed-855fd128174f4a91a8678a34a2ea4348:
+    request_id: request-reviewed-be48cd312cd84ae2a3964e0a144f070b
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:4f680756e48926fc881df899a42e9fbaaba4e372463b02b09a7fad207ac3781a
+    transaction_id: transaction-20261110-231936-001
+    receipt_path: operations/transactions/transaction-20261110-231936-001.yaml
+    revisions:
+      study-map-bs-cpu-scheduling: 2
+      unit-bs-cpu-scheduling: 2
+    snapshot_before: sha256:ca36ab76dee0ebb08736f766aee48b9e6eac76eb03d954fd0e5c0bcd765161e7
+    snapshot_after: sha256:ae547a1ffc836f4dedafd675184f79a1dcf2ef84ba2a431cf52ed72ede0f5d38
   reviewed-8b303ff1e102427da1f372752e2deef0:
     request_id: request-reviewed-3af724c3c07a436a8b5899bb572b8edb
     capability: module.plan.import
@@ -3973,6 +4009,18 @@ entries:
       file:operations/transactions/lineage.yaml: 1
     snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
     snapshot_after: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+  reviewed-fbe11882ec2c40128d4389d93d0d9402:
+    request_id: request-reviewed-ef7258191b9847e2b811718e03dba52c
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:7621b39719fb4e2e355fd7645cca64ee0fc4384771d055e0a3472bd1d93a3145
+    transaction_id: transaction-20261110-231958-001
+    receipt_path: operations/transactions/transaction-20261110-231958-001.yaml
+    revisions:
+      study-map-bs-os-structure: 1
+      unit-bs-os-structure: 2
+    snapshot_before: sha256:ae547a1ffc836f4dedafd675184f79a1dcf2ef84ba2a431cf52ed72ede0f5d38
+    snapshot_after: sha256:1daeae920f9921e4981669f2cb603ddf8c1568fd5e7ff3f4c4161ef91c05a873
   reviewed-fc33f73b034444d792f33cee9db2dd12:
     request_id: request-reviewed-88f66dc6e77745dca50024b4265f2a4d
     capability: note.analysis.save_batch

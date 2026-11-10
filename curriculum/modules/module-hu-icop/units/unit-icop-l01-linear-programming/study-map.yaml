@@ -5,7 +5,7 @@ unit_id: unit-icop-l01-linear-programming
 status: ready
 current_stage: stage-icop-l01-forms
 source_plan:
-  path: /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/icop-l01-2026-10-22/module-plan.yaml
+  path: work/active/icop-l01-2026-10-22/outputs/coverage-audit.md
   provenance: ai-proposed
 detours: []
 stages:

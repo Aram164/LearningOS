@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261110-232019-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-11-10T23:20:19+01:00'
+snapshot_before: sha256:1daeae920f9921e4981669f2cb603ddf8c1568fd5e7ff3f4c4161ef91c05a873
+snapshot_after: sha256:a7f595a70361964498fed65c80fa8c64013e716fa193688edcf6441c48bab0da
+expected_revisions:
+  study-map-icop-l01-linear-programming: 0
+  unit-icop-l01-linear-programming: 2
+artifact_revisions:
+  study-map-icop-l01-linear-programming:
+    before: 0
+    after: 1
+  unit-icop-l01-linear-programming:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-icop/units/unit-icop-l01-linear-programming/study-map.yaml
+  sha256_before: cbf9d245acf462d52d5ad964117b2a305f3c765693f1b603e78e6330de2b306a
+  sha256_after: d5473eecb6227a61cf3bf03fa48e2e9944e29f4c430674f3b833d616e94f10df
+  created: false
+metadata:
+  data_roots_sha256: sha256:1d34230901cb658ed315132342286e08f204a3ee0e3fe524d21b5d1fe5262ee4
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-cfcd368067e04a8b9e0bf300daf41277
+  idempotency_key: reviewed-10507687e3a846d98af5b5a45f88c317
+  intent_sha256: sha256:b5360b3e0e1b6efb661f5a85a8ea2db79af47c9ed7f1e7c84ac94edc811e918a
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:b5360b3e0e1b6efb661f5a85a8ea2db79af47c9ed7f1e7c84ac94edc811e918a
