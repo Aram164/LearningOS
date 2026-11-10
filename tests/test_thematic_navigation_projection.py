@@ -6,11 +6,11 @@ import json
 
 import pytest
 import yaml
+from repo_builders import add_curriculum
 
 from learning_os.derive.projection import generate_all
 from learning_os.derive.validation import Validator
 from learning_os.store.loader import load_repo
-from repo_builders import add_curriculum
 
 
 def _write_navigation_fixture(root):

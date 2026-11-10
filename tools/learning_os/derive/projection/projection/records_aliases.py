@@ -5,7 +5,7 @@ from __future__ import annotations
 from learning_os.domain.snapshot import Repo
 
 
-def project_project_aliases(repo: Repo) -> list[dict]:
+def project_project_aliases(repo: Repo) -> list[dict[str, str]]:
     types = {**dict.fromkeys(repo.modules, "module"),
              **dict.fromkeys(repo.units, "unit"),
              **dict.fromkeys(repo.workspaces, "workspace")}

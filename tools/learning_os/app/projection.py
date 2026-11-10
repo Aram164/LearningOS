@@ -15,14 +15,12 @@ from learning_os.derive.projection import (
     write_outputs,
 )
 from learning_os.derive.projection.common import git_state as _git_state
-from learning_os.domain.snapshot import Repo
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.fingerprint import (
     canonical_fingerprint,
     seed_source_fingerprint,
 )
 from learning_os.store.loader import load_repo
-from learning_os.store.loading import load_workspaces
 from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     bytes_sha256,

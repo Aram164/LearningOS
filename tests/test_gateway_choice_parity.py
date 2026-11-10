@@ -17,7 +17,6 @@ import json
 from pathlib import Path
 
 import pytest
-import yaml
 from gateway_helpers import approved_v2_call
 from jsonschema import Draft202012Validator
 

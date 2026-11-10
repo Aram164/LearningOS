@@ -7,7 +7,6 @@ from pathlib import Path
 from learning_os.domain.snapshot import Coordination, Repo, Workspace
 from learning_os.domain.snapshot import register as _register
 from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
-from learning_os.store.loading.yamlio import load_yaml as _load_yaml
 from learning_os.store.loading.yamlio import read_text as _read_text
 from learning_os.store.loading.yamlio import record_id as _record_id
 

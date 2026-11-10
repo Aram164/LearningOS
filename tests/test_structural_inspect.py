@@ -10,10 +10,8 @@ revision guards.
 from __future__ import annotations
 
 import json
-from types import SimpleNamespace
 
-import yaml
-from repo_builders import add_curriculum, add_manifest_fixtures, run_los, write_yaml
+from repo_builders import add_curriculum, add_manifest_fixtures, run_los
 
 from learning_os.app.handlers.platform import structural_payload
 
@@ -152,7 +150,6 @@ def test_cli_inspect_unknown_structural_id_names_the_search(mini_repo):
 
 
 def test_overnight_inspection_loads_only_workspaces(mini_repo, monkeypatch):
-    from repo_builders import write_yaml
 
     from learning_os.app import projection
     def forbidden(_root):

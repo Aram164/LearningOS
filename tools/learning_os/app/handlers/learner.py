@@ -7,8 +7,6 @@ import re
 import sys
 from pathlib import Path
 
-import yaml
-
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import (
@@ -20,9 +18,7 @@ from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import requirement_id_for
 from learning_os.derive.routes import route_with_identity
 from learning_os.domain.curriculum.stages import (
-    PATH_ACTIONS,
     STAGE_ACTIONS,
-    apply_path_action,
     apply_stage_action,
     progress_entry,
 )

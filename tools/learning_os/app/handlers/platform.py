@@ -20,7 +20,6 @@ from learning_os.app.backup_manifest import (
 )
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_structured_file as _read_structured_file
-from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register

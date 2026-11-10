@@ -17,6 +17,7 @@ import yaml
 from learning_os.app._plan_gate import coverage_audit_problems as _coverage_audit_problems
 from learning_os.app._plan_gate import enumerate_inventory_roots as _enumerate_inventory_roots
 from learning_os.app._plan_gate import inventory_row_problems as _inventory_row_problems
+from learning_os.app._plan_gate import is_source_plan_only as _is_source_plan_only
 from learning_os.app._plan_gate import (
     master_promotion_check_result as _master_promotion_check_result,
 )
@@ -28,7 +29,6 @@ from learning_os.app._plan_gate import (
 from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
 )
-from learning_os.app._plan_gate import is_source_plan_only as _is_source_plan_only
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app._plan_gate import staged_plan_repository
 from learning_os.app.admin.masters_planning import prepare_master_promotion
@@ -37,7 +37,6 @@ from learning_os.app.claim_admission import anchor_report, lineage_artifacts
 from learning_os.app.claim_admission import prepare_claim_admission as _phaseB_validate
 from learning_os.app.claim_admission import render_claim_lineage as _phaseB_ledger_text
 from learning_os.app.context import OpContext
-from learning_os.store.contracts import PLAN_TEMPLATE_VERSION
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
@@ -89,7 +88,7 @@ from learning_os.domain.suggest import not_found
 from learning_os.store.codec import dump_study_map as _dump_study_map
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.codec import render_frontmatter as _render_frontmatter
-from learning_os.store.contracts import current_template_problems
+from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.store.revisions import load_revisions

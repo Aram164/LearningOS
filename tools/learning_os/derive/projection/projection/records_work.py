@@ -6,7 +6,6 @@ from collections.abc import Callable
 
 from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
-from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.domain.snapshot import Repo
 
 Revision = Callable[..., int]

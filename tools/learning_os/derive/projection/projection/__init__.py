@@ -20,6 +20,7 @@ from learning_os.derive.projection.projection.grouping import (
 )
 from learning_os.derive.projection.projection.indexes import build_indexes
 from learning_os.derive.projection.projection.lifecycle import module_lifecycle
+from learning_os.derive.projection.projection.records_aliases import project_project_aliases
 from learning_os.derive.projection.projection.records_curriculum import (
     project_module_source_maps,
     project_modules,
@@ -37,7 +38,6 @@ from learning_os.derive.projection.projection.records_library import (
     project_collections,
     project_sources,
 )
-from learning_os.derive.projection.projection.records_aliases import project_project_aliases
 from learning_os.derive.projection.projection.records_work import (
     project_coordination,
     project_workspaces,
