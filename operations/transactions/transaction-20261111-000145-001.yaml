@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20261111-000145-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-11-11T00:01:45+01:00'
+snapshot_before: sha256:d39d9ddd138f6f57a75b49168e0772610013ca29bc3030add748d323662619a8
+snapshot_after: sha256:7bba7511dba938c9005ef568544f0cb85500f79a42479ba8bd010ab9200aadbe
+expected_revisions:
+  study-map-bs-processes: 2
+  unit-bs-processes: 2
+artifact_revisions:
+  study-map-bs-processes:
+    before: 2
+    after: 3
+  unit-bs-processes:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-processes/study-map.yaml
+  sha256_before: c8466a2e976138e2d5d4b2e991e159bfb16d1cec35adb170ea1215b1317fa367
+  sha256_after: b51008329a9a5d51c05ce57089314c1ee38dfafd0996358a38005c7dd3ce900c
+  created: false
+metadata:
+  data_roots_sha256: sha256:01f6af2ebe902139e245723b7fa0a421de47619f5d847a34302cfea3a7e760b2
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-fa7bb8bf825b49f29fcef37fba01d2e1
+  idempotency_key: reviewed-c0f43eddba9d4e2a8a3de3bf968b9eb6
+  intent_sha256: sha256:c71eb02edc1293a7ed9d564cc335626a3417b8825f7af6d3a3e87f5267f78b59
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c71eb02edc1293a7ed9d564cc335626a3417b8825f7af6d3a3e87f5267f78b59

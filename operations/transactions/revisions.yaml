@@ -458,9 +458,9 @@ revisions:
   study-map-amls-l11: 1
   study-map-amls-l12: 1
   study-map-amls-l13: 1
-  study-map-bs-cpu-scheduling: 2
+  study-map-bs-cpu-scheduling: 3
   study-map-bs-os-structure: 1
-  study-map-bs-processes: 2
+  study-map-bs-processes: 3
   study-map-icop-l01-linear-programming: 1
   study-map-job-engineering-tools-fluency: 3
   study-map-job-git-fluency: 3
@@ -544,9 +544,9 @@ revisions:
   unit-amls-l12: 1
   unit-amls-l13: 1
   unit-amls-theory: 1
-  unit-bs-cpu-scheduling: 2
+  unit-bs-cpu-scheduling: 3
   unit-bs-os-structure: 2
-  unit-bs-processes: 2
+  unit-bs-processes: 3
   unit-icop-l01-linear-programming: 3
   unit-job-engineering-tools-fluency: 3
   unit-job-git-fluency: 3

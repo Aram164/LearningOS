@@ -3964,6 +3964,18 @@ entries:
       unit-m2-sad-exam-prep: 11
     snapshot_before: sha256:aa0484092f156b1ed58e3d34a76b7807c62f2bc2b7ed41784d0c0f69d754f5fc
     snapshot_after: sha256:4fc193b479065fa758cc43584f1ab0f8a91455176934a775fde3442877829d23
+  reviewed-c0f43eddba9d4e2a8a3de3bf968b9eb6:
+    request_id: request-reviewed-fa7bb8bf825b49f29fcef37fba01d2e1
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:c71eb02edc1293a7ed9d564cc335626a3417b8825f7af6d3a3e87f5267f78b59
+    transaction_id: transaction-20261111-000145-001
+    receipt_path: operations/transactions/transaction-20261111-000145-001.yaml
+    revisions:
+      study-map-bs-processes: 3
+      unit-bs-processes: 3
+    snapshot_before: sha256:d39d9ddd138f6f57a75b49168e0772610013ca29bc3030add748d323662619a8
+    snapshot_after: sha256:7bba7511dba938c9005ef568544f0cb85500f79a42479ba8bd010ab9200aadbe
   reviewed-c80142f9685041afb69e8a2dd24a213a:
     request_id: request-reviewed-36ef366688eb47658de2823b37803b54
     capability: unit.plan.revise
@@ -4078,6 +4090,18 @@ entries:
       file:operations/transactions/lineage.yaml: 1
     snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
     snapshot_after: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+  reviewed-f80432826aa243368c6b67d43e987bd0:
+    request_id: request-reviewed-e96aa2709aab4ea380004a0ec813685e
+    capability: unit.plan.revise
+    channel: operator
+    intent_sha256: sha256:e8c5f88abef32ce09066f00cb852d3dc9bf7f60346e4661c903146ee3d46cf46
+    transaction_id: transaction-20261111-000218-001
+    receipt_path: operations/transactions/transaction-20261111-000218-001.yaml
+    revisions:
+      study-map-bs-cpu-scheduling: 3
+      unit-bs-cpu-scheduling: 3
+    snapshot_before: sha256:7bba7511dba938c9005ef568544f0cb85500f79a42479ba8bd010ab9200aadbe
+    snapshot_after: sha256:7ce724d3b089526a3559d2bf942c6608cb4fd1adfa7a7ad648e6b5b5445ea8db
   reviewed-fbe11882ec2c40128d4389d93d0d9402:
     request_id: request-reviewed-ef7258191b9847e2b811718e03dba52c
     capability: unit.plan.revise
