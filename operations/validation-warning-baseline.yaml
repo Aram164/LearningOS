@@ -23,13 +23,10 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: 'G8 engineering-tools: bind retained resources, routes, angles and source dispositions'
-total: 499
-distinct_signatures: 46
+note: 'G8 git: bind retained resources to exact source routes and dispositions'
+total: 425
+distinct_signatures: 45
 signatures:
-- code: RESOURCE-SCOPE-NO-DISPOSITION
-  path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
-  count: 59
 - code: RESOURCE-SCOPE-NO-DISPOSITION
   path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
   count: 15
@@ -116,7 +113,7 @@ signatures:
   count: 1
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
-  count: 16
+  count: 1
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
   count: 8

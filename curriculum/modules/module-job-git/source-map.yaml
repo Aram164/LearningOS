@@ -5,14 +5,1891 @@ sources:
   role: reference
   why: Referenced by migrated learning plan job-track-git.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-job-git-s01-r03
+    unit_id: unit-job-git-fluency
+    title: Local material — git-handbook
+    format: website
+    angle: Connects the intention for snapshots, objects, the commit dag, and refs to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Four-region visual map. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: Four-region visual map; index.html
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
+  - id: route-job-git-s02-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — wt-inspect.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Pro Git Ch. 2.2 and the state-triangle pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git Ch. 2.2 and the state-triangle pages; wt-inspect.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-inspect.html
+  - id: route-job-git-s02-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — idx-review-diffs.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Pro Git Ch. 2.2 and the state-triangle pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git Ch. 2.2 and the state-triangle pages; idx-review-diffs.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-review-diffs.html
+  - id: route-job-git-s02-r04
+    unit_id: unit-job-git-fluency
+    title: Local material — idx-stage.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Stage/unstage/discard/rename pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Stage/unstage/discard/rename pages; idx-stage.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stage.html
+  - id: route-job-git-s02-r05
+    unit_id: unit-job-git-fluency
+    title: Local material — idx-unstage.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Stage/unstage/discard/rename pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Stage/unstage/discard/rename pages; idx-unstage.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-unstage.html
+  - id: route-job-git-s02-r06
+    unit_id: unit-job-git-fluency
+    title: Local material — wt-discard-unstaged.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Stage/unstage/discard/rename pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Stage/unstage/discard/rename pages; wt-discard-unstaged.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+  - id: route-job-git-s02-r07
+    unit_id: unit-job-git-fluency
+    title: Local material — wt-rename-delete.html
+    format: website
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Stage/unstage/discard/rename pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Stage/unstage/discard/rename pages; wt-rename-delete.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+  - id: route-job-git-s02-r12
+    unit_id: unit-job-git-fluency
+    title: Guided exercises — idx-review.html
+    format: exercise
+    angle: 'Connects the intention for the state triangle: working tree, index, and head to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Work every scenario in then predict and verify the three
+      versions of each path. The stage objective, resource wording, activity kind, triage, and order are
+      retained. This binding records where the existing activity belongs, rather than asserting a complete
+      comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Work every scenario in then predict and verify the three versions of each path; idx-review.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-review.html
+  - id: route-job-git-s03-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — idx-stage-hunks.html
+    format: website
+    angle: Connects the intention for intentional staging and atomic commits to WT/index/DAG/ref changes
+      and concrete commands.
+    angle_detail: 'Use the existing locator: Interactive staging and commit construction and Pro Git Chs.
+      2.2–2.3, 7.2. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2; idx-stage-hunks.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stage-hunks.html
+  - id: route-job-git-s03-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — local-commit.html
+    format: website
+    angle: Connects the intention for intentional staging and atomic commits to WT/index/DAG/ref changes
+      and concrete commands.
+    angle_detail: 'Use the existing locator: Interactive staging and commit construction and Pro Git Chs.
+      2.2–2.3, 7.2. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2; local-commit.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-commit.html
+  - id: route-job-git-s03-r04
+    unit_id: unit-job-git-fluency
+    title: Local material — local-amend.html
+    format: website
+    angle: Connects the intention for intentional staging and atomic commits to WT/index/DAG/ref changes
+      and concrete commands.
+    angle_detail: 'Use the existing locator: Amend as object replacement. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Amend as object replacement; local-amend.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-amend.html
+  - id: route-job-git-s04-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — local-branch-switch.html
+    format: website
+    angle: Connects the intention for branches, head, revision syntax, and detached work to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1; local-branch-switch.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-branch-switch.html
+  - id: route-job-git-s05-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — local-merge.html
+    format: website
+    angle: Connects the intention for merge bases, three-way merges, and conflicts to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8; local-merge.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-merge.html
+  - id: route-job-git-s05-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-conflicts.html
+    format: website
+    angle: Connects the intention for merge bases, three-way merges, and conflicts to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8; collab-conflicts.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-conflicts.html
+  - id: route-job-git-s06-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — local-rebase.html
+    format: website
+    angle: Connects the intention for rebase and deliberate history editing to WT/index/DAG/ref changes
+      and concrete commands.
+    angle_detail: 'Use the existing locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6; local-rebase.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-rebase.html
+  - id: route-job-git-s07-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — local-undo.html
+    format: website
+    angle: 'Connects the intention for undo and recovery: restore, reset, revert, and reflog to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7; local-undo.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-undo.html
+  - id: route-job-git-s07-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-safety.html
+    format: website
+    angle: 'Connects the intention for undo and recovery: restore, reset, revert, and reflog to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7; collab-safety.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-safety.html
+  - id: route-job-git-s07-r04
+    unit_id: unit-job-git-fluency
+    title: Local material — wt-discard-unstaged.html
+    format: website
+    angle: 'Connects the intention for undo and recovery: restore, reset, revert, and reflog to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Destructive working-tree boundary. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Destructive working-tree boundary; wt-discard-unstaged.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+  - id: route-job-git-s08-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-stash.html
+    format: website
+    angle: Connects the intention for stash and honest work-in-progress management to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Stash model and intent plus Pro Git Ch. 7.3. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: Stash model and intent plus Pro Git Ch. 7.3; collab-stash.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-stash.html
+  - id: route-job-git-s08-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — wt-stash.html
+    format: website
+    angle: Connects the intention for stash and honest work-in-progress management to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Stash model and intent plus Pro Git Ch. 7.3. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: Stash model and intent plus Pro Git Ch. 7.3; wt-stash.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-stash.html
+  - id: route-job-git-s09-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — remote-model.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5; remote-model.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-model.html
+  - id: route-job-git-s09-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — remote-fetch.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5; remote-fetch.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-fetch.html
+  - id: route-job-git-s09-r04
+    unit_id: unit-job-git-fluency
+    title: Local material — remote-clone.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Clone/init/connect/upstream intentions. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Clone/init/connect/upstream intentions; remote-clone.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-clone.html
+  - id: route-job-git-s09-r05
+    unit_id: unit-job-git-fluency
+    title: Local material — remote-clone-init.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Clone/init/connect/upstream intentions. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Clone/init/connect/upstream intentions; remote-clone-init.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-clone-init.html
+  - id: route-job-git-s09-r06
+    unit_id: unit-job-git-fluency
+    title: Local material — remote-add-origin.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Clone/init/connect/upstream intentions. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Clone/init/connect/upstream intentions; remote-add-origin.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-add-origin.html
+  - id: route-job-git-s09-r07
+    unit_id: unit-job-git-fluency
+    title: Local material — remote-upstream.html
+    format: website
+    angle: Connects the intention for remotes, remote-tracking refs, fetch, and upstreams to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Clone/init/connect/upstream intentions. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Clone/init/connect/upstream intentions; remote-upstream.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-upstream.html
+  - id: route-job-git-s10-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — remote-fetch-pull.html
+    format: website
+    angle: Connects the intention for pull, push, divergence, and force-with-lease to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5; remote-fetch-pull.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-fetch-pull.html
+  - id: route-job-git-s10-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — remote-pull.html
+    format: website
+    angle: Connects the intention for pull, push, divergence, and force-with-lease to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5; remote-pull.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-pull.html
+  - id: route-job-git-s10-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — remote-push.html
+    format: website
+    angle: Connects the intention for pull, push, divergence, and force-with-lease to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5; remote-push.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-push.html
+  - id: route-job-git-s11-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-pr.html
+    format: website
+    angle: Connects the intention for pull requests, forks, and reviewable contribution flow to WT/index/DAG/ref
+      changes and concrete commands.
+    angle_detail: 'Use the existing locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2; collab-pr.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-pr.html
+  - id: route-job-git-s12-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-tags.html
+    format: website
+    angle: 'Connects the intention for selective history: cherry-pick, tags, and releases to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1; collab-tags.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-tags.html
+  - id: route-job-git-s13-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-inspect.html
+    format: website
+    angle: 'Connects the intention for history archaeology: log, show, blame, search, and bisect to WT/index/DAG/ref
+      changes and concrete commands.'
+    angle_detail: 'Use the existing locator: History inspection intentions and Pro Git Chs. 2.3, 7.5,
+      7.10. The stage objective, resource wording, activity kind, triage, and order are retained. This
+      binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: History inspection intentions and Pro Git Chs. 2.3, 7.5, 7.10; collab-inspect.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-inspect.html
+  - id: route-job-git-s14-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-gitignore.html
+    format: website
+    angle: 'Connects the intention for repository hygiene: ignore rules, attributes, config, hooks, and
+      secrets to WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3; collab-gitignore.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-gitignore.html
+  - id: route-job-git-s14-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — collab-safety.html
+    format: website
+    angle: 'Connects the intention for repository hygiene: ignore rules, attributes, config, hooks, and
+      secrets to WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3; collab-safety.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-safety.html
+  - id: route-job-git-s14-r04
+    unit_id: unit-job-git-fluency
+    title: Local material — wt-ignore.html
+    format: website
+    angle: 'Connects the intention for repository hygiene: ignore rules, attributes, config, hooks, and
+      secrets to WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Working-tree ignore/stop-tracking/rename pages. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Working-tree ignore/stop-tracking/rename pages; wt-ignore.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-ignore.html
+  - id: route-job-git-s14-r05
+    unit_id: unit-job-git-fluency
+    title: Local material — idx-stop-tracking.html
+    format: website
+    angle: 'Connects the intention for repository hygiene: ignore rules, attributes, config, hooks, and
+      secrets to WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Working-tree ignore/stop-tracking/rename pages. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Working-tree ignore/stop-tracking/rename pages; idx-stop-tracking.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stop-tracking.html
+  - id: route-job-git-s14-r06
+    unit_id: unit-job-git-fluency
+    title: Local material — wt-rename-delete.html
+    format: website
+    angle: 'Connects the intention for repository hygiene: ignore rules, attributes, config, hooks, and
+      secrets to WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Working-tree ignore/stop-tracking/rename pages. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Working-tree ignore/stop-tracking/rename pages; wt-rename-delete.html
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+  - id: route-job-git-s16-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — git-handbook
+    format: website
+    angle: 'Connects the intention for capstone: two clones, one feature, one failure, full recovery to
+      WT/index/DAG/ref changes and concrete commands.'
+    angle_detail: 'Use the existing locator: Synthesize the local handbook and Pro Git. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Synthesize the local handbook and Pro Git; index.html
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
 - source_id: source-hu-git-intro
   role: reference
   why: Referenced by migrated learning plan job-track-git.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-job-git-s01-r06
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — HU-intro-to-git.pdf
+    format: course-material
+    angle: Gives a shorter workshop example for revisiting snapshots, objects, the commit dag, and refs
+      after the core material.
+    angle_detail: 'Use the existing locator: HU Berlin introductory telling. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: HU Berlin introductory telling; HU-intro-to-git.pdf
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+  - id: route-job-git-s02-r13
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — HU-intro-to-git.pdf
+    format: course-material
+    angle: 'Gives a shorter workshop example for revisiting the state triangle: working tree, index, and
+      head after the core material.'
+    angle_detail: 'Use the existing locator: HU working-tree and staging explanation. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: HU working-tree and staging explanation; HU-intro-to-git.pdf
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+  - id: route-job-git-s04-r06
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — HU-intro-to-git.pdf
+    format: course-material
+    angle: Gives a shorter workshop example for revisiting branches, head, revision syntax, and detached
+      work after the core material.
+    angle_detail: 'Use the existing locator: HU branch diagrams. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: HU branch diagrams; HU-intro-to-git.pdf
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+  - id: route-job-git-s09-r13
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — HU-intro-to-git.pdf
+    format: course-material
+    angle: Gives a shorter workshop example for revisiting remotes, remote-tracking refs, fetch, and upstreams
+      after the core material.
+    angle_detail: 'Use the existing locator: HU remote workflow. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: HU remote workflow; HU-intro-to-git.pdf
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+  - id: route-job-git-s16-r05
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — HU-intro-to-git.pdf
+    format: course-material
+    angle: 'Gives a shorter workshop example for revisiting capstone: two clones, one feature, one failure,
+      full recovery after the core material.'
+    angle_detail: 'Use the existing locator: Closed-book second telling from the HU handout. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Closed-book second telling from the HU handout; HU-intro-to-git.pdf
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
 - source_id: source-progit
   role: reference
   why: Referenced by migrated learning plan job-track-git.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-job-git-s01-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of snapshots, objects, the commit dag, and refs at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: MIT''s bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT's bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4; ProGit_2ed.pdf, PDF pp. 16-31,
+      pp. 69-75, pp. 421-430, pp. 435-437
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s01-r07
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Internals Git Objects
+    format: book
+    angle: Supplies the book treatment of snapshots, objects, the commit dag, and refs at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Git internals reference. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: Git internals reference; ProGit_2ed.pdf, PDF pp. 421-430
+    url: https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s02-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of the state triangle: working tree, index, and head at the already
+      assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Pro Git Ch. 2.2 and the state-triangle pages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git Ch. 2.2 and the state-triangle pages; ProGit_2ed.pdf, PDF pp. 34-45
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s03-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of intentional staging and atomic commits at the already assigned
+      chapter or section.
+    angle_detail: 'Use the existing locator: Interactive staging and commit construction and Pro Git Chs.
+      2.2–2.3, 7.2. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2; ProGit_2ed.pdf,
+      PDF pp. 34-45, pp. 46-51, pp. 232-235
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s03-r09
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Interactive Staging
+    format: book
+    angle: Supplies the book treatment of intentional staging and atomic commits at the already assigned
+      chapter or section.
+    angle_detail: 'Use the existing locator: Pro Git interactive staging details. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git interactive staging details; ProGit_2ed.pdf, PDF pp. 232-235
+    url: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s04-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of branches, head, revision syntax, and detached work at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1; ProGit_2ed.pdf, PDF pp. 69-75, pp.
+      85-87, pp. 224-231
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s04-r07
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Revision Selection
+    format: book
+    angle: Supplies the book treatment of branches, head, revision syntax, and detached work at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Pro Git revision selection. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Pro Git revision selection"; ProGit_2ed.pdf, PDF pp. 224-231'
+    url: https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s05-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of merge bases, three-way merges, and conflicts at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8; ProGit_2ed.pdf, PDF pp. 76-84, pp.
+      277-293
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s05-r08
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Advanced Merging
+    format: book
+    angle: Supplies the book treatment of merge bases, three-way merges, and conflicts at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Advanced merging. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: Advanced merging; ProGit_2ed.pdf, PDF pp. 277-293
+    url: https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s06-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of rebase and deliberate history editing at the already assigned
+      chapter or section.
+    angle_detail: 'Use the existing locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6; ProGit_2ed.pdf, PDF pp. 101-109, pp.
+      249-256
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s06-r06
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Rewriting History
+    format: book
+    angle: Supplies the book treatment of rebase and deliberate history editing at the already assigned
+      chapter or section.
+    angle_detail: 'Use the existing locator: Rewriting history. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: Rewriting history; ProGit_2ed.pdf, PDF pp. 249-256
+    url: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s07-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of undo and recovery: restore, reset, revert, and reflog at the
+      already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7; ProGit_2ed.pdf, PDF pp. 52-55, pp. 257-276,
+      pp. 446-452
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s07-r10
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — git-scm.com — Git Tools Reset Demystified
+    format: book
+    angle: 'Supplies the book treatment of undo and recovery: restore, reset, revert, and reflog at the
+      already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Reset demystified. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Reset demystified; ProGit_2ed.pdf, PDF pp. 257-276
+    url: https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s08-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of stash and honest work-in-progress management at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Stash model and intent plus Pro Git Ch. 7.3. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: Stash model and intent plus Pro Git Ch. 7.3; ProGit_2ed.pdf, PDF pp. 236-241
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s08-r07
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Stashing and Cleaning
+    format: book
+    angle: Supplies the book treatment of stash and honest work-in-progress management at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Stashing and cleaning. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: Stashing and cleaning; ProGit_2ed.pdf, PDF pp. 236-241
+    url: https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s09-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of remotes, remote-tracking refs, fetch, and upstreams at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5; ProGit_2ed.pdf, PDF pp. 56-60, pp.
+      91-100
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s10-r04
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of pull, push, divergence, and force-with-lease at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5; ProGit_2ed.pdf, PDF pp. 56-60, pp.
+      91-100
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s10-r08
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — git-scm.com — Git Branching Remote Branches
+    format: book
+    angle: Supplies the book treatment of pull, push, divergence, and force-with-lease at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Remote branches. The stage objective, resource wording, activity
+      kind, triage, and order are retained. This binding records where the existing activity belongs,
+      rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote branches; ProGit_2ed.pdf, PDF pp. 91-100
+    url: https://git-scm.com/book/en/v2/Git-Branching-Remote-Branches
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s10-r09
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git on the Server The Protocols
+    format: book
+    angle: Supplies the book treatment of pull, push, divergence, and force-with-lease at the already
+      assigned chapter or section.
+    angle_detail: 'Use the existing locator: Protocol and transfer details. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Protocol and transfer details; ProGit_2ed.pdf, PDF pp. 111-115
+    url: https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s11-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of pull requests, forks, and reviewable contribution flow at the
+      already assigned chapter or section.
+    angle_detail: 'Use the existing locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2; ProGit_2ed.pdf, PDF pp. 132-134, pp. 135-155,
+      pp. 177-196
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s12-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of selective history: cherry-pick, tags, and releases at the already
+      assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1; ProGit_2ed.pdf, PDF pp. 61-65, pp. 156-170,
+      pp. 224-231
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s12-r06
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — git-scm.com — Distributed Git Maintaining a Project
+    format: book
+    angle: 'Supplies the book treatment of selective history: cherry-pick, tags, and releases at the already
+      assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Distributed maintenance workflow. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Distributed maintenance workflow; ProGit_2ed.pdf, PDF pp. 156-170
+    url: https://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s13-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of history archaeology: log, show, blame, search, and bisect at
+      the already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: History inspection intentions and Pro Git Chs. 2.3, 7.5,
+      7.10. The stage objective, resource wording, activity kind, triage, and order are retained. This
+      binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: History inspection intentions and Pro Git Chs. 2.3, 7.5, 7.10; ProGit_2ed.pdf, PDF pp. 46-51,
+      pp. 245-248, pp. 301-303
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s13-r08
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Searching
+    format: book
+    angle: 'Supplies the book treatment of history archaeology: log, show, blame, search, and bisect at
+      the already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Pro Git searching and debugging. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git searching and debugging; ProGit_2ed.pdf, PDF pp. 245-248
+    url: https://git-scm.com/book/en/v2/Git-Tools-Searching
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s13-r09
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — Git Tools Debugging with Git
+    format: book
+    angle: 'Supplies the book treatment of history archaeology: log, show, blame, search, and bisect at
+      the already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Pro Git searching and debugging. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git searching and debugging; ProGit_2ed.pdf, PDF pp. 301-303
+    url: https://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s14-r03
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of repository hygiene: ignore rules, attributes, config, hooks,
+      and secrets at the already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3; ProGit_2ed.pdf, PDF pp. 342-351, pp. 360-362
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s15-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: Supplies the book treatment of worktrees, parallel tickets, and advanced repository layouts
+      at the already assigned chapter or section.
+    angle_detail: 'Use the existing locator: Pro Git submodules and replace Chs. 7.11, 7.13. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: Pro Git submodules and replace Chs. 7.11, 7.13; ProGit_2ed.pdf, PDF pp. 304-323, pp. 328-335
+    vault_path: material://source-progit/ProGit_2ed.pdf
+  - id: route-job-git-s16-r02
+    unit_id: unit-job-git-fluency
+    title: Required core — ProGit_2ed.pdf
+    format: book
+    angle: 'Supplies the book treatment of capstone: two clones, one feature, one failure, full recovery
+      at the already assigned chapter or section.'
+    angle_detail: 'Use the existing locator: Synthesize the local handbook and Pro Git. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Synthesize the local handbook and Pro Git; ProGit_2ed.pdf, PDF pp. 1-501
+    vault_path: material://source-progit/ProGit_2ed.pdf
+- source_id: source-mit-missing-semester
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 3
+  unit_routes:
+  - id: route-job-git-s01-r01
+    unit_id: unit-job-git-fluency
+    title: Required core — missing.csail.mit.edu — version control
+    format: course
+    angle: Connects snapshots, objects, the commit dag, and refs to MIT's bottom-up tooling model and
+      the assigned lecture activity.
+    angle_detail: 'Use the existing locator: MIT''s bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT's bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4; "Version Control and Git · Missing
+      Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/
+  - id: route-job-git-s01-r05
+    unit_id: unit-job-git-fluency
+    title: Guided exercises — missing.csail.mit.edu — version control
+    format: exercise
+    angle: Connects snapshots, objects, the commit dag, and refs to MIT's bottom-up tooling model and
+      the assigned lecture activity.
+    angle_detail: 'Use the existing locator: Complete the MIT lecture exercises and inspect objects in
+      the disposable repository from this stage. The stage objective, resource wording, activity kind,
+      triage, and order are retained. This binding records where the existing activity belongs, rather
+      than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: Complete the MIT lecture exercises and inspect objects in the disposable repository from
+      this stage; "Version Control and Git · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/#exercises
+  - id: route-job-git-s03-r08
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — beyond code
+    format: course
+    angle: Connects intentional staging and atomic commits to MIT's bottom-up tooling model and the assigned
+      lecture activity.
+    angle_detail: 'Use the existing locator: MIT guidance on durable commit messages. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT guidance on durable commit messages; "Beyond the Code · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/beyond-code/
+  - id: route-job-git-s05-r07
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — version control
+    format: course
+    angle: Connects merge bases, three-way merges, and conflicts to MIT's bottom-up tooling model and
+      the assigned lecture activity.
+    angle_detail: 'Use the existing locator: MIT''s DAG-first merge explanation. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT's DAG-first merge explanation; "Version Control and Git · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/
+  - id: route-job-git-s06-r05
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — version control
+    format: course
+    angle: Connects rebase and deliberate history editing to MIT's bottom-up tooling model and the assigned
+      lecture activity.
+    angle_detail: 'Use the existing locator: MIT advanced Git list. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT advanced Git list; "Version Control and Git · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/#advanced-git
+  - id: route-job-git-s11-r05
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — beyond code
+    format: course
+    angle: Connects pull requests, forks, and reviewable contribution flow to MIT's bottom-up tooling
+      model and the assigned lecture activity.
+    angle_detail: 'Use the existing locator: MIT contributing and maintainer-time guidance. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT contributing and maintainer-time guidance; "Beyond the Code · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/beyond-code/
+  - id: route-job-git-s13-r07
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — version control
+    format: course
+    angle: 'Connects history archaeology: log, show, blame, search, and bisect to MIT''s bottom-up tooling
+      model and the assigned lecture activity.'
+    angle_detail: 'Use the existing locator: MIT''s motivating history questions. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT's motivating history questions; "Version Control and Git · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/
+  - id: route-job-git-s15-r05
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — missing.csail.mit.edu — version control
+    format: course
+    angle: Connects worktrees, parallel tickets, and advanced repository layouts to MIT's bottom-up tooling
+      model and the assigned lecture activity.
+    angle_detail: 'Use the existing locator: MIT advanced Git worktree pointer. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: MIT advanced Git worktree pointer; "Version Control and Git · Missing Semester"
+    url: https://missing.csail.mit.edu/2026/version-control/#advanced-git
+- source_id: source-git-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 4
+  unit_routes:
+  - id: route-job-git-s01-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — gitglossary
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for snapshots, objects, the commit dag,
+      and refs.
+    angle_detail: 'Use the existing locator: Git glossary and object terminology. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: Git glossary and object terminology; "Git - gitglossary Documentation"
+    url: https://git-scm.com/docs/gitglossary
+  - id: route-job-git-s02-r08
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git status
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for the state triangle: working tree,
+      index, and head.'
+    angle_detail: 'Use the existing locator: Status, diff, restore, and clean. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Status, diff, restore, and clean; "Git - git-status Documentation"
+    url: https://git-scm.com/docs/git-status
+  - id: route-job-git-s02-r09
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git diff
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for the state triangle: working tree,
+      index, and head.'
+    angle_detail: 'Use the existing locator: Status, diff, restore, and clean. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Status, diff, restore, and clean; "Git - git-diff Documentation"
+    url: https://git-scm.com/docs/git-diff
+  - id: route-job-git-s02-r10
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git restore
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for the state triangle: working tree,
+      index, and head.'
+    angle_detail: 'Use the existing locator: Status, diff, restore, and clean. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Status, diff, restore, and clean; "Git - git-restore Documentation"
+    url: https://git-scm.com/docs/git-restore
+  - id: route-job-git-s02-r11
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git clean
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for the state triangle: working tree,
+      index, and head.'
+    angle_detail: 'Use the existing locator: Status, diff, restore, and clean. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: Status, diff, restore, and clean; "Git - git-clean Documentation"
+    url: https://git-scm.com/docs/git-clean
+  - id: route-job-git-s03-r05
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git add
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for intentional staging and atomic commits.
+    angle_detail: 'Use the existing locator: git-add and git-commit. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: git-add and git-commit; "Git - git-add Documentation"
+    url: https://git-scm.com/docs/git-add
+  - id: route-job-git-s03-r06
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git commit
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for intentional staging and atomic commits.
+    angle_detail: 'Use the existing locator: git-add and git-commit. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: git-add and git-commit; "Git - git-commit Documentation"
+    url: https://git-scm.com/docs/git-commit
+  - id: route-job-git-s04-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — gitrevisions
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for branches, head, revision syntax, and
+      detached work.
+    angle_detail: 'Use the existing locator: Revision selection and switching. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Revision selection and switching"'
+    url: https://git-scm.com/docs/gitrevisions
+  - id: route-job-git-s04-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git switch
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for branches, head, revision syntax, and
+      detached work.
+    angle_detail: 'Use the existing locator: Revision selection and switching. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Revision selection and switching"; "https://git-scm.com/docs/git-switch"'
+    url: https://git-scm.com/docs/git-switch
+  - id: route-job-git-s05-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git merge
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for merge bases, three-way merges, and
+      conflicts.
+    angle_detail: 'Use the existing locator: git-merge and unmerged index entries. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: git-merge and unmerged index entries; "Git - git-merge Documentation"
+    url: https://git-scm.com/docs/git-merge
+  - id: route-job-git-s05-r05
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git ls files
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for merge bases, three-way merges, and
+      conflicts.
+    angle_detail: 'Use the existing locator: git-merge and unmerged index entries. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: git-merge and unmerged index entries; "Git - git-ls-files Documentation"
+    url: https://git-scm.com/docs/git-ls-files
+  - id: route-job-git-s06-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git rebase
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for rebase and deliberate history editing.
+    angle_detail: 'Use the existing locator: git-rebase including interactive commands and --rebase-merges.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: git-rebase including interactive commands and --rebase-merges; "Git - git-rebase Documentation"
+    url: https://git-scm.com/docs/git-rebase
+  - id: route-job-git-s07-r05
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git restore
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for undo and recovery: restore, reset,
+      revert, and reflog.'
+    angle_detail: 'Use the existing locator: Restore, reset, revert, and reflog. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Restore, reset, revert, and reflog; "Git - git-restore Documentation"
+    url: https://git-scm.com/docs/git-restore
+  - id: route-job-git-s07-r06
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git reset
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for undo and recovery: restore, reset,
+      revert, and reflog.'
+    angle_detail: 'Use the existing locator: Restore, reset, revert, and reflog. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Restore, reset, revert, and reflog; "Git - git-reset Documentation"
+    url: https://git-scm.com/docs/git-reset
+  - id: route-job-git-s07-r07
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git revert
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for undo and recovery: restore, reset,
+      revert, and reflog.'
+    angle_detail: 'Use the existing locator: Restore, reset, revert, and reflog. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Restore, reset, revert, and reflog; "Git - git-revert Documentation"
+    url: https://git-scm.com/docs/git-revert
+  - id: route-job-git-s07-r08
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git reflog
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for undo and recovery: restore, reset,
+      revert, and reflog.'
+    angle_detail: 'Use the existing locator: Restore, reset, revert, and reflog. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Restore, reset, revert, and reflog; "Git - git-reflog Documentation"
+    url: https://git-scm.com/docs/git-reflog
+  - id: route-job-git-s08-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git stash
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for stash and honest work-in-progress
+      management.
+    angle_detail: 'Use the existing locator: git-stash object and option reference. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: git-stash object and option reference; "Git - git-stash Documentation"
+    url: https://git-scm.com/docs/git-stash
+  - id: route-job-git-s09-r08
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git remote
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for remotes, remote-tracking refs, fetch,
+      and upstreams.
+    angle_detail: 'Use the existing locator: Remote, clone, fetch, and refspec docs. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote, clone, fetch, and refspec docs; "Git - git-remote Documentation"
+    url: https://git-scm.com/docs/git-remote
+  - id: route-job-git-s09-r09
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git clone
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for remotes, remote-tracking refs, fetch,
+      and upstreams.
+    angle_detail: 'Use the existing locator: Remote, clone, fetch, and refspec docs. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote, clone, fetch, and refspec docs; "Git - git-clone Documentation"
+    url: https://git-scm.com/docs/git-clone
+  - id: route-job-git-s09-r10
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git fetch
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for remotes, remote-tracking refs, fetch,
+      and upstreams.
+    angle_detail: 'Use the existing locator: Remote, clone, fetch, and refspec docs. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote, clone, fetch, and refspec docs; "Git - git-fetch Documentation"
+    url: https://git-scm.com/docs/git-fetch
+  - id: route-job-git-s09-r11
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git fetch
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for remotes, remote-tracking refs, fetch,
+      and upstreams.
+    angle_detail: 'Use the existing locator: Remote, clone, fetch, and refspec docs. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Remote, clone, fetch, and refspec docs; "Git - git-fetch Documentation"; "Documentation/git-fetch.txt-ltrefspecgt"
+    url: https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt-ltrefspecgt
+  - id: route-job-git-s10-r05
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git pull
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for pull, push, divergence, and force-with-lease.
+    angle_detail: 'Use the existing locator: Pull and push semantics. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Pull and push semantics; "Git - git-pull Documentation"
+    url: https://git-scm.com/docs/git-pull
+  - id: route-job-git-s10-r06
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git push
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for pull, push, divergence, and force-with-lease.
+    angle_detail: 'Use the existing locator: Pull and push semantics. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: Pull and push semantics; "Git - git-push Documentation"
+    url: https://git-scm.com/docs/git-push
+  - id: route-job-git-s12-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git cherry pick
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for selective history: cherry-pick, tags,
+      and releases.'
+    angle_detail: 'Use the existing locator: Cherry-pick and tag references. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Cherry-pick and tag references; "Git - git-cherry-pick Documentation"
+    url: https://git-scm.com/docs/git-cherry-pick
+  - id: route-job-git-s12-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git tag
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for selective history: cherry-pick, tags,
+      and releases.'
+    angle_detail: 'Use the existing locator: Cherry-pick and tag references. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Cherry-pick and tag references; "Git - git-tag Documentation"
+    url: https://git-scm.com/docs/git-tag
+  - id: route-job-git-s13-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git log
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for history archaeology: log, show, blame,
+      search, and bisect.'
+    angle_detail: 'Use the existing locator: log, blame, and bisect. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: log, blame, and bisect; "Git - git-log Documentation"
+    url: https://git-scm.com/docs/git-log
+  - id: route-job-git-s13-r04
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git blame
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for history archaeology: log, show, blame,
+      search, and bisect.'
+    angle_detail: 'Use the existing locator: log, blame, and bisect. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: log, blame, and bisect; "Git - git-blame Documentation"
+    url: https://git-scm.com/docs/git-blame
+  - id: route-job-git-s13-r05
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git bisect
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for history archaeology: log, show, blame,
+      search, and bisect.'
+    angle_detail: 'Use the existing locator: log, blame, and bisect. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: log, blame, and bisect; "Git - git-bisect Documentation"
+    url: https://git-scm.com/docs/git-bisect
+  - id: route-job-git-s14-r07
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — gitignore
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for repository hygiene: ignore rules,
+      attributes, config, hooks, and secrets.'
+    angle_detail: 'Use the existing locator: Ignore, attributes, configuration, and hooks. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore, attributes, configuration, and hooks; "Git - gitignore Documentation"
+    url: https://git-scm.com/docs/gitignore
+  - id: route-job-git-s14-r08
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — gitattributes
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for repository hygiene: ignore rules,
+      attributes, config, hooks, and secrets.'
+    angle_detail: 'Use the existing locator: Ignore, attributes, configuration, and hooks. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore, attributes, configuration, and hooks; "Git - gitattributes Documentation"
+    url: https://git-scm.com/docs/gitattributes
+  - id: route-job-git-s14-r09
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git config
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for repository hygiene: ignore rules,
+      attributes, config, hooks, and secrets.'
+    angle_detail: 'Use the existing locator: Ignore, attributes, configuration, and hooks. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore, attributes, configuration, and hooks; "Git - git-config Documentation"
+    url: https://git-scm.com/docs/git-config
+  - id: route-job-git-s14-r10
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — githooks
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for repository hygiene: ignore rules,
+      attributes, config, hooks, and secrets.'
+    angle_detail: 'Use the existing locator: Ignore, attributes, configuration, and hooks. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Ignore, attributes, configuration, and hooks; "Git - githooks Documentation"
+    url: https://git-scm.com/docs/githooks
+  - id: route-job-git-s15-r02
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — git worktree
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for worktrees, parallel tickets, and advanced
+      repository layouts.
+    angle_detail: 'Use the existing locator: git-worktree and submodule model. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: git-worktree and submodule model; "Git - git-worktree Documentation"
+    url: https://git-scm.com/docs/git-worktree
+  - id: route-job-git-s15-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — gitsubmodules
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for worktrees, parallel tickets, and advanced
+      repository layouts.
+    angle_detail: 'Use the existing locator: git-worktree and submodule model. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: git-worktree and submodule model; "Git - gitsubmodules Documentation"
+    url: https://git-scm.com/docs/gitsubmodules
+  - id: route-job-git-s15-r06
+    unit_id: unit-job-git-fluency
+    title: Optional depth — git-scm.com — partial clone
+    format: documentation
+    angle: Checks exact Git command behavior and options needed for worktrees, parallel tickets, and advanced
+      repository layouts.
+    angle_detail: 'Use the existing locator: Partial clone design. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: Partial clone design; "Git - partial-clone Documentation"
+    url: https://git-scm.com/docs/partial-clone
+  - id: route-job-git-s16-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — git-scm.com — docs
+    format: documentation
+    angle: 'Checks exact Git command behavior and options needed for capstone: two clones, one feature,
+      one failure, full recovery.'
+    angle_detail: 'Use the existing locator: Use the command references already assigned in Stages 1–15.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-git-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Use the command references already assigned in Stages 1–15; "Git - Reference"
+    url: https://git-scm.com/docs
+- source_id: source-learn-git-branching
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 5
+  unit_routes:
+  - id: route-job-git-s04-r05
+    unit_id: unit-job-git-fluency
+    title: Guided exercises — learngitbranching.js.org
+    format: exercise
+    angle: Makes ref and commit movement visible while practicing branches, head, revision syntax, and
+      detached work.
+    angle_detail: 'Use the existing locator: Complete the branch, detached-HEAD, and revision-navigation
+      drills; then solve the visual branch exercises. The stage objective, resource wording, activity
+      kind, triage, and order are retained. This binding records where the existing activity belongs,
+      rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: Complete the branch, detached-HEAD, and revision-navigation drills; then solve the visual
+      branch exercises; "Learn Git Branching"
+    url: https://learngitbranching.js.org/
+  - id: route-job-git-s05-r06
+    unit_id: unit-job-git-fluency
+    title: Guided exercises — learngitbranching.js.org
+    format: exercise
+    angle: Makes ref and commit movement visible while practicing merge bases, three-way merges, and conflicts.
+    angle_detail: 'Use the existing locator: Create all four conflict forms in the stage and inspect base/ours/theirs;
+      also complete the merge section. The stage objective, resource wording, activity kind, triage, and
+      order are retained. This binding records where the existing activity belongs, rather than asserting
+      a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: Create all four conflict forms in the stage and inspect base/ours/theirs; also complete the
+      merge section; "Learn Git Branching"
+    url: https://learngitbranching.js.org/
+  - id: route-job-git-s06-r04
+    unit_id: unit-job-git-fluency
+    title: Guided exercises — learngitbranching.js.org
+    format: exercise
+    angle: Makes ref and commit movement visible while practicing rebase and deliberate history editing.
+    angle_detail: 'Use the existing locator: Perform the old-ID→new-ID drills and the rebase levels. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: Perform the old-ID→new-ID drills and the rebase levels; "Learn Git Branching"
+    url: https://learngitbranching.js.org/
+- source_id: source-github-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 6
+  unit_routes:
+  - id: route-job-git-s11-r03
+    unit_id: unit-job-git-fluency
+    title: Official reference — docs.github.com — collaborating with pull requests
+    format: documentation
+    angle: Checks the hosting workflow and collaboration rules used for pull requests, forks, and reviewable
+      contribution flow.
+    angle_detail: 'Use the existing locator: GitHub pull-request collaboration. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: GitHub pull-request collaboration; "Pull requests documentation - GitHub Docs"
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests
+  - id: route-job-git-s11-r06
+    unit_id: unit-job-git-fluency
+    title: Optional depth — docs.github.com — reviewing changes in pull requests
+    format: documentation
+    angle: Checks the hosting workflow and collaboration rules used for pull requests, forks, and reviewable
+      contribution flow.
+    angle_detail: 'Use the existing locator: GitHub review documentation. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: GitHub review documentation; "Review pull requests - GitHub Docs"
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
+  - id: route-job-git-s14-r12
+    unit_id: unit-job-git-fluency
+    title: Alternative explanation — docs.github.com — removing sensitive data from a repository
+    format: documentation
+    angle: 'Checks the hosting workflow and collaboration rules used for repository hygiene: ignore rules,
+      attributes, config, hooks, and secrets.'
+    angle_detail: 'Use the existing locator: GitHub secret-removal guidance. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-git-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: GitHub secret-removal guidance; "Removing sensitive data from a repository - GitHub Docs"
+    url: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository

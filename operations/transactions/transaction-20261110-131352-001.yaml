@@ -1,0 +1,38 @@
+schema_version: 2
+id: transaction-20261110-131352-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T13:13:52+01:00'
+snapshot_before: sha256:658d76ad06568170f5d9ccfb4241acb480112c92df307c9fc30d95869acd3809
+snapshot_after: sha256:620c37e95d3e99b18e334dec2dc381055e0bd4e9ca540f9004fd9946b2043920
+expected_revisions:
+  source-learn-git-branching: 0
+artifact_revisions:
+  source-learn-git-branching:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 8354eb7bd573d575d6a5f134f691bac38678e166487e58c2f5c132480cea0c07
+  sha256_after: 9ec4ba79ab1cfda666687e0ac50cc5176d0db1a74708933234a764a069b9d012
+  created: false
+metadata:
+  data_roots_sha256: sha256:702013d050ad86681dfd53bfd8953825acdfbd2e1f21e67a5f2fe1ec03e77dd5
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-git-intake-f57531d1
+  idempotency_key: git-intake
+  intent_sha256: sha256:aaac3b0103b46c624ab441a2ff79811531abb6a68775d3038d6da3db5322bbf2
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:aaac3b0103b46c624ab441a2ff79811531abb6a68775d3038d6da3db5322bbf2

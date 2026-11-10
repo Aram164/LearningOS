@@ -8963,6 +8963,3222 @@ records:
         idempotency_key: reviewed-ddcd56deffcc423fb5276f3d2a49412a
       reviewed_by: ''
       status: supported
+  covers:route-job-git-s01-r01:
+    claim_id: covers:route-job-git-s01-r01
+    claim_kind: route-covers
+    statement: route-job-git-s01-r01 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r01: sha256:8753ffea570b9c693556201473791dda3734ddce0d3a87552216ac244fb372a3
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT's bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4
+      - 'external:https://missing.csail.mit.edu/2026/version-control/ -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''MIT''s bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4''
+        in stage ''Snapshots, objects, the commit DAG, and refs''. Page begins ''Version
+        Control and Git · Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r02:
+    claim_id: covers:route-job-git-s01-r02
+    claim_kind: route-covers
+    statement: route-job-git-s01-r02 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r02: sha256:bb5dd0020a9ab11aca2cd6ab4510c75c822e0fb36dfe634eb83c76c74957c7a9
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p16 sha256:8e36c2381cdf9e1b3cb9c705b03d9a0983046e47f1c8510be58b705bc79218c9
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r03:
+    claim_id: covers:route-job-git-s01-r03
+    claim_kind: route-covers
+    statement: route-job-git-s01-r03 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/index.html: 1f7be7899586fc1dc6ead5eaec56d19d7d21c3ec3c81a12c90aeb114acc155cf
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r03: sha256:edfc3c96c518a065b560900d82a961b6920a56d33c6fb36e898d4c2cab513b33
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Four-region visual map
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/index.html --
+        trail: Opened and inspected this HTML intention page on 2026-11-10 for ''Snapshots,
+        objects, the commit DAG, and refs''. Observed heading/content:  Git Intentions
+        Handbook — Home Git Intentions Handbook Choose a region, then an intention.
+        Each intention page explains: Scenario → Intention → Data model chan. HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r04:
+    claim_id: covers:route-job-git-s01-r04
+    claim_kind: route-covers
+    statement: route-job-git-s01-r04 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r04: sha256:1b1fab6507d7672a13d5f8b13cbf92d06b0efb2b52ab52c22d5c26b058102c0e
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Git glossary and object terminology
+      - 'external:https://git-scm.com/docs/gitglossary -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Git glossary and object terminology'' in stage ''Snapshots, objects, the
+        commit DAG, and refs''. Page begins ''Git - gitglossary Documentation''; response
+        SHA-256 216bc0df7f50dc17d331ea2a9873daf65a08a2afddd797f73a300cc2e15f0129.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r05:
+    claim_id: covers:route-job-git-s01-r05
+    claim_kind: route-covers
+    statement: route-job-git-s01-r05 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r05: sha256:5b31fb1578b46ad35746560a3a4bf7fbff23fd39bbb3873b6608b777bd6a8852
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Complete the MIT lecture exercises and inspect objects in the
+        disposable repository from this stage
+      - 'external:https://missing.csail.mit.edu/2026/version-control/#exercises --
+        trail: Opened 2026-11-10; HTTP 200; inspected page content and headings for
+        the already assigned locator ''Complete the MIT lecture exercises and inspect
+        objects in the disposable repository from this stage'' in stage ''Snapshots,
+        objects, the commit DAG, and refs''. Page begins ''Version Control and Git
+        · Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r06:
+    claim_id: covers:route-job-git-s01-r06
+    claim_kind: route-covers
+    statement: route-job-git-s01-r06 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/hu-git-intro/HU-intro-to-git.pdf: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r06: sha256:9e3e6e6f2df406f1efe5db5e417baca77b4a2fefe7a6637e6504b0c6a16c08e3
+        source-material:source-hu-git-intro: sha256:7fba77f5ec395909c4345ebad54b2285523d3b42ff272f3aeb8b769a2be8be50
+      evidence:
+      - route-locator:HU Berlin introductory telling
+      - 'quote:material://source-hu-git-intro/HU-intro-to-git.pdf#p3 sha256:d92086537ac3313064c854ae2a44a51ca91afb12da22fe534ee9a924fe84ffed
+        -- trail: Inspected PDF page 3 against the existing chapter/workshop locator;
+        the route remains bounded to the existing stage assignment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s01-r07:
+    claim_id: covers:route-job-git-s01-r07
+    claim_kind: route-covers
+    statement: route-job-git-s01-r07 covers knowledge-job-git-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-01: sha256:c2207fc34195b624024a567281fe4b1ea142f13e2fb9fefba5a109ea27a8977e
+        route-content:route-job-git-s01-r07: sha256:bea783fc11c4b8d790948c16344a7ae2540017893fe87a9cc84620e97de56632
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p421 sha256:418a8b42bf57928f0c7b8e043e87c47d6391eff7c51a305deeb1a75475f8f4fd
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r01:
+    claim_id: covers:route-job-git-s02-r01
+    claim_kind: route-covers
+    statement: route-job-git-s02-r01 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r01: sha256:397655b31f1bd67c79b2eac37254ce392b34091ed5e016b637267dfd4d6d307c
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p34 sha256:c2fbd8b30449c015d79058fbfb2ee17dc06acdf7ff92521082d8cb31403222e2
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r02:
+    claim_id: covers:route-job-git-s02-r02
+    claim_kind: route-covers
+    statement: route-job-git-s02-r02 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-inspect.html: 98483754cbd3e05360a3b3bf3311d57f1d496e0bb4a6840e324b68b7d7de637e
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r02: sha256:57b8172743a5e1507aa88f6c1f8660479fec9cd4dba957768ea50938482e7ca0
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Pro Git Ch. 2.2 and the state-triangle pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-inspect.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Working
+        Tree — Inspect what changed Working Tree — Inspect what changed Home → WT
+        → Inspect what changed You want to answer: “What did I change?” and “What
+        wil. HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r03:
+    claim_id: covers:route-job-git-s02-r03
+    claim_kind: route-covers
+    statement: route-job-git-s02-r03 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-review-diffs.html: 7bcb624151777c79ab5626f4cc2e85a8701505dbc374fc3de783952d00433efc
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r03: sha256:d1887213c51e1bcc98975393a766b25f520d7e62b9d09494360995b7c3801a62
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Pro Git Ch. 2.2 and the state-triangle pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-review-diffs.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Index
+        (Staging) — Review diffs (WT vs IDX vs HEAD) Index (Staging) — Review diffs
+        (WT vs IDX vs HEAD) Home → Index → Review diffs (WT vs IDX vs HEAD) The “diff.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r04:
+    claim_id: covers:route-job-git-s02-r04
+    claim_kind: route-covers
+    statement: route-job-git-s02-r04 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage.html: 146b7e7bcfa8a2954fdb3ebfb6c2394f554ab2c4d8e40eaa140fa47b23536a2a
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r04: sha256:3d22d86d7faebdb684d11af901d3d14229f9b0ff8d91d63ead5b17bcae4980d7
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stage/unstage/discard/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Index
+        (Staging) — Stage changes (git add) Index (Staging) — Stage changes (git add)
+        Home → Index → Stage changes (git add) Index = the “next commit draft”. You.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r05:
+    claim_id: covers:route-job-git-s02-r05
+    claim_kind: route-covers
+    statement: route-job-git-s02-r05 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-unstage.html: a37cbcac61537a4481f3fd88b2db11dbb9812e7e34369900d7216d1f5d03c900
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r05: sha256:00faae6070471ede2f86fff1b9af772ff1b805a12496daf086125c53966ff8ea
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stage/unstage/discard/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-unstage.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Index
+        (Staging) — Unstage changes (restore --staged / reset) Index (Staging) — Unstage
+        changes (restore --staged / reset) Home → Index → Unstage changes (resto.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r06:
+    claim_id: covers:route-job-git-s02-r06
+    claim_kind: route-covers
+    statement: route-job-git-s02-r06 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html: 73d87116750527a272e04cb756cd4acc2564fcdf170a8db78c3e3e7c91a187e8
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r06: sha256:0de0d2a07869a132b3cc1d9e48dff94d5d8c212ef5f19714b30e103cc70ac63c
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stage/unstage/discard/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Working
+        Tree — Discard unstaged edits (git restore) Working Tree — Discard unstaged
+        edits (git restore) Home → WT → Discard unstaged edits (git restore) You ch.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r07:
+    claim_id: covers:route-job-git-s02-r07
+    claim_kind: route-covers
+    statement: route-job-git-s02-r07 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-rename-delete.html: 8da4cbd440947887149ffc28f69f8d47c466089e9bb313d43db6ef77fa8e71c7
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r07: sha256:98d800eb088f8d24bfc853ccaffb39d3aa9ed3a92c7e27d026a664dfde29379e
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stage/unstage/discard/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Working
+        Tree — Rename / delete (git mv / git rm) Working Tree — Rename / delete (git
+        mv / git rm) Home → WT → Rename / delete (git mv / git rm) These commands
+        . HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r08:
+    claim_id: covers:route-job-git-s02-r08
+    claim_kind: route-covers
+    statement: route-job-git-s02-r08 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r08: sha256:2eb8635fbb6d6edd5db429cc63cc483a45cb90ddaff761559e12e25c6f088ee6
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Status, diff, restore, and clean
+      - 'external:https://git-scm.com/docs/git-status -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Status, diff, restore, and clean'' in stage ''The state triangle: working
+        tree, index, and HEAD''. Page begins ''Git - git-status Documentation''; response
+        SHA-256 af1fbb494104a6bcbfb44d65f8d75b2dad850fc9e9b5d43501cc2a6c995f58f6.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r09:
+    claim_id: covers:route-job-git-s02-r09
+    claim_kind: route-covers
+    statement: route-job-git-s02-r09 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r09: sha256:654d2f566688f0abf46d4a644ce21251f0d1c303b9a04c7c9fd0208ca47a2b7f
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Status, diff, restore, and clean
+      - 'external:https://git-scm.com/docs/git-diff -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Status, diff, restore, and clean'' in stage ''The state triangle: working
+        tree, index, and HEAD''. Page begins ''Git - git-diff Documentation''; response
+        SHA-256 d7fb2aa01e52aca30ed9d62fe5302bab72c3a30fa17efc24caaabce6e97f2991.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r10:
+    claim_id: covers:route-job-git-s02-r10
+    claim_kind: route-covers
+    statement: route-job-git-s02-r10 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r10: sha256:6530d0e9655b83eb0e6e41c0a4fbb8b0e2d271ba263d6314bb4773a1ce8418b5
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Status, diff, restore, and clean
+      - 'external:https://git-scm.com/docs/git-restore -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Status, diff, restore, and clean'' in stage ''The state triangle: working
+        tree, index, and HEAD''. Page begins ''Git - git-restore Documentation'';
+        response SHA-256 a534c542b405c5f1d4f851254c12d938bb64b9ea7ac4d4d821edc600bcdc6c59.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r11:
+    claim_id: covers:route-job-git-s02-r11
+    claim_kind: route-covers
+    statement: route-job-git-s02-r11 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r11: sha256:e2b78dde5c169528037db850fa7398710a4ba5c513eb92c8028cfb3ac2b8055b
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Status, diff, restore, and clean
+      - 'external:https://git-scm.com/docs/git-clean -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Status, diff, restore, and clean'' in stage ''The state triangle: working
+        tree, index, and HEAD''. Page begins ''Git - git-clean Documentation''; response
+        SHA-256 c8b8761b4e44df18820ded27150ad241089dfb4372201711343fbfcfdc8ad6ea.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r12:
+    claim_id: covers:route-job-git-s02-r12
+    claim_kind: route-covers
+    statement: route-job-git-s02-r12 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-review.html: 3114b1bf351d33ff9575c8ab1a8fd53493b8787e71ef176f5cdfdbba9d824f76
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r12: sha256:e3b9ec790262ef9d9d6878728cd042e277844f5e3e710e0f515d83849c96fbe4
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Work every scenario in then predict and verify the three versions
+        of each path
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-review.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''The state triangle: working tree, index, and HEAD''. Observed heading/content:  Index
+        — Review staged vs unstaged (git diff) Index — Review staged vs unstaged (git
+        diff) Home → Index → Review staged vs unstaged (git diff) Reviewing is abou.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s02-r13:
+    claim_id: covers:route-job-git-s02-r13
+    claim_kind: route-covers
+    statement: route-job-git-s02-r13 covers knowledge-job-git-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/hu-git-intro/HU-intro-to-git.pdf: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c
+        node-content:knowledge-job-git-stage-02: sha256:8aafadb4520f4c83f7239730d6078246a8c5b846f15ae4603ff003eb04c1fe80
+        route-content:route-job-git-s02-r13: sha256:8457505f88d37cb2a3e5317c02dbe2042fb98f3a886d31bc61917942c311c007
+        source-material:source-hu-git-intro: sha256:7fba77f5ec395909c4345ebad54b2285523d3b42ff272f3aeb8b769a2be8be50
+      evidence:
+      - route-locator:HU working-tree and staging explanation
+      - 'quote:material://source-hu-git-intro/HU-intro-to-git.pdf#p10 sha256:69bdc4251407aab85cc48f8c3cb69519e70e0e218b1e2b8acf70900bc47cc697
+        -- trail: Inspected PDF page 10 against the existing chapter/workshop locator;
+        the route remains bounded to the existing stage assignment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r01:
+    claim_id: covers:route-job-git-s03-r01
+    claim_kind: route-covers
+    statement: route-job-git-s03-r01 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage-hunks.html: 34284ff2bd3d1f16ae2038f9a0ae1e5b18100d44ee253659cef19a43610ca20c
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r01: sha256:65587ba3796c2f5cb0e52f98d27ae5623455df24ce1e20c223eec6dc3d7028cd
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Interactive staging and commit construction and Pro Git Chs.
+        2.2–2.3, 7.2
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage-hunks.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Intentional staging and atomic commits''. Observed heading/content:  Index
+        (Staging) — Stage hunks (git add -p) Index (Staging) — Stage hunks (git add
+        -p) Home → Index → Stage hunks (git add -p) Interactive staging: turn messy
+        “. HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r02:
+    claim_id: covers:route-job-git-s03-r02
+    claim_kind: route-covers
+    statement: route-job-git-s03-r02 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-commit.html: 945ae3d07a7a32964fd65feca28f80c0684d07a919d5f453c8eb262ab967b7c9
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r02: sha256:4b31bd93b1a33802e8745ffdf5e7f6f1258532ba48000aa2f22c42a9b60b0df5
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Interactive staging and commit construction and Pro Git Chs.
+        2.2–2.3, 7.2
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-commit.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Intentional staging and atomic commits''. Observed heading/content:  Local
+        Repo — Create commits (git commit) Local Repo — Create commits (git commit)
+        Home → Local Repo → Create commits (git commit) A commit is an immutable snap.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r03:
+    claim_id: covers:route-job-git-s03-r03
+    claim_kind: route-covers
+    statement: route-job-git-s03-r03 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r03: sha256:fecab2d214a06ccdb20c4a8e4679472964eaaaf230a65f5673a7a46ec247b9e7
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p34 sha256:c2fbd8b30449c015d79058fbfb2ee17dc06acdf7ff92521082d8cb31403222e2
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r04:
+    claim_id: covers:route-job-git-s03-r04
+    claim_kind: route-covers
+    statement: route-job-git-s03-r04 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-amend.html: 5cd193219ee21cafdeb672607c438cc8ef00a6dc9cd370afbde09ccb920f0e61
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r04: sha256:5f11e06e51566dfe7afc1ab391fedeb9b0c47daef298d23e0eab9ad0dbfed52f
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Amend as object replacement
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-amend.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Intentional staging and atomic commits''. Observed heading/content:  Local
+        Repo — Fix last commit (commit --amend) Local Repo — Fix last commit (commit
+        --amend) Home → Local Repo → Fix last commit (commit --amend) --amend means:.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r05:
+    claim_id: covers:route-job-git-s03-r05
+    claim_kind: route-covers
+    statement: route-job-git-s03-r05 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r05: sha256:83718b25997b931a44f141448ea28aacb318d21d5e735588c2ef026e894023ad
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-add and git-commit
+      - 'external:https://git-scm.com/docs/git-add -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''git-add and git-commit'' in stage ''Intentional staging and atomic commits''.
+        Page begins ''Git - git-add Documentation''; response SHA-256 6c80dc3ccd41718b77749cfba5aa917434c2893ca551bdc283b7fdacf85f63ad.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r06:
+    claim_id: covers:route-job-git-s03-r06
+    claim_kind: route-covers
+    statement: route-job-git-s03-r06 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r06: sha256:a578e9bc3b5e5db737998991a14a621d62b2a4989bd83476e986357fc6537c1d
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-add and git-commit
+      - 'external:https://git-scm.com/docs/git-commit -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-add and git-commit'' in stage ''Intentional staging and atomic commits''.
+        Page begins ''Git - git-commit Documentation''; response SHA-256 595cd590193b960fa06b38fceab390a2f2de0c953b99560a06a60905b1dd56ee.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r08:
+    claim_id: covers:route-job-git-s03-r08
+    claim_kind: route-covers
+    statement: route-job-git-s03-r08 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r08: sha256:e35f09ebe65276e100ec66887234f6a57c9c42c630e5f4ac368dfdf8e90cbd7d
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT guidance on durable commit messages
+      - 'external:https://missing.csail.mit.edu/2026/beyond-code/ -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''MIT guidance on durable commit messages'' in stage ''Intentional
+        staging and atomic commits''. Page begins ''Beyond the Code · Missing Semester'';
+        response SHA-256 8564833c39148e7a6b125256dcda9df9398c972a9ba0e02d9acd342667a01eb5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s03-r09:
+    claim_id: covers:route-job-git-s03-r09
+    claim_kind: route-covers
+    statement: route-job-git-s03-r09 covers knowledge-job-git-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-03: sha256:37339c4e8a623eff70aeacbe6e347e1d5df9afea58d76cf19caed6fbfc4d463f
+        route-content:route-job-git-s03-r09: sha256:9d1d3313faa208601145a84b75e8c0cbf0b8cce2df956a54ae61ca4dc590e9df
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p232 sha256:6b4878a9789d5a00761b15133beeb46267164f20cdf446384b8d3e52a3a47833
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r01:
+    claim_id: covers:route-job-git-s04-r01
+    claim_kind: route-covers
+    statement: route-job-git-s04-r01 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-branch-switch.html: d608ab01a25ae14fd4a5483424bdc77dcfdefda9e9d1641306fa458cdf7227b1
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r01: sha256:bffd9302806ef2b7a3d582ccfbcf4821ce5fc96dce8dde3cd91e9da1722dadcb
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-branch-switch.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Branches, HEAD, revision syntax, and detached work''. Observed heading/content:  Local
+        Repo — Branch & switch (HEAD attached vs detached) Local Repo — Branch & switch
+        (HEAD attached vs detached) Home → Local Repo → Branch & switch (HEAD att.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r02:
+    claim_id: covers:route-job-git-s04-r02
+    claim_kind: route-covers
+    statement: route-job-git-s04-r02 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r02: sha256:c3e9fc6c1c10979e63794c2c72f2802921ec36bfc0b707c657b167b2351b426f
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p69 sha256:360975ecdf4fa9acca4a066efebc89fd7db707039d4ac8a5e2ab6386cdc9ec04
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r03:
+    claim_id: covers:route-job-git-s04-r03
+    claim_kind: route-covers
+    statement: route-job-git-s04-r03 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r03: sha256:d5b5d0863326e311db4d9ea3ae08caef0777e3144717542d0796fa278d856b83
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Revision selection and switching
+      - 'external:https://git-scm.com/docs/gitrevisions -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Revision selection and switching'' in stage ''Branches, HEAD, revision syntax,
+        and detached work''. Page begins ''Git - gitrevisions Documentation''; response
+        SHA-256 60bfaca3907710bdedcfaab0c6d82721b9b317a86ecc11d60d07027bf41a1a54.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r04:
+    claim_id: covers:route-job-git-s04-r04
+    claim_kind: route-covers
+    statement: route-job-git-s04-r04 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r04: sha256:14e19bc58afd79eef9eb16adc6fe6b94b569fd856e2631050a78750df63ed1ea
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Revision selection and switching
+      - 'external:https://git-scm.com/docs/git-switch -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Revision selection and switching'' in stage ''Branches, HEAD, revision syntax,
+        and detached work''. Page begins ''Git - git-switch Documentation''; response
+        SHA-256 7ae3de20811176cf87081d4055e42500e2bbb6dfd65ab5f7ff918f7347268f1a.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r05:
+    claim_id: covers:route-job-git-s04-r05
+    claim_kind: route-covers
+    statement: route-job-git-s04-r05 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r05: sha256:21281ca2d7f0885aa396f07571d21347f670b356dbf8dc987a2a820909d9dab6
+        source-material:source-learn-git-branching: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Complete the branch, detached-HEAD, and revision-navigation
+        drills; then solve the visual branch exercises
+      - 'external:https://learngitbranching.js.org/ -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Complete the branch, detached-HEAD, and revision-navigation drills; then
+        solve the visual branch exercises'' in stage ''Branches, HEAD, revision syntax,
+        and detached work''. Page begins ''Learn Git Branching''; response SHA-256
+        bfcdccc1fe5101b67ef3577ef1a2e229c045839b4f68c95928af368e9154df57. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r06:
+    claim_id: covers:route-job-git-s04-r06
+    claim_kind: route-covers
+    statement: route-job-git-s04-r06 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/hu-git-intro/HU-intro-to-git.pdf: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r06: sha256:637433a216330d4eed9c239f0abbc692efc2e777e80b3f73bf31bf53f1467c8e
+        source-material:source-hu-git-intro: sha256:7fba77f5ec395909c4345ebad54b2285523d3b42ff272f3aeb8b769a2be8be50
+      evidence:
+      - route-locator:HU branch diagrams
+      - 'quote:material://source-hu-git-intro/HU-intro-to-git.pdf#p11 sha256:3855d5ec0887187413c1a7b2014292450eef0bfcd2271f6e835546d956201ebb
+        -- trail: Inspected PDF page 11 against the existing chapter/workshop locator;
+        the route remains bounded to the existing stage assignment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s04-r07:
+    claim_id: covers:route-job-git-s04-r07
+    claim_kind: route-covers
+    statement: route-job-git-s04-r07 covers knowledge-job-git-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-04: sha256:6f0d00e3bc38bd19bba29b59f1e1d5810efee448edb658e52b52aff34d8eb36c
+        route-content:route-job-git-s04-r07: sha256:6d73fd5c9f60fb36a424ce27f2f9edcb60553e5f5602f25c401ef77d88202bb1
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p224 sha256:9cb06b082b4caa9839cca610452991325011cc40f8ba9fe3dc1370a57db3f075
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r01:
+    claim_id: covers:route-job-git-s05-r01
+    claim_kind: route-covers
+    statement: route-job-git-s05-r01 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-merge.html: a234732b3a3d9a70b3547da408af4761e2cab1b288c61129c8d0ddfe70d75671
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r01: sha256:d0094591ea43fc0aee56b4da5d8471d51202adaee6b144bb8c75da1fa7ffbd93
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-merge.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Merge bases, three-way merges, and conflicts''. Observed heading/content:  Local
+        Repo — Merge branches (fast-forward vs merge commit) Local Repo — Merge branches
+        (fast-forward vs merge commit) Home → Local Repo → Merge branches (fast-.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r02:
+    claim_id: covers:route-job-git-s05-r02
+    claim_kind: route-covers
+    statement: route-job-git-s05-r02 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-conflicts.html: 900857dbe0abdfaf2f6a60d65d45b58c3e48e01a996bc5a4bdaac50a0918542b
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r02: sha256:e0f65f4580776e693c3665c2e5e76e7dc2583e7560faae17350fdd4aff8acde5
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-conflicts.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Merge bases, three-way merges, and conflicts''. Observed heading/content:  Collaboration
+        & Safety — Resolve conflicts (merge/rebase conflicts) Collaboration & Safety
+        — Resolve conflicts (merge/rebase conflicts) Home → Collaboration & . HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r03:
+    claim_id: covers:route-job-git-s05-r03
+    claim_kind: route-covers
+    statement: route-job-git-s05-r03 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r03: sha256:5cc743568a581f17ec78f420098143ad0aeb36e3c52742c44f4dc2ae7f71c396
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p76 sha256:c7a4b78a3b6600970742b666de42a71ac94069b05b76917ede1bf12005fb29f7
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r04:
+    claim_id: covers:route-job-git-s05-r04
+    claim_kind: route-covers
+    statement: route-job-git-s05-r04 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r04: sha256:6b0170cd29fd7e80bf0239f688aa1e46b22f55c7278a052694f62126e4fd2786
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-merge and unmerged index entries
+      - 'external:https://git-scm.com/docs/git-merge -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-merge and unmerged index entries'' in stage ''Merge bases, three-way
+        merges, and conflicts''. Page begins ''Git - git-merge Documentation''; response
+        SHA-256 b55a3b78ae297f815ad23966dcd97c14bad3c98ad7a16677f60a176b9ae04cfa.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r05:
+    claim_id: covers:route-job-git-s05-r05
+    claim_kind: route-covers
+    statement: route-job-git-s05-r05 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r05: sha256:8770056512970a715aaac064ba0a84a8721fa4c83c17014ec6b83fd1343c3ecb
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-merge and unmerged index entries
+      - 'external:https://git-scm.com/docs/git-ls-files -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-merge and unmerged index entries'' in stage ''Merge bases, three-way
+        merges, and conflicts''. Page begins ''Git - git-ls-files Documentation'';
+        response SHA-256 39bbbe6af002214f7ee3075ab4915fc7af05943869a469b89e3393c8cd6f5f08.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r06:
+    claim_id: covers:route-job-git-s05-r06
+    claim_kind: route-covers
+    statement: route-job-git-s05-r06 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r06: sha256:ec4d8fd7dd75664e500b298fe041e392057bf9ea07e3af525060c08016e171b2
+        source-material:source-learn-git-branching: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Create all four conflict forms in the stage and inspect base/ours/theirs;
+        also complete the merge section
+      - 'external:https://learngitbranching.js.org/ -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Create all four conflict forms in the stage and inspect base/ours/theirs;
+        also complete the merge section'' in stage ''Merge bases, three-way merges,
+        and conflicts''. Page begins ''Learn Git Branching''; response SHA-256 bfcdccc1fe5101b67ef3577ef1a2e229c045839b4f68c95928af368e9154df57.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r07:
+    claim_id: covers:route-job-git-s05-r07
+    claim_kind: route-covers
+    statement: route-job-git-s05-r07 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r07: sha256:33d766543527ba3bd58bcb269865126c04d90b6acf59b57fc48c218901ddb2f0
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT's DAG-first merge explanation
+      - 'external:https://missing.csail.mit.edu/2026/version-control/ -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''MIT''s DAG-first merge explanation'' in stage ''Merge bases,
+        three-way merges, and conflicts''. Page begins ''Version Control and Git ·
+        Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s05-r08:
+    claim_id: covers:route-job-git-s05-r08
+    claim_kind: route-covers
+    statement: route-job-git-s05-r08 covers knowledge-job-git-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-05: sha256:cfeca816e9e2d10c1274200cf17c55096710caef0088aff748a2b530c1898d66
+        route-content:route-job-git-s05-r08: sha256:9d7ccf00115d601fb2766480f345f26a3d1ed4be9e0ccc2395557041fafd3978
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p277 sha256:d53b024427eeef563902ff3ab0bd4ad2069467261f08e6eb8543bc31cf93bf9c
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r01:
+    claim_id: covers:route-job-git-s06-r01
+    claim_kind: route-covers
+    statement: route-job-git-s06-r01 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-rebase.html: 13a5fab3a2c52a46b72278d91d518dc8a8011466c57e8c03f278b6923c6500cd
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r01: sha256:45d6fefdcce24cb7d4f023cc1349a944e2f0dc6316dc92d60f28c9b14b7141b5
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Rebase and history editing plus Pro Git Chs. 3.6, 7.6
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-rebase.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Rebase and deliberate history editing''. Observed heading/content:  Local
+        Repo — Rebase (copy commits onto a new base) Local Repo — Rebase (copy commits
+        onto a new base) Home → Local Repo → Rebase (copy commits onto a new base).
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r02:
+    claim_id: covers:route-job-git-s06-r02
+    claim_kind: route-covers
+    statement: route-job-git-s06-r02 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r02: sha256:0335c0d29a3b89ddd9cdda52d024ff518527237b70810e4ed2b90e9c5bbc8157
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p101 sha256:d42058f3273580263549d48cdff514b8a4782bde905b85552efcddf5051bdcce
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r03:
+    claim_id: covers:route-job-git-s06-r03
+    claim_kind: route-covers
+    statement: route-job-git-s06-r03 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r03: sha256:f4b6c39c7e06803bd93e7e1325fcc3cd33d81e5594c0b98adc131bb9b2c3791d
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-rebase including interactive commands and --rebase-merges
+      - 'external:https://git-scm.com/docs/git-rebase -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-rebase including interactive commands and --rebase-merges'' in stage
+        ''Rebase and deliberate history editing''. Page begins ''Git - git-rebase
+        Documentation''; response SHA-256 f94d86be0e4142f4b0671bdf5acf26ac72c581826145336885492652928b390d.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r04:
+    claim_id: covers:route-job-git-s06-r04
+    claim_kind: route-covers
+    statement: route-job-git-s06-r04 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r04: sha256:d2b237ba6d7f000d9fb7e49294f5bda216fca69061d3464b36df2dd2f6efa432
+        source-material:source-learn-git-branching: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Perform the old-ID→new-ID drills and the rebase levels
+      - 'external:https://learngitbranching.js.org/ -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Perform the old-ID→new-ID drills and the rebase levels'' in stage ''Rebase
+        and deliberate history editing''. Page begins ''Learn Git Branching''; response
+        SHA-256 bfcdccc1fe5101b67ef3577ef1a2e229c045839b4f68c95928af368e9154df57.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r05:
+    claim_id: covers:route-job-git-s06-r05
+    claim_kind: route-covers
+    statement: route-job-git-s06-r05 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r05: sha256:750c79642bc145040cb04165ee5dce9e1d83b1839b4aac19bd6c705c820f71f1
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT advanced Git list
+      - 'external:https://missing.csail.mit.edu/2026/version-control/#advanced-git
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''MIT advanced Git list'' in stage ''Rebase
+        and deliberate history editing''. Page begins ''Version Control and Git ·
+        Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s06-r06:
+    claim_id: covers:route-job-git-s06-r06
+    claim_kind: route-covers
+    statement: route-job-git-s06-r06 covers knowledge-job-git-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-06: sha256:b98d19f6082f75e2f6c2e657042077a272e96059a45137a319903292a28136e1
+        route-content:route-job-git-s06-r06: sha256:f01f75c8a79a6252c477226b5a177ac49bb9c4d57d96873043774a8ac6d60210
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p249 sha256:45fdf743e78b98fb218a9398a4af4265c9f19829a281f48f84fe6a6171731534
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r01:
+    claim_id: covers:route-job-git-s07-r01
+    claim_kind: route-covers
+    statement: route-job-git-s07-r01 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-undo.html: 9f658f9c5a1a080dcb6b7c5ddba16ec51e66f0139aecc2a7147cc369f501a71a
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r01: sha256:5d9cd9ab49f1af04aeb7dd3754af87a770525b4e20cea5c4122edfc861ac2374
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Recovery map and Pro Git Chs. 2.4, 7.7, 10.7
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/local-undo.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Undo and recovery: restore, reset, revert, and reflog''. Observed heading/content:  Local
+        Repo — Undo & recover (reset / revert / reflog) Local Repo — Undo & recover
+        (reset / revert / reflog) Home → Local Repo → Undo & recover (reset / revert
+        . HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r02:
+    claim_id: covers:route-job-git-s07-r02
+    claim_kind: route-covers
+    statement: route-job-git-s07-r02 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-safety.html: 5db171d504cbaf1cb85b896913da0ccbbebf72d525cbead3fb5700c9864011da
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r02: sha256:46f4a09e52e8b2e086504859b2f0ad2cd5a5d38544d8e011a157dec328e59af1
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Recovery map and Pro Git Chs. 2.4, 7.7, 10.7
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-safety.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Undo and recovery: restore, reset, revert, and reflog''. Observed heading/content:  Collaboration
+        & Safety — Safety rules (rewrite history, force push, secrets) Collaboration
+        & Safety — Safety rules (rewrite history, force push, secrets) Home . HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r03:
+    claim_id: covers:route-job-git-s07-r03
+    claim_kind: route-covers
+    statement: route-job-git-s07-r03 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r03: sha256:bde685477d6b7d8ebc6da787bc6a872659a9dbf81b7971fdf89fac8e4945ee2d
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p52 sha256:e13ce2f21cd81af9a05a46ec0c0896b421521e698129e8bf98b82ab0e4719079
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r04:
+    claim_id: covers:route-job-git-s07-r04
+    claim_kind: route-covers
+    statement: route-job-git-s07-r04 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html: 73d87116750527a272e04cb756cd4acc2564fcdf170a8db78c3e3e7c91a187e8
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r04: sha256:bbfb33ad09e6f2cc725509ab978b6194b8adb9fc010c4cc050ac050201956554
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Destructive working-tree boundary
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Undo and recovery: restore, reset, revert, and reflog''. Observed heading/content:  Working
+        Tree — Discard unstaged edits (git restore) Working Tree — Discard unstaged
+        edits (git restore) Home → WT → Discard unstaged edits (git restore) You ch.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r05:
+    claim_id: covers:route-job-git-s07-r05
+    claim_kind: route-covers
+    statement: route-job-git-s07-r05 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r05: sha256:aeead6a80f6d7bf06328807958ef971ec570e0be4cbf0c561682841f9614a27b
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Restore, reset, revert, and reflog
+      - 'external:https://git-scm.com/docs/git-restore -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Restore, reset, revert, and reflog'' in stage ''Undo and recovery: restore,
+        reset, revert, and reflog''. Page begins ''Git - git-restore Documentation'';
+        response SHA-256 a534c542b405c5f1d4f851254c12d938bb64b9ea7ac4d4d821edc600bcdc6c59.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r06:
+    claim_id: covers:route-job-git-s07-r06
+    claim_kind: route-covers
+    statement: route-job-git-s07-r06 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r06: sha256:788181c47d08eaa4befbc4f72f103cb49d025330641975c8381be43b820f94ec
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Restore, reset, revert, and reflog
+      - 'external:https://git-scm.com/docs/git-reset -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Restore, reset, revert, and reflog'' in stage ''Undo and recovery: restore,
+        reset, revert, and reflog''. Page begins ''Git - git-reset Documentation'';
+        response SHA-256 77c44c446f35e8b42cd3f9b4022328e1fe9ad77644f7c46c8fcc48e94d71ea53.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r07:
+    claim_id: covers:route-job-git-s07-r07
+    claim_kind: route-covers
+    statement: route-job-git-s07-r07 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r07: sha256:710aad17fb88dfa2d579a2064a1c025547b1bdc2e7ab2eb66a3a7da4a89f7005
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Restore, reset, revert, and reflog
+      - 'external:https://git-scm.com/docs/git-revert -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Restore, reset, revert, and reflog'' in stage ''Undo and recovery: restore,
+        reset, revert, and reflog''. Page begins ''Git - git-revert Documentation'';
+        response SHA-256 ba574fd9df721510d59dcc8c5d1a331b643c06374218daeeeb667cffe3af4b9f.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r08:
+    claim_id: covers:route-job-git-s07-r08
+    claim_kind: route-covers
+    statement: route-job-git-s07-r08 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r08: sha256:bfc712dddcbfa2c389b032994326b901d2afcb4f4c6997453135f5a8e6c06978
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Restore, reset, revert, and reflog
+      - 'external:https://git-scm.com/docs/git-reflog -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Restore, reset, revert, and reflog'' in stage ''Undo and recovery: restore,
+        reset, revert, and reflog''. Page begins ''Git - git-reflog Documentation'';
+        response SHA-256 23e265fe4ec8ff87640e64dad9658ea0527bd1dfe8e69235016fa0bb9d7562dd.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s07-r10:
+    claim_id: covers:route-job-git-s07-r10
+    claim_kind: route-covers
+    statement: route-job-git-s07-r10 covers knowledge-job-git-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-07: sha256:fc19c52205db78b933227aedb83b7ccdfc409c5488fc8bf2d1d028a1c13ef0d7
+        route-content:route-job-git-s07-r10: sha256:54cbf21a4a9df254cf47abbe66ad704f51c1ea2e24269150c634395eb3eb0390
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p257 sha256:5237881611d81ec493973d63eb90be3bcb0148736384db688a365a743f89b0dc
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s08-r01:
+    claim_id: covers:route-job-git-s08-r01
+    claim_kind: route-covers
+    statement: route-job-git-s08-r01 covers knowledge-job-git-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-stash.html: c0e624ac51ab0995a23bfdcc99a9dbcacd78ce9fa65f51ce1605aae89aec2bbe
+        node-content:knowledge-job-git-stage-08: sha256:d7b6aaa1aed0782fdcdae14bd4961fc95a80aa736771815d5679e6cad8559a28
+        route-content:route-job-git-s08-r01: sha256:0b4bad0c035132caac776d1b747f7b829866692853d950c33573b8b52486669f
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stash model and intent plus Pro Git Ch. 7.3
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-stash.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Stash and honest work-in-progress management''. Observed heading/content:  Collaboration
+        & Safety — Stash work (git stash) Collaboration & Safety — Stash work (git
+        stash) Home → Collaboration & Safety → Stash work (git stash) Stash is. HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s08-r02:
+    claim_id: covers:route-job-git-s08-r02
+    claim_kind: route-covers
+    statement: route-job-git-s08-r02 covers knowledge-job-git-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-stash.html: c36486e6aabf6290781c80ecfab9c561d097c56a8b985333293caad5d1ca7996
+        node-content:knowledge-job-git-stage-08: sha256:d7b6aaa1aed0782fdcdae14bd4961fc95a80aa736771815d5679e6cad8559a28
+        route-content:route-job-git-s08-r02: sha256:e31a7c5c289ab5344344766dc4aaa17d5a862e6b0ec93193c0ed190d879b9374
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Stash model and intent plus Pro Git Ch. 7.3
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-stash.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Stash and honest work-in-progress management''. Observed heading/content:  Working
+        Tree — Temporarily park work (stash) Working Tree — Temporarily park work
+        (stash) Home → WT → Temporarily park work (stash) You need a clean working
+        di. HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s08-r03:
+    claim_id: covers:route-job-git-s08-r03
+    claim_kind: route-covers
+    statement: route-job-git-s08-r03 covers knowledge-job-git-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-08: sha256:d7b6aaa1aed0782fdcdae14bd4961fc95a80aa736771815d5679e6cad8559a28
+        route-content:route-job-git-s08-r03: sha256:1bcca432d537e0f2b280dfda71356ffc46fc827eeb0cc8719cf5f6e168fba7a9
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p236 sha256:0a4a35bc70227ca34a7673e1eb4cfbcc60bc8d5899e20c99ecd17980cdfdc60c
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s08-r04:
+    claim_id: covers:route-job-git-s08-r04
+    claim_kind: route-covers
+    statement: route-job-git-s08-r04 covers knowledge-job-git-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-08: sha256:d7b6aaa1aed0782fdcdae14bd4961fc95a80aa736771815d5679e6cad8559a28
+        route-content:route-job-git-s08-r04: sha256:0f98d914c27d2cf15d8a48e7f9c0d4fbc62424c73b4ecb1f833b14975fe4b147
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-stash object and option reference
+      - 'external:https://git-scm.com/docs/git-stash -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-stash object and option reference'' in stage ''Stash and honest work-in-progress
+        management''. Page begins ''Git - git-stash Documentation''; response SHA-256
+        15e47e297247a37f5ef9276000fa863f82fff4ab854d4d556bd1dd4f9c2713c1. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s08-r07:
+    claim_id: covers:route-job-git-s08-r07
+    claim_kind: route-covers
+    statement: route-job-git-s08-r07 covers knowledge-job-git-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-08: sha256:d7b6aaa1aed0782fdcdae14bd4961fc95a80aa736771815d5679e6cad8559a28
+        route-content:route-job-git-s08-r07: sha256:d3f5f1b9670e2012f373a1538ca1f425ebda619e93c08ca7f73e43605b9e526b
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p236 sha256:0a4a35bc70227ca34a7673e1eb4cfbcc60bc8d5899e20c99ecd17980cdfdc60c
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r01:
+    claim_id: covers:route-job-git-s09-r01
+    claim_kind: route-covers
+    statement: route-job-git-s09-r01 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-model.html: c7c30d979846c7bd330b3f84207fc2eb13620b0fe34391197705e394f7ebbbcb
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r01: sha256:b495b5954d3a19b7073d305cec4eeee921b41e205aa7dc9bfdcc072a25f9d062
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Remote model and fetch flow and Pro Git Chs. 2.5, 3.5
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-model.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Mental model (origin/*, upstream, sync) Remote — Mental model (origin/*,
+        upstream, sync) Home → Remote → Mental model (origin/*, upstream, sync) Remot.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r02:
+    claim_id: covers:route-job-git-s09-r02
+    claim_kind: route-covers
+    statement: route-job-git-s09-r02 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch.html: 1bd9e9b7a678b9f601d39b2b8df2e9dace864844b15eadbea124d85002d1fcc7
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r02: sha256:b2fe8f522cfc6f0b76b23390dbe57466af67e4e232572c08adf3b3cc58fef495
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Remote model and fetch flow and Pro Git Chs. 2.5, 3.5
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Fetch updates (git fetch) Remote — Fetch updates (git fetch) Home → Remote
+        → Fetch updates (git fetch) Fetch downloads new objects and updates remote‑.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r03:
+    claim_id: covers:route-job-git-s09-r03
+    claim_kind: route-covers
+    statement: route-job-git-s09-r03 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r03: sha256:096bc147a2ce16ec68c994da40d8fe416a31c020a85094edeca9e9178937d2e6
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p56 sha256:50a6c1d4002228744eaf6196c9faff3bf59b1726ada77d753b6731ad33a14de2
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r04:
+    claim_id: covers:route-job-git-s09-r04
+    claim_kind: route-covers
+    statement: route-job-git-s09-r04 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone.html: 76ec1b72355929224305673698814ee7f2a1cadfc3bca32dca89a0ea33f42eed
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r04: sha256:938866bd9f590a142b5ba8367210d6cf50a9c93bafb138b423b8235bbe4fd5c1
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Clone/init/connect/upstream intentions
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Clone a repository Remote — Clone a repository Home → Remote → Clone a repository
+        Start from an existing remote repo. Scenario → Intention Scenario: A. HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r05:
+    claim_id: covers:route-job-git-s09-r05
+    claim_kind: route-covers
+    statement: route-job-git-s09-r05 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone-init.html: 86672c343fdc762ceba57400afb34952743e3f883e86defbd8d2e6e30ab9e800
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r05: sha256:d11ee36ed6377d4b3f2892e97b1d56ec0c03ff27a3d1dc3571d792868ba05198
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Clone/init/connect/upstream intentions
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone-init.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Get a repo / connect remote (clone, remote add) Remote — Get a repo / connect
+        remote (clone, remote add) Home → Remote → Get a repo / connect remote (.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r06:
+    claim_id: covers:route-job-git-s09-r06
+    claim_kind: route-covers
+    statement: route-job-git-s09-r06 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-add-origin.html: c40b29b262d341b10bf710a521adb34a3c594adbfa35fc84fd534d5542fa6907
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r06: sha256:a5762f1d27f1bd9deb54f95ba436c89b26bfea981f12d2e51404159ceeff8907
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Clone/init/connect/upstream intentions
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-add-origin.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Add origin to an existing repo Remote — Add origin to an existing repo Home
+        → Remote → Add origin to an existing repo When you start locally, you can
+        . HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r07:
+    claim_id: covers:route-job-git-s09-r07
+    claim_kind: route-covers
+    statement: route-job-git-s09-r07 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-upstream.html: 39880160bfe0c1489c974dcfa6e063bbc7f6ce4ec24ffce4c2f6fef0caff5c40
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r07: sha256:96c13aed499abea3c90543d5ab494167b9ff77a4853c31a2e0fd43ca7e095708
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Clone/init/connect/upstream intentions
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-upstream.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Remotes, remote-tracking refs, fetch, and upstreams''. Observed heading/content:  Remote
+        — Upstream tracking (push -u, branch -u) Remote — Upstream tracking (push
+        -u, branch -u) Home → Remote → Upstream tracking (push -u, branch -u) Upstream.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r08:
+    claim_id: covers:route-job-git-s09-r08
+    claim_kind: route-covers
+    statement: route-job-git-s09-r08 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r08: sha256:4255d6b0cdb344b4f49ddfb9e41facbb5166c84734787c21f2364f1062e4b4a4
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Remote, clone, fetch, and refspec docs
+      - 'external:https://git-scm.com/docs/git-remote -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Remote, clone, fetch, and refspec docs'' in stage ''Remotes, remote-tracking
+        refs, fetch, and upstreams''. Page begins ''Git - git-remote Documentation'';
+        response SHA-256 ea97eda5a77a610b15360f77747bfa6c944ace9b0e576b096839bf8e914ec70c.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r09:
+    claim_id: covers:route-job-git-s09-r09
+    claim_kind: route-covers
+    statement: route-job-git-s09-r09 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r09: sha256:7f546245d2817d3d412f86e87edd8828f3d922ce3d19ec706e6da163bd53e6b9
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Remote, clone, fetch, and refspec docs
+      - 'external:https://git-scm.com/docs/git-clone -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Remote, clone, fetch, and refspec docs'' in stage ''Remotes, remote-tracking
+        refs, fetch, and upstreams''. Page begins ''Git - git-clone Documentation'';
+        response SHA-256 bf47cd00dd014b4159af5b4ceb2cbccd3bdb66d6f7e0f01c1562c419e0fa1807.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r10:
+    claim_id: covers:route-job-git-s09-r10
+    claim_kind: route-covers
+    statement: route-job-git-s09-r10 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r10: sha256:6ab160b247994080a8c675a63d08977006578d3048bf18ea59337b75cd9fd4dd
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Remote, clone, fetch, and refspec docs
+      - 'external:https://git-scm.com/docs/git-fetch -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Remote, clone, fetch, and refspec docs'' in stage ''Remotes, remote-tracking
+        refs, fetch, and upstreams''. Page begins ''Git - git-fetch Documentation'';
+        response SHA-256 908ec0712ef80b65df0d4abd57503c975a42af6b50d5970aeca93ef134e65a66.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r11:
+    claim_id: covers:route-job-git-s09-r11
+    claim_kind: route-covers
+    statement: route-job-git-s09-r11 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r11: sha256:247b3b46729d44aa7b97006541ca003246b369e546870c5dfc1fabdfa95c0b0a
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Remote, clone, fetch, and refspec docs
+      - 'external:https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt-ltrefspecgt
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''Remote, clone, fetch, and refspec docs''
+        in stage ''Remotes, remote-tracking refs, fetch, and upstreams''. Page begins
+        ''Git - git-fetch Documentation''; response SHA-256 908ec0712ef80b65df0d4abd57503c975a42af6b50d5970aeca93ef134e65a66.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s09-r13:
+    claim_id: covers:route-job-git-s09-r13
+    claim_kind: route-covers
+    statement: route-job-git-s09-r13 covers knowledge-job-git-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/hu-git-intro/HU-intro-to-git.pdf: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c
+        node-content:knowledge-job-git-stage-09: sha256:008f61cd2e7386bbd75917a5191822b9e1c0645f0201a8b1e3b7468afdeaaf68
+        route-content:route-job-git-s09-r13: sha256:7c96b3509369b241d8f7029644a68d1eb0b332d621159976422427e8fb9d7cbf
+        source-material:source-hu-git-intro: sha256:7fba77f5ec395909c4345ebad54b2285523d3b42ff272f3aeb8b769a2be8be50
+      evidence:
+      - route-locator:HU remote workflow
+      - 'quote:material://source-hu-git-intro/HU-intro-to-git.pdf#p18 sha256:4145a629f2d8a2fb35442b91b8f66d7431619459ddb81210aa5e1bd4df55728d
+        -- trail: Inspected PDF page 18 against the existing chapter/workshop locator;
+        the route remains bounded to the existing stage assignment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r01:
+    claim_id: covers:route-job-git-s10-r01
+    claim_kind: route-covers
+    statement: route-job-git-s10-r01 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch-pull.html: c3ef3a3aa75c4dd67d8e2a83361c729e682ea9f3ff6cd641c17a1f18fbf155b6
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r01: sha256:b526478dd99f317ce4d619896b9d16c6eb1b82d022058f31d04f2a815b20788f
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch-pull.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Pull, push, divergence, and force-with-lease''. Observed heading/content:  Remote
+        — Fetch & pull (merge vs rebase) Remote — Fetch & pull (merge vs rebase) Home
+        → Remote → Fetch & pull (merge vs rebase) Fetch updates your view of the r.
+        HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r02:
+    claim_id: covers:route-job-git-s10-r02
+    claim_kind: route-covers
+    statement: route-job-git-s10-r02 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-pull.html: e0a817a8f66abf3629d2b4a126047eea50b30fab408330589e4cb578ac556cfd
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r02: sha256:5639a6e5234c047c111efac27483647e21fba5f014276e74922a79dd4cc57c01
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-pull.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Pull, push, divergence, and force-with-lease''. Observed heading/content:  Remote
+        — Pull updates (fetch + merge/rebase) Remote — Pull updates (fetch + merge/rebase)
+        Home → Remote → Pull updates (fetch + merge/rebase) Pull = fetch + in. HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r03:
+    claim_id: covers:route-job-git-s10-r03
+    claim_kind: route-covers
+    statement: route-job-git-s10-r03 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-push.html: a1e6ef1de8682249c882ba4c7c846edc2c9c39092b65871e35290c4df049f922
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r03: sha256:4f07d8a5726c47ff5701e5d9bb8cf27530eed276b8770458123f448907809039
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/remote-push.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Pull, push, divergence, and force-with-lease''. Observed heading/content:  Remote
+        — Push commits (git push) Remote — Push commits (git push) Home → Remote →
+        Push commits (git push) Push sends commits/objects to the remote and asks
+        it . HTML is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r04:
+    claim_id: covers:route-job-git-s10-r04
+    claim_kind: route-covers
+    statement: route-job-git-s10-r04 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r04: sha256:4f2556b8dd5f2a9d8da90a71e1db4da3a2faacddd6717c66c2770be1322dec9e
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p56 sha256:50a6c1d4002228744eaf6196c9faff3bf59b1726ada77d753b6731ad33a14de2
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r05:
+    claim_id: covers:route-job-git-s10-r05
+    claim_kind: route-covers
+    statement: route-job-git-s10-r05 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r05: sha256:89ec250d7648a5feb84900e6baf268d65305b6a468d10a8ff9ead7a4d4d93c33
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Pull and push semantics
+      - 'external:https://git-scm.com/docs/git-pull -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Pull and push semantics'' in stage ''Pull, push, divergence, and force-with-lease''.
+        Page begins ''Git - git-pull Documentation''; response SHA-256 8c9289248f6ff1079de034ebc11562688ad87fe6d76f9ecb8e27c22db25e14ff.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r06:
+    claim_id: covers:route-job-git-s10-r06
+    claim_kind: route-covers
+    statement: route-job-git-s10-r06 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r06: sha256:f7f4852839c5da1ed81baa128aaa68d3c8092ec649503c6358c853840d09bf04
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Pull and push semantics
+      - 'external:https://git-scm.com/docs/git-push -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Pull and push semantics'' in stage ''Pull, push, divergence, and force-with-lease''.
+        Page begins ''Git - git-push Documentation''; response SHA-256 2e451f3ceb4558bd8e40edafa157a5b7c1fd8b366f22d77340c1767dd44cf5ee.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r08:
+    claim_id: covers:route-job-git-s10-r08
+    claim_kind: route-covers
+    statement: route-job-git-s10-r08 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r08: sha256:ad24729b9782670322228c16c70e234e6bd2b39f6a18fe42e320f6f78b461c63
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p91 sha256:f1cd7d777a64cca3029f0fb3750204ef39bd1eb5ef6fa8b82aeb5200a7f4a7b9
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s10-r09:
+    claim_id: covers:route-job-git-s10-r09
+    claim_kind: route-covers
+    statement: route-job-git-s10-r09 covers knowledge-job-git-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-10: sha256:9e96b5ea69a250efe2c2fbfa567f905111e3dce00919de372d491184853cbe72
+        route-content:route-job-git-s10-r09: sha256:9bd3b5ca4f0a2872a50e25822034bfe66cbb4da780f9b24690fb875160941bf3
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p111 sha256:5d478ccbd00842edda39a2e3f2174772604b3da5169d14694d5182dd6f1d071a
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s11-r01:
+    claim_id: covers:route-job-git-s11-r01
+    claim_kind: route-covers
+    statement: route-job-git-s11-r01 covers knowledge-job-git-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-pr.html: 717becc6e5def69f2714a93324833fe03d18282d21a668e3486a41245cb025d3
+        node-content:knowledge-job-git-stage-11: sha256:4ca48d0c0cc47053847ee528bb0316d3e1e4f9bb3cb8e4b8ad7cc6177b93962f
+        route-content:route-job-git-s11-r01: sha256:53471b2c9016bb3d71c446a6575cee6e2ce77f33f025013e037ff9dff04b1027
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-pr.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Pull requests, forks, and reviewable contribution flow''. Observed heading/content:  Collaboration
+        & Safety — Pull Request workflow (feature branch → PR → merge) Collaboration
+        & Safety — Pull Request workflow (feature branch → PR → merge) Home . HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s11-r02:
+    claim_id: covers:route-job-git-s11-r02
+    claim_kind: route-covers
+    statement: route-job-git-s11-r02 covers knowledge-job-git-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-11: sha256:4ca48d0c0cc47053847ee528bb0316d3e1e4f9bb3cb8e4b8ad7cc6177b93962f
+        route-content:route-job-git-s11-r02: sha256:3b486e95d0038bfdaf4572be2f9f5d947cc43c2a7d197e4ff6ef22f97cfe01d9
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p132 sha256:9f4d3fd62af5efabc4acc8775ef9ea2db0c6cf426bda9fdc42aea4a0f0cf338f
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s11-r03:
+    claim_id: covers:route-job-git-s11-r03
+    claim_kind: route-covers
+    statement: route-job-git-s11-r03 covers knowledge-job-git-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-11: sha256:4ca48d0c0cc47053847ee528bb0316d3e1e4f9bb3cb8e4b8ad7cc6177b93962f
+        route-content:route-job-git-s11-r03: sha256:21ed7fe317881e0addacc8fe259648e0ba6370dc4fe4b0dbc7b638993d90421b
+        source-material:source-github-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:GitHub pull-request collaboration
+      - 'external:https://docs.github.com/en/pull-requests/collaborating-with-pull-requests
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''GitHub pull-request collaboration'' in
+        stage ''Pull requests, forks, and reviewable contribution flow''. Page begins
+        ''Pull requests documentation - GitHub Docs''; response SHA-256 500daf5d018b836475253572fe441cbf866f954a4ea160b3ec23236cfdf9c5b3.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s11-r05:
+    claim_id: covers:route-job-git-s11-r05
+    claim_kind: route-covers
+    statement: route-job-git-s11-r05 covers knowledge-job-git-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-11: sha256:4ca48d0c0cc47053847ee528bb0316d3e1e4f9bb3cb8e4b8ad7cc6177b93962f
+        route-content:route-job-git-s11-r05: sha256:98fedee148af01931b8bf62a38d5fd74b9943f8efa767c17939a0fc5ae68754a
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT contributing and maintainer-time guidance
+      - 'external:https://missing.csail.mit.edu/2026/beyond-code/ -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''MIT contributing and maintainer-time guidance'' in stage
+        ''Pull requests, forks, and reviewable contribution flow''. Page begins ''Beyond
+        the Code · Missing Semester''; response SHA-256 8564833c39148e7a6b125256dcda9df9398c972a9ba0e02d9acd342667a01eb5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s11-r06:
+    claim_id: covers:route-job-git-s11-r06
+    claim_kind: route-covers
+    statement: route-job-git-s11-r06 covers knowledge-job-git-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-11: sha256:4ca48d0c0cc47053847ee528bb0316d3e1e4f9bb3cb8e4b8ad7cc6177b93962f
+        route-content:route-job-git-s11-r06: sha256:4cfa9925231e976bdbe4186d58db3f4f95cb9a3a0abaf19517130327819eb770
+        source-material:source-github-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:GitHub review documentation
+      - 'external:https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''GitHub review documentation'' in stage
+        ''Pull requests, forks, and reviewable contribution flow''. Page begins ''Review
+        pull requests - GitHub Docs''; response SHA-256 0639cd6e30610a86c051a844d363502f7ae926b420991dffdc4e5f483b7cff39.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s12-r01:
+    claim_id: covers:route-job-git-s12-r01
+    claim_kind: route-covers
+    statement: route-job-git-s12-r01 covers knowledge-job-git-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-tags.html: 925f2fbcff09d4bea49c448640c822a6865820786746ca2708fb2f2a014cacd2
+        node-content:knowledge-job-git-stage-12: sha256:c6af5888e47734dee15e9c28c2f74dec95749e2b1c5ce90695ddffac16285bee
+        route-content:route-job-git-s12-r01: sha256:0b5dd1f29c0365b3ce31388d3344332dfca3168936ee12c18d10f0030bd95b57
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-tags.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Selective history: cherry-pick, tags, and releases''. Observed heading/content:  Collaboration
+        & Safety — Tags & releases (git tag) Collaboration & Safety — Tags & releases
+        (git tag) Home → Collaboration & Safety → Tags & releases (git tag). HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s12-r02:
+    claim_id: covers:route-job-git-s12-r02
+    claim_kind: route-covers
+    statement: route-job-git-s12-r02 covers knowledge-job-git-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-12: sha256:c6af5888e47734dee15e9c28c2f74dec95749e2b1c5ce90695ddffac16285bee
+        route-content:route-job-git-s12-r02: sha256:71ab2f67ce3ed75b6a86173d2c0f049405527dbbc7d10a6cedc3f62adcd92fed
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p61 sha256:0a1ba1fbcf346fa375da278e3b693db66b61b072df7f35cf9cba725107b575af
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s12-r03:
+    claim_id: covers:route-job-git-s12-r03
+    claim_kind: route-covers
+    statement: route-job-git-s12-r03 covers knowledge-job-git-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-12: sha256:c6af5888e47734dee15e9c28c2f74dec95749e2b1c5ce90695ddffac16285bee
+        route-content:route-job-git-s12-r03: sha256:7587d623823a549fe8f9b573491933ef63ce90309cf89a5882f2cea18baab0b9
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cherry-pick and tag references
+      - 'external:https://git-scm.com/docs/git-cherry-pick -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Cherry-pick and tag references'' in stage ''Selective history: cherry-pick,
+        tags, and releases''. Page begins ''Git - git-cherry-pick Documentation'';
+        response SHA-256 b56b5f7d056510788c8b2f9284dc496fe881f272bde7d2259a25291627896843.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s12-r04:
+    claim_id: covers:route-job-git-s12-r04
+    claim_kind: route-covers
+    statement: route-job-git-s12-r04 covers knowledge-job-git-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-12: sha256:c6af5888e47734dee15e9c28c2f74dec95749e2b1c5ce90695ddffac16285bee
+        route-content:route-job-git-s12-r04: sha256:2789b08c649b63fd917a070ca207b536f9779c34a60c09062425756758f1d8ac
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Cherry-pick and tag references
+      - 'external:https://git-scm.com/docs/git-tag -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Cherry-pick and tag references'' in stage ''Selective history: cherry-pick,
+        tags, and releases''. Page begins ''Git - git-tag Documentation''; response
+        SHA-256 8b67fd3eaaec907f08ef68c9cd3007bef21457ceccd8e818643141a730c55bc0.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s12-r06:
+    claim_id: covers:route-job-git-s12-r06
+    claim_kind: route-covers
+    statement: route-job-git-s12-r06 covers knowledge-job-git-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-12: sha256:c6af5888e47734dee15e9c28c2f74dec95749e2b1c5ce90695ddffac16285bee
+        route-content:route-job-git-s12-r06: sha256:162174a31572b20b04e69d68b7db4eb8a90a01dc546d51700c131991270e46e0
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p156 sha256:f48cf028a09c846a257e4604869a7827c0f4fc585e8bedfe140411b7984e5250
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r01:
+    claim_id: covers:route-job-git-s13-r01
+    claim_kind: route-covers
+    statement: route-job-git-s13-r01 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-inspect.html: 14e514bf6173e8db0e51ac26f4b06e99331cd50ff5ce3d383bd5ee3fdf928499
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r01: sha256:fef955f544129af451bf4a9565e76c000552188b21d0a973019c09f009b76965
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:History inspection intentions and Pro Git Chs. 2.3, 7.5, 7.10
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-inspect.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''History archaeology: log, show, blame, search, and bisect''. Observed heading/content:  Collaboration
+        & Safety — Inspect history (show/log/blame) Collaboration & Safety — Inspect
+        history (show/log/blame) Home → Collaboration & Safety → Inspect his. HTML
+        is unsupported by the quotation verifier; this is the explicit unsupported-format
+        fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r02:
+    claim_id: covers:route-job-git-s13-r02
+    claim_kind: route-covers
+    statement: route-job-git-s13-r02 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r02: sha256:3be3303f7180da315bbacb595b05a07670f2b434c4cc172d0613bbd247df21f2
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p46 sha256:858040d75ceb011c82e9ce2ff7bcdd2aca3f2f188a1ba598535adf649185b7a2
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r03:
+    claim_id: covers:route-job-git-s13-r03
+    claim_kind: route-covers
+    statement: route-job-git-s13-r03 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r03: sha256:b2b456382c25e1f830e01e7de073e7b75540a5710cbcd0a0b73be4cda9a1338c
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:log, blame, and bisect
+      - 'external:https://git-scm.com/docs/git-log -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''log, blame, and bisect'' in stage ''History archaeology: log, show, blame,
+        search, and bisect''. Page begins ''Git - git-log Documentation''; response
+        SHA-256 f206647fba42b627f46d29993490fbb585adedaa5d27b9ed575f50ef9002f69b.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r04:
+    claim_id: covers:route-job-git-s13-r04
+    claim_kind: route-covers
+    statement: route-job-git-s13-r04 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r04: sha256:83f6913b1c22dac6a52a40587d287b15ced417bba3d4c81f005b7083c4c338e7
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:log, blame, and bisect
+      - 'external:https://git-scm.com/docs/git-blame -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''log, blame, and bisect'' in stage ''History archaeology: log, show, blame,
+        search, and bisect''. Page begins ''Git - git-blame Documentation''; response
+        SHA-256 8d46440d51e44ed3edbe6347c8fb8b71a376d048cca51c4f5c59c1b945296f2f.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r05:
+    claim_id: covers:route-job-git-s13-r05
+    claim_kind: route-covers
+    statement: route-job-git-s13-r05 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r05: sha256:86cb649d34e0687378ba2e94ec0ace66c12b91fde86051c86f9e37b40bfbec22
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:log, blame, and bisect
+      - 'external:https://git-scm.com/docs/git-bisect -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''log, blame, and bisect'' in stage ''History archaeology: log, show, blame,
+        search, and bisect''. Page begins ''Git - git-bisect Documentation''; response
+        SHA-256 d4e8287fc19b89cf91ca904719cc3a0ea6030f27913dfbe47feef76abf5a6df1.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r07:
+    claim_id: covers:route-job-git-s13-r07
+    claim_kind: route-covers
+    statement: route-job-git-s13-r07 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r07: sha256:84e89e7798f707224b741425db8f1812d19da51c0287e7a87ed874abb4692b41
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT's motivating history questions
+      - 'external:https://missing.csail.mit.edu/2026/version-control/ -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''MIT''s motivating history questions'' in stage ''History
+        archaeology: log, show, blame, search, and bisect''. Page begins ''Version
+        Control and Git · Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r08:
+    claim_id: covers:route-job-git-s13-r08
+    claim_kind: route-covers
+    statement: route-job-git-s13-r08 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r08: sha256:7b96fd17d3444c05ce014be9a4a16ea986610e5782c7e5e3a18ee605f7395929
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p245 sha256:462f6778f50e6ff2c984023e100948761b22c183ddc28bdcd34d1484bef0a180
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s13-r09:
+    claim_id: covers:route-job-git-s13-r09
+    claim_kind: route-covers
+    statement: route-job-git-s13-r09 covers knowledge-job-git-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-13: sha256:bfd6f65ec8e03aa5589ed0527095325728c04b4935d2c4dfb7294dab6d1d34ed
+        route-content:route-job-git-s13-r09: sha256:7ae09f90e4954ef825798a0c50769807148516fc7c5e51188d9dad975cde01d3
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p301 sha256:e74ffd0f81cdd802dce977690125f3537160410622161c9bacdd31ba1a05cea8
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r01:
+    claim_id: covers:route-job-git-s14-r01
+    claim_kind: route-covers
+    statement: route-job-git-s14-r01 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-gitignore.html: 78b78620bdb6dbb06584c3857ecd2793233cf0dbe96c11530bc5ec64b575cbc6
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r01: sha256:207097c28161165a31b44eb70b2011ddd0e20cb07c5974b9beadcd4421392f23
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Ignore and safety pages plus Pro Git Chs. 8.1–8.3
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-gitignore.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Observed heading/content:  Collaboration & Safety — Ignore files (.gitignore
+        best practices) Collaboration & Safety — Ignore files (.gitignore best practices)
+        Home → Collaboration & Safe. HTML is unsupported by the quotation verifier;
+        this is the explicit unsupported-format fallback, not a claim that its bytes
+        were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r02:
+    claim_id: covers:route-job-git-s14-r02
+    claim_kind: route-covers
+    statement: route-job-git-s14-r02 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-safety.html: 5db171d504cbaf1cb85b896913da0ccbbebf72d525cbead3fb5700c9864011da
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r02: sha256:7c7bc996d2ed0125c1668764c0e7c1a1500a9bf14679d6e6a0453f443eaa5ab0
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Ignore and safety pages plus Pro Git Chs. 8.1–8.3
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/collab-safety.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Observed heading/content:  Collaboration & Safety — Safety rules (rewrite
+        history, force push, secrets) Collaboration & Safety — Safety rules (rewrite
+        history, force push, secrets) Home . HTML is unsupported by the quotation
+        verifier; this is the explicit unsupported-format fallback, not a claim that
+        its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r03:
+    claim_id: covers:route-job-git-s14-r03
+    claim_kind: route-covers
+    statement: route-job-git-s14-r03 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r03: sha256:ef1186a343b0fb72d65afd1492a3eb20b9b728fb43a72989d0e0f13f28a6cc27
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p342 sha256:bb1fef3ccb92f65805ee2fec5cf195533f5bf7cd3caec54d299200cca6057dc0
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r04:
+    claim_id: covers:route-job-git-s14-r04
+    claim_kind: route-covers
+    statement: route-job-git-s14-r04 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-ignore.html: a94292691a933aca82483d5a0e120ae51986a552e23cb355f52dd3c67a8e8dee
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r04: sha256:809e0fa1b36ac90f9f83e8cae41cab41cf6b3ad444d466234f7eaa0a331fa921
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Working-tree ignore/stop-tracking/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-ignore.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Observed heading/content:  Working Tree — Ignore noisy files (.gitignore)
+        Working Tree — Ignore noisy files (.gitignore) Home → WT → Ignore noisy files
+        (.gitignore) Prevent build artifac. HTML is unsupported by the quotation verifier;
+        this is the explicit unsupported-format fallback, not a claim that its bytes
+        were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r05:
+    claim_id: covers:route-job-git-s14-r05
+    claim_kind: route-covers
+    statement: route-job-git-s14-r05 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stop-tracking.html: 78a30ffd2cbd04e9e1013279c454b1a3ab7445e308b4fa75beffad03f1663f77
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r05: sha256:1875cd67e8a622cbef5126978d7b6fb7ca05462494352560efe3462d9e7697f6
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Working-tree ignore/stop-tracking/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/idx-stop-tracking.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Observed heading/content:  Index — Stop tracking but keep locally (rm --cached)
+        Index — Stop tracking but keep locally (rm --cached) Home → Index → Stop tracking
+        but keep locally (rm --c. HTML is unsupported by the quotation verifier; this
+        is the explicit unsupported-format fallback, not a claim that its bytes were
+        unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r06:
+    claim_id: covers:route-job-git-s14-r06
+    claim_kind: route-covers
+    statement: route-job-git-s14-r06 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-rename-delete.html: 8da4cbd440947887149ffc28f69f8d47c466089e9bb313d43db6ef77fa8e71c7
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r06: sha256:ba5e4563cf97005eff453c7c639b52a666a4f14f6059ac4ee2ef3ca3d9bb46fb
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Working-tree ignore/stop-tracking/rename pages
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+        -- trail: Opened and inspected this HTML intention page on 2026-11-10 for
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Observed heading/content:  Working Tree — Rename / delete (git mv / git rm)
+        Working Tree — Rename / delete (git mv / git rm) Home → WT → Rename / delete
+        (git mv / git rm) These commands . HTML is unsupported by the quotation verifier;
+        this is the explicit unsupported-format fallback, not a claim that its bytes
+        were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r07:
+    claim_id: covers:route-job-git-s14-r07
+    claim_kind: route-covers
+    statement: route-job-git-s14-r07 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r07: sha256:26a3f5f1db1c2d3e7aa5d079e408690b4833616da44438e15df4c0e1ae682ef7
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Ignore, attributes, configuration, and hooks
+      - 'external:https://git-scm.com/docs/gitignore -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Ignore, attributes, configuration, and hooks'' in stage ''Repository hygiene:
+        ignore rules, attributes, config, hooks, and secrets''. Page begins ''Git
+        - gitignore Documentation''; response SHA-256 8eeb3719ba7000e8702fb3b3b5135f415f449d798a8201c6b22bae91181f2cc7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r08:
+    claim_id: covers:route-job-git-s14-r08
+    claim_kind: route-covers
+    statement: route-job-git-s14-r08 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r08: sha256:7089d65305f4f04ce9145009fce5dc2c66b3d171ff982e25fa1f2a6ddee1f388
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Ignore, attributes, configuration, and hooks
+      - 'external:https://git-scm.com/docs/gitattributes -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Ignore, attributes, configuration, and hooks'' in stage ''Repository hygiene:
+        ignore rules, attributes, config, hooks, and secrets''. Page begins ''Git
+        - gitattributes Documentation''; response SHA-256 0a1e80158ac05e237f2626fbe047b93460b9291a8da96e893774ade8a9665aee.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r09:
+    claim_id: covers:route-job-git-s14-r09
+    claim_kind: route-covers
+    statement: route-job-git-s14-r09 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r09: sha256:a8cd2bf96465c75ea242572b718bc29abe5f4821b917b4ee5a3d8acad6b07a11
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Ignore, attributes, configuration, and hooks
+      - 'external:https://git-scm.com/docs/git-config -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Ignore, attributes, configuration, and hooks'' in stage ''Repository hygiene:
+        ignore rules, attributes, config, hooks, and secrets''. Page begins ''Git
+        - git-config Documentation''; response SHA-256 37aa8407b12e377a38f523d5012835d0515cc82f2249c942b9e5cff656019226.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r10:
+    claim_id: covers:route-job-git-s14-r10
+    claim_kind: route-covers
+    statement: route-job-git-s14-r10 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r10: sha256:0ce14f0080f963ee535d59036487e2ac917ad4879e40f3543e22621890477e69
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Ignore, attributes, configuration, and hooks
+      - 'external:https://git-scm.com/docs/githooks -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Ignore, attributes, configuration, and hooks'' in stage ''Repository hygiene:
+        ignore rules, attributes, config, hooks, and secrets''. Page begins ''Git
+        - githooks Documentation''; response SHA-256 824b971b063e33e057da1849e3ed457f760b870552ae62e6baf63cdc1609bc0f.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s14-r12:
+    claim_id: covers:route-job-git-s14-r12
+    claim_kind: route-covers
+    statement: route-job-git-s14-r12 covers knowledge-job-git-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-14: sha256:61d3346d8aab021ebbe887e21158a68976ed236e5f285afb46458c2f21f5959d
+        route-content:route-job-git-s14-r12: sha256:2d621711ba87ab75db4d18491728bcd932a4a0f317234ae171c71d458d6adccc
+        source-material:source-github-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:GitHub secret-removal guidance
+      - 'external:https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''GitHub secret-removal guidance'' in stage
+        ''Repository hygiene: ignore rules, attributes, config, hooks, and secrets''.
+        Page begins ''Removing sensitive data from a repository - GitHub Docs''; response
+        SHA-256 2386a5b379dc4695ab8bce22c7bb7722e2ce6944d678b2f8535ca26226292dbe.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s15-r01:
+    claim_id: covers:route-job-git-s15-r01
+    claim_kind: route-covers
+    statement: route-job-git-s15-r01 covers knowledge-job-git-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-15: sha256:3c5c09a4840206445838721a0270b542180926167d5937e44e4e9e7c21e74800
+        route-content:route-job-git-s15-r01: sha256:ed39f8cb3e6acd326fce1a1d9615b43ffb483b29ce5e5cc6bb6c602995fc87d0
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p304 sha256:58963c0c619aa05ba720af0c5686779b6d63b9dfb319141064f2d8a046559909
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s15-r02:
+    claim_id: covers:route-job-git-s15-r02
+    claim_kind: route-covers
+    statement: route-job-git-s15-r02 covers knowledge-job-git-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-15: sha256:3c5c09a4840206445838721a0270b542180926167d5937e44e4e9e7c21e74800
+        route-content:route-job-git-s15-r02: sha256:f27e0d4095b0fbc3177069b9ecd7db52f2f00f3755e1deee82134961f90c8d5f
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-worktree and submodule model
+      - 'external:https://git-scm.com/docs/git-worktree -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-worktree and submodule model'' in stage ''Worktrees, parallel tickets,
+        and advanced repository layouts''. Page begins ''Git - git-worktree Documentation'';
+        response SHA-256 82844667c66ab73fb682755622f82c4ea71866bba0f76f9c66569c3394a0f3d5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s15-r03:
+    claim_id: covers:route-job-git-s15-r03
+    claim_kind: route-covers
+    statement: route-job-git-s15-r03 covers knowledge-job-git-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-15: sha256:3c5c09a4840206445838721a0270b542180926167d5937e44e4e9e7c21e74800
+        route-content:route-job-git-s15-r03: sha256:d10d4ce26607e034036af1c4378d1542647c5b4b7468a74194b73df239a9fec6
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:git-worktree and submodule model
+      - 'external:https://git-scm.com/docs/gitsubmodules -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''git-worktree and submodule model'' in stage ''Worktrees, parallel tickets,
+        and advanced repository layouts''. Page begins ''Git - gitsubmodules Documentation'';
+        response SHA-256 346275cf82859f51a9b860b0c8ae13abbe4688350daef95937f14234cf698bfd.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s15-r05:
+    claim_id: covers:route-job-git-s15-r05
+    claim_kind: route-covers
+    statement: route-job-git-s15-r05 covers knowledge-job-git-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-15: sha256:3c5c09a4840206445838721a0270b542180926167d5937e44e4e9e7c21e74800
+        route-content:route-job-git-s15-r05: sha256:135a3f45a5bb0b3eddfcc5323b0d1b200500da0aa425b637cf25af6294b365ec
+        source-material:source-mit-missing-semester: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:MIT advanced Git worktree pointer
+      - 'external:https://missing.csail.mit.edu/2026/version-control/#advanced-git
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''MIT advanced Git worktree pointer'' in
+        stage ''Worktrees, parallel tickets, and advanced repository layouts''. Page
+        begins ''Version Control and Git · Missing Semester''; response SHA-256 4b9f0cf4a01b235f3a1532d95650aa1282ae61b3c3dacce0c97583e23f5a35d7.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s15-r06:
+    claim_id: covers:route-job-git-s15-r06
+    claim_kind: route-covers
+    statement: route-job-git-s15-r06 covers knowledge-job-git-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-15: sha256:3c5c09a4840206445838721a0270b542180926167d5937e44e4e9e7c21e74800
+        route-content:route-job-git-s15-r06: sha256:917dd202bbe5b776f7865070ddd3d07fa19e4c55fdb5dace8c3fc7f4bff7329c
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Partial clone design
+      - 'external:https://git-scm.com/docs/partial-clone -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Partial clone design'' in stage ''Worktrees, parallel tickets, and advanced
+        repository layouts''. Page begins ''Git - partial-clone Documentation''; response
+        SHA-256 71afb825dfc5f46aded6a31ba8dc20f0f117e1a868ddcb2db011c8eaa4530ace.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s16-r01:
+    claim_id: covers:route-job-git-s16-r01
+    claim_kind: route-covers
+    statement: route-job-git-s16-r01 covers knowledge-job-git-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/git-handbook-archive/git-handbook/index.html: 1f7be7899586fc1dc6ead5eaec56d19d7d21c3ec3c81a12c90aeb114acc155cf
+        node-content:knowledge-job-git-stage-16: sha256:644726077034d71460fa9239a63ff9df77536be4e929938bbf80adbdcf6f06ab
+        route-content:route-job-git-s16-r01: sha256:f20ad0bf0e5547179a641b20e3dda513fea2ebaad1f415541f143206e44a1ae5
+        source-material:source-git-handbook-archive: sha256:3286c8e0a370e526bec4ec98c349a7ab410eb695cc90df7b631e96f35b40e7fe
+      evidence:
+      - route-locator:Synthesize the local handbook and Pro Git
+      - 'manifest:software/tooling/git-handbook-archive/git-handbook/index.html --
+        trail: Opened and inspected this HTML intention page on 2026-11-10 for ''Capstone:
+        two clones, one feature, one failure, full recovery''. Observed heading/content:  Git
+        Intentions Handbook — Home Git Intentions Handbook Choose a region, then an
+        intention. Each intention page explains: Scenario → Intention → Data model
+        chan. HTML is unsupported by the quotation verifier; this is the explicit
+        unsupported-format fallback, not a claim that its bytes were unreadable.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s16-r02:
+    claim_id: covers:route-job-git-s16-r02
+    claim_kind: route-covers
+    statement: route-job-git-s16-r02 covers knowledge-job-git-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/progit/ProGit_2ed.pdf: 763ecf202d5cc71895597012d5f5aa2cdd8c147485c3eed87bd299a8ddb11ceb
+        node-content:knowledge-job-git-stage-16: sha256:644726077034d71460fa9239a63ff9df77536be4e929938bbf80adbdcf6f06ab
+        route-content:route-job-git-s16-r02: sha256:e8da1f071f397e282a11d7ddb79cca88eee7b01bae028f5c607f8f91191a16e6
+        source-material:source-progit: sha256:bc56d231ee64b7a71996923d33fe38a584df54156ff11727214ff66175076b24
+      evidence:
+      - 'quote:material://source-progit/ProGit_2ed.pdf#p2 sha256:8ad0cf06d6ffc811ca502bdbf871d623aae5a800f22743ae6e110544d693e2c8
+        -- trail: Opened the exact physical section named by the existing chapter
+        or corresponding web section. The original URL remains; local evidence binds
+        the same book rather than downgrading its registered material.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s16-r03:
+    claim_id: covers:route-job-git-s16-r03
+    claim_kind: route-covers
+    statement: route-job-git-s16-r03 covers knowledge-job-git-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-git-stage-16: sha256:644726077034d71460fa9239a63ff9df77536be4e929938bbf80adbdcf6f06ab
+        route-content:route-job-git-s16-r03: sha256:2485b9c4cb98847e8021df88661d7691accb91249a1049dc090f7c218ed28cf8
+        source-material:source-git-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Use the command references already assigned in Stages 1–15
+      - 'external:https://git-scm.com/docs -- trail: Opened 2026-11-10; HTTP 200;
+        inspected page content and headings for the already assigned locator ''Use
+        the command references already assigned in Stages 1–15'' in stage ''Capstone:
+        two clones, one feature, one failure, full recovery''. Page begins ''Git -
+        Reference''; response SHA-256 7395856704c6d27812e6135a7619e10ff70ca6e037ca34911dec13bfb525f940.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
+  covers:route-job-git-s16-r05:
+    claim_id: covers:route-job-git-s16-r05
+    claim_kind: route-covers
+    statement: route-job-git-s16-r05 covers knowledge-job-git-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/tooling/hu-git-intro/HU-intro-to-git.pdf: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c
+        node-content:knowledge-job-git-stage-16: sha256:644726077034d71460fa9239a63ff9df77536be4e929938bbf80adbdcf6f06ab
+        route-content:route-job-git-s16-r05: sha256:f01dc0795106bde3293baccc1d3594f171a99bb874996686d46043cadbecb726
+        source-material:source-hu-git-intro: sha256:7fba77f5ec395909c4345ebad54b2285523d3b42ff272f3aeb8b769a2be8be50
+      evidence:
+      - route-locator:Closed-book second telling from the HU handout
+      - 'quote:material://source-hu-git-intro/HU-intro-to-git.pdf#p20 sha256:77f2e243f48231515307a0392c079521dfd74df676945c85e3f9b2d32ca260c4
+        -- trail: Inspected PDF page 20 against the existing chapter/workshop locator;
+        the route remains bounded to the existing stage assignment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+      idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+    reviewed_by: ''
+    status: supported
   covers:route-modern-polars-s01:
     claim_id: covers:route-modern-polars-s01
     claim_kind: route-covers

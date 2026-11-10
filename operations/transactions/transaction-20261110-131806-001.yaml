@@ -1,0 +1,71 @@
+schema_version: 2
+id: transaction-20261110-131806-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-11-10T13:18:06+01:00'
+snapshot_before: sha256:655e642dae7d6cfdcca681cd3d39c39e32bfce9cc038f62bfc5271af39b55445
+snapshot_after: sha256:eea3f9c585179f7baa889bd04965da04683c3a147aa79079c491631ddefde004
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 10
+  module-job-git: 1
+  study-map-job-git-fluency: 2
+  unit-job-git-fluency: 2
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 10
+    after: 11
+  module-job-git:
+    before: 1
+    after: 2
+  study-map-job-git-fluency:
+    before: 2
+    after: 3
+  unit-job-git-fluency:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-job-git/module.yaml
+  sha256_before: 58caa92d43ca429f0f8997d5605e0400dae876e9d287d671548c2d732a12cfa5
+  sha256_after: 58caa92d43ca429f0f8997d5605e0400dae876e9d287d671548c2d732a12cfa5
+  created: false
+- path: curriculum/modules/module-job-git/source-map.yaml
+  sha256_before: 180091eacf9a87568847cb6faf6e5ceffa7f325d3c2f6841f2916f45c9de3aef
+  sha256_after: 2341f496ee05cadbdda233e63720fd288353074f915171b739108bb798e86235
+  created: false
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
+  sha256_before: 0b1b171562f678d473a88552760979080347d222329f626829bc1ca77b19d586
+  sha256_after: f4c07cdebc5fce43d3cfd3cec3914cfe0f38390444e7a8f6d14021075facdd81
+  created: false
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/unit.yaml
+  sha256_before: c04591921ca33bd6b6c10801ef0869444e77c4b12803401b3f2c494ac12123c0
+  sha256_after: c560e62890138d9b8011eb3096a06354a0ce268ed00543ba33fafd7748fa3575
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: 73aa6f8c11ac204dac4a9e8b31497b92e1f62918fc93b05f13cc0efb505a7ab4
+  sha256_after: 4c00e4630e8b2bb30689bfa5ad7527abf5ed843cedec1468266de00ea618ac3c
+  created: false
+metadata:
+  data_roots_sha256: sha256:2d214d0dacef6389b2904ab187108e868133fbeabdb37ead21b1e2b362eac128
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-4c81a6dc1f4b4650a7f89fdd49633df8
+  idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
+  intent_sha256: sha256:a80e04f4d36dc0e1dd92f9460036fadd7d4de2e2c8ed51e79ef353ecc0dbd006
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a80e04f4d36dc0e1dd92f9460036fadd7d4de2e2c8ed51e79ef353ecc0dbd006

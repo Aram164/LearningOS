@@ -1479,3 +1479,16 @@ sources:
       its existing role.
   thematic_group_ids:
   - thematic-group-software
+- id: source-learn-git-branching
+  title: Learn Git Branching
+  type: website
+  url: https://learngitbranching.js.org/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml#L382
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software

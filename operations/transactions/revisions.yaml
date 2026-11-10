@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 10
+  file:operations/transactions/lineage.yaml: 11
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -53,7 +53,7 @@ revisions:
   module-hu-icop: 2
   module-hu-m2-statistik-analysis: 62
   module-job-engineering-tools: 2
-  module-job-git: 1
+  module-job-git: 2
   module-job-polars: 4
   module-job-python-engineering: 3
   module-job-rust-engineering: 1
@@ -181,6 +181,7 @@ revisions:
   source-kit-algorithmen2: 1
   source-korte-vygen: 2
   source-language-server-protocol: 1
+  source-learn-git-branching: 1
   source-linux-kernel-docs: 1
   source-linux-man-pages: 1
   source-lldb-docs: 1
@@ -387,7 +388,7 @@ revisions:
   study-map-bs-cpu-scheduling: 1
   study-map-bs-processes: 1
   study-map-job-engineering-tools-fluency: 3
-  study-map-job-git-fluency: 2
+  study-map-job-git-fluency: 3
   study-map-job-polars-aggregation-windows: 1
   study-map-job-polars-backend-loop: 3
   study-map-job-polars-capstone-transition: 1
@@ -471,7 +472,7 @@ revisions:
   unit-bs-processes: 1
   unit-icop-l01-linear-programming: 2
   unit-job-engineering-tools-fluency: 3
-  unit-job-git-fluency: 2
+  unit-job-git-fluency: 3
   unit-job-polars-aggregation-windows: 3
   unit-job-polars-backend-loop: 5
   unit-job-polars-capstone-transition: 3
