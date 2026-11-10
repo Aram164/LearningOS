@@ -687,3 +687,18 @@ def test_non_utf8_text_candidate_and_quote_fail_with_typed_anchor_error(material
         observed.candidate_excerpt(file, selected.locator)
     with pytest.raises(AnchorError, match="not UTF-8"):
         observed.verify_quote(selected, Quote(file.material_uri, TEXT, line_start=1, line_end=1))
+
+
+@pytest.mark.parametrize("filename", ["GUIDE.md", "index.html"])
+def test_remote_document_filename_is_not_an_unregistered_local_binding(material_world, filename):
+    root, _, manifest = material_world
+    registry = root / "sources/sources.yaml"
+    data = yaml.safe_load(registry.read_text())
+    data["sources"][0].pop("material")
+    write_yaml(registry, data)
+    observed = AnchorReader(load_repo(root), manifest)
+    remote = route(vault_path="", locator=f'"{filename}"',
+                   url=f"https://example.test/docs/{filename}")
+    assert observed.materials(remote).kind == "remote-unanchored"
+    # A previous explicit local file remains authoritative after a remote edit.
+    assert observed.materials(remote, route()).kind == "local-unresolved"

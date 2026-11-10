@@ -164,8 +164,13 @@ class AnchorReader:
         return value if isinstance(value, str) else ""
 
     def _explicit_file(self, route: RouteMaterial, *, previous: bool = False) -> bool:
-        return bool(route.vault_path.startswith("material://") or MATERIAL_SUFFIX_TOKEN.search(
-            route.locator) or single_file_material(self._source_material(route, previous=previous)))
+        # A remote documentation URL may name GUIDE.md or index.html. Its
+        # filename is not a local-material binding. Explicit material URIs and
+        # the source's current/previous material still prevent downgrades.
+        local_filename = (MATERIAL_SUFFIX_TOKEN.search(route.locator)
+                          and not route.url.startswith(("http://", "https://")))
+        return bool(route.vault_path.startswith("material://") or local_filename
+                    or single_file_material(self._source_material(route, previous=previous)))
 
     def materials(self, route: RouteMaterial, previous: RouteMaterial | None = None) -> MaterialSet:
         known_local = self._explicit_file(route) or bool(material_uri_authority(
