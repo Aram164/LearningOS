@@ -1492,3 +1492,198 @@ sources:
       route explicit.
   thematic_group_ids:
   - thematic-group-software
+- id: source-anyhow-documentation
+  title: anyhow documentation
+  type: documentation
+  url: https://docs.rs/anyhow/latest/anyhow/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L663
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-cargo-reference
+  title: The Cargo Book — reference
+  type: documentation
+  url: https://doc.rust-lang.org/cargo/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L400
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-maturin-guide
+  title: Maturin user guide
+  type: documentation
+  url: https://www.maturin.rs/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L714
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-ndarray-documentation
+  title: Rust ndarray documentation
+  type: documentation
+  url: https://docs.rs/ndarray/latest/ndarray/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L752
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pyo3-guide
+  title: PyO3 user guide and official examples
+  type: documentation
+  url: https://pyo3.rs/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L708
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rayon-documentation
+  title: Rayon documentation
+  type: documentation
+  url: https://docs.rs/rayon/latest/rayon/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L575
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rust-api-guidelines
+  title: Rust API Guidelines
+  type: documentation
+  url: https://rust-lang.github.io/api-guidelines/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L532
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rust-numpy-documentation
+  title: rust-numpy documentation
+  type: documentation
+  url: https://docs.rs/numpy/latest/numpy/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L758
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rust-reference
+  title: The Rust Reference
+  type: documentation
+  url: https://doc.rust-lang.org/reference/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L851
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rust-std-documentation
+  title: Rust standard library documentation
+  type: documentation
+  url: https://doc.rust-lang.org/std/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L488
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rustlings
+  title: Rustlings — small Rust exercises
+  type: software
+  url: https://github.com/rust-lang/rustlings
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L46
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rustonomicon
+  title: The Rustonomicon
+  type: book
+  url: https://doc.rust-lang.org/nomicon/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L845
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-serde-documentation
+  title: Serde documentation
+  type: documentation
+  url: https://serde.rs/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L669
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-thiserror-documentation
+  title: thiserror documentation
+  type: documentation
+  url: https://docs.rs/thiserror/latest/thiserror/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L657
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-tokio-tutorial
+  title: Tokio tutorial
+  type: documentation
+  url: https://tokio.rs/tokio/tutorial
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml#L620
+    observed: '2026-11-10'
+    possible_use: Already assigned in the existing skill study map; metadata registration makes its existing
+      route explicit.
+  thematic_group_ids:
+  - thematic-group-software

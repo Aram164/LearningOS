@@ -5,4 +5,712 @@ sources:
   role: reference
   why: Referenced by migrated learning plan job-track-rust.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-job-rust-s01-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for tooling, cargo, and the compiler feedback loop before
+      the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 1 — Getting Started. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 1 — Getting Started; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s02-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for bindings, types, expressions, and control flow before
+      the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapters 2–3: Programming a Guessing Game and Common Programming
+      Concepts. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: 'Chapters 2–3: Programming a Guessing Game and Common Programming Concepts; The-Rust-Programming-Language_print.html'
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s03-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for ownership, moves, clone, and drop before the stage's
+      own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 4.1 — What Is Ownership?. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 4.1 — What Is Ownership?; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s04-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for borrowing, slices, and reborrowing before the stage's
+      own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 4.2–4.3 — References, Borrowing, and Slices. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 4.2–4.3 — References, Borrowing, and Slices; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s05-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for structs, enums, pattern matching, and domain models
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapters 5–6 — Structs, Enums, and Pattern Matching. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapters 5–6 — Structs, Enums, and Pattern Matching"; The-Rust-Programming-Language_print.html'
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s06-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for collections, result, and iterator fundamentals before
+      the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapters 8–9 — Collections and Error Handling. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapters 8–9 — Collections and Error Handling; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s07-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for traits, generics, and interface design before the
+      stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 10.1–10.2 — Generics and Traits. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 10.1–10.2 — Generics and Traits; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s08-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for lifetimes and borrowed api contracts before the
+      stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 10.3 — Validating References with Lifetimes. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 10.3 — Validating References with Lifetimes; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s09-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for modules, crates, workspaces, and public boundaries
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules,
+      and Workspaces. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules, and Workspaces; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s10-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for closures, iterators, and zero-cost pipelines before
+      the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 13 — Functional Language Features: Iterators and
+      Closures. The stage objective, resource wording, activity kind, triage, and order are retained.
+      This binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: 'Chapter 13 — Functional Language Features: Iterators and Closures; The-Rust-Programming-Language_print.html'
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s11-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for smart pointers, shared ownership, and interior mutability
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 15 — Smart Pointers. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 15 — Smart Pointers; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s12-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for testing, documentation, clippy, and api quality
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 11 and Chapter 14.2 — Tests and Documentation. The
+      stage objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 11 and Chapter 14.2 — Tests and Documentation; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s13-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for concurrency, send, sync, channels, and rayon before
+      the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 16 — Fearless Concurrency. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 16 — Fearless Concurrency; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s14-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for async rust, cancellation, and blocking boundaries
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Chapter 17 — Async and Await. The stage objective, resource
+      wording, activity kind, triage, and order are retained. This binding records where the existing
+      activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Chapter 17 — Async and Await; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+  - id: route-job-rust-s18-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Programming Language
+    format: website
+    angle: Develops the book's model and examples for capstone — own a python-to-rust feature end to end
+      before the stage's own implementation work.
+    angle_detail: 'Use the existing locator: Revisit the chapters connected to recorded misses. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-18
+    depth: unassessed
+    scope: unevaluated
+    locator: Revisit the chapters connected to recorded misses; The-Rust-Programming-Language_print.html
+    url: https://doc.rust-lang.org/book/
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
+- source_id: source-rustlings
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 1
+  unit_routes:
+  - id: route-job-rust-s01-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for tooling, cargo, and the compiler feedback loop
+      using the already named exercise group.
+    angle_detail: 'Use the existing locator: intro exercises. The stage objective, resource wording, activity
+      kind, triage, and order are retained. This binding records where the existing activity belongs,
+      rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-01
+    depth: unassessed
+    scope: unevaluated
+    locator: 'intro exercises; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+      reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s02-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for bindings, types, expressions, and control flow
+      using the already named exercise group.
+    angle_detail: 'Use the existing locator: variables, functions, if, primitive_types. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-02
+    depth: unassessed
+    scope: unevaluated
+    locator: 'variables, functions, if, primitive_types; "GitHub - rust-lang/rustlings: :crab: Small exercises
+      to get you used to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s03-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for ownership, moves, clone, and drop using the already
+      named exercise group.
+    angle_detail: 'Use the existing locator: move_semantics. The stage objective, resource wording, activity
+      kind, triage, and order are retained. This binding records where the existing activity belongs,
+      rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-03
+    depth: unassessed
+    scope: unevaluated
+    locator: 'move_semantics; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+      reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s04-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for borrowing, slices, and reborrowing using the
+      already named exercise group.
+    angle_detail: 'Use the existing locator: borrowing and strings. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-04
+    depth: unassessed
+    scope: unevaluated
+    locator: 'borrowing and strings; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s05-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for structs, enums, pattern matching, and domain
+      models using the already named exercise group.
+    angle_detail: 'Use the existing locator: structs, enums, options. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-05
+    depth: unassessed
+    scope: unevaluated
+    locator: 'structs, enums, options; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s06-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for collections, result, and iterator fundamentals
+      using the already named exercise group.
+    angle_detail: 'Use the existing locator: vecs, hashmaps, strings, error_handling. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-06
+    depth: unassessed
+    scope: unevaluated
+    locator: 'vecs, hashmaps, strings, error_handling; "GitHub - rust-lang/rustlings: :crab: Small exercises
+      to get you used to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s07-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for traits, generics, and interface design using
+      the already named exercise group.
+    angle_detail: 'Use the existing locator: generics and traits. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-07
+    depth: unassessed
+    scope: unevaluated
+    locator: 'generics and traits; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used
+      to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s08-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for lifetimes and borrowed api contracts using the
+      already named exercise group.
+    angle_detail: 'Use the existing locator: lifetimes. The stage objective, resource wording, activity
+      kind, triage, and order are retained. This binding records where the existing activity belongs,
+      rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-08
+    depth: unassessed
+    scope: unevaluated
+    locator: 'lifetimes; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to reading
+      and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+  - id: route-job-rust-s10-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rustlings exercises
+    format: exercise
+    angle: Provides focused compiler-feedback drills for closures, iterators, and zero-cost pipelines
+      using the already named exercise group.
+    angle_detail: 'Use the existing locator: iterators and closures. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-10
+    depth: unassessed
+    scope: unevaluated
+    locator: 'iterators and closures; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
+    url: https://github.com/rust-lang/rustlings
+- source_id: source-cargo-reference
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 2
+  unit_routes:
+  - id: route-job-rust-s09-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Cargo reference — manifest format
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check modules, crates, workspaces,
+      and public boundaries.
+    angle_detail: 'Use the existing locator: Package, target, feature, and dependency tables. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-09
+    depth: unassessed
+    scope: unevaluated
+    locator: Package, target, feature, and dependency tables; "The Manifest Format - The Cargo Book"
+    url: https://doc.rust-lang.org/cargo/reference/manifest.html
+- source_id: source-rust-std-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 3
+  unit_routes:
+  - id: route-job-rust-s11-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rust standard library — pointer module
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check smart pointers, shared ownership,
+      and interior mutability.
+    angle_detail: 'Use the existing locator: Pointer types and safety contracts. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-11
+    depth: unassessed
+    scope: unevaluated
+    locator: Pointer types and safety contracts; "std::ptr - Rust"
+    url: https://doc.rust-lang.org/std/ptr/
+- source_id: source-rust-api-guidelines
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 4
+  unit_routes:
+  - id: route-job-rust-s12-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rust API Guidelines
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check testing, documentation, clippy,
+      and api quality.
+    angle_detail: 'Use the existing locator: Checklist for idiomatic, interoperable public APIs. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-12
+    depth: unassessed
+    scope: unevaluated
+    locator: Checklist for idiomatic, interoperable public APIs; "About - Rust API Guidelines"
+    url: https://rust-lang.github.io/api-guidelines/
+- source_id: source-rayon-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 5
+  unit_routes:
+  - id: route-job-rust-s13-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rayon documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check concurrency, send, sync,
+      channels, and rayon.
+    angle_detail: 'Use the existing locator: Parallel iterators and thread-pool contracts. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-13
+    depth: unassessed
+    scope: unevaluated
+    locator: Parallel iterators and thread-pool contracts; "rayon - Rust"
+    url: https://docs.rs/rayon/latest/rayon/
+- source_id: source-tokio-tutorial
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 6
+  unit_routes:
+  - id: route-job-rust-s14-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: Tokio tutorial
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check async rust, cancellation,
+      and blocking boundaries.
+    angle_detail: 'Use the existing locator: Tasks, I/O, spawning, shared state, and channels. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-14
+    depth: unassessed
+    scope: unevaluated
+    locator: Tasks, I/O, spawning, shared state, and channels; "Tutorial | Tokio - An asynchronous Rust
+      runtime"
+    url: https://tokio.rs/tokio/tutorial
+- source_id: source-thiserror-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 7
+  unit_routes:
+  - id: route-job-rust-s15-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: thiserror documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check production errors, serialization,
+      and ecosystem choices.
+    angle_detail: 'Use the existing locator: Typed library errors. The stage objective, resource wording,
+      activity kind, triage, and order are retained. This binding records where the existing activity
+      belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: Typed library errors; "thiserror - Rust"
+    url: https://docs.rs/thiserror/latest/thiserror/
+- source_id: source-anyhow-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 8
+  unit_routes:
+  - id: route-job-rust-s15-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: anyhow documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check production errors, serialization,
+      and ecosystem choices.
+    angle_detail: 'Use the existing locator: Application-level context and propagation. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: Application-level context and propagation; "anyhow - Rust"
+    url: https://docs.rs/anyhow/latest/anyhow/
+- source_id: source-serde-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 9
+  unit_routes:
+  - id: route-job-rust-s15-r04
+    unit_id: unit-job-rust-engineering-fluency
+    title: Serde documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check production errors, serialization,
+      and ecosystem choices.
+    angle_detail: 'Use the existing locator: Serialization data model and derives. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-15
+    depth: unassessed
+    scope: unevaluated
+    locator: Serialization data model and derives; "Overview · Serde"
+    url: https://serde.rs/
+- source_id: source-pyo3-guide
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 10
+  unit_routes:
+  - id: route-job-rust-s16-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: PyO3 user guide
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check pyo3, maturin, the gil, and
+      python boundary design.
+    angle_detail: 'Use the existing locator: Python modules, functions, types, errors, GIL, and free-threading
+      notes. The stage objective, resource wording, activity kind, triage, and order are retained. This
+      binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Python modules, functions, types, errors, GIL, and free-threading notes; "Introduction -
+      PyO3 user guide"
+    url: https://pyo3.rs/
+  - id: route-job-rust-s18-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: PyO3 examples repository
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check capstone — own a python-to-rust
+      feature end to end.
+    angle_detail: 'Use the existing locator: Small reference integrations; read only after the baseline
+      works. The stage objective, resource wording, activity kind, triage, and order are retained. This
+      binding records where the existing activity belongs, rather than asserting a complete comparative
+      source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-18
+    depth: unassessed
+    scope: unevaluated
+    locator: Small reference integrations; read only after the baseline works; "pyo3/examples at main
+      · PyO3/pyo3 · GitHub"
+    url: https://github.com/PyO3/pyo3/tree/main/examples
+- source_id: source-maturin-guide
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 11
+  unit_routes:
+  - id: route-job-rust-s16-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: maturin guide
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check pyo3, maturin, the gil, and
+      python boundary design.
+    angle_detail: 'Use the existing locator: Project layout, build, develop, and wheel workflow. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-16
+    depth: unassessed
+    scope: unevaluated
+    locator: Project layout, build, develop, and wheel workflow; "Introduction - Maturin User Guide"
+    url: https://www.maturin.rs/
+- source_id: source-ndarray-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 12
+  unit_routes:
+  - id: route-job-rust-s17-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: Rust ndarray documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check sparse buffers, numpy interop,
+      and performance evidence.
+    angle_detail: 'Use the existing locator: Owned arrays, views, shapes, strides, and parallel features.
+      The stage objective, resource wording, activity kind, triage, and order are retained. This binding
+      records where the existing activity belongs, rather than asserting a complete comparative source
+      evaluation.'
+    covers:
+    - knowledge-job-rust-stage-17
+    depth: unassessed
+    scope: unevaluated
+    locator: Owned arrays, views, shapes, strides, and parallel features; "ndarray - Rust"
+    url: https://docs.rs/ndarray/latest/ndarray/
+- source_id: source-rust-numpy-documentation
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 13
+  unit_routes:
+  - id: route-job-rust-s17-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: rust-numpy documentation
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check sparse buffers, numpy interop,
+      and performance evidence.
+    angle_detail: 'Use the existing locator: PyO3 bindings for NumPy arrays and ownership rules. The stage
+      objective, resource wording, activity kind, triage, and order are retained. This binding records
+      where the existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-17
+    depth: unassessed
+    scope: unevaluated
+    locator: PyO3 bindings for NumPy arrays and ownership rules; "numpy - Rust"
+    url: https://docs.rs/numpy/latest/numpy/
+- source_id: source-rustonomicon
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 14
+  unit_routes:
+  - id: route-job-rust-s19-r02
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rustonomicon
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check pull-based advanced clinic
+      — unsafe, macros, and type-level techniques.
+    angle_detail: 'Use the existing locator: Unsafe Rust contracts and undefined behavior. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-19
+    depth: unassessed
+    scope: unevaluated
+    locator: Unsafe Rust contracts and undefined behavior; "Introduction - The Rustonomicon"
+    url: https://doc.rust-lang.org/nomicon/
+- source_id: source-rust-reference
+  role: reference
+  why: Preserves materials already assigned by this existing study map; no new global source evaluation
+    is implied.
+  priority: 15
+  unit_routes:
+  - id: route-job-rust-s19-r03
+    unit_id: unit-job-rust-engineering-fluency
+    title: The Rust Reference — macros
+    format: documentation
+    angle: Provides the project's own contracts and examples needed to check pull-based advanced clinic
+      — unsafe, macros, and type-level techniques.
+    angle_detail: 'Use the existing locator: Declarative and procedural macro semantics. The stage objective,
+      resource wording, activity kind, triage, and order are retained. This binding records where the
+      existing activity belongs, rather than asserting a complete comparative source evaluation.'
+    covers:
+    - knowledge-job-rust-stage-19
+    depth: unassessed
+    scope: unevaluated
+    locator: Declarative and procedural macro semantics; "Macros - The Rust Reference"
+    url: https://doc.rust-lang.org/reference/macros.html

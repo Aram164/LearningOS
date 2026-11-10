@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 11
+  file:operations/transactions/lineage.yaml: 12
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -56,7 +56,7 @@ revisions:
   module-job-git: 2
   module-job-polars: 4
   module-job-python-engineering: 3
-  module-job-rust-engineering: 1
+  module-job-rust-engineering: 2
   module-project-bachelor-thesis: 2
   note-06-random-variables-pp005-008: 1
   note-06-random-variables-pp009-013: 1
@@ -125,6 +125,7 @@ revisions:
   source-algoexpert-catalogue: 1
   source-amls-prior-archives: 1
   source-analysis-klausuren-extern: 1
+  source-anyhow-documentation: 1
   source-aptos-winning-solution: 1
   source-arora-barak: 1
   source-beazley-generator-tricks: 1
@@ -135,6 +136,7 @@ revisions:
   source-bs-hu-prior-slides: 2
   source-caltech-lfd: 1
   source-captum: 1
+  source-cargo-reference: 1
   source-cmu-10414: 1
   source-cmu-15445: 1
   source-cmu-15451-splay-notes: 1
@@ -190,6 +192,7 @@ revisions:
   source-map-job-polars: 1
   source-map-job-python-engineering: 1
   source-map-job-rust-engineering: 1
+  source-maturin-guide: 1
   source-medmnist: 1
   source-mimic-iv: 1
   source-mit-18100a: 1
@@ -210,6 +213,7 @@ revisions:
   source-murphy-pml1: 1
   source-mypy-docs: 1
   source-narwhals-concepts: 1
+  source-ndarray-documentation: 1
   source-ng-coursera: 1
   source-nielsen-nndl: 1
   source-nist-ai-risk-management-framework: 1
@@ -226,9 +230,11 @@ revisions:
   source-pre-commit-docs: 1
   source-ptb-xl: 1
   source-pydata-handbook: 1
+  source-pyo3-guide: 1
   source-python-docs: 1
   source-python-packaging-guide: 1
   source-pytorch-tutorials: 1
+  source-rayon-documentation: 1
   source-rd-agent-paper: 1
   source-restic-docs: 1
   source-rex-mle-paper: 1
@@ -236,10 +242,17 @@ revisions:
   source-rohrer-e2eml: 1
   source-rsync-manual: 1
   source-ruff-docs: 1
+  source-rust-api-guidelines: 1
+  source-rust-numpy-documentation: 1
+  source-rust-reference: 1
+  source-rust-std-documentation: 1
+  source-rustlings: 1
+  source-rustonomicon: 1
   source-sad-klausuren-extern: 1
   source-scalable-dataframe-systems-paper: 1
   source-scrimba-catalogue: 1
   source-semantic-versioning: 1
+  source-serde-documentation: 1
   source-shellcheck: 1
   source-sigstore-docs: 1
   source-siim-isic-winning-solution: 1
@@ -253,7 +266,9 @@ revisions:
   source-sutton-barto-rl: 1
   source-symfonycasts-catalogue: 1
   source-systemd-manuals: 1
+  source-thiserror-documentation: 1
   source-tmux-manual: 1
+  source-tokio-tutorial: 1
   source-toussaint-optimization-script: 1
   source-tripod-ai: 1
   source-tu-python-ml-course: 1
@@ -417,7 +432,7 @@ revisions:
   study-map-job-python-testing: 1
   study-map-job-python-tooling: 1
   study-map-job-python-type-hints: 1
-  study-map-job-rust-engineering-fluency: 1
+  study-map-job-rust-engineering-fluency: 2
   study-map-m2-analysis-ch01: 1
   study-map-m2-analysis-ch02: 1
   study-map-m2-analysis-exam-prep: 1
@@ -501,7 +516,7 @@ revisions:
   unit-job-python-testing: 1
   unit-job-python-tooling: 1
   unit-job-python-type-hints: 1
-  unit-job-rust-engineering-fluency: 1
+  unit-job-rust-engineering-fluency: 2
   unit-m2-analysis-ch01: 6
   unit-m2-analysis-ch02: 9
   unit-m2-analysis-ch03: 9

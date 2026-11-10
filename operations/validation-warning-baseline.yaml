@@ -23,13 +23,10 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: 'G8 git: bind retained resources to exact source routes and dispositions'
-total: 425
-distinct_signatures: 45
+note: 'G8 rust: bind existing material routes and preserve roadmap pointers'
+total: 379
+distinct_signatures: 43
 signatures:
-- code: RESOURCE-SCOPE-NO-DISPOSITION
-  path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
-  count: 15
 - code: RESOURCE-SCOPE-NO-DISPOSITION
   path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml
   count: 19
@@ -147,9 +144,6 @@ signatures:
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
   count: 25
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
-  count: 31
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
   count: 44

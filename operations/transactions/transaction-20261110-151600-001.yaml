@@ -1,0 +1,94 @@
+schema_version: 2
+id: transaction-20261110-151600-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T15:16:00+01:00'
+snapshot_before: sha256:eea3f9c585179f7baa889bd04965da04683c3a147aa79079c491631ddefde004
+snapshot_after: sha256:bd4675dbc8c3115a2c425e2862378c86b269679461fb6aba2f8cd46742e753f7
+expected_revisions:
+  source-anyhow-documentation: 0
+  source-cargo-reference: 0
+  source-maturin-guide: 0
+  source-ndarray-documentation: 0
+  source-pyo3-guide: 0
+  source-rayon-documentation: 0
+  source-rust-api-guidelines: 0
+  source-rust-numpy-documentation: 0
+  source-rust-reference: 0
+  source-rust-std-documentation: 0
+  source-rustlings: 0
+  source-rustonomicon: 0
+  source-serde-documentation: 0
+  source-thiserror-documentation: 0
+  source-tokio-tutorial: 0
+artifact_revisions:
+  source-anyhow-documentation:
+    before: 0
+    after: 1
+  source-cargo-reference:
+    before: 0
+    after: 1
+  source-maturin-guide:
+    before: 0
+    after: 1
+  source-ndarray-documentation:
+    before: 0
+    after: 1
+  source-pyo3-guide:
+    before: 0
+    after: 1
+  source-rayon-documentation:
+    before: 0
+    after: 1
+  source-rust-api-guidelines:
+    before: 0
+    after: 1
+  source-rust-numpy-documentation:
+    before: 0
+    after: 1
+  source-rust-reference:
+    before: 0
+    after: 1
+  source-rust-std-documentation:
+    before: 0
+    after: 1
+  source-rustlings:
+    before: 0
+    after: 1
+  source-rustonomicon:
+    before: 0
+    after: 1
+  source-serde-documentation:
+    before: 0
+    after: 1
+  source-thiserror-documentation:
+    before: 0
+    after: 1
+  source-tokio-tutorial:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 9ec4ba79ab1cfda666687e0ac50cc5176d0db1a74708933234a764a069b9d012
+  sha256_after: 1c76a0f0eec4a15661a578a7c41df4281ab7e50841f08660dce3df86ebbd7fbf
+  created: false
+metadata:
+  data_roots_sha256: sha256:bde435e5631e22d9b8f695e34466d459b23127c0ff43f864a29e6007a0d771a1
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-rust-intake-c5b71b6e
+  idempotency_key: rust-intake
+  intent_sha256: sha256:23a67a9765c5480a2903681beac82f3453d1f81075fcb3b9f3f51728d8966e25
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:23a67a9765c5480a2903681beac82f3453d1f81075fcb3b9f3f51728d8966e25

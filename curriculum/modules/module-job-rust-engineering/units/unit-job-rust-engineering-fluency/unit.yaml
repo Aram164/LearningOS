@@ -11,8 +11,262 @@ scope: Given an unfamiliar Rust or PyO3 path, independently explain ownership, b
   capstone and a read-only architectural comparison with Stratum, not completion of readings.
 status: ready
 scope_sources: []
-source_selections: []
+source_selections:
+- route_id: route-job-rust-s01-r02
+  source_id: source-rust-book
+  locator: Chapter 1 — Getting Started; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop
+- route_id: route-job-rust-s01-r03
+  source_id: source-rustlings
+  locator: 'intro exercises; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+    reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop
+- route_id: route-job-rust-s02-r02
+  source_id: source-rust-book
+  locator: 'Chapters 2–3: Programming a Guessing Game and Common Programming Concepts; The-Rust-Programming-Language_print.html'
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-02-bindings-types-expressions-and-control-flow
+- route_id: route-job-rust-s02-r03
+  source_id: source-rustlings
+  locator: 'variables, functions, if, primitive_types; "GitHub - rust-lang/rustlings: :crab: Small exercises
+    to get you used to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-02-bindings-types-expressions-and-control-flow
+- route_id: route-job-rust-s03-r02
+  source_id: source-rust-book
+  locator: Chapter 4.1 — What Is Ownership?; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-03-ownership-moves-clone-and-drop
+- route_id: route-job-rust-s03-r03
+  source_id: source-rustlings
+  locator: 'move_semantics; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to reading
+    and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-03-ownership-moves-clone-and-drop
+- route_id: route-job-rust-s04-r02
+  source_id: source-rust-book
+  locator: Chapter 4.2–4.3 — References, Borrowing, and Slices; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-04-borrowing-slices-and-reborrowing
+- route_id: route-job-rust-s04-r03
+  source_id: source-rustlings
+  locator: 'borrowing and strings; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used
+    to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-04-borrowing-slices-and-reborrowing
+- route_id: route-job-rust-s05-r02
+  source_id: source-rust-book
+  locator: '"Chapters 5–6 — Structs, Enums, and Pattern Matching"; The-Rust-Programming-Language_print.html'
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-05-structs-enums-pattern-matching-and-domain-models
+- route_id: route-job-rust-s05-r03
+  source_id: source-rustlings
+  locator: 'structs, enums, options; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+    used to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-05-structs-enums-pattern-matching-and-domain-models
+- route_id: route-job-rust-s06-r02
+  source_id: source-rust-book
+  locator: Chapters 8–9 — Collections and Error Handling; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-06-collections-result-and-iterator-fundamentals
+- route_id: route-job-rust-s06-r03
+  source_id: source-rustlings
+  locator: 'vecs, hashmaps, strings, error_handling; "GitHub - rust-lang/rustlings: :crab: Small exercises
+    to get you used to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-06-collections-result-and-iterator-fundamentals
+- route_id: route-job-rust-s07-r02
+  source_id: source-rust-book
+  locator: Chapter 10.1–10.2 — Generics and Traits; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-07-traits-generics-and-interface-design
+- route_id: route-job-rust-s07-r03
+  source_id: source-rustlings
+  locator: 'generics and traits; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used
+    to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-07-traits-generics-and-interface-design
+- route_id: route-job-rust-s08-r02
+  source_id: source-rust-book
+  locator: Chapter 10.3 — Validating References with Lifetimes; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-08-lifetimes-and-borrowed-api-contracts
+- route_id: route-job-rust-s08-r03
+  source_id: source-rustlings
+  locator: 'lifetimes; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to reading
+    and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-08-lifetimes-and-borrowed-api-contracts
+- route_id: route-job-rust-s09-r02
+  source_id: source-rust-book
+  locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules, and Workspaces; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-09-modules-crates-workspaces-and-public-boundaries
+- route_id: route-job-rust-s10-r02
+  source_id: source-rust-book
+  locator: 'Chapter 13 — Functional Language Features: Iterators and Closures; The-Rust-Programming-Language_print.html'
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-10-closures-iterators-and-zero-cost-pipelines
+- route_id: route-job-rust-s10-r03
+  source_id: source-rustlings
+  locator: 'iterators and closures; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used
+    to reading and writing Rust code! · GitHub"'
+  purpose: 'Selected by the existing required-now stage placement: Rustlings exercises'
+  stage_ids:
+  - stage-rust-10-closures-iterators-and-zero-cost-pipelines
+- route_id: route-job-rust-s11-r02
+  source_id: source-rust-book
+  locator: Chapter 15 — Smart Pointers; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-11-smart-pointers-shared-ownership-and-interior-mut
+- route_id: route-job-rust-s12-r02
+  source_id: source-rust-book
+  locator: Chapter 11 and Chapter 14.2 — Tests and Documentation; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-12-testing-documentation-clippy-and-api-quality
+- route_id: route-job-rust-s13-r02
+  source_id: source-rust-book
+  locator: Chapter 16 — Fearless Concurrency; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-13-concurrency-send-sync-channels-and-rayon
+- route_id: route-job-rust-s14-r02
+  source_id: source-rust-book
+  locator: Chapter 17 — Async and Await; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-14-async-rust-cancellation-and-blocking-boundaries
+- route_id: route-job-rust-s16-r02
+  source_id: source-pyo3-guide
+  locator: Python modules, functions, types, errors, GIL, and free-threading notes; "Introduction - PyO3
+    user guide"
+  purpose: 'Selected by the existing required-now stage placement: PyO3 user guide'
+  stage_ids:
+  - stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design
+- route_id: route-job-rust-s16-r03
+  source_id: source-maturin-guide
+  locator: Project layout, build, develop, and wheel workflow; "Introduction - Maturin User Guide"
+  purpose: 'Selected by the existing required-now stage placement: maturin guide'
+  stage_ids:
+  - stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design
+- route_id: route-job-rust-s18-r02
+  source_id: source-rust-book
+  locator: Revisit the chapters connected to recorded misses; The-Rust-Programming-Language_print.html
+  purpose: 'Selected by the existing required-now stage placement: The Rust Programming Language'
+  stage_ids:
+  - stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end
+- route_id: route-job-rust-s18-r03
+  source_id: source-pyo3-guide
+  locator: Small reference integrations; read only after the baseline works; "pyo3/examples at main ·
+    PyO3/pyo3 · GitHub"
+  purpose: 'Selected by the existing helpful-now stage placement: PyO3 examples repository'
+  stage_ids:
+  - stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end
 working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/notes.md
 artifacts: {}
 workspace_ids: []
 current_study_map: study-map-job-rust-engineering-fluency
+knowledge_map:
+  summary: Given an unfamiliar Rust or PyO3 path, independently explain ownership, borrowing, lifetime,
+    trait, error, concurrency, and FFI behavior; design a small crate with explicit invariants; follow
+    compiler diagnostics rather than guessing; test, document, profile, and package it; and review a Python-to-Rust
+    boundary for copies, errors, GIL behavior, and thread safety. Evidence is a no-AI Rust/Python extension
+    capstone and a read-only architectural comparison with Stratum, not completion of readings.
+  nodes:
+  - id: knowledge-job-rust-stage-01
+    title: Tooling, Cargo, and the compiler feedback loop
+    summary: Build the smallest complete Rust crate and learn to treat cargo, rustc diagnostics, rustfmt,
+      clippy, tests, and documentation as one engineering feedback loop.
+  - id: knowledge-job-rust-stage-02
+    title: Bindings, types, expressions, and control flow
+    summary: Write idiomatic Rust syntax from memory and reason about mutability, shadowing, expressions,
+      numeric conversions, loops, matches, and function signatures.
+  - id: knowledge-job-rust-stage-03
+    title: Ownership, moves, Clone, and Drop
+    summary: Predict ownership transfers and design APIs that make allocation and copying visible.
+  - id: knowledge-job-rust-stage-04
+    title: Borrowing, slices, and reborrowing
+    summary: Design borrowed APIs with shared and exclusive access, slices, and scopes that satisfy invariants
+      without unnecessary allocation.
+  - id: knowledge-job-rust-stage-05
+    title: Structs, enums, pattern matching, and domain models
+    summary: Model valid states with structs and enums so impossible or unhandled cases become compiler-visible.
+  - id: knowledge-job-rust-stage-06
+    title: Collections, Result, and iterator fundamentals
+    summary: Choose collections by access pattern, propagate typed failures, and replace index-heavy loops
+      with clear iterator code where it improves correctness.
+  - id: knowledge-job-rust-stage-07
+    title: Traits, generics, and interface design
+    summary: Express capability-based interfaces with trait bounds and choose static or dynamic dispatch
+      deliberately.
+  - id: knowledge-job-rust-stage-08
+    title: Lifetimes and borrowed API contracts
+    summary: Annotate lifetime relationships by reasoning about which output borrows from which input,
+      and redesign APIs when borrowing would make ownership unclear.
+  - id: knowledge-job-rust-stage-09
+    title: Modules, crates, workspaces, and public boundaries
+    summary: Organize a multi-module crate with a small public API, private implementation details, feature-aware
+      dependencies, and reproducible metadata.
+  - id: knowledge-job-rust-stage-10
+    title: Closures, iterators, and zero-cost pipelines
+    summary: Reason about Fn/FnMut/FnOnce capture, iterator ownership, laziness, and allocation while
+      building expressive data pipelines.
+  - id: knowledge-job-rust-stage-11
+    title: Smart pointers, shared ownership, and interior mutability
+    summary: Select Box, Rc, Arc, Cell, RefCell, Mutex, or ordinary ownership from the actual sharing
+      and mutation requirements.
+  - id: knowledge-job-rust-stage-12
+    title: Testing, documentation, clippy, and API quality
+    summary: Treat examples, unit tests, integration tests, property checks, compiler lints, and documentation
+      as parts of the public contract.
+  - id: knowledge-job-rust-stage-13
+    title: Concurrency, Send, Sync, channels, and Rayon
+    summary: Design concurrent work with explicit ownership, deterministic results, bounded resources,
+      and measured benefit.
+  - id: knowledge-job-rust-stage-14
+    title: Async Rust, cancellation, and blocking boundaries
+    summary: Understand Future polling, executors, cancellation, pinning at a conceptual level, and when
+      async is inappropriate for CPU-bound kernels.
+  - id: knowledge-job-rust-stage-15
+    title: Production errors, serialization, and ecosystem choices
+    summary: Design stable error categories and adopt ecosystem crates only after understanding their
+      contract, maintenance cost, and boundary behavior.
+  - id: knowledge-job-rust-stage-16
+    title: PyO3, maturin, the GIL, and Python boundary design
+    summary: Build and reason about a small Python extension whose types, ownership, errors, copies, ABI,
+      and threading behavior are explicit.
+  - id: knowledge-job-rust-stage-17
+    title: Sparse buffers, NumPy interop, and performance evidence
+    summary: Reason about contiguous and sparse layouts, dtype and index contracts, copies, parallel kernels,
+      and benchmark validity across Python and Rust.
+  - id: knowledge-job-rust-stage-18
+    title: Capstone — own a Python-to-Rust feature end to end
+    summary: Independently design, implement, test, package, profile, document, and review a small native-backed
+      Python feature without copying Stratum code.
+  - id: knowledge-job-rust-stage-19
+    title: Pull-based advanced clinic — unsafe, macros, and type-level techniques
+    summary: Approach advanced Rust only when a concrete problem demands it, with explicit safety invariants,
+      expansion inspection, and simpler alternatives documented first.

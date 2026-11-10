@@ -28,7 +28,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-01-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -38,15 +38,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-01-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 1 — Getting Started
+    locator: Chapter 1 — Getting Started; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s01-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-01-03-rustlings-exercises
-    locator: intro exercises
+    locator: 'intro exercises; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+      reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s01-r03
   - kind: practise
     label: Build a tiny library and CLI from blank
     id: resource-rust-01-04-build-a-tiny-library-and-cli-from-blank
@@ -56,6 +61,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-01
 - id: stage-rust-02-bindings-types-expressions-and-control-flow
   number: 2
   title: Bindings, types, expressions, and control flow
@@ -72,7 +78,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-02-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -82,15 +88,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-02-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: 'Chapters 2–3: Programming a Guessing Game and Common Programming Concepts'
+    locator: 'Chapters 2–3: Programming a Guessing Game and Common Programming Concepts; The-Rust-Programming-Language_print.html'
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s02-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-02-03-rustlings-exercises
-    locator: variables, functions, if, primitive_types
+    locator: 'variables, functions, if, primitive_types; "GitHub - rust-lang/rustlings: :crab: Small exercises
+      to get you used to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s02-r03
   - kind: practise
     label: Implement a typed text-statistics CLI
     id: resource-rust-02-04-implement-a-typed-text-statistics-cli
@@ -100,6 +111,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-02-bindings-types-expressions-and-control-flow/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-02
 - id: stage-rust-03-ownership-moves-clone-and-drop
   number: 3
   title: Ownership, moves, Clone, and Drop
@@ -115,7 +127,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-03-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -125,15 +137,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-03-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 4.1 — What Is Ownership?
+    locator: Chapter 4.1 — What Is Ownership?; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s03-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-03-03-rustlings-exercises
-    locator: move_semantics
+    locator: 'move_semantics; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+      reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s03-r03
   - kind: practise
     label: Build an owned buffer pipeline
     id: resource-rust-03-04-build-an-owned-buffer-pipeline
@@ -143,6 +160,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-03-ownership-moves-clone-and-drop/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-03
 - id: stage-rust-04-borrowing-slices-and-reborrowing
   number: 4
   title: Borrowing, slices, and reborrowing
@@ -160,7 +178,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-04-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -170,15 +188,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-04-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 4.2–4.3 — References, Borrowing, and Slices
+    locator: Chapter 4.2–4.3 — References, Borrowing, and Slices; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s04-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-04-03-rustlings-exercises
-    locator: borrowing and strings
+    locator: 'borrowing and strings; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s04-r03
   - kind: practise
     label: Design and repair a slice-based tokenizer
     id: resource-rust-04-04-design-and-repair-a-slice-based-tokenizer
@@ -188,6 +211,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-04-borrowing-slices-and-reborrowing/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-04
 - id: stage-rust-05-structs-enums-pattern-matching-and-domain-models
   number: 5
   title: Structs, enums, pattern matching, and domain models
@@ -203,7 +227,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-05-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -213,15 +237,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-05-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapters 5–6 — Structs, Enums, and Pattern Matching
+    locator: '"Chapters 5–6 — Structs, Enums, and Pattern Matching"; The-Rust-Programming-Language_print.html'
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s05-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-05-03-rustlings-exercises
-    locator: structs, enums, options
+    locator: 'structs, enums, options; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s05-r03
   - kind: practise
     label: Model a fallible transformation pipeline
     id: resource-rust-05-04-model-a-fallible-transformation-pipeline
@@ -231,6 +260,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-05-structs-enums-pattern-matching-and-domain-models/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-05
 - id: stage-rust-06-collections-result-and-iterator-fundamentals
   number: 6
   title: Collections, Result, and iterator fundamentals
@@ -248,7 +278,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-06-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -258,15 +288,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-06-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapters 8–9 — Collections and Error Handling
+    locator: Chapters 8–9 — Collections and Error Handling; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s06-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-06-03-rustlings-exercises
-    locator: vecs, hashmaps, strings, error_handling
+    locator: 'vecs, hashmaps, strings, error_handling; "GitHub - rust-lang/rustlings: :crab: Small exercises
+      to get you used to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s06-r03
   - kind: practise
     label: Build a validated sparse-row accumulator
     id: resource-rust-06-04-build-a-validated-sparse-row-accumulator
@@ -276,6 +311,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-06-collections-result-and-iterator-fundamentals/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-06
 - id: stage-rust-07-traits-generics-and-interface-design
   number: 7
   title: Traits, generics, and interface design
@@ -293,7 +329,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-07-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -303,15 +339,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-07-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 10.1–10.2 — Generics and Traits
+    locator: Chapter 10.1–10.2 — Generics and Traits; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s07-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-07-03-rustlings-exercises
-    locator: generics and traits
+    locator: 'generics and traits; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used
+      to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s07-r03
   - kind: practise
     label: Implement and review a generic processing kernel
     id: resource-rust-07-04-implement-and-review-a-generic-processing-kernel
@@ -321,6 +362,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-07-traits-generics-and-interface-design/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-07
 - id: stage-rust-08-lifetimes-and-borrowed-api-contracts
   number: 8
   title: Lifetimes and borrowed API contracts
@@ -338,7 +380,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-08-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -348,15 +390,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-08-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 10.3 — Validating References with Lifetimes
+    locator: Chapter 10.3 — Validating References with Lifetimes; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s08-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-08-03-rustlings-exercises
-    locator: lifetimes
+    locator: 'lifetimes; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to reading
+      and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s08-r03
   - kind: practise
     label: Build a borrowed view over validated sparse data
     id: resource-rust-08-04-build-a-borrowed-view-over-validated-sparse-data
@@ -366,6 +413,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-08-lifetimes-and-borrowed-api-contracts/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-08
 - id: stage-rust-09-modules-crates-workspaces-and-public-boundaries
   number: 9
   title: Modules, crates, workspaces, and public boundaries
@@ -382,7 +430,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-09-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -392,15 +440,19 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-09-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules, and Workspaces
+    locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules, and Workspaces; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s09-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: reference
     label: Cargo reference — manifest format
     id: resource-rust-09-03-cargo-reference-manifest-format
-    locator: Package, target, feature, and dependency tables
+    locator: Package, target, feature, and dependency tables; "The Manifest Format - The Cargo Book"
     url: https://doc.rust-lang.org/cargo/reference/manifest.html
     scope_triage: reference-only
+    source_id: source-cargo-reference
+    route_id: route-job-rust-s09-r03
   - kind: practise
     label: Refactor one crate into explicit modules
     id: resource-rust-09-04-refactor-one-crate-into-explicit-modules
@@ -409,6 +461,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-09-modules-crates-workspaces-and-public-boundaries/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-09
 - id: stage-rust-10-closures-iterators-and-zero-cost-pipelines
   number: 10
   title: Closures, iterators, and zero-cost pipelines
@@ -425,7 +478,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-10-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -435,15 +488,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-10-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: 'Chapter 13 — Functional Language Features: Iterators and Closures'
+    locator: 'Chapter 13 — Functional Language Features: Iterators and Closures; The-Rust-Programming-Language_print.html'
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s10-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: practise
     label: Rustlings exercises
     id: resource-rust-10-03-rustlings-exercises
-    locator: iterators and closures
+    locator: 'iterators and closures; "GitHub - rust-lang/rustlings: :crab: Small exercises to get you
+      used to reading and writing Rust code! · GitHub"'
     url: https://github.com/rust-lang/rustlings
     scope_triage: required-now
+    source_id: source-rustlings
+    route_id: route-job-rust-s10-r03
   - kind: practise
     label: Implement a lazy token-to-feature pipeline
     id: resource-rust-10-04-implement-a-lazy-token-to-feature-pipeline
@@ -452,6 +510,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-10-closures-iterators-and-zero-cost-pipelines/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-10
 - id: stage-rust-11-smart-pointers-shared-ownership-and-interior-mut
   number: 11
   title: Smart pointers, shared ownership, and interior mutability
@@ -470,7 +529,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-11-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -480,15 +539,19 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-11-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 15 — Smart Pointers
+    locator: Chapter 15 — Smart Pointers; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s11-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: reference
     label: Rust standard library — pointer module
     id: resource-rust-11-03-rust-standard-library-pointer-module
-    locator: Pointer types and safety contracts
+    locator: Pointer types and safety contracts; "std::ptr - Rust"
     url: https://doc.rust-lang.org/std/ptr/
     scope_triage: reference-only
+    source_id: source-rust-std-documentation
+    route_id: route-job-rust-s11-r03
   - kind: practise
     label: Build three ownership variants of a small graph
     id: resource-rust-11-04-build-three-ownership-variants-of-a-small-graph
@@ -498,6 +561,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-11-smart-pointers-shared-ownership-and-interior-mut/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-11
 - id: stage-rust-12-testing-documentation-clippy-and-api-quality
   number: 12
   title: Testing, documentation, clippy, and API quality
@@ -514,7 +578,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-12-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -524,15 +588,19 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-12-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 11 and Chapter 14.2 — Tests and Documentation
+    locator: Chapter 11 and Chapter 14.2 — Tests and Documentation; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s12-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: reference
     label: Rust API Guidelines
     id: resource-rust-12-03-rust-api-guidelines
-    locator: Checklist for idiomatic, interoperable public APIs
+    locator: Checklist for idiomatic, interoperable public APIs; "About - Rust API Guidelines"
     url: https://rust-lang.github.io/api-guidelines/
     scope_triage: helpful-now
+    source_id: source-rust-api-guidelines
+    route_id: route-job-rust-s12-r03
   - kind: practise
     label: Harden the earlier kernel crate
     id: resource-rust-12-04-harden-the-earlier-kernel-crate
@@ -541,6 +609,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-12-testing-documentation-clippy-and-api-quality/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-12
 - id: stage-rust-13-concurrency-send-sync-channels-and-rayon
   number: 13
   title: Concurrency, Send, Sync, channels, and Rayon
@@ -557,7 +626,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-13-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -567,15 +636,19 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-13-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 16 — Fearless Concurrency
+    locator: Chapter 16 — Fearless Concurrency; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s13-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: reference
     label: Rayon documentation
     id: resource-rust-13-03-rayon-documentation
-    locator: Parallel iterators and thread-pool contracts
+    locator: Parallel iterators and thread-pool contracts; "rayon - Rust"
     url: https://docs.rs/rayon/latest/rayon/
     scope_triage: required-now
+    source_id: source-rayon-documentation
+    route_id: route-job-rust-s13-r03
   - kind: practise
     label: Parallelize a measured batch transform
     id: resource-rust-13-04-parallelize-a-measured-batch-transform
@@ -585,6 +658,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-13-concurrency-send-sync-channels-and-rayon/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-13
 - id: stage-rust-14-async-rust-cancellation-and-blocking-boundaries
   number: 14
   title: Async Rust, cancellation, and blocking boundaries
@@ -602,7 +676,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-14-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -612,15 +686,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-14-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Chapter 17 — Async and Await
+    locator: Chapter 17 — Async and Await; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s14-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: reference
     label: Tokio tutorial
     id: resource-rust-14-03-tokio-tutorial
-    locator: Tasks, I/O, spawning, shared state, and channels
+    locator: Tasks, I/O, spawning, shared state, and channels; "Tutorial | Tokio - An asynchronous Rust
+      runtime"
     url: https://tokio.rs/tokio/tutorial
     scope_triage: helpful-now
+    source_id: source-tokio-tutorial
+    route_id: route-job-rust-s14-r03
   - kind: practise
     label: Build a cancellable async fetch-and-transform lab
     id: resource-rust-14-04-build-a-cancellable-async-fetch-and-transform-la
@@ -629,6 +708,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-14-async-rust-cancellation-and-blocking-boundaries/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-14
 - id: stage-rust-15-production-errors-serialization-and-ecosystem-ch
   number: 15
   title: Production errors, serialization, and ecosystem choices
@@ -646,7 +726,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-15-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -655,21 +735,27 @@ stages:
   - kind: reference
     label: thiserror documentation
     id: resource-rust-15-02-thiserror-documentation
-    locator: Typed library errors
+    locator: Typed library errors; "thiserror - Rust"
     url: https://docs.rs/thiserror/latest/thiserror/
     scope_triage: required-now
+    source_id: source-thiserror-documentation
+    route_id: route-job-rust-s15-r02
   - kind: reference
     label: anyhow documentation
     id: resource-rust-15-03-anyhow-documentation
-    locator: Application-level context and propagation
+    locator: Application-level context and propagation; "anyhow - Rust"
     url: https://docs.rs/anyhow/latest/anyhow/
     scope_triage: required-now
+    source_id: source-anyhow-documentation
+    route_id: route-job-rust-s15-r03
   - kind: reference
     label: Serde documentation
     id: resource-rust-15-04-serde-documentation
-    locator: Serialization data model and derives
+    locator: Serialization data model and derives; "Overview · Serde"
     url: https://serde.rs/
     scope_triage: required-now
+    source_id: source-serde-documentation
+    route_id: route-job-rust-s15-r04
   - kind: practise
     label: Build a versioned configuration and error boundary
     id: resource-rust-15-05-build-a-versioned-configuration-and-error-bounda
@@ -679,6 +765,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-15-production-errors-serialization-and-ecosystem-ch/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-15
 - id: stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design
   number: 16
   title: PyO3, maturin, the GIL, and Python boundary design
@@ -697,7 +784,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-16-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -706,15 +793,20 @@ stages:
   - kind: read
     label: PyO3 user guide
     id: resource-rust-16-02-pyo3-user-guide
-    locator: Python modules, functions, types, errors, GIL, and free-threading notes
+    locator: Python modules, functions, types, errors, GIL, and free-threading notes; "Introduction -
+      PyO3 user guide"
     url: https://pyo3.rs/
     scope_triage: required-now
+    source_id: source-pyo3-guide
+    route_id: route-job-rust-s16-r02
   - kind: read
     label: maturin guide
     id: resource-rust-16-03-maturin-guide
-    locator: Project layout, build, develop, and wheel workflow
+    locator: Project layout, build, develop, and wheel workflow; "Introduction - Maturin User Guide"
     url: https://www.maturin.rs/
     scope_triage: required-now
+    source_id: source-maturin-guide
+    route_id: route-job-rust-s16-r03
   - kind: practise
     label: Create a toy Python-to-Rust extension
     id: resource-rust-16-04-create-a-toy-python-to-rust-extension
@@ -724,6 +816,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-16
 - id: stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi
   number: 17
   title: Sparse buffers, NumPy interop, and performance evidence
@@ -741,7 +834,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-17-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -750,15 +843,19 @@ stages:
   - kind: reference
     label: Rust ndarray documentation
     id: resource-rust-17-02-rust-ndarray-documentation
-    locator: Owned arrays, views, shapes, strides, and parallel features
+    locator: Owned arrays, views, shapes, strides, and parallel features; "ndarray - Rust"
     url: https://docs.rs/ndarray/latest/ndarray/
     scope_triage: required-now
+    source_id: source-ndarray-documentation
+    route_id: route-job-rust-s17-r02
   - kind: reference
     label: rust-numpy documentation
     id: resource-rust-17-03-rust-numpy-documentation
-    locator: PyO3 bindings for NumPy arrays and ownership rules
+    locator: PyO3 bindings for NumPy arrays and ownership rules; "numpy - Rust"
     url: https://docs.rs/numpy/latest/numpy/
     scope_triage: required-now
+    source_id: source-rust-numpy-documentation
+    route_id: route-job-rust-s17-r03
   - kind: practise
     label: Implement and benchmark a checked CSR kernel
     id: resource-rust-17-04-implement-and-benchmark-a-checked-csr-kernel
@@ -768,6 +865,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-17
 - id: stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end
   number: 18
   title: Capstone — own a Python-to-Rust feature end to end
@@ -789,7 +887,7 @@ stages:
   concepts: []
   scope_triage: required-now
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-18-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -799,15 +897,20 @@ stages:
     label: The Rust Programming Language
     id: resource-rust-18-02-the-rust-programming-language
     source_id: source-rust-book
-    locator: Revisit the chapters connected to recorded misses
+    locator: Revisit the chapters connected to recorded misses; The-Rust-Programming-Language_print.html
     url: https://doc.rust-lang.org/book/
     scope_triage: required-now
+    route_id: route-job-rust-s18-r02
+    vault_path: material://source-rust-book/The-Rust-Programming-Language_print.html
   - kind: read
     label: PyO3 examples repository
     id: resource-rust-18-03-pyo3-examples-repository
-    locator: Small reference integrations; read only after the baseline works
+    locator: Small reference integrations; read only after the baseline works; "pyo3/examples at main
+      · PyO3/pyo3 · GitHub"
     url: https://github.com/PyO3/pyo3/tree/main/examples
     scope_triage: helpful-now
+    source_id: source-pyo3-guide
+    route_id: route-job-rust-s18-r03
   - kind: practise
     label: Build the complete independent extension capstone
     id: resource-rust-18-04-build-the-complete-independent-extension-capston
@@ -817,6 +920,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-18
 - id: stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ
   number: 19
   title: Pull-based advanced clinic — unsafe, macros, and type-level techniques
@@ -834,7 +938,7 @@ stages:
   concepts: []
   scope_triage: deferred
   resources:
-  - kind: read
+  - kind: reference
     label: Canonical roadmap — Rust learning plan
     id: resource-rust-19-01-canonical-roadmap-rust-learning-plan
     locator: The matching phase and step in the canonical Rust roadmap
@@ -843,15 +947,19 @@ stages:
   - kind: reference
     label: The Rustonomicon
     id: resource-rust-19-02-the-rustonomicon
-    locator: Unsafe Rust contracts and undefined behavior
+    locator: Unsafe Rust contracts and undefined behavior; "Introduction - The Rustonomicon"
     url: https://doc.rust-lang.org/nomicon/
     scope_triage: deferred
+    source_id: source-rustonomicon
+    route_id: route-job-rust-s19-r02
   - kind: reference
     label: The Rust Reference — macros
     id: resource-rust-19-03-the-rust-reference-macros
-    locator: Declarative and procedural macro semantics
+    locator: Declarative and procedural macro semantics; "Macros - The Rust Reference"
     url: https://doc.rust-lang.org/reference/macros.html
     scope_triage: deferred
+    source_id: source-rust-reference
+    route_id: route-job-rust-s19-r03
   - kind: practise
     label: Run one need-driven advanced spike
     id: resource-rust-19-04-run-one-need-driven-advanced-spike
@@ -861,3 +969,4 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ/notes.md
+  knowledge_node_id: knowledge-job-rust-stage-19

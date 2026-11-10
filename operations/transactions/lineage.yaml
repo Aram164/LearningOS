@@ -12179,6 +12179,1161 @@ records:
       idempotency_key: reviewed-754a3ae203c34bcfa1cadb8245c9e782
     reviewed_by: ''
     status: supported
+  covers:route-job-rust-s01-r02:
+    claim_id: covers:route-job-rust-s01-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s01-r02 covers knowledge-job-rust-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-01: sha256:8e0cb7ac4618c88297285fe2e051d5cdc719064c9d2633d8a2894ea06e265c3a
+        route-content:route-job-rust-s01-r02: sha256:88b4aeecb51eaab9651e6822bb738ae6c97d8b7578b5107dcb9ad751bd948f70
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 1 — Getting Started
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch01-00-getting-started.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 1 — Getting Started'' in stage ''Tooling, Cargo,
+        and the compiler feedback loop''. Page begins ''Getting Started - The Rust
+        Programming Language''; response SHA-256 b6e126d53a6ad5f91dc1981fd523c726dbf1a2e75953bd9c1a2848233f81edab.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s01-r03:
+    claim_id: covers:route-job-rust-s01-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s01-r03 covers knowledge-job-rust-stage-01
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-01: sha256:8e0cb7ac4618c88297285fe2e051d5cdc719064c9d2633d8a2894ea06e265c3a
+        route-content:route-job-rust-s01-r03: sha256:9912cfab25d6ae20b96c8df4fb212539de2d7df201cfa1385b39801d91da642f
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:intro exercises
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''intro exercises'' in stage ''Tooling, Cargo, and the compiler feedback loop''.
+        Page begins ''GitHub - rust-lang/rustlings: :crab: Small exercises to get
+        you used to reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s02-r02:
+    claim_id: covers:route-job-rust-s02-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s02-r02 covers knowledge-job-rust-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-02: sha256:b69c56d3320e2f1438ed0ed01b28e8448604e8c5502b83099a129f675be8da1e
+        route-content:route-job-rust-s02-r02: sha256:8ac14c57cb2ae3eb0956e412da0e3fdaf7d7106ee9a82d291027b6a6a02fc07f
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - 'route-locator:Chapters 2–3: Programming a Guessing Game and Common Programming
+        Concepts'
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch03-00-common-programming-concepts.html
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''Chapters 2–3: Programming a Guessing Game
+        and Common Programming Concepts'' in stage ''Bindings, types, expressions,
+        and control flow''. Page begins ''Common Programming Concepts - The Rust Programming
+        Language''; response SHA-256 7fccd131617e9c8222a42e7425742ed1c19318188d5c9c6340c2a68568fc9b65.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s02-r03:
+    claim_id: covers:route-job-rust-s02-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s02-r03 covers knowledge-job-rust-stage-02
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-02: sha256:b69c56d3320e2f1438ed0ed01b28e8448604e8c5502b83099a129f675be8da1e
+        route-content:route-job-rust-s02-r03: sha256:f78f458f7476b2981f4b5a5af61ac1d486e7a64e37d472127cf5a0d30c7d677a
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:variables, functions, if, primitive_types
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''variables, functions, if, primitive_types'' in stage ''Bindings, types,
+        expressions, and control flow''. Page begins ''GitHub - rust-lang/rustlings:
+        :crab: Small exercises to get you used to reading and writing Rust code! ·
+        GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s03-r02:
+    claim_id: covers:route-job-rust-s03-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s03-r02 covers knowledge-job-rust-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-03: sha256:9c5fce08a93b9899603f06368e7c3a660f677bf993ec13256b8cc92f7253a621
+        route-content:route-job-rust-s03-r02: sha256:da749412cff3ae303890e65888362af0e831564fa238847da3077e34e66931d9
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 4.1 — What Is Ownership?
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html --
+        trail: Opened 2026-11-10; HTTP 200; inspected page content and headings for
+        the already assigned locator ''Chapter 4.1 — What Is Ownership?'' in stage
+        ''Ownership, moves, Clone, and Drop''. Page begins ''What is Ownership? -
+        The Rust Programming Language''; response SHA-256 e3fc7f4e1db60f35be5bf71f915af51863b2ad0ccc5dd0e78debf4ce57e966a5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s03-r03:
+    claim_id: covers:route-job-rust-s03-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s03-r03 covers knowledge-job-rust-stage-03
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-03: sha256:9c5fce08a93b9899603f06368e7c3a660f677bf993ec13256b8cc92f7253a621
+        route-content:route-job-rust-s03-r03: sha256:1cfd58891c5a7218ce3bc2ed5ff4547a6aca391a353541998e704c60432d5527
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:move_semantics
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''move_semantics'' in stage ''Ownership, moves, Clone, and Drop''. Page begins
+        ''GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+        reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s04-r02:
+    claim_id: covers:route-job-rust-s04-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s04-r02 covers knowledge-job-rust-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-04: sha256:c5c4bd1dd59d7ea4132662a3f5854cd607955d0f4ebefefbb10cad832514c140
+        route-content:route-job-rust-s04-r02: sha256:234342098b548b7f7432f8465a7f952601b774a19c63b6b90fab619cb02ce684
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 4.2–4.3 — References, Borrowing, and Slices
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''Chapter 4.2–4.3 — References, Borrowing,
+        and Slices'' in stage ''Borrowing, slices, and reborrowing''. Page begins
+        ''References and Borrowing - The Rust Programming Language''; response SHA-256
+        379c38691d0eec3fed415151166f37705084acbac8ed98b67adf55990ab43552. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s04-r03:
+    claim_id: covers:route-job-rust-s04-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s04-r03 covers knowledge-job-rust-stage-04
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-04: sha256:c5c4bd1dd59d7ea4132662a3f5854cd607955d0f4ebefefbb10cad832514c140
+        route-content:route-job-rust-s04-r03: sha256:a0585449bf28442eae90d6ea8a02b31963525f7a75e3f70c7904bd135f964f35
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:borrowing and strings
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''borrowing and strings'' in stage ''Borrowing, slices, and reborrowing''.
+        Page begins ''GitHub - rust-lang/rustlings: :crab: Small exercises to get
+        you used to reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s05-r02:
+    claim_id: covers:route-job-rust-s05-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s05-r02 covers knowledge-job-rust-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-05: sha256:d2e564a96719ac7903e908906ee1c6706dc585229fdecf028649fef2d39ba551
+        route-content:route-job-rust-s05-r02: sha256:925431232d1bc698e7dae054c8f0d3b20ff4d5dc0ee6392c870dee78c69ca2f9
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapters 5–6 — Structs, Enums, and Pattern Matching
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch05-00-structs.html -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapters 5–6 — Structs, Enums, and Pattern Matching'' in
+        stage ''Structs, enums, pattern matching, and domain models''. Page begins
+        ''Using Structs to Structure Related Data - The Rust Programming Language'';
+        response SHA-256 798701e63d5ec834ef19269a89609c5bb47a2080a51f9ac9c24105c492eeab7c.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s05-r03:
+    claim_id: covers:route-job-rust-s05-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s05-r03 covers knowledge-job-rust-stage-05
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-05: sha256:d2e564a96719ac7903e908906ee1c6706dc585229fdecf028649fef2d39ba551
+        route-content:route-job-rust-s05-r03: sha256:a1c344c43fe48f5c9569ab43bf50b1df46a97be7bdc460db6f1672e6f6654da8
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:structs, enums, options
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''structs, enums, options'' in stage ''Structs, enums, pattern matching, and
+        domain models''. Page begins ''GitHub - rust-lang/rustlings: :crab: Small
+        exercises to get you used to reading and writing Rust code! · GitHub''; response
+        SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s06-r02:
+    claim_id: covers:route-job-rust-s06-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s06-r02 covers knowledge-job-rust-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-06: sha256:ddb011983663e4bdcfd5e6b15fec29b8e93bda2d382f34a45611f50c70f16c9d
+        route-content:route-job-rust-s06-r02: sha256:09b7a1eab32ec664db6d7ce02981cafb111484bfc21794990c30f0c1567ea3a5
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapters 8–9 — Collections and Error Handling
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch08-00-common-collections.html --
+        trail: Opened 2026-11-10; HTTP 200; inspected page content and headings for
+        the already assigned locator ''Chapters 8–9 — Collections and Error Handling''
+        in stage ''Collections, Result, and iterator fundamentals''. Page begins ''Common
+        Collections - The Rust Programming Language''; response SHA-256 85811bfcf4cca721f14087ddf2699442c0ff6414064ec8af7255c1af1420530a.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s06-r03:
+    claim_id: covers:route-job-rust-s06-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s06-r03 covers knowledge-job-rust-stage-06
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-06: sha256:ddb011983663e4bdcfd5e6b15fec29b8e93bda2d382f34a45611f50c70f16c9d
+        route-content:route-job-rust-s06-r03: sha256:1ad2969b1265fd200f9fb6a0d42132c34d0ae0d54c378d8626f5465d2574f78a
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:vecs, hashmaps, strings, error_handling
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''vecs, hashmaps, strings, error_handling'' in stage ''Collections, Result,
+        and iterator fundamentals''. Page begins ''GitHub - rust-lang/rustlings: :crab:
+        Small exercises to get you used to reading and writing Rust code! · GitHub'';
+        response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s07-r02:
+    claim_id: covers:route-job-rust-s07-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s07-r02 covers knowledge-job-rust-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-07: sha256:1ccd45f53b861f39561421372bb27f25dffe6696817f53a898851fe7ab06e220
+        route-content:route-job-rust-s07-r02: sha256:5bde1f52c861a863ca4514ec95f0f64eacb92770f2650fc22afae84f6b5c002c
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 10.1–10.2 — Generics and Traits
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch10-02-traits.html -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 10.1–10.2 — Generics and Traits'' in stage ''Traits,
+        generics, and interface design''. Page begins ''Defining Shared Behavior with
+        Traits - The Rust Programming Language''; response SHA-256 998c5a1c20235f25176d0c419c36f45b8250965914b5f50f89143abf245fb0d9.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s07-r03:
+    claim_id: covers:route-job-rust-s07-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s07-r03 covers knowledge-job-rust-stage-07
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-07: sha256:1ccd45f53b861f39561421372bb27f25dffe6696817f53a898851fe7ab06e220
+        route-content:route-job-rust-s07-r03: sha256:85a68296ec9bfa1d10a43e1a87f0bd62a89266e80f164fb801c58768e4ab7750
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:generics and traits
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''generics and traits'' in stage ''Traits, generics, and interface design''.
+        Page begins ''GitHub - rust-lang/rustlings: :crab: Small exercises to get
+        you used to reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s08-r02:
+    claim_id: covers:route-job-rust-s08-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s08-r02 covers knowledge-job-rust-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-08: sha256:a13d65d6660f0f6ee995e542d833fa3bb8bc5aa298d866f26a3d464d8ba33ace
+        route-content:route-job-rust-s08-r02: sha256:ba5fc9b8055760505bd7cb53082609136139b398167d615720688105468c7be9
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 10.3 — Validating References with Lifetimes
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 10.3 — Validating References with Lifetimes'' in
+        stage ''Lifetimes and borrowed API contracts''. Page begins ''Validating References
+        with Lifetimes - The Rust Programming Language''; response SHA-256 ea4a843bd3a74229960b490a7af4ecee1d86740ecec5643dcf36ee4fa6a5d40a.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s08-r03:
+    claim_id: covers:route-job-rust-s08-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s08-r03 covers knowledge-job-rust-stage-08
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-08: sha256:a13d65d6660f0f6ee995e542d833fa3bb8bc5aa298d866f26a3d464d8ba33ace
+        route-content:route-job-rust-s08-r03: sha256:8b5478bcfbfe8d8e5876e47484731a0d348f6338536d7f4fdeb2f5897bf2755a
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:lifetimes
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''lifetimes'' in stage ''Lifetimes and borrowed API contracts''. Page begins
+        ''GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to
+        reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s09-r02:
+    claim_id: covers:route-job-rust-s09-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s09-r02 covers knowledge-job-rust-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-09: sha256:d29f6197c8b9f8e70d4e24e302ec840c20b978a21e2e7ac6b78ed4c3aedf8c62
+        route-content:route-job-rust-s09-r02: sha256:3657a33d7928b1e1b5db12b949a77634a0965fb84d1685a0e6f3eef4556c0732
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules,
+        and Workspaces
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''Chapter 7 and Chapter 14.1–14.3 — Packages,
+        Crates, Modules, and Workspaces'' in stage ''Modules, crates, workspaces,
+        and public boundaries''. Page begins ''Packages, Crates, and Modules - The
+        Rust Programming Language''; response SHA-256 3ccd483d32805dadcd724d4054903dc753cb9261d3ecac03c4c47992d763b46a.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s09-r03:
+    claim_id: covers:route-job-rust-s09-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s09-r03 covers knowledge-job-rust-stage-09
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-09: sha256:d29f6197c8b9f8e70d4e24e302ec840c20b978a21e2e7ac6b78ed4c3aedf8c62
+        route-content:route-job-rust-s09-r03: sha256:7612028a297be3a6632bcef3dc3668e614ec71a087692841b8e5452aa370bb2b
+        source-material:source-cargo-reference: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Package, target, feature, and dependency tables
+      - 'external:https://doc.rust-lang.org/cargo/reference/manifest.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Package, target, feature, and dependency tables'' in stage
+        ''Modules, crates, workspaces, and public boundaries''. Page begins ''The
+        Manifest Format - The Cargo Book''; response SHA-256 faabed42690ed91a33349e0a00980008a451332bcbab7ca215facee9c3d473b6.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s10-r02:
+    claim_id: covers:route-job-rust-s10-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s10-r02 covers knowledge-job-rust-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-10: sha256:5ea7231bfaf83da3332a9938be4be41637bdb0da09d7aa6faff625a83b645ef8
+        route-content:route-job-rust-s10-r02: sha256:695f414ed9f93ee5895228bc41ffc34fa73123275adaff074f1fff6efe5d1914
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - 'route-locator:Chapter 13 — Functional Language Features: Iterators and Closures'
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch13-00-functional-features.html
+        -- trail: Opened 2026-11-10; HTTP 200; inspected page content and headings
+        for the already assigned locator ''Chapter 13 — Functional Language Features:
+        Iterators and Closures'' in stage ''Closures, iterators, and zero-cost pipelines''.
+        Page begins ''Functional Language Features: Iterators and Closures - The Rust
+        Programming Language''; response SHA-256 3ec855e1bf64f89e09476bf46989503a8725624f9462fb6ae51d6a62768138a5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s10-r03:
+    claim_id: covers:route-job-rust-s10-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s10-r03 covers knowledge-job-rust-stage-10
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-10: sha256:5ea7231bfaf83da3332a9938be4be41637bdb0da09d7aa6faff625a83b645ef8
+        route-content:route-job-rust-s10-r03: sha256:2d444b46d2c661f61e9fab70b767480bdc0183d379cc0f84c7a8d14dc77ac650
+        source-material:source-rustlings: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:iterators and closures
+      - 'external:https://github.com/rust-lang/rustlings -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''iterators and closures'' in stage ''Closures, iterators, and zero-cost pipelines''.
+        Page begins ''GitHub - rust-lang/rustlings: :crab: Small exercises to get
+        you used to reading and writing Rust code! · GitHub''; response SHA-256 f3d7acbf9d05535123c3b77226bf00e4f29cac512ab9ffd1d791bee16f0f9623.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s11-r02:
+    claim_id: covers:route-job-rust-s11-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s11-r02 covers knowledge-job-rust-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-11: sha256:5abaf79778f9bf8f170249bbb4f8a886d6906ff8f3796da1e7be9e4b9114b423
+        route-content:route-job-rust-s11-r02: sha256:65ca6e2879b7eedec03960dc20497bb502a33a1d97b3fddf0e2371bf0bdfac72
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 15 — Smart Pointers
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch15-00-smart-pointers.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 15 — Smart Pointers'' in stage ''Smart pointers,
+        shared ownership, and interior mutability''. Page begins ''Smart Pointers
+        - The Rust Programming Language''; response SHA-256 dca462ae04ed7307fb123378924f21e2c69e8b1659566fb88f82187a6b4830a8.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s11-r03:
+    claim_id: covers:route-job-rust-s11-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s11-r03 covers knowledge-job-rust-stage-11
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-11: sha256:5abaf79778f9bf8f170249bbb4f8a886d6906ff8f3796da1e7be9e4b9114b423
+        route-content:route-job-rust-s11-r03: sha256:521909df662817896f95b448d58a653ce0449f444b9137ee33ac3719b3b9b9aa
+        source-material:source-rust-std-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Pointer types and safety contracts
+      - 'external:https://doc.rust-lang.org/std/ptr/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Pointer types and safety contracts'' in stage ''Smart pointers, shared ownership,
+        and interior mutability''. Page begins ''std::ptr - Rust''; response SHA-256
+        14f0960be8361339aa7798e198b3f602d4c0b2b182b1bbfe904b095ff66081db. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s12-r02:
+    claim_id: covers:route-job-rust-s12-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s12-r02 covers knowledge-job-rust-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-12: sha256:3db6a81bcf9fb3bb4716d80cb07b0784dbde17db2fd856317400284718cc3a82
+        route-content:route-job-rust-s12-r02: sha256:df3eeec396bc141a322e3b4c77272db5608ca49302bc32525152a863b258a86c
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 11 and Chapter 14.2 — Tests and Documentation
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch11-00-testing.html -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 11 and Chapter 14.2 — Tests and Documentation''
+        in stage ''Testing, documentation, clippy, and API quality''. Page begins
+        ''Writing Automated Tests - The Rust Programming Language''; response SHA-256
+        75e17101d0f27da3c025d06eb5a8def85263c1510fafd06c85c8b156852f7330. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s12-r03:
+    claim_id: covers:route-job-rust-s12-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s12-r03 covers knowledge-job-rust-stage-12
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-12: sha256:3db6a81bcf9fb3bb4716d80cb07b0784dbde17db2fd856317400284718cc3a82
+        route-content:route-job-rust-s12-r03: sha256:0a1942583138e1fda1b34554008f936e96f9a42f1e8cc3ce4bbe15456c771e17
+        source-material:source-rust-api-guidelines: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Checklist for idiomatic, interoperable public APIs
+      - 'external:https://rust-lang.github.io/api-guidelines/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Checklist for idiomatic, interoperable public APIs'' in stage ''Testing,
+        documentation, clippy, and API quality''. Page begins ''About - Rust API Guidelines'';
+        response SHA-256 232058b56bdaf145f663f9a5f0255effca43b8886383ea8342b5c3fadfdeba3d.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s13-r02:
+    claim_id: covers:route-job-rust-s13-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s13-r02 covers knowledge-job-rust-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-13: sha256:0b5bfe78ef61b09950c13cdf6fd606bf21de1839c08de7ee841989f776e52a35
+        route-content:route-job-rust-s13-r02: sha256:1f967ea47aac3b46a96a278fc8a63d9ef88bcdb368daed5e4ae1cd0a27038ddc
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 16 — Fearless Concurrency
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch16-00-concurrency.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 16 — Fearless Concurrency'' in stage ''Concurrency,
+        Send, Sync, channels, and Rayon''. Page begins ''Fearless Concurrency - The
+        Rust Programming Language''; response SHA-256 0ab0d6759cf1760eb7f9747fe1a318d9b520a11b7ac36d6defdd2fcadebfaf5e.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s13-r03:
+    claim_id: covers:route-job-rust-s13-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s13-r03 covers knowledge-job-rust-stage-13
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-13: sha256:0b5bfe78ef61b09950c13cdf6fd606bf21de1839c08de7ee841989f776e52a35
+        route-content:route-job-rust-s13-r03: sha256:e4e950c2b0ccd9cb9d96667de60abf38c2077679881be923245035c5f83a6978
+        source-material:source-rayon-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Parallel iterators and thread-pool contracts
+      - 'external:https://docs.rs/rayon/latest/rayon/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Parallel iterators and thread-pool contracts'' in stage ''Concurrency, Send,
+        Sync, channels, and Rayon''. Page begins ''rayon - Rust''; response SHA-256
+        03d25045a1f3c87e95d184eaf2b23698165bae2dd2f0f7dc47a6f2380d0fe707. This binds
+        the existing placement; it is not a full source-quality assessment or execution
+        of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s14-r02:
+    claim_id: covers:route-job-rust-s14-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s14-r02 covers knowledge-job-rust-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-14: sha256:1bd17f22282bccec2f21f5c5854ec7c964c9bef374dc606a3629c6871a8db1c4
+        route-content:route-job-rust-s14-r02: sha256:e82bd2f5874c592ec0f39538ba022cacec6f709585eda10e09c37a3c53c055c3
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Chapter 17 — Async and Await
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch17-00-async-await.html -- trail:
+        Opened 2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Chapter 17 — Async and Await'' in stage ''Async Rust, cancellation,
+        and blocking boundaries''. Page begins ''Fundamentals of Asynchronous Programming:
+        Async, Await, Futures, and Streams - The Rust Programming Language''; response
+        SHA-256 c73fab7a31975dc684abda09862fb6c27cde44b0036f910b7b28575b04a873b0.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s14-r03:
+    claim_id: covers:route-job-rust-s14-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s14-r03 covers knowledge-job-rust-stage-14
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-14: sha256:1bd17f22282bccec2f21f5c5854ec7c964c9bef374dc606a3629c6871a8db1c4
+        route-content:route-job-rust-s14-r03: sha256:333cae001ae298e7bb88046c22869b79368d237c17ea635866d5c96db65fb424
+        source-material:source-tokio-tutorial: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Tasks, I/O, spawning, shared state, and channels
+      - 'external:https://tokio.rs/tokio/tutorial -- trail: Opened 2026-11-10; HTTP
+        200; inspected page content and headings for the already assigned locator
+        ''Tasks, I/O, spawning, shared state, and channels'' in stage ''Async Rust,
+        cancellation, and blocking boundaries''. Page begins ''Tutorial | Tokio -
+        An asynchronous Rust runtime''; response SHA-256 fc1485ff673ebd1e92ef0d782270238231c36899ccebf6079bff94b0400e1147.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s15-r02:
+    claim_id: covers:route-job-rust-s15-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s15-r02 covers knowledge-job-rust-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-15: sha256:19e2defcbe5ed3dc8aa24d6af3de62d7e8a4788f4a213901cf81f425eb17e464
+        route-content:route-job-rust-s15-r02: sha256:1b07c858fefa8a69b8c3163bc39ad07d327f366e380c58d2d717a09fd06383a0
+        source-material:source-thiserror-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Typed library errors
+      - 'external:https://docs.rs/thiserror/latest/thiserror/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Typed library errors'' in stage ''Production errors, serialization, and
+        ecosystem choices''. Page begins ''thiserror - Rust''; response SHA-256 36e5f7c0cbad0205a2fffd6315b8807f2edcc85fc3b2efd158e21d7823077139.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s15-r03:
+    claim_id: covers:route-job-rust-s15-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s15-r03 covers knowledge-job-rust-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-15: sha256:19e2defcbe5ed3dc8aa24d6af3de62d7e8a4788f4a213901cf81f425eb17e464
+        route-content:route-job-rust-s15-r03: sha256:1f92388a305856048f308ce45e979a277c573cc9724126629999e456b105cd92
+        source-material:source-anyhow-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Application-level context and propagation
+      - 'external:https://docs.rs/anyhow/latest/anyhow/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Application-level context and propagation'' in stage ''Production errors,
+        serialization, and ecosystem choices''. Page begins ''anyhow - Rust''; response
+        SHA-256 deec7ffaa11863b48e21bea58dab94c64f8d4cb3120d814bd837c7ac7c05c10e.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s15-r04:
+    claim_id: covers:route-job-rust-s15-r04
+    claim_kind: route-covers
+    statement: route-job-rust-s15-r04 covers knowledge-job-rust-stage-15
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-15: sha256:19e2defcbe5ed3dc8aa24d6af3de62d7e8a4788f4a213901cf81f425eb17e464
+        route-content:route-job-rust-s15-r04: sha256:c00e31c60c100ea0f5f37a1b99839007b279234e61fc5d42879443d5c0658eb8
+        source-material:source-serde-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Serialization data model and derives
+      - 'external:https://serde.rs/ -- trail: Opened 2026-11-10; HTTP 200; inspected
+        page content and headings for the already assigned locator ''Serialization
+        data model and derives'' in stage ''Production errors, serialization, and
+        ecosystem choices''. Page begins ''Overview · Serde''; response SHA-256 3d572b2f2808a460a131a06e7cdfd4cf4e01c8a017445915c94282058b43d959.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s16-r02:
+    claim_id: covers:route-job-rust-s16-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s16-r02 covers knowledge-job-rust-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-16: sha256:1010d07ab3826935390e67c1d21031656815bf6b32fcf60aa46a3b2ab7321c82
+        route-content:route-job-rust-s16-r02: sha256:ee6d47e4aba6e30030e465eb3032d28ec09b881ca354394bbae59cf0b4972b97
+        source-material:source-pyo3-guide: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Python modules, functions, types, errors, GIL, and free-threading
+        notes
+      - 'external:https://pyo3.rs/ -- trail: Opened 2026-11-10; HTTP 200; inspected
+        page content and headings for the already assigned locator ''Python modules,
+        functions, types, errors, GIL, and free-threading notes'' in stage ''PyO3,
+        maturin, the GIL, and Python boundary design''. Page begins ''Introduction
+        - PyO3 user guide''; response SHA-256 e076af51706f88c470fcf7dcca547f074917cab13c8a8babec2f774d2281de09.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s16-r03:
+    claim_id: covers:route-job-rust-s16-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s16-r03 covers knowledge-job-rust-stage-16
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-16: sha256:1010d07ab3826935390e67c1d21031656815bf6b32fcf60aa46a3b2ab7321c82
+        route-content:route-job-rust-s16-r03: sha256:b9b9ef782932ca7a5726dfe566754ff5d8e9eb029d7dcf4f1e0a11e1341db2f4
+        source-material:source-maturin-guide: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Project layout, build, develop, and wheel workflow
+      - 'external:https://www.maturin.rs/ -- trail: Opened 2026-11-10; HTTP 200; inspected
+        page content and headings for the already assigned locator ''Project layout,
+        build, develop, and wheel workflow'' in stage ''PyO3, maturin, the GIL, and
+        Python boundary design''. Page begins ''Introduction - Maturin User Guide'';
+        response SHA-256 4561d21d19423c2d5eeaca55d6ad4c7378079e3c541b4ffd5155cd597b69f973.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s17-r02:
+    claim_id: covers:route-job-rust-s17-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s17-r02 covers knowledge-job-rust-stage-17
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-17: sha256:f61c669064d720de8ab90037510781f9226d9792f9220a207ac5e626d74cdac1
+        route-content:route-job-rust-s17-r02: sha256:596fca334e81c23e841fb9097c4527e7989f3fb64da958e10984183ec44c57be
+        source-material:source-ndarray-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Owned arrays, views, shapes, strides, and parallel features
+      - 'external:https://docs.rs/ndarray/latest/ndarray/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Owned arrays, views, shapes, strides, and parallel features'' in stage ''Sparse
+        buffers, NumPy interop, and performance evidence''. Page begins ''ndarray
+        - Rust''; response SHA-256 f7b124624b60c33dd24609500e1a935eccb1091eaa473cd5332b44bd90c8b580.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s17-r03:
+    claim_id: covers:route-job-rust-s17-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s17-r03 covers knowledge-job-rust-stage-17
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-17: sha256:f61c669064d720de8ab90037510781f9226d9792f9220a207ac5e626d74cdac1
+        route-content:route-job-rust-s17-r03: sha256:4aa2c4efd537bdd302a8308fecc39b73195c15e5944fcca1e168e38c58f01cf9
+        source-material:source-rust-numpy-documentation: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:PyO3 bindings for NumPy arrays and ownership rules
+      - 'external:https://docs.rs/numpy/latest/numpy/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''PyO3 bindings for NumPy arrays and ownership rules'' in stage ''Sparse buffers,
+        NumPy interop, and performance evidence''. Page begins ''numpy - Rust''; response
+        SHA-256 6310edc35177490dbf4c9407821392a3b8cf667f0c00a2e4ae27a239a5f41fdf.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s18-r02:
+    claim_id: covers:route-job-rust-s18-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s18-r02 covers knowledge-job-rust-stage-18
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html: 73adfd2bd513655f9b9148d102aa94bc7da94ea97581849f71987973d519849b
+        node-content:knowledge-job-rust-stage-18: sha256:0c62a4786f9e20aa3ab2c9b105497864febdbf5f9b94feb16717276d9cf8916b
+        route-content:route-job-rust-s18-r02: sha256:a9ff1391d39c0bfdfb27464b67060570808acdda146006c15eceb6490e83e6b1
+        source-material:source-rust-book: sha256:c2f6c00b0f5dc9416248a0a1d65a3f20f6dacd81245ab7786018bccf1799aa23
+      evidence:
+      - route-locator:Revisit the chapters connected to recorded misses
+      - 'manifest:software/languages/rust-book/The-Rust-Programming-Language_print.html
+        -- trail: Inspected the local print HTML and matched named book sections,
+        including ownership, lifetimes, concurrency and asynchronous programming.
+        HTML is unsupported by the quotation verifier, so this is the explicit unsupported-format
+        fallback, alongside the exact opened online chapter evidence.'
+      - 'external:https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html --
+        trail: Opened 2026-11-10; HTTP 200; inspected page content and headings for
+        the already assigned locator ''Revisit the chapters connected to recorded
+        misses'' in stage ''Capstone — own a Python-to-Rust feature end to end''.
+        Page begins ''What is Ownership? - The Rust Programming Language''; response
+        SHA-256 e3fc7f4e1db60f35be5bf71f915af51863b2ad0ccc5dd0e78debf4ce57e966a5.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s18-r03:
+    claim_id: covers:route-job-rust-s18-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s18-r03 covers knowledge-job-rust-stage-18
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-18: sha256:0c62a4786f9e20aa3ab2c9b105497864febdbf5f9b94feb16717276d9cf8916b
+        route-content:route-job-rust-s18-r03: sha256:8ff262af2f88954a0f097db74bb193c0ee98bdc6d1ce5f36b59e588c1ef098ed
+        source-material:source-pyo3-guide: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Small reference integrations; read only after the baseline works
+      - 'external:https://github.com/PyO3/pyo3/tree/main/examples -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Small reference integrations; read only after the baseline
+        works'' in stage ''Capstone — own a Python-to-Rust feature end to end''. Page
+        begins ''pyo3/examples at main · PyO3/pyo3 · GitHub''; response SHA-256 fd52b369494af3e2eb7ae3f34926515bd5fb432645b567fb64a6fc4c07626c41.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s19-r02:
+    claim_id: covers:route-job-rust-s19-r02
+    claim_kind: route-covers
+    statement: route-job-rust-s19-r02 covers knowledge-job-rust-stage-19
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-19: sha256:0fc69cadcffacebc2626129cf52e1107ae1346a0aa61f36199424e078eaca606
+        route-content:route-job-rust-s19-r02: sha256:5a9f4e1d69f1998c5974a11814517c9822386263f61987b6a659a8162be18d32
+        source-material:source-rustonomicon: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Unsafe Rust contracts and undefined behavior
+      - 'external:https://doc.rust-lang.org/nomicon/ -- trail: Opened 2026-11-10;
+        HTTP 200; inspected page content and headings for the already assigned locator
+        ''Unsafe Rust contracts and undefined behavior'' in stage ''Pull-based advanced
+        clinic — unsafe, macros, and type-level techniques''. Page begins ''Introduction
+        - The Rustonomicon''; response SHA-256 ac88e70c72e52f0952ab2e7b0ddcd358f3619339265a245b25a401599162d242.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
+  covers:route-job-rust-s19-r03:
+    claim_id: covers:route-job-rust-s19-r03
+    claim_kind: route-covers
+    statement: route-job-rust-s19-r03 covers knowledge-job-rust-stage-19
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-job-rust-stage-19: sha256:0fc69cadcffacebc2626129cf52e1107ae1346a0aa61f36199424e078eaca606
+        route-content:route-job-rust-s19-r03: sha256:1da4fe9054fd394df2bd839c0f46adf91169f66a399c5523ba5154d3e635b8ac
+        source-material:source-rust-reference: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - route-locator:Declarative and procedural macro semantics
+      - 'external:https://doc.rust-lang.org/reference/macros.html -- trail: Opened
+        2026-11-10; HTTP 200; inspected page content and headings for the already
+        assigned locator ''Declarative and procedural macro semantics'' in stage ''Pull-based
+        advanced clinic — unsafe, macros, and type-level techniques''. Page begins
+        ''Macros - The Rust Reference''; response SHA-256 88ae535c579becdc4514772f26f874fdbdf6125fa99c16855b0eb4bc279698dc.
+        This binds the existing placement; it is not a full source-quality assessment
+        or execution of its exercises.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+      idempotency_key: reviewed-3160fd27d429402d9f0ac5b317721fb8
+    reviewed_by: ''
+    status: supported
   covers:route-modern-polars-s01:
     claim_id: covers:route-modern-polars-s01
     claim_kind: route-covers

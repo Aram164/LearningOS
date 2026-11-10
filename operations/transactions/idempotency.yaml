@@ -3264,6 +3264,20 @@ entries:
       unit-m2-sad-l11: 15
     snapshot_before: sha256:90e692a2f926e41d515bd1ea5d5a905061e2687f7f2f4869eb8e45195534a75b
     snapshot_after: sha256:2357e4fbecdaf147e51ebab8ebe98f9162d15d40d6af894bce3de511e9e76e2d
+  reviewed-3160fd27d429402d9f0ac5b317721fb8:
+    request_id: request-reviewed-486279b5bbd241efbc30b50caa18e506
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:4f007f852e55ceec170ed20672880add9a3e1183a7526a1beed2ef1e7e9266b6
+    transaction_id: transaction-20261110-152055-001
+    receipt_path: operations/transactions/transaction-20261110-152055-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 12
+      module-job-rust-engineering: 2
+      study-map-job-rust-engineering-fluency: 2
+      unit-job-rust-engineering-fluency: 2
+    snapshot_before: sha256:f05b34a5a243ec61e75a21225f7910921f6db3fe7500166ab78b05643fe23f89
+    snapshot_after: sha256:26f51b2a16539fe5663d23742b54939cd239c8a0e86feddd7ceca85f7ea22f5b
   reviewed-3c20f3f5ec1b4dc1aee8e5e9ab2d8517:
     request_id: request-reviewed-d939a26b4ca840e887b0f4a2443d0d82
     capability: unit.plan.revise
@@ -3940,6 +3954,31 @@ entries:
       unit-m2-sad-l08: 21
     snapshot_before: sha256:5c69d4f18b9665bcd2c9d67a4e802a6b090850df1555802fad7fc6e68f5f19e0
     snapshot_after: sha256:bdc9c347ada9e3406368b7d02d2fb66e08a0e7556401e1609e2edbcec44b4b2c
+  rust-intake:
+    request_id: request-rust-intake-c5b71b6e
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:23a67a9765c5480a2903681beac82f3453d1f81075fcb3b9f3f51728d8966e25
+    transaction_id: transaction-20261110-151600-001
+    receipt_path: operations/transactions/transaction-20261110-151600-001.yaml
+    revisions:
+      source-anyhow-documentation: 1
+      source-cargo-reference: 1
+      source-maturin-guide: 1
+      source-ndarray-documentation: 1
+      source-pyo3-guide: 1
+      source-rayon-documentation: 1
+      source-rust-api-guidelines: 1
+      source-rust-numpy-documentation: 1
+      source-rust-reference: 1
+      source-rust-std-documentation: 1
+      source-rustlings: 1
+      source-rustonomicon: 1
+      source-serde-documentation: 1
+      source-thiserror-documentation: 1
+      source-tokio-tutorial: 1
+    snapshot_before: sha256:eea3f9c585179f7baa889bd04965da04683c3a147aa79079c491631ddefde004
+    snapshot_after: sha256:bd4675dbc8c3115a2c425e2862378c86b269679461fb6aba2f8cd46742e753f7
   sad-gap-fills-2026-09-16-001:
     request_id: request-sad-gap-fills-2026-09-16
     capability: module.plan.import
