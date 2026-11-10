@@ -28,6 +28,7 @@ from learning_os.app._plan_gate import (
 from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
 )
+from learning_os.app._plan_gate import is_source_plan_only as _is_source_plan_only
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app._plan_gate import staged_plan_repository
 from learning_os.app.admin.masters_planning import prepare_master_promotion
@@ -36,6 +37,7 @@ from learning_os.app.claim_admission import anchor_report, lineage_artifacts
 from learning_os.app.claim_admission import prepare_claim_admission as _phaseB_validate
 from learning_os.app.claim_admission import render_claim_lineage as _phaseB_ledger_text
 from learning_os.app.context import OpContext
+from learning_os.store.contracts import PLAN_TEMPLATE_VERSION
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
@@ -303,6 +305,19 @@ def _unit_revision_contract_problems(root: Path, unit_id: str, revision: dict) -
             "(see system/procedures/revise-an-existing-plan.md); "
             "version 2 belongs to module.plan.import"
         )
+    elif (
+        _is_source_plan_only(root, unit_id, revision.get("study_map"))
+        and revision.get("route_changes") in (None, {})
+        and all(revision.get(field) is None for field in (
+            "material_synthesis", "material_synthesis_patch", "unit_patch",
+            "stage_patches", "stage_additions", "stage_order"))
+        and not revision.get("claim_evidence")
+        and not revision.get("acknowledgments")
+    ):
+        if contract.get("plan_template_version") != PLAN_TEMPLATE_VERSION:
+            problems.append(
+                f"plan_contract.plan_template_version must be {PLAN_TEMPLATE_VERSION}"
+            )
     else:
         problems.extend(_coverage_audit_problems(root, contract))
     changes = revision.get("route_changes", {})

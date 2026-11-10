@@ -570,6 +570,45 @@ def module_plan_validation_errors(
         signatures=signatures)
 
 
+def is_source_plan_only(root: Path, unit_id: str, study_map: object) -> bool:
+    """True when ``study_map`` changes only ``source_plan.path`` on disk.
+
+    A provenance-path repair is a metadata correction, not a plan revision:
+    it must not have to claim a coverage audit it never performed. The
+    exemption is narrow and fail-closed — any other field differing, or a
+    target that does not exist, keeps the full audit gate.
+    """
+    import copy as _copy
+
+    import yaml as _yaml
+
+    if not isinstance(study_map, dict) or not unit_id:
+        return False
+    matches = sorted(root.glob(f"curriculum/modules/*/units/{unit_id}/study-map.yaml"))
+    if len(matches) != 1:
+        return False
+    try:
+        current = _yaml.safe_load(matches[0].read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    if not isinstance(current, dict):
+        return False
+    new_plan = study_map.get("source_plan")
+    old_plan = current.get("source_plan")
+    if not isinstance(new_plan, dict) or not isinstance(old_plan, dict):
+        return False
+    new_path = new_plan.get("path")
+    if not isinstance(new_path, str) or not new_path or new_path == old_plan.get("path"):
+        return False
+    if not (root / new_path).exists():
+        return False
+    masked_new = _copy.deepcopy(study_map)
+    masked_old = _copy.deepcopy(current)
+    masked_new.get("source_plan", {}).pop("path", None)
+    masked_old.get("source_plan", {}).pop("path", None)
+    return masked_new == masked_old
+
+
 def coverage_audit_problems(root: Path, contract: dict) -> list[str]:
     """The audit-evidence rules shared by the module (v2) and unit (v1) contracts."""
     problems: list[str] = []
@@ -777,7 +816,24 @@ def module_plan_contract_problems(root: Path, package: dict) -> list[str]:
             "system/PLAN-CREATION-SOP.md#gate-3--build-the-package-from-the-canonical-template); "
             "version 1 belongs to unit.plan.revise"
         ]
-    problems.extend(coverage_audit_problems(root, contract))
+    units = package.get("units", []) or []
+    source_plan_only = (
+        len(units) == 1
+        and isinstance(units[0], dict)
+        and is_source_plan_only(
+            root,
+            str((units[0].get("unit") or {}).get("id") or units[0].get("study_map", {}).get("unit_id") or ""),
+            units[0].get("study_map"),
+        )
+        and not package.get("material_syntheses")
+    )
+    if source_plan_only:
+        if contract.get("plan_template_version") != PLAN_TEMPLATE_VERSION:
+            problems.append(
+                f"plan_contract.plan_template_version must be {PLAN_TEMPLATE_VERSION}"
+            )
+    else:
+        problems.extend(coverage_audit_problems(root, contract))
     problems.extend(_ack_shape_problems(package.get("acknowledgments", [])))
     intentional_reorders = contract.get("intentional_reorders", [])
     if not isinstance(intentional_reorders, list):

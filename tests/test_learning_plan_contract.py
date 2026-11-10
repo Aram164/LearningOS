@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 import sys
@@ -187,3 +188,37 @@ def test_a_refused_query_reports_its_reason_as_json(repo_root: Path):
     assert error["retryable"] is False
     assert error["message"].startswith("cannot build plan template: ")
     assert "unit_id" in error["message"]
+
+
+def test_source_plan_only_revision_needs_no_coverage_audit(mini_repo):
+    """A provenance-path repair must not claim an audit it never performed.
+
+    The exemption is narrow: changing anything else in the map keeps the
+    full coverage-audit gate.
+    """
+    from repo_builders import add_curriculum
+
+    from learning_os.app.handlers.plan import _unit_revision_contract_problems
+
+    add_curriculum(mini_repo)
+    map_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    study_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    study_map["plan_template_version"] = 1
+    for number, stage in enumerate(study_map["stages"], 1):
+        stage.setdefault("number", number)
+    map_path.write_text(yaml.safe_dump(study_map, sort_keys=False), encoding="utf-8")
+    study_map["source_plan"] = {
+        "path": "work/COORDINATION.md",
+        "provenance": "operator",
+    }
+    contract = {"version": 1, "plan_template_version": 1}
+    revision = {"unit_id": "unit-demo-l01", "plan_contract": contract,
+                "study_map": study_map}
+    assert _unit_revision_contract_problems(mini_repo, "unit-demo-l01", revision) == []
+
+    changed = copy.deepcopy(study_map)
+    changed["stages"][0]["title"] = "A different title"
+    revision = {"unit_id": "unit-demo-l01", "plan_contract": dict(contract),
+                "study_map": changed}
+    problems = _unit_revision_contract_problems(mini_repo, "unit-demo-l01", revision)
+    assert any("coverage_audit" in problem for problem in problems)
