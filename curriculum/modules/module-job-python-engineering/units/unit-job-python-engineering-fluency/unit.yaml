@@ -4,8 +4,8 @@ module_id: module-job-python-engineering
 kind: topic
 title: Optional former engineering and diagnostic path
 order: 17
-scope: Preserved former diagnostic, repair, optimizer, project and engineering activities;
-  all deferred and outside the 16-topic reading path.
+scope: Preserved former diagnostic, repair, optimizer, project and engineering activities; all deferred
+  and outside the 16-topic reading path.
 status: paused
 scope_sources:
 - source_id: source-batchelder-names
@@ -30,16 +30,36 @@ scope_sources:
   authority: reference
 - source_id: source-uv-docs
   authority: reference
+- source_id: source-spark-sql-paper
+  authority: reference
+- source_id: source-skrub
+  authority: reference
+- source_id: source-networkx-code
+  authority: reference
+- source_id: source-hypothesis-code
+  authority: reference
+- source_id: source-pytest-code
+  authority: reference
+- source_id: source-pluggy-code
+  authority: reference
+- source_id: source-python-packaging-guide
+  authority: reference
+- source_id: source-pydantic-code
+  authority: reference
+- source_id: source-httpx-code
+  authority: reference
+- source_id: source-structlog-code
+  authority: reference
 source_selections: []
 working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/notes.md
 artifacts: {}
 workspace_ids: []
 current_study_map: study-map-job-python-engineering-fluency
 knowledge_map:
-  summary: Preserved former diagnostic, repair, optimizer, project and engineering
-    activities; all deferred and outside the 16-topic reading path.
+  summary: Preserved former diagnostic, repair, optimizer, project and engineering activities; all deferred
+    and outside the 16-topic reading path.
   nodes:
   - id: knowledge-python-optional-former-path
     title: Optional former engineering and diagnostic path
-    summary: Preserved former diagnostic, repair, optimizer, project and engineering
-      activities; all deferred and outside the 16-topic reading path.
+    summary: Preserved former diagnostic, repair, optimizer, project and engineering activities; all deferred
+      and outside the 16-topic reading path.

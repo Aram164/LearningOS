@@ -2260,3 +2260,149 @@ sources:
       assessment.
   thematic_group_ids:
   - thematic-group-software
+- id: source-httpx-code
+  title: HTTPX — synchronous and asynchronous HTTP client source
+  type: software
+  url: https://github.com/encode/httpx
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/encode/httpx
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-hypothesis-code
+  title: Hypothesis — property-based testing source repository
+  type: software
+  url: https://github.com/HypothesisWorks/hypothesis
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/HypothesisWorks/hypothesis
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-networkx-code
+  title: NetworkX — graph algorithms and tests
+  type: software
+  url: https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-pluggy-code
+  title: pluggy — plugin system source repository
+  type: software
+  url: https://github.com/pytest-dev/pluggy
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/pytest-dev/pluggy
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-polars-authored-first-steps-exercises
+  title: Authored Polars-first Session 1 drills and self-check
+  type: other
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-p2.md#L1
+    - kind: list-entry
+      ref: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check-p2.py#L1
+    observed: '2026-11-10'
+    possible_use: Existing authored Session 1 drills and self-check; retain their practice actions and
+      repository-owned files.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-polars-birds-eye-view
+  title: Polars — A bird’s eye view of Polars
+  type: website
+  url: https://pola.rs/posts/polars_birds_eye_view
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pola.rs/posts/polars_birds_eye_view
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-polars-cookbook-code
+  title: Polars Cookbook — companion code and notebooks
+  type: software
+  url: https://github.com/PacktPublishing/Polars-Cookbook
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/PacktPublishing/Polars-Cookbook
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-polars-definitive-guide-code
+  title: 'Python Polars: The Definitive Guide — companion code and data'
+  type: software
+  url: https://github.com/jeroenjanssens/python-polars-the-definitive-guide
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/jeroenjanssens/python-polars-the-definitive-guide
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-polars-expression-engine-talk
+  title: Polars and a Peek into the Expression Engine — PyData Amsterdam 2023
+  type: video
+  url: https://pola.rs/posts/talk-pydata-amsterdam-2023
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pola.rs/posts/talk-pydata-amsterdam-2023
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-pydantic-code
+  title: Pydantic — validation source repository
+  type: software
+  url: https://github.com/pydantic/pydantic
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/pydantic/pydantic
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-pytest-code
+  title: pytest — source repository and contributor guide
+  type: software
+  url: https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-spark-sql-paper
+  title: 'Spark SQL: Relational Data Processing in Spark'
+  type: paper
+  url: https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.
+- id: source-structlog-code
+  title: structlog — structured logging source repository
+  type: software
+  url: https://github.com/hynek/structlog
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/hynek/structlog
+    observed: '2026-11-10'
+    possible_use: Preserve an existing study-map item as an explicit material choice; depth and contextual
+      fit remain unassessed.

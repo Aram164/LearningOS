@@ -329,6 +329,29 @@ entries:
       unit-m2-analysis-exam-prep: 4
     snapshot_before: sha256:73ed1e976a12ffeb1b923869921f80ebb0e7db093bc307318b1baf129942d701
     snapshot_after: sha256:209dd4cd6f0af16a5ea8d9c6e72d11ce26542276963407ae9a463e3dbbd7f9e9
+  analysis-data-final:
+    request_id: request-analysis-data-final-9c2cfd86
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:5b9aa829a007753e19703ff61d4a202ee4492843146073e8c1e2ef5251b85cd8
+    transaction_id: transaction-20261110-232125-001
+    receipt_path: operations/transactions/transaction-20261110-232125-001.yaml
+    revisions:
+      source-httpx-code: 1
+      source-hypothesis-code: 1
+      source-networkx-code: 1
+      source-pluggy-code: 1
+      source-polars-authored-first-steps-exercises: 1
+      source-polars-birds-eye-view: 1
+      source-polars-cookbook-code: 1
+      source-polars-definitive-guide-code: 1
+      source-polars-expression-engine-talk: 1
+      source-pydantic-code: 1
+      source-pytest-code: 1
+      source-spark-sql-paper: 1
+      source-structlog-code: 1
+    snapshot_before: sha256:a7f595a70361964498fed65c80fa8c64013e716fa193688edcf6441c48bab0da
+    snapshot_after: sha256:ebc009302ceb088296eb69873b7e2a78fd877eadb57cf305b45c1a1560e6a213
   attach-orphan-repair-001:
     request_id: request-attach-orphan-repair-001
     capability: note.revise
@@ -3291,6 +3314,20 @@ entries:
       unit-job-polars-capstone-transition: 2
     snapshot_before: sha256:1288d2b0483a568267b516581c95238526e0bb6782e1bcdf9effcebe6cd50f7c
     snapshot_after: sha256:cc4efcf4f68170f0f5c8595d5a4d2506364659e13d8d85bdda80ab19a2bc9627
+  reviewed-16549c7e04654e659e0d5d36f5c89cff:
+    request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:a23f7f2fa3ef63f6727184353432373c80f26f17deaac8197521d715d4028701
+    transaction_id: transaction-20261110-232209-001
+    receipt_path: operations/transactions/transaction-20261110-232209-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 14
+      module-job-python-engineering: 4
+      study-map-job-python-engineering-fluency: 5
+      unit-job-python-engineering-fluency: 5
+    snapshot_before: sha256:876affb9620cc7f85f149cf7febab71444ccc6d2e7e21eebca3e0a45afe1a820
+    snapshot_after: sha256:552e2d3aa37f8acc5c7535c474d065491aea67e0645447b5847d501e0428b8e6
   reviewed-2172204ea350416f8e53c56e9c18c15e:
     request_id: request-reviewed-acb34257f3c9435284727f47f0473706
     capability: unit.map.import

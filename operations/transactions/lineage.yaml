@@ -6183,6 +6183,853 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-g8-python-engineering-fluency-04ac045940:
+    claim_id: covers:route-g8-python-engineering-fluency-04ac045940
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-04ac045940 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-04ac045940: sha256:e1d37d24e634ab88336b787151483fec81ba70d251a59ab1bd51f55cde94443b
+        source-material:source-pydantic-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pydantic/pydantic -- trail: Verified 2026-11-10:
+        Opened primary project README and pydantic/pydantic-core/tests tree entries.
+        Detailed validation-path tracing remains a deferred learner lab, not an operator
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-12951a4479:
+    claim_id: covers:route-g8-python-engineering-fluency-12951a4479
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-12951a4479 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-4-classes-as-objects.ipynb: 1b9b9cd6c1fcef5e94b577d9114a246851e3339f9160bf8df1d384b2dce61be5
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-12951a4479: sha256:4502303a2e5c4b2ed88c41d03cf8b1635cdd19e152e068f35c067585b32607ea
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-4-classes-as-objects.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-223479e704:
+    claim_id: covers:route-g8-python-engineering-fluency-223479e704
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-223479e704 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-223479e704: sha256:b65610afc181898ff0edadf44b446a9491049db9e8027a2a77ef6f3c6aa8a5da
+        source-material:source-python-packaging-guide: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://packaging.python.org/en/latest/tutorials/packaging-projects/
+        -- trail: Verified 2026-11-10: Opened official tutorial: src package layout,
+        pyproject, build backends, distribution artifacts. No package was built or
+        uploaded.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-2a23aafaf0:
+    claim_id: covers:route-g8-python-engineering-fluency-2a23aafaf0
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-2a23aafaf0 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-2a23aafaf0: sha256:20319c77df48896e27015bae717aa3ee8b522a70ea1ca1b3cf0d59d5c27b8e7c
+        source-material:source-hypothesis-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/HypothesisWorks/hypothesis -- trail: Verified
+        2026-11-10: Opened primary README: strategies, generated edge cases and shrinking
+        example. No particular future strategy implementation was selected or executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-3058362e43:
+    claim_id: covers:route-g8-python-engineering-fluency-3058362e43
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-3058362e43 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/fluent-python/fluent-python.pdf: db97c77518c68ce3db19da8f65e9f8dd8f9494fcbba59dddb0ed1796973f7e35
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-3058362e43: sha256:942fb92c9fd4aab948448301a5c714419de554c132ffa8ad293de1080db9ae5f
+        source-material:source-fluent-python: sha256:5df76eb66059b4dae52ffa2d780a3abb578dce5c2443a545f1451001b9cff28d
+      evidence:
+      - 'quote:material://source-fluent-python/fluent-python.pdf#p17 sha256:26990a2d4b3f1559ea37f620f9168e20afe9b5a83723ee938f91a510e0d78861
+        -- trail: Opened exact local bytes; quotation supports the preserved topic
+        binding, not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-35527c5780:
+    claim_id: covers:route-g8-python-engineering-fluency-35527c5780
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-35527c5780 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/stratum-paper/stratum-paper.pdf: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-35527c5780: sha256:4ed9834e5d807cfe078f9ae23c39c0278632d828219bc6f3b8e5dd9022e4bfa4
+        source-material:source-stratum-paper: sha256:209cd346fd89ce91b2f6c3fa77b1f85e8ae650baf64f950335db705ef80799ca
+      evidence:
+      - 'quote:material://source-stratum-paper/stratum-paper.pdf#p3 sha256:3b378a17c6472bdde7a47a7ec9fbf46d0d34f3e62bcc24db84245794a52e0624
+        -- trail: Opened exact local bytes; quotation supports the preserved topic
+        binding, not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-36dd9add3e:
+    claim_id: covers:route-g8-python-engineering-fluency-36dd9add3e
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-36dd9add3e covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:data-systems/architecture/stratum-paper/stratum-paper.pdf: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-36dd9add3e: sha256:b56ec21e840967e9203baffa50bd9c9e2930a2fcbc972486cdda494b7faf960e
+        source-material:source-stratum-paper: sha256:209cd346fd89ce91b2f6c3fa77b1f85e8ae650baf64f950335db705ef80799ca
+      evidence:
+      - 'quote:material://source-stratum-paper/stratum-paper.pdf#p5 sha256:b2f266e49209576ca7af2cdc708773e2e4b44ddaedcd3ac937a77c0099048298
+        -- trail: Opened exact local bytes; quotation supports the preserved topic
+        binding, not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-3c42442584:
+    claim_id: covers:route-g8-python-engineering-fluency-3c42442584
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-3c42442584 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-3c42442584: sha256:5ac165629e8ac2942ff5a2dd601aee07448bd43d5fa2852ac308a429f797995c
+        source-material:source-skrub: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://skrub-data.org/stable/reference/data_ops.html -- trail:
+        Verified 2026-11-10: Opened official data_ops reference and its DataOp/skb
+        API index. No assertion about an installed skrub version.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-3c5abf3d9b:
+    claim_id: covers:route-g8-python-engineering-fluency-3c5abf3d9b
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-3c5abf3d9b covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-1-functions-as-objects.ipynb: 77b9b6b2bdf9f118c0eb20d3e9c395864417654bd427a80d288b52d56c067283
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-3c5abf3d9b: sha256:2f8f3272c756814bf3bf7f642083a197e8da06c05435b595986c955ca5b40560
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-1-functions-as-objects.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-47f2597404:
+    claim_id: covers:route-g8-python-engineering-fluency-47f2597404
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-47f2597404 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-47f2597404: sha256:e430536427caf0617fc329b69a40df4256c03b419203727794a367bcf90df185
+        source-material:source-cosmicpython-architecture-patterns: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/cosmicpython/book -- trail: Verified 2026-11-10:
+        Opened authors’ book repository and contents: domain model, abstractions,
+        service layer, TDD, and the code submodule. No full code trace asserted.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-4e61b43056:
+    claim_id: covers:route-g8-python-engineering-fluency-4e61b43056
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-4e61b43056 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-2-scope-and-closures.ipynb: aabb0d1853b82b5dd1259af1188457ab8cd78f04fe446cfa2a7fb1e9abbe2f4a
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-4e61b43056: sha256:31b2269e5e87449c695c37393f5c8df91e3bb3852b617f0f0999f884e89925b1
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-2-scope-and-closures.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-568eb91c60:
+    claim_id: covers:route-g8-python-engineering-fluency-568eb91c60
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-568eb91c60 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-568eb91c60: sha256:46c3c981ec8180d2c71ead14e5fb2b3fde9242541a4219cab91df700ccc66624
+        source-material:source-spark-sql-paper: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf
+        -- trail: Verified 2026-11-10: Opened author-hosted paper, abstract and §4
+        pp. 4–5: Catalyst trees, transformation rules, logical and physical planning.
+        No claim of equivalence to Stratum.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-6189c31a33:
+    claim_id: covers:route-g8-python-engineering-fluency-6189c31a33
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-6189c31a33 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-7-generators-and-iterators.ipynb: 97e09e78c5ec6ae0e32ec3d55e39687e3819c7899abb0885842a393c1226b7ec
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-6189c31a33: sha256:0eb2949f845e2936bd78910afdb423cc681039fa987cf6e637de31a63af67d49
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-7-generators-and-iterators.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-66195427dd:
+    claim_id: covers:route-g8-python-engineering-fluency-66195427dd
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-66195427dd covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/slatkin-effective-python/effective-python.pdf: c6049c8b5985ef7449740fb4bc30f7a157dff1baef8feca2b7ad414734467de6
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-66195427dd: sha256:dfb4e3c805029fe3c59a522ab1a7f648884621e47c504114effa2e46cf842ebf
+        source-material:source-slatkin-effective-python: sha256:2a5ee91ce7ad69d68044d415653bbc39203796b7914c5993fe5ea9410ff6e82e
+      evidence:
+      - 'quote:material://source-slatkin-effective-python/effective-python.pdf#p168
+        sha256:7ea8048ecfa49f40c33c853a34be7769bd77eb4ebc6fcdd4f9f65f216351e83a --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-6e79a54e45:
+    claim_id: covers:route-g8-python-engineering-fluency-6e79a54e45
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-6e79a54e45 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-6e79a54e45: sha256:9d07f0be2f2608b4a548d49a0a25e3f3e7b3e33f9b79a208c7af23222b1ac562
+        source-material:source-networkx-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+        -- trail: Verified 2026-11-10: Opened primary source, topological_generations
+        docstring and generator body. The future learner trace through corresponding
+        tests remains deferred.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-7039cc519d:
+    claim_id: covers:route-g8-python-engineering-fluency-7039cc519d
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-7039cc519d covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-5-imports-and-registration.ipynb: 6223dd84f71a36de06a9c74b8030b1afddff0a57fb94e10bf8f67f991d3517b6
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-7039cc519d: sha256:26c9aacac026cd2283a6fe3ad9f12b8260210d7abc9bcb3400ed11375eb601d0
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-5-imports-and-registration.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-73c337e527:
+    claim_id: covers:route-g8-python-engineering-fluency-73c337e527
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-73c337e527 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-73c337e527: sha256:c939c23ad723c8a38fcd5370c5e4390e7b63f3275db7c576adf50b66e81da8a9
+        source-material:source-cosmicpython-architecture-patterns: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://www.cosmicpython.com/book/preface.html -- trail: Verified
+        2026-11-10: Opened author preface and contents: testable business logic, domain
+        modelling, repository and service-layer chapters.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-7aae78cfb6:
+    claim_id: covers:route-g8-python-engineering-fluency-7aae78cfb6
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-7aae78cfb6 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/slatkin-effective-python/effective-python.pdf: c6049c8b5985ef7449740fb4bc30f7a157dff1baef8feca2b7ad414734467de6
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-7aae78cfb6: sha256:7d1d1299c24be8c5e97153e9c85ce70d33d094962c3ea170c32d5619bc29b5d3
+        source-material:source-slatkin-effective-python: sha256:2a5ee91ce7ad69d68044d415653bbc39203796b7914c5993fe5ea9410ff6e82e
+      evidence:
+      - 'quote:material://source-slatkin-effective-python/effective-python.pdf#p18
+        sha256:da07d0c1c8dcfe1f0834ff6b092280f2599dffe8cac715d760aee94619ff397f --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-85aad813e3:
+    claim_id: covers:route-g8-python-engineering-fluency-85aad813e3
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-85aad813e3 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-85aad813e3: sha256:7c06b4ce4cd96ac4b7c733ccee301bf10b27b865eafcb74e97f9d96f809cab9e
+        source-material:source-httpx-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/encode/httpx -- trail: Verified 2026-11-10: Opened
+        primary README: sync/async APIs, transport dependency, timeouts and source/tests
+        entries. No future request trace or runtime behavior was claimed verified.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-86a0a5771e:
+    claim_id: covers:route-g8-python-engineering-fluency-86a0a5771e
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-86a0a5771e covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-86a0a5771e: sha256:620a4457e82a7932b56f4ab5b0924fe96ec06f8d9d32e7af2184efb2ea62e783
+        source-material:source-python-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.python.org/3/library/asyncio.html -- trail: Verified
+        2026-11-10: Opened official page and topic/API sections on 2026-11-10. Preserved
+        the original unpinned URL; no installed-version or execution claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-88d35a8323:
+    claim_id: covers:route-g8-python-engineering-fluency-88d35a8323
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-88d35a8323 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-88d35a8323: sha256:15a46cfc15ffb9af225c5a1b792cedd74c6ab890b013b8e4e4fa5032e95008ae
+        source-material:source-pytest-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+        -- trail: Verified 2026-11-10: Opened primary contributing guide: bug reports,
+        reproductions, tests and feature contributions. A future small merged change
+        remains the learner’s choice.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-95718861d9:
+    claim_id: covers:route-g8-python-engineering-fluency-95718861d9
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-95718861d9 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-95718861d9: sha256:8d594e39a6c7bb21c2662d7611218e4f983bd94692cff5105c5d89edc733d141
+        source-material:source-python-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.python.org/3/tutorial/errors.html -- trail: Verified
+        2026-11-10: Opened official page and topic/API sections on 2026-11-10. Preserved
+        the original unpinned URL; no installed-version or execution claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-a0a07a6827:
+    claim_id: covers:route-g8-python-engineering-fluency-a0a07a6827
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-a0a07a6827 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-a0a07a6827: sha256:cb97940dbf90f599deac8da452f6f903a70f8b4bb734e9fe6197c930681f8fc9
+        source-material:source-pluggy-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/pytest-dev/pluggy -- trail: Verified 2026-11-10:
+        Opened primary README hook specification, implementations, registration and
+        invocation example. No future change or test was invented.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-b324488ea7:
+    claim_id: covers:route-g8-python-engineering-fluency-b324488ea7
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-b324488ea7 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/SHELF.md: 9ec0dae0ec7283389afbd6ef1fce9c97d6a2b7bed6871c1fca053425dd1dced5
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-b324488ea7: sha256:cd26329d56c631b988b5117fc64a907a7065a43f8cf9753414c441243048a0d5
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'quote:material://source-python-depth-drills/SHELF.md#L3-L3 sha256:d5511102c8d509ef2456e58604da2c84e84b8b6fd24f306c038a033476558281
+        -- trail: Opened actual authored Markdown, not a timestamped transcript.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-b36b035c44:
+    claim_id: covers:route-g8-python-engineering-fluency-b36b035c44
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-b36b035c44 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-b36b035c44: sha256:41a81f211cbd9bede3175b4ae0e313286444222073fabaa056559d6eb9221e25
+        source-material:source-python-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.python.org/3/howto/logging-cookbook.html -- trail:
+        Verified 2026-11-10: Opened official page and topic/API sections on 2026-11-10.
+        Preserved the original unpinned URL; no installed-version or execution claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-b845977bac:
+    claim_id: covers:route-g8-python-engineering-fluency-b845977bac
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-b845977bac covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-b845977bac: sha256:79057fc264a3b6b4be5e44d780caaabd7e377f44d1cd92be7e125d3c023a605d
+        source-material:source-httpx-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/encode/httpx -- trail: Verified 2026-11-10: Opened
+        primary README: sync/async APIs, transport dependency, timeouts and source/tests
+        entries. No future request trace or runtime behavior was claimed verified.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-c5cf8c3aab:
+    claim_id: covers:route-g8-python-engineering-fluency-c5cf8c3aab
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-c5cf8c3aab covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-6-data-model-and-dunders.ipynb: b25e8cbeb729b26087c148d2dd510e24a6cc5e315bd4d5a068d16e2e8c77b898
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-c5cf8c3aab: sha256:8ed00111f9d6da33f9e0779826c33e70ef07d27d8480968190fe54ccf63eba23
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-6-data-model-and-dunders.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-c7f4932b18:
+    claim_id: covers:route-g8-python-engineering-fluency-c7f4932b18
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-c7f4932b18 covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-c7f4932b18: sha256:4f80b3fbd3178ec6c13330ef463a2845556568a8c7d77ff7ca4589572a76db1e
+        source-material:source-structlog-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/hynek/structlog -- trail: Verified 2026-11-10:
+        Opened primary README: function/dictionary transformations and structured
+        logging, plus src/structlog and tests entries. Processor runtime tracing remains
+        the deferred lab.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-cd0dc4f9ed:
+    claim_id: covers:route-g8-python-engineering-fluency-cd0dc4f9ed
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-cd0dc4f9ed covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-0-names-and-identity.ipynb: c788ffc079a116840e71d4e3be5c9c159a4d58ca188dd710dcfe6b10075f30f4
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-cd0dc4f9ed: sha256:1fe893ff6536c637250fccd1314e40743d3edb2dd4a0655a62535c7287103cc3
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-0-names-and-identity.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-cd2f07ff4c:
+    claim_id: covers:route-g8-python-engineering-fluency-cd2f07ff4c
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-cd2f07ff4c covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/slatkin-effective-python/effective-python.pdf: c6049c8b5985ef7449740fb4bc30f7a157dff1baef8feca2b7ad414734467de6
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-cd2f07ff4c: sha256:3378ef576581e81d9db095853f45e3e08075d55648bab0394ae5e3549cc4974c
+        source-material:source-slatkin-effective-python: sha256:2a5ee91ce7ad69d68044d415653bbc39203796b7914c5993fe5ea9410ff6e82e
+      evidence:
+      - 'quote:material://source-slatkin-effective-python/effective-python.pdf#p413
+        sha256:b8025713cdfc8450c01e0586c80aafb412f13216e2068e353f2e9ad5622f4d91 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-d61fa3e7ed:
+    claim_id: covers:route-g8-python-engineering-fluency-d61fa3e7ed
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-d61fa3e7ed covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-3-decorators.ipynb: 858c013bd3e6804d3ed05598553fb33636dcb777b6545d0645092e587d5da37e
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-d61fa3e7ed: sha256:5a2c9d7beff521989b89db159af9c61c789f162f1960bdf3af96b846fc3cc628
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-3-decorators.ipynb --
+        trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-f398b6cf7e:
+    claim_id: covers:route-g8-python-engineering-fluency-f398b6cf7e
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-f398b6cf7e covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-f398b6cf7e: sha256:49dd909246e1d679386f89536f135e51f2ad7df45f06b0a79128854bcc45a124
+        source-material:source-python-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.python.org/3/library/graphlib.html -- trail: Verified
+        2026-11-10: Opened official page and topic/API sections on 2026-11-10. Preserved
+        the original unpinned URL; no installed-version or execution claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-fluency-f76798e55e:
+    claim_id: covers:route-g8-python-engineering-fluency-f76798e55e
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-fluency-f76798e55e covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-depth-drills/stage-8-interfaces-and-dispatch.ipynb: 87c330a6ed48dba0d0f0fc83915d1bd67e8af6948ef00a832f6eb8bb92418c36
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-fluency-f76798e55e: sha256:dd46103fad64fba215b76677099694e436e22f015b3ca8d1a2d9323f81048e89
+        source-material:source-python-depth-drills: sha256:52dc6b3ed2c9cf7f6a2678f0faa4d992e0cbee78f19857d9d1d71f85bc6193d9
+      evidence:
+      - 'manifest:software/python/python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-reference-names:
+    claim_id: covers:route-g8-python-engineering-reference-names
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-reference-names covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-reference-names: sha256:54673e50f2e04960571a5c4cea6e544f6256dda060cffda909ac035b9a21f2cc
+        source-material:source-batchelder-names: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://nedbatchelder.com/text/names.html -- trail: Verified 2026-11-10.
+        Read the author’s named sections and examples for rebinding, aliasing and
+        shared list mutation.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-reference-pytest:
+    claim_id: covers:route-g8-python-engineering-reference-pytest
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-reference-pytest covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-reference-pytest: sha256:5998092800a65ecd6b42c58cb499cb55211fcfc749f25c2ae7823abaece72267
+        source-material:source-pytest-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pytest.org/en/stable/how-to/parametrize.html -- trail:
+        Verified 2026-11-10. Opened the pytest how-to section with the same test function
+        applied to several input-and-result pairs.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-reference-typing:
+    claim_id: covers:route-g8-python-engineering-reference-typing
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-reference-typing covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-reference-typing: sha256:1c88c81e7669e2aa339e72e3f75594df0214bb5837eb1fa130c63d1907179b1f
+        source-material:source-typing-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://typing.python.org/en/latest/reference/protocols.html --
+        trail: Verified 2026-11-10. Opened the official typing reference’s SupportsClose
+        example showing how distinct implementations satisfy one interface.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-python-engineering-reference-uv:
+    claim_id: covers:route-g8-python-engineering-reference-uv
+    claim_kind: route-covers
+    statement: route-g8-python-engineering-reference-uv covers knowledge-python-optional-former-path
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-python-optional-former-path: sha256:430c85fb8d93aff97f511e6d0a0f2a51433da400722a29f1c65306d895ce4484
+        route-content:route-g8-python-engineering-reference-uv: sha256:4ec328658644afee98be8f11552a74a661385456c4e3de018f4c48ef3bcc761e
+        source-material:source-uv-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.astral.sh/uv/guides/projects/ -- trail: Verified 2026-11-10.
+        Opened the official uv guide and verified its sections on pyproject.toml,
+        the project environment, the lockfile and dependencies.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+      idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+    reviewed_by: ''
+    status: supported
   covers:route-icop-l01-blum-bases:
     claim_id: covers:route-icop-l01-blum-bases
     claim_kind: route-covers

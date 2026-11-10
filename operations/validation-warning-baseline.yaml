@@ -23,10 +23,9 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: Bind existing Python skill materials and keep original learner placements and
-  triage
-total: 278
-distinct_signatures: 37
+note: Bind existing deferred Python engineering materials and retain all study placements
+total: 238
+distinct_signatures: 35
 signatures:
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
@@ -97,9 +96,6 @@ signatures:
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
   count: 3
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
-  count: 15
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
   count: 1
@@ -136,6 +132,3 @@ signatures:
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
   count: 15
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
-  count: 25

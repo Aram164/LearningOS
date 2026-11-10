@@ -1,0 +1,86 @@
+schema_version: 2
+id: transaction-20261110-232125-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T23:21:25+01:00'
+snapshot_before: sha256:a7f595a70361964498fed65c80fa8c64013e716fa193688edcf6441c48bab0da
+snapshot_after: sha256:ebc009302ceb088296eb69873b7e2a78fd877eadb57cf305b45c1a1560e6a213
+expected_revisions:
+  source-httpx-code: 0
+  source-hypothesis-code: 0
+  source-networkx-code: 0
+  source-pluggy-code: 0
+  source-polars-authored-first-steps-exercises: 0
+  source-polars-birds-eye-view: 0
+  source-polars-cookbook-code: 0
+  source-polars-definitive-guide-code: 0
+  source-polars-expression-engine-talk: 0
+  source-pydantic-code: 0
+  source-pytest-code: 0
+  source-spark-sql-paper: 0
+  source-structlog-code: 0
+artifact_revisions:
+  source-httpx-code:
+    before: 0
+    after: 1
+  source-hypothesis-code:
+    before: 0
+    after: 1
+  source-networkx-code:
+    before: 0
+    after: 1
+  source-pluggy-code:
+    before: 0
+    after: 1
+  source-polars-authored-first-steps-exercises:
+    before: 0
+    after: 1
+  source-polars-birds-eye-view:
+    before: 0
+    after: 1
+  source-polars-cookbook-code:
+    before: 0
+    after: 1
+  source-polars-definitive-guide-code:
+    before: 0
+    after: 1
+  source-polars-expression-engine-talk:
+    before: 0
+    after: 1
+  source-pydantic-code:
+    before: 0
+    after: 1
+  source-pytest-code:
+    before: 0
+    after: 1
+  source-spark-sql-paper:
+    before: 0
+    after: 1
+  source-structlog-code:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: b7898af7b98f1c0c525123aa8bf2041369cc53716a5fb9ffc636f1d1b1a84804
+  sha256_after: 33c73378860d79fa32ad3f31e5f50cd9fdc7dc2ffd96b6345a2e5d1d0705a1cd
+  created: false
+metadata:
+  data_roots_sha256: sha256:48a32eedfc670d57faebaec256c5a3da7537a38c0b234741ffaa163055347eb9
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-analysis-data-final-9c2cfd86
+  idempotency_key: analysis-data-final
+  intent_sha256: sha256:5b9aa829a007753e19703ff61d4a202ee4492843146073e8c1e2ef5251b85cd8
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:5b9aa829a007753e19703ff61d4a202ee4492843146073e8c1e2ef5251b85cd8

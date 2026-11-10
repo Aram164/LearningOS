@@ -1,0 +1,71 @@
+schema_version: 2
+id: transaction-20261110-232209-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-11-10T23:22:09+01:00'
+snapshot_before: sha256:876affb9620cc7f85f149cf7febab71444ccc6d2e7e21eebca3e0a45afe1a820
+snapshot_after: sha256:552e2d3aa37f8acc5c7535c474d065491aea67e0645447b5847d501e0428b8e6
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 13
+  module-job-python-engineering: 3
+  study-map-job-python-engineering-fluency: 4
+  unit-job-python-engineering-fluency: 4
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 13
+    after: 14
+  module-job-python-engineering:
+    before: 3
+    after: 4
+  study-map-job-python-engineering-fluency:
+    before: 4
+    after: 5
+  unit-job-python-engineering-fluency:
+    before: 4
+    after: 5
+writes:
+- path: curriculum/modules/module-job-python-engineering/module.yaml
+  sha256_before: 92425250220233201fbe1e6dd46a853c35a6d80ee6f9d9fb4eb4b3ff90f7ccf5
+  sha256_after: 92425250220233201fbe1e6dd46a853c35a6d80ee6f9d9fb4eb4b3ff90f7ccf5
+  created: false
+- path: curriculum/modules/module-job-python-engineering/source-map.yaml
+  sha256_before: 463d7e104a587db9bde4a45f44c221b0d4b37a10df40e34d78f5d31b72b393d7
+  sha256_after: 0d186d580dc0c4f37fca994283c10624f77561775af12a31f1fb48c02fab9029
+  created: false
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
+  sha256_before: 9da7b7c264ea724c79faada1e1c4cf5198e7e901c2f0624ab6651665ca0ea447
+  sha256_after: 575e190ddcad4099a015a81716a983cec9047aba1414d1ef0147a64c2a46ae62
+  created: false
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/unit.yaml
+  sha256_before: 488f496c71fed00fc93a3c34849e95ab0484e721dfa473b94b3c9c969ef604f8
+  sha256_after: 659a6f1ad7ee27b518b8f062e0ca81c8783953323ea7f99c6822857390fcaf47
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: 314ee7c6682588d06f012d6f77ab06f8d8882bb52c444e388446700b947d583e
+  sha256_after: b04d5945f3b413c791407e8ce81e55beb54a3ad1ba5afab5a74249c661bde8f3
+  created: false
+metadata:
+  data_roots_sha256: sha256:a2386d29483b9af16aacf105d37ec23454eb14a030388161426c2d18308d5c32
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-ce5accc967b24c1b87cded553e39cdd4
+  idempotency_key: reviewed-16549c7e04654e659e0d5d36f5c89cff
+  intent_sha256: sha256:a23f7f2fa3ef63f6727184353432373c80f26f17deaac8197521d715d4028701
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a23f7f2fa3ef63f6727184353432373c80f26f17deaac8197521d715d4028701

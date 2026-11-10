@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 13
+  file:operations/transactions/lineage.yaml: 14
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -55,7 +55,7 @@ revisions:
   module-job-engineering-tools: 2
   module-job-git: 2
   module-job-polars: 4
-  module-job-python-engineering: 3
+  module-job-python-engineering: 4
   module-job-rust-engineering: 2
   module-project-bachelor-thesis: 2
   module-skill-python: 1
@@ -187,6 +187,8 @@ revisions:
   source-hettinger-idiomatic-python: 1
   source-hogan-knowledge-graphs: 1
   source-homebrew-docs: 1
+  source-httpx-code: 1
+  source-hypothesis-code: 1
   source-icop-hu-ws2627: 2
   source-interviewcake-catalogue: 1
   source-islp: 1
@@ -230,6 +232,7 @@ revisions:
   source-mypy-docs: 1
   source-narwhals-concepts: 1
   source-ndarray-documentation: 1
+  source-networkx-code: 1
   source-ng-coursera: 1
   source-nielsen-nndl: 1
   source-nist-ai-risk-management-framework: 1
@@ -243,14 +246,22 @@ revisions:
   source-pep-380: 1
   source-pep-562: 1
   source-piml-paper: 1
+  source-pluggy-code: 1
+  source-polars-authored-first-steps-exercises: 1
   source-polars-benchmark: 1
+  source-polars-birds-eye-view: 1
+  source-polars-cookbook-code: 1
   source-polars-definitive-guide: 1
+  source-polars-definitive-guide-code: 1
   source-polars-docs: 1
+  source-polars-expression-engine-talk: 1
   source-posix-specification: 1
   source-pre-commit-docs: 1
   source-ptb-xl: 1
+  source-pydantic-code: 1
   source-pydata-handbook: 1
   source-pyo3-guide: 1
+  source-pytest-code: 1
   source-python-docs: 1
   source-python-implementing-graphs: 1
   source-python-module-of-week-3: 1
@@ -304,10 +315,12 @@ revisions:
   source-sklearn-user-guide: 3
   source-skrub: 1
   source-slatkin-effective-python: 1
+  source-spark-sql-paper: 1
   source-spielman-teng-smoothed-simplex-2004: 1
   source-stanford-cs261-2016: 1
   source-stat110: 1
   source-stratum-paper: 1
+  source-structlog-code: 1
   source-sutton-barto-rl: 1
   source-symfonycasts-catalogue: 1
   source-systemd-manuals: 1
@@ -465,7 +478,7 @@ revisions:
   study-map-job-python-classes-inheritance: 1
   study-map-job-python-dataclasses-properties: 1
   study-map-job-python-decorators-registration: 1
-  study-map-job-python-engineering-fluency: 4
+  study-map-job-python-engineering-fluency: 5
   study-map-job-python-errors-logging: 1
   study-map-job-python-everyday-data: 1
   study-map-job-python-functions-scope: 1
@@ -551,7 +564,7 @@ revisions:
   unit-job-python-classes-inheritance: 1
   unit-job-python-dataclasses-properties: 1
   unit-job-python-decorators-registration: 1
-  unit-job-python-engineering-fluency: 4
+  unit-job-python-engineering-fluency: 5
   unit-job-python-errors-logging: 1
   unit-job-python-everyday-data: 1
   unit-job-python-functions-scope: 1
