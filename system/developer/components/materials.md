@@ -30,6 +30,12 @@ Used by: `ai-action-store`, `ai-delivery`, `backup`, `contracts`, `derived-store
 - A locator must bind its own source bytes; never widen an invalid requested window. Pinning: `tests/test_material_span.py`.
 - The full-text material search index is a self-describing, disposable read-only artifact under `generated/material-search/` that validates live material bytes and reports text-cache freshness and corpus coverage on every query. Pinning: `tests/test_material_search.py`.
 
+Plain Markdown and text quotations use `line_start` and `line_end`, one-based
+and inclusive, on the exact `material://` file. A declared locator line span
+also bounds the quote. PDF evidence keeps its page fields; timestamped
+transcripts keep their window, video identity and grid checks and cannot use
+line ranges. All forms bind the registered digest and reject changed bytes.
+
 ## Pinning tests
 
 - `tests/test_material_span.py`

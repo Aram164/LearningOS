@@ -341,7 +341,9 @@ entries, optional read revisions), or the import refuses before apply —
 including its no-write preflight. Evidence kinds: `quote` (the primary kind
 for a positive claim about local readable material: `ref` naming the
 material URI, the verbatim `text` from the local bytes, and its place —
-`page` with optional `page_end` for a PDF, or `window` for text formats),
+`page` with optional `page_end` for a PDF, `window` for a timestamped
+transcript, or one-based inclusive `line_start` and `line_end` for plain
+Markdown/text; transcript material cannot use the line-range form),
 `route-locator` (substring of the recorded locator), `manifest`
 (materials-manifest path, digest bound by the gateway), `repo-file` (in-repo
 path, hashed by the gateway), `external` (http(s) URL plus its verification

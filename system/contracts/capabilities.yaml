@@ -245,7 +245,7 @@ commands:
     - changing a covered route's material identity or explicitly re-judging a stale or disputed claim uses shared evidence admission and the shared lineage file revision
     payload_records:
       claim_evidence:
-        description: One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit page or transcript window. Excerpts remain outside tracked output.
+        description: One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit PDF page, transcript window, or plain-text line range. Excerpts remain outside tracked output.
         accepted: [claim_id, evidence, reads]
         required: [claim_id, evidence]
         types: {claim_id: string, evidence: array, reads: object}
@@ -255,9 +255,9 @@ commands:
             min_items: 1
             items:
               type: object
-              accepted: [kind, ref, text, page, page_end, window, node, note]
+              accepted: [kind, ref, text, page, page_end, window, line_start, line_end, node, note]
               required: [kind, ref]
-              types: {kind: string, ref: string, text: string, page: integer, page_end: integer, window: string, node: string, note: string}
+              types: {kind: string, ref: string, text: string, page: integer, page_end: integer, window: string, line_start: integer, line_end: integer, node: string, note: string}
       changes:
         description: >-
           A nonempty map of declared descriptive material fields to their new

@@ -71,3 +71,22 @@ def test_quote_bounds(text, accepted):
 def test_quote_requires_one_explicit_valid_place(place):
     with pytest.raises(QuoteError):
         quote_from_mapping({"ref": "material://source-book/book.pdf", "text": "a" * 40, **place})
+
+
+@pytest.mark.parametrize("place", [
+    {"line_start": 1}, {"line_end": 1}, {"line_start": True, "line_end": 2},
+    {"line_start": 0, "line_end": 2}, {"line_start": 3, "line_end": 2},
+    {"line_start": 1, "line_end": 2, "page": 1},
+    {"line_start": 1, "line_end": 2, "window": "00:00-00:30"},
+    {"line_start": 1, "line_end": 2, "page_end": 2},
+])
+def test_text_quote_requires_one_complete_valid_line_range(place):
+    with pytest.raises(QuoteError):
+        quote_from_mapping({"ref": "material://source-book/guide.md", "text": "a" * 40, **place})
+
+
+def test_text_quote_preserves_one_based_inclusive_lines():
+    quote = quote_from_mapping({"ref": "material://source-book/guide.md", "text": "a" * 40,
+                                "line_start": 2, "line_end": 4})
+    assert (quote.line_start, quote.line_end) == (2, 4)
+    assert quote.page is None and quote.window is None

@@ -70,6 +70,12 @@
               "window": {
                 "type": "string"
               },
+              "line_start": {
+                "type": "integer"
+              },
+              "line_end": {
+                "type": "integer"
+              },
               "node": {
                 "type": "string"
               },
@@ -94,7 +100,7 @@
         "claim_id",
         "evidence"
       ],
-      "description": "One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit page or transcript window. Excerpts remain outside tracked output."
+      "description": "One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit PDF page, transcript window, or plain-text line range. Excerpts remain outside tracked output."
     },
     "route_id": {
       "type": "string",

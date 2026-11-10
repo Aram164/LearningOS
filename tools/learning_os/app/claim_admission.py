@@ -73,7 +73,9 @@ def anchor_report(evidence: Mapping[str, AdmittedEvidence]) -> list[dict[str, ob
     return [{"claim_id": cid, "classification": row.classification,
              "quotes": [{"ref": quote.ref, "text": quote.text, "page": quote.page,
                          "page_end": quote.page_end, "window": quote.window, "node": quote.node,
-                         "matched": True} for quote in row.quotes],
+                         "matched": True,
+                         **({"line_start": quote.line_start, "line_end": quote.line_end}
+                            if quote.line_start is not None else {})} for quote in row.quotes],
              "bindings": [{"material": proof.material_uri, "manifest": proof.manifest_path,
                            "sha256": proof.material_sha256, "place": proof.place,
                            "language": proof.language} for proof in row.anchors]}
@@ -172,6 +174,9 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
                 quote: dict[str, object] = {"kind": "quote", "ref": file.material_uri, "text": ""}
                 if file.path.suffix.lower() == ".pdf":
                     quote["page"] = ranges[0][0] if ranges else None
+                elif candidate and "line_start" in candidate:
+                    quote["line_start"] = candidate["line_start"]
+                    quote["line_end"] = candidate["line_end"]
                 else:
                     quote["window"] = ""
                 evidence.append(quote)

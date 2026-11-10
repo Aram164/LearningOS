@@ -35,6 +35,8 @@ StatToken = tuple[int, int, int, int, int]
 _TIMESTAMP = r"\d+:[0-5]\d(?::[0-5]\d)?"
 _WINDOW_LINE = re.compile(rf"^\[({_TIMESTAMP})\]\s*(.*)$")
 _LOCATOR_TIME = re.compile(rf"(?<![\w:])({_TIMESTAMP})(?![\w:])")
+_LOCATOR_LINES = re.compile(r"(?<!\w)(?:lines?\s+|L)(\d+)(?:\s*[-–]\s*L?(\d+))?", re.I)
+_TRANSCRIPT_HEADER = re.compile(r"(?m)^- (?:video_id|duration|window):")
 
 
 class AnchorError(ValueError):
@@ -275,6 +277,42 @@ class AnchorReader:
             raise AnchorError("quote page is outside this file's locator span")
         return "\n".join(self._page(snapshot, number) for number in pages)
 
+    def _plain_lines(self, snapshot: MaterialSnapshot) -> list[str]:
+        try:
+            document = snapshot.content.decode("utf-8")
+        except UnicodeError as exc:
+            raise AnchorError("text material is not UTF-8") from exc
+        lines = document.splitlines()
+        if _TRANSCRIPT_HEADER.search(document) or any(_WINDOW_LINE.fullmatch(line) for line in lines):
+            raise AnchorError("timestamped transcripts require a transcript window, not a line range")
+        return lines
+
+    def _line_ranges(self, locator: str) -> list[tuple[int, int]]:
+        ranges = [(int(match[1]), int(match[2] or match[1]))
+                  for match in _LOCATOR_LINES.finditer(locator)]
+        if any(start < 1 or end < start for start, end in ranges):
+            raise AnchorError("locator line range must name positive lines in order")
+        return ranges
+
+    def _line_text(self, route: RouteMaterial, file: ResolvedMaterialFile,
+                   snapshot: MaterialSnapshot, start: int | None, end: int | None) -> str:
+        if type(start) is not int or type(end) is not int or start < 1 or end < start:
+            raise AnchorError("text quotation requires an explicit one-based inclusive line range")
+        if _video_id(route.url) is not None:
+            raise AnchorError("video quotations require a transcript window, not a line range")
+        lines = self._plain_lines(snapshot)
+        if end > len(lines):
+            raise AnchorError(f"quote line range is outside this {len(lines)}-line file")
+        try:
+            locator = locator_for_material(route.locator, file.material_uri)
+        except ValueError as exc:
+            raise AnchorError(str(exc)) from exc
+        ranges = self._line_ranges(locator)
+        if ranges and not all(any(first <= line <= last for first, last in ranges)
+                              for line in range(start, end + 1)):
+            raise AnchorError("quote line range is outside this file's locator span")
+        return "\n".join(lines[start - 1:end])
+
     def candidate_excerpt(self, file: ResolvedMaterialFile, locator: str) -> dict[str, object] | None:
         """An unadmitted, bounded hint from the exact registered page/window."""
         snapshot = self.snapshot(file)
@@ -284,6 +322,21 @@ class AnchorReader:
                 return None
             page = ranges[0][0]
             return {"text": self._page(snapshot, page)[:200], "page": page}
+        if snapshot.path.suffix.casefold() not in {".md", ".txt"}:
+            return None
+        try:
+            document = snapshot.content.decode("utf-8")
+        except UnicodeError as exc:
+            raise AnchorError("text material is not UTF-8") from exc
+        if not (_TRANSCRIPT_HEADER.search(document)
+                or any(_WINDOW_LINE.fullmatch(line) for line in document.splitlines())):
+            lines = self._plain_lines(snapshot)
+            ranges = self._line_ranges(locator)
+            start, end = ranges[0] if ranges else (1, min(10, len(lines)))
+            if not lines or end > len(lines):
+                return None
+            return {"text": "\n".join(lines[start - 1:end])[:200],
+                    "line_start": start, "line_end": end}
         transcript = parse_transcript(snapshot.content)
         times = _LOCATOR_TIME.findall(locator)
         if not times:
@@ -303,6 +356,10 @@ class AnchorReader:
                 raise AnchorError("PDF quotation requires an explicit page")
             observed = self._pdf_text(route, file, snapshot, quote.page, quote.page_end)
             place = f"p{quote.page}" + (f"-{quote.page_end}" if quote.page_end else "")
+        elif snapshot.path.suffix.casefold() in {".md", ".txt"} \
+                and (quote.line_start is not None or quote.line_end is not None):
+            observed = self._line_text(route, file, snapshot, quote.line_start, quote.line_end)
+            place = f"L{quote.line_start}-L{quote.line_end}"
         elif snapshot.path.suffix.casefold() in {".md", ".txt"}:
             if quote.window is None or quote.window.count("-") != 1:
                 raise AnchorError("transcript quotation requires an explicit timestamp window")

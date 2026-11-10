@@ -548,3 +548,142 @@ def test_overnight_transcript_hint_uses_the_exact_locator_window(material_world)
     file = ResolvedMaterialFile(ref, material_world[1] / "transcript.md")
     candidate = reader(material_world).candidate_excerpt(file, "transcript.md, video 00:00-00:30")
     assert candidate == {"text": TEXT, "window": "00:00-00:30"}
+
+
+
+def _plain_text(world, content=None):
+    _, folder, manifest = world
+    payload = (content if content is not None else f"# Guide\n{TEXT}\n{OTHER}\n").encode()
+    (folder / "guide.md").write_bytes(payload)
+    manifest["source-demo-book/guide.md"] = {"sha256": hashlib.sha256(payload).hexdigest()}
+    return route(vault_path=URI + "guide.md", locator="guide.md, lines 2-2")
+
+
+def test_plain_markdown_quote_binds_its_exact_lines_and_digest(material_world):
+    selected = _plain_text(material_world)
+    quote = Quote(URI + "guide.md", TEXT, line_start=2, line_end=2)
+    observed = reader(material_world)
+    proof = observed.verify_quote(selected, quote)
+    assert proof.place == "L2-L2"
+    assert proof.manifest_path == "source-demo-book/guide.md"
+    assert proof.trail.startswith("quote:" + URI + "guide.md#L2-L2 sha256:")
+    candidate = observed.candidate_excerpt(observed.materials(selected).files[0], selected.locator)
+    assert candidate == {"text": TEXT, "line_start": 2, "line_end": 2}
+    assert observed.verify_quote(replace(selected, locator="guide.md#L2-L2"), quote)
+
+
+@pytest.mark.parametrize(("quote", "message"), [
+    (Quote(URI + "guide.md", TEXT, line_start=0, line_end=2), "one-based"),
+    (Quote(URI + "guide.md", TEXT, line_start=2, line_end=4), "outside this 3-line file"),
+    (Quote(URI + "guide.md", OTHER, line_start=3, line_end=3), "locator span"),
+    (Quote(URI + "guide.md", OTHER, line_start=2, line_end=2), "not found"),
+    (Quote(URI + "other.pdf", TEXT, line_start=2, line_end=2), "wrong file"),
+])
+def test_plain_text_wrong_lines_text_or_file_refuses(material_world, quote, message):
+    selected = _plain_text(material_world)
+    with pytest.raises(AnchorError, match=message):
+        reader(material_world).verify_quote(selected, quote)
+
+
+def test_plain_text_still_rejects_manifest_only_and_changed_bytes(material_world):
+    selected = _plain_text(material_world)
+    observed = reader(material_world)
+    quote = Quote(URI + "guide.md", TEXT, line_start=2, line_end=2)
+    assert observed.verify_quote(selected, quote)
+    with pytest.raises(AnchorError, match="requires a quotation"):
+        observed.verify_unreadable(selected, "source-demo-book/guide.md", "opened guide")
+    (material_world[1] / "guide.md").write_text("# Changed\n" + OTHER)
+    with pytest.raises(AnchorError, match="cannot be read safely|changed during admission"):
+        observed.verify_quote(selected, quote)
+    with pytest.raises(AnchorError, match="digest differs"):
+        reader(material_world).verify_quote(selected, quote)
+
+
+@pytest.mark.parametrize("content", [
+    f"- video_id: `broken`\n{TEXT}\n",
+    f"[00:00] {TEXT}\n",
+])
+def test_malformed_transcripts_cannot_be_reclassified_as_plain_lines(material_world, content):
+    selected = _plain_text(material_world, content)
+    with pytest.raises(AnchorError, match="transcripts require a transcript window"):
+        reader(material_world).verify_quote(
+            selected, Quote(URI + "guide.md", TEXT, line_start=1, line_end=2))
+
+
+def test_valid_transcript_and_video_binding_cannot_use_line_quotes(material_world):
+    ref = _transcript(material_world)
+    with pytest.raises(AnchorError, match="transcripts require a transcript window"):
+        reader(material_world).verify_quote(
+            route(vault_path=ref, locator="transcript.md"),
+            Quote(ref, TEXT, line_start=5, line_end=5))
+    selected = _plain_text(material_world)
+    with pytest.raises(AnchorError, match="video quotations require"):
+        reader(material_world).verify_quote(
+            replace(selected, url="https://youtu.be/video-demo"),
+            Quote(URI + "guide.md", TEXT, line_start=2, line_end=2))
+
+
+def test_plain_markdown_quote_runs_through_gateway_and_persists_digest_only(mini_repo):
+    import json
+
+    from gateway_helpers import approved_v2_envelope, run_v2_capability
+    from repo_builders import run_los
+
+    from learning_os.derive.semantics.lineage import load_ledger
+
+    _patch_world(mini_repo)
+    folder = mini_repo.parent / "materials/source-demo-book"
+    payload = f"# Guide\n{TEXT}\n{OTHER}\n"
+    (folder / "guide.md").write_text(payload)
+    manifest_path = mini_repo / "records/materials-manifest.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text())
+    manifest["files"]["source-demo-book/guide.md"] = {
+        "size": len(payload.encode()), "sha256": hashlib.sha256(payload.encode()).hexdigest()}
+    write_yaml(manifest_path, manifest)
+    changes = {"locator": "guide.md, lines 2-2", "vault_path": URI + "guide.md"}
+    evidence = {"claim_id": "covers:route-test", "evidence": [{
+        "kind": "quote", "ref": URI + "guide.md", "text": TEXT,
+        "line_start": 2, "line_end": 2}]}
+    checked = run_los(mini_repo, "route-patch", "unit-demo-l01", "route-test", "--changes",
+                      json.dumps(changes), "--claim-evidence", json.dumps(evidence), "--check")
+    assert checked.returncode == 0, checked.stdout + checked.stderr
+    report = json.loads(checked.stdout)
+    quoted = report["claim_anchors"][0]["quotes"][0]
+    assert quoted["line_start"] == 2 and quoted["line_end"] == 2 and quoted["matched"]
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    envelope = approved_v2_envelope(
+        mini_repo, capability="route.patch", payload=report["next"]["payload"],
+        artifact_ids=report["artifact_ids"], idempotency_key="patch-plain-text")
+    applied = run_v2_capability(mini_repo, envelope)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    lineage = load_ledger(mini_repo)["covers:route-test"]
+    assert any(trail.startswith("quote:" + URI + "guide.md#L2-L2 ")
+               for trail in lineage.derived_from.evidence)
+    assert TEXT not in (mini_repo / "operations/transactions/lineage.yaml").read_text()
+
+
+
+def test_unsupported_binary_has_no_text_quote_candidate(material_world):
+    _, folder, manifest = material_world
+    payload = b"\xff\xfe\x00binary"
+    path = folder / "data.bin"
+    path.write_bytes(payload)
+    manifest["source-demo-book/data.bin"] = {"sha256": hashlib.sha256(payload).hexdigest()}
+    file = anchors.ResolvedMaterialFile(URI + "data.bin", path)
+    assert reader(material_world).candidate_excerpt(file, "data.bin") is None
+
+
+
+def test_non_utf8_text_candidate_and_quote_fail_with_typed_anchor_error(material_world):
+    _, folder, manifest = material_world
+    payload = b"\xff\xfe\x00not UTF-8"
+    path = folder / "broken.md"
+    path.write_bytes(payload)
+    manifest["source-demo-book/broken.md"] = {"sha256": hashlib.sha256(payload).hexdigest()}
+    file = anchors.ResolvedMaterialFile(URI + "broken.md", path)
+    selected = route(vault_path=file.material_uri, locator="broken.md")
+    observed = reader(material_world)
+    with pytest.raises(AnchorError, match="not UTF-8"):
+        observed.candidate_excerpt(file, selected.locator)
+    with pytest.raises(AnchorError, match="not UTF-8"):
+        observed.verify_quote(selected, Quote(file.material_uri, TEXT, line_start=1, line_end=1))

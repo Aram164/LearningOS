@@ -60,6 +60,8 @@ class Quote:
     window: str | None = None
     node: str = ""
     note: str = ""
+    line_start: int | None = None
+    line_end: int | None = None
 
 
 def quote_from_mapping(item: Mapping[str, object]) -> Quote:
@@ -69,7 +71,14 @@ def quote_from_mapping(item: Mapping[str, object]) -> Quote:
     if not isinstance(text, str) or len(text) > 300 or len(normalise(text)) < 40:
         raise QuoteError("quote text needs at least 40 normalized characters and at most 300 raw characters")
     page, page_end, window = item.get("page"), item.get("page_end"), item.get("window")
-    if (page is None) == (window is None):
+    line_start, line_end = item.get("line_start"), item.get("line_end")
+    if line_start is not None or line_end is not None:
+        if page is not None or window is not None:
+            raise QuoteError("quote line range cannot combine with a PDF page or transcript window")
+        if type(line_start) is not int or type(line_end) is not int \
+                or line_start < 1 or line_end < line_start:
+            raise QuoteError("quote line range needs positive one-based start and end lines in order")
+    elif (page is None) == (window is None):
         raise QuoteError("quote needs exactly one PDF page or transcript window")
     if page is not None and (type(page) is not int or page < 1):
         raise QuoteError("quote page must be a positive PDF page number")
@@ -81,4 +90,5 @@ def quote_from_mapping(item: Mapping[str, object]) -> Quote:
     if not isinstance(node, str) or not isinstance(note, str):
         raise QuoteError("quote node and note must be strings")
     return Quote(ref=ref, text=text, page=page, page_end=page_end,
-                 window=window, node=node, note=note)
+                 window=window, node=node, note=note,
+                 line_start=line_start, line_end=line_end)
