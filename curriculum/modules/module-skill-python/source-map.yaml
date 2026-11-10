@@ -5,20 +5,2695 @@ sources:
   role: spine
   why: Authored staged depth ladder.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-python-depth-0-1
+    unit_id: unit-python-depth-drills
+    title: Stage 0 guide
+    format: documentation
+    angle: 'Stage 0 guide — Names, identity & mutation: claim under test, prerequisites, ranked reading,
+      drills, done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 0 — Names, identity & mutation. Work
+      Stage 0 (Names, identity & mutation) until its self-test needs no lookups; unlocks everything below
+      it.
+    covers:
+    - knowledge-python-depth-0
+    depth: unassessed
+    scope: current
+    locator: stage-0-names-and-identity.md
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+  - id: route-python-depth-0-2
+    unit_id: unit-python-depth-drills
+    title: Stage 0 self-test notebook
+    format: exercise
+    angle: Stage 0 self-test notebook — 20 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 0 — Names, identity & mutation. Work
+      Stage 0 (Names, identity & mutation) until its self-test needs no lookups; unlocks everything below
+      it.
+    covers:
+    - knowledge-python-depth-0
+    depth: practice
+    scope: current
+    locator: stage-0-names-and-identity.ipynb
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
+  - id: route-python-depth-0-3
+    unit_id: unit-python-depth-drills
+    title: Ladder README
+    format: documentation
+    angle: Ladder README — entry point, order, and the two shorter paths.
+    angle_detail: Retains the exact authored placement for Stage 0 — Names, identity & mutation. Work
+      Stage 0 (Names, identity & mutation) until its self-test needs no lookups; unlocks everything below
+      it.
+    covers:
+    - knowledge-python-depth-0
+    depth: unassessed
+    scope: optional
+    locator: README.md
+    vault_path: material://source-python-depth-drills/README.md
+  - id: route-python-depth-1-1
+    unit_id: unit-python-depth-drills
+    title: Stage 1 guide
+    format: documentation
+    angle: 'Stage 1 guide — Functions as first-class objects: claim under test, prerequisites, ranked
+      reading, drills, done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 1 — Functions as first-class objects.
+      Work Stage 1 (Functions as first-class objects) until its self-test needs no lookups; unlocks stages
+      2, 3 and 8.
+    covers:
+    - knowledge-python-depth-1
+    depth: unassessed
+    scope: current
+    locator: stage-1-functions-as-objects.md
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+  - id: route-python-depth-1-2
+    unit_id: unit-python-depth-drills
+    title: Stage 1 self-test notebook
+    format: exercise
+    angle: Stage 1 self-test notebook — 19 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 1 — Functions as first-class objects.
+      Work Stage 1 (Functions as first-class objects) until its self-test needs no lookups; unlocks stages
+      2, 3 and 8.
+    covers:
+    - knowledge-python-depth-1
+    depth: practice
+    scope: current
+    locator: stage-1-functions-as-objects.ipynb
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+  - id: route-python-depth-2-1
+    unit_id: unit-python-depth-drills
+    title: Stage 2 guide
+    format: documentation
+    angle: 'Stage 2 guide — Scope & closures: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 2 — Scope & closures. Work Stage 2 (Scope
+      & closures) until its self-test needs no lookups; unlocks stage 3.
+    covers:
+    - knowledge-python-depth-2
+    depth: unassessed
+    scope: current
+    locator: stage-2-scope-and-closures.md
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+  - id: route-python-depth-2-2
+    unit_id: unit-python-depth-drills
+    title: Stage 2 self-test notebook
+    format: exercise
+    angle: Stage 2 self-test notebook — 19 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 2 — Scope & closures. Work Stage 2 (Scope
+      & closures) until its self-test needs no lookups; unlocks stage 3.
+    covers:
+    - knowledge-python-depth-2
+    depth: practice
+    scope: current
+    locator: stage-2-scope-and-closures.ipynb
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+  - id: route-python-depth-3-1
+    unit_id: unit-python-depth-drills
+    title: Stage 3 guide
+    format: documentation
+    angle: 'Stage 3 guide — Decorators: claim under test, prerequisites, ranked reading, drills, done-when,
+      traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 3 — Decorators. Work Stage 3 (Decorators)
+      until its self-test needs no lookups; unlocks stage 5.
+    covers:
+    - knowledge-python-depth-3
+    depth: unassessed
+    scope: current
+    locator: stage-3-decorators.md
+    vault_path: material://source-python-depth-drills/stage-3-decorators.md
+  - id: route-python-depth-3-2
+    unit_id: unit-python-depth-drills
+    title: Stage 3 self-test notebook
+    format: exercise
+    angle: Stage 3 self-test notebook — 20 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 3 — Decorators. Work Stage 3 (Decorators)
+      until its self-test needs no lookups; unlocks stage 5.
+    covers:
+    - knowledge-python-depth-3
+    depth: practice
+    scope: current
+    locator: stage-3-decorators.ipynb
+    vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+  - id: route-python-depth-4-1
+    unit_id: unit-python-depth-drills
+    title: Stage 4 guide
+    format: documentation
+    angle: 'Stage 4 guide — Classes as objects: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 4 — Classes as objects. Work Stage 4
+      (Classes as objects) until its self-test needs no lookups; unlocks stages 6 and 8.
+    covers:
+    - knowledge-python-depth-4
+    depth: unassessed
+    scope: current
+    locator: stage-4-classes-as-objects.md
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+  - id: route-python-depth-4-2
+    unit_id: unit-python-depth-drills
+    title: Stage 4 self-test notebook
+    format: exercise
+    angle: Stage 4 self-test notebook — 20 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 4 — Classes as objects. Work Stage 4
+      (Classes as objects) until its self-test needs no lookups; unlocks stages 6 and 8.
+    covers:
+    - knowledge-python-depth-4
+    depth: practice
+    scope: current
+    locator: stage-4-classes-as-objects.ipynb
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+  - id: route-python-depth-5-1
+    unit_id: unit-python-depth-drills
+    title: Stage 5 guide
+    format: documentation
+    angle: 'Stage 5 guide — Imports & registration: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 5 — Imports & registration. Work Stage
+      5 (Imports & registration) until its self-test needs no lookups; unlocks registry and plugin code.
+    covers:
+    - knowledge-python-depth-5
+    depth: unassessed
+    scope: current
+    locator: stage-5-imports-and-registration.md
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+  - id: route-python-depth-5-2
+    unit_id: unit-python-depth-drills
+    title: Stage 5 self-test notebook
+    format: exercise
+    angle: Stage 5 self-test notebook — 17 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 5 — Imports & registration. Work Stage
+      5 (Imports & registration) until its self-test needs no lookups; unlocks registry and plugin code.
+    covers:
+    - knowledge-python-depth-5
+    depth: practice
+    scope: current
+    locator: stage-5-imports-and-registration.ipynb
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+  - id: route-python-depth-6-1
+    unit_id: unit-python-depth-drills
+    title: Stage 6 guide
+    format: documentation
+    angle: 'Stage 6 guide — The data model & dunders: claim under test, prerequisites, ranked reading,
+      drills, done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 6 — The data model & dunders. Work Stage
+      6 (The data model & dunders) until its self-test needs no lookups; unlocks stages 7 and 8.
+    covers:
+    - knowledge-python-depth-6
+    depth: unassessed
+    scope: current
+    locator: stage-6-data-model-and-dunders.md
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+  - id: route-python-depth-6-2
+    unit_id: unit-python-depth-drills
+    title: Stage 6 self-test notebook
+    format: exercise
+    angle: Stage 6 self-test notebook — 18 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 6 — The data model & dunders. Work Stage
+      6 (The data model & dunders) until its self-test needs no lookups; unlocks stages 7 and 8.
+    covers:
+    - knowledge-python-depth-6
+    depth: practice
+    scope: current
+    locator: stage-6-data-model-and-dunders.ipynb
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+  - id: route-python-depth-7-1
+    unit_id: unit-python-depth-drills
+    title: Stage 7 guide
+    format: documentation
+    angle: 'Stage 7 guide — Generators & iterators: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 7 — Generators & iterators. Work Stage
+      7 (Generators & iterators) until its self-test needs no lookups; unlocks tree and graph traversal
+      code.
+    covers:
+    - knowledge-python-depth-7
+    depth: unassessed
+    scope: current
+    locator: stage-7-generators-and-iterators.md
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+  - id: route-python-depth-7-2
+    unit_id: unit-python-depth-drills
+    title: Stage 7 self-test notebook
+    format: exercise
+    angle: Stage 7 self-test notebook — 15 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 7 — Generators & iterators. Work Stage
+      7 (Generators & iterators) until its self-test needs no lookups; unlocks tree and graph traversal
+      code.
+    covers:
+    - knowledge-python-depth-7
+    depth: practice
+    scope: current
+    locator: stage-7-generators-and-iterators.ipynb
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+  - id: route-python-depth-8-1
+    unit_id: unit-python-depth-drills
+    title: Stage 8 guide
+    format: documentation
+    angle: 'Stage 8 guide — Interfaces & dispatch: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    angle_detail: Retains the exact authored placement for Stage 8 — Interfaces & dispatch. Work Stage
+      8 (Interfaces & dispatch) until its self-test needs no lookups; unlocks design reviews.
+    covers:
+    - knowledge-python-depth-8
+    depth: unassessed
+    scope: current
+    locator: stage-8-interfaces-and-dispatch.md
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+  - id: route-python-depth-8-2
+    unit_id: unit-python-depth-drills
+    title: Stage 8 self-test notebook
+    format: exercise
+    angle: Stage 8 self-test notebook — 14 predict-then-run questions with folded solutions.
+    angle_detail: Retains the exact authored placement for Stage 8 — Interfaces & dispatch. Work Stage
+      8 (Interfaces & dispatch) until its self-test needs no lookups; unlocks design reviews.
+    covers:
+    - knowledge-python-depth-8
+    depth: practice
+    scope: current
+    locator: stage-8-interfaces-and-dispatch.ipynb
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+  - id: route-python-depth-9-1
+    unit_id: unit-python-depth-drills
+    title: Capstone notebook
+    format: exercise
+    angle: Capstone notebook — the ladder's terminal self-test.
+    angle_detail: 'Retains the exact authored placement for Capstone — rebuild blind. Close the ladder:
+      rebuild the capstone exercises without the guides open.'
+    covers:
+    - knowledge-python-depth-capstone
+    depth: practice
+    scope: current
+    locator: capstone.ipynb
+    vault_path: material://source-python-depth-drills/capstone.ipynb
+  - id: route-python-depth-9-2
+    unit_id: unit-python-depth-drills
+    title: SHELF.md
+    format: documentation
+    angle: SHELF.md — cross-cutting topics no stage owns (testing, debugging, performance, style).
+    angle_detail: 'Retains the exact authored placement for Capstone — rebuild blind. Close the ladder:
+      rebuild the capstone exercises without the guides open.'
+    covers:
+    - knowledge-python-depth-capstone
+    depth: unassessed
+    scope: optional
+    locator: SHELF.md
+    vault_path: material://source-python-depth-drills/SHELF.md
+  - title: Stage 0 guide
+    format: documentation
+    locator: stage-0-names-and-identity.md
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    id: route-python-roadmap-depth-reference
+    unit_id: unit-python-intermediate-roadmap
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
+  - title: Stage 0 guide
+    format: documentation
+    locator: stage-0-names-and-identity.md
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    id: route-python-oop-depth-reference
+    unit_id: unit-python-oop-scope
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
 - source_id: source-fluent-python
   role: optional-depth
   why: Language-model depth and idioms.
   priority: 2
-  unit_routes: []
+  unit_routes:
+  - id: route-python-roadmap-02-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 6 — PY.02 ✅. Re-read §"Identity, Equality, Aliases" + §"Function Parameters as
+      References."'
+    format: book
+    angle: Chapter 6. Object References, Mutability, and Recycling — contributes the assigned explanation
+      for Step 2 — Names, objects, references, mutability.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 6 — PY.02 ✅. Re-read
+      §"Identity, Equality, Aliases" + §"Function Parameters as References." Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 6. Object References, Mutability, and Recycling"; fluent-python.pdf, PDF pp. 231-260'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-03-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 7 (Functions as First-Class Objects) — PY.05 ⬜. Functions are objects with attributes;
+      `def` executes at runtime, not at parse time.'
+    format: book
+    angle: Chapter 7. Functions as First-Class Objects — contributes the assigned explanation for Step
+      3 — Scope, namespaces, functions as objects.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 7 (Functions as First-Class
+      Objects) — PY.05 ⬜. Functions are objects with attributes; `def` executes at runtime, not at parse
+      time. Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-03
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 7. Functions as First-Class Objects"; fluent-python.pdf, PDF pp. 261-282'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-04-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 1 (Data Model) — PY.01 ✅; FP Ch 11 (A Pythonic Object) — PY.07 ✅. Re-read Ch 11
+      §`__repr__`/`__str__`, §hashable objects, §`__format__`.'
+    format: book
+    angle: Chapter 1. The Python Data Model / Chapter 11. A Pythonic Object / Chapter 11. A Pythonic Object
+      — contributes the assigned explanation for Step 4 — The data model & dunder methods.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 1 (Data Model) — PY.01
+      ✅; FP Ch 11 (A Pythonic Object) — PY.07 ✅. Re-read Ch 11 §`__repr__`/`__str__`, §hashable objects,
+      §`__format__`. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 1. The Python Data Model / Chapter 11. A Pythonic Object / Chapter 11. A Pythonic
+      Object"; fluent-python.pdf, PDF pp. 33-50, pp. 393-426, pp. 393-426'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-04-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Going further: FP Ch 16 (Operator Overloading) — when you need `+`/`==` on your own classes.'
+    format: book
+    angle: Chapter 16. Operator Overloading — contributes the assigned explanation for Step 4 — The data
+      model & dunder methods.
+    angle_detail: 'Retains the original assigned resource and action. Going further: FP Ch 16 (Operator
+      Overloading) — when you need `+`/`==` on your own classes. Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 16. Operator Overloading"; fluent-python.pdf, PDF pp. 591-622'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-05-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 2 (Sequences) — PY.03 ⬜ — slicing, unpacking, `sort` vs `sorted`, when lists are
+      wrong.'
+    format: book
+    angle: Chapter 2. An Array of Sequences — contributes the assigned explanation for Step 5 — Built-in
+      containers & comprehensions.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 2 (Sequences) — PY.03
+      ⬜ — slicing, unpacking, `sort` vs `sorted`, when lists are wrong. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 2. An Array of Sequences"; fluent-python.pdf, PDF pp. 51-106'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-05-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 3 (Dicts and Sets) — PY.04 ⬜ — hashing, dict views, `setdefault`/`defaultdict`,
+      set algebra, dict ordering (insertion-order since 3.7).'
+    format: book
+    angle: Chapter 3. Dictionaries and Sets — contributes the assigned explanation for Step 5 — Built-in
+      containers & comprehensions.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 3 (Dicts and Sets) —
+      PY.04 ⬜ — hashing, dict views, `setdefault`/`defaultdict`, set algebra, dict ordering (insertion-order
+      since 3.7). Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 3. Dictionaries and Sets"; fluent-python.pdf, PDF pp. 107-146'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-06-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 4 (Unicode Text vs Bytes) — §"Character Issues" + §"Basic Encoders/Decoders" +
+      §"Handling Text Files" (the "Unicode sandwich"); skim the rest.'
+    format: book
+    angle: Chapter 4. Unicode Text Versus Bytes — contributes the assigned explanation for Step 6 — Strings,
+      bytes, and formatting.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 4 (Unicode Text vs Bytes)
+      — §"Character Issues" + §"Basic Encoders/Decoders" + §"Handling Text Files" (the "Unicode sandwich");
+      skim the rest. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-06
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 4. Unicode Text Versus Bytes"; fluent-python.pdf, PDF pp. 147-192'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-08-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 14 (Inheritance) — PY.08 ✅. Re-read §"Multiple Inheritance and MRO" + §"Mixin
+      Classes" + §"Subclassing Built-In Types Is Tricky."'
+    format: book
+    angle: 'Chapter 14. Inheritance: For Better or for Worse — contributes the assigned explanation for
+      Step 8 — Classes II: inheritance, super(), MRO, mixins.'
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 14 (Inheritance) — PY.08
+      ✅. Re-read §"Multiple Inheritance and MRO" + §"Mixin Classes" + §"Subclassing Built-In Types Is
+      Tricky." Other sources supply the remainder of the stage; no new quality or mastery judgment is
+      asserted.'
+    covers:
+    - knowledge-python-roadmap-08
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 14. Inheritance: For Better or for Worse"; fluent-python.pdf, PDF pp. 517-548'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-09-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 5 (Data Class Builders) — PY.09 ✅. Re-read §"Main Features" comparison table.'
+    format: book
+    angle: Chapter 5. Data Class Builders — contributes the assigned explanation for Step 9 — Data class
+      builders.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 5 (Data Class Builders)
+      — PY.09 ✅. Re-read §"Main Features" comparison table. Other sources supply the remainder of the
+      stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-09
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 5. Data Class Builders"; fluent-python.pdf, PDF pp. 193-230'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-10-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 13 (Interfaces, Protocols, ABCs) — PY.11 ⬜ — the four interface mechanisms: duck
+      typing, goose typing (ABCs), static protocols, static duck typing.'
+    format: book
+    angle: Chapter 13. Interfaces, Protocols, and ABCs — contributes the assigned explanation for Step
+      10 — Duck typing, ABCs, protocols.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 13 (Interfaces, Protocols,
+      ABCs) — PY.11 ⬜ — the four interface mechanisms: duck typing, goose typing (ABCs), static protocols,
+      static duck typing. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-10
+    - knowledge-python-roadmap-14
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 13. Interfaces, Protocols, and ABCs"; fluent-python.pdf, PDF pp. 461-516'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-11-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 9 (Decorators and Closures) — PY.10 ⬜ — registration decorators, `functools.wraps`,
+      `lru_cache`, `singledispatch`.'
+    format: book
+    angle: Chapter 9. Decorators and Closures — contributes the assigned explanation for Step 11 — Closures
+      & decorators.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 9 (Decorators and Closures)
+      — PY.10 ⬜ — registration decorators, `functools.wraps`, `lru_cache`, `singledispatch`. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-11
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 9. Decorators and Closures"; fluent-python.pdf, PDF pp. 333-370'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-12-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 17 (Iterators, Generators, Classic Coroutines) — PY.06 ⬜ — read the generators
+      section first; the coroutines section is Step 24.'
+    format: book
+    angle: Chapter 17. Iterators, Generators,  and Classic Coroutines — contributes the assigned explanation
+      for Step 12 — Iterators, generators, lazy pipelines.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 17 (Iterators, Generators,
+      Classic Coroutines) — PY.06 ⬜ — read the generators section first; the coroutines section is Step
+      24. Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-12
+    - knowledge-python-roadmap-24
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 17. Iterators, Generators,  and Classic Coroutines"; fluent-python.pdf, PDF pp.
+      623-686'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-13-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 18 (with, match, else) — PY.14 ⬜.'
+    format: book
+    angle: Chapter 18. with, match, and else Blocks — contributes the assigned explanation for Step 13
+      — Context managers, with / else / match.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 18 (with, match, else)
+      — PY.14 ⬜. Other sources supply the remainder of the stage; no new quality or mastery judgment is
+      asserted.'
+    covers:
+    - knowledge-python-roadmap-13
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 18. with, match, and else Blocks"; fluent-python.pdf, PDF pp. 687-724'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-15-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: FP Ch 8 (Type Hints in Functions) — PY.12 ⬜; FP Ch 15 (more types) — PY.13 ⬜.'
+    format: book
+    angle: Chapter 8. Type Hints in Functions / Chapter 15. More About Type Hints — contributes the assigned
+      explanation for Step 15 — Type hints.
+    angle_detail: 'Retains the original assigned resource and action. Core: FP Ch 8 (Type Hints in Functions)
+      — PY.12 ⬜; FP Ch 15 (more types) — PY.13 ⬜. Other sources supply the remainder of the stage; no
+      new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-15
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 8. Type Hints in Functions / Chapter 15. More About Type Hints"; fluent-python.pdf,
+      PDF pp. 283-332, pp. 549-590'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-19-08
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Book: FP Ch 19–21 — read only if needed after the above.'
+    format: book
+    angle: Chapter 19. Concurrency Models in Python / Chapter 20. Concurrent Executors / Chapter 21. Asynchronous
+      Programming — contributes the assigned explanation for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. Book: FP Ch 19–21 — read only if
+      needed after the above. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 19. Concurrency Models in Python / Chapter 20. Concurrent Executors / Chapter 21.
+      Asynchronous Programming"; fluent-python.pdf, PDF pp. 725-772, pp. 773-804, pp. 805-864'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-21-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Properties: FP Ch 22 (Dynamic Attributes and Properties) — `@property` is the 95%-case; turns
+      `get_x()` habits into plain attribute access. `@property` + `@x.setter` + `@x.deleter` trio.'
+    format: book
+    angle: 'Chapter 22. Dynamic Attributes and Properties — contributes the assigned explanation for Step
+      21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`.'
+    angle_detail: 'Retains the original assigned resource and action. Properties: FP Ch 22 (Dynamic Attributes
+      and Properties) — `@property` is the 95%-case; turns `get_x()` habits into plain attribute access.
+      `@property` + `@x.setter` + `@x.deleter` trio. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-21
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 22. Dynamic Attributes and Properties"; fluent-python.pdf, PDF pp. 865-908'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - id: route-python-roadmap-21-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Metaclasses: FP Ch 24 — skim only. FP''s own advice: "if you''re not sure you need them, you
+      don''t." The one pattern worth knowing: `type(obj)` is its metaclass; `type` itself is a metaclass;
+      classes are instances of `type`.'
+    format: book
+    angle: 'Chapter 24. Class Metaprogramming — contributes the assigned explanation for Step 21 — Attribute
+      magic: properties, descriptors, metaclasses, module `__getattr__`.'
+    angle_detail: 'Retains the original assigned resource and action. Metaclasses: FP Ch 24 — skim only.
+      FP''s own advice: "if you''re not sure you need them, you don''t." The one pattern worth knowing:
+      `type(obj)` is its metaclass; `type` itself is a metaclass; classes are instances of `type`. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-21
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Chapter 24. Class Metaprogramming"; fluent-python.pdf, PDF pp. 937-992'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+  - title: 'Core: FP Ch 6 — PY.02 ✅. Re-read §"Identity, Equality, Aliases" + §"Function Parameters as
+      References."'
+    format: book
+    locator: '"Chapter 6. Object References, Mutability, and Recycling"; fluent-python.pdf, PDF pp. 231-260'
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    id: route-python-oop-fluent-reference
+    unit_id: unit-python-oop-scope
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
 - source_id: source-slatkin-effective-python
   role: optional-depth
-  why: Prescriptive companion to Fluent Python — 90 short items saying what to do; per-stage item
-    mapping lives in the depth-drills SHELF.
+  why: Prescriptive companion to Fluent Python — 90 short items saying what to do; per-stage item mapping
+    lives in the depth-drills SHELF.
   priority: 2
-  unit_routes: []
+  unit_routes:
+  - title: Effective Python — reference on argument defaults
+    format: book
+    locator: '"Item 24: Use None and Docstrings to Specify Dynamic Default Arguments" (local 2e); effective-python.pdf,
+      PDF pp. 117-119'
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    id: route-python-roadmap-effective-reference
+    unit_id: unit-python-intermediate-roadmap
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
+  - title: Effective Python — reference on argument defaults
+    format: book
+    locator: '"Item 24: Use None and Docstrings to Specify Dynamic Default Arguments" (local 2e); effective-python.pdf,
+      PDF pp. 117-119'
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    id: route-python-oop-effective-reference
+    unit_id: unit-python-oop-scope
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
 - source_id: source-python-docs-classes-mro
   role: reference
   why: Official class and MRO reference.
   priority: 1
-  unit_routes: []
+  unit_routes:
+  - id: route-python-roadmap-07-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Official tutorial ch. 9 (Classes) §9.1–9.4 — classes are namespaces; attribute lookup
+      is dict lookup.'
+    format: website
+    angle: '9. Classes — Python 3.15.2 documentation — contributes the assigned explanation for Step 7
+      — Classes I: mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Core: Official tutorial ch. 9 (Classes)
+      §9.1–9.4 — classes are namespaces; attribute lookup is dict lookup. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-07
+    depth: unassessed
+    scope: unevaluated
+    locator: '"9. Classes — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/tutorial/classes.html
+  - id: route-python-roadmap-08-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Official MRO write-up — C3 linearization; read after Hettinger.'
+    format: website
+    angle: 'The Python 2.3 Method Resolution Order — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 8 — Classes II: inheritance, super(), MRO, mixins.'
+    angle_detail: 'Retains the original assigned resource and action. Reference: Official MRO write-up
+      — C3 linearization; read after Hettinger. Other sources supply the remainder of the stage; no new
+      quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-08
+    depth: unassessed
+    scope: unevaluated
+    locator: '"The Python 2.3 Method Resolution Order — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/howto/mro.html
+  - title: Python classes tutorial — inheritance reference
+    format: documentation
+    locator: '"Inheritance" and "Multiple Inheritance", Python tutorial sections 9.5–9.5.1'
+    url: https://docs.python.org/3/tutorial/classes.html#inheritance
+    id: route-python-oop-classes-reference
+    unit_id: unit-python-oop-scope
+    covers:
+    - knowledge-python-oop-03
+    depth: unassessed
+    scope: unevaluated
+    angle: Reference availability for the unit’s already declared source, with a concrete related topic.
+    angle_detail: The source was already named by this unit with reference authority. This menu route
+      completes that existing declaration; it adds no stage placement or learner selection, and imposes
+      no reading order or cover-to-cover obligation. Contextual quality/depth remains unassessed.
+- source_id: source-automate-boring-stuff
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 4
+  unit_routes:
+  - id: route-python-roadmap-01-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Book: Automate the Boring Stuff — dip back in for any syntax hole.'
+    format: book
+    angle: 'Automate the Boring Stuff — Python basics, flow control and functions — contributes the assigned
+      explanation for Step 1 — Baseline: syntax & core mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Book: Automate the Boring Stuff
+      — dip back in for any syntax hole. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Automate the Boring Stuff — Python basics, flow control and functions"; Sweigart_Automate-the-Boring-Stuff.pdf,
+      PDF pp. 37-106'
+    vault_path: material://source-automate-boring-stuff/Sweigart_Automate-the-Boring-Stuff.pdf
+- source_id: source-python-docs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 5
+  unit_routes:
+  - id: route-python-roadmap-01-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Official Python Tutorial ch. 3–5 — skim; small revelations hide here.'
+    format: website
+    angle: 'The Python Tutorial — Python 3.15.2 documentation — contributes the assigned explanation for
+      Step 1 — Baseline: syntax & core mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Reference: Official Python Tutorial
+      ch. 3–5 — skim; small revelations hide here. Other sources supply the remainder of the stage; no
+      new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"The Python Tutorial — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/tutorial/
+  - id: route-python-roadmap-02-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: `is` vs `==`, `copy.copy` vs `copy.deepcopy` (copy module docs).'
+    format: website
+    angle: copy — Shallow and deep copy operations — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 2 — Names, objects, references, mutability.
+    angle_detail: 'Retains the original assigned resource and action. Reference: `is` vs `==`, `copy.copy`
+      vs `copy.deepcopy` (copy module docs). Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    locator: '"copy — Shallow and deep copy operations — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/copy.html
+  - id: route-python-roadmap-02-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Going deeper: `sys.getrefcount(obj)` — see CPython''s reference count live; `id(obj)` — the
+      memory address, which is what `is` compares. weakref module — references that don''t prevent garbage
+      collection; important for cache / buffer pool patterns like Stratum''s `BufferPool`.'
+    format: website
+    angle: weakref — Weak references — Python 3.15.2 documentation — contributes the assigned explanation
+      for Step 2 — Names, objects, references, mutability.
+    angle_detail: 'Retains the original assigned resource and action. Going deeper: `sys.getrefcount(obj)`
+      — see CPython''s reference count live; `id(obj)` — the memory address, which is what `is` compares.
+      weakref module — references that don''t prevent garbage collection; important for cache / buffer
+      pool patterns like Stratum''s `BufferPool`. Other sources supply the remainder of the stage; no
+      new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-02
+    - knowledge-python-roadmap-27
+    depth: unassessed
+    scope: unevaluated
+    locator: '"weakref — Weak references — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/weakref.html
+  - id: route-python-roadmap-04-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Data model chapter of the language reference — the authoritative dunder list; bookmark,
+      don''t read linearly.'
+    format: website
+    angle: 3. Data model — Python 3.15.2 documentation — contributes the assigned explanation for Step
+      4 — The data model & dunder methods.
+    angle_detail: 'Retains the original assigned resource and action. Reference: Data model chapter of
+      the language reference — the authoritative dunder list; bookmark, don''t read linearly. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"3. Data model — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/reference/datamodel.html
+  - id: route-python-roadmap-05-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Sorting HOWTO — `key=` functions; the idiom that replaces C++ comparators.'
+    format: website
+    angle: Sorting Techniques — Python 3.15.2 documentation — contributes the assigned explanation for
+      Step 5 — Built-in containers & comprehensions.
+    angle_detail: 'Retains the original assigned resource and action. Reference: Sorting HOWTO — `key=`
+      functions; the idiom that replaces C++ comparators. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Sorting Techniques — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/howto/sorting.html
+  - id: route-python-roadmap-07-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed layout of named slots; eliminates
+      per-instance dict overhead; important for classes created in hot loops (like Op nodes in Stratum''s
+      large DAGs). Python data model — `__slots__`. Also see Step 27.'
+    format: website
+    angle: '3. Data model — Python 3.15.2 documentation — contributes the assigned explanation for Step
+      7 — Classes I: mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Going deeper: `__slots__` — replaces
+      `__dict__` with a fixed layout of named slots; eliminates per-instance dict overhead; important
+      for classes created in hot loops (like Op nodes in Stratum''s large DAGs). Python data model — `__slots__`.
+      Also see Step 27. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-07
+    - knowledge-python-roadmap-27
+    depth: unassessed
+    scope: unevaluated
+    locator: '"3. Data model — Python 3.15.2 documentation" #object.__slots__'
+    url: https://docs.python.org/3/reference/datamodel.html#object.__slots__
+  - id: route-python-roadmap-07-06
+    unit_id: unit-python-intermediate-roadmap
+    title: '`__init_subclass__` — a hook called on the base class every time a subclass is defined; used
+      in frameworks to auto-register subclasses. Docs. Stratum''s `Op` hierarchy could use this; understanding
+      it helps you read framework code.'
+    format: website
+    angle: '3. Data model — Python 3.15.2 documentation — contributes the assigned explanation for Step
+      7 — Classes I: mechanics.'
+    angle_detail: Retains the original assigned resource and action. `__init_subclass__` — a hook called
+      on the base class every time a subclass is defined; used in frameworks to auto-register subclasses.
+      Docs. Stratum's `Op` hierarchy could use this; understanding it helps you read framework code. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.
+    covers:
+    - knowledge-python-roadmap-07
+    depth: unassessed
+    scope: unevaluated
+    locator: '"3. Data model — Python 3.15.2 documentation" #object.__init_subclass__'
+    url: https://docs.python.org/3/reference/datamodel.html#object.__init_subclass__
+  - id: route-python-roadmap-10-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: collections.abc table — which dunders give you which "free" methods.'
+    format: website
+    angle: collections.abc — Abstract Base Classes for Containers — Python 3.15.2 documentation — contributes
+      the assigned explanation for Step 10 — Duck typing, ABCs, protocols.
+    angle_detail: 'Retains the original assigned resource and action. Reference: collections.abc table
+      — which dunders give you which "free" methods. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-10
+    depth: unassessed
+    scope: unevaluated
+    locator: '"collections.abc — Abstract Base Classes for Containers — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/collections.abc.html
+  - id: route-python-roadmap-10-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Going deeper: `@runtime_checkable` on a `Protocol` — lets you use `isinstance(x, MyProtocol)`
+      at runtime (normally protocols are static-only). `TypeVar` + `Generic` for parameterized protocols.
+      Docs.'
+    format: website
+    angle: typing — Support for type hints — Python 3.15.2 documentation — contributes the assigned explanation
+      for Step 10 — Duck typing, ABCs, protocols.
+    angle_detail: 'Retains the original assigned resource and action. Going deeper: `@runtime_checkable`
+      on a `Protocol` — lets you use `isinstance(x, MyProtocol)` at runtime (normally protocols are static-only).
+      `TypeVar` + `Generic` for parameterized protocols. Docs. Other sources supply the remainder of the
+      stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-10
+    depth: unassessed
+    scope: unevaluated
+    locator: '"typing — Support for type hints — Python 3.15.2 documentation" #typing.Protocol'
+    url: https://docs.python.org/3/library/typing.html#typing.Protocol
+  - id: route-python-roadmap-11-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Going deeper: `functools.singledispatch` — dispatch table by first argument type; used extensively
+      in optimizer/rewrite passes like Stratum''s `extract_dataframe_op`. Docs. `functools.cache` (3.9+,
+      alias for `lru_cache(maxsize=None)`) — zero-arg version, fastest.'
+    format: website
+    angle: functools — Higher-order functions and operations on callable objects — Python 3.15.2 documentation
+      — contributes the assigned explanation for Step 11 — Closures & decorators.
+    angle_detail: 'Retains the original assigned resource and action. Going deeper: `functools.singledispatch`
+      — dispatch table by first argument type; used extensively in optimizer/rewrite passes like Stratum''s
+      `extract_dataframe_op`. Docs. `functools.cache` (3.9+, alias for `lru_cache(maxsize=None)`) — zero-arg
+      version, fastest. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-11
+    depth: unassessed
+    scope: unevaluated
+    locator: '"functools — Higher-order functions and operations on callable objects — Python 3.15.2 documentation"
+      #functools.singledispatch'
+    url: https://docs.python.org/3/library/functools.html#functools.singledispatch
+  - id: route-python-roadmap-13-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Two ways to write one: class with `__enter__`/`__exit__`, or `@contextlib.contextmanager`
+      + one `yield` (contextlib docs).'
+    format: website
+    angle: contextlib — Utilities for with-statement contexts — Python 3.15.2 documentation — contributes
+      the assigned explanation for Step 13 — Context managers, with / else / match.
+    angle_detail: 'Retains the original assigned resource and action. Two ways to write one: class with
+      `__enter__`/`__exit__`, or `@contextlib.contextmanager` + one `yield` (contextlib docs). Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-13
+    depth: unassessed
+    scope: unevaluated
+    locator: '"contextlib — Utilities for with-statement contexts — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/contextlib.html
+  - id: route-python-roadmap-14-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Official tutorial ch. 8 — `else`, `finally`, exception chaining (`raise X from Y`).'
+    format: website
+    angle: 8. Errors and Exceptions — Python 3.15.2 documentation — contributes the assigned explanation
+      for Step 14 — Exceptions & error handling.
+    angle_detail: 'Retains the original assigned resource and action. Core: Official tutorial ch. 8 —
+      `else`, `finally`, exception chaining (`raise X from Y`). Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-14
+    depth: unassessed
+    scope: unevaluated
+    locator: '"8. Errors and Exceptions — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/tutorial/errors.html
+  - id: route-python-roadmap-14-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Built-in exception hierarchy — catch the most specific class.'
+    format: website
+    angle: Built-in Exceptions — Python 3.15.2 documentation — contributes the assigned explanation for
+      Step 14 — Exceptions & error handling.
+    angle_detail: 'Retains the original assigned resource and action. Reference: Built-in exception hierarchy
+      — catch the most specific class. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-14
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Built-in Exceptions — Python 3.15.2 documentation" #exception-hierarchy'
+    url: https://docs.python.org/3/library/exceptions.html#exception-hierarchy
+  - id: route-python-roadmap-17-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'collections: docs — `Counter`, `defaultdict`, `deque`, `namedtuple`, `UserDict` (the Step-8
+      subclassing fix), `ChainMap`.'
+    format: website
+    angle: collections — Container datatypes — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 17 — Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. collections: docs — `Counter`, `defaultdict`,
+      `deque`, `namedtuple`, `UserDict` (the Step-8 subclassing fix), `ChainMap`. Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"collections — Container datatypes — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/collections.html
+  - id: route-python-roadmap-17-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'functools: docs — `lru_cache`/`cache`, `partial`, `reduce`, `cached_property`, `singledispatch`.'
+    format: website
+    angle: functools — Higher-order functions and operations on callable objects — Python 3.15.2 documentation
+      — contributes the assigned explanation for Step 17 — Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. functools: docs — `lru_cache`/`cache`,
+      `partial`, `reduce`, `cached_property`, `singledispatch`. Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"functools — Higher-order functions and operations on callable objects — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/functools.html
+  - id: route-python-roadmap-17-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'abc: docs — `ABC`, `abstractmethod`, `ABCMeta` — the formal way to define abstract interfaces
+      (vs. just `raise NotImplementedError`).'
+    format: website
+    angle: abc — Abstract Base Classes — Python 3.15.2 documentation — contributes the assigned explanation
+      for Step 17 — Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. abc: docs — `ABC`, `abstractmethod`,
+      `ABCMeta` — the formal way to define abstract interfaces (vs. just `raise NotImplementedError`).
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"abc — Abstract Base Classes — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/abc.html
+  - id: route-python-roadmap-17-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'inspect: docs — `getmembers`, `signature`, `isclass`, `isfunction`, `currentframe` — introspects
+      live objects; essential for Step 22.'
+    format: website
+    angle: inspect — Inspect live objects — Python 3.15.2 documentation — contributes the assigned explanation
+      for Step 17 — Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. inspect: docs — `getmembers`, `signature`,
+      `isclass`, `isfunction`, `currentframe` — introspects live objects; essential for Step 22. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    - knowledge-python-roadmap-22
+    depth: unassessed
+    scope: unevaluated
+    locator: '"inspect — Inspect live objects — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/inspect.html
+  - id: route-python-roadmap-19-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Threading primitives: `threading.RLock` (reentrant lock — the same thread can acquire it multiple
+      times without deadlock), `threading.Lock`, `threading.Event`. Official docs. Used in Stratum''s
+      `_patching.py` (`_LOCK = threading.RLock()`) to make the monkey-patching idempotent across threads.'
+    format: website
+    angle: threading — Thread-based parallelism — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. Threading primitives: `threading.RLock`
+      (reentrant lock — the same thread can acquire it multiple times without deadlock), `threading.Lock`,
+      `threading.Event`. Official docs. Used in Stratum''s `_patching.py` (`_LOCK = threading.RLock()`)
+      to make the monkey-patching idempotent across threads. Other sources supply the remainder of the
+      stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"threading — Thread-based parallelism — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/threading.html
+  - id: route-python-roadmap-21-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Descriptors: Official Descriptor HOWTO (Hettinger) ⭐ — explains how `@property`, `@classmethod`,
+      methods themselves ALL work underneath via the descriptor protocol (`__get__`, `__set__`, `__delete__`).
+      Real Python — descriptors as a gentler alternative.'
+    format: website
+    angle: 'Descriptor Guide — Python 3.15.2 documentation — contributes the assigned explanation for
+      Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`.'
+    angle_detail: 'Retains the original assigned resource and action. Descriptors: Official Descriptor
+      HOWTO (Hettinger) ⭐ — explains how `@property`, `@classmethod`, methods themselves ALL work underneath
+      via the descriptor protocol (`__get__`, `__set__`, `__delete__`). Real Python — descriptors as a
+      gentler alternative. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-21
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Descriptor Guide — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/howto/descriptor.html
+  - id: route-python-roadmap-22-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Official docs — Built-in functions: `getattr`, `setattr`, `hasattr`, `delattr` — the
+      reflection quad. `getattr(obj, name, default)` is the safe form; `setattr(mod, name, value)` patches
+      attributes on anything, including modules (Step 23).'
+    format: website
+    angle: Built-in functions — Python 3.15.2 documentation — contributes the assigned explanation for
+      Step 22 — Runtime introspection & reflection.
+    angle_detail: 'Retains the original assigned resource and action. Core: Official docs — Built-in functions:
+      `getattr`, `setattr`, `hasattr`, `delattr` — the reflection quad. `getattr(obj, name, default)`
+      is the safe form; `setattr(mod, name, value)` patches attributes on anything, including modules
+      (Step 23). Other sources supply the remainder of the stage; no new quality or mastery judgment is
+      asserted.'
+    covers:
+    - knowledge-python-roadmap-22
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Built-in functions — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/functions.html
+  - id: route-python-roadmap-23-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: Python docs — `unittest.mock.patch` — the context manager does exactly this; understanding
+      it demystifies Stratum''s manual version.'
+    format: website
+    angle: unittest.mock — mock object library — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 23 — Import machinery & monkey-patching.
+    angle_detail: 'Retains the original assigned resource and action. Reference: Python docs — `unittest.mock.patch`
+      — the context manager does exactly this; understanding it demystifies Stratum''s manual version.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-23
+    depth: unassessed
+    scope: unevaluated
+    locator: '"unittest.mock — mock object library — Python 3.15.2 documentation" #unittest.mock.patch'
+    url: https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch
+  - id: route-python-roadmap-23-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Idempotence pattern: Stratum uses `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock`
+      to ensure patching runs exactly once even across threads. Classic sentinel + lock pattern. threading.RLock
+      docs.'
+    format: website
+    angle: threading — Thread-based parallelism — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 23 — Import machinery & monkey-patching.
+    angle_detail: 'Retains the original assigned resource and action. Idempotence pattern: Stratum uses
+      `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock` to ensure patching runs exactly
+      once even across threads. Classic sentinel + lock pattern. threading.RLock docs. Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-23
+    depth: unassessed
+    scope: unevaluated
+    locator: '"threading — Thread-based parallelism — Python 3.15.2 documentation" #threading.RLock'
+    url: https://docs.python.org/3/library/threading.html#threading.RLock
+  - id: route-python-roadmap-25-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'How Python loads compiled extensions · Reference: Python C extension docs — the C version;
+      read §1 (structure of an extension) to understand what PyO3 generates automatically.'
+    format: website
+    angle: 'Using the C API: Assorted topics — Python 3.15.2 documentation — contributes the assigned
+      explanation for Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. How Python loads compiled extensions
+      · Reference: Python C extension docs — the C version; read §1 (structure of an extension) to understand
+      what PyO3 generates automatically. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Using the C API: Assorted topics — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/extending/extending.html
+  - id: route-python-roadmap-25-13
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Data marshaling · Buffer protocol: Python buffer protocol — the general mechanism for zero-copy
+      memory sharing between Python objects and native code. `memoryview` is the Python-level interface.'
+    format: website
+    angle: 'Buffer Protocol — Python 3.15.2 documentation — contributes the assigned explanation for Step
+      25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. Data marshaling · Buffer protocol:
+      Python buffer protocol — the general mechanism for zero-copy memory sharing between Python objects
+      and native code. `memoryview` is the Python-level interface. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Buffer Protocol — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/c-api/buffer.html
+  - id: route-python-roadmap-25-14
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Data marshaling · `ctypes`: Official docs + Real Python — ctypes — call existing shared libraries
+      without writing any C/Rust. Useful for quick prototypes; not used in Stratum (they use PyO3 instead).'
+    format: website
+    angle: 'ctypes — A foreign function library for Python — Python 3.15.2 documentation — contributes
+      the assigned explanation for Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. Data marshaling · `ctypes`: Official
+      docs + Real Python — ctypes — call existing shared libraries without writing any C/Rust. Useful
+      for quick prototypes; not used in Stratum (they use PyO3 instead). Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"ctypes — A foreign function library for Python — Python 3.15.2 documentation"'
+    url: https://docs.python.org/3/library/ctypes.html
+- source_id: source-beyond-basic-stuff-python
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 6
+  unit_routes:
+  - id: route-python-roadmap-01-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Bridge: Beyond the Basic Stuff with Python (Sweigart, free online) — ch. 4 (common Python
+      gotchas) is a 30-min pass worth doing once.'
+    format: website
+    angle: 'Beyond the Basic Stuff with Python - Invent with Python — contributes the assigned explanation
+      for Step 1 — Baseline: syntax & core mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Bridge: Beyond the Basic Stuff with
+      Python (Sweigart, free online) — ch. 4 (common Python gotchas) is a 30-min pass worth doing once.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Beyond the Basic Stuff with Python - Invent with Python"; Chapter 4 — Common Python Gotchas'
+    url: https://inventwithpython.com/beyond/
+- source_id: source-batchelder-names
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 7
+  unit_routes:
+  - id: route-python-roadmap-02-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Ned Batchelder — Facts and myths about Python names and values ⭐ (~40 min), or the PyCon
+      talk.'
+    format: website
+    angle: Facts and myths about Python names and values | Ned Batchelder — contributes the assigned explanation
+      for Step 2 — Names, objects, references, mutability.
+    angle_detail: 'Retains the original assigned resource and action. Core: Ned Batchelder — Facts and
+      myths about Python names and values ⭐ (~40 min), or the PyCon talk. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Facts and myths about Python names and values | Ned Batchelder"'
+    url: https://nedbatchelder.com/text/names.html
+  - id: route-python-oop-01-02
+    unit_id: unit-python-oop-scope
+    title: Read (~70 min) · Ned Batchelder — Facts and myths about Python names and values (~40 min) —
+      or the PyCon talk
+    format: website
+    angle: Facts and myths about Python names and values | Ned Batchelder — contributes the assigned explanation
+      for Session 1 — Names, values, scope (the root of everything).
+    angle_detail: Retains the original assigned resource and action. Read (~70 min) · Ned Batchelder —
+      Facts and myths about Python names and values (~40 min) — or the PyCon talk Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Facts and myths about Python names and values | Ned Batchelder"'
+    url: https://nedbatchelder.com/text/names.html
+- source_id: source-python-tutor
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 8
+  unit_routes:
+  - id: route-python-roadmap-02-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Tool: Python Tutor — visualize every snippet you don''t trust.'
+    format: website
+    angle: Python Tutor - Python Online Compiler with Visual Debugger — contributes the assigned explanation
+      for Step 2 — Names, objects, references, mutability.
+    angle_detail: 'Retains the original assigned resource and action. Tool: Python Tutor — visualize every
+      snippet you don''t trust. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-02
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Tutor - Python Online Compiler with Visual Debugger"'
+    url: https://pythontutor.com
+  - id: route-python-oop-01-04
+    unit_id: unit-python-oop-scope
+    title: 'Drill (~20 min) · paste each into pythontutor.com, predict first:'
+    format: website
+    angle: Python Tutor - Python Online Compiler with Visual Debugger — contributes the assigned practice
+      for Session 1 — Names, values, scope (the root of everything).
+    angle_detail: 'Retains the original assigned resource and action. Drill (~20 min) · paste each into
+      pythontutor.com, predict first: Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Tutor - Python Online Compiler with Visual Debugger"'
+    url: https://pythontutor.com
+- source_id: source-realpython-legb
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 9
+  unit_routes:
+  - id: route-python-roadmap-03-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Real Python — LEGB Rule — §LEGB + §functions.'
+    format: website
+    angle: 'Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python — contributes the
+      assigned explanation for Step 3 — Scope, namespaces, functions as objects.'
+    angle_detail: 'Retains the original assigned resource and action. Core: Real Python — LEGB Rule —
+      §LEGB + §functions. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-03
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python"'
+    url: https://realpython.com/python-scope-legb-rule/
+  - id: route-python-oop-01-03
+    unit_id: unit-python-oop-scope
+    title: Read (~70 min) · Real Python — LEGB Rule — only §"Python Scope vs Namespace" and §"functions";
+      skim the rest
+    format: website
+    angle: 'Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python — contributes the
+      assigned explanation for Session 1 — Names, values, scope (the root of everything).'
+    angle_detail: Retains the original assigned resource and action. Read (~70 min) · Real Python — LEGB
+      Rule — only §"Python Scope vs Namespace" and §"functions"; skim the rest Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.
+    covers:
+    - knowledge-python-oop-01
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python"'
+    url: https://realpython.com/python-scope-legb-rule/
+- source_id: source-hettinger-idiomatic-python
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 10
+  unit_routes:
+  - id: route-python-roadmap-03-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video: any Hettinger talk — watch how he passes functions as values without ceremony.'
+    format: video
+    angle: Transforming Code into Beautiful, Idiomatic Python - YouTube — contributes the assigned explanation
+      for Step 3 — Scope, namespaces, functions as objects.
+    angle_detail: 'Retains the original assigned resource and action. Video: any Hettinger talk — watch
+      how he passes functions as values without ceremony. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-03
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Transforming Code into Beautiful, Idiomatic Python" — function values and key functions'
+    url: https://www.youtube.com/watch?v=OSGv2VnC0go
+  - id: route-python-roadmap-18-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video: Hettinger — Transforming Code into Beautiful, Idiomatic Python ⭐ (~50 min) — the single
+      highest-value hour in this file.'
+    format: video
+    angle: Transforming Code into Beautiful, Idiomatic Python - YouTube — contributes the assigned explanation
+      for Step 18 — Pythonic style & idioms.
+    angle_detail: 'Retains the original assigned resource and action. Video: Hettinger — Transforming
+      Code into Beautiful, Idiomatic Python ⭐ (~50 min) — the single highest-value hour in this file.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-18
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Transforming Code into Beautiful, Idiomatic Python - YouTube"'
+    url: https://www.youtube.com/watch?v=OSGv2VnC0go
+- source_id: source-powell-python-expert
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 11
+  unit_routes:
+  - id: route-python-roadmap-04-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video: James Powell — "So you want to be a Python expert?" — first 25 min is the best live
+      demo of the data model''s logic.'
+    format: video
+    angle: 'James Powell: So you want to be a Python expert? | PyData Seattle 2017 - YouTube — contributes
+      the assigned explanation for Step 4 — The data model & dunder methods.'
+    angle_detail: 'Retains the original assigned resource and action. Video: James Powell — "So you want
+      to be a Python expert?" — first 25 min is the best live demo of the data model''s logic. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"James Powell: So you want to be a Python expert? | PyData Seattle 2017 - YouTube"'
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+- source_id: source-fluent-python-example-code
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 12
+  unit_routes:
+  - id: route-python-roadmap-04-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Code: FP example-code-2e `01-data-model/` (FrenchDeck, Vector) — retype FrenchDeck from memory.'
+    format: code
+    angle: 'GitHub - fluentpython/example-code-2e: Example code for Fluent Python, 2nd edition (O''Reilly
+      2022) · GitHub — contributes the assigned practice for Step 4 — The data model & dunder methods.'
+    angle_detail: 'Retains the original assigned resource and action. Code: FP example-code-2e `01-data-model/`
+      (FrenchDeck, Vector) — retype FrenchDeck from memory. Other sources supply the remainder of the
+      stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Fluent Python example-code-2e", 01-data-model/'
+    url: https://github.com/fluentpython/example-code-2e
+  - id: route-python-roadmap-05-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Code: example-code-2e `02-array-seq/`, `03-dict-set/`; rewrite three of your own mlprov/job
+      loops as comprehensions.'
+    format: code
+    angle: 'GitHub - fluentpython/example-code-2e: Example code for Fluent Python, 2nd edition (O''Reilly
+      2022) · GitHub — contributes the assigned practice for Step 5 — Built-in containers & comprehensions.'
+    angle_detail: 'Retains the original assigned resource and action. Code: example-code-2e `02-array-seq/`,
+      `03-dict-set/`; rewrite three of your own mlprov/job loops as comprehensions. Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Fluent Python example-code-2e", 02-array-seq/ and 03-dict-set/'
+    url: https://github.com/fluentpython/example-code-2e
+  - id: route-python-roadmap-10-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Code: example-code-2e `13-protocol-abc/`.'
+    format: code
+    angle: 'GitHub - fluentpython/example-code-2e: Example code for Fluent Python, 2nd edition (O''Reilly
+      2022) · GitHub — contributes the assigned practice for Step 10 — Duck typing, ABCs, protocols.'
+    angle_detail: 'Retains the original assigned resource and action. Code: example-code-2e `13-protocol-abc/`.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-10
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Fluent Python example-code-2e", 13-protocl-abc/ (verified upstream directory; original
+      label retained)'
+    url: https://github.com/fluentpython/example-code-2e
+- source_id: source-realpython-list-comprehension-python
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 13
+  unit_routes:
+  - id: route-python-roadmap-05-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — List Comprehensions — incl. when not to use them.'
+    format: website
+    angle: 'Python List Comprehension: Tutorial With Examples – Real Python — contributes the assigned
+      explanation for Step 5 — Built-in containers & comprehensions.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — List Comprehensions
+      — incl. when not to use them. Other sources supply the remainder of the stage; no new quality or
+      mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python List Comprehension: Tutorial With Examples – Real Python"'
+    url: https://realpython.com/list-comprehension-python/
+- source_id: source-realpython-python-string-formatting
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 14
+  unit_routes:
+  - id: route-python-roadmap-06-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — f-strings / string formatting — format-spec mini-language (`f"{x:.3f}"`,
+      `{x!r}`).'
+    format: website
+    angle: 'Python String Formatting: Available Tools and Their Features – Real Python — contributes the
+      assigned explanation for Step 6 — Strings, bytes, and formatting.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — f-strings
+      / string formatting — format-spec mini-language (`f"{x:.3f}"`, `{x!r}`). Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-06
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python String Formatting: Available Tools and Their Features – Real Python"'
+    url: https://realpython.com/python-string-formatting/
+- source_id: source-corey-schafer-oop
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 15
+  unit_routes:
+  - id: route-python-roadmap-07-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video + code: Corey Schafer OOP playlist #1–3, code at CoreyMSchafer/code_snippets.'
+    format: video
+    angle: 'Python OOP Tutorials - Working with Classes - YouTube — contributes the assigned explanation
+      for Step 7 — Classes I: mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Video + code: Corey Schafer OOP
+      playlist #1–3, code at CoreyMSchafer/code_snippets. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-07
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python OOP Tutorials - Working with Classes - YouTube"'
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+  - id: route-python-oop-02-02
+    unit_id: unit-python-oop-scope
+    title: 'Watch + code along (~60 min) · Corey Schafer OOP playlist videos #2 (class variables) and
+      #3 (classmethods/staticmethods). His code: github.com/CoreyMSchafer/code_snippets → Object-Oriented.'
+    format: video
+    angle: 'Python OOP Tutorials - Working with Classes - YouTube — contributes the assigned explanation
+      for Session 2 — Class mechanics: self, instance vs class attributes.'
+    angle_detail: 'Retains the original assigned resource and action. Watch + code along (~60 min) · Corey
+      Schafer OOP playlist videos #2 (class variables) and #3 (classmethods/staticmethods). His code:
+      github.com/CoreyMSchafer/code_snippets → Object-Oriented. Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-oop-02
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python OOP Tutorials - Working with Classes - YouTube"'
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+  - id: route-python-oop-03-02
+    unit_id: unit-python-oop-scope
+    title: 'Watch first (~25 min) · Corey Schafer #4 (inheritance) — the gentle version.'
+    format: video
+    angle: Python OOP Tutorials - Working with Classes - YouTube — contributes the assigned explanation
+      for Session 3 — Inheritance + super() (the headache session).
+    angle_detail: 'Retains the original assigned resource and action. Watch first (~25 min) · Corey Schafer
+      #4 (inheritance) — the gentle version. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-oop-03
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python OOP Tutorial 4: Inheritance - Creating Subclasses" (playlist video 4)'
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+- source_id: source-realpython-instance-class-and-static-methods-demystified
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 16
+  unit_routes:
+  - id: route-python-roadmap-07-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Instance, Class, and Static Methods Demystified.'
+    format: website
+    angle: 'Python''s Instance, Class, and Static Methods Demystified – Real Python — contributes the
+      assigned explanation for Step 7 — Classes I: mechanics.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Instance,
+      Class, and Static Methods Demystified. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-07
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python''s Instance, Class, and Static Methods Demystified – Real Python"'
+    url: https://realpython.com/instance-class-and-static-methods-demystified/
+- source_id: source-hettinger-super
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 17
+  unit_routes:
+  - id: route-python-roadmap-08-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Hettinger — Python''s super() considered super! ⭐ — THE mental model: super() = next
+      in MRO.'
+    format: website
+    angle: 'Python’s super() considered super! – Deep Thoughts by Raymond Hettinger — contributes the
+      assigned explanation for Step 8 — Classes II: inheritance, super(), MRO, mixins.'
+    angle_detail: 'Retains the original assigned resource and action. Core: Hettinger — Python''s super()
+      considered super! ⭐ — THE mental model: super() = next in MRO. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-08
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python’s super() considered super! – Deep Thoughts by Raymond Hettinger"'
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+  - id: route-python-oop-03-03
+    unit_id: unit-python-oop-scope
+    title: 'Then read (~45 min) · Hettinger — Python''s super() considered super! — slowly. His opening
+      example:'
+    format: website
+    angle: Python’s super() considered super! – Deep Thoughts by Raymond Hettinger — contributes the assigned
+      explanation for Session 3 — Inheritance + super() (the headache session).
+    angle_detail: 'Retains the original assigned resource and action. Then read (~45 min) · Hettinger
+      — Python''s super() considered super! — slowly. His opening example: Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-oop-03
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python’s super() considered super! – Deep Thoughts by Raymond Hettinger"'
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+- source_id: source-realpython-python-super
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 18
+  unit_routes:
+  - id: route-python-roadmap-08-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Supercharge Your Classes With super().'
+    format: website
+    angle: 'Supercharge Your Classes With Python super() – Real Python — contributes the assigned explanation
+      for Step 8 — Classes II: inheritance, super(), MRO, mixins.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Supercharge
+      Your Classes With super(). Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-08
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Supercharge Your Classes With Python super() – Real Python"'
+    url: https://realpython.com/python-super/
+- source_id: source-numpy-subclassing-docs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 19
+  unit_routes:
+  - id: route-python-roadmap-08-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Practical: numpy subclassing guide + pandas subclassing guide — your mlprov reality.'
+    format: website
+    angle: 'Subclassing ndarray — NumPy v2.5 Manual — contributes the assigned practice for Step 8 — Classes
+      II: inheritance, super(), MRO, mixins.'
+    angle_detail: 'Retains the original assigned resource and action. Practical: numpy subclassing guide
+      + pandas subclassing guide — your mlprov reality. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-08
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Subclassing ndarray — NumPy v2.5 Manual"'
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+  - id: route-python-oop-04-03
+    unit_id: unit-python-oop-scope
+    title: Read (~30 min) · numpy subclassing guide + pandas subclassing guide — now Hettinger has given
+      you the model these assume. Explains `__array_finalize__` (why ndarray can't just use `__init__`)
+      and `_metadata`/`_constructor` (how provenance survives pandas ops).
+    format: website
+    angle: Subclassing ndarray — NumPy v2.5 Manual — contributes the assigned explanation for Session
+      4 — Subclassing real libraries (mlprov-shaped).
+    angle_detail: Retains the original assigned resource and action. Read (~30 min) · numpy subclassing
+      guide + pandas subclassing guide — now Hettinger has given you the model these assume. Explains
+      `__array_finalize__` (why ndarray can't just use `__init__`) and `_metadata`/`_constructor` (how
+      provenance survives pandas ops). Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.
+    covers:
+    - knowledge-python-oop-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Subclassing ndarray — NumPy v2.5 Manual"'
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+- source_id: source-realpython-python-data-classes
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 20
+  unit_routes:
+  - id: route-python-roadmap-09-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Data Classes — `field(default_factory=...)`, `frozen=True`, `__post_init__`.'
+    format: website
+    angle: Data Classes in Python (Guide) – Real Python — contributes the assigned explanation for Step
+      9 — Data class builders.
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Data Classes
+      — `field(default_factory=...)`, `frozen=True`, `__post_init__`. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-09
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Data Classes in Python (Guide) – Real Python"'
+    url: https://realpython.com/python-data-classes/
+- source_id: source-realpython-primer-on-python-decorators
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 21
+  unit_routes:
+  - id: route-python-roadmap-11-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Primer on Python Decorators ⭐ — do this FIRST, then FP Ch 9.'
+    format: website
+    angle: Primer on Python Decorators – Real Python — contributes the assigned explanation for Step 11
+      — Closures & decorators.
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Primer on
+      Python Decorators ⭐ — do this FIRST, then FP Ch 9. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-11
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Primer on Python Decorators – Real Python"'
+    url: https://realpython.com/primer-on-python-decorators/
+- source_id: source-corey-schafer-decorators
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 22
+  unit_routes:
+  - id: route-python-roadmap-11-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video: Corey Schafer — Decorators.'
+    format: video
+    angle: 'Python Tutorial: Decorators - Dynamically Alter The Functionality Of Your Functions - YouTube
+      — contributes the assigned explanation for Step 11 — Closures & decorators.'
+    angle_detail: 'Retains the original assigned resource and action. Video: Corey Schafer — Decorators.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-11
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Tutorial: Decorators - Dynamically Alter The Functionality Of Your Functions - YouTube"'
+    url: https://www.youtube.com/watch?v=FsAPt_9Bf3U
+- source_id: source-hunner-iterator-protocol
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 23
+  unit_routes:
+  - id: route-python-roadmap-12-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Trey Hunner — The Iterator Protocol: How for Loops Work.'
+    format: website
+    angle: 'The Iterator Protocol: How "For Loops" Work in Python — contributes the assigned explanation
+      for Step 12 — Iterators, generators, lazy pipelines.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Trey Hunner — The Iterator
+      Protocol: How for Loops Work. Other sources supply the remainder of the stage; no new quality or
+      mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-12
+    depth: unassessed
+    scope: unevaluated
+    locator: '"The Iterator Protocol: How ''For Loops'' Work in Python"'
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+- source_id: source-beazley-generator-tricks
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 24
+  unit_routes:
+  - id: route-python-roadmap-12-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Classic: David Beazley — Generator Tricks for Systems Programmers ⭐ — generator pipelines
+      over logs; career-grade for data engineering.'
+    format: code
+    angle: 'GitHub - dabeaz/generators: Generator Tricks for Systems Programmers (Tutorial) — contributes
+      the assigned explanation for Step 12 — Iterators, generators, lazy pipelines.'
+    angle_detail: 'Retains the original assigned resource and action. Classic: David Beazley — Generator
+      Tricks for Systems Programmers ⭐ — generator pipelines over logs; career-grade for data engineering.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-12
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - dabeaz/generators: Generator Tricks for Systems Programmers (Tutorial)"'
+    url: https://web.archive.org/web/2024/https://github.com/dabeaz/generators
+- source_id: source-realpython-introduction-to-python-generators
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 25
+  unit_routes:
+  - id: route-python-roadmap-12-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Introduction to Generators.'
+    format: website
+    angle: How to Use Generators and yield in Python – Real Python — contributes the assigned explanation
+      for Step 12 — Iterators, generators, lazy pipelines.
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Introduction
+      to Generators. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-12
+    depth: unassessed
+    scope: unevaluated
+    locator: '"How to Use Generators and yield in Python – Real Python"'
+    url: https://realpython.com/introduction-to-python-generators/
+  - id: route-python-roadmap-24-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Generators and Coroutines — §"Advanced Generator Methods."'
+    format: website
+    angle: 'How to Use Generators and yield in Python – Real Python — contributes the assigned explanation
+      for Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Generators
+      and Coroutines — §"Advanced Generator Methods." Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-24
+    depth: unassessed
+    scope: unevaluated
+    locator: '"How to Use Generators and yield in Python – Real Python" #using-advanced-generator-methods'
+    url: https://realpython.com/introduction-to-python-generators/#using-advanced-generator-methods
+- source_id: source-pep-380
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 26
+  unit_routes:
+  - id: route-python-roadmap-12-06
+    unit_id: unit-python-intermediate-roadmap
+    title: '`yield from`: delegates to a sub-iterator; essential in recursive generator traversals (like
+      Stratum''s DAG walkers). `yield from inner` is shorthand for `for x in inner: yield x` but also
+      proxies `.send()` and `.throw()`. PEP 380.'
+    format: website
+    angle: PEP 380 – Syntax for Delegating to a Subgenerator | peps.python.org — contributes the assigned
+      explanation for Step 12 — Iterators, generators, lazy pipelines.
+    angle_detail: 'Retains the original assigned resource and action. `yield from`: delegates to a sub-iterator;
+      essential in recursive generator traversals (like Stratum''s DAG walkers). `yield from inner` is
+      shorthand for `for x in inner: yield x` but also proxies `.send()` and `.throw()`. PEP 380. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-12
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PEP 380 – Syntax for Delegating to a Subgenerator | peps.python.org"'
+    url: https://peps.python.org/pep-0380/
+- source_id: source-realpython-python-with-statement
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 27
+  unit_routes:
+  - id: route-python-roadmap-13-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Context Managers and the with Statement.'
+    format: website
+    angle: 'Python''s with Statement: Manage External Resources Safely – Real Python — contributes the
+      assigned explanation for Step 13 — Context managers, with / else / match.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Context Managers
+      and the with Statement. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-13
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python''s with Statement: Manage External Resources Safely – Real Python"'
+    url: https://realpython.com/python-with-statement/
+- source_id: source-realpython-python-exceptions
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 28
+  unit_routes:
+  - id: route-python-roadmap-14-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Python Exceptions.'
+    format: website
+    angle: 'Python Exceptions: An Introduction – Real Python — contributes the assigned explanation for
+      Step 14 — Exceptions & error handling.'
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Python Exceptions.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-14
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Exceptions: An Introduction – Real Python"'
+    url: https://realpython.com/python-exceptions/
+- source_id: source-realpython-python-type-checking
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 29
+  unit_routes:
+  - id: route-python-roadmap-15-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Article: Real Python — Python Type Checking — practical mypy setup.'
+    format: website
+    angle: Python Type Checking (Guide) – Real Python — contributes the assigned explanation for Step
+      15 — Type hints.
+    angle_detail: 'Retains the original assigned resource and action. Article: Real Python — Python Type
+      Checking — practical mypy setup. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-15
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Type Checking (Guide) – Real Python"'
+    url: https://realpython.com/python-type-checking/
+- source_id: source-mypy-docs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 30
+  unit_routes:
+  - id: route-python-roadmap-15-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: mypy cheat sheet ⭐ — fastest on-ramp; start here.'
+    format: website
+    angle: Type hints cheat sheet - mypy 2.4.1 documentation — contributes the assigned explanation for
+      Step 15 — Type hints.
+    angle_detail: 'Retains the original assigned resource and action. Reference: mypy cheat sheet ⭐ —
+      fastest on-ramp; start here. Other sources supply the remainder of the stage; no new quality or
+      mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-15
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Type hints cheat sheet - mypy 2.4.1 documentation"'
+    url: https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+- source_id: source-realpython-python-modules-packages
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 31
+  unit_routes:
+  - id: route-python-roadmap-16-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Real Python — Python Modules and Packages.'
+    format: website
+    angle: Python Modules and Packages – An Introduction – Real Python — contributes the assigned explanation
+      for Step 16 — Modules, imports, packages, environments.
+    angle_detail: 'Retains the original assigned resource and action. Core: Real Python — Python Modules
+      and Packages. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-16
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Modules and Packages – An Introduction – Real Python"'
+    url: https://realpython.com/python-modules-packages/
+- source_id: source-realpython-python-import
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 32
+  unit_routes:
+  - id: route-python-roadmap-16-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Deeper: Real Python — Python import: Advanced Techniques — §basics + §circular imports + §the
+      import system.'
+    format: website
+    angle: 'Python import: Advanced Techniques and Tips – Real Python — contributes the assigned explanation
+      for Step 16 — Modules, imports, packages, environments.'
+    angle_detail: 'Retains the original assigned resource and action. Deeper: Real Python — Python import:
+      Advanced Techniques — §basics + §circular imports + §the import system. Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-16
+    - knowledge-python-roadmap-23
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python import: Advanced Techniques and Tips – Real Python"'
+    url: https://realpython.com/python-import/
+- source_id: source-realpython-python-itertools
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 33
+  unit_routes:
+  - id: route-python-roadmap-17-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'itertools: Real Python guide + docs recipes — the recipes are goldmine idiomatic code.'
+    format: website
+    angle: Python itertools By Example – Real Python — contributes the assigned explanation for Step 17
+      — Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. itertools: Real Python guide + docs
+      recipes — the recipes are goldmine idiomatic code. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python itertools By Example – Real Python"'
+    url: https://realpython.com/python-itertools/
+- source_id: source-realpython-python-pathlib
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 34
+  unit_routes:
+  - id: route-python-roadmap-17-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'pathlib: Real Python — pathlib — replace every `os.path` + string concat habit.'
+    format: website
+    angle: 'Python''s pathlib Module: Taming the File System – Real Python — contributes the assigned
+      explanation for Step 17 — Standard library power tools.'
+    angle_detail: 'Retains the original assigned resource and action. pathlib: Real Python — pathlib —
+      replace every `os.path` + string concat habit. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python''s pathlib Module: Taming the File System – Real Python"'
+    url: https://realpython.com/python-pathlib/
+- source_id: source-realpython-python-logging
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 35
+  unit_routes:
+  - id: route-python-roadmap-17-08
+    unit_id: unit-python-intermediate-roadmap
+    title: 'logging: Real Python — logging — Stratum uses `logging` everywhere (`logger = logging.getLogger(__name__)`);
+      know how to configure it.'
+    format: website
+    angle: Logging in Python – Real Python — contributes the assigned explanation for Step 17 — Standard
+      library power tools.
+    angle_detail: 'Retains the original assigned resource and action. logging: Real Python — logging —
+      Stratum uses `logging` everywhere (`logger = logging.getLogger(__name__)`); know how to configure
+      it. Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Logging in Python – Real Python"'
+    url: https://realpython.com/python-logging/
+- source_id: source-pymotw-python-module-of-the-week
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 36
+  unit_routes:
+  - id: route-python-roadmap-17-09
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Browsing resource: PyMOTW-3 — one worked article per stdlib module.'
+    format: website
+    angle: Python 3 Module of the Week — PyMOTW 3 — contributes the assigned explanation for Step 17 —
+      Standard library power tools.
+    angle_detail: 'Retains the original assigned resource and action. Browsing resource: PyMOTW-3 — one
+      worked article per stdlib module. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-17
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python 3 Module of the Week — PyMOTW 3"'
+    url: https://pymotw.com/3/
+- source_id: source-pep-008
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 37
+  unit_routes:
+  - id: route-python-roadmap-18-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Reference: PEP 8 — skim once; let `ruff` enforce it.'
+    format: website
+    angle: PEP 8 – Style Guide for Python Code | peps.python.org — contributes the assigned explanation
+      for Step 18 — Pythonic style & idioms.
+    angle_detail: 'Retains the original assigned resource and action. Reference: PEP 8 — skim once; let
+      `ruff` enforce it. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-18
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PEP 8 – Style Guide for Python Code | peps.python.org"'
+    url: https://peps.python.org/pep-0008/
+- source_id: source-rhodes-python-patterns
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 38
+  unit_routes:
+  - id: route-python-roadmap-18-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Patterns: python-patterns.guide (Brandon Rhodes) — read "Composition Over Inheritance" first.'
+    format: website
+    angle: Python Design Patterns — contributes the assigned explanation for Step 18 — Pythonic style
+      & idioms.
+    angle_detail: 'Retains the original assigned resource and action. Patterns: python-patterns.guide
+      (Brandon Rhodes) — read "Composition Over Inheritance" first. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-18
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Design Patterns"'
+    url: https://python-patterns.guide/
+- source_id: source-realpython-python-concurrency
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 39
+  unit_routes:
+  - id: route-python-roadmap-19-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Orientation: Real Python — Speed Up Your Python Program With Concurrency — the threading vs
+      multiprocessing vs asyncio decision map.'
+    format: website
+    angle: Speed Up Your Python Program With Concurrency – Real Python — contributes the assigned explanation
+      for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. Orientation: Real Python — Speed
+      Up Your Python Program With Concurrency — the threading vs multiprocessing vs asyncio decision map.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Speed Up Your Python Program With Concurrency – Real Python"'
+    url: https://realpython.com/python-concurrency/
+  - id: route-python-roadmap-19-05
+    unit_id: unit-python-intermediate-roadmap
+    title: '`concurrent.futures`: Real Python — concurrent.futures — `ThreadPoolExecutor` for I/O-bound,
+      `ProcessPoolExecutor` for CPU-bound; cleaner API than raw `threading`/`multiprocessing`.'
+    format: website
+    angle: Speed Up Your Python Program With Concurrency – Real Python — contributes the assigned explanation
+      for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. `concurrent.futures`: Real Python
+      — concurrent.futures — `ThreadPoolExecutor` for I/O-bound, `ProcessPoolExecutor` for CPU-bound;
+      cleaner API than raw `threading`/`multiprocessing`. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Speed Up Your Python Program With Concurrency – Real Python" #using-concurrentfutures'
+    url: https://realpython.com/python-concurrency/#using-concurrentfutures
+- source_id: source-realpython-python-gil
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 40
+  unit_routes:
+  - id: route-python-roadmap-19-03
+    unit_id: unit-python-intermediate-roadmap
+    title: 'The GIL: Real Python — What Is the GIL? + Beazley — Understanding the GIL (slides).'
+    format: website
+    angle: What Is the Python Global Interpreter Lock (GIL)? – Real Python — contributes the assigned
+      explanation for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. The GIL: Real Python — What Is the
+      GIL? + Beazley — Understanding the GIL (slides). Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"What Is the Python Global Interpreter Lock (GIL)? – Real Python"'
+    url: https://realpython.com/python-gil/
+- source_id: source-beazley-python-concurrency-live
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 41
+  unit_routes:
+  - id: route-python-roadmap-19-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Video: Beazley — Python Concurrency From the Ground Up: LIVE! ⭐ — builds a concurrent server
+      from scratch on stage.'
+    format: video
+    angle: 'David Beazley - Python Concurrency From the Ground Up: LIVE! - PyCon 2015 - YouTube — contributes
+      the assigned explanation for Step 19 — Concurrency & the GIL.'
+    angle_detail: 'Retains the original assigned resource and action. Video: Beazley — Python Concurrency
+      From the Ground Up: LIVE! ⭐ — builds a concurrent server from scratch on stage. Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"David Beazley - Python Concurrency From the Ground Up: LIVE! - PyCon 2015 - YouTube"'
+    url: https://www.youtube.com/watch?v=MCs5OvhV9S4
+- source_id: source-realpython-async-io-python
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 42
+  unit_routes:
+  - id: route-python-roadmap-19-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'asyncio basics: Real Python — Async IO in Python — `async def`, `await`, `asyncio.run()`.
+      Know the model; don''t need to write it for Stratum work.'
+    format: website
+    angle: 'Python''s asyncio: A Hands-On Walkthrough – Real Python — contributes the assigned explanation
+      for Step 19 — Concurrency & the GIL.'
+    angle_detail: 'Retains the original assigned resource and action. asyncio basics: Real Python — Async
+      IO in Python — `async def`, `await`, `asyncio.run()`. Know the model; don''t need to write it for
+      Stratum work. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python''s asyncio: A Hands-On Walkthrough – Real Python"'
+    url: https://realpython.com/async-io-python/
+- source_id: source-rohrer-e2eml
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 43
+  unit_routes:
+  - id: route-python-roadmap-19-09
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Job tie-in: Brandon Rohrer''s Making Python Faster series.'
+    format: website
+    angle: Brandon Rohrer — End-to-End Machine Learning blog/courses — contributes the assigned explanation
+      for Step 19 — Concurrency & the GIL.
+    angle_detail: 'Retains the original assigned resource and action. Job tie-in: Brandon Rohrer''s Making
+      Python Faster series. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-19
+    - knowledge-python-roadmap-28
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Brandon Rohrer — End-to-End Machine Learning blog/courses"'
+    url: https://brandonrohrer.com/code_optimization.html
+- source_id: source-kaptur-byterun
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 44
+  unit_routes:
+  - id: route-python-roadmap-20-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Allison Kaptur — A Python Interpreter Written in Python ⭐ (~1.5h) — Byterun: working
+      bytecode VM in 500 lines; frames, value stack, why scope IS the frame structure.'
+    format: website
+    angle: 500 Lines or LessA Python Interpreter Written in Python — contributes the assigned explanation
+      for Step 20 — Interpreter internals.
+    angle_detail: 'Retains the original assigned resource and action. Core: Allison Kaptur — A Python
+      Interpreter Written in Python ⭐ (~1.5h) — Byterun: working bytecode VM in 500 lines; frames, value
+      stack, why scope IS the frame structure. Other sources supply the remainder of the stage; no new
+      quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-20
+    depth: unassessed
+    scope: unevaluated
+    locator: '"500 Lines or LessA Python Interpreter Written in Python"'
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+  - id: route-python-oop-05-06
+    unit_id: unit-python-oop-scope
+    title: 'Deep version (post-Jul 15, ~1.5h) · Allison Kaptur — A Python Interpreter Written in Python.
+      Your C++ background is an asset here. Optional after: Philip Guo''s CPython lectures L1/L3/L8 (see
+      LEARNING-RESOURCES.md §8 Tier 3).'
+    format: website
+    angle: 500 Lines or LessA Python Interpreter Written in Python — contributes the assigned explanation
+      for Session 5 — The interpreter, demystified.
+    angle_detail: 'Retains the original assigned resource and action. Deep version (post-Jul 15, ~1.5h)
+      · Allison Kaptur — A Python Interpreter Written in Python. Your C++ background is an asset here.
+      Optional after: Philip Guo''s CPython lectures L1/L3/L8 (see LEARNING-RESOURCES.md §8 Tier 3). Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-oop-05
+    depth: unassessed
+    scope: unevaluated
+    locator: '"500 Lines or LessA Python Interpreter Written in Python"'
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+- source_id: source-composing-programs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 45
+  unit_routes:
+  - id: route-python-roadmap-20-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Foundations alternative: Composing Programs ch. 1.6 & 3 (Berkeley CS61A) — environments/frames
+      diagrams done formally.'
+    format: website
+    angle: Composing Programs — contributes the assigned explanation for Step 20 — Interpreter internals.
+    angle_detail: 'Retains the original assigned resource and action. Foundations alternative: Composing
+      Programs ch. 1.6 & 3 (Berkeley CS61A) — environments/frames diagrams done formally. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-20
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Composing Programs"; Chapter 1.6 and Chapter 3'
+    url: https://www.composingprograms.com/
+- source_id: source-guo-cpython-internals
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 46
+  unit_routes:
+  - id: route-python-roadmap-20-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Deep: Philip Guo — CPython internals lectures — cherry-pick L1 (overview), L3 (frames/scope),
+      L8 (classes). Old (Py 2.7) but architecture stands.'
+    format: website
+    angle: 'CPython internals: A ten-hour codewalk through the Python interpreter source code - YouTube
+      — contributes the assigned explanation for Step 20 — Interpreter internals.'
+    angle_detail: 'Retains the original assigned resource and action. Deep: Philip Guo — CPython internals
+      lectures — cherry-pick L1 (overview), L3 (frames/scope), L8 (classes). Old (Py 2.7) but architecture
+      stands. Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-20
+    depth: unassessed
+    scope: unevaluated
+    locator: '"CPython internals: A ten-hour codewalk through the Python interpreter source code - YouTube"'
+    url: https://www.youtube.com/playlist?list=PLzV58Zm8FuBL6OAv1Yu6AwXZrnsFbbR0S
+- source_id: source-realpython-products-cpython-internals-book
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 47
+  unit_routes:
+  - id: route-python-roadmap-20-07
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Modern alternative: CPython internals book (Real Python, paid) or the free devguide.python.org
+      — the official contributor guide explains the C source layout.'
+    format: website
+    angle: CPython Internals Book – Real Python — contributes the assigned explanation for Step 20 — Interpreter
+      internals.
+    angle_detail: 'Retains the original assigned resource and action. Modern alternative: CPython internals
+      book (Real Python, paid) or the free devguide.python.org — the official contributor guide explains
+      the C source layout. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-20
+    depth: unassessed
+    scope: unevaluated
+    locator: '"CPython Internals Book – Real Python"'
+    url: https://realpython.com/products/cpython-internals-book/
+- source_id: source-realpython-python-eval-function
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 48
+  unit_routes:
+  - id: route-python-roadmap-20-08
+    unit_id: unit-python-intermediate-roadmap
+    title: '`eval()`/`exec()`: Real Python — eval and exec — run Python code from strings; understand
+      why this is powerful and dangerous.'
+    format: website
+    angle: 'Python eval(): Evaluate Expressions Dynamically – Real Python — contributes the assigned explanation
+      for Step 20 — Interpreter internals.'
+    angle_detail: 'Retains the original assigned resource and action. `eval()`/`exec()`: Real Python —
+      eval and exec — run Python code from strings; understand why this is powerful and dangerous. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-20
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python eval(): Evaluate Expressions Dynamically – Real Python"'
+    url: https://realpython.com/python-eval-function/
+- source_id: source-pep-562
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 49
+  unit_routes:
+  - id: route-python-roadmap-21-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Module-level `__getattr__` (PEP 562): defining `def __getattr__(name):` at module level (not
+      inside a class) intercepts attribute access on the module object itself — `stratum._rust_backend`
+      uses this exact pattern to lazily read config flags: `USE_RUST = __getattr__("USE_RUST")`. PEP 562.
+      Key…'
+    format: website
+    angle: 'PEP 562 – Module __getattr__ and __dir__ | peps.python.org — contributes the assigned explanation
+      for Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`.'
+    angle_detail: 'Retains the original assigned resource and action. Module-level `__getattr__` (PEP
+      562): defining `def __getattr__(name):` at module level (not inside a class) intercepts attribute
+      access on the module object itself — `stratum._rust_backend` uses this exact pattern to lazily read
+      config flags: `USE_RUST = __getattr__("USE_RUST")`. PEP 562. Key… Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-21
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PEP 562 – Module __getattr__ and __dir__ | peps.python.org"'
+    url: https://peps.python.org/pep-0562/
+- source_id: source-realpython-python-isinstance
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 50
+  unit_routes:
+  - id: route-python-roadmap-22-02
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core: Real Python — Python''s `isinstance` and `issubclass` — when to use it, when duck typing
+      is better.'
+    format: website
+    angle: isinstance() | Python’s Built-in Functions – Real Python — contributes the assigned explanation
+      for Step 22 — Runtime introspection & reflection.
+    angle_detail: 'Retains the original assigned resource and action. Core: Real Python — Python''s `isinstance`
+      and `issubclass` — when to use it, when duck typing is better. Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-22
+    depth: unassessed
+    scope: unevaluated
+    locator: '"isinstance() | Python’s Built-in Functions – Real Python"'
+    url: https://realpython.com/python-isinstance/
+- source_id: source-pep-342
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 51
+  unit_routes:
+  - id: route-python-roadmap-24-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'PEP 342: PEP 342 — Coroutines via Enhanced Generators — the spec; readable.'
+    format: website
+    angle: 'PEP 342 – Coroutines via Enhanced Generators | peps.python.org — contributes the assigned
+      explanation for Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`.'
+    angle_detail: 'Retains the original assigned resource and action. PEP 342: PEP 342 — Coroutines via
+      Enhanced Generators — the spec; readable. Other sources supply the remainder of the stage; no new
+      quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-24
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PEP 342 – Coroutines via Enhanced Generators | peps.python.org"'
+    url: https://peps.python.org/pep-0342/
+- source_id: source-pyo3-guide
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 52
+  unit_routes:
+  - id: route-python-roadmap-25-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'PyO3 — the Rust↔Python bridge · Core: PyO3 user guide ⭐ — start with "Getting started" + "Python
+      classes" + "Calling Python from Rust." This is the primary resource; it''s well-written.'
+    format: website
+    angle: 'Introduction - PyO3 user guide — contributes the assigned explanation for Step 25 — Python
+      ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. PyO3 — the Rust↔Python bridge ·
+      Core: PyO3 user guide ⭐ — start with "Getting started" + "Python classes" + "Calling Python from
+      Rust." This is the primary resource; it''s well-written. Other sources supply the remainder of the
+      stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Introduction - PyO3 user guide"'
+    url: https://pyo3.rs/latest/
+- source_id: source-maturin-guide
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 53
+  unit_routes:
+  - id: route-python-roadmap-25-08
+    unit_id: unit-python-intermediate-roadmap
+    title: 'maturin — the build tool · Core: maturin docs — `maturin develop` builds and installs the
+      extension in-place (like `pip install -e .`). `maturin build` produces a wheel.'
+    format: website
+    angle: 'Introduction - Maturin User Guide — contributes the assigned explanation for Step 25 — Python
+      ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. maturin — the build tool · Core:
+      maturin docs — `maturin develop` builds and installs the extension in-place (like `pip install -e
+      .`). `maturin build` produces a wheel. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Introduction - Maturin User Guide"'
+    url: https://www.maturin.rs/
+- source_id: source-realpython-build-python-c-extension-module
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 54
+  unit_routes:
+  - id: route-python-roadmap-25-11
+    unit_id: unit-python-intermediate-roadmap
+    title: 'maturin — the build tool · Practical: Real Python — Build a Python C Extension Module — C
+      version; read for mental model, then prefer PyO3 in practice.'
+    format: website
+    angle: 'Building a Python C Extension Module – Real Python — contributes the assigned practice for
+      Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. maturin — the build tool · Practical:
+      Real Python — Build a Python C Extension Module — C version; read for mental model, then prefer
+      PyO3 in practice. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Building a Python C Extension Module – Real Python"'
+    url: https://realpython.com/build-python-c-extension-module/
+- source_id: source-rust-numpy-documentation
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 55
+  unit_routes:
+  - id: route-python-roadmap-25-12
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Data marshaling · NumPy ↔ Rust: PyO3 + `numpy` crate — zero-copy array sharing via buffer
+      protocol. pyo3-numpy docs. The `csr_to_dense` and TF-IDF functions in Stratum all work on sparse
+      matrices, converted via this bridge.'
+    format: website
+    angle: 'numpy - Rust — contributes the assigned explanation for Step 25 — Python ↔ Rust/C FFI: PyO3,
+      maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. Data marshaling · NumPy ↔ Rust:
+      PyO3 + `numpy` crate — zero-copy array sharing via buffer protocol. pyo3-numpy docs. The `csr_to_dense`
+      and TF-IDF functions in Stratum all work on sparse matrices, converted via this bridge. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"numpy - Rust"'
+    url: https://docs.rs/numpy/latest/numpy/
+- source_id: source-realpython-python-bindings-overview
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 56
+  unit_routes:
+  - id: route-python-roadmap-25-15
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Data marshaling · Overview of alternatives: Real Python — Python Bindings Overview — ctypes,
+      CFFI, PyO3, Cython, pybind11 — comparison of all approaches; read once to orient.'
+    format: website
+    angle: 'Python Bindings: Calling C or C++ From Python – Real Python — contributes the assigned explanation
+      for Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. Data marshaling · Overview of alternatives:
+      Real Python — Python Bindings Overview — ctypes, CFFI, PyO3, Cython, pybind11 — comparison of all
+      approaches; read once to orient. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Bindings: Calling C or C++ From Python – Real Python"'
+    url: https://realpython.com/python-bindings-overview/
+- source_id: source-cython-docs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 57
+  unit_routes:
+  - id: route-python-roadmap-25-16
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Data marshaling · Cython: Cython docs — "Python with types" that compiles to C. Used in NumPy,
+      sklearn. Know it exists; PyO3 is preferred for new Rust-based work.'
+    format: website
+    angle: 'Welcome to Cython’s Documentation — Cython 3.4.0a0 documentation — contributes the assigned
+      explanation for Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions.'
+    angle_detail: 'Retains the original assigned resource and action. Data marshaling · Cython: Cython
+      docs — "Python with types" that compiles to C. Used in NumPy, sklearn. Know it exists; PyO3 is preferred
+      for new Rust-based work. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-25
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Welcome to Cython’s Documentation — Cython 3.4.0a0 documentation"'
+    url: https://cython.readthedocs.io/en/latest/
+- source_id: source-python-implementing-graphs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 58
+  unit_routes:
+  - id: route-python-roadmap-26-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core graph representation · Article: Python.org — Implementing Graphs — adjacency lists and
+      graph traversal in Python.'
+    format: website
+    angle: Python Patterns - Implementing Graphs | Python.org — contributes the assigned explanation for
+      Step 26 — DAG / IR patterns in Python.
+    angle_detail: 'Retains the original assigned resource and action. Core graph representation · Article:
+      Python.org — Implementing Graphs — adjacency lists and graph traversal in Python. Other sources
+      supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Python Patterns - Implementing Graphs | Python.org"'
+    url: https://www.python.org/doc/essays/graphs/
+- source_id: source-clrs
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 59
+  unit_routes:
+  - id: route-python-roadmap-26-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Core graph representation · Book: CLRS §22 (Graph algorithms, already in your Algo2 plan)
+      — the formal version; the Stratum code is direct applied CLRS.'
+    format: book
+    angle: CLRS, Kapitel 22 — Elementare Graphenalgorithmen — contributes the assigned explanation for
+      Step 26 — DAG / IR patterns in Python.
+    angle_detail: 'Retains the original assigned resource and action. Core graph representation · Book:
+      CLRS §22 (Graph algorithms, already in your Algo2 plan) — the formal version; the Stratum code is
+      direct applied CLRS. Other sources supply the remainder of the stage; no new quality or mastery
+      judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"CLRS, Kapitel 22 — Elementare Graphenalgorithmen"; clrs-de.pdf, PDF pp. 619-651'
+    vault_path: material://source-clrs/clrs-de.pdf
+- source_id: source-en-wikipedia-org-wiki-common-subexpression-elimination
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 60
+  unit_routes:
+  - id: route-python-roadmap-26-12
+    unit_id: unit-python-intermediate-roadmap
+    title: 'CSE (Common Subexpression Elimination) · Article: Wikipedia — Common subexpression elimination
+      — concept overview; then read `_cse.py`.'
+    format: website
+    angle: Common subexpression elimination - Wikipedia — contributes the assigned explanation for Step
+      26 — DAG / IR patterns in Python.
+    angle_detail: 'Retains the original assigned resource and action. CSE (Common Subexpression Elimination)
+      · Article: Wikipedia — Common subexpression elimination — concept overview; then read `_cse.py`.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Common subexpression elimination - Wikipedia"'
+    url: https://en.wikipedia.org/wiki/Common_subexpression_elimination
+- source_id: source-crafting-interpreters
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 61
+  unit_routes:
+  - id: route-python-roadmap-26-17
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Resources · Book: Crafting Interpreters (Nystrom, free online) — the best accessible intro
+      to IR design, AST walking, and optimization passes. Not Python-specific but your C++ background
+      makes Part II very readable.'
+    format: website
+    angle: Crafting Interpreters — contributes the assigned explanation for Step 26 — DAG / IR patterns
+      in Python.
+    angle_detail: 'Retains the original assigned resource and action. Resources · Book: Crafting Interpreters
+      (Nystrom, free online) — the best accessible intro to IR design, AST walking, and optimization passes.
+      Not Python-specific but your C++ background makes Part II very readable. Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Crafting Interpreters"'
+    url: https://craftinginterpreters.com/index.html
+- source_id: source-engineering-a-compiler
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 62
+  unit_routes:
+  - id: route-python-roadmap-26-18
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Resources · Book: Engineering a Compiler (Cooper & Torczon, 3rd ed.) — the textbook for compiler
+      middle-end (IR, optimization, register allocation). Graduate-level; dip in when you hit a specific
+      Stratum concept.'
+    format: website
+    angle: Engineering a Compiler - 3rd Edition | Elsevier Shop — contributes the assigned explanation
+      for Step 26 — DAG / IR patterns in Python.
+    angle_detail: 'Retains the original assigned resource and action. Resources · Book: Engineering a
+      Compiler (Cooper & Torczon, 3rd ed.) — the textbook for compiler middle-end (IR, optimization, register
+      allocation). Graduate-level; dip in when you hit a specific Stratum concept. Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Engineering a Compiler", 3rd ed., chapters 4 and 8–10 (publisher contents; full text not
+      locally registered)'
+    url: https://shop.elsevier.com/books/engineering-a-compiler/cooper/978-0-12-815412-0
+- source_id: source-green-tree-snakes
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 63
+  unit_routes:
+  - id: route-python-roadmap-26-19
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Resources · Python AST as a worked example: `import ast; tree = ast.parse("x + 1"); ast.dump(tree)`
+      — Python''s own IR for source code. `ast.NodeVisitor` and `ast.NodeTransformer` are the visitor
+      and rewriter patterns in stdlib form. Green Tree Snakes — the missing Python AST docs.'
+    format: website
+    angle: Green Tree Snakes - the missing Python AST docs — Green Tree Snakes 1.0 documentation — contributes
+      the assigned explanation for Step 26 — DAG / IR patterns in Python.
+    angle_detail: 'Retains the original assigned resource and action. Resources · Python AST as a worked
+      example: `import ast; tree = ast.parse("x + 1"); ast.dump(tree)` — Python''s own IR for source code.
+      `ast.NodeVisitor` and `ast.NodeTransformer` are the visitor and rewriter patterns in stdlib form.
+      Green Tree Snakes — the missing Python AST docs. Other sources supply the remainder of the stage;
+      no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-26
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Green Tree Snakes - the missing Python AST docs — Green Tree Snakes 1.0 documentation"'
+    url: https://greentreesnakes.readthedocs.io/
+- source_id: source-github-com-bloomberg-memray
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 64
+  unit_routes:
+  - id: route-python-roadmap-27-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Memory profiling: `tracemalloc` (stdlib) + memray (Bloomberg''s profiler, highly recommended)
+      — identify which objects are using the most memory.'
+    format: code
+    angle: 'GitHub - bloomberg/memray: Memray is a memory profiler for Python · GitHub — contributes the
+      assigned explanation for Step 27 — `__slots__`, `weakref`, memory layout.'
+    angle_detail: 'Retains the original assigned resource and action. Memory profiling: `tracemalloc`
+      (stdlib) + memray (Bloomberg''s profiler, highly recommended) — identify which objects are using
+      the most memory. Other sources supply the remainder of the stage; no new quality or mastery judgment
+      is asserted.'
+    covers:
+    - knowledge-python-roadmap-27
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - bloomberg/memray: Memray is a memory profiler for Python · GitHub"'
+    url: https://github.com/bloomberg/memray
+- source_id: source-jiffyclub-github-io-snakeviz
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 65
+  unit_routes:
+  - id: route-python-roadmap-28-04
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Function-level: `cProfile` + `pstats` (stdlib) — where time goes by function; sort by cumulative
+      time. Visualize with snakeviz.'
+    format: website
+    angle: SnakeViz — contributes the assigned explanation for Step 28 — CPU & timing profiling ("making
+      Python faster").
+    angle_detail: 'Retains the original assigned resource and action. Function-level: `cProfile` + `pstats`
+      (stdlib) — where time goes by function; sort by cumulative time. Visualize with snakeviz. Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-28
+    depth: unassessed
+    scope: unevaluated
+    locator: '"SnakeViz"'
+    url: https://jiffyclub.github.io/snakeviz/
+- source_id: source-github-com-pyutils-line-profiler
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 66
+  unit_routes:
+  - id: route-python-roadmap-28-05
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Line-level: `line_profiler` (`@profile`) — the hot line inside the hot function.'
+    format: code
+    angle: 'GitHub - pyutils/line_profiler: Line-by-line profiling for Python · GitHub — contributes the
+      assigned explanation for Step 28 — CPU & timing profiling ("making Python faster").'
+    angle_detail: 'Retains the original assigned resource and action. Line-level: `line_profiler` (`@profile`)
+      — the hot line inside the hot function. Other sources supply the remainder of the stage; no new
+      quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-28
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - pyutils/line_profiler: Line-by-line profiling for Python · GitHub"'
+    url: https://github.com/pyutils/line_profiler
+- source_id: source-github-com-benfred-py-spy
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 67
+  unit_routes:
+  - id: route-python-roadmap-28-06
+    unit_id: unit-python-intermediate-roadmap
+    title: 'Sampling (no code changes): `py-spy` — attach to a running process, get a flamegraph; `scalene`
+      — CPU + memory, separates Python from native time (useful once the Rust backend is in the loop).'
+    format: code
+    angle: 'GitHub - benfred/py-spy: Sampling profiler for Python programs · GitHub — contributes the
+      assigned explanation for Step 28 — CPU & timing profiling ("making Python faster").'
+    angle_detail: 'Retains the original assigned resource and action. Sampling (no code changes): `py-spy`
+      — attach to a running process, get a flamegraph; `scalene` — CPU + memory, separates Python from
+      native time (useful once the Rust backend is in the loop). Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
+    covers:
+    - knowledge-python-roadmap-28
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - benfred/py-spy: Sampling profiler for Python programs · GitHub"'
+    url: https://github.com/benfred/py-spy
+- source_id: source-tu-python-ml-course
+  role: reference
+  why: Already assigned by this unit study map; preserve the exact role and locator.
+  priority: 9
+  unit_routes:
+  - id: route-python-oop-04-02
+    unit_id: unit-python-oop-scope
+    title: Do (~60 min) · TU Python-for-ML Sheet 2 — the inheritance/NumPy exercises. Real exercises with
+      code, already mapped to mlprov/job in HANDOFF.
+    format: code
+    angle: 'GitHub - mahmutoezmen/Python-for-ML-Course: Python for Machine Learning course at TU Berlin.
+      Introduction to Python and Python examples of machine learning algorithms with interactive Jupyter
+      demos and math is applied. · GitHub — contributes the assigned practice for Session 4 — Subclassing
+      real libraries (mlprov-shaped).'
+    angle_detail: Retains the original assigned resource and action. Do (~60 min) · TU Python-for-ML Sheet
+      2 — the inheritance/NumPy exercises. Real exercises with code, already mapped to mlprov/job in HANDOFF.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.
+    covers:
+    - knowledge-python-oop-04
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - mahmutoezmen/Python-for-ML-Course: Python for Machine Learning course at TU Berlin.
+      Introduction to Python and Python examples of machine learning algorithms with interactive Jupyter
+      demos and math is applied. · GitHub"'
+    url: https://github.com/mahmutoezmen/Python-for-ML-Course

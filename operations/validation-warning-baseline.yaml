@@ -23,16 +23,11 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: 'G8 rust: bind existing material routes and preserve roadmap pointers'
-total: 379
-distinct_signatures: 43
+note: Bind existing Python skill materials and keep original learner placements and
+  triage
+total: 278
+distinct_signatures: 37
 signatures:
-- code: RESOURCE-SCOPE-NO-DISPOSITION
-  path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml
-  count: 19
-- code: RESOURCE-SCOPE-NO-DISPOSITION
-  path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
-  count: 19
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
   count: 5
@@ -144,15 +139,3 @@ signatures:
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
   count: 25
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
-  count: 44
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
-  count: 1
-- code: RESOURCE-SCOPE-UNADOPTED
-  path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
-  count: 10
-- code: RESOURCE-SCOPE-UNADOPTED
-  path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
-  count: 8

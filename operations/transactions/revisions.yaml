@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 12
+  file:operations/transactions/lineage.yaml: 13
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -58,6 +58,7 @@ revisions:
   module-job-python-engineering: 3
   module-job-rust-engineering: 2
   module-project-bachelor-thesis: 2
+  module-skill-python: 1
   note-06-random-variables-pp005-008: 1
   note-06-random-variables-pp009-013: 1
   note-06-random-variables-pp015-023: 1
@@ -129,7 +130,9 @@ revisions:
   source-aptos-winning-solution: 1
   source-arora-barak: 1
   source-beazley-generator-tricks: 1
+  source-beazley-python-concurrency-live: 1
   source-bermbach-csb: 1
+  source-beyond-basic-stuff-python: 1
   source-blitzstein-hwang: 1
   source-blum-algorithmen-datenstrukturen: 2
   source-boot-dev-catalogue: 1
@@ -141,11 +144,15 @@ revisions:
   source-cmu-15445: 1
   source-cmu-15451-splay-notes: 1
   source-codedex-catalogue: 1
+  source-composing-programs: 1
+  source-corey-schafer-decorators: 1
   source-cornell-topaloglu-lp: 1
+  source-crafting-interpreters: 1
   source-cs229-2018-videos: 1
   source-cs229-notes: 1
   source-cs229-project-archive: 2
   source-cs231n-notes: 1
+  source-cython-docs: 1
   source-dantzig-orden-wolfe-generalized-simplex-1955: 1
   source-datacamp-catalogue: 1
   source-diataxis: 1
@@ -153,11 +160,17 @@ revisions:
   source-docker-documentation: 1
   source-educative-catalogue: 1
   source-eecs498: 2
+  source-en-wikipedia-org-wiki-common-subexpression-elimination: 1
+  source-engineering-a-compiler: 1
   source-esl: 1
+  source-fluent-python-example-code: 1
   source-fortmann-roe-bias-variance: 1
   source-frankfurt-algo2-course: 1
   source-frontendmasters-catalogue: 1
   source-git-documentation: 1
+  source-github-com-benfred-py-spy: 1
+  source-github-com-bloomberg-memray: 1
+  source-github-com-pyutils-line-profiler: 1
   source-github-documentation: 1
   source-github-student-developer-pack: 1
   source-gnu-bash-manual: 1
@@ -168,13 +181,16 @@ revisions:
   source-gondzio-interior-point-2012: 1
   source-google-shell-style-guide: 1
   source-gorails-catalogue: 1
+  source-green-tree-snakes: 1
   source-grinstead-snell: 2
   source-guo-cpython-internals: 1
+  source-hettinger-idiomatic-python: 1
   source-hogan-knowledge-graphs: 1
   source-homebrew-docs: 1
   source-icop-hu-ws2627: 2
   source-interviewcake-catalogue: 1
   source-islp: 1
+  source-jiffyclub-github-io-snakeviz: 1
   source-jq-manual: 1
   source-just-manual: 1
   source-kaggle-winning-solutions: 2
@@ -222,6 +238,10 @@ revisions:
   source-openssh-manuals: 1
   source-owasp-cheat-sheets: 1
   source-pandas-docs: 1
+  source-pep-008: 1
+  source-pep-342: 1
+  source-pep-380: 1
+  source-pep-562: 1
   source-piml-paper: 1
   source-polars-benchmark: 1
   source-polars-definitive-guide: 1
@@ -232,10 +252,35 @@ revisions:
   source-pydata-handbook: 1
   source-pyo3-guide: 1
   source-python-docs: 1
+  source-python-implementing-graphs: 1
+  source-python-module-of-week-3: 1
   source-python-packaging-guide: 1
   source-pytorch-tutorials: 1
   source-rayon-documentation: 1
   source-rd-agent-paper: 1
+  source-realpython-async-io-python: 1
+  source-realpython-build-python-c-extension-module: 1
+  source-realpython-instance-class-and-static-methods-demystified: 1
+  source-realpython-introduction-to-python-generators: 1
+  source-realpython-list-comprehension-python: 1
+  source-realpython-primer-on-python-decorators: 1
+  source-realpython-products-cpython-internals-book: 1
+  source-realpython-python-bindings-overview: 1
+  source-realpython-python-concurrency: 1
+  source-realpython-python-data-classes: 1
+  source-realpython-python-eval-function: 1
+  source-realpython-python-exceptions: 1
+  source-realpython-python-gil: 1
+  source-realpython-python-import: 1
+  source-realpython-python-isinstance: 1
+  source-realpython-python-itertools: 1
+  source-realpython-python-logging: 1
+  source-realpython-python-modules-packages: 1
+  source-realpython-python-pathlib: 1
+  source-realpython-python-string-formatting: 1
+  source-realpython-python-super: 1
+  source-realpython-python-type-checking: 1
+  source-realpython-python-with-statement: 1
   source-restic-docs: 1
   source-rex-mle-paper: 1
   source-ripgrep-guide: 1
@@ -454,7 +499,9 @@ revisions:
   study-map-m2-sad-l13: 6
   study-map-m2-sad-l14: 6
   study-map-m2-sad-l15: 7
-  study-map-python-intermediate-roadmap: 1
+  study-map-python-depth-drills: 1
+  study-map-python-intermediate-roadmap: 2
+  study-map-python-oop-scope: 1
   unit-algo2-exam-prep: 3
   unit-aml-exam-prep: 10
   unit-aml-l01: 6
@@ -543,5 +590,7 @@ revisions:
   unit-m2-sad-l13: 12
   unit-m2-sad-l14: 16
   unit-m2-sad-l15: 17
-  unit-python-intermediate-roadmap: 1
+  unit-python-depth-drills: 1
+  unit-python-intermediate-roadmap: 2
+  unit-python-oop-scope: 1
   workspace-thesis-mle-medical: 3

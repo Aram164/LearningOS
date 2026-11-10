@@ -30,27 +30,54 @@ stages:
     label: Session 1 in full — reading, drill snippets, and the plan's own timings.
     locator: '## Session 1 — Names, values, scope (the root of everything)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-01-01
   - kind: read
     label: Read (~70 min) · Ned Batchelder — Facts and myths about Python names and values (~40 min) —
       or the PyCon talk
     source_id: source-batchelder-names
     url: https://nedbatchelder.com/text/names.html
+    id: resource-python-oop-01-02
+    route_id: route-python-oop-01-02
+    locator: '"Facts and myths about Python names and values | Ned Batchelder"'
+    angle: Facts and myths about Python names and values | Ned Batchelder — contributes the assigned explanation
+      for Session 1 — Names, values, scope (the root of everything).
+    angle_detail: Retains the original assigned resource and action. Read (~70 min) · Ned Batchelder —
+      Facts and myths about Python names and values (~40 min) — or the PyCon talk Other sources supply
+      the remainder of the stage; no new quality or mastery judgment is asserted.
   - kind: read
     label: Read (~70 min) · Real Python — LEGB Rule — only §"Python Scope vs Namespace" and §"functions";
       skim the rest
     source_id: source-realpython-legb
     url: https://realpython.com/python-scope-legb-rule/
+    id: resource-python-oop-01-03
+    route_id: route-python-oop-01-03
+    locator: '"Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python"'
+    angle: 'Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python — contributes the
+      assigned explanation for Session 1 — Names, values, scope (the root of everything).'
+    angle_detail: Retains the original assigned resource and action. Read (~70 min) · Real Python — LEGB
+      Rule — only §"Python Scope vs Namespace" and §"functions"; skim the rest Other sources supply the
+      remainder of the stage; no new quality or mastery judgment is asserted.
   - kind: practise
     label: 'Drill (~20 min) · paste each into pythontutor.com, predict first:'
     source_id: source-python-tutor
     url: https://pythontutor.com
+    id: resource-python-oop-01-04
+    route_id: route-python-oop-01-04
+    locator: '"Python Tutor - Python Online Compiler with Visual Debugger"'
+    angle: Python Tutor - Python Online Compiler with Visual Debugger — contributes the assigned practice
+      for Session 1 — Names, values, scope (the root of everything).
+    angle_detail: 'Retains the original assigned resource and action. Drill (~20 min) · paste each into
+      pythontutor.com, predict first: Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
   - kind: reference
     label: Rules of the game — predict → run → explain; close the tab and rebuild; type, never paste.
     locator: '## Rules of the game (do this or the plan fails)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-01-05
   working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-1-names-values-scope-the-root-of-everything/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-oop-01
 - id: stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes
   number: 2
   title: 'Session 2 — Class mechanics: self, instance vs class attributes'
@@ -71,24 +98,38 @@ stages:
     label: Session 2 in full — reading, drill snippets, and the plan's own timings.
     locator: '## Session 2 — Class mechanics: self, instance vs class attributes'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-02-01
   - kind: watch
     label: 'Watch + code along (~60 min) · Corey Schafer OOP playlist videos #2 (class variables) and
       #3 (classmethods/staticmethods). His code: github.com/CoreyMSchafer/code_snippets → Object-Oriented.'
     source_id: source-corey-schafer-oop
     url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+    id: resource-python-oop-02-02
+    route_id: route-python-oop-02-02
+    locator: '"Python OOP Tutorials - Working with Classes - YouTube"'
+    angle: 'Python OOP Tutorials - Working with Classes - YouTube — contributes the assigned explanation
+      for Session 2 — Class mechanics: self, instance vs class attributes.'
+    angle_detail: 'Retains the original assigned resource and action. Watch + code along (~60 min) · Corey
+      Schafer OOP playlist videos #2 (class variables) and #3 (classmethods/staticmethods). His code:
+      github.com/CoreyMSchafer/code_snippets → Object-Oriented. Other sources supply the remainder of
+      the stage; no new quality or mastery judgment is asserted.'
   - kind: reference
     label: Key reframe · `obj.method(x)` is just `Class.method(obj, x)`. `self` is not magic — it's an
       ordinary first argument. A class is a dict of names; attribute lookup goes instance `__dict__` →
       class → parent classes.
+    id: resource-python-oop-02-03
   - kind: practise
     label: 'Drill (~30 min) · from scratch, no reference:'
+    id: resource-python-oop-02-04
   - kind: reference
     label: Rules of the game — predict → run → explain; close the tab and rebuild; type, never paste.
     locator: '## Rules of the game (do this or the plan fails)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-02-05
   working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-oop-02
 - id: stage-python-repair-session-3-inheritance-plus-super-the-headache-session
   number: 3
   title: Session 3 — Inheritance + super() (the headache session)
@@ -110,29 +151,53 @@ stages:
     label: Session 3 in full — reading, drill snippets, and the plan's own timings.
     locator: '## Session 3 — Inheritance + super() (the headache session)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-03-01
   - kind: watch
     label: 'Watch first (~25 min) · Corey Schafer #4 (inheritance) — the gentle version.'
+    id: resource-python-oop-03-02
+    source_id: source-corey-schafer-oop
+    route_id: route-python-oop-03-02
+    locator: '"Python OOP Tutorial 4: Inheritance - Creating Subclasses" (playlist video 4)'
+    angle: Python OOP Tutorials - Working with Classes - YouTube — contributes the assigned explanation
+      for Session 3 — Inheritance + super() (the headache session).
+    angle_detail: 'Retains the original assigned resource and action. Watch first (~25 min) · Corey Schafer
+      #4 (inheritance) — the gentle version. Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.'
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
   - kind: read
     label: 'Then read (~45 min) · Hettinger — Python''s super() considered super! — slowly. His opening
       example:'
     source_id: source-hettinger-super
     url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    id: resource-python-oop-03-03
+    route_id: route-python-oop-03-03
+    locator: '"Python’s super() considered super! – Deep Thoughts by Raymond Hettinger"'
+    angle: Python’s super() considered super! – Deep Thoughts by Raymond Hettinger — contributes the assigned
+      explanation for Session 3 — Inheritance + super() (the headache session).
+    angle_detail: 'Retains the original assigned resource and action. Then read (~45 min) · Hettinger
+      — Python''s super() considered super! — slowly. His opening example: Other sources supply the remainder
+      of the stage; no new quality or mastery judgment is asserted.'
   - kind: practise
     label: Drill (~20 min) · Close the article. Rebuild `LoggingDict` from memory. Then build `LoggingList(list)`
       that logs `append`.
+    id: resource-python-oop-03-04
   - kind: practise
     label: 'Drill (~20 min) · Build the diamond: `A`, `B(A)`, `C(A)`, `D(B, C)`, each `__init__` printing
       its name and calling `super().__init__()`. Predict the print order for `D()`. Check against `D.__mro__`.'
+    id: resource-python-oop-03-05
   - kind: practise
     label: 'Drill (~20 min) · Open `ProvDataFrame` in mlprov and annotate every `super()` call: which
       class actually gets hit next? (Check `ProvDataFrame.__mro__`.)'
+    id: resource-python-oop-03-06
   - kind: reference
     label: Rules of the game — predict → run → explain; close the tab and rebuild; type, never paste.
     locator: '## Rules of the game (do this or the plan fails)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-03-07
   working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-3-inheritance-plus-super-the-headache-session/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-oop-03
 - id: stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped
   number: 4
   title: Session 4 — Subclassing real libraries (mlprov-shaped)
@@ -152,28 +217,54 @@ stages:
     label: Session 4 in full — reading, drill snippets, and the plan's own timings.
     locator: '## Session 4 — Subclassing real libraries (mlprov-shaped) — *post-Jun 18*'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-04-01
   - kind: practise
     label: Do (~60 min) · TU Python-for-ML Sheet 2 — the inheritance/NumPy exercises. Real exercises with
       code, already mapped to mlprov/job in HANDOFF.
     source_id: source-tu-python-ml-course
     url: https://github.com/mahmutoezmen/Python-for-ML-Course
+    id: resource-python-oop-04-02
+    route_id: route-python-oop-04-02
+    locator: '"GitHub - mahmutoezmen/Python-for-ML-Course: Python for Machine Learning course at TU Berlin.
+      Introduction to Python and Python examples of machine learning algorithms with interactive Jupyter
+      demos and math is applied. · GitHub"'
+    angle: 'GitHub - mahmutoezmen/Python-for-ML-Course: Python for Machine Learning course at TU Berlin.
+      Introduction to Python and Python examples of machine learning algorithms with interactive Jupyter
+      demos and math is applied. · GitHub — contributes the assigned practice for Session 4 — Subclassing
+      real libraries (mlprov-shaped).'
+    angle_detail: Retains the original assigned resource and action. Do (~60 min) · TU Python-for-ML Sheet
+      2 — the inheritance/NumPy exercises. Real exercises with code, already mapped to mlprov/job in HANDOFF.
+      Other sources supply the remainder of the stage; no new quality or mastery judgment is asserted.
   - kind: read
     label: Read (~30 min) · numpy subclassing guide + pandas subclassing guide — now Hettinger has given
       you the model these assume. Explains `__array_finalize__` (why ndarray can't just use `__init__`)
       and `_metadata`/`_constructor` (how provenance survives pandas ops).
     source_id: source-numpy-subclassing-docs
     url: https://numpy.org/doc/stable/user/basics.subclassing.html
+    id: resource-python-oop-04-03
+    route_id: route-python-oop-04-03
+    locator: '"Subclassing ndarray — NumPy v2.5 Manual"'
+    angle: Subclassing ndarray — NumPy v2.5 Manual — contributes the assigned explanation for Session
+      4 — Subclassing real libraries (mlprov-shaped).
+    angle_detail: Retains the original assigned resource and action. Read (~30 min) · numpy subclassing
+      guide + pandas subclassing guide — now Hettinger has given you the model these assume. Explains
+      `__array_finalize__` (why ndarray can't just use `__init__`) and `_metadata`/`_constructor` (how
+      provenance survives pandas ops). Other sources supply the remainder of the stage; no new quality
+      or mastery judgment is asserted.
   - kind: practise
     label: 'Drill · pick one mlprov sklearn skeleton class and explain every line out loud (or to Chat
       4). Note the adapter pattern Hettinger describes — that''s why the skeletons call `orig_tree.DecisionTreeClassifier.predict(self,
       X)` explicitly: sklearn classes aren''t cooperative super() citizens.'
+    id: resource-python-oop-04-04
   - kind: reference
     label: Rules of the game — predict → run → explain; close the tab and rebuild; type, never paste.
     locator: '## Rules of the game (do this or the plan fails)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-04-05
   working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-oop-04
 - id: stage-python-repair-session-5-the-interpreter-demystified
   number: 5
   title: Session 5 — The interpreter, demystified
@@ -193,27 +284,43 @@ stages:
     label: Session 5 in full — reading, drill snippets, and the plan's own timings.
     locator: '## Session 5 — The interpreter, demystified — *post-Jun 18 (light), post-Jul 15 (deep)*'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-05-01
   - kind: reference
     label: 'Light version now (~30 min) · the "interpreter" mystery mostly dissolves with three facts:'
+    id: resource-python-oop-05-02
   - kind: reference
     label: Everything is an object created at runtime — `def` and `class` are statements that execute,
       not declarations.
+    id: resource-python-oop-05-03
   - kind: reference
     label: Every function call creates a frame; local scope IS the frame. When the frame dies, locals
       die.
+    id: resource-python-oop-05-04
   - kind: reference
     label: 'See it physically: `import dis; dis.dis(your_function)` — `LOAD_FAST` = local lookup, `LOAD_GLOBAL`
       = global lookup. Scope made visible.'
+    id: resource-python-oop-05-05
   - kind: read
     label: 'Deep version (post-Jul 15, ~1.5h) · Allison Kaptur — A Python Interpreter Written in Python.
       Your C++ background is an asset here. Optional after: Philip Guo''s CPython lectures L1/L3/L8 (see
       LEARNING-RESOURCES.md §8 Tier 3).'
     source_id: source-kaptur-byterun
     url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+    id: resource-python-oop-05-06
+    route_id: route-python-oop-05-06
+    locator: '"500 Lines or LessA Python Interpreter Written in Python"'
+    angle: 500 Lines or LessA Python Interpreter Written in Python — contributes the assigned explanation
+      for Session 5 — The interpreter, demystified.
+    angle_detail: 'Retains the original assigned resource and action. Deep version (post-Jul 15, ~1.5h)
+      · Allison Kaptur — A Python Interpreter Written in Python. Your C++ background is an asset here.
+      Optional after: Philip Guo''s CPython lectures L1/L3/L8 (see LEARNING-RESOURCES.md §8 Tier 3). Other
+      sources supply the remainder of the stage; no new quality or mastery judgment is asserted.'
   - kind: reference
     label: Rules of the game — predict → run → explain; close the tab and rebuild; type, never paste.
     locator: '## Rules of the game (do this or the plan fails)'
     vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    id: resource-python-oop-05-07
   working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-python-repair-session-5-the-interpreter-demystified/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-oop-05

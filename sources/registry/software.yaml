@@ -1687,3 +1687,576 @@ sources:
       route explicit.
   thematic_group_ids:
   - thematic-group-software
+- id: source-beyond-basic-stuff-python
+  title: Beyond the Basic Stuff with Python - Invent with Python
+  type: book
+  url: https://inventwithpython.com/beyond/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://inventwithpython.com/beyond/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-corey-schafer-decorators
+  title: 'Python Tutorial: Decorators - Dynamically Alter The Functionality Of Your Functions - YouTube'
+  type: video
+  url: https://www.youtube.com/watch?v=FsAPt_9Bf3U
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.youtube.com/watch?v=FsAPt_9Bf3U
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-fluent-python-example-code
+  title: 'GitHub - fluentpython/example-code-2e: Example code for Fluent Python, 2nd edition (O''Reilly
+    2022) · GitHub'
+  type: software
+  url: https://github.com/fluentpython/example-code-2e
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/fluentpython/example-code-2e
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-hettinger-idiomatic-python
+  title: Transforming Code into Beautiful, Idiomatic Python - YouTube
+  type: video
+  url: https://www.youtube.com/watch?v=OSGv2VnC0go
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.youtube.com/watch?v=OSGv2VnC0go
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pep-380
+  title: PEP 380 – Syntax for Delegating to a Subgenerator | peps.python.org
+  type: website
+  url: https://peps.python.org/pep-0380/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://peps.python.org/pep-0380/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-instance-class-and-static-methods-demystified
+  title: Python's Instance, Class, and Static Methods Demystified – Real Python
+  type: website
+  url: https://realpython.com/instance-class-and-static-methods-demystified/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/instance-class-and-static-methods-demystified/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-introduction-to-python-generators
+  title: How to Use Generators and yield in Python – Real Python
+  type: website
+  url: https://realpython.com/introduction-to-python-generators/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/introduction-to-python-generators/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-list-comprehension-python
+  title: 'Python List Comprehension: Tutorial With Examples – Real Python'
+  type: website
+  url: https://realpython.com/list-comprehension-python/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/list-comprehension-python/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-primer-on-python-decorators
+  title: Primer on Python Decorators – Real Python
+  type: website
+  url: https://realpython.com/primer-on-python-decorators/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/primer-on-python-decorators/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-data-classes
+  title: Data Classes in Python (Guide) – Real Python
+  type: website
+  url: https://realpython.com/python-data-classes/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-data-classes/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-exceptions
+  title: 'Python Exceptions: An Introduction – Real Python'
+  type: website
+  url: https://realpython.com/python-exceptions/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-exceptions/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-import
+  title: 'Python import: Advanced Techniques and Tips – Real Python'
+  type: website
+  url: https://realpython.com/python-import/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-import/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-itertools
+  title: Python itertools By Example – Real Python
+  type: website
+  url: https://realpython.com/python-itertools/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-itertools/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-logging
+  title: Logging in Python – Real Python
+  type: website
+  url: https://realpython.com/python-logging/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-logging/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-modules-packages
+  title: Python Modules and Packages – An Introduction – Real Python
+  type: website
+  url: https://realpython.com/python-modules-packages/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-modules-packages/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-pathlib
+  title: 'Python''s pathlib Module: Taming the File System – Real Python'
+  type: website
+  url: https://realpython.com/python-pathlib/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-pathlib/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-string-formatting
+  title: 'Python String Formatting: Available Tools and Their Features – Real Python'
+  type: website
+  url: https://realpython.com/python-string-formatting/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-string-formatting/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-super
+  title: Supercharge Your Classes With Python super() – Real Python
+  type: website
+  url: https://realpython.com/python-super/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-super/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-type-checking
+  title: Python Type Checking (Guide) – Real Python
+  type: website
+  url: https://realpython.com/python-type-checking/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-type-checking/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-with-statement
+  title: 'Python''s with Statement: Manage External Resources Safely – Real Python'
+  type: website
+  url: https://realpython.com/python-with-statement/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-with-statement/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-beazley-python-concurrency-live
+  title: 'David Beazley - Python Concurrency From the Ground Up: LIVE! - PyCon 2015 - YouTube'
+  type: video
+  url: https://www.youtube.com/watch?v=MCs5OvhV9S4
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.youtube.com/watch?v=MCs5OvhV9S4
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-composing-programs
+  title: Composing Programs
+  type: book
+  url: https://www.composingprograms.com/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.composingprograms.com/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-crafting-interpreters
+  title: Crafting Interpreters
+  type: book
+  url: https://craftinginterpreters.com/index.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://craftinginterpreters.com/index.html
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-cython-docs
+  title: Welcome to Cython’s Documentation — Cython 3.4.0a0 documentation
+  type: website
+  url: https://cython.readthedocs.io/en/latest/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://cython.readthedocs.io/en/latest/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-en-wikipedia-org-wiki-common-subexpression-elimination
+  title: Common subexpression elimination - Wikipedia
+  type: website
+  url: https://en.wikipedia.org/wiki/Common_subexpression_elimination
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://en.wikipedia.org/wiki/Common_subexpression_elimination
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-engineering-a-compiler
+  title: Engineering a Compiler (3rd ed.)
+  type: book
+  url: https://shop.elsevier.com/books/engineering-a-compiler/cooper/978-0-12-815412-0
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://shop.elsevier.com/books/engineering-a-compiler/cooper/978-0-12-815412-0
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-green-tree-snakes
+  title: Green Tree Snakes - the missing Python AST docs — Green Tree Snakes 1.0 documentation
+  type: website
+  url: https://greentreesnakes.readthedocs.io/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://greentreesnakes.readthedocs.io/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pep-008
+  title: PEP 8 – Style Guide for Python Code | peps.python.org
+  type: website
+  url: https://peps.python.org/pep-0008/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://peps.python.org/pep-0008/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pep-342
+  title: PEP 342 – Coroutines via Enhanced Generators | peps.python.org
+  type: website
+  url: https://peps.python.org/pep-0342/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://peps.python.org/pep-0342/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pep-562
+  title: PEP 562 – Module __getattr__ and __dir__ | peps.python.org
+  type: website
+  url: https://peps.python.org/pep-0562/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://peps.python.org/pep-0562/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-python-implementing-graphs
+  title: Python Patterns - Implementing Graphs | Python.org
+  type: website
+  url: https://www.python.org/doc/essays/graphs/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.python.org/doc/essays/graphs/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pymotw-python-module-of-the-week
+  title: Python 3 Module of the Week — PyMOTW 3
+  type: website
+  url: https://pymotw.com/3/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pymotw.com/3/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-async-io-python
+  title: 'Python''s asyncio: A Hands-On Walkthrough – Real Python'
+  type: website
+  url: https://realpython.com/async-io-python/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/async-io-python/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-build-python-c-extension-module
+  title: Building a Python C Extension Module – Real Python
+  type: website
+  url: https://realpython.com/build-python-c-extension-module/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/build-python-c-extension-module/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-products-cpython-internals-book
+  title: CPython Internals Book – Real Python
+  type: website
+  url: https://realpython.com/products/cpython-internals-book/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/products/cpython-internals-book/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-bindings-overview
+  title: 'Python Bindings: Calling C or C++ From Python – Real Python'
+  type: website
+  url: https://realpython.com/python-bindings-overview/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-bindings-overview/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-concurrency
+  title: Speed Up Your Python Program With Concurrency – Real Python
+  type: website
+  url: https://realpython.com/python-concurrency/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-concurrency/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-eval-function
+  title: 'Python eval(): Evaluate Expressions Dynamically – Real Python'
+  type: website
+  url: https://realpython.com/python-eval-function/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-eval-function/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-gil
+  title: What Is the Python Global Interpreter Lock (GIL)? – Real Python
+  type: website
+  url: https://realpython.com/python-gil/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-gil/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-realpython-python-isinstance
+  title: isinstance() | Python’s Built-in Functions – Real Python
+  type: website
+  url: https://realpython.com/python-isinstance/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://realpython.com/python-isinstance/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-github-com-benfred-py-spy
+  title: 'GitHub - benfred/py-spy: Sampling profiler for Python programs · GitHub'
+  type: software
+  url: https://github.com/benfred/py-spy
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/benfred/py-spy
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-github-com-bloomberg-memray
+  title: 'GitHub - bloomberg/memray: Memray is a memory profiler for Python · GitHub'
+  type: software
+  url: https://github.com/bloomberg/memray
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/bloomberg/memray
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-github-com-pyutils-line-profiler
+  title: 'GitHub - pyutils/line_profiler: Line-by-line profiling for Python · GitHub'
+  type: software
+  url: https://github.com/pyutils/line_profiler
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/pyutils/line_profiler
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-jiffyclub-github-io-snakeviz
+  title: SnakeViz
+  type: website
+  url: https://jiffyclub.github.io/snakeviz/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://jiffyclub.github.io/snakeviz/
+    observed: '2026-11-10'
+    possible_use: Existing Python study-map resource; identity and route binding only, no new quality
+      assessment.
+  thematic_group_ids:
+  - thematic-group-software

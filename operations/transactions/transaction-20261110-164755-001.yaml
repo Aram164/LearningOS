@@ -1,0 +1,114 @@
+schema_version: 2
+id: transaction-20261110-164755-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T16:47:55+01:00'
+snapshot_before: sha256:8538d549f057b060ff314f8a3ddd36b96e8017a8558045c475bff482f0b22b5d
+snapshot_after: sha256:4d0096f6304f54be9ac2beafed55d1788a4f410d028bdef72f0d01edaf9a56a5
+expected_revisions:
+  source-beyond-basic-stuff-python: 0
+  source-corey-schafer-decorators: 0
+  source-fluent-python-example-code: 0
+  source-hettinger-idiomatic-python: 0
+  source-pep-380: 0
+  source-realpython-instance-class-and-static-methods-demystified: 0
+  source-realpython-introduction-to-python-generators: 0
+  source-realpython-list-comprehension-python: 0
+  source-realpython-primer-on-python-decorators: 0
+  source-realpython-python-data-classes: 0
+  source-realpython-python-exceptions: 0
+  source-realpython-python-import: 0
+  source-realpython-python-itertools: 0
+  source-realpython-python-logging: 0
+  source-realpython-python-modules-packages: 0
+  source-realpython-python-pathlib: 0
+  source-realpython-python-string-formatting: 0
+  source-realpython-python-super: 0
+  source-realpython-python-type-checking: 0
+  source-realpython-python-with-statement: 0
+artifact_revisions:
+  source-beyond-basic-stuff-python:
+    before: 0
+    after: 1
+  source-corey-schafer-decorators:
+    before: 0
+    after: 1
+  source-fluent-python-example-code:
+    before: 0
+    after: 1
+  source-hettinger-idiomatic-python:
+    before: 0
+    after: 1
+  source-pep-380:
+    before: 0
+    after: 1
+  source-realpython-instance-class-and-static-methods-demystified:
+    before: 0
+    after: 1
+  source-realpython-introduction-to-python-generators:
+    before: 0
+    after: 1
+  source-realpython-list-comprehension-python:
+    before: 0
+    after: 1
+  source-realpython-primer-on-python-decorators:
+    before: 0
+    after: 1
+  source-realpython-python-data-classes:
+    before: 0
+    after: 1
+  source-realpython-python-exceptions:
+    before: 0
+    after: 1
+  source-realpython-python-import:
+    before: 0
+    after: 1
+  source-realpython-python-itertools:
+    before: 0
+    after: 1
+  source-realpython-python-logging:
+    before: 0
+    after: 1
+  source-realpython-python-modules-packages:
+    before: 0
+    after: 1
+  source-realpython-python-pathlib:
+    before: 0
+    after: 1
+  source-realpython-python-string-formatting:
+    before: 0
+    after: 1
+  source-realpython-python-super:
+    before: 0
+    after: 1
+  source-realpython-python-type-checking:
+    before: 0
+    after: 1
+  source-realpython-python-with-statement:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 1c76a0f0eec4a15661a578a7c41df4281ab7e50841f08660dce3df86ebbd7fbf
+  sha256_after: 19428fff200ae873b1e040224715af9245ee7c083482cdb5d24e293bcc06600a
+  created: false
+metadata:
+  data_roots_sha256: sha256:87a0fec26c0e06097af0b37c0ed16dd60bf7435d1070d11816e556a0fec3963f
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-python-intake1-9149c5c8
+  idempotency_key: python-intake1
+  intent_sha256: sha256:9abd6cd9b4b64464260a222c5b5190b4f5ceb0d29d986c8a5183f4577fedaef2
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:9abd6cd9b4b64464260a222c5b5190b4f5ceb0d29d986c8a5183f4577fedaef2

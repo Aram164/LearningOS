@@ -3100,6 +3100,80 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  python-intake1:
+    request_id: request-python-intake1-9149c5c8
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:9abd6cd9b4b64464260a222c5b5190b4f5ceb0d29d986c8a5183f4577fedaef2
+    transaction_id: transaction-20261110-164755-001
+    receipt_path: operations/transactions/transaction-20261110-164755-001.yaml
+    revisions:
+      source-beyond-basic-stuff-python: 1
+      source-corey-schafer-decorators: 1
+      source-fluent-python-example-code: 1
+      source-hettinger-idiomatic-python: 1
+      source-pep-380: 1
+      source-realpython-instance-class-and-static-methods-demystified: 1
+      source-realpython-introduction-to-python-generators: 1
+      source-realpython-list-comprehension-python: 1
+      source-realpython-primer-on-python-decorators: 1
+      source-realpython-python-data-classes: 1
+      source-realpython-python-exceptions: 1
+      source-realpython-python-import: 1
+      source-realpython-python-itertools: 1
+      source-realpython-python-logging: 1
+      source-realpython-python-modules-packages: 1
+      source-realpython-python-pathlib: 1
+      source-realpython-python-string-formatting: 1
+      source-realpython-python-super: 1
+      source-realpython-python-type-checking: 1
+      source-realpython-python-with-statement: 1
+    snapshot_before: sha256:8538d549f057b060ff314f8a3ddd36b96e8017a8558045c475bff482f0b22b5d
+    snapshot_after: sha256:4d0096f6304f54be9ac2beafed55d1788a4f410d028bdef72f0d01edaf9a56a5
+  python-intake2:
+    request_id: request-python-intake2-9d76a76b
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:8dd54025272da673e5a15cb717b75780fc3a20ee76b18715d0a0a7d02a0188ba
+    transaction_id: transaction-20261110-165202-001
+    receipt_path: operations/transactions/transaction-20261110-165202-001.yaml
+    revisions:
+      source-beazley-python-concurrency-live: 1
+      source-composing-programs: 1
+      source-crafting-interpreters: 1
+      source-cython-docs: 1
+      source-en-wikipedia-org-wiki-common-subexpression-elimination: 1
+      source-engineering-a-compiler: 1
+      source-green-tree-snakes: 1
+      source-pep-008: 1
+      source-pep-342: 1
+      source-pep-562: 1
+      source-python-implementing-graphs: 1
+      source-python-module-of-week-3: 1
+      source-realpython-async-io-python: 1
+      source-realpython-build-python-c-extension-module: 1
+      source-realpython-products-cpython-internals-book: 1
+      source-realpython-python-bindings-overview: 1
+      source-realpython-python-concurrency: 1
+      source-realpython-python-eval-function: 1
+      source-realpython-python-gil: 1
+      source-realpython-python-isinstance: 1
+    snapshot_before: sha256:4d0096f6304f54be9ac2beafed55d1788a4f410d028bdef72f0d01edaf9a56a5
+    snapshot_after: sha256:8f1a568e28ca9ee1f81570311b8e09907e4e93245772314ba30d13b7f08ba45d
+  python-intake3:
+    request_id: request-python-intake3-b5ce7364
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:7cd3f7748e2f09f256d24b54b5fbe86edb7182ca8cc5155c30e50abeb5dd6d4c
+    transaction_id: transaction-20261110-165414-001
+    receipt_path: operations/transactions/transaction-20261110-165414-001.yaml
+    revisions:
+      source-github-com-benfred-py-spy: 1
+      source-github-com-bloomberg-memray: 1
+      source-github-com-pyutils-line-profiler: 1
+      source-jiffyclub-github-io-snakeviz: 1
+    snapshot_before: sha256:8f1a568e28ca9ee1f81570311b8e09907e4e93245772314ba30d13b7f08ba45d
+    snapshot_after: sha256:60fc67cac4a2ac9334c2796fe37d84807d5bdfc9a3caed2b5524a02b1810575c
   python-plan-intake-v2:
     request_id: request-python-plan-intake-v2-143d9022
     capability: source.intake.record
@@ -3531,6 +3605,24 @@ entries:
       unit-job-git-fluency: 3
     snapshot_before: sha256:655e642dae7d6cfdcca681cd3d39c39e32bfce9cc038f62bfc5271af39b55445
     snapshot_after: sha256:eea3f9c585179f7baa889bd04965da04683c3a147aa79079c491631ddefde004
+  reviewed-7a2018d550d9497d8912a29d7f6d1ade:
+    request_id: request-reviewed-0dea3624246c4ae59763d4db8ab91d88
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:bb8a6f70568d9761f7cbd7dce13cc1b7f4298c431931d5b3548bcb21a95a2f3e
+    transaction_id: transaction-20261110-231740-001
+    receipt_path: operations/transactions/transaction-20261110-231740-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 13
+      module-skill-python: 1
+      study-map-python-depth-drills: 1
+      study-map-python-intermediate-roadmap: 2
+      study-map-python-oop-scope: 1
+      unit-python-depth-drills: 1
+      unit-python-intermediate-roadmap: 2
+      unit-python-oop-scope: 1
+    snapshot_before: sha256:c6bd580ef0a30609c7ba7781561a2e8fa36e98c2f41ad2f59915ab95285afc5c
+    snapshot_after: sha256:47a5a3a42c205b17dde09d67c1de93a7db7ef526664e511c8777e549c9b5a0a4
   reviewed-8214a11a2b2b419d8107bcfb7b9273a0:
     request_id: request-reviewed-12187f7224f64cf388a00ba0fb155d61
     capability: unit.plan.revise

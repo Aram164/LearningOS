@@ -1,0 +1,103 @@
+schema_version: 2
+id: transaction-20261110-231740-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-11-10T23:17:40+01:00'
+snapshot_before: sha256:c6bd580ef0a30609c7ba7781561a2e8fa36e98c2f41ad2f59915ab95285afc5c
+snapshot_after: sha256:47a5a3a42c205b17dde09d67c1de93a7db7ef526664e511c8777e549c9b5a0a4
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 12
+  module-skill-python: 0
+  study-map-python-depth-drills: 0
+  study-map-python-intermediate-roadmap: 1
+  study-map-python-oop-scope: 0
+  unit-python-depth-drills: 0
+  unit-python-intermediate-roadmap: 1
+  unit-python-oop-scope: 0
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 12
+    after: 13
+  module-skill-python:
+    before: 0
+    after: 1
+  study-map-python-depth-drills:
+    before: 0
+    after: 1
+  study-map-python-intermediate-roadmap:
+    before: 1
+    after: 2
+  study-map-python-oop-scope:
+    before: 0
+    after: 1
+  unit-python-depth-drills:
+    before: 0
+    after: 1
+  unit-python-intermediate-roadmap:
+    before: 1
+    after: 2
+  unit-python-oop-scope:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-skill-python/module.yaml
+  sha256_before: e3d6484d7ea2a45de1748f4ce9d53b214a43bc3ee2e8b82959a1bec6a4c37ad1
+  sha256_after: a451164e62bf9d7d556601a40b5e8512a6e06b853798c2853e1bddab85f61ccd
+  created: false
+- path: curriculum/modules/module-skill-python/source-map.yaml
+  sha256_before: 032fa43a8a36fc852119fae0b3e80a7e8967ac20700f6d64124a9bccaae93b68
+  sha256_after: a910f2f72610a205cd7ecfe794c6c31727ec2f21256b8d3eb8a0fe132e9edbed
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml
+  sha256_before: 222bdae45299fe752353cdbf40a8f17335ba926abf3b90b8738afd4ec87b453d
+  sha256_after: b3ee9e14548a9e74b51545db126867a4ac99b13e304529e0817658d280e08c81
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/unit.yaml
+  sha256_before: 845b401ee579bf8a3c761aa8f1e6bed54a74173d728af6d41dd62fbc1dc0c177
+  sha256_after: 6b06e1b540483ff113dfe666a503447d3620a6fa8ea705850fb9bcd2df5ec58d
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
+  sha256_before: c005d7b0849aebf0491bd8add9b053c9538b5c6551d9ea1537157d7412030c7d
+  sha256_after: 24dea194bf873d1f6585a175f02203c15fb4c5354b25a88f27d8fae1162256a3
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/unit.yaml
+  sha256_before: 4e0bdcfb72e95552f97e5cb36f73185ecd2f046b6d504f2d67e5289be4242118
+  sha256_after: a8050d26cd7f92663831e3407b6a645d903daf2e0b273f33d2db4bb07bdb1e87
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
+  sha256_before: 55128ed9f5c6eb9c0dd020052bdea87be7e62a0cfc7872392fac75a02dcfb383
+  sha256_after: b4c53055e1dd0b40657aa8c6b1f64f6b3e7d46d5b6c1122a1a2cc04464b5e72d
+  created: false
+- path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/unit.yaml
+  sha256_before: 8ee760e7d6337e2ca51f0588508940097e5a7e34dddba38a4d3bb684a60b21e7
+  sha256_after: 0b59889889ab258478d447930bf23704b709d86c4940a0e14a3a81d04bc0334d
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: a5a5497e3946b4dac9bfb0435c063ca795e46bef4952fa2843b542a6f624b46d
+  sha256_after: 314ee7c6682588d06f012d6f77ab06f8d8882bb52c444e388446700b947d583e
+  created: false
+metadata:
+  data_roots_sha256: sha256:5ed8146119d11a58ef98a81ae7cfeb74fd154c309a40c8ccbbdf9eff6c3874f3
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-0dea3624246c4ae59763d4db8ab91d88
+  idempotency_key: reviewed-7a2018d550d9497d8912a29d7f6d1ade
+  intent_sha256: sha256:bb8a6f70568d9761f7cbd7dce13cc1b7f4298c431931d5b3548bcb21a95a2f3e
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:bb8a6f70568d9761f7cbd7dce13cc1b7f4298c431931d5b3548bcb21a95a2f3e

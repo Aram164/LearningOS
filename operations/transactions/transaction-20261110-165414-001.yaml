@@ -1,0 +1,50 @@
+schema_version: 2
+id: transaction-20261110-165414-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T16:54:14+01:00'
+snapshot_before: sha256:8f1a568e28ca9ee1f81570311b8e09907e4e93245772314ba30d13b7f08ba45d
+snapshot_after: sha256:60fc67cac4a2ac9334c2796fe37d84807d5bdfc9a3caed2b5524a02b1810575c
+expected_revisions:
+  source-github-com-benfred-py-spy: 0
+  source-github-com-bloomberg-memray: 0
+  source-github-com-pyutils-line-profiler: 0
+  source-jiffyclub-github-io-snakeviz: 0
+artifact_revisions:
+  source-github-com-benfred-py-spy:
+    before: 0
+    after: 1
+  source-github-com-bloomberg-memray:
+    before: 0
+    after: 1
+  source-github-com-pyutils-line-profiler:
+    before: 0
+    after: 1
+  source-jiffyclub-github-io-snakeviz:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 7253dac0d3fcd3036ecb161baef944b77b157e36dbb9065a961e7083f795bda4
+  sha256_after: 5d796f5e18e66e785573a88dd4994004c27f5948d8ba219386dd26f8852b16da
+  created: false
+metadata:
+  data_roots_sha256: sha256:9e2585078b82ecc79854a78c6b7885511d35c30be4f8f81043b1b6d235e2423c
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-python-intake3-b5ce7364
+  idempotency_key: python-intake3
+  intent_sha256: sha256:7cd3f7748e2f09f256d24b54b5fbe86edb7182ca8cc5155c30e50abeb5dd6d4c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:7cd3f7748e2f09f256d24b54b5fbe86edb7182ca8cc5155c30e50abeb5dd6d4c

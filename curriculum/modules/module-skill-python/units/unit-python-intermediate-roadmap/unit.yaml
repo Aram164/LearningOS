@@ -6,9 +6,733 @@ title: Python intermediate roadmap
 order: 2
 scope: Seeded from the existing roadmap without inferring completion.
 status: ready
-scope_sources: []
-source_selections: []
+scope_sources:
+- source_id: source-python-depth-drills
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-fluent-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-slatkin-effective-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-docs-classes-mro
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-automate-boring-stuff
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-docs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-beyond-basic-stuff-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-batchelder-names
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-tutor
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-legb
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-hettinger-idiomatic-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-powell-python-expert
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-fluent-python-example-code
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-list-comprehension-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-string-formatting
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-corey-schafer-oop
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-instance-class-and-static-methods-demystified
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-hettinger-super
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-super
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-numpy-subclassing-docs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-data-classes
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-primer-on-python-decorators
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-corey-schafer-decorators
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-hunner-iterator-protocol
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-beazley-generator-tricks
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-introduction-to-python-generators
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pep-380
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-with-statement
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-exceptions
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-type-checking
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-mypy-docs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-modules-packages
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-import
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-itertools
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-pathlib
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-logging
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pymotw-python-module-of-the-week
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pep-008
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-rhodes-python-patterns
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-concurrency
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-gil
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-beazley-python-concurrency-live
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-async-io-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-rohrer-e2eml
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-kaptur-byterun
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-composing-programs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-guo-cpython-internals
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-products-cpython-internals-book
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-eval-function
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pep-562
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-isinstance
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pep-342
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-pyo3-guide
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-maturin-guide
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-build-python-c-extension-module
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-rust-numpy-documentation
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-python-bindings-overview
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-cython-docs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-implementing-graphs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-clrs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-en-wikipedia-org-wiki-common-subexpression-elimination
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-crafting-interpreters
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-engineering-a-compiler
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-green-tree-snakes
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-github-com-bloomberg-memray
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-jiffyclub-github-io-snakeviz
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-github-com-pyutils-line-profiler
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-github-com-benfred-py-spy
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+source_selections:
+- route_id: route-python-roadmap-01-02
+  source_id: source-automate-boring-stuff
+  locator: '"Automate the Boring Stuff — Python basics, flow control and functions"; Sweigart_Automate-the-Boring-Stuff.pdf,
+    PDF pp. 37-106'
+  purpose: 'Existing helpful-now placement — Book: Automate the Boring Stuff — dip back in for any syntax
+    hole.'
+  stage_ids:
+  - stage-python-step-01-baseline-syntax-and-core-mechanics
+- route_id: route-python-roadmap-01-04
+  source_id: source-beyond-basic-stuff-python
+  locator: '"Beyond the Basic Stuff with Python - Invent with Python"; Chapter 4 — Common Python Gotchas'
+  purpose: 'Existing helpful-now placement — Bridge: Beyond the Basic Stuff with Python (Sweigart, free
+    online) — ch. 4 (common Python gotchas) is a 30-min pass worth doing once.'
+  stage_ids:
+  - stage-python-step-01-baseline-syntax-and-core-mechanics
+- route_id: route-python-roadmap-02-02
+  source_id: source-fluent-python
+  locator: '"Chapter 6. Object References, Mutability, and Recycling"; fluent-python.pdf, PDF pp. 231-260'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 6 — PY.02 ✅. Re-read §"Identity, Equality, Aliases"
+    + §"Function Parameters as References."'
+  stage_ids:
+  - stage-python-step-02-names-objects-references-mutability
+- route_id: route-python-roadmap-02-03
+  source_id: source-batchelder-names
+  locator: '"Facts and myths about Python names and values | Ned Batchelder"'
+  purpose: 'Existing helpful-now placement — Core: Ned Batchelder — Facts and myths about Python names
+    and values ⭐ (~40 min), or the PyCon talk.'
+  stage_ids:
+  - stage-python-step-02-names-objects-references-mutability
+- route_id: route-python-roadmap-03-02
+  source_id: source-realpython-legb
+  locator: '"Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python"'
+  purpose: 'Existing helpful-now placement — Core: Real Python — LEGB Rule — §LEGB + §functions.'
+  stage_ids:
+  - stage-python-step-03-scope-namespaces-functions-as-objects
+- route_id: route-python-roadmap-03-03
+  source_id: source-fluent-python
+  locator: '"Chapter 7. Functions as First-Class Objects"; fluent-python.pdf, PDF pp. 261-282'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 7 (Functions as First-Class Objects) — PY.05
+    ⬜. Functions are objects with attributes; `def` executes at runtime, not at parse time.'
+  stage_ids:
+  - stage-python-step-03-scope-namespaces-functions-as-objects
+- route_id: route-python-roadmap-03-06
+  source_id: source-hettinger-idiomatic-python
+  locator: '"Transforming Code into Beautiful, Idiomatic Python" — function values and key functions'
+  purpose: 'Existing helpful-now placement — Video: any Hettinger talk — watch how he passes functions
+    as values without ceremony.'
+  stage_ids:
+  - stage-python-step-03-scope-namespaces-functions-as-objects
+- route_id: route-python-roadmap-04-02
+  source_id: source-fluent-python
+  locator: '"Chapter 1. The Python Data Model / Chapter 11. A Pythonic Object / Chapter 11. A Pythonic
+    Object"; fluent-python.pdf, PDF pp. 33-50, pp. 393-426, pp. 393-426'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 1 (Data Model) — PY.01 ✅; FP Ch 11 (A Pythonic
+    Object) — PY.07 ✅. Re-read Ch 11 §`__repr__`/`__str__`, §hashable objects, §`__format__`.'
+  stage_ids:
+  - stage-python-step-04-the-data-model-and-dunder-methods
+- route_id: route-python-roadmap-04-05
+  source_id: source-powell-python-expert
+  locator: '"James Powell: So you want to be a Python expert? | PyData Seattle 2017 - YouTube"'
+  purpose: 'Existing helpful-now placement — Video: James Powell — "So you want to be a Python expert?"
+    — first 25 min is the best live demo of the data model''s logic.'
+  stage_ids:
+  - stage-python-step-04-the-data-model-and-dunder-methods
+- route_id: route-python-roadmap-04-06
+  source_id: source-fluent-python-example-code
+  locator: '"Fluent Python example-code-2e", 01-data-model/'
+  purpose: 'Existing helpful-now placement — Code: FP example-code-2e `01-data-model/` (FrenchDeck, Vector)
+    — retype FrenchDeck from memory.'
+  stage_ids:
+  - stage-python-step-04-the-data-model-and-dunder-methods
+- route_id: route-python-roadmap-05-02
+  source_id: source-fluent-python
+  locator: '"Chapter 2. An Array of Sequences"; fluent-python.pdf, PDF pp. 51-106'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 2 (Sequences) — PY.03 ⬜ — slicing, unpacking,
+    `sort` vs `sorted`, when lists are wrong.'
+  stage_ids:
+  - stage-python-step-05-built-in-containers-and-comprehensions
+- route_id: route-python-roadmap-05-03
+  source_id: source-fluent-python
+  locator: '"Chapter 3. Dictionaries and Sets"; fluent-python.pdf, PDF pp. 107-146'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 3 (Dicts and Sets) — PY.04 ⬜ — hashing, dict
+    views, `setdefault`/`defaultdict`, set algebra, dict ordering (insertion-order since 3.7).'
+  stage_ids:
+  - stage-python-step-05-built-in-containers-and-comprehensions
+- route_id: route-python-roadmap-05-04
+  source_id: source-realpython-list-comprehension-python
+  locator: '"Python List Comprehension: Tutorial With Examples – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — List Comprehensions — incl. when not
+    to use them.'
+  stage_ids:
+  - stage-python-step-05-built-in-containers-and-comprehensions
+- route_id: route-python-roadmap-05-06
+  source_id: source-fluent-python-example-code
+  locator: '"Fluent Python example-code-2e", 02-array-seq/ and 03-dict-set/'
+  purpose: 'Existing helpful-now placement — Code: example-code-2e `02-array-seq/`, `03-dict-set/`; rewrite
+    three of your own mlprov/job loops as comprehensions.'
+  stage_ids:
+  - stage-python-step-05-built-in-containers-and-comprehensions
+- route_id: route-python-roadmap-06-02
+  source_id: source-fluent-python
+  locator: '"Chapter 4. Unicode Text Versus Bytes"; fluent-python.pdf, PDF pp. 147-192'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 4 (Unicode Text vs Bytes) — §"Character Issues"
+    + §"Basic Encoders/Decoders" + §"Handling Text Files" (the "Unicode sandwich"); skim the rest.'
+  stage_ids:
+  - stage-python-step-06-strings-bytes-and-formatting
+- route_id: route-python-roadmap-06-03
+  source_id: source-realpython-python-string-formatting
+  locator: '"Python String Formatting: Available Tools and Their Features – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — f-strings / string formatting — format-spec
+    mini-language (`f"{x:.3f}"`, `{x!r}`).'
+  stage_ids:
+  - stage-python-step-06-strings-bytes-and-formatting
+- route_id: route-python-roadmap-07-02
+  source_id: source-python-docs-classes-mro
+  locator: '"9. Classes — Python 3.15.2 documentation"'
+  purpose: 'Existing helpful-now placement — Core: Official tutorial ch. 9 (Classes) §9.1–9.4 — classes
+    are namespaces; attribute lookup is dict lookup.'
+  stage_ids:
+  - stage-python-step-07-classes-i-mechanics
+- route_id: route-python-roadmap-07-03
+  source_id: source-corey-schafer-oop
+  locator: '"Python OOP Tutorials - Working with Classes - YouTube"'
+  purpose: 'Existing helpful-now placement — Video + code: Corey Schafer OOP playlist #1–3, code at CoreyMSchafer/code_snippets.'
+  stage_ids:
+  - stage-python-step-07-classes-i-mechanics
+- route_id: route-python-roadmap-07-04
+  source_id: source-realpython-instance-class-and-static-methods-demystified
+  locator: '"Python''s Instance, Class, and Static Methods Demystified – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Instance, Class, and Static Methods
+    Demystified.'
+  stage_ids:
+  - stage-python-step-07-classes-i-mechanics
+- route_id: route-python-roadmap-08-02
+  source_id: source-hettinger-super
+  locator: '"Python’s super() considered super! – Deep Thoughts by Raymond Hettinger"'
+  purpose: 'Existing helpful-now placement — Core: Hettinger — Python''s super() considered super! ⭐ —
+    THE mental model: super() = next in MRO.'
+  stage_ids:
+  - stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+- route_id: route-python-roadmap-08-03
+  source_id: source-fluent-python
+  locator: '"Chapter 14. Inheritance: For Better or for Worse"; fluent-python.pdf, PDF pp. 517-548'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 14 (Inheritance) — PY.08 ✅. Re-read §"Multiple
+    Inheritance and MRO" + §"Mixin Classes" + §"Subclassing Built-In Types Is Tricky."'
+  stage_ids:
+  - stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+- route_id: route-python-roadmap-08-04
+  source_id: source-realpython-python-super
+  locator: '"Supercharge Your Classes With Python super() – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Supercharge Your Classes With super().'
+  stage_ids:
+  - stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+- route_id: route-python-roadmap-08-06
+  source_id: source-numpy-subclassing-docs
+  locator: '"Subclassing ndarray — NumPy v2.5 Manual"'
+  purpose: 'Existing helpful-now placement — Practical: numpy subclassing guide + pandas subclassing guide
+    — your mlprov reality.'
+  stage_ids:
+  - stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+- route_id: route-python-roadmap-09-02
+  source_id: source-fluent-python
+  locator: '"Chapter 5. Data Class Builders"; fluent-python.pdf, PDF pp. 193-230'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 5 (Data Class Builders) — PY.09 ✅. Re-read §"Main
+    Features" comparison table.'
+  stage_ids:
+  - stage-python-step-09-data-class-builders
+- route_id: route-python-roadmap-09-03
+  source_id: source-realpython-python-data-classes
+  locator: '"Data Classes in Python (Guide) – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Data Classes — `field(default_factory=...)`,
+    `frozen=True`, `__post_init__`.'
+  stage_ids:
+  - stage-python-step-09-data-class-builders
+- route_id: route-python-roadmap-10-02
+  source_id: source-fluent-python
+  locator: '"Chapter 13. Interfaces, Protocols, and ABCs"; fluent-python.pdf, PDF pp. 461-516'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 13 (Interfaces, Protocols, ABCs) — PY.11 ⬜ —
+    the four interface mechanisms: duck typing, goose typing (ABCs), static protocols, static duck typing.'
+  stage_ids:
+  - stage-python-step-10-duck-typing-abcs-protocols
+- route_id: route-python-roadmap-10-05
+  source_id: source-fluent-python-example-code
+  locator: '"Fluent Python example-code-2e", 13-protocl-abc/ (verified upstream directory; original label
+    retained)'
+  purpose: 'Existing helpful-now placement — Code: example-code-2e `13-protocol-abc/`.'
+  stage_ids:
+  - stage-python-step-10-duck-typing-abcs-protocols
+- route_id: route-python-roadmap-11-03
+  source_id: source-fluent-python
+  locator: '"Chapter 9. Decorators and Closures"; fluent-python.pdf, PDF pp. 333-370'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 9 (Decorators and Closures) — PY.10 ⬜ — registration
+    decorators, `functools.wraps`, `lru_cache`, `singledispatch`.'
+  stage_ids:
+  - stage-python-step-11-closures-and-decorators
+- route_id: route-python-roadmap-11-04
+  source_id: source-realpython-primer-on-python-decorators
+  locator: '"Primer on Python Decorators – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Primer on Python Decorators ⭐ — do
+    this FIRST, then FP Ch 9.'
+  stage_ids:
+  - stage-python-step-11-closures-and-decorators
+- route_id: route-python-roadmap-11-05
+  source_id: source-corey-schafer-decorators
+  locator: '"Python Tutorial: Decorators - Dynamically Alter The Functionality Of Your Functions - YouTube"'
+  purpose: 'Existing helpful-now placement — Video: Corey Schafer — Decorators.'
+  stage_ids:
+  - stage-python-step-11-closures-and-decorators
+- route_id: route-python-roadmap-12-02
+  source_id: source-fluent-python
+  locator: '"Chapter 17. Iterators, Generators,  and Classic Coroutines"; fluent-python.pdf, PDF pp. 623-686'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 17 (Iterators, Generators, Classic Coroutines)
+    — PY.06 ⬜ — read the generators section first; the coroutines section is Step 24.'
+  stage_ids:
+  - stage-python-step-12-iterators-generators-lazy-pipelines
+  - stage-python-step-24-generator-coroutines-send-throw-stopiteration-value
+- route_id: route-python-roadmap-12-03
+  source_id: source-hunner-iterator-protocol
+  locator: '"The Iterator Protocol: How ''For Loops'' Work in Python"'
+  purpose: 'Existing helpful-now placement — Article: Trey Hunner — The Iterator Protocol: How for Loops
+    Work.'
+  stage_ids:
+  - stage-python-step-12-iterators-generators-lazy-pipelines
+- route_id: route-python-roadmap-12-04
+  source_id: source-beazley-generator-tricks
+  locator: '"GitHub - dabeaz/generators: Generator Tricks for Systems Programmers (Tutorial)"'
+  purpose: 'Existing helpful-now placement — Classic: David Beazley — Generator Tricks for Systems Programmers
+    ⭐ — generator pipelines over logs; career-grade for data engineering.'
+  stage_ids:
+  - stage-python-step-12-iterators-generators-lazy-pipelines
+- route_id: route-python-roadmap-12-05
+  source_id: source-realpython-introduction-to-python-generators
+  locator: '"How to Use Generators and yield in Python – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Introduction to Generators.'
+  stage_ids:
+  - stage-python-step-12-iterators-generators-lazy-pipelines
+- route_id: route-python-roadmap-13-02
+  source_id: source-fluent-python
+  locator: '"Chapter 18. with, match, and else Blocks"; fluent-python.pdf, PDF pp. 687-724'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 18 (with, match, else) — PY.14 ⬜.'
+  stage_ids:
+  - stage-python-step-13-context-managers-with-else-match
+- route_id: route-python-roadmap-13-03
+  source_id: source-realpython-python-with-statement
+  locator: '"Python''s with Statement: Manage External Resources Safely – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Context Managers and the with Statement.'
+  stage_ids:
+  - stage-python-step-13-context-managers-with-else-match
+- route_id: route-python-roadmap-14-02
+  source_id: source-python-docs
+  locator: '"8. Errors and Exceptions — Python 3.15.2 documentation"'
+  purpose: 'Existing helpful-now placement — Core: Official tutorial ch. 8 — `else`, `finally`, exception
+    chaining (`raise X from Y`).'
+  stage_ids:
+  - stage-python-step-14-exceptions-and-error-handling
+- route_id: route-python-roadmap-14-03
+  source_id: source-realpython-python-exceptions
+  locator: '"Python Exceptions: An Introduction – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Python Exceptions.'
+  stage_ids:
+  - stage-python-step-14-exceptions-and-error-handling
+- route_id: route-python-roadmap-15-02
+  source_id: source-fluent-python
+  locator: '"Chapter 8. Type Hints in Functions / Chapter 15. More About Type Hints"; fluent-python.pdf,
+    PDF pp. 283-332, pp. 549-590'
+  purpose: 'Existing helpful-now placement — Core: FP Ch 8 (Type Hints in Functions) — PY.12 ⬜; FP Ch
+    15 (more types) — PY.13 ⬜.'
+  stage_ids:
+  - stage-python-step-15-type-hints
+- route_id: route-python-roadmap-15-03
+  source_id: source-realpython-python-type-checking
+  locator: '"Python Type Checking (Guide) – Real Python"'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Python Type Checking — practical mypy
+    setup.'
+  stage_ids:
+  - stage-python-step-15-type-hints
+- route_id: route-python-roadmap-16-02
+  source_id: source-realpython-python-modules-packages
+  locator: '"Python Modules and Packages – An Introduction – Real Python"'
+  purpose: 'Existing helpful-now placement — Core: Real Python — Python Modules and Packages.'
+  stage_ids:
+  - stage-python-step-16-modules-imports-packages-environments
+- route_id: route-python-roadmap-16-03
+  source_id: source-realpython-python-import
+  locator: '"Python import: Advanced Techniques and Tips – Real Python"'
+  purpose: 'Existing helpful-now placement — Deeper: Real Python — Python import: Advanced Techniques
+    — §basics + §circular imports + §the import system.'
+  stage_ids:
+  - stage-python-step-16-modules-imports-packages-environments
+  - stage-python-step-23-import-machinery-and-monkey-patching
+- route_id: route-python-roadmap-18-02
+  source_id: source-hettinger-idiomatic-python
+  locator: '"Transforming Code into Beautiful, Idiomatic Python - YouTube"'
+  purpose: 'Existing helpful-now placement — Video: Hettinger — Transforming Code into Beautiful, Idiomatic
+    Python ⭐ (~50 min) — the single highest-value hour in this file.'
+  stage_ids:
+  - stage-python-step-18-pythonic-style-and-idioms
+- route_id: route-python-roadmap-22-02
+  source_id: source-realpython-python-isinstance
+  locator: '"isinstance() | Python’s Built-in Functions – Real Python"'
+  purpose: 'Existing helpful-now placement — Core: Real Python — Python''s `isinstance` and `issubclass`
+    — when to use it, when duck typing is better.'
+  stage_ids:
+  - stage-python-step-22-runtime-introspection-and-reflection
+- route_id: route-python-roadmap-22-03
+  source_id: source-python-docs
+  locator: '"Built-in functions — Python 3.15.2 documentation"'
+  purpose: 'Existing helpful-now placement — Core: Official docs — Built-in functions: `getattr`, `setattr`,
+    `hasattr`, `delattr` — the reflection quad. `getattr(obj, name, default)` is the safe form; `setattr(mod,
+    name, value)` patches attributes on anything, including modules (Step 23).'
+  stage_ids:
+  - stage-python-step-22-runtime-introspection-and-reflection
+- route_id: route-python-roadmap-23-06
+  source_id: source-python-docs
+  locator: '"unittest.mock — mock object library — Python 3.15.2 documentation" #unittest.mock.patch'
+  purpose: 'Existing helpful-now placement — Reference: Python docs — `unittest.mock.patch` — the context
+    manager does exactly this; understanding it demystifies Stratum''s manual version.'
+  stage_ids:
+  - stage-python-step-23-import-machinery-and-monkey-patching
+- route_id: route-python-roadmap-24-04
+  source_id: source-realpython-introduction-to-python-generators
+  locator: '"How to Use Generators and yield in Python – Real Python" #using-advanced-generator-methods'
+  purpose: 'Existing helpful-now placement — Article: Real Python — Generators and Coroutines — §"Advanced
+    Generator Methods."'
+  stage_ids:
+  - stage-python-step-24-generator-coroutines-send-throw-stopiteration-value
+- route_id: route-python-roadmap-25-05
+  source_id: source-pyo3-guide
+  locator: '"Introduction - PyO3 user guide"'
+  purpose: 'Existing helpful-now placement — PyO3 — the Rust↔Python bridge · Core: PyO3 user guide ⭐ —
+    start with "Getting started" + "Python classes" + "Calling Python from Rust." This is the primary
+    resource; it''s well-written.'
+  stage_ids:
+  - stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions
+- route_id: route-python-roadmap-25-08
+  source_id: source-maturin-guide
+  locator: '"Introduction - Maturin User Guide"'
+  purpose: 'Existing helpful-now placement — maturin — the build tool · Core: maturin docs — `maturin
+    develop` builds and installs the extension in-place (like `pip install -e .`). `maturin build` produces
+    a wheel.'
+  stage_ids:
+  - stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions
+- route_id: route-python-roadmap-25-11
+  source_id: source-realpython-build-python-c-extension-module
+  locator: '"Building a Python C Extension Module – Real Python"'
+  purpose: 'Existing helpful-now placement — maturin — the build tool · Practical: Real Python — Build
+    a Python C Extension Module — C version; read for mental model, then prefer PyO3 in practice.'
+  stage_ids:
+  - stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions
+- route_id: route-python-roadmap-26-04
+  source_id: source-python-implementing-graphs
+  locator: '"Python Patterns - Implementing Graphs | Python.org"'
+  purpose: 'Existing helpful-now placement — Core graph representation · Article: Python.org — Implementing
+    Graphs — adjacency lists and graph traversal in Python.'
+  stage_ids:
+  - stage-python-step-26-dag-ir-patterns-in-python
+- route_id: route-python-roadmap-26-05
+  source_id: source-clrs
+  locator: '"CLRS, Kapitel 22 — Elementare Graphenalgorithmen"; clrs-de.pdf, PDF pp. 619-651'
+  purpose: 'Existing helpful-now placement — Core graph representation · Book: CLRS §22 (Graph algorithms,
+    already in your Algo2 plan) — the formal version; the Stratum code is direct applied CLRS.'
+  stage_ids:
+  - stage-python-step-26-dag-ir-patterns-in-python
+- route_id: route-python-roadmap-26-12
+  source_id: source-en-wikipedia-org-wiki-common-subexpression-elimination
+  locator: '"Common subexpression elimination - Wikipedia"'
+  purpose: 'Existing helpful-now placement — CSE (Common Subexpression Elimination) · Article: Wikipedia
+    — Common subexpression elimination — concept overview; then read `_cse.py`.'
+  stage_ids:
+  - stage-python-step-26-dag-ir-patterns-in-python
+- route_id: route-python-roadmap-26-17
+  source_id: source-crafting-interpreters
+  locator: '"Crafting Interpreters"'
+  purpose: 'Existing helpful-now placement — Resources · Book: Crafting Interpreters (Nystrom, free online)
+    — the best accessible intro to IR design, AST walking, and optimization passes. Not Python-specific
+    but your C++ background makes Part II very readable.'
+  stage_ids:
+  - stage-python-step-26-dag-ir-patterns-in-python
+- route_id: route-python-roadmap-26-18
+  source_id: source-engineering-a-compiler
+  locator: '"Engineering a Compiler", 3rd ed., chapters 4 and 8–10 (publisher contents; full text not
+    locally registered)'
+  purpose: 'Existing helpful-now placement — Resources · Book: Engineering a Compiler (Cooper & Torczon,
+    3rd ed.) — the textbook for compiler middle-end (IR, optimization, register allocation). Graduate-level;
+    dip in when you hit a specific Stratum concept.'
+  stage_ids:
+  - stage-python-step-26-dag-ir-patterns-in-python
+- route_id: route-python-roadmap-19-09
+  source_id: source-rohrer-e2eml
+  locator: '"Brandon Rohrer — End-to-End Machine Learning blog/courses"'
+  purpose: 'Existing helpful-now placement — Owned series: Brandon Rohrer — Making Python Faster ⭐ (`PY`
+    `JK`), plus multiprocessing and threading — practical and measurement-first; the multiprocessing/threading
+    pieces back Stratum''s `runtime/_scheduler.py`.'
+  stage_ids:
+  - stage-python-step-28-cpu-and-timing-profiling-making-python-faster
 artifacts:
   ultimate_reference: note-python-intermediate-roadmap
 workspace_ids: []
 current_study_map: study-map-python-intermediate-roadmap
+knowledge_map:
+  summary: Routing topics transcribed from the existing stage objectives; study order and scope retained.
+  nodes:
+  - id: knowledge-python-roadmap-01
+    title: 'Step 1 — Baseline: syntax & core mechanics'
+    summary: You're past this. Listed for gap-fills only.
+  - id: knowledge-python-roadmap-02
+    title: Step 2 — Names, objects, references, mutability
+    summary: 'The single most important mental-model fix from C++. Everything else builds on it. Symptoms
+      it repairs: aliasing surprises, mutable default arguments, shallow vs deep copy confusion, "is `=`
+      a copy?"'
+  - id: knowledge-python-roadmap-03
+    title: Step 3 — Scope, namespaces, functions as objects
+    summary: 'Repair the symptoms this step names: `UnboundLocalError`, confusion about what a function
+      "sees", `global`/`nonlocal`, passing functions around.'
+  - id: knowledge-python-roadmap-04
+    title: Step 4 — The data model & dunder methods
+    summary: 'The "grand unified theory" of Python: `len()`, operators, `for` loops, `with` — all just
+      call dunders. Symptoms it repairs: dunders feel magic; you don''t know which to implement; `print(obj)`
+      shows `<object at 0x...>`.'
+  - id: knowledge-python-roadmap-05
+    title: Step 5 — Built-in containers & comprehensions
+    summary: 'Repair the symptoms this step names: misusing lists where sets/dicts fit, slice confusion,
+      sort vs sorted, clunky loops that should be comprehensions.'
+  - id: knowledge-python-roadmap-06
+    title: Step 6 — Strings, bytes, and formatting
+    summary: 'Repair the symptoms this step names: `UnicodeDecodeError`, `b''...''` confusion, ugly string
+      building.'
+  - id: knowledge-python-roadmap-07
+    title: 'Step 7 — Classes I: mechanics'
+    summary: 'Repair the symptoms this step names: `self` feels magic, instance vs class attributes blur,
+      `@classmethod` vs `@staticmethod` unclear.'
+  - id: knowledge-python-roadmap-08
+    title: 'Step 8 — Classes II: inheritance, super(), MRO, mixins'
+    summary: 'Your named headache. The repair plan''s Sessions 3–4 are the drill version of this step.
+      Symptoms it repairs: super() confusion, mixin `__init__` chains, subclassing pandas/numpy/sklearn,
+      diamond inheritance.'
+  - id: knowledge-python-roadmap-09
+    title: Step 9 — Data class builders
+    summary: 'Repair the symptoms this step names: writing boilerplate `__init__`/`__repr__`/`__eq__`
+      by hand.'
+  - id: knowledge-python-roadmap-10
+    title: Step 10 — Duck typing, ABCs, protocols
+    summary: 'Repair the symptoms this step names: "what type does this function accept?", `isinstance`
+      overuse, designing interfaces.'
+  - id: knowledge-python-roadmap-11
+    title: Step 11 — Closures & decorators
+    summary: 'Repair the symptoms this step names: `@something` syntax feels magic, can''t write a decorator
+      with arguments, losing function metadata.'
+  - id: knowledge-python-roadmap-12
+    title: Step 12 — Iterators, generators, lazy pipelines
+    summary: 'Repair the symptoms this step names: `yield` confusion, iterator-exhausted-once surprises,
+      memory blowups from loading whole files.'
+  - id: knowledge-python-roadmap-13
+    title: Step 13 — Context managers, with / else / match
+    summary: 'Repair the symptoms this step names: `with` feels like ritual, can''t write your own, `try/else`
+      semantics unclear.'
+  - id: knowledge-python-roadmap-14
+    title: Step 14 — Exceptions & error handling
+    summary: 'Repair the symptoms this step names: bare `except:`, unsure what to catch, when to define
+      custom exceptions.'
+  - id: knowledge-python-roadmap-15
+    title: Step 15 — Type hints
+    summary: 'Repair the symptoms this step names: reading hinted signatures in skrub/sklearn/Stratum,
+      `Optional`, generics, mypy errors.'
+  - id: knowledge-python-roadmap-16
+    title: Step 16 — Modules, imports, packages, environments
+    summary: 'Repair the symptoms this step names: `ModuleNotFoundError`, `__init__.py` mystery, circular
+      imports, "works in IDE not terminal."'
+  - id: knowledge-python-roadmap-17
+    title: Step 17 — Standard library power tools
+    summary: 'Repair the symptoms this step names: writing 10 lines for what stdlib does in 1; manual
+      path surgery; nested loops that should be `itertools`.'
+  - id: knowledge-python-roadmap-18
+    title: Step 18 — Pythonic style & idioms
+    summary: 'Repair the symptoms this step names: code works but reads like translated C++.'
+  - id: knowledge-python-roadmap-19
+    title: Step 19 — Concurrency & the GIL
+    summary: Relevant for AMLS parallelism + job perf work.
+  - id: knowledge-python-roadmap-20
+    title: Step 20 — Interpreter internals
+    summary: The "how does it actually work" itch. Your C++ background is an asset here.
+  - id: knowledge-python-roadmap-21
+    title: 'Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`'
+    summary: Read to understand libraries; you will write `@property` often, descriptors occasionally,
+      metaclasses almost never.
+  - id: knowledge-python-roadmap-22
+    title: Step 22 — Runtime introspection & reflection
+    summary: 'Used pervasively in Stratum: `isinstance`, `getattr`, `hasattr`, `type`, `vars`, `inspect`.
+      Symptoms it repairs: confused by code that reads/modifies objects without knowing their type at
+      write-time; `isinstance` chains; `getattr(obj, name, default)` calls.'
+  - id: knowledge-python-roadmap-23
+    title: Step 23 — Import machinery & monkey-patching
+    summary: 'Stratum''s `patching/_patching.py` is a full monkey-patching system. Understanding it requires
+      knowing how Python''s import system works. Symptoms it repairs: `importlib.import_module` looks
+      foreign; `setattr(module, "ClassName", MyClass)` seems wrong; "why would you replace a class inside
+      another module?"'
+  - id: knowledge-python-roadmap-24
+    title: 'Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`'
+    summary: 'Used in `ImplOp.process()` in Stratum to fuse a generator-based evaluation protocol with
+      regular function calls. Symptoms it repairs: `gen.send(value)` looks wrong; confused by `StopIteration
+      as e: return e.value`; difference between a generator and a coroutine is unclear.'
+  - id: knowledge-python-roadmap-25
+    title: 'Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions'
+    summary: 'Stratum has a Rust backend (`_rust_backend_native`) compiled with PyO3/maturin. This is
+      what "developing microkernels underneath Python" means. Symptoms it repairs: `.so`/`.pyd` import
+      fails or succeeds mysteriously; `from . import _rust_backend_native` looks like magic; unsure how
+      to write and build a Rust function callable from Python.'
+  - id: knowledge-python-roadmap-26
+    title: Step 26 — DAG / IR patterns in Python
+    summary: 'Stratum''s entire optimizer is a DAG transformation pipeline in Python. These patterns come
+      from compiler design — PL theory applied in Python. Symptoms it repairs: code that builds and transforms
+      graph structures feels ad-hoc; unclear how to visit all nodes, replace nodes, maintain input/output
+      edges consistently.'
+  - id: knowledge-python-roadmap-27
+    title: Step 27 — `__slots__`, `weakref`, memory layout
+    summary: 'For performance-sensitive code; relevant when Op DAGs get large. Symptoms it repairs: high
+      memory usage from many small objects; `weakref` appearing in buffer pool code; `__slots__` in scikit-learn
+      internals.'
+  - id: knowledge-python-roadmap-28
+    title: Step 28 — CPU & timing profiling ("making Python faster")
+    summary: 'Step 27 covers memory; this is its time counterpart. A cost-based optimizer only pays off
+      if you can measure where time actually goes — this is the profiling half the roadmap was missing.
+      Symptoms it repairs: "it feels slow" with no numbers; guessing at hot spots; optimizing the wrong
+      loop; no baseline before/after a rewrite.'

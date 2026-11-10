@@ -30,17 +30,24 @@ stages:
       drills, done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    route_id: route-python-depth-0-1
+    locator: stage-0-names-and-identity.md
   - kind: practise
     label: Stage 0 self-test notebook — 20 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
+    route_id: route-python-depth-0-2
+    locator: stage-0-names-and-identity.ipynb
   - kind: reference
     label: Ladder README — entry point, order, and the two shorter paths.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/README.md
+    route_id: route-python-depth-0-3
+    locator: README.md
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-0-names-and-identity/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-0
 - id: stage-python-depth-1-functions-as-objects
   number: 2
   title: Stage 1 — Functions as first-class objects
@@ -60,13 +67,18 @@ stages:
       reading, drills, done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+    route_id: route-python-depth-1-1
+    locator: stage-1-functions-as-objects.md
   - kind: practise
     label: Stage 1 self-test notebook — 19 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+    route_id: route-python-depth-1-2
+    locator: stage-1-functions-as-objects.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-1-functions-as-objects/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-1
 - id: stage-python-depth-2-scope-and-closures
   number: 3
   title: Stage 2 — Scope & closures
@@ -85,13 +97,18 @@ stages:
       done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+    route_id: route-python-depth-2-1
+    locator: stage-2-scope-and-closures.md
   - kind: practise
     label: Stage 2 self-test notebook — 19 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+    route_id: route-python-depth-2-2
+    locator: stage-2-scope-and-closures.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-2-scope-and-closures/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-2
 - id: stage-python-depth-3-decorators
   number: 4
   title: Stage 3 — Decorators
@@ -110,13 +127,18 @@ stages:
       traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-3-decorators.md
+    route_id: route-python-depth-3-1
+    locator: stage-3-decorators.md
   - kind: practise
     label: Stage 3 self-test notebook — 20 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+    route_id: route-python-depth-3-2
+    locator: stage-3-decorators.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-3-decorators/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-3
 - id: stage-python-depth-4-classes-as-objects
   number: 5
   title: Stage 4 — Classes as objects
@@ -136,13 +158,18 @@ stages:
       done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+    route_id: route-python-depth-4-1
+    locator: stage-4-classes-as-objects.md
   - kind: practise
     label: Stage 4 self-test notebook — 20 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+    route_id: route-python-depth-4-2
+    locator: stage-4-classes-as-objects.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-4-classes-as-objects/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-4
 - id: stage-python-depth-5-imports-and-registration
   number: 6
   title: Stage 5 — Imports & registration
@@ -162,13 +189,18 @@ stages:
       done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+    route_id: route-python-depth-5-1
+    locator: stage-5-imports-and-registration.md
   - kind: practise
     label: Stage 5 self-test notebook — 17 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+    route_id: route-python-depth-5-2
+    locator: stage-5-imports-and-registration.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-5-imports-and-registration/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-5
 - id: stage-python-depth-6-data-model-and-dunders
   number: 7
   title: Stage 6 — The data model & dunders
@@ -188,13 +220,18 @@ stages:
       drills, done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+    route_id: route-python-depth-6-1
+    locator: stage-6-data-model-and-dunders.md
   - kind: practise
     label: Stage 6 self-test notebook — 18 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+    route_id: route-python-depth-6-2
+    locator: stage-6-data-model-and-dunders.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-6-data-model-and-dunders/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-6
 - id: stage-python-depth-7-generators-and-iterators
   number: 8
   title: Stage 7 — Generators & iterators
@@ -214,13 +251,18 @@ stages:
       done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+    route_id: route-python-depth-7-1
+    locator: stage-7-generators-and-iterators.md
   - kind: practise
     label: Stage 7 self-test notebook — 15 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+    route_id: route-python-depth-7-2
+    locator: stage-7-generators-and-iterators.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-7-generators-and-iterators/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-7
 - id: stage-python-depth-8-interfaces-and-dispatch
   number: 9
   title: Stage 8 — Interfaces & dispatch
@@ -240,13 +282,18 @@ stages:
       done-when, traps checklist.'
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+    route_id: route-python-depth-8-1
+    locator: stage-8-interfaces-and-dispatch.md
   - kind: practise
     label: Stage 8 self-test notebook — 14 predict-then-run questions with folded solutions.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+    route_id: route-python-depth-8-2
+    locator: stage-8-interfaces-and-dispatch.ipynb
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-8-interfaces-and-dispatch/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-8
 - id: stage-python-depth-capstone
   number: 10
   title: Capstone — rebuild blind
@@ -264,10 +311,15 @@ stages:
     label: Capstone notebook — the ladder's terminal self-test.
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/capstone.ipynb
+    route_id: route-python-depth-9-1
+    locator: capstone.ipynb
   - kind: reference
     label: SHELF.md — cross-cutting topics no stage owns (testing, debugging, performance, style).
     source_id: source-python-depth-drills
     vault_path: material://source-python-depth-drills/SHELF.md
+    route_id: route-python-depth-9-2
+    locator: SHELF.md
   working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-capstone/notes.md
   attachments: []
   source_feedback: []
+  knowledge_node_id: knowledge-python-depth-capstone

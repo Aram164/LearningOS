@@ -6,9 +6,141 @@ title: Python OOP & scope repair
 order: 3
 scope: Seeded from the existing roadmap without inferring completion.
 status: ready
-scope_sources: []
-source_selections: []
+scope_sources:
+- source_id: source-python-depth-drills
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-fluent-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-slatkin-effective-python
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-docs-classes-mro
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-batchelder-names
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-realpython-legb
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-python-tutor
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-corey-schafer-oop
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-hettinger-super
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-tu-python-ml-course
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-numpy-subclassing-docs
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+- source_id: source-kaptur-byterun
+  authority: reference
+  locator: Exact existing study-map placements; no expansion of unit scope.
+source_selections:
+- route_id: route-python-oop-01-02
+  source_id: source-batchelder-names
+  locator: '"Facts and myths about Python names and values | Ned Batchelder"'
+  purpose: Existing helpful-now placement — Read (~70 min) · Ned Batchelder — Facts and myths about Python
+    names and values (~40 min) — or the PyCon talk
+  stage_ids:
+  - stage-python-repair-session-1-names-values-scope-the-root-of-everything
+- route_id: route-python-oop-01-03
+  source_id: source-realpython-legb
+  locator: '"Python Scope and the LEGB Rule: Resolving Names in Your Code – Real Python"'
+  purpose: Existing helpful-now placement — Read (~70 min) · Real Python — LEGB Rule — only §"Python Scope
+    vs Namespace" and §"functions"; skim the rest
+  stage_ids:
+  - stage-python-repair-session-1-names-values-scope-the-root-of-everything
+- route_id: route-python-oop-01-04
+  source_id: source-python-tutor
+  locator: '"Python Tutor - Python Online Compiler with Visual Debugger"'
+  purpose: 'Existing helpful-now placement — Drill (~20 min) · paste each into pythontutor.com, predict
+    first:'
+  stage_ids:
+  - stage-python-repair-session-1-names-values-scope-the-root-of-everything
+- route_id: route-python-oop-02-02
+  source_id: source-corey-schafer-oop
+  locator: '"Python OOP Tutorials - Working with Classes - YouTube"'
+  purpose: 'Existing helpful-now placement — Watch + code along (~60 min) · Corey Schafer OOP playlist
+    videos #2 (class variables) and #3 (classmethods/staticmethods). His code: github.com/CoreyMSchafer/code_snippets
+    → Object-Oriented.'
+  stage_ids:
+  - stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes
+- route_id: route-python-oop-03-02
+  source_id: source-corey-schafer-oop
+  locator: '"Python OOP Tutorial 4: Inheritance - Creating Subclasses" (playlist video 4)'
+  purpose: 'Existing helpful-now placement — Watch first (~25 min) · Corey Schafer #4 (inheritance) —
+    the gentle version.'
+  stage_ids:
+  - stage-python-repair-session-3-inheritance-plus-super-the-headache-session
+- route_id: route-python-oop-03-03
+  source_id: source-hettinger-super
+  locator: '"Python’s super() considered super! – Deep Thoughts by Raymond Hettinger"'
+  purpose: 'Existing helpful-now placement — Then read (~45 min) · Hettinger — Python''s super() considered
+    super! — slowly. His opening example:'
+  stage_ids:
+  - stage-python-repair-session-3-inheritance-plus-super-the-headache-session
+- route_id: route-python-oop-04-02
+  source_id: source-tu-python-ml-course
+  locator: '"GitHub - mahmutoezmen/Python-for-ML-Course: Python for Machine Learning course at TU Berlin.
+    Introduction to Python and Python examples of machine learning algorithms with interactive Jupyter
+    demos and math is applied. · GitHub"'
+  purpose: Existing helpful-now placement — Do (~60 min) · TU Python-for-ML Sheet 2 — the inheritance/NumPy
+    exercises. Real exercises with code, already mapped to mlprov/job in HANDOFF.
+  stage_ids:
+  - stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped
+- route_id: route-python-oop-04-03
+  source_id: source-numpy-subclassing-docs
+  locator: '"Subclassing ndarray — NumPy v2.5 Manual"'
+  purpose: Existing helpful-now placement — Read (~30 min) · numpy subclassing guide + pandas subclassing
+    guide — now Hettinger has given you the model these assume. Explains `__array_finalize__` (why ndarray
+    can't just use `__init__`) and `_metadata`/`_constructor` (how provenance survives pandas ops).
+  stage_ids:
+  - stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped
+- route_id: route-python-oop-05-06
+  source_id: source-kaptur-byterun
+  locator: '"500 Lines or LessA Python Interpreter Written in Python"'
+  purpose: 'Existing helpful-now placement — Deep version (post-Jul 15, ~1.5h) · Allison Kaptur — A Python
+    Interpreter Written in Python. Your C++ background is an asset here. Optional after: Philip Guo''s
+    CPython lectures L1/L3/L8 (see LEARNING-RESOURCES.md §8 Tier 3).'
+  stage_ids:
+  - stage-python-repair-session-5-the-interpreter-demystified
 artifacts:
   ultimate_reference: note-python-oop-scope-repair-plan
 workspace_ids: []
 current_study_map: study-map-python-oop-scope
+knowledge_map:
+  summary: Routing topics transcribed from the existing stage objectives; study order and scope retained.
+  nodes:
+  - id: knowledge-python-oop-01
+    title: Session 1 — Names, values, scope (the root of everything)
+    summary: Your C++ intuition (variables are boxes holding values) is the bug. In Python, variables
+      are labels pointing at objects.
+  - id: knowledge-python-oop-02
+    title: 'Session 2 — Class mechanics: self, instance vs class attributes'
+    summary: '`obj.method(x)` is just `Class.method(obj, x)`. `self` is not magic — it''s an ordinary
+      first argument. A class is a dict of names; attribute lookup goes instance `__dict__` → class →
+      parent classes.'
+  - id: knowledge-python-oop-03
+    title: Session 3 — Inheritance + super() (the headache session)
+    summary: '`super()` does NOT mean "my parent." It means "the next class after me in this object''s
+      MRO (method resolution order)." In single inheritance the next class IS the parent, so the simple
+      intuition usually works — until multiple inheritance (mixins, like `PandasProvenanceMixin`), where
+      the MRO is a single linear sequence through ALL classes and `super()` just moves one step along
+      it. Print it: `ClassName.__mro__`.'
+  - id: knowledge-python-oop-04
+    title: Session 4 — Subclassing real libraries (mlprov-shaped)
+    summary: TU Python-for-ML Sheet 2 — the inheritance/NumPy exercises. Real exercises with code, already
+      mapped to mlprov/job in HANDOFF.
+  - id: knowledge-python-oop-05
+    title: Session 5 — The interpreter, demystified
+    summary: 'Allison Kaptur — A Python Interpreter Written in Python. Your C++ background is an asset
+      here. Optional after: Philip Guo''s CPython lectures L1/L3/L8 (see LEARNING-RESOURCES.md §8 Tier
+      3).'

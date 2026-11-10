@@ -1,0 +1,114 @@
+schema_version: 2
+id: transaction-20261110-165202-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T16:52:02+01:00'
+snapshot_before: sha256:4d0096f6304f54be9ac2beafed55d1788a4f410d028bdef72f0d01edaf9a56a5
+snapshot_after: sha256:8f1a568e28ca9ee1f81570311b8e09907e4e93245772314ba30d13b7f08ba45d
+expected_revisions:
+  source-beazley-python-concurrency-live: 0
+  source-composing-programs: 0
+  source-crafting-interpreters: 0
+  source-cython-docs: 0
+  source-en-wikipedia-org-wiki-common-subexpression-elimination: 0
+  source-engineering-a-compiler: 0
+  source-green-tree-snakes: 0
+  source-pep-008: 0
+  source-pep-342: 0
+  source-pep-562: 0
+  source-python-implementing-graphs: 0
+  source-python-module-of-week-3: 0
+  source-realpython-async-io-python: 0
+  source-realpython-build-python-c-extension-module: 0
+  source-realpython-products-cpython-internals-book: 0
+  source-realpython-python-bindings-overview: 0
+  source-realpython-python-concurrency: 0
+  source-realpython-python-eval-function: 0
+  source-realpython-python-gil: 0
+  source-realpython-python-isinstance: 0
+artifact_revisions:
+  source-beazley-python-concurrency-live:
+    before: 0
+    after: 1
+  source-composing-programs:
+    before: 0
+    after: 1
+  source-crafting-interpreters:
+    before: 0
+    after: 1
+  source-cython-docs:
+    before: 0
+    after: 1
+  source-en-wikipedia-org-wiki-common-subexpression-elimination:
+    before: 0
+    after: 1
+  source-engineering-a-compiler:
+    before: 0
+    after: 1
+  source-green-tree-snakes:
+    before: 0
+    after: 1
+  source-pep-008:
+    before: 0
+    after: 1
+  source-pep-342:
+    before: 0
+    after: 1
+  source-pep-562:
+    before: 0
+    after: 1
+  source-python-implementing-graphs:
+    before: 0
+    after: 1
+  source-python-module-of-week-3:
+    before: 0
+    after: 1
+  source-realpython-async-io-python:
+    before: 0
+    after: 1
+  source-realpython-build-python-c-extension-module:
+    before: 0
+    after: 1
+  source-realpython-products-cpython-internals-book:
+    before: 0
+    after: 1
+  source-realpython-python-bindings-overview:
+    before: 0
+    after: 1
+  source-realpython-python-concurrency:
+    before: 0
+    after: 1
+  source-realpython-python-eval-function:
+    before: 0
+    after: 1
+  source-realpython-python-gil:
+    before: 0
+    after: 1
+  source-realpython-python-isinstance:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 19428fff200ae873b1e040224715af9245ee7c083482cdb5d24e293bcc06600a
+  sha256_after: 7253dac0d3fcd3036ecb161baef944b77b157e36dbb9065a961e7083f795bda4
+  created: false
+metadata:
+  data_roots_sha256: sha256:75c18c78449ba1778462484db81e95bfb1c67e68616e42e9f29224172ed7341c
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-python-intake2-9d76a76b
+  idempotency_key: python-intake2
+  intent_sha256: sha256:8dd54025272da673e5a15cb717b75780fc3a20ee76b18715d0a0a7d02a0188ba
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8dd54025272da673e5a15cb717b75780fc3a20ee76b18715d0a0a7d02a0188ba

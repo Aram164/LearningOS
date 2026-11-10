@@ -7,8 +7,163 @@ order: 1
 scope: Seeded from the existing roadmap without inferring completion.
 status: ready
 scope_sources: []
-source_selections: []
+source_selections:
+- route_id: route-python-depth-0-1
+  source_id: source-python-depth-drills
+  locator: stage-0-names-and-identity.md
+  purpose: 'selected: Stage 0 — Names, identity & mutation — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-0-names-and-identity
+- route_id: route-python-depth-0-2
+  source_id: source-python-depth-drills
+  locator: stage-0-names-and-identity.ipynb
+  purpose: 'selected: Stage 0 — Names, identity & mutation — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-0-names-and-identity
+- route_id: route-python-depth-1-1
+  source_id: source-python-depth-drills
+  locator: stage-1-functions-as-objects.md
+  purpose: 'selected: Stage 1 — Functions as first-class objects — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-1-functions-as-objects
+- route_id: route-python-depth-1-2
+  source_id: source-python-depth-drills
+  locator: stage-1-functions-as-objects.ipynb
+  purpose: 'selected: Stage 1 — Functions as first-class objects — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-1-functions-as-objects
+- route_id: route-python-depth-2-1
+  source_id: source-python-depth-drills
+  locator: stage-2-scope-and-closures.md
+  purpose: 'selected: Stage 2 — Scope & closures — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-2-scope-and-closures
+- route_id: route-python-depth-2-2
+  source_id: source-python-depth-drills
+  locator: stage-2-scope-and-closures.ipynb
+  purpose: 'selected: Stage 2 — Scope & closures — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-2-scope-and-closures
+- route_id: route-python-depth-3-1
+  source_id: source-python-depth-drills
+  locator: stage-3-decorators.md
+  purpose: 'selected: Stage 3 — Decorators — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-3-decorators
+- route_id: route-python-depth-3-2
+  source_id: source-python-depth-drills
+  locator: stage-3-decorators.ipynb
+  purpose: 'selected: Stage 3 — Decorators — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-3-decorators
+- route_id: route-python-depth-4-1
+  source_id: source-python-depth-drills
+  locator: stage-4-classes-as-objects.md
+  purpose: 'selected: Stage 4 — Classes as objects — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-4-classes-as-objects
+- route_id: route-python-depth-4-2
+  source_id: source-python-depth-drills
+  locator: stage-4-classes-as-objects.ipynb
+  purpose: 'selected: Stage 4 — Classes as objects — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-4-classes-as-objects
+- route_id: route-python-depth-5-1
+  source_id: source-python-depth-drills
+  locator: stage-5-imports-and-registration.md
+  purpose: 'selected: Stage 5 — Imports & registration — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-5-imports-and-registration
+- route_id: route-python-depth-5-2
+  source_id: source-python-depth-drills
+  locator: stage-5-imports-and-registration.ipynb
+  purpose: 'selected: Stage 5 — Imports & registration — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-5-imports-and-registration
+- route_id: route-python-depth-6-1
+  source_id: source-python-depth-drills
+  locator: stage-6-data-model-and-dunders.md
+  purpose: 'selected: Stage 6 — The data model & dunders — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-6-data-model-and-dunders
+- route_id: route-python-depth-6-2
+  source_id: source-python-depth-drills
+  locator: stage-6-data-model-and-dunders.ipynb
+  purpose: 'selected: Stage 6 — The data model & dunders — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-6-data-model-and-dunders
+- route_id: route-python-depth-7-1
+  source_id: source-python-depth-drills
+  locator: stage-7-generators-and-iterators.md
+  purpose: 'selected: Stage 7 — Generators & iterators — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-7-generators-and-iterators
+- route_id: route-python-depth-7-2
+  source_id: source-python-depth-drills
+  locator: stage-7-generators-and-iterators.ipynb
+  purpose: 'selected: Stage 7 — Generators & iterators — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-7-generators-and-iterators
+- route_id: route-python-depth-8-1
+  source_id: source-python-depth-drills
+  locator: stage-8-interfaces-and-dispatch.md
+  purpose: 'selected: Stage 8 — Interfaces & dispatch — preserve existing read placement.'
+  stage_ids:
+  - stage-python-depth-8-interfaces-and-dispatch
+- route_id: route-python-depth-8-2
+  source_id: source-python-depth-drills
+  locator: stage-8-interfaces-and-dispatch.ipynb
+  purpose: 'selected: Stage 8 — Interfaces & dispatch — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-8-interfaces-and-dispatch
+- route_id: route-python-depth-9-1
+  source_id: source-python-depth-drills
+  locator: capstone.ipynb
+  purpose: 'selected: Capstone — rebuild blind — preserve existing practise placement.'
+  stage_ids:
+  - stage-python-depth-capstone
 artifacts:
   ultimate_reference: note-python-depth-drills
 workspace_ids: []
 current_study_map: study-map-python-depth-drills
+knowledge_map:
+  summary: Existing authored depth-drill stage objectives, exposed as unit-local knowledge nodes without
+    changing the ladder.
+  nodes:
+  - id: knowledge-python-depth-0
+    title: Stage 0 — Names, identity & mutation
+    summary: Work Stage 0 (Names, identity & mutation) until its self-test needs no lookups; unlocks everything
+      below it.
+  - id: knowledge-python-depth-1
+    title: Stage 1 — Functions as first-class objects
+    summary: Work Stage 1 (Functions as first-class objects) until its self-test needs no lookups; unlocks
+      stages 2, 3 and 8.
+  - id: knowledge-python-depth-2
+    title: Stage 2 — Scope & closures
+    summary: Work Stage 2 (Scope & closures) until its self-test needs no lookups; unlocks stage 3.
+  - id: knowledge-python-depth-3
+    title: Stage 3 — Decorators
+    summary: Work Stage 3 (Decorators) until its self-test needs no lookups; unlocks stage 5.
+  - id: knowledge-python-depth-4
+    title: Stage 4 — Classes as objects
+    summary: Work Stage 4 (Classes as objects) until its self-test needs no lookups; unlocks stages 6
+      and 8.
+  - id: knowledge-python-depth-5
+    title: Stage 5 — Imports & registration
+    summary: Work Stage 5 (Imports & registration) until its self-test needs no lookups; unlocks registry
+      and plugin code.
+  - id: knowledge-python-depth-6
+    title: Stage 6 — The data model & dunders
+    summary: Work Stage 6 (The data model & dunders) until its self-test needs no lookups; unlocks stages
+      7 and 8.
+  - id: knowledge-python-depth-7
+    title: Stage 7 — Generators & iterators
+    summary: Work Stage 7 (Generators & iterators) until its self-test needs no lookups; unlocks tree
+      and graph traversal code.
+  - id: knowledge-python-depth-8
+    title: Stage 8 — Interfaces & dispatch
+    summary: Work Stage 8 (Interfaces & dispatch) until its self-test needs no lookups; unlocks design
+      reviews.
+  - id: knowledge-python-depth-capstone
+    title: Capstone — rebuild blind
+    summary: 'Close the ladder: rebuild the capstone exercises without the guides open.'
