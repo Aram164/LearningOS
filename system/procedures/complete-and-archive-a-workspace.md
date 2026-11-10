@@ -30,7 +30,8 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 6. set `status: complete`;
 7. rebuild and validate generated files;
 8. a workspace moves whole to `archive/workspaces/<year>/<workspace-id>/`
-   only after its explicit path links are checked.
+   only after its explicit path links are checked. Rewrite any
+   `source_plan.path` values that point into the folder being moved.
 
 ```scrut
 $ los inspect note-demo | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["id"], d["title"])'

@@ -184,6 +184,10 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
   `angle_detail` for the hover.
 - **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
+- **W** `SOURCE-PLAN-PATH-MISSING` — a study map's `source_plan.path` points
+  into the repository's `work/` area and does not exist. Absolute paths, URI
+  forms, `../` escapes and `Job/…` paths name evidence outside the repository
+  and are not checked.
 - **W** `RESOURCE-SCOPE-ROUTE-UNDECLARED` — a stage resource teaches an authored material route that the module's source map does not declare for this unit (undeclared, or owned by another unit).
 - **W** `RESOURCE-SCOPE-NO-SOURCE` — a stage resource names no `source_id`, so module adoption cannot be checked.
 - **W** `RESOURCE-SCOPE-UNADOPTED` — a stage resource names a source the module's source map does not declare.

@@ -476,6 +476,23 @@ class ChecksReferences:
             data = study_map.data
             if data.get("unit_id") != study_map.unit_id:
                 self.err("MAP-OWNER", f"study map '{smid}' declares unit '{data.get('unit_id')}' but lives under '{study_map.unit_id}'", where)
+            source_plan = data.get("source_plan")
+            plan_path = source_plan.get("path") if isinstance(source_plan, dict) else None
+            if isinstance(plan_path, str) and plan_path:
+                # Only paths into this tree's own work/ area are checked:
+                # absolute paths, URI forms (note://…), ../ escapes and
+                # Job/… paths name evidence that lives outside the
+                # repository by design.
+                from pathlib import PurePosixPath
+
+                pure = PurePosixPath(plan_path)
+                if pure.parts and pure.parts[0] == "work" and not pure.is_absolute():
+                    if not (r.root / plan_path).exists():
+                        self.warn(
+                            "SOURCE-PLAN-PATH-MISSING",
+                            f"study map '{smid}' source_plan.path '{plan_path}' does not exist",
+                            where,
+                        )
             for stage in data.get("stages", []) or []:
                 for resource in stage.get("resources", []) or []:
                     sid = resource.get("source_id") if isinstance(resource, dict) else None
