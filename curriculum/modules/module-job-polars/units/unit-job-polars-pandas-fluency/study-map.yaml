@@ -67,6 +67,8 @@ stages:
       as a value. Do them before any comparison.
     scope_triage: required-now
     vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-p2.md
+    source_id: source-polars-authored-first-steps-exercises
+    route_id: route-g8-polars-pandas-fluency-1e18312a14
   - id: resource-polars-01-polars-first-check
     kind: practise
     label: Polars-first drill self-check - 25 assertions
@@ -77,6 +79,8 @@ stages:
       likely to move between releases, which makes them the two worth having a test for.
     scope_triage: required-now
     vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check-p2.py
+    source_id: source-polars-authored-first-steps-exercises
+    route_id: route-g8-polars-pandas-fluency-0c5af4d442
   - kind: reference
     label: Book authors' crash-course notebook
     id: resource-polars-crash-course
@@ -102,8 +106,9 @@ stages:
       work on, so exercises stop being three-row toys. Pin its environment to Stratum's versions rather
       than its own pyproject, or the drift you measure is the repo's, not the book's.
     scope_triage: helpful-now
-    source_id: source-polars-definitive-guide
+    source_id: source-polars-definitive-guide-code
     id: resource-polars-01-book-repo
+    route_id: route-g8-polars-pandas-fluency-66ee137aa0
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-first-steps/notes.md
   attachments: []
   source_feedback: []
@@ -139,6 +144,8 @@ stages:
       than as a first exposure. It is written to persuade a migrating user, so it names the differences
       it considers improvements and is silent about the ones that are merely different — the silences
       are where your own axes have to do the work.
+    source_id: source-polars-docs
+    route_id: route-g8-polars-pandas-fluency-509fe03f76
   - material_ref:
       route_id: route-polars-docs-upgrade2
       inherit:
@@ -227,6 +234,7 @@ stages:
       94-98 is a side-by-side operation table, which is the fastest way to build the Task 5 list. Its
       limit: it argues for Polars rather than specifying pandas, so it will not tell you what pandas *promises*
       — and it is an early-release edition, so confirm every callable against 2.0.'
+    route_id: route-g8-polars-pandas-fluency-32115ff656
   - material_ref:
       route_id: route-pandas-docs-s01
       inherit:
@@ -322,6 +330,7 @@ stages:
       than as row numbers, because that is what makes Task 3 surprising. Demoted to reference-only — the
       notebook predates pandas 3.0 (its string columns are `object`, yours are `str`), so it generates
       questions for the oracle and never answers them.'
+    route_id: route-g8-polars-pandas-fluency-151dbc2284
   - kind: read
     label: Pandas_cheatsheet.pdf
     id: resource-polars-01-04-local-material-pandas-cheatsheet-pdf
@@ -333,6 +342,7 @@ stages:
     angle_detail: Dated 2017. Use it to *find* the name of an operation you half-remember for the Task
       5 table, then verify every signature against pandas 3.0.2 before writing it down. It cannot establish
       current semantics and several of its defaults have since changed.
+    route_id: route-g8-polars-pandas-fluency-62096ddd78
   - kind: reference
     label: arrow.apache.org — Columnar.html
     id: resource-polars-01-09-optional-depth-arrow-apache-org-column
@@ -426,7 +436,7 @@ stages:
       nine sessions of notes silently.'
     scope_triage: required-now
     vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-check.py
-  - kind: read
+  - kind: reference
     label: Local material — pandas↔Polars contention probes
     id: resource-polars-02-05-local-material-contention-probes
     locator: check_all.py (the three-layer runner) and verify.py (per-claim assertions)
@@ -474,6 +484,8 @@ stages:
       it — the harness grows by one row per session for nine more sessions, so the cost of a hand-written
       test per case compounds. `pytest.param(..., id=...)` is what gives a divergence its stable name
       for the deposit protocol.'
+    source_id: source-pytest-docs
+    route_id: route-g8-polars-pandas-fluency-30c7c2c926
   - id: resource-polars-02-book-testing
     kind: read
     label: Polars internals - comparing DataFrames and Series
@@ -488,6 +500,7 @@ stages:
     scope_triage: helpful-now
     source_id: source-polars-definitive-guide
     vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    route_id: route-g8-polars-pandas-fluency-a0dbd443f3
   - kind: practise
     label: Closing axis pass - classify this session's divergences and deposit one case each
     id: resource-polars-02-99-axis-pass

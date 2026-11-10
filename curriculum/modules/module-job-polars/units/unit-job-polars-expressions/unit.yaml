@@ -56,6 +56,10 @@ scope_sources:
   authority: reference
 - source_id: source-modern-polars
   authority: reference
+- source_id: source-polars-expression-engine-talk
+  authority: reference
+- source_id: source-polars-docs
+  authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-expressions
 artifacts: {}

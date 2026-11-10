@@ -145,6 +145,245 @@ sources:
     locator: Chapter 18 plus relevant operation chapters, PDF viewer pages 537-591 and the capstone's
       operation route
     vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-aggregation-windows-0fd1f5375a
+    unit_id: unit-job-polars-aggregation-windows
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Polars-first explanation and worked examples for this stage. Open the named item at
+      the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s stated
+      action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-aggregation
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 13 pp. 369-386
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-aggregation-windows-e642f30767
+    unit_id: unit-job-polars-aggregation-windows
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Polars-first explanation and worked examples for this stage. Open the named item at
+      the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s stated
+      action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-windows
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 13 §Window Functions in Selection Context pp. 390-391 and §Rolling Aggregations pp. 396-399
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-joins-reshape-9f990b1815
+    unit_id: unit-job-polars-joins-reshape
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The book's join chapter, and its three pages on validation are the only prose treatment you
+      have of that argument.
+    angle_detail: The book's join chapter, and its three pages on validation are the only prose treatment
+      you have of that argument. Open the named item at the preserved locator. Depth and contextual fit
+      have not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-join-semantics
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 14 §Join Strategies pp. 404-408, §Joining on Multiple Columns pp. 409-410, §Validation
+      pp. 410-411
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-joins-reshape-adeb12fa09
+    unit_id: unit-job-polars-joins-reshape
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The book enumerates the concat modes in one place, which is the only way to learn them as a
+      set.
+    angle_detail: The book enumerates the concat modes in one place, which is the only way to learn them
+      as a set. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-reshape
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 14 §Vertical and Horizontal Concatenation pp. 421-431; Ch 15 §Pivot pp. 437-442 and §Unpivot
+      pp. 443-445
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-joins-reshape-4b184a7a0e
+    unit_id: unit-job-polars-joins-reshape
+    title: Required core — python-polars-the-definitive-guide.pdf
+    format: book
+    angle: Re-read for the two sections a compatibility layer has to decide about, not for the strategies
+      again.
+    angle_detail: Re-read for the two sections a compatibility layer has to decide about, not for the
+      strategies again. Open the named item at the preserved locator. Depth and contextual fit have not
+      been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-join-compatibility
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 14 §Validation pp. 410-411 and §Inexact Joining pp. 412-420
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-lazy-udf-interop-9d29fb72ba
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The book's internals chapter, and these eleven pages are the closest thing to a written explanation
+      of this stage.
+    angle_detail: The book's internals chapter, and these eleven pages are the closest thing to a written
+      explanation of this stage. Open the named item at the preserved locator. Depth and contextual fit
+      have not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-lazy-plans
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 18 §Query Optimization pp. 545-550, §Checking Your Expressions pp. 551-555, §Profiling
+      Polars pp. 556-558
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-lazy-udf-interop-425cadf453
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The book organises UDFs by granularity, which is exactly the rung ladder this stage builds.
+    angle_detail: The book organises UDFs by granularity, which is exactly the rung ladder this stage
+      builds. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-udf-boundary
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 17 §Applying a Function to Elements pp. 504-506, to Series pp. 507-508, to Groups pp.
+      508-510, to an Expression pp. 511-512
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-lazy-udf-interop-a8563963b8
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Required core — python-polars-the-definitive-guide.pdf
+    format: book
+    angle: The book's account of the physical layout, which is what makes conversion cost predictable
+      per column.
+    angle_detail: The book's account of the physical layout, which is what makes conversion cost predictable
+      per column. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-arrow-interop
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 18 §Arrow pp. 539-541, §The String Data Type in Memory pp. 543-544, §ChunkedArrays in
+      Series pp. 544-545
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-order-text-time-9f9915862e
+    unit_id: unit-job-polars-order-text-time
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Polars-first explanation and worked examples for this stage. Open the named item at
+      the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s stated
+      action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-ordering
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 11 §Sorting Rows pp. 313-319
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-order-text-time-57cbdf6c5f
+    unit_id: unit-job-polars-order-text-time
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Polars-first explanation and worked examples for this stage. Open the named item at
+      the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s stated
+      action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-text-temporal
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 12 §String pp. 328-336 and §Temporal pp. 343-352
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-pandas-fluency-32115ff656
+    unit_id: unit-job-polars-pandas-fluency
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The only source here written specifically for someone who already thinks in pandas.
+    angle_detail: The only source here written specifically for someone who already thinks in pandas.
+      Open the named item at the preserved locator. Depth and contextual fit have not been assessed; keep
+      the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 3 'Moving from Pandas to Polars' §Concepts to Unlearn pp. 83-92 and §Syntax to Forget
+      pp. 93-98
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-pandas-fluency-a0dbd443f3
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars internals - comparing DataFrames and Series
+    format: book
+    angle: The book's only treatment of equality testing, and it is on exactly this stage's subject.
+    angle_detail: The book's only treatment of equality testing, and it is on exactly this stage's subject.
+      Open the named item at the preserved locator. Depth and contextual fit have not been assessed; keep
+      the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-parity-harness
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 18 §Tests in Polars → 'Comparing DataFrames and Series' pp. 559-561, then §Common Anti-patterns
+      pp. 562-564
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-schema-missing-types-ccb6b1760c
+    unit_id: unit-job-polars-schema-missing-types
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: 'The book''s own treatment of the two questions this stage asks: what types exist, and what
+      the reader does with text.'
+    angle_detail: 'The book''s own treatment of the two questions this stage asks: what types exist, and
+      what the reader does with text. Open the named item at the preserved locator. Depth and contextual
+      fit have not been assessed; keep the stage’s stated action and optional/deferred boundary.'
+    covers:
+    - knowledge-polars-schema-construction
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 4 §Data Types pp. 105-109 and §Data Type Conversion pp. 117-120; Ch 6 §Parsing Missing
+      Values Correctly pp. 149-151
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-schema-missing-types-89fa691527
+    unit_id: unit-job-polars-schema-missing-types
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The type lattice as the book presents it, which is what the supertype rule is computed over.
+    angle_detail: The type lattice as the book presents it, which is what the supertype rule is computed
+      over. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-casting
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 4 §Data Types pp. 105-109 and §Data Type Conversion pp. 117-120
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-schema-missing-types-622630a60e
+    unit_id: unit-job-polars-schema-missing-types
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: 'The book''s two passes at missing data: the representation, then the operations over it.'
+    angle_detail: 'The book''s two passes at missing data: the representation, then the operations over
+      it. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.'
+    covers:
+    - knowledge-polars-missing-model
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 4 §Missing Values pp. 112-116; Ch 8 §Operations for Missing or Infinite Values pp. 219-221
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-g8-polars-selection-backend-6d9c8789da
+    unit_id: unit-job-polars-selection-backend
+    title: 'Python Polars: The Definitive Guide'
+    format: book
+    angle: The Polars-native account of row and column selection, with no pandas comparison in sight.
+    angle_detail: The Polars-native account of row and column selection, with no pandas comparison in
+      sight. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-selection-contract
+    depth: unassessed
+    scope: unevaluated
+    locator: Ch 11 §Filtering Rows pp. 308-312 and §Related Row Operations pp. 319-324; Ch 10 §Selecting
+      Columns pp. 281-283
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
 - source_id: source-pydata-handbook
   role: reference
   why: 2016 notebooks, kept only as optional old examples of index behaviour. They predate pandas 3.0
@@ -272,6 +511,246 @@ sources:
     scope: prior-year
     locator: 03.12-Performance-Eval-and-Query.ipynb; 01.07-Timing-and-Profiling.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+  - id: route-g8-polars-aggregation-windows-2934ca2234
+    unit_id: unit-job-polars-aggregation-windows
+    title: 03.08-Aggregation-and-Grouping.ipynb
+    format: code
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Historical pandas examples to turn into an explicit compatibility contract. Open the
+      named item at the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s
+      stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-aggregation
+    depth: unassessed
+    scope: unevaluated
+    locator: '03.08-Aggregation-and-Grouping.ipynb, "groupby: Split, Apply, Combine", "Specifying the
+      Split Key"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+  - id: route-g8-polars-aggregation-windows-7e969207db
+    unit_id: unit-job-polars-aggregation-windows
+    title: 03.08-Aggregation-and-Grouping.ipynb
+    format: code
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Historical pandas examples to turn into an explicit compatibility contract. Open the
+      named item at the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s
+      stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-windows
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.08-Aggregation-and-Grouping.ipynb, "Simple Aggregation in Pandas", "Aggregate, Filter,
+      Transform, Apply"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+  - id: route-g8-polars-expressions-8d8f59fb62
+    unit_id: unit-job-polars-expressions
+    title: 03.03-Operations-in-Pandas.ipynb
+    format: code
+    angle: Shows pandas doing alignment inside ordinary arithmetic - the behaviour Polars has no analogue
+      for.
+    angle_detail: Shows pandas doing alignment inside ordinary arithmetic - the behaviour Polars has no
+      analogue for. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-expr-contexts
+    depth: unassessed
+    scope: unevaluated
+    locator: '03.03-Operations-in-Pandas.ipynb, "Index Alignment in DataFrames", "Ufuncs: Operations Between
+      DataFrames and Series"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.03-Operations-in-Pandas.ipynb
+  - id: route-g8-polars-joins-reshape-8e0dad1175
+    unit_id: unit-job-polars-joins-reshape
+    title: 03.07-Merge-and-Join.ipynb
+    format: code
+    angle: pandas' own framing of merge as a relational-algebra operation, plus the suffix behaviour this
+      stage compares.
+    angle_detail: pandas' own framing of merge as a relational-algebra operation, plus the suffix behaviour
+      this stage compares. Open the named item at the preserved locator. Depth and contextual fit have
+      not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-join-semantics
+    depth: unassessed
+    scope: unevaluated
+    locator: '03.07-Merge-and-Join.ipynb, "Specification of the Merge Key", "Overlapping Column Names:
+      The suffixes Keyword"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+  - id: route-g8-polars-joins-reshape-53576139ef
+    unit_id: unit-job-polars-joins-reshape
+    title: 03.06-Concat-And-Append.ipynb
+    format: code
+    angle: pandas' concat as an index operation, which is what makes its permissive default coherent.
+    angle_detail: pandas' concat as an index operation, which is what makes its permissive default coherent.
+      Open the named item at the preserved locator. Depth and contextual fit have not been assessed; keep
+      the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-reshape
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.06-Concat-And-Append.ipynb, "Duplicate Indices", "Concatenation with Joins"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.06-Concat-And-Append.ipynb
+  - id: route-g8-polars-joins-reshape-838512b3d0
+    unit_id: unit-job-polars-joins-reshape
+    title: 03.09-Pivot-Tables.ipynb
+    format: code
+    angle: The pivot/pivot_table split that Polars collapses into one function plus an argument.
+    angle_detail: The pivot/pivot_table split that Polars collapses into one function plus an argument.
+      Open the named item at the preserved locator. Depth and contextual fit have not been assessed; keep
+      the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-reshape
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.09-Pivot-Tables.ipynb, "Pivot Table Syntax", "Additional Pivot Table Options"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.09-Pivot-Tables.ipynb
+  - id: route-g8-polars-joins-reshape-99a3a0baaf
+    unit_id: unit-job-polars-joins-reshape
+    title: Local material — 03.07-Merge-and-Join.ipynb
+    format: code
+    angle: One worked example with real messiness, useful as a parity corpus rather than as instruction.
+    angle_detail: One worked example with real messiness, useful as a parity corpus rather than as instruction.
+      Open the named item at the preserved locator. Depth and contextual fit have not been assessed; keep
+      the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-join-compatibility
+    depth: unassessed
+    scope: unevaluated
+    locator: '03.07-Merge-and-Join.ipynb, "Example: US States Data"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+  - id: route-g8-polars-lazy-udf-interop-09400a5e74
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: 03.12-Performance-Eval-and-Query.ipynb
+    format: code
+    angle: pandas' own account of why compound expressions allocate, which is the problem a planner solves
+      differently.
+    angle_detail: pandas' own account of why compound expressions allocate, which is the problem a planner
+      solves differently. Open the named item at the preserved locator. Depth and contextual fit have
+      not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-lazy-plans
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.12-Performance-Eval-and-Query.ipynb, "pandas.eval for Efficient Operations", "The DataFrame.query
+      Method"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+  - id: route-g8-polars-lazy-udf-interop-88f71f28ed
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: 03.12-Performance-Eval-and-Query.ipynb
+    format: code
+    angle: pandas' own guidance on when its optimizations stop being worth it, which is a template for
+      your ledger.
+    angle_detail: pandas' own guidance on when its optimizations stop being worth it, which is a template
+      for your ledger. Open the named item at the preserved locator. Depth and contextual fit have not
+      been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-udf-boundary
+    depth: unassessed
+    scope: unevaluated
+    locator: '03.12-Performance-Eval-and-Query.ipynb, "Performance: When to Use These Functions"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+  - id: route-g8-polars-lazy-udf-interop-c765de6afc
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Local material — 03.01-Introducing-Pandas-Objects.ipynb
+    format: code
+    angle: The representation the default to_pandas() has to construct, which is why it is the slowest
+      of the four.
+    angle_detail: The representation the default to_pandas() has to construct, which is why it is the
+      slowest of the four. Open the named item at the preserved locator. Depth and contextual fit have
+      not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-arrow-interop
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.01-Introducing-Pandas-Objects.ipynb, "The Pandas Series Object", "The Pandas DataFrame
+      Object"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+  - id: route-g8-polars-order-text-time-dc1c637e52
+    unit_id: unit-job-polars-order-text-time
+    title: 03.10-Working-With-Strings.ipynb
+    format: code
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Historical pandas examples to turn into an explicit compatibility contract. Open the
+      named item at the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s
+      stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-text-temporal
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.10-Working-With-Strings.ipynb, "Tables of Pandas String Methods"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.10-Working-With-Strings.ipynb
+  - id: route-g8-polars-order-text-time-e37edaf3c0
+    unit_id: unit-job-polars-order-text-time
+    title: 03.11-Working-with-Time-Series.ipynb
+    format: code
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Historical pandas examples to turn into an explicit compatibility contract. Open the
+      named item at the preserved locator. Depth and contextual fit have not been assessed; keep the stage’s
+      stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-text-temporal
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.11-Working-with-Time-Series.ipynb, "Pandas Time Series Data Structures", "Resampling,
+      Shifting, and Windowing"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.11-Working-with-Time-Series.ipynb
+  - id: route-g8-polars-pandas-fluency-151dbc2284
+    unit_id: unit-job-polars-pandas-fluency
+    title: 03.01-Introducing-Pandas-Objects.ipynb
+    format: code
+    angle: A pandas-native explanation of the index as a first-class object, which is the premise Polars
+      drops.
+    angle_detail: A pandas-native explanation of the index as a first-class object, which is the premise
+      Polars drops. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.01-Introducing-Pandas-Objects.ipynb, "The Pandas Index Object"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+  - id: route-g8-polars-schema-missing-types-4411a2239b
+    unit_id: unit-job-polars-schema-missing-types
+    title: 03.01-Introducing-Pandas-Objects.ipynb
+    format: code
+    angle: pandas dtype vocabulary for the Part B table; not an authority on 3.0 behaviour.
+    angle_detail: These examples illustrate how Series and DataFrames are constructed. Data Indexing and
+      Selection is the title of a separate notebook, 03.02. This notebook provides background, and the
+      pinned pandas 3.0 runtime remains the authority for current dtype behavior.
+    covers:
+    - knowledge-polars-schema-construction
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.01-Introducing-Pandas-Objects.ipynb, "Series as Generalized NumPy Array", "Constructing
+      DataFrame Objects"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+  - id: route-g8-polars-schema-missing-types-fe34f782fa
+    unit_id: unit-job-polars-schema-missing-types
+    title: 03.04-Missing-Values.ipynb
+    format: code
+    angle: The clearest explanation of WHY pandas uses NaN as a sentinel, which is the decision Polars
+      declined.
+    angle_detail: The clearest explanation of WHY pandas uses NaN as a sentinel, which is the decision
+      Polars declined. Open the named item at the preserved locator. Depth and contextual fit have not
+      been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-missing-model
+    depth: unassessed
+    scope: unevaluated
+    locator: 03.04-Missing-Values.ipynb, "Trade-offs in Missing Data Conventions", "Missing Data in Pandas"
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.04-Missing-Values.ipynb
+  - id: route-g8-polars-selection-backend-d7fbd76d5e
+    unit_id: unit-job-polars-selection-backend
+    title: 03.02-Data-Indexing-and-Selection.ipynb
+    format: code
+    angle: The clearest available statement of what pandas indexing means, which is what makes the mask
+      case make sense.
+    angle_detail: The clearest available statement of what pandas indexing means, which is what makes
+      the mask case make sense. The titled target identifies the artifact. The study placement retains
+      the original target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-selection-contract
+    depth: unassessed
+    scope: unevaluated
+    locator: '"03.02-Data-Indexing-and-Selection.ipynb"'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.02-Data-Indexing-and-Selection.ipynb
 - source_id: source-python-cheatsheets
   role: reference
   why: 2017 two-page sheet, kept only for quick recall of pandas verbs. Not on the study path and never
@@ -326,6 +805,33 @@ sources:
     scope: prior-year
     locator: 'Pandas_cheatsheet.pdf, PDF viewer pages 1-2; panels: method chaining, subset observations,
       summarize data, and combine data sets'
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+  - id: route-g8-polars-pandas-fluency-62096ddd78
+    unit_id: unit-job-polars-pandas-fluency
+    title: Pandas_cheatsheet.pdf
+    format: book
+    angle: Operation-name recall only — the fastest way to remember what a pandas call is called.
+    angle_detail: Operation-name recall only — the fastest way to remember what a pandas call is called.
+      The full-file bounds identify reference availability. The study placement retains the original target
+      and any conditional or deferred action.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: Pandas_cheatsheet.pdf, PDF pp. 1-2
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+  - id: route-g8-polars-selection-backend-dc143a1803
+    unit_id: unit-job-polars-selection-backend
+    title: Pandas_cheatsheet.pdf
+    format: book
+    angle: Name recall for the pandas half of Part B only.
+    angle_detail: Name recall for the pandas half of Part B only. The full-file bounds identify reference
+      availability. The study placement retains the original target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-selection-contract
+    depth: unassessed
+    scope: unevaluated
+    locator: Pandas_cheatsheet.pdf, PDF pp. 1-2
     vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
 - source_id: source-python-depth-drills
   role: practice
@@ -492,6 +998,18 @@ sources:
     behaviour.
   priority: 0
   unit_routes:
+  - id: route-polars-docs-s09
+    unit_id: unit-job-polars-ml-pipeline
+    title: Polars API pages used in pipelines
+    format: documentation
+    angle: 'The exact behaviour of the crossing points: to_numpy, to_pandas, from_pandas, to_dummies.'
+    angle_detail: Reference only. Look these up when a task needs them; nothing here is to be memorised.
+    covers:
+    - knowledge-polars-ml-boundary
+    depth: practice
+    scope: current
+    locator: API pages 'DataFrame.to_numpy', 'DataFrame.to_pandas', 'polars.from_pandas', 'DataFrame.to_dummies'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.to_numpy.html
   - id: route-polars-docs-s01
     unit_id: unit-job-polars-pandas-fluency
     title: Polars user guide - Getting started
@@ -519,18 +1037,219 @@ sources:
     scope: current
     locator: '''Release of Polars 2.0'' post; upgrade guide §''Behavior changes'''
     url: https://pola.rs/posts/release-polars-2
-  - id: route-polars-docs-s09
-    unit_id: unit-job-polars-ml-pipeline
-    title: Polars API pages used in pipelines
+  - id: route-g8-polars-aggregation-windows-29c5729797
+    unit_id: unit-job-polars-aggregation-windows
+    title: Polars aggregation guide
     format: documentation
-    angle: 'The exact behaviour of the crossing points: to_numpy, to_pandas, from_pandas, to_dummies.'
-    angle_detail: Reference only. Look these up when a task needs them; nothing here is to be memorised.
+    angle: Shows native expression-based grouped aggregation patterns.
+    angle_detail: Shows native expression-based grouped aggregation patterns. The titled target identifies
+      the artifact. The study placement retains the original target and any conditional or deferred action.
     covers:
-    - knowledge-polars-ml-boundary
-    depth: practice
-    scope: current
-    locator: API pages 'DataFrame.to_numpy', 'DataFrame.to_pandas', 'polars.from_pandas', 'DataFrame.to_dummies'
-    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.to_numpy.html
+    - knowledge-polars-aggregation-flags
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Aggregation - Polars user guide"'
+    url: https://docs.pola.rs/user-guide/expressions/aggregation/
+  - id: route-g8-polars-backend-loop-5afce1282e
+    unit_id: unit-job-polars-backend-loop
+    title: Polars parametric testing
+    format: documentation
+    angle: Generates adversarial Polars inputs for regression discovery.
+    angle_detail: Generates adversarial Polars inputs for regression discovery. The study placement retains
+      its original task and optional/deferred boundary.
+    covers:
+    - knowledge-polars-regression-policy
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Parametric testing", "Polars strategies", "Profiles", "Examples"'
+    url: https://docs.pola.rs/api/python/stable/reference/testing.html
+  - id: route-g8-polars-capstone-transition-f4cc532998
+    unit_id: unit-job-polars-capstone-transition
+    title: Polars testing reference
+    format: documentation
+    angle: Provides the capstone's native assertions and generated inputs.
+    angle_detail: Provides the capstone's native assertions and generated inputs. The study placement
+      retains its original task and optional/deferred boundary.
+    covers:
+    - knowledge-polars-property-stress
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Asserts", "Parametric testing", "Profiles"'
+    url: https://docs.pola.rs/api/python/stable/reference/testing.html
+  - id: route-g8-polars-capstone-transition-03adf69a07
+    unit_id: unit-job-polars-capstone-transition
+    title: Polars 2.0 upgrade guide
+    format: documentation
+    angle: Isolates future semantic changes from today's locked backend target.
+    angle_detail: Isolates future semantic changes from today's locked backend target. The titled target
+      identifies the artifact. The study placement retains the original target and any conditional or
+      deferred action.
+    covers:
+    - knowledge-polars-version-transition
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Version 2.0 - Polars user guide"'
+    url: https://docs.pola.rs/releases/upgrade/2/
+  - id: route-g8-polars-expressions-11fd2ab1a3
+    unit_id: unit-job-polars-expressions
+    title: Polars expression expansion
+    format: documentation
+    angle: The only source that states the operator overloading explicitly, and it is the stage's central
+      hazard.
+    angle_detail: The only source that states the operator overloading explicitly, and it is the stage's
+      central hazard. Open the named item at the preserved locator. Depth and contextual fit have not
+      been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-expr-expansion
+    depth: unassessed
+    scope: unevaluated
+    locator: §'Selectors' and §'Debugging selectors' - specifically the operator-ambiguity warning
+    url: https://docs.pola.rs/user-guide/expressions/expression-expansion/
+  - id: route-g8-polars-expressions-f588f5d50d
+    unit_id: unit-job-polars-expressions
+    title: Polars folds
+    format: documentation
+    angle: Explains the accumulator, which is where the fold's output dtype comes from - the stage's quietest
+      trap.
+    angle_detail: Explains the accumulator, which is where the fold's output dtype comes from - the stage's
+      quietest trap. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-expr-horizontal
+    depth: unassessed
+    scope: unevaluated
+    locator: §'Basic example', §'Conditional fold', and the accumulator/initial-value discussion
+    url: https://docs.pola.rs/user-guide/expressions/folds/
+  - id: route-g8-polars-expressions-cc6119fe4c
+    unit_id: unit-job-polars-expressions
+    title: polars.when
+    format: documentation
+    angle: The API reference for the conditional, read for what it does not say about branch typing.
+    angle_detail: The API reference for the conditional, read for what it does not say about branch typing.
+      The titled target identifies the artifact. The study placement retains the original target and any
+      conditional or deferred action.
+    covers:
+    - knowledge-polars-expr-horizontal
+    depth: unassessed
+    scope: unevaluated
+    locator: '"polars.when: Polars  documentation"'
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.when.html
+  - id: route-g8-polars-joins-reshape-955590f09a
+    unit_id: unit-job-polars-joins-reshape
+    title: Polars 2.0 upgrade guide
+    format: documentation
+    angle: This stage's API moved in 2.0, so older examples need translating.
+    angle_detail: This stage's API moved in 2.0, so older examples need translating. The titled target
+      identifies the artifact. The study placement retains the original target and any conditional or
+      deferred action.
+    covers:
+    - knowledge-polars-reshape
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Version 2.0 - Polars user guide"'
+    url: https://docs.pola.rs/releases/upgrade/2/
+  - id: route-g8-polars-pandas-fluency-509fe03f76
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars user guide - Coming from pandas
+    format: documentation
+    angle: The maintainers' own account of which pandas habits do not transfer — shorter and blunter than
+      the book.
+    angle_detail: The maintainers' own account of which pandas habits do not transfer — shorter and blunter
+      than the book. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: Whole page, and specifically the sections on index, 'no multi-indexes', and column assignment
+    url: https://docs.pola.rs/user-guide/migration/pandas/
+  - id: route-g8-polars-selection-backend-9f259a5f91
+    unit_id: unit-job-polars-selection-backend
+    title: Polars lazy optimizations - the complete pass list
+    format: documentation
+    angle: The authoritative list of what the optimizer does; the sheet's plan-reading task names only
+      the three you can see.
+    angle_detail: The authoritative list of what the optimizer does; the sheet's plan-reading task names
+      only the three you can see. The titled target identifies the artifact. The study placement retains
+      the original target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-selection-contract
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Optimizations - Polars user guide"'
+    url: https://docs.pola.rs/user-guide/lazy/optimizations/
+  - id: route-g8-polars-selection-backend-786e10aec1
+    unit_id: unit-job-polars-selection-backend
+    title: Polars DataFrame.sample
+    format: documentation
+    angle: One default on this page decides whether a translated shuffle still shuffles.
+    angle_detail: One default on this page decides whether a translated shuffle still shuffles. The titled
+      target identifies the artifact. The study placement retains the original target and any conditional
+      or deferred action.
+    covers:
+    - knowledge-polars-runtime-operands
+    depth: unassessed
+    scope: unevaluated
+    locator: '"polars.DataFrame.sample: Polars  documentation"'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sample.html
+  - id: route-g8-polars-selection-backend-75a3938c62
+    unit_id: unit-job-polars-selection-backend
+    title: Polars DataFrame.head/tail
+    format: documentation
+    angle: The Polars half of the same agreement, plus the one input where it fails differently.
+    angle_detail: The Polars half of the same agreement, plus the one input where it fails differently.
+      The titled target identifies the artifact. The study placement retains the original target and any
+      conditional or deferred action.
+    covers:
+    - knowledge-polars-runtime-operands
+    depth: unassessed
+    scope: unevaluated
+    locator: '"polars.DataFrame.head: Polars  documentation"'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.head.html
+  - id: route-g8-polars-selection-backend-34dd0e359e
+    unit_id: unit-job-polars-selection-backend
+    title: Polars DataFrame.unique
+    format: documentation
+    angle: Four keep values against pandas' three, and a default that makes no ordering promise at all.
+    angle_detail: Four keep values against pandas' three, and a default that makes no ordering promise
+      at all. Open the named item at the preserved locator. Depth and contextual fit have not been assessed;
+      keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-selection-methods
+    depth: unassessed
+    scope: unevaluated
+    locator: subset, keep ('any'/'first'/'last'/'none'), maintain_order - and the default of maintain_order
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.unique.html
+  - id: route-g8-polars-selection-backend-6d8f59a952
+    unit_id: unit-job-polars-selection-backend
+    title: Polars user guide - Missing data
+    format: documentation
+    angle: The design rationale for two concepts where pandas has one - read it before the pandas contract,
+      not after.
+    angle_detail: The design rationale for two concepts where pandas has one - read it before the pandas
+      contract, not after. Open the named item at the preserved locator. Depth and contextual fit have
+      not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-dropna-lowering
+    depth: unassessed
+    scope: unevaluated
+    locator: §'Missing data' - null versus NaN, the validity bitmap, and the separate fill verbs
+    url: https://docs.pola.rs/user-guide/expressions/missing-data/
+  - id: route-g8-polars-selection-backend-6bb5ce6915
+    unit_id: unit-job-polars-selection-backend
+    title: Polars DataFrame.drop_nulls
+    format: documentation
+    angle: Establishes what drop_nulls does NOT do, which is most of why this stage is not a one-line
+      translation.
+    angle_detail: Establishes what drop_nulls does NOT do, which is most of why this stage is not a one-line
+      translation. The titled target identifies the artifact. The study placement retains the original
+      target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-dropna-lowering
+    depth: unassessed
+    scope: unevaluated
+    locator: '"polars.DataFrame.drop_nulls: Polars  documentation"'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.drop_nulls.html
 - source_id: source-modern-polars
   role: first-exposure
   why: Free side-by-side book of idiomatic pandas and Polars, maintained against Polars 1.41 and pandas
@@ -670,6 +1389,77 @@ sources:
     scope: current
     locator: What's new in 3.0.0, §'Dedicated string data type' and §'Consistent copy/view behaviour'
     url: https://pandas.pydata.org/docs/whatsnew/v3.0.0.html
+  - id: route-g8-polars-capstone-transition-96df9fa680
+    unit_id: unit-job-polars-capstone-transition
+    title: pandas testing reference
+    format: documentation
+    angle: Makes the oracle comparison policy reviewable.
+    angle_detail: Makes the oracle comparison policy reviewable. The titled target identifies the artifact.
+      The study placement retains the original target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-property-stress
+    depth: unassessed
+    scope: unevaluated
+    locator: '"pandas.testing.assert_frame_equal: pandas 3.1.1 documentation"'
+    url: https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html
+  - id: route-g8-polars-selection-backend-3eb95efeb5
+    unit_id: unit-job-polars-selection-backend
+    title: pandas DataFrame.sample
+    format: documentation
+    angle: The larger of the two sampling surfaces; two of its parameters have no Polars counterpart at
+      all.
+    angle_detail: The larger of the two sampling surfaces; two of its parameters have no Polars counterpart
+      at all. The titled target identifies the artifact. The study placement retains the original target
+      and any conditional or deferred action.
+    covers:
+    - knowledge-polars-runtime-operands
+    depth: unassessed
+    scope: unevaluated
+    locator: '"pandas.DataFrame.sample: pandas 3.1.1 documentation"'
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+  - id: route-g8-polars-selection-backend-e8725a2148
+    unit_id: unit-job-polars-selection-backend
+    title: pandas DataFrame.head/tail
+    format: documentation
+    angle: Establishes that negative n is defined behaviour, not an accident to be avoided.
+    angle_detail: Establishes that negative n is defined behaviour, not an accident to be avoided. The
+      titled target identifies the artifact. The study placement retains the original target and any conditional
+      or deferred action.
+    covers:
+    - knowledge-polars-runtime-operands
+    depth: unassessed
+    scope: unevaluated
+    locator: '"pandas.DataFrame.head: pandas 3.1.1 documentation"'
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html
+  - id: route-g8-polars-selection-backend-96e0a5a609
+    unit_id: unit-job-polars-selection-backend
+    title: pandas DataFrame.drop_duplicates
+    format: documentation
+    angle: Establishes that pandas promises input order, which is the guarantee the Polars default does
+      not make.
+    angle_detail: Establishes that pandas promises input order, which is the guarantee the Polars default
+      does not make. Open the named item at the preserved locator. Depth and contextual fit have not been
+      assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-selection-methods
+    depth: unassessed
+    scope: unevaluated
+    locator: subset, keep ('first'/'last'/False), inplace, ignore_index - and the ordering guarantee
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html
+  - id: route-g8-polars-selection-backend-36b2a51a0e
+    unit_id: unit-job-polars-selection-backend
+    title: pandas DataFrame.dropna
+    format: documentation
+    angle: The contract being reproduced, including one refusal that has no Polars analogue to inherit.
+    angle_detail: The contract being reproduced, including one refusal that has no Polars analogue to
+      inherit. The titled target identifies the artifact. The study placement retains the original target
+      and any conditional or deferred action.
+    covers:
+    - knowledge-polars-dropna-lowering
+    depth: unassessed
+    scope: unevaluated
+    locator: '"pandas.DataFrame.dropna: pandas 3.1.1 documentation"'
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
 - source_id: source-polars-benchmark
   role: practice
   why: 22 real analytical queries written by the Polars team in both pandas and Polars. Stratum's own
@@ -756,3 +1546,183 @@ sources:
     scope: current
     locator: User guide §'Pandas/Polars Output for Transformers with set_output API'
     url: https://scikit-learn.org/stable/modules/df_output_transform.html
+- source_id: source-polars-expression-engine-talk
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 4
+  unit_routes:
+  - id: route-g8-polars-expressions-f3258b5d09
+    unit_id: unit-job-polars-expressions
+    title: Ritchie Vink - 'Polars and a peek into the expression engine' (PyData Amsterdam 2023)
+    format: video
+    angle: The library's author explaining why expressions are the design, from the inside.
+    angle_detail: The library's author explaining why expressions are the design, from the inside. The
+      titled target identifies the artifact. The study placement retains the original target and any conditional
+      or deferred action.
+    covers:
+    - knowledge-polars-expr-contexts
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PyData Amsterdam 2023: Polars and a Peek into the Expression Engine | Polars"'
+    url: https://pola.rs/posts/talk-pydata-amsterdam-2023
+  - id: route-g8-polars-lazy-udf-interop-08e3ff3f3d
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Ritchie Vink - 'Polars and a peek into the expression engine' (PyData Amsterdam 2023)
+    format: video
+    angle: The author explaining why the expression design makes these optimizations possible at all.
+    angle_detail: The author explaining why the expression design makes these optimizations possible at
+      all. The titled target identifies the artifact. The study placement retains the original target
+      and any conditional or deferred action.
+    covers:
+    - knowledge-polars-lazy-plans
+    depth: unassessed
+    scope: unevaluated
+    locator: '"PyData Amsterdam 2023: Polars and a Peek into the Expression Engine | Polars"'
+    url: https://pola.rs/posts/talk-pydata-amsterdam-2023
+- source_id: source-polars-cookbook-code
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 5
+  unit_routes:
+  - id: route-g8-polars-joins-reshape-dc13c6d8c3
+    unit_id: unit-job-polars-joins-reshape
+    title: Polars Cookbook companion notebooks - written against Polars 1.x
+    format: exercise
+    angle: The one local-book alternative that targets 1.x rather than an early-release edition, and it
+      is runnable.
+    angle_detail: The one local-book alternative that targets 1.x rather than an early-release edition,
+      and it is runnable. The titled target identifies the artifact. The study placement retains the original
+      target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-join-semantics
+    depth: unassessed
+    scope: unevaluated
+    locator: '"GitHub - PacktPublishing/Polars-Cookbook: Polars Cookbook, Published by Packt · GitHub"'
+    url: https://github.com/PacktPublishing/Polars-Cookbook
+  - id: route-g8-polars-lazy-udf-interop-834d0cbbca
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Polars Cookbook Ch 10 - Interoperability With Other Python Libraries (runnable notebook)
+    format: exercise
+    angle: A current 1.x treatment of exactly this stage's subject, runnable, from a book written after
+      the API settled.
+    angle_detail: A current 1.x treatment of exactly this stage's subject, runnable, from a book written
+      after the API settled. Open the named item at the preserved locator. Depth and contextual fit have
+      not been assessed; keep the stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-arrow-interop
+    depth: unassessed
+    scope: unevaluated
+    locator: github.com/PacktPublishing/Polars-Cookbook - Chapter10/ch10.ipynb, with data/
+    url: https://github.com/PacktPublishing/Polars-Cookbook
+- source_id: source-polars-birds-eye-view
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 6
+  unit_routes:
+  - id: route-g8-polars-lazy-udf-interop-f473bc1348
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: A bird's eye view of Polars - planning, optimizing, execution
+    format: documentation
+    angle: Names the internal structures - LogicalPlan, Expr, PhysicalPlan, compute kernels - that make
+      explain() output readable.
+    angle_detail: Names the internal structures - LogicalPlan, Expr, PhysicalPlan, compute kernels - that
+      make explain() output readable. The titled target identifies the artifact. The study placement retains
+      the original target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-lazy-plans
+    depth: unassessed
+    scope: unevaluated
+    locator: '"A bird''s eye view of Polars | Polars"'
+    url: https://pola.rs/posts/polars_birds_eye_view
+  - id: route-g8-polars-selection-backend-e57a10f45a
+    unit_id: unit-job-polars-selection-backend
+    title: A bird's eye view of Polars - planning, optimizing, execution
+    format: documentation
+    angle: The maintainers' own account of the pipeline from LogicalPlan through PhysicalPlan to compute
+      kernels.
+    angle_detail: The maintainers' own account of the pipeline from LogicalPlan through PhysicalPlan to
+      compute kernels. The titled target identifies the artifact. The study placement retains the original
+      target and any conditional or deferred action.
+    covers:
+    - knowledge-polars-selection-contract
+    depth: unassessed
+    scope: unevaluated
+    locator: '"A bird''s eye view of Polars | Polars"'
+    url: https://pola.rs/posts/polars_birds_eye_view
+- source_id: source-polars-authored-first-steps-exercises
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 7
+  unit_routes:
+  - id: route-g8-polars-pandas-fluency-1e18312a14
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars-first drill set - five drills, no pandas anywhere
+    format: exercise
+    angle: Polars on its own terms, with no pandas in the file.
+    angle_detail: Polars on its own terms, with no pandas in the file. The study placement retains its
+      original task and optional/deferred boundary.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Session 1 — Polars on its own terms", drills 1–5'
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-p2.md
+  - id: route-g8-polars-pandas-fluency-0c5af4d442
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars-first drill self-check - 25 assertions
+    format: exercise
+    angle: Pins the namespace shapes and the chunk behaviour, both of which are version-sensitive.
+    angle_detail: Pins the namespace shapes and the chunk behaviour, both of which are version-sensitive.
+      The study placement retains its original task and optional/deferred boundary.
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: '"Assert the Session 1 Polars-first drill key"'
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check-p2.py
+- source_id: source-polars-definitive-guide-code
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 8
+  unit_routes:
+  - id: route-g8-polars-pandas-fluency-66ee137aa0
+    unit_id: unit-job-polars-pandas-fluency
+    title: Book companion repository - runnable notebooks and the book's own datasets
+    format: exercise
+    angle: 'Turns the local PDF spine into executable material: the same examples, as notebooks, with
+      the datasets.'
+    angle_detail: 'Turns the local PDF spine into executable material: the same examples, as notebooks,
+      with the datasets. Open the named item at the preserved locator. Depth and contextual fit have not
+      been assessed; keep the stage’s stated action and optional/deferred boundary.'
+    covers:
+    - knowledge-polars-divergence-axes
+    depth: unassessed
+    scope: unevaluated
+    locator: github.com/jeroenjanssens/python-polars-the-definitive-guide - ch01.ipynb through ch18.ipynb,
+      plus data/
+    url: https://github.com/jeroenjanssens/python-polars-the-definitive-guide
+- source_id: source-pytest-docs
+  role: reference
+  why: Already named by the preserved study activities; availability is explicit, and no new quality ranking
+    is asserted.
+  priority: 9
+  unit_routes:
+  - id: route-g8-polars-pandas-fluency-30c7c2c926
+    unit_id: unit-job-polars-pandas-fluency
+    title: Required core — pytest parametrization
+    format: documentation
+    angle: How the twelve cases become twelve reported failures instead of one aborted run.
+    angle_detail: How the twelve cases become twelve reported failures instead of one aborted run. Open
+      the named item at the preserved locator. Depth and contextual fit have not been assessed; keep the
+      stage’s stated action and optional/deferred boundary.
+    covers:
+    - knowledge-polars-parity-harness
+    depth: unassessed
+    scope: unevaluated
+    locator: §'Parametrizing fixtures and test functions' and §'Basic pytest.mark.parametrize'
+    url: https://docs.pytest.org/en/stable/how-to/parametrize.html

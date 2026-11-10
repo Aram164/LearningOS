@@ -72,6 +72,8 @@ scope_sources:
   authority: reference
 - source_id: source-scalable-dataframe-systems-paper
   authority: reference
+- source_id: source-polars-docs
+  authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-backend-loop
 artifacts: {}

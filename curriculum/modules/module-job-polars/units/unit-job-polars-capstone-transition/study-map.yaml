@@ -131,6 +131,8 @@ stages:
       treating it as backend policy.
     scope_triage: required-now
     url: https://docs.pola.rs/api/python/stable/reference/testing.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-capstone-transition-f4cc532998
   - id: resource-pandas-testing-capstone
     kind: read
     label: pandas testing reference
@@ -141,6 +143,8 @@ stages:
       or pandas 3.0.2 before treating it as backend policy.
     scope_triage: required-now
     url: https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html
+    source_id: source-pandas-docs
+    route_id: route-g8-polars-capstone-transition-96df9fa680
   - id: resource-capstone-stress-report
     kind: practise
     label: Capstone stress report
@@ -182,6 +186,8 @@ stages:
       each claim against Polars 1.36.0 or pandas 3.0.2 before treating it as backend policy.
     scope_triage: deferred
     url: https://docs.pola.rs/releases/upgrade/2/
+    source_id: source-polars-docs
+    route_id: route-g8-polars-capstone-transition-03adf69a07
   - id: resource-pandas-3-release
     kind: reference
     label: pandas 3.0 release notes

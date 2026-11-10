@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 14
+  file:operations/transactions/lineage.yaml: 15
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -54,7 +54,7 @@ revisions:
   module-hu-m2-statistik-analysis: 62
   module-job-engineering-tools: 2
   module-job-git: 2
-  module-job-polars: 4
+  module-job-polars: 5
   module-job-python-engineering: 4
   module-job-rust-engineering: 2
   module-project-bachelor-thesis: 2
@@ -464,17 +464,17 @@ revisions:
   study-map-icop-l01-linear-programming: 1
   study-map-job-engineering-tools-fluency: 3
   study-map-job-git-fluency: 3
-  study-map-job-polars-aggregation-windows: 1
-  study-map-job-polars-backend-loop: 3
-  study-map-job-polars-capstone-transition: 1
-  study-map-job-polars-expressions: 25
-  study-map-job-polars-joins-reshape: 12
-  study-map-job-polars-lazy-udf-interop: 10
+  study-map-job-polars-aggregation-windows: 2
+  study-map-job-polars-backend-loop: 4
+  study-map-job-polars-capstone-transition: 2
+  study-map-job-polars-expressions: 26
+  study-map-job-polars-joins-reshape: 13
+  study-map-job-polars-lazy-udf-interop: 11
   study-map-job-polars-ml-pipeline: 1
-  study-map-job-polars-order-text-time: 1
-  study-map-job-polars-pandas-fluency: 17
-  study-map-job-polars-schema-missing-types: 14
-  study-map-job-polars-selection-backend: 19
+  study-map-job-polars-order-text-time: 2
+  study-map-job-polars-pandas-fluency: 18
+  study-map-job-polars-schema-missing-types: 15
+  study-map-job-polars-selection-backend: 20
   study-map-job-python-classes-inheritance: 1
   study-map-job-python-dataclasses-properties: 1
   study-map-job-python-decorators-registration: 1
@@ -550,17 +550,17 @@ revisions:
   unit-icop-l01-linear-programming: 3
   unit-job-engineering-tools-fluency: 3
   unit-job-git-fluency: 3
-  unit-job-polars-aggregation-windows: 3
-  unit-job-polars-backend-loop: 5
-  unit-job-polars-capstone-transition: 3
-  unit-job-polars-expressions: 27
-  unit-job-polars-joins-reshape: 14
-  unit-job-polars-lazy-udf-interop: 12
+  unit-job-polars-aggregation-windows: 4
+  unit-job-polars-backend-loop: 6
+  unit-job-polars-capstone-transition: 4
+  unit-job-polars-expressions: 28
+  unit-job-polars-joins-reshape: 15
+  unit-job-polars-lazy-udf-interop: 13
   unit-job-polars-ml-pipeline: 1
-  unit-job-polars-order-text-time: 3
-  unit-job-polars-pandas-fluency: 20
-  unit-job-polars-schema-missing-types: 16
-  unit-job-polars-selection-backend: 21
+  unit-job-polars-order-text-time: 4
+  unit-job-polars-pandas-fluency: 21
+  unit-job-polars-schema-missing-types: 17
+  unit-job-polars-selection-backend: 22
   unit-job-python-classes-inheritance: 1
   unit-job-python-dataclasses-properties: 1
   unit-job-python-decorators-registration: 1

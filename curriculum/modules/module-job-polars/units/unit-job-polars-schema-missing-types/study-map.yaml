@@ -42,6 +42,7 @@ stages:
       ''NA'' divergence in Part B, from the Polars side, and it explains why the library declines to keep
       a default list of missing strings. pp. 117-120 on conversion is the bridge into the next stage.
       Early-release edition: confirm parameter names against 2.0.'
+    route_id: route-g8-polars-schema-missing-types-ccb6b1760c
   - id: resource-polars-s4a-sheet
     kind: practise
     label: Stage exercise sheet - declare vs infer, CSV inference, chunks
@@ -142,8 +143,9 @@ stages:
     angle: pandas dtype vocabulary for the Part B table; not an authority on 3.0 behaviour.
     angle_detail: 'Pre-3.0 notebook: its string columns are `object` where yours are `str`, and its missing-value
       discussion predates the nullable dtypes. Use it to recognise names, then verify in 3.0.2.'
+    route_id: route-g8-polars-schema-missing-types-4411a2239b
   - id: resource-polars-03-construction-i-o-schema-and-chunks-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -202,6 +204,7 @@ stages:
     angle_detail: Read pp. 105-109 for the enumerated types, then predict the Task A1 table from the lattice
       before running it. The Int64/UInt64 row is the one the lattice explains and intuition does not —
       you can see from the type list that there is nothing above them to widen into.
+    route_id: route-g8-polars-schema-missing-types-89fa691527
   - id: resource-polars-s4b-sheet
     kind: practise
     label: Stage exercise sheet - the supertype rule, its edge, and the cast that lies
@@ -266,7 +269,7 @@ stages:
       a captured frame is using, because the answer changes whether an integer column can hold a null
       at all.
   - id: resource-polars-07-type-promotion-coercion-and-strictness-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -361,6 +364,7 @@ stages:
     angle_detail: pp. 112-116 is the model — validity bitmap, null versus NaN, why they are orthogonal.
       pp. 219-221 is the verb list, and reading them together is what makes `fill_null` and `fill_nan`
       stop looking like duplicated API. Read before Part A, not after.
+    route_id: route-g8-polars-schema-missing-types-622630a60e
   - kind: reference
     label: Polars user guide - Casting
     id: resource-polars-05-05-official-reference-docs-pola-rs-castin
@@ -371,7 +375,7 @@ stages:
     angle_detail: 'Kept as reference because the casting material belongs to the type-promotion stage.
       The one question it answers here: a null survives a cast as a null, in every direction, which is
       what makes the fill_nan(None) normalization safe to place anywhere in a cast chain.'
-  - kind: read
+  - kind: reference
     label: pandas↔Polars aggregation contentions
     id: resource-polars-06-90-local-material-contention-map-nulls
     locator: Node (0) system-wide contentions 0.1 and 0.2, and the skipna discussion
@@ -439,6 +443,7 @@ stages:
       costs. It is pre-3.0 so its account of pandas'' options is dated, but the trade-off it describes
       is exactly the fork the two libraries took, and understanding the fork is what makes the divergences
       predictable instead of arbitrary.'
+    route_id: route-g8-polars-schema-missing-types-fe34f782fa
   - kind: reference
     label: arrow.apache.org — Columnar.html
     id: resource-polars-05-09-optional-depth-arrow-apache-org-column
@@ -450,7 +455,7 @@ stages:
       A separate validity buffer makes 'absent' independent of any bit pattern in the values buffer, which
       is precisely what a sentinel-based representation cannot do.
   - id: resource-polars-06-nulls-nans-and-the-missing-value-model-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'

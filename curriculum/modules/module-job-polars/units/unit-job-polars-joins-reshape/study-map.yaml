@@ -80,6 +80,7 @@ stages:
       is short and directly usable. Early-release edition: the `coalesce` and `nulls_equal` parameters
       in particular should be confirmed against 2.0 before you write them into a mapping, since parameter
       names in this area have moved between releases.'
+    route_id: route-g8-polars-joins-reshape-9f990b1815
   - material_ref:
       route_id: route-polars-benchmark-s07
       inherit:
@@ -172,6 +173,8 @@ stages:
     scope_triage: reference-only
     id: resource-polars-s7-cookbook-repo
     locator: Chapter folders in the repository, joins chapter notebook
+    source_id: source-polars-cookbook-code
+    route_id: route-g8-polars-joins-reshape-dc13c6d8c3
   - kind: read
     label: 03.07-Merge-and-Join.ipynb
     id: resource-polars-09-02-local-material-03-07-merge-and-join-ip
@@ -185,8 +188,9 @@ stages:
       B2 and is worth having in the author''s words, because the both-sides-suffixed behaviour looks arbitrary
       until you see it presented as symmetric-by-design. Pre-3.0 notebook: use it for the model, not for
       current defaults.'
+    route_id: route-g8-polars-joins-reshape-8e0dad1175
   - id: resource-polars-12-joins-i-relational-semantics-and-key-cardinality-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -233,6 +237,8 @@ stages:
     angle: This stage's API moved in 2.0, so older examples need translating.
     angle_detail: Read only the named entries. You will meet the old forms in the book and in older tutorials.
     scope_triage: required-now
+    source_id: source-polars-docs
+    route_id: route-g8-polars-joins-reshape-955590f09a
   - kind: read
     label: 'Python Polars: The Definitive Guide'
     id: resource-polars-11-01-required-core-python-polars-the-defini
@@ -248,6 +254,7 @@ stages:
       as a vocabulary list. IMPORTANT currency caveat: this is the chapter most affected by the 2.0 changes,
       since `melt` is renamed and horizontal concat''s padding becomes an error. Treat its reshaping API
       names as 1.x and check each against the upgrade guide routed on this stage.'
+    route_id: route-g8-polars-joins-reshape-adeb12fa09
   - kind: reference
     label: pandas user guide - Reshaping
     id: resource-polars-11-07-official-reference-pandas-pydata-org-r
@@ -365,6 +372,7 @@ stages:
     angle_detail: 'The duplicate-index section explains why pandas'' concat produces what it produces:
       it is aligning labels, not stacking buffers. That framing makes the divergence predictable rather
       than arbitrary — and it is also why Polars, with no labels, had to make a different choice.'
+    route_id: route-g8-polars-joins-reshape-53576139ef
   - kind: read
     label: 03.09-Pivot-Tables.ipynb
     id: resource-polars-11-03-local-material-03-09-pivot-tables-ipyn
@@ -376,8 +384,9 @@ stages:
     angle_detail: 'Read the aggfunc section specifically: it is the pandas concept that maps onto Polars''
       `aggregate_function`, and understanding that pandas has two functions where Polars has one argument
       is the whole of the translation. Pre-3.0 notebook; the concept is stable, the defaults are not.'
+    route_id: route-g8-polars-joins-reshape-838512b3d0
   - id: resource-polars-14-concatenation-and-reshaping-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -501,6 +510,7 @@ stages:
       and the inexact-join surface — the latter because `join_asof` and `join_where` are the two boundaries
       where 'translate the pandas call' stops being possible and the layer has to say so. pp. 417-420's
       marketing-attribution use case is a good worked example of why an asof join is not a convenience.
+    route_id: route-g8-polars-joins-reshape-4b184a7a0e
   - kind: read
     label: Local material — 03.07-Merge-and-Join.ipynb
     id: resource-polars-10-02-local-material-03-07-merge-and-join-ip
@@ -512,6 +522,7 @@ stages:
     angle_detail: The states example has differing key names, missing matches and a genuine need for validation,
       so it converts cleanly into three or four of the sixteen parity cases. Take the data and the shape
       of the problem; do not take its pandas idioms, which predate 3.0.
+    route_id: route-g8-polars-joins-reshape-99a3a0baaf
   - kind: practise
     label: Axis pass — classify every divergence found this session against the eight axes, then add one
       harness case per divergence and re-run the whole harness.
@@ -535,7 +546,7 @@ stages:
       where both libraries depart from SQL tells you which behaviour will surprise a data engineer reading
       your layer''s output.'
   - id: resource-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'

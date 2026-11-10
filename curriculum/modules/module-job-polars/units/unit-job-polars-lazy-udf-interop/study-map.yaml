@@ -138,6 +138,7 @@ stages:
       and that `eval` avoids some of them. That is a real optimization and a *different kind* from a query
       plan — it cannot reorder, prune columns or defer. Task B2 asks you to state that distinction, and
       this is where the pandas half comes from.'
+    route_id: route-g8-polars-lazy-udf-interop-09400a5e74
   - kind: reference
     label: Polars docs - optimizations
     id: resource-polars-12-05-official-reference-docs-pola-rs-optimi
@@ -164,6 +165,8 @@ stages:
       declines to cover the execution model in depth. It is also the closest published analogue to Stratum''s
       own logical/physical split, which makes it useful for Part C''s diagram as well as for reading plans.'
     scope_triage: deferred
+    source_id: source-polars-birds-eye-view
+    route_id: route-g8-polars-lazy-udf-interop-f473bc1348
   - kind: read
     label: 'Python Polars: The Definitive Guide'
     id: resource-polars-12-01-required-core-python-polars-the-defini
@@ -179,6 +182,7 @@ stages:
       know what the returned frame means. Early-release caveat matters here more than usual: the optimizer
       is the fastest-moving part of the library, so treat the pass list in the book as indicative and
       the routed optimizations page as authoritative.'
+    route_id: route-g8-polars-lazy-udf-interop-9d29fb72ba
   - id: resource-polars-s8a-expr-talk
     kind: watch
     label: Ritchie Vink - 'Polars and a peek into the expression engine' (PyData Amsterdam 2023)
@@ -189,8 +193,10 @@ stages:
       the talk''s argument about expressions being data rather than calls lands as an explanation rather
       than a claim. 2023 talk: treat any specific API shown as historical and the reasoning as current.'
     scope_triage: deferred
+    source_id: source-polars-expression-engine-talk
+    route_id: route-g8-polars-lazy-udf-interop-08e3ff3f3d
   - id: resource-polars-15-lazy-plans-and-optimizer-literacy-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -250,6 +256,7 @@ stages:
       on group application carefully and then ask whether the example needs a UDF at all — most grouped
       applies are `over()` windows, which is Task B1 case 5. Early-release edition; confirm the callable
       names against 2.0, since this area has been renamed before.
+    route_id: route-g8-polars-lazy-udf-interop-425cadf453
   - id: resource-polars-s8b-sheet
     kind: practise
     label: Stage exercise sheet - the five rungs, the length trap, and the elimination ledger
@@ -325,8 +332,9 @@ stages:
     angle_detail: 'The useful part is the framing: the answer is a frame size, not a rule. Your elimination
       ledger should reach the same shape — below some size, the UDF is fine and the rewrite is not worth
       the risk of changing semantics. Pre-3.0 numbers; take the method, not the thresholds.'
+    route_id: route-g8-polars-lazy-udf-interop-88f71f28ed
   - id: resource-polars-16-udfs-fallbacks-and-native-expression-rewrites-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -439,6 +447,7 @@ stages:
       in memory, and what does a conversion have to build. pp. 543-544 on the string layout explains why
       Polars uses large_string, and pp. 544-545 on ChunkedArrays is the mechanism behind the chunk-survival
       result in Task A2.'
+    route_id: route-g8-polars-lazy-udf-interop-a8563963b8
   - id: resource-polars-s8c-cookbook-interop
     kind: practise
     label: Polars Cookbook Ch 10 - Interoperability With Other Python Libraries (runnable notebook)
@@ -455,6 +464,8 @@ stages:
       published contents; the recipe-level detail is not, so check the notebook on first open rather than
       trusting a mapping.
     scope_triage: helpful-now
+    source_id: source-polars-cookbook-code
+    route_id: route-g8-polars-lazy-udf-interop-834d0cbbca
   - kind: practise
     label: Find three conversion sites in the read-only Stratum checkout
     id: resource-polars-14-12-find-three-places-in-the-read-only-str
@@ -487,6 +498,7 @@ stages:
       Arrow buffers into it is genuine construction rather than a handover. That is the explanation Task
       A3 asks for. Pre-3.0 notebook, and pandas 3.0''s Arrow-backed options change the picture — which
       is exactly the alternative path this stage measures.'
+    route_id: route-g8-polars-lazy-udf-interop-c765de6afc
   - kind: practise
     label: Axis pass — classify every divergence found this session against the eight axes, then add one
       harness case per divergence and re-run the whole harness.
@@ -518,7 +530,7 @@ stages:
       without serialising'. Read it when the timings in Task A3 stop feeling plausible; the C Data Interface
       is why to_arrow can be sub-millisecond on a million rows.
   - id: resource-polars-17-arrow-interop-chunks-and-conversion-costs-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'

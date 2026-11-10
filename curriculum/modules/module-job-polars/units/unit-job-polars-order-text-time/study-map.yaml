@@ -38,6 +38,7 @@ stages:
     angle_detail: Use Sorting, top-k, and the order guarantees of grouped operations to build the native
       Polars model for Ordering, sorting, and determinism; the book is an early-release edition, so confirm
       callable names and defaults against Polars 2.0.
+    route_id: route-g8-polars-order-text-time-9f9915862e
   - material_ref:
       route_id: route-narwhals-s05
       inherit:
@@ -151,7 +152,7 @@ stages:
       sorting, and determinism and encode the promised behavior in pandas 3.0.2 fixtures; unspecified
       behavior remains evidence, not a universal contract.
   - id: resource-polars-08-ordering-sorting-and-determinism-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: Preserves the deeper mental model and traps written for the original stage.
@@ -261,6 +262,7 @@ stages:
     angle: Polars-first explanation and worked examples for this stage.
     angle_detail: Use Ch. 12 to build the native Polars model for Strings, datetimes, and namespace translation;
       the book is an early-release edition, so confirm callable names and defaults against Polars 2.0.
+    route_id: route-g8-polars-order-text-time-57cbdf6c5f
   - kind: practise
     label: Guided exercises — Mirror official parsing, extraction, timezone, and invalid-input examples;
       include Unicode, null, ambiguous time, and format-error cases.
@@ -332,6 +334,7 @@ stages:
     angle_detail: Use Pandas strings and time notebooks to identify pandas behavior relevant to Strings,
       datetimes, and namespace translation. The notebook predates pandas 3.0.2, so it generates test questions
       rather than serving as semantic authority.
+    route_id: route-g8-polars-order-text-time-dc1c637e52
   - kind: read
     label: 03.11-Working-with-Time-Series.ipynb
     id: resource-polars-06-03-local-material-03-11-working-with-time
@@ -343,6 +346,7 @@ stages:
     angle_detail: Use Pandas strings and time notebooks to identify pandas behavior relevant to Strings,
       datetimes, and namespace translation. The notebook predates pandas 3.0.2, so it generates test questions
       rather than serving as semantic authority.
+    route_id: route-g8-polars-order-text-time-e37edaf3c0
   - kind: reference
     label: Polars docs - string.html
     id: resource-polars-06-09-optional-depth-docs-pola-rs-string-htm
@@ -364,7 +368,7 @@ stages:
       namespace translation, then run the example under Polars 2.0 because the live documentation can
       move ahead of Stratum's lockfile.
   - id: resource-polars-09-strings-datetimes-and-namespace-translation-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: Preserves the deeper mental model and traps written for the original stage.

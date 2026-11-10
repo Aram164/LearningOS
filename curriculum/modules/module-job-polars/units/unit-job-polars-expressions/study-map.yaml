@@ -183,6 +183,7 @@ stages:
       rather than as instruction: every alignment example there is a Session 1 Task 3 case with different
       numbers. Pre-3.0 notebook, so its dtypes and its `object` string columns describe a different library
       than the pinned one.'
+    route_id: route-g8-polars-expressions-8d8f59fb62
   - kind: reference
     label: pandas docs - enhancingperf.html
     id: resource-polars-04-06-official-reference-pandas-pydata-org-e
@@ -195,7 +196,7 @@ stages:
       `eval`, so it is background for why pandas grew an expression language rather than work for this
       stage.'
   - id: resource-polars-05-expressions-and-column-creation-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide, kept at its original path.'
@@ -215,6 +216,8 @@ stages:
       any specific API shown as historical and the reasoning as current.
     scope_triage: deferred
     id: resource-polars-05-expr-engine-talk
+    source_id: source-polars-expression-engine-talk
+    route_id: route-g8-polars-expressions-f3258b5d09
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-exercises.md
     label: Exercise sheet - contexts, sibling visibility, expression trees
@@ -265,6 +268,8 @@ stages:
       is short and easy to skim past — the sheet turns it into an executed result so it cannot be skimmed.'
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/expression-expansion/
+    source_id: source-polars-docs
+    route_id: route-g8-polars-expressions-11fd2ab1a3
   - material_ref:
       route_id: route-polars-definitive-guide-s02
       inherit:
@@ -291,7 +296,7 @@ stages:
         asserts no new source observation or learner achievement.'
       fingerprint: sha256:b7f1a0f0d847ad20c046b0b7654a48d221aeba7605bfb028fb649b03edbf1de8
   - id: resource-note-columnselectorop
-    kind: read
+    kind: reference
     label: Stratum ColumnSelectorOp note
     locator: Node shape, fit-time schema resolution, and the stored selected_columns field
     angle: Your own note on where Stratum resolves a selector - the design question this stage is evidence
@@ -379,6 +384,8 @@ stages:
       emits.'
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/folds/
+    source_id: source-polars-docs
+    route_id: route-g8-polars-expressions-f588f5d50d
   - material_ref:
       route_id: route-polars-definitive-guide-s02
       inherit:
@@ -448,6 +455,8 @@ stages:
       to a supertype rather than rejected — are visible only by execution, which is Task 5.
     scope_triage: reference-only
     url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.when.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-expressions-cc6119fe4c
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises.md
@@ -479,7 +488,7 @@ stages:
   scope_triage: required-now
   resources:
   - id: resource-note-assignmapop
-    kind: read
+    kind: reference
     label: Stratum AssignMapOp note
     locator: Foldability rules, ordered entries, leaf operands, and the fallback conditions
     angle: Your own record of the intended translation - the design this stage's twelve cases are a test
@@ -491,7 +500,7 @@ stages:
     scope_triage: helpful-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignmapop.md
   - id: resource-note-assignop
-    kind: read
+    kind: reference
     label: Stratum AssignOp fallback note
     locator: The opaque fallback cases and their trigger conditions
     angle: 'The other half of the same design: what is deliberately not lowered, and on what evidence.'

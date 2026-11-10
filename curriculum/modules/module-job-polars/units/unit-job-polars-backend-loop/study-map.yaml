@@ -134,7 +134,7 @@ stages:
         relation review asserts no new source observation or learner achievement.'
       fingerprint: sha256:e2bfb5a4fbaa5c14772bfa9889c25be85aea0e509af569d8772c1b19a8be5ba8
   - id: resource-note-joinop-loop
-    kind: read
+    kind: reference
     label: JoinOp logical note
     locator: Complete note
     angle: Exercises the same loop on binary inputs, key flags, and chained joins.
@@ -176,7 +176,7 @@ stages:
   scope_triage: deferred
   resources:
   - id: resource-note-assignmapop-loop
-    kind: read
+    kind: reference
     label: AssignMapOp logical note
     locator: Complete note
     angle: Map-family transfer case for expression construction and fallback.
@@ -184,7 +184,7 @@ stages:
     scope_triage: required-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignmapop.md
   - id: resource-note-aggregateop-loop
-    kind: read
+    kind: reference
     label: AggregateOp logical note
     locator: Complete note
     angle: Aggregation-family transfer case for flags, grouping, and output shape.
@@ -192,7 +192,7 @@ stages:
     scope_triage: required-now
     vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-aggregateop.md
   - id: resource-note-joinop-family-loop
-    kind: read
+    kind: reference
     label: JoinOp logical note
     locator: Complete note
     angle: Join-family transfer case for binary inputs and cardinality.
@@ -240,6 +240,8 @@ stages:
       each claim against Polars 1.36.0 or pandas 3.0.2 before treating it as backend policy.
     scope_triage: required-now
     url: https://docs.pola.rs/api/python/stable/reference/testing.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-backend-loop-5afce1282e
   - id: resource-depth-testing
     kind: read
     label: Python Depth Drills SHELF - testing

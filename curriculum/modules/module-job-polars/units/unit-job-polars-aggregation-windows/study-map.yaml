@@ -82,7 +82,8 @@ stages:
     angle: Polars-first explanation and worked examples for this stage.
     angle_detail: Use Ch. 13 to build the native Polars model for GroupBy aggregation, counting, and de-duplication;
       the book is an early-release edition, so confirm callable names and defaults against Polars 2.0.
-  - kind: read
+    route_id: route-g8-polars-aggregation-windows-0fd1f5375a
+  - kind: reference
     label: pandas↔Polars aggregation contentions
     id: resource-polars-10-90-local-material-contention-map-groupby
     locator: Full contention map
@@ -145,7 +146,8 @@ stages:
     angle_detail: Use Pandas grouping notebook to identify pandas behavior relevant to GroupBy aggregation,
       counting, and de-duplication. The notebook predates pandas 3.0.2, so it generates test questions
       rather than serving as semantic authority.
-  - kind: read
+    route_id: route-g8-polars-aggregation-windows-2934ca2234
+  - kind: reference
     label: pandas groupby signature reference
     id: resource-polars-10-91-local-material-groupby-signatures
     locator: Your own signature reference — the argument surface you must mirror
@@ -186,7 +188,7 @@ stages:
     angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
       row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
   - id: resource-polars-10-groupby-aggregation-counting-and-de-duplication-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: Preserves the deeper mental model and traps written for the original stage.
@@ -265,6 +267,7 @@ stages:
     angle: Polars-first explanation and worked examples for this stage.
     angle_detail: Use Chs. 9, 13 to build the native Polars model for Windows and per-group transformations;
       the book is an early-release edition, so confirm callable names and defaults against Polars 2.0.
+    route_id: route-g8-polars-aggregation-windows-e642f30767
   - kind: practise
     label: Guided exercises — Run official over/window examples and mirror transform, rank, shift, rolling,
       group-order, and null-partition behavior.
@@ -335,8 +338,9 @@ stages:
     angle_detail: Use Pandas aggregation baseline to identify pandas behavior relevant to Windows and
       per-group transformations. The notebook predates pandas 3.0.2, so it generates test questions rather
       than serving as semantic authority.
+    route_id: route-g8-polars-aggregation-windows-7e969207db
   - id: resource-polars-11-windows-and-per-group-transformations-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: Preserves the deeper mental model and traps written for the original stage.
@@ -371,7 +375,7 @@ stages:
   scope_triage: deferred
   resources:
   - id: resource-note-pandas-groupby-signatures
-    kind: read
+    kind: reference
     label: pandas GroupBy signature reference
     locator: Complete note; targets pandas 3.0.2
     angle: Inventory of the per-method flags Stratum's logical record must not erase.
@@ -380,7 +384,7 @@ stages:
     scope_triage: required-now
     vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-groupby-signatures.md
   - id: resource-note-aggregation-contentions
-    kind: read
+    kind: reference
     label: pandas-Polars aggregation contention map
     locator: Complete note plus executable attachments; verified against pandas 3.0.2 and Polars 1.36.0
     angle: The strongest local semantic evidence for this session.
@@ -389,7 +393,7 @@ stages:
     scope_triage: required-now
     vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
   - id: resource-note-aggregateop
-    kind: read
+    kind: reference
     label: Stratum AggregateOp note
     locator: 'Complete note: fused groupby extraction and OperandRef shifting'
     angle: Connects pandas signatures to the actual logical fields and graph rewrite.
@@ -407,6 +411,8 @@ stages:
       Polars 1.36.0 or pandas 3.0.2 before treating it as backend policy.
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/aggregation/
+    source_id: source-polars-docs
+    route_id: route-g8-polars-aggregation-windows-29c5729797
   - id: resource-aggregation-support-matrix
     kind: practise
     label: Aggregation backend support matrix

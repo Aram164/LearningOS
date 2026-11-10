@@ -6183,6 +6183,1509 @@ records:
       status: supported
     restamped_by: codex/operator-approval
     restamped_on: '2026-10-02'
+  covers:route-g8-polars-aggregation-windows-0fd1f5375a:
+    claim_id: covers:route-g8-polars-aggregation-windows-0fd1f5375a
+    claim_kind: route-covers
+    statement: route-g8-polars-aggregation-windows-0fd1f5375a covers knowledge-polars-aggregation
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-aggregation: sha256:c97497b3c5df0aca6254710b64250944eb6caeed854d1a5c6629b5a700f97374
+        route-content:route-g8-polars-aggregation-windows-0fd1f5375a: sha256:03c670f05ff6298f355dc9e44d33b0b8cc058f3972648630519778cfcc3809a8
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p372
+        sha256:822f88c375d3a96051ea82e1a2bfacb3ac2572adcb156ae3505a91a4f5787d56 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-aggregation-windows-2934ca2234:
+    claim_id: covers:route-g8-polars-aggregation-windows-2934ca2234
+    claim_kind: route-covers
+    statement: route-g8-polars-aggregation-windows-2934ca2234 covers knowledge-polars-aggregation
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb: fcfd81b5607e9ca0331ac96568d1141bab977e8f57d5f644b64136ccf41ece27
+        node-content:knowledge-polars-aggregation: sha256:c97497b3c5df0aca6254710b64250944eb6caeed854d1a5c6629b5a700f97374
+        route-content:route-g8-polars-aggregation-windows-2934ca2234: sha256:e23d0db42098934b84d56e140b11fefb8d91f54d158706127dd2e286c6d7adcf
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-aggregation-windows-29c5729797:
+    claim_id: covers:route-g8-polars-aggregation-windows-29c5729797
+    claim_kind: route-covers
+    statement: route-g8-polars-aggregation-windows-29c5729797 covers knowledge-polars-aggregation-flags
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-aggregation-flags: sha256:4b19b6cce02190508b81d841601655c42199df24dd7011328e4530822d91dfa6
+        route-content:route-g8-polars-aggregation-windows-29c5729797: sha256:4046464c4bfd628660cc97967a513d4eeb1796e3ea6482f8da7c6877e21ac98b
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/expressions/aggregation/ -- trail:
+        Verified 2026-11-10: Opened official named guide/API section and its definitions/parameters
+        on 2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-aggregation-windows-7e969207db:
+    claim_id: covers:route-g8-polars-aggregation-windows-7e969207db
+    claim_kind: route-covers
+    statement: route-g8-polars-aggregation-windows-7e969207db covers knowledge-polars-windows
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb: fcfd81b5607e9ca0331ac96568d1141bab977e8f57d5f644b64136ccf41ece27
+        node-content:knowledge-polars-windows: sha256:b4efa302c48d669a3f1216638715159c5406f402b92ebedb430931701da440f9
+        route-content:route-g8-polars-aggregation-windows-7e969207db: sha256:8ad829db0d1112473aa60770f1f3952c95390a0bdc706f75a2dab29a030500a9
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-aggregation-windows-e642f30767:
+    claim_id: covers:route-g8-polars-aggregation-windows-e642f30767
+    claim_kind: route-covers
+    statement: route-g8-polars-aggregation-windows-e642f30767 covers knowledge-polars-windows
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-windows: sha256:b4efa302c48d669a3f1216638715159c5406f402b92ebedb430931701da440f9
+        route-content:route-g8-polars-aggregation-windows-e642f30767: sha256:55ea70bf036239afeeae94f7f693b56b05ffa712c97b93a43a84f886848daa79
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p391
+        sha256:f171922788e555eba4a1a91f6c772b5bf570fca0d466f8c49f75092b808521de --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-backend-loop-5afce1282e:
+    claim_id: covers:route-g8-polars-backend-loop-5afce1282e
+    claim_kind: route-covers
+    statement: route-g8-polars-backend-loop-5afce1282e covers knowledge-polars-regression-policy
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-regression-policy: sha256:3614330e311f337f7189dab2bb651e71490ed96f8b61912d77bb191a58363bd1
+        route-content:route-g8-polars-backend-loop-5afce1282e: sha256:faf0ffb8ef8809ecdff635df90c189df7d85b4061c8bf6c5795409d4f5813b5c
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/testing.html --
+        trail: Verified 2026-11-10: Opened official named guide/API section and its
+        definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-capstone-transition-03adf69a07:
+    claim_id: covers:route-g8-polars-capstone-transition-03adf69a07
+    claim_kind: route-covers
+    statement: route-g8-polars-capstone-transition-03adf69a07 covers knowledge-polars-version-transition
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-version-transition: sha256:0436fdf77a4c148e1c260ffcc72dd42db553c75243098d539b882312c342f486
+        route-content:route-g8-polars-capstone-transition-03adf69a07: sha256:c38008f7aa02f2a10d117ae33d89c4466cde388a204e3d0da5b2759aff154d77
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/releases/upgrade/2/ -- trail: Verified 2026-11-10:
+        Opened official named guide/API section and its definitions/parameters on
+        2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-capstone-transition-96df9fa680:
+    claim_id: covers:route-g8-polars-capstone-transition-96df9fa680
+    claim_kind: route-covers
+    statement: route-g8-polars-capstone-transition-96df9fa680 covers knowledge-polars-property-stress
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-property-stress: sha256:64cf16778e1e0f7a18db6c70134679ec404626ea8bd50ed545df5e65dfcaede9
+        route-content:route-g8-polars-capstone-transition-96df9fa680: sha256:6ba189f331dcf5f06a85607eb45fc45dbeb4bbaaef2dbe0a4ed4079df4f17236
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html
+        -- trail: Verified 2026-11-10: Opened official named API signature, parameters
+        and explanation on 2026-11-10. Preserved original URL; no version-pinned execution
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-capstone-transition-f4cc532998:
+    claim_id: covers:route-g8-polars-capstone-transition-f4cc532998
+    claim_kind: route-covers
+    statement: route-g8-polars-capstone-transition-f4cc532998 covers knowledge-polars-property-stress
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-property-stress: sha256:64cf16778e1e0f7a18db6c70134679ec404626ea8bd50ed545df5e65dfcaede9
+        route-content:route-g8-polars-capstone-transition-f4cc532998: sha256:43a07edb81db11eb3cc9fb5ebb914292c9ae083446a43f459f5e06983b3484bc
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/testing.html --
+        trail: Verified 2026-11-10: Opened official named guide/API section and its
+        definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-expressions-11fd2ab1a3:
+    claim_id: covers:route-g8-polars-expressions-11fd2ab1a3
+    claim_kind: route-covers
+    statement: route-g8-polars-expressions-11fd2ab1a3 covers knowledge-polars-expr-expansion
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-expr-expansion: sha256:a5b53db3740670ce60c344fee1a8ce9c17135356d43fde9d7d7ebab4d411043f
+        route-content:route-g8-polars-expressions-11fd2ab1a3: sha256:1ad56a65f32ddd29636172563d6eca00981abefbe7dd097505ccbf199679aef4
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/expressions/expression-expansion/
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-expressions-8d8f59fb62:
+    claim_id: covers:route-g8-polars-expressions-8d8f59fb62
+    claim_kind: route-covers
+    statement: route-g8-polars-expressions-8d8f59fb62 covers knowledge-polars-expr-contexts
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.03-Operations-in-Pandas.ipynb: abfe26a5a3f342e4cf95860170d3f378f10375abb1f372430b2d9f9a0499f9df
+        node-content:knowledge-polars-expr-contexts: sha256:07fda42453c0b5233bc84959c80b8c226cdea8eeebf1645976c07507d49d8ebf
+        route-content:route-g8-polars-expressions-8d8f59fb62: sha256:7a722e0ee5a3153887b5b949ffee010483ef8e9320aa7985044448638f2da7a5
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.03-Operations-in-Pandas.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-expressions-cc6119fe4c:
+    claim_id: covers:route-g8-polars-expressions-cc6119fe4c
+    claim_kind: route-covers
+    statement: route-g8-polars-expressions-cc6119fe4c covers knowledge-polars-expr-horizontal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-expr-horizontal: sha256:3be2203d719be4c8e33c1feaa108e4963e52ec66db8b5743bf763f768bc0ec31
+        route-content:route-g8-polars-expressions-cc6119fe4c: sha256:14854f81cebc96d05d671872f4cb4dfdd3ae1b32e387b346b5c964fb9fa092ab
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.when.html
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-expressions-f3258b5d09:
+    claim_id: covers:route-g8-polars-expressions-f3258b5d09
+    claim_kind: route-covers
+    statement: route-g8-polars-expressions-f3258b5d09 covers knowledge-polars-expr-contexts
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-expr-contexts: sha256:07fda42453c0b5233bc84959c80b8c226cdea8eeebf1645976c07507d49d8ebf
+        route-content:route-g8-polars-expressions-f3258b5d09: sha256:97c816a53554a57ff1b04184f08c460b2778261b7536793ed00d1f22a7d66945
+        source-material:source-polars-expression-engine-talk: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pola.rs/posts/talk-pydata-amsterdam-2023 -- trail: Verified
+        2026-11-10: Opened official talk landing page identifying Ritchie Vink, 2023
+        talk and optimizer/execution topic. Video itself not watched: route remains
+        unassessed/unevaluated.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-expressions-f588f5d50d:
+    claim_id: covers:route-g8-polars-expressions-f588f5d50d
+    claim_kind: route-covers
+    statement: route-g8-polars-expressions-f588f5d50d covers knowledge-polars-expr-horizontal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-expr-horizontal: sha256:3be2203d719be4c8e33c1feaa108e4963e52ec66db8b5743bf763f768bc0ec31
+        route-content:route-g8-polars-expressions-f588f5d50d: sha256:157642f83a66609894b77b62d7b006d27e0703e6adcdf2304f70f3713306cc6d
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/expressions/folds/ -- trail: Verified
+        2026-11-10: Opened official named guide/API section and its definitions/parameters
+        on 2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-4b184a7a0e:
+    claim_id: covers:route-g8-polars-joins-reshape-4b184a7a0e
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-4b184a7a0e covers knowledge-polars-join-compatibility
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-join-compatibility: sha256:300d958940cc6d81caa7c462a479214e5e6dc965f84d98984795463103efded2
+        route-content:route-g8-polars-joins-reshape-4b184a7a0e: sha256:e25a3386a49b62318b40f62d2e19494c604a2781ad5f2c7d3a69b346e70f368a
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p410
+        sha256:a1ad2821eac8d85f5f5eef7f252867d9f2664a3fe5ca6b403f948f79cac654ef --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-53576139ef:
+    claim_id: covers:route-g8-polars-joins-reshape-53576139ef
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-53576139ef covers knowledge-polars-reshape
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.06-Concat-And-Append.ipynb: 485559ab2e5035dd6d0e927226801fd286b47cd0843dd3ca5f7e2ff7cce3e580
+        node-content:knowledge-polars-reshape: sha256:6b03173ce84fad07a92918f0d77dbcf72fb8e9cc74e466df7ba879a49cfd8291
+        route-content:route-g8-polars-joins-reshape-53576139ef: sha256:f430797021235829cf7f7140877df0bed90579a721cc802ba26871b141e00f3c
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.06-Concat-And-Append.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-838512b3d0:
+    claim_id: covers:route-g8-polars-joins-reshape-838512b3d0
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-838512b3d0 covers knowledge-polars-reshape
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.09-Pivot-Tables.ipynb: ca4361b5e0b5d29f695bd537c41e2fc3eaec0d1149893e35db159bc17c357bb9
+        node-content:knowledge-polars-reshape: sha256:6b03173ce84fad07a92918f0d77dbcf72fb8e9cc74e466df7ba879a49cfd8291
+        route-content:route-g8-polars-joins-reshape-838512b3d0: sha256:7c896d105440d5dff346a4c212166d4101437191710339696c637486c4fc68e0
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.09-Pivot-Tables.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-8e0dad1175:
+    claim_id: covers:route-g8-polars-joins-reshape-8e0dad1175
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-8e0dad1175 covers knowledge-polars-join-semantics
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb: 0d71fee1082d5b1e3886987a3cbb8f71d25ee09bbc3a2db2b87958c26b6e6042
+        node-content:knowledge-polars-join-semantics: sha256:554105ab78c9a8f83cb43c2f7b0cb86cc20c76678acc3f0454b21081c3e2769f
+        route-content:route-g8-polars-joins-reshape-8e0dad1175: sha256:0cd894924f12a71cd0d5130cbd9b9680b3491ee62aadab0bb88ff930ddc5af39
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-955590f09a:
+    claim_id: covers:route-g8-polars-joins-reshape-955590f09a
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-955590f09a covers knowledge-polars-reshape
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-reshape: sha256:6b03173ce84fad07a92918f0d77dbcf72fb8e9cc74e466df7ba879a49cfd8291
+        route-content:route-g8-polars-joins-reshape-955590f09a: sha256:ec6335e98ba77958de0af05d0f8505dd587e5a05ee4a5620c08fafe98db64e0f
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/releases/upgrade/2/ -- trail: Verified 2026-11-10:
+        Opened official named guide/API section and its definitions/parameters on
+        2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-99a3a0baaf:
+    claim_id: covers:route-g8-polars-joins-reshape-99a3a0baaf
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-99a3a0baaf covers knowledge-polars-join-compatibility
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb: 0d71fee1082d5b1e3886987a3cbb8f71d25ee09bbc3a2db2b87958c26b6e6042
+        node-content:knowledge-polars-join-compatibility: sha256:300d958940cc6d81caa7c462a479214e5e6dc965f84d98984795463103efded2
+        route-content:route-g8-polars-joins-reshape-99a3a0baaf: sha256:aea39d2e62884d191fccfcaa1838b973697e8d3bcedbee2ef57bdcacecfe6726
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-9f990b1815:
+    claim_id: covers:route-g8-polars-joins-reshape-9f990b1815
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-9f990b1815 covers knowledge-polars-join-semantics
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-join-semantics: sha256:554105ab78c9a8f83cb43c2f7b0cb86cc20c76678acc3f0454b21081c3e2769f
+        route-content:route-g8-polars-joins-reshape-9f990b1815: sha256:bb2e10343a6d8fde62e461f6714c6d70b6a368078cd255505fd019f34b293892
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p405
+        sha256:32f06b50f9338855e28538a280d4b2c10f0d8cfa9bcc533f0f05e08314409217 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-adeb12fa09:
+    claim_id: covers:route-g8-polars-joins-reshape-adeb12fa09
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-adeb12fa09 covers knowledge-polars-reshape
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-reshape: sha256:6b03173ce84fad07a92918f0d77dbcf72fb8e9cc74e466df7ba879a49cfd8291
+        route-content:route-g8-polars-joins-reshape-adeb12fa09: sha256:9920a0b62d4b3f5d7b1e31f945f2b835c5a1739c0af82eaa11bc4278fc0986d3
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p424
+        sha256:df353b626d5c0dbcf417069d9091f6f192ba6ffdf3f1ff584eacf701fa0f4ef9 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-joins-reshape-dc13c6d8c3:
+    claim_id: covers:route-g8-polars-joins-reshape-dc13c6d8c3
+    claim_kind: route-covers
+    statement: route-g8-polars-joins-reshape-dc13c6d8c3 covers knowledge-polars-join-semantics
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-join-semantics: sha256:554105ab78c9a8f83cb43c2f7b0cb86cc20c76678acc3f0454b21081c3e2769f
+        route-content:route-g8-polars-joins-reshape-dc13c6d8c3: sha256:fa3dfbfa16b8980ff2d2d939b4683f8164fe2a9481d37cb5d6c41a724792567e
+        source-material:source-polars-cookbook-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/PacktPublishing/Polars-Cookbook -- trail: Verified
+        2026-11-10: Opened publisher repository contents. Chapter 8 lists joins/reshaping
+        and Chapter 10 interoperability. Preserved original version caution; notebooks
+        were not executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-08e3ff3f3d:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-08e3ff3f3d
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-08e3ff3f3d covers knowledge-polars-lazy-plans
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-lazy-plans: sha256:3b0140618887a27ebe39670c1a9f592e3f81f6a3451a99cae716ac2975e8943e
+        route-content:route-g8-polars-lazy-udf-interop-08e3ff3f3d: sha256:beaddd3d81b672c087e3d0fba9dcb468f0f4b3ae4d002be3be52769630d631d2
+        source-material:source-polars-expression-engine-talk: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pola.rs/posts/talk-pydata-amsterdam-2023 -- trail: Verified
+        2026-11-10: Opened official talk landing page identifying Ritchie Vink, 2023
+        talk and optimizer/execution topic. Video itself not watched: route remains
+        unassessed/unevaluated.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-09400a5e74:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-09400a5e74
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-09400a5e74 covers knowledge-polars-lazy-plans
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb: d7b667ce895ee99780dd335b8393dfe450f58ac60ea5f7b259fb9223c3a175ae
+        node-content:knowledge-polars-lazy-plans: sha256:3b0140618887a27ebe39670c1a9f592e3f81f6a3451a99cae716ac2975e8943e
+        route-content:route-g8-polars-lazy-udf-interop-09400a5e74: sha256:107f792f46c54381884a6bea2b45752675a51cd712d971d6fa1cdd7d047634e3
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-425cadf453:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-425cadf453
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-425cadf453 covers knowledge-polars-udf-boundary
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-udf-boundary: sha256:5b3539098ad51d35315910a68cb9e87df8b30a237254218b2e0b9c05a59b6c04
+        route-content:route-g8-polars-lazy-udf-interop-425cadf453: sha256:3e8759e9b560508bfdd27364b9099423cd6d30f76212d8faac0cd5628f3b1d97
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p505
+        sha256:5b225e86eafe0ab4703b7ef9577a929ebe715bbf7dc273f7b36aa576219ae279 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-834d0cbbca:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-834d0cbbca
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-834d0cbbca covers knowledge-polars-arrow-interop
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-arrow-interop: sha256:9033edf02d310a7d66df8f2186007efaabdd75aec74adfde32b922f2522c8ffc
+        route-content:route-g8-polars-lazy-udf-interop-834d0cbbca: sha256:d34276b73a41dfdd2a78705921b5f75bd02338148da59d8d21fe99c87d5a353f
+        source-material:source-polars-cookbook-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/PacktPublishing/Polars-Cookbook -- trail: Verified
+        2026-11-10: Opened publisher repository contents. Chapter 8 lists joins/reshaping
+        and Chapter 10 interoperability. Preserved original version caution; notebooks
+        were not executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-88f71f28ed:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-88f71f28ed
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-88f71f28ed covers knowledge-polars-udf-boundary
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb: d7b667ce895ee99780dd335b8393dfe450f58ac60ea5f7b259fb9223c3a175ae
+        node-content:knowledge-polars-udf-boundary: sha256:5b3539098ad51d35315910a68cb9e87df8b30a237254218b2e0b9c05a59b6c04
+        route-content:route-g8-polars-lazy-udf-interop-88f71f28ed: sha256:edae484a32eb8fc0e122de13786a19787930a2ea037c17d7a3c54bf1fb16f714
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-9d29fb72ba:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-9d29fb72ba
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-9d29fb72ba covers knowledge-polars-lazy-plans
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-lazy-plans: sha256:3b0140618887a27ebe39670c1a9f592e3f81f6a3451a99cae716ac2975e8943e
+        route-content:route-g8-polars-lazy-udf-interop-9d29fb72ba: sha256:cd419930f5d86d034753ed54f8f8c4384df077b38b120e264fecdfe52b2802e9
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p547
+        sha256:860de620bf7deed688f9a0026854bd3a9ef2eb493a4246ed60c954cd1365598e --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-a8563963b8:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-a8563963b8
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-a8563963b8 covers knowledge-polars-arrow-interop
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-arrow-interop: sha256:9033edf02d310a7d66df8f2186007efaabdd75aec74adfde32b922f2522c8ffc
+        route-content:route-g8-polars-lazy-udf-interop-a8563963b8: sha256:045521b5e2b7fff238c0c68c5275a669cc3f32f76ff1cd77ea6cbc29a873f22b
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p540
+        sha256:b2817a59cf01388ed7d57b6268e313c137dbcfcefed8aa0e98b61495a31db772 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-c765de6afc:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-c765de6afc
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-c765de6afc covers knowledge-polars-arrow-interop
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb: aafa916ead1d807c403ac5c530cb229499195a96d8de866f04466e769cc1bdef
+        node-content:knowledge-polars-arrow-interop: sha256:9033edf02d310a7d66df8f2186007efaabdd75aec74adfde32b922f2522c8ffc
+        route-content:route-g8-polars-lazy-udf-interop-c765de6afc: sha256:fb5fb2468041e96d7035846ff9cffb43f081b066d85b5d1e54293f1d16da9b7f
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-lazy-udf-interop-f473bc1348:
+    claim_id: covers:route-g8-polars-lazy-udf-interop-f473bc1348
+    claim_kind: route-covers
+    statement: route-g8-polars-lazy-udf-interop-f473bc1348 covers knowledge-polars-lazy-plans
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-lazy-plans: sha256:3b0140618887a27ebe39670c1a9f592e3f81f6a3451a99cae716ac2975e8943e
+        route-content:route-g8-polars-lazy-udf-interop-f473bc1348: sha256:85a1c5d48a7b4c53cecd4073dd39c6c866107dd8caf35bf5175162e3fab866bd
+        source-material:source-polars-birds-eye-view: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pola.rs/posts/polars_birds_eye_view -- trail: Verified 2026-11-10:
+        Opened official article: logical plan, optimization, physical planning and
+        execution; historical 2024 article, not current API guarantees.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-order-text-time-57cbdf6c5f:
+    claim_id: covers:route-g8-polars-order-text-time-57cbdf6c5f
+    claim_kind: route-covers
+    statement: route-g8-polars-order-text-time-57cbdf6c5f covers knowledge-polars-text-temporal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-text-temporal: sha256:bbf81233a510ef374bda02aeb6f7b514636677fa37c709e6eff7466ebc751fa4
+        route-content:route-g8-polars-order-text-time-57cbdf6c5f: sha256:223e433504549552e4933fb1d792012cde68b1459f5026274823047831cc5f20
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p330
+        sha256:92291d8042793dae8dadee73cc8b4ba9e77236847fb9d2c53c4a8a6805952238 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-order-text-time-9f9915862e:
+    claim_id: covers:route-g8-polars-order-text-time-9f9915862e
+    claim_kind: route-covers
+    statement: route-g8-polars-order-text-time-9f9915862e covers knowledge-polars-ordering
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-ordering: sha256:d1c107da98faf5cc030d30ff31d83fa580bb85be3b36719ee912a137cc3d2007
+        route-content:route-g8-polars-order-text-time-9f9915862e: sha256:343a499aafb38e3d053644de416f0059099c4035a20c8f66431a4a2ee4030ada
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p313
+        sha256:15204e5b0942944fad4b06d79eea5e5d07cda26976f38528f6636dd7ab0f1167 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-order-text-time-dc1c637e52:
+    claim_id: covers:route-g8-polars-order-text-time-dc1c637e52
+    claim_kind: route-covers
+    statement: route-g8-polars-order-text-time-dc1c637e52 covers knowledge-polars-text-temporal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.10-Working-With-Strings.ipynb: f1d500ec88dafa72b06156565282481b8f14cd6db5dea42f94f5acb5ab9695ed
+        node-content:knowledge-polars-text-temporal: sha256:bbf81233a510ef374bda02aeb6f7b514636677fa37c709e6eff7466ebc751fa4
+        route-content:route-g8-polars-order-text-time-dc1c637e52: sha256:c9345ae37319c6df18627548943e35897bbe864a9f5eac35a087d594f75d5aba
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.10-Working-With-Strings.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-order-text-time-e37edaf3c0:
+    claim_id: covers:route-g8-polars-order-text-time-e37edaf3c0
+    claim_kind: route-covers
+    statement: route-g8-polars-order-text-time-e37edaf3c0 covers knowledge-polars-text-temporal
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.11-Working-with-Time-Series.ipynb: 7a30ebac052ed41aaa6bb1a22c6bcfca687839ca9a49e534ff49a8c4fd2791d3
+        node-content:knowledge-polars-text-temporal: sha256:bbf81233a510ef374bda02aeb6f7b514636677fa37c709e6eff7466ebc751fa4
+        route-content:route-g8-polars-order-text-time-e37edaf3c0: sha256:cce1ef7db1ab82b4ac2f307a7904fcbca872b42fd2c3f288ebe8de63beb9e926
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.11-Working-with-Time-Series.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-0c5af4d442:
+    claim_id: covers:route-g8-polars-pandas-fluency-0c5af4d442
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-0c5af4d442 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        ? file:curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check-p2.py
+        : sha256:14054ca0b97fc9212e6f612cbd0e71ccf26bda8da326a2b779405b3cf79ceee5
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-0c5af4d442: sha256:608b49ae7a1734ab8b9e0d62670c89e4d5edf476a6d3e36dd3a130b236924ffc
+        source-material:source-polars-authored-first-steps-exercises: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'repo-file:curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check-p2.py
+        -- trail: Opened the authored drill/check file; it remains a repository attachment
+        rather than a registered external material. Code was read, not executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-151dbc2284:
+    claim_id: covers:route-g8-polars-pandas-fluency-151dbc2284
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-151dbc2284 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb: aafa916ead1d807c403ac5c530cb229499195a96d8de866f04466e769cc1bdef
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-151dbc2284: sha256:dc2e6ec4cc1d927fce6ed400dcfd993709dca68fe908103f528a26649ab64052
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-1e18312a14:
+    claim_id: covers:route-g8-polars-pandas-fluency-1e18312a14
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-1e18312a14 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        ? file:curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-p2.md
+        : sha256:b232eb3153553abf390ea2e34cf2c77ca32e5cac82e25e59091c8e2228d88aae
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-1e18312a14: sha256:e52c9a9517653090d4ae9bfa2f17f1ed2c2f40d542fa409263dc049400f007ae
+        source-material:source-polars-authored-first-steps-exercises: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'repo-file:curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-p2.md
+        -- trail: Opened the authored drill/check file; it remains a repository attachment
+        rather than a registered external material. Code was read, not executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-30c7c2c926:
+    claim_id: covers:route-g8-polars-pandas-fluency-30c7c2c926
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-30c7c2c926 covers knowledge-polars-parity-harness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-parity-harness: sha256:d52d8e5a1234dfa4c58f2d5856890ba3313a62fb67f481bab357918ec7b74771
+        route-content:route-g8-polars-pandas-fluency-30c7c2c926: sha256:1169646f6594b3c98c6a54a34197e67d6c87c512a3b17be214cc7fcbe741d195
+        source-material:source-pytest-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pytest.org/en/stable/how-to/parametrize.html -- trail:
+        Verified 2026-11-10: Opened official pytest parametrization explanation and
+        worked parameter-set example on 2026-11-10; no examples executed.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-32115ff656:
+    claim_id: covers:route-g8-polars-pandas-fluency-32115ff656
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-32115ff656 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-32115ff656: sha256:85bbe211aac718e0d14800de97637ed9df2a997f23b23bda138d6c667127ff29
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p87
+        sha256:77a0982259048413f937f6dbf71388e0afadfbf52c1271be628438ae7d4a7bde --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-509fe03f76:
+    claim_id: covers:route-g8-polars-pandas-fluency-509fe03f76
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-509fe03f76 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-509fe03f76: sha256:1664599a57b7b35d1bbef708e6ca70fdadb7106009f26f634e1f4886abb673e7
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/migration/pandas/ -- trail: Verified
+        2026-11-10: Opened official named guide/API section and its definitions/parameters
+        on 2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-62096ddd78:
+    claim_id: covers:route-g8-polars-pandas-fluency-62096ddd78
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-62096ddd78 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-cheatsheets/Pandas_cheatsheet.pdf: 590d02ed248727c0e56f6e5a72419aae88d405a68afd9a7e3652f42fd131755b
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-62096ddd78: sha256:e7e41fc8b00731c3c323514f194e5989a635c5a9bcffdeb43b8096e57252d5b6
+        source-material:source-python-cheatsheets: sha256:5fe0c481c9f8f88387a2cf5009521dea6f597544c6cefd714800684631f3adcb
+      evidence:
+      - 'quote:material://source-python-cheatsheets/Pandas_cheatsheet.pdf#p1 sha256:dfcdc2e8ed48efa720016a817e484f98fccd7b03f8d5df9d7ad79d172a68a902
+        -- trail: Opened exact local bytes; quotation supports the preserved topic
+        binding, not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-66ee137aa0:
+    claim_id: covers:route-g8-polars-pandas-fluency-66ee137aa0
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-66ee137aa0 covers knowledge-polars-divergence-axes
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-divergence-axes: sha256:216bc6c729c76dd36fbce1ab433cfe85d331123b6aa45a81365a50c51c6b01e7
+        route-content:route-g8-polars-pandas-fluency-66ee137aa0: sha256:4d53a01e73b36edec3c314891146b805271ca0a0e71863095864f101cb511d86
+        source-material:source-polars-definitive-guide-code: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://github.com/jeroenjanssens/python-polars-the-definitive-guide
+        -- trail: Verified 2026-11-10: Opened authors’ companion repository: chapter
+        notebooks, scripts and data. Kept separate source identity from the local
+        PDF so repository claims do not masquerade as PDF evidence.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-pandas-fluency-a0dbd443f3:
+    claim_id: covers:route-g8-polars-pandas-fluency-a0dbd443f3
+    claim_kind: route-covers
+    statement: route-g8-polars-pandas-fluency-a0dbd443f3 covers knowledge-polars-parity-harness
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-parity-harness: sha256:d52d8e5a1234dfa4c58f2d5856890ba3313a62fb67f481bab357918ec7b74771
+        route-content:route-g8-polars-pandas-fluency-a0dbd443f3: sha256:217fb1b14de94f3e5a099140c74899a625e74c874b8983b3456c0c569572cc8a
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p560
+        sha256:829eef4ac5db90c0a8116140f497d2c3951715564da6d24b437b734de6eabaa7 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-schema-missing-types-4411a2239b:
+    claim_id: covers:route-g8-polars-schema-missing-types-4411a2239b
+    claim_kind: route-covers
+    statement: route-g8-polars-schema-missing-types-4411a2239b covers knowledge-polars-schema-construction
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb: aafa916ead1d807c403ac5c530cb229499195a96d8de866f04466e769cc1bdef
+        node-content:knowledge-polars-schema-construction: sha256:f554537abe52c8adf9b599e1ec230cbd112d7b3f6c887c6cee22de51c8a42dba
+        route-content:route-g8-polars-schema-missing-types-4411a2239b: sha256:4d41353c282fe27f5d6166cf902fe4846ae27f221df2847ae0f60e31933f756d
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-schema-missing-types-622630a60e:
+    claim_id: covers:route-g8-polars-schema-missing-types-622630a60e
+    claim_kind: route-covers
+    statement: route-g8-polars-schema-missing-types-622630a60e covers knowledge-polars-missing-model
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-missing-model: sha256:bee5481ad78f87b72845fd3a61f273e54a41e81aeb2123d1ef6ac063ac5ed4b0
+        route-content:route-g8-polars-schema-missing-types-622630a60e: sha256:f5c7e0b99cffc1094c3529cf73e537c1b5a3c061afcc020cddd4de5702e48e0c
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p113
+        sha256:84df3a3a8ad0a8b2b1d03dcbc1a3707ad30d0624c7ca3802bcdd229bec784e6e --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-schema-missing-types-89fa691527:
+    claim_id: covers:route-g8-polars-schema-missing-types-89fa691527
+    claim_kind: route-covers
+    statement: route-g8-polars-schema-missing-types-89fa691527 covers knowledge-polars-casting
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-casting: sha256:9389a9b293c7a268af96269f4ddab7fa4d3348c5a11059ac5a887a1c14d93be2
+        route-content:route-g8-polars-schema-missing-types-89fa691527: sha256:fcd8c250f9da87f0c49e52f2cbd0f907062daac3b7e9defce9356d20e8aae0e0
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p106
+        sha256:4a74edae4b68734a7c94e14f2f3582b5296ec723ad94a9aeff61dead7a8c72ac --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-schema-missing-types-ccb6b1760c:
+    claim_id: covers:route-g8-polars-schema-missing-types-ccb6b1760c
+    claim_kind: route-covers
+    statement: route-g8-polars-schema-missing-types-ccb6b1760c covers knowledge-polars-schema-construction
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-schema-construction: sha256:f554537abe52c8adf9b599e1ec230cbd112d7b3f6c887c6cee22de51c8a42dba
+        route-content:route-g8-polars-schema-missing-types-ccb6b1760c: sha256:732dfdb95b9d9c90e9a7f6793ca99f2cf51f9485d0a676c3c446dda2db777ab4
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p106
+        sha256:4a74edae4b68734a7c94e14f2f3582b5296ec723ad94a9aeff61dead7a8c72ac --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-schema-missing-types-fe34f782fa:
+    claim_id: covers:route-g8-polars-schema-missing-types-fe34f782fa
+    claim_kind: route-covers
+    statement: route-g8-polars-schema-missing-types-fe34f782fa covers knowledge-polars-missing-model
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.04-Missing-Values.ipynb: 26c55e6f51bb406703e16011f722d0d7f8502426c5f14d93dec525fbae07f521
+        node-content:knowledge-polars-missing-model: sha256:bee5481ad78f87b72845fd3a61f273e54a41e81aeb2123d1ef6ac063ac5ed4b0
+        route-content:route-g8-polars-schema-missing-types-fe34f782fa: sha256:8939f0db5413606a7a67a17037fe8a0137da6d7726322c78c7cd5fb38340c83a
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.04-Missing-Values.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-34dd0e359e:
+    claim_id: covers:route-g8-polars-selection-backend-34dd0e359e
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-34dd0e359e covers knowledge-polars-selection-methods
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-selection-methods: sha256:07fb469c9b6b032181d0242861cd07ef6833f5194f8ed30290d46ac6675adc41
+        route-content:route-g8-polars-selection-backend-34dd0e359e: sha256:37f9045578fb3a9e03368365b269e4b28410f709f87174fb62e02de9f2272d26
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.unique.html
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-36b2a51a0e:
+    claim_id: covers:route-g8-polars-selection-backend-36b2a51a0e
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-36b2a51a0e covers knowledge-polars-dropna-lowering
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-dropna-lowering: sha256:4ae7530e036ca70a74b32b90dab8b856d01d912a876a63ae909af942d7fbe611
+        route-content:route-g8-polars-selection-backend-36b2a51a0e: sha256:dca016745eeeabc437ee9e6efd653a37bdb9ebb127da8bf78ce4d84f2d441d31
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+        -- trail: Verified 2026-11-10: Opened official named API signature, parameters
+        and explanation on 2026-11-10. Preserved original URL; no version-pinned execution
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-3eb95efeb5:
+    claim_id: covers:route-g8-polars-selection-backend-3eb95efeb5
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-3eb95efeb5 covers knowledge-polars-runtime-operands
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-runtime-operands: sha256:1703fe651cb26007914eae843865e74bf0ba0dfde1ba725f0e4a2e91eebc763f
+        route-content:route-g8-polars-selection-backend-3eb95efeb5: sha256:82ee2f409483e1f00ba4939dacbc15e0c9ac73c2a7903b5fea9a0f1c688a6d99
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+        -- trail: Verified 2026-11-10: Opened official named API signature, parameters
+        and explanation on 2026-11-10. Preserved original URL; no version-pinned execution
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-6bb5ce6915:
+    claim_id: covers:route-g8-polars-selection-backend-6bb5ce6915
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-6bb5ce6915 covers knowledge-polars-dropna-lowering
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-dropna-lowering: sha256:4ae7530e036ca70a74b32b90dab8b856d01d912a876a63ae909af942d7fbe611
+        route-content:route-g8-polars-selection-backend-6bb5ce6915: sha256:7269fb26c2a6ff184272e50e1254571556c030eaf417a92c1fc7a79ce48cc1ce
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.drop_nulls.html
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-6d8f59a952:
+    claim_id: covers:route-g8-polars-selection-backend-6d8f59a952
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-6d8f59a952 covers knowledge-polars-dropna-lowering
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-dropna-lowering: sha256:4ae7530e036ca70a74b32b90dab8b856d01d912a876a63ae909af942d7fbe611
+        route-content:route-g8-polars-selection-backend-6d8f59a952: sha256:d950861748076be04af57f8bc3c27c67299ea6ae8e5706dcbca9744a619142ba
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/expressions/missing-data/ -- trail:
+        Verified 2026-11-10: Opened official named guide/API section and its definitions/parameters
+        on 2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-6d9c8789da:
+    claim_id: covers:route-g8-polars-selection-backend-6d9c8789da
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-6d9c8789da covers knowledge-polars-selection-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+        node-content:knowledge-polars-selection-contract: sha256:2a6f98afdb2114f3956426e08eb30b4591e742d1338f02bbaf32afea2c5ec747
+        route-content:route-g8-polars-selection-backend-6d9c8789da: sha256:8e4207bc8c19296c9e722b84758630b968727cb4a9961b3681c5595fb98605e5
+        source-material:source-polars-definitive-guide: sha256:639324de512382199d02aa94b75fb538f03de4aba215bec6a796c294da3cf3bc
+      evidence:
+      - 'quote:material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf#p309
+        sha256:6376e29b8c785e7ba6ee732ae44889eff321267ebc09206e7f289184fd2ce395 --
+        trail: Opened exact local bytes; quotation supports the preserved topic binding,
+        not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-75a3938c62:
+    claim_id: covers:route-g8-polars-selection-backend-75a3938c62
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-75a3938c62 covers knowledge-polars-runtime-operands
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-runtime-operands: sha256:1703fe651cb26007914eae843865e74bf0ba0dfde1ba725f0e4a2e91eebc763f
+        route-content:route-g8-polars-selection-backend-75a3938c62: sha256:3c8873a972962d4164df8ec9690e91f4fe13efcd6c10c09a8c709957e0475eb3
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.head.html
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-786e10aec1:
+    claim_id: covers:route-g8-polars-selection-backend-786e10aec1
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-786e10aec1 covers knowledge-polars-runtime-operands
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-runtime-operands: sha256:1703fe651cb26007914eae843865e74bf0ba0dfde1ba725f0e4a2e91eebc763f
+        route-content:route-g8-polars-selection-backend-786e10aec1: sha256:6b706286eac931117b98fc4775d51f8798ec2db51248e88fafcf843612644534
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sample.html
+        -- trail: Verified 2026-11-10: Opened official named guide/API section and
+        its definitions/parameters on 2026-11-10. Source binding is factual; runtime/version
+        comparisons remain the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-96e0a5a609:
+    claim_id: covers:route-g8-polars-selection-backend-96e0a5a609
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-96e0a5a609 covers knowledge-polars-selection-methods
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-selection-methods: sha256:07fb469c9b6b032181d0242861cd07ef6833f5194f8ed30290d46ac6675adc41
+        route-content:route-g8-polars-selection-backend-96e0a5a609: sha256:3bfbb48dda6013f4130426488068871c01acf92a6aa33c5fcf9a0f8ff1a049b1
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html
+        -- trail: Verified 2026-11-10: Opened official named API signature, parameters
+        and explanation on 2026-11-10. Preserved original URL; no version-pinned execution
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-9f259a5f91:
+    claim_id: covers:route-g8-polars-selection-backend-9f259a5f91
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-9f259a5f91 covers knowledge-polars-selection-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-selection-contract: sha256:2a6f98afdb2114f3956426e08eb30b4591e742d1338f02bbaf32afea2c5ec747
+        route-content:route-g8-polars-selection-backend-9f259a5f91: sha256:802d83cba167225b7f703378c201449565c06db1bf7a7f6bc8263b370c40180b
+        source-material:source-polars-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://docs.pola.rs/user-guide/lazy/optimizations/ -- trail: Verified
+        2026-11-10: Opened official named guide/API section and its definitions/parameters
+        on 2026-11-10. Source binding is factual; runtime/version comparisons remain
+        the existing exercise.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-d7fbd76d5e:
+    claim_id: covers:route-g8-polars-selection-backend-d7fbd76d5e
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-d7fbd76d5e covers knowledge-polars-selection-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.02-Data-Indexing-and-Selection.ipynb: 70d00d4824b58c88aae867809ae3f05f8b0704f168820b09e866d238d1f2564c
+        node-content:knowledge-polars-selection-contract: sha256:2a6f98afdb2114f3956426e08eb30b4591e742d1338f02bbaf32afea2c5ec747
+        route-content:route-g8-polars-selection-backend-d7fbd76d5e: sha256:d5c26fb1c61396c859d847edd16434a52d854bd233152bf10f261c165341546e
+        source-material:source-pydata-handbook: sha256:3a2eeb344af650be06422e6dd2ce6c9f7ab57ebefeacf9ed35c8e8b38b211782
+      evidence:
+      - 'manifest:software/python/pydata-handbook/PythonDataScienceHandbook/notebooks/03.02-Data-Indexing-and-Selection.ipynb
+        -- trail: Opened notebook cell source without execution. Notebook format has
+        no quotation reader; explicit manifest-bound fallback. Existing exercise/reading
+        scope preserved.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-dc143a1803:
+    claim_id: covers:route-g8-polars-selection-backend-dc143a1803
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-dc143a1803 covers knowledge-polars-selection-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        manifest:software/python/python-cheatsheets/Pandas_cheatsheet.pdf: 590d02ed248727c0e56f6e5a72419aae88d405a68afd9a7e3652f42fd131755b
+        node-content:knowledge-polars-selection-contract: sha256:2a6f98afdb2114f3956426e08eb30b4591e742d1338f02bbaf32afea2c5ec747
+        route-content:route-g8-polars-selection-backend-dc143a1803: sha256:9393a3048cfa9db0b29257f07e182e482c075f97c1ecd3995edec77bd084156d
+        source-material:source-python-cheatsheets: sha256:5fe0c481c9f8f88387a2cf5009521dea6f597544c6cefd714800684631f3adcb
+      evidence:
+      - 'quote:material://source-python-cheatsheets/Pandas_cheatsheet.pdf#p1 sha256:dfcdc2e8ed48efa720016a817e484f98fccd7b03f8d5df9d7ad79d172a68a902
+        -- trail: Opened exact local bytes; quotation supports the preserved topic
+        binding, not a quality/depth assessment.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-e57a10f45a:
+    claim_id: covers:route-g8-polars-selection-backend-e57a10f45a
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-e57a10f45a covers knowledge-polars-selection-contract
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-selection-contract: sha256:2a6f98afdb2114f3956426e08eb30b4591e742d1338f02bbaf32afea2c5ec747
+        route-content:route-g8-polars-selection-backend-e57a10f45a: sha256:afdd9d2ee232d6b617c8d36c777e11470f60c053ad6326627c4aec0afe72cc40
+        source-material:source-polars-birds-eye-view: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pola.rs/posts/polars_birds_eye_view -- trail: Verified 2026-11-10:
+        Opened official article: logical plan, optimization, physical planning and
+        execution; historical 2024 article, not current API guarantees.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
+  covers:route-g8-polars-selection-backend-e8725a2148:
+    claim_id: covers:route-g8-polars-selection-backend-e8725a2148
+    claim_kind: route-covers
+    statement: route-g8-polars-selection-backend-e8725a2148 covers knowledge-polars-runtime-operands
+    derived_from:
+      contract_version: 3
+      revisions: {}
+      source_hashes:
+        node-content:knowledge-polars-runtime-operands: sha256:1703fe651cb26007914eae843865e74bf0ba0dfde1ba725f0e4a2e91eebc763f
+        route-content:route-g8-polars-selection-backend-e8725a2148: sha256:22d8c494ebbb228231276befd625fbd81ac8de301d52d22de639f2add4ebfba4
+        source-material:source-pandas-docs: sha256:5170d79975dfb71f2048b96469428d1513cec5f40523074f9a04a06f3e5e003b
+      evidence:
+      - 'external:https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html
+        -- trail: Verified 2026-11-10: Opened official named API signature, parameters
+        and explanation on 2026-11-10. Preserved original URL; no version-pinned execution
+        claim.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+      idempotency_key: reviewed-45af6b250da24ea2af3571825a0f05f0
+    reviewed_by: ''
+    status: supported
   covers:route-g8-python-engineering-fluency-04ac045940:
     claim_id: covers:route-g8-python-engineering-fluency-04ac045940
     claim_kind: route-covers

@@ -48,6 +48,10 @@ scope_sources:
   authority: reference
 - source_id: source-polars-benchmark
   authority: reference
+- source_id: source-polars-cookbook-code
+  authority: reference
+- source_id: source-polars-docs
+  authority: reference
 source_selections: []
 current_study_map: study-map-job-polars-joins-reshape
 artifacts: {}

@@ -3462,6 +3462,38 @@ entries:
       unit-m2-sad-l15: 16
     snapshot_before: sha256:4559959c0bae68a357f86a8a9cd5c309fac4489459aa044ed136cd6638eb35bf
     snapshot_after: sha256:585b63b3f6ce0ac9ed6c06ff7b93992f19b82b79eed7b74006206bc966c8712e
+  reviewed-45af6b250da24ea2af3571825a0f05f0:
+    request_id: request-reviewed-f3e23f1a2ca9473b97371a247839b7bb
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:50eaf957952107bcbc19614a1ed5608e02b8603954deb37ab90517efb1156794
+    transaction_id: transaction-20261110-232306-001
+    receipt_path: operations/transactions/transaction-20261110-232306-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 15
+      module-job-polars: 5
+      study-map-job-polars-aggregation-windows: 2
+      study-map-job-polars-backend-loop: 4
+      study-map-job-polars-capstone-transition: 2
+      study-map-job-polars-expressions: 26
+      study-map-job-polars-joins-reshape: 13
+      study-map-job-polars-lazy-udf-interop: 11
+      study-map-job-polars-order-text-time: 2
+      study-map-job-polars-pandas-fluency: 18
+      study-map-job-polars-schema-missing-types: 15
+      study-map-job-polars-selection-backend: 20
+      unit-job-polars-aggregation-windows: 4
+      unit-job-polars-backend-loop: 6
+      unit-job-polars-capstone-transition: 4
+      unit-job-polars-expressions: 28
+      unit-job-polars-joins-reshape: 15
+      unit-job-polars-lazy-udf-interop: 13
+      unit-job-polars-order-text-time: 4
+      unit-job-polars-pandas-fluency: 21
+      unit-job-polars-schema-missing-types: 17
+      unit-job-polars-selection-backend: 22
+    snapshot_before: sha256:2ea171d7b8e0e7f1434e10210bc08afaf27253fbb00de3436f3b17f6a14bc3a8
+    snapshot_after: sha256:4e48b836e75ab4a114fc35396a372ca4cc7a2258240b4f0f0ebe2f6a2e426d90
   reviewed-4864428a63f34012aee3417d44ff4fb5:
     request_id: request-reviewed-91e8b90106054b0ba2ac034da52af64c
     capability: unit.map.import

@@ -41,6 +41,7 @@ stages:
       as one of three things you can do with a predicate expression, which is the framing Part A of the
       sheet asks you to adopt. pp. 319-324 covers the row operations that are not filters — the ones you
       would otherwise reimplement by hand. Early-release edition; confirm callables against 2.0.'
+    route_id: route-g8-polars-selection-backend-6d9c8789da
   - kind: reference
     label: pandas user guide - Indexing
     id: resource-polars-03-06-official-reference-pandas-pydata-org-i
@@ -120,6 +121,7 @@ stages:
       is gone and the notebook predates pandas 3.0. Its value is that it explains *why* pandas has three
       indexers, which is the context for Part B''s mask exercise — a boolean Series is not a boolean list,
       and the notebook is where that becomes intelligible rather than surprising.'
+    route_id: route-g8-polars-selection-backend-d7fbd76d5e
   - kind: read
     label: Pandas_cheatsheet.pdf
     id: resource-polars-03-03-local-material-pandas-cheatsheet-pdf
@@ -130,8 +132,9 @@ stages:
     angle: Name recall for the pandas half of Part B only.
     angle_detail: 2017 sheet. Use it to remember what a pandas selection is called, never to establish
       what it does. Every signature it shows must be re-checked against 3.0.2 before it enters a table.
+    route_id: route-g8-polars-selection-backend-dc143a1803
   - id: resource-polars-04-selection-and-projection-index-logic-versus-expr-migrated-guide
-    kind: read
+    kind: reference
     label: Migrated authored stage guide
     locator: Complete guide retained from the original monolithic plan
     angle: 'Migration evidence: the pre-split stage guide at its original path.'
@@ -153,6 +156,8 @@ stages:
       a habit question rather than a syntax one.'
     scope_triage: deferred
     id: resource-polars-03-optimizations
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-9f259a5f91
   - kind: read
     label: A bird's eye view of Polars - planning, optimizing, execution
     locator: pola.rs/posts/polars_birds_eye_view - the Query / Query Optimization / Query Execution sections
@@ -167,6 +172,8 @@ stages:
       closest published analogue to Stratum''s own logical/physical split, which makes it useful twice.'
     scope_triage: deferred
     id: resource-polars-03-birds-eye-view
+    source_id: source-polars-birds-eye-view
+    route_id: route-g8-polars-selection-backend-e57a10f45a
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-exercises.md
     label: Exercise sheet - Polars-first selection, plan reading, pandas contract
@@ -198,7 +205,7 @@ stages:
   scope_triage: required-now
   resources:
   - id: resource-selection-execs-case-study
-    kind: read
+    kind: reference
     label: Attached _selection_execs.py case study
     locator: Stratum/stratum/optimizer/physical/_selection_execs.py, get_polars_sample_kwargs and the
       Polars duplicate classes (read only)
@@ -243,6 +250,8 @@ stages:
       first, and the two reference pages together are enough to get it right.'
     scope_triage: reference-only
     url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sample.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-786e10aec1
   - id: resource-pandas-sample
     kind: read
     label: pandas DataFrame.sample
@@ -254,6 +263,8 @@ stages:
       Polars does not make, and the whole of the sheet''s case 2 follows from it.'
     scope_triage: reference-only
     url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+    source_id: source-pandas-docs
+    route_id: route-g8-polars-selection-backend-3eb95efeb5
   - id: resource-polars-head
     kind: read
     label: Polars DataFrame.head/tail
@@ -264,6 +275,8 @@ stages:
       to None, so the undocumented input is reachable through the very path this stage exists for.
     scope_triage: reference-only
     url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.head.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-75a3938c62
   - id: resource-pandas-head
     kind: read
     label: pandas DataFrame.head/tail
@@ -274,6 +287,8 @@ stages:
       This supplies the documented half.
     scope_triage: reference-only
     url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html
+    source_id: source-pandas-docs
+    route_id: route-g8-polars-selection-backend-e8725a2148
   - id: resource-selection-head-tail-sample-matrix
     kind: practise
     label: Selection parameter matrix
@@ -285,7 +300,7 @@ stages:
       the None case.
     scope_triage: deferred
   - id: resource-note-selectionop-head-tail-sample
-    kind: read
+    kind: reference
     label: Stratum SelectionOp note
     locator: SelectionKind, the args/kwargs/predicate fields, and the physical method mapping
     angle: Your own record of the operand shapes this stage must handle on both paths.
@@ -358,6 +373,8 @@ stages:
       queries and not in the mapping table.'
     scope_triage: reference-only
     url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.unique.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-34dd0e359e
   - id: resource-pandas-drop-duplicates
     kind: read
     label: pandas DataFrame.drop_duplicates
@@ -370,6 +387,8 @@ stages:
       the mapping.'
     scope_triage: reference-only
     url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html
+    source_id: source-pandas-docs
+    route_id: route-g8-polars-selection-backend-96e0a5a609
   - id: resource-selection-duplicates-matrix
     kind: practise
     label: Duplicate-removal compatibility matrix
@@ -423,6 +442,8 @@ stages:
       surprising, which is the difference between knowing Polars and having memorised a divergence.
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/missing-data/
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-6d8f59a952
   - id: resource-polars-dropna-sheet
     kind: practise
     label: Stage exercise sheet - the missing-value toolkit, the normalization sandwich, the full argument
@@ -460,6 +481,8 @@ stages:
       have to compose yourself.
     scope_triage: reference-only
     url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.drop_nulls.html
+    source_id: source-polars-docs
+    route_id: route-g8-polars-selection-backend-6bb5ce6915
   - id: resource-pandas-dropna
     kind: read
     label: pandas DataFrame.dropna
@@ -471,6 +494,8 @@ stages:
       a column operation wearing the same function's name.
     scope_triage: reference-only
     url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+    source_id: source-pandas-docs
+    route_id: route-g8-polars-selection-backend-36b2a51a0e
   - id: resource-selection-dropna-implementation
     kind: practise
     label: Rebuild DROPNA without AI
@@ -482,7 +507,7 @@ stages:
       to write down rather than a fix to apply.
     scope_triage: deferred
   - id: resource-note-missingmaskop
-    kind: read
+    kind: reference
     label: Stratum MissingMaskOp note
     locator: 'Complete note: the positive flag, call/method extraction, and Polars compilation'
     angle: Your own design record for the mask operation the dropna translation is built on.

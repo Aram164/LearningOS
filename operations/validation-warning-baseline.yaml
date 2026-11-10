@@ -23,9 +23,10 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: Bind existing deferred Python engineering materials and retain all study placements
-total: 238
-distinct_signatures: 35
+note: Bind existing Polars routes while preserving all study actions and authored
+  practice
+total: 142
+distinct_signatures: 17
 signatures:
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
@@ -72,63 +73,9 @@ signatures:
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-hu-amls/units/unit-amls-theory/study-map.yaml
   count: 7
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
-  count: 4
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
-  count: 1
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
-  count: 7
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
-  count: 6
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
-  count: 4
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
-  count: 5
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
-  count: 5
-- code: RESOURCE-SCOPE-NO-ROUTE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
-  count: 3
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
   count: 1
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
   count: 1
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
-  count: 8
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
-  count: 5
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
-  count: 3
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
-  count: 8
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
-  count: 5
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
-  count: 6
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
-  count: 2
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
-  count: 5
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
-  count: 4
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
-  count: 15
