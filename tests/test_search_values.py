@@ -48,7 +48,7 @@ def test_metadata_key_only_terms_match_nothing(mini_repo):
 def test_metadata_value_search_still_finds_rows(mini_repo):
     # Guard against over-narrowing: ids, titles and paths are values.
     proc = run_los(mini_repo, "search", "demo", "--page", "--limit", "1")
-    assert _page_total(proc) == 5
+    assert _page_total(proc) == 4  # 5 minus the retired project-demo record
 
 
 def test_value_flattening_covers_scalars_and_skips_keys():
@@ -98,7 +98,7 @@ def test_cut_array_names_shown_total_and_continuation(mini_repo):
     proc = run_los(mini_repo, "search", "demo", "--limit", "1")
     assert proc.returncode == 0, proc.stderr
     assert len(json.loads(proc.stdout)) == 1
-    assert "showing 1 of 5 matches" in proc.stderr
+    assert "showing 1 of 4 matches" in proc.stderr
     assert "--offset 1" in proc.stderr
     assert "--page" in proc.stderr
 
@@ -107,14 +107,14 @@ def test_cut_array_suggests_the_next_offset(mini_repo):
     proc = run_los(mini_repo, "search", "demo", "--limit", "1", "--offset", "1")
     assert proc.returncode == 0, proc.stderr
     assert len(json.loads(proc.stdout)) == 1
-    assert "showing 1 of 5 matches" in proc.stderr
+    assert "showing 1 of 4 matches" in proc.stderr
     assert "--offset 2" in proc.stderr
 
 
 def test_complete_array_stays_silent(mini_repo):
     proc = run_los(mini_repo, "search", "demo")
     assert proc.returncode == 0, proc.stderr
-    assert len(json.loads(proc.stdout)) == 5
+    assert len(json.loads(proc.stdout)) == 4
     assert proc.stderr == ""
     exact = run_los(mini_repo, "search", "demo", "--limit", "5")
     assert exact.returncode == 0, exact.stderr

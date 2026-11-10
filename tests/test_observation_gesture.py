@@ -326,6 +326,7 @@ ABILITY_CONDITIONS = ["one predictor with nonzero variance", "intercept included
 @pytest.fixture()
 def ability_repo(mini_repo: Path) -> Path:
     """Two reviewed abilities Aram can record work and a connection against."""
+    add_curriculum(mini_repo)
     ability = {
         "title": "Derive simple least squares", "claim": "Derive slope and intercept.",
         "conditions": ABILITY_CONDITIONS, "evidence_spec": ["correct derivation"],

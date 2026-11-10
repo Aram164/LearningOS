@@ -20,6 +20,14 @@ def run(root):
     return validate(load_repo(root))
 
 
+def _module_data(mini_repo):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    path = mini_repo / "curriculum" / "modules" / "module-demo" / "module.yaml"
+    return path, yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
 # ---------------------------------------------------------------- clean base
 def test_mini_repo_is_clean(mini_repo):
     issues = run(mini_repo)
@@ -69,7 +77,7 @@ def test_schema_invalid_record_is_a_named_error_not_a_crash(mini_repo, rel, fiel
 @pytest.mark.parametrize(("rel", "slot", "reference_code"), [
     ("curriculum/modules/module-demo/module.yaml", ("unit_order",), "REF-UNIT"),
     ("curriculum/modules/module-demo/source-map.yaml", ("sources", 0, "unit_routes"), "REF-UNIT"),
-    ("projects/registry/project-demo.yaml", ("linked_module_ids",), "REF-MODULE"),
+    ("curriculum/modules/module-demo/module.yaml", ("thematic_group_ids",), "REF-THEMATIC-GROUP"),
     ("work/active/workspace-demo/CONTEXT.md", ("unit_ids",), "REF-UNIT"),
     ("knowledge/notes/mathematics/note-demo.md", ("sources",), "REF-SOURCE"),
 ])
@@ -323,6 +331,9 @@ def test_a_semantic_edge_does_not_close_a_strict_cycle(mini_repo):
 
 # ----------------------------------------------------------------- ownership
 def test_exam_date_duplication_in_coordination_is_error(mini_repo):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
     f = mini_repo / "work" / "COORDINATION.md"
     f.write_text(f.read_text().replace(
         "- Demo module deferred to 2. Termin (date lives in records/modules.yaml)",
@@ -338,6 +349,9 @@ def test_exam_date_duplication_in_coordination_is_error(mini_repo):
 def test_an_archive_date_that_matches_an_attempt_is_not_an_exam_copy(mini_repo):
     """Real data: recording an AML sitting was refused because a workspace was
     archived on the same calendar day (blind trial, 30 October 2026)."""
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
     date = next(str(attempt["date"]) for module in load_repo(mini_repo).modules.values()
                 for attempt in module.get("attempts", []) or [] if attempt.get("date"))
     f = mini_repo / "work" / "COORDINATION.md"
@@ -424,9 +438,8 @@ def test_crosswalk_judgment_table_warns(mini_repo):
 
 # ------------------------------------------------------------------- modules
 def test_registered_must_be_latest_attempt(mini_repo):
-    f = mini_repo / "records" / "modules.yaml"
-    data = yaml.safe_load(f.read_text())
-    data["modules"][0]["attempts"] = [
+    f, data = _module_data(mini_repo)
+    data["attempts"] = [
         {"termin": 1, "date": "2026-07-27", "result": "registered"},
         {"termin": 2, "date": "2026-10-09", "result": "withdrawn"},
     ]
@@ -435,28 +448,25 @@ def test_registered_must_be_latest_attempt(mini_repo):
 
 
 def test_grade_only_on_passed(mini_repo):
-    f = mini_repo / "records" / "modules.yaml"
-    data = yaml.safe_load(f.read_text())
-    data["modules"][0]["attempts"][0]["grade"] = 2.0
+    f, data = _module_data(mini_repo)
+    data["attempts"][0]["grade"] = 2.0
     f.write_text(yaml.safe_dump(data))
     assert "MOD-GRADE" in codes(run(mini_repo), "E")
 
 
 def test_attempt_dates_must_be_ordered(mini_repo):
-    f = mini_repo / "records" / "modules.yaml"
-    data = yaml.safe_load(f.read_text())
-    data["modules"][0]["attempts"] = list(reversed(data["modules"][0]["attempts"]))
+    f, data = _module_data(mini_repo)
+    data["attempts"] = list(reversed(data["attempts"]))
     # keep 'registered only on latest' satisfied
-    data["modules"][0]["attempts"][0]["result"] = "withdrawn"
-    data["modules"][0]["attempts"][1]["result"] = "registered"
+    data["attempts"][0]["result"] = "withdrawn"
+    data["attempts"][1]["result"] = "registered"
     f.write_text(yaml.safe_dump(data))
     assert "MOD-ORDER" in codes(run(mini_repo), "E")
 
 
 def test_structured_exam_ranges_must_be_forward_and_unique(mini_repo):
-    f = mini_repo / "records" / "modules.yaml"
-    data = yaml.safe_load(f.read_text())
-    data["modules"][0]["examination"] = {
+    f, data = _module_data(mini_repo)
+    data["examination"] = {
         "type": "klausur",
         "sittings": [
             {"termin": 2, "date": "2026-10-09", "end_date": "2026-10-08"},
