@@ -1,0 +1,114 @@
+schema_version: 2
+id: transaction-20261110-110927-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T11:09:27+01:00'
+snapshot_before: sha256:440ae8a4c54afff6f9c9d291d3b44d22a3ceca3a14719e20c7811ed58d2fc87c
+snapshot_after: sha256:a49580e680750d5df154f616806b1d9f4b99b9a9c6eb37e858e3ad5f04c5d01b
+expected_revisions:
+  source-diataxis: 0
+  source-docker-documentation: 0
+  source-git-documentation: 0
+  source-github-documentation: 0
+  source-gnu-make-manual: 0
+  source-just-manual: 0
+  source-keep-a-changelog: 0
+  source-linux-kernel-docs: 0
+  source-mypy-docs: 0
+  source-nist-ai-risk-management-framework: 0
+  source-oci-image-specification: 0
+  source-owasp-cheat-sheets: 0
+  source-pre-commit-docs: 0
+  source-python-packaging-guide: 0
+  source-restic-docs: 0
+  source-ruff-docs: 0
+  source-semantic-versioning: 0
+  source-sigstore-docs: 0
+  source-systemd-manuals: 0
+  source-twelve-factor-app: 0
+artifact_revisions:
+  source-diataxis:
+    before: 0
+    after: 1
+  source-docker-documentation:
+    before: 0
+    after: 1
+  source-git-documentation:
+    before: 0
+    after: 1
+  source-github-documentation:
+    before: 0
+    after: 1
+  source-gnu-make-manual:
+    before: 0
+    after: 1
+  source-just-manual:
+    before: 0
+    after: 1
+  source-keep-a-changelog:
+    before: 0
+    after: 1
+  source-linux-kernel-docs:
+    before: 0
+    after: 1
+  source-mypy-docs:
+    before: 0
+    after: 1
+  source-nist-ai-risk-management-framework:
+    before: 0
+    after: 1
+  source-oci-image-specification:
+    before: 0
+    after: 1
+  source-owasp-cheat-sheets:
+    before: 0
+    after: 1
+  source-pre-commit-docs:
+    before: 0
+    after: 1
+  source-python-packaging-guide:
+    before: 0
+    after: 1
+  source-restic-docs:
+    before: 0
+    after: 1
+  source-ruff-docs:
+    before: 0
+    after: 1
+  source-semantic-versioning:
+    before: 0
+    after: 1
+  source-sigstore-docs:
+    before: 0
+    after: 1
+  source-systemd-manuals:
+    before: 0
+    after: 1
+  source-twelve-factor-app:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: dcc71d1d5a08ff26281503ecca9865ade273ab2e6774341300b811f9488d6d47
+  sha256_after: 8354eb7bd573d575d6a5f134f691bac38678e166487e58c2f5c132480cea0c07
+  created: false
+metadata:
+  data_roots_sha256: sha256:63af95495f6908937ae612c0a140db9040277d6e0d28dbda76a372e44eda4d78
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-engineering-intake2-48e6a288
+  idempotency_key: engineering-intake2
+  intent_sha256: sha256:e4d04685263d1eaba2331106cbf23646b30800cf58fe6fc23dcfaaf78565c654
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:e4d04685263d1eaba2331106cbf23646b30800cf58fe6fc23dcfaaf78565c654

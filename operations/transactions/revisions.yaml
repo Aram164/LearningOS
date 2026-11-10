@@ -31,7 +31,7 @@ revisions:
   file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
   file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
   file:archive/inbox/2026/complaints/README.md: 1
-  file:operations/transactions/lineage.yaml: 9
+  file:operations/transactions/lineage.yaml: 10
   file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
   file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
   file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
@@ -52,7 +52,7 @@ revisions:
   module-hu-betriebssysteme: 2
   module-hu-icop: 2
   module-hu-m2-statistik-analysis: 62
-  module-job-engineering-tools: 1
+  module-job-engineering-tools: 2
   module-job-git: 1
   module-job-polars: 4
   module-job-python-engineering: 3
@@ -146,26 +146,44 @@ revisions:
   source-cs231n-notes: 1
   source-dantzig-orden-wolfe-generalized-simplex-1955: 1
   source-datacamp-catalogue: 1
+  source-diataxis: 1
   source-disser-skutella-simplex-np-mighty-2018: 1
+  source-docker-documentation: 1
   source-educative-catalogue: 1
   source-eecs498: 2
   source-esl: 1
   source-fortmann-roe-bias-variance: 1
   source-frankfurt-algo2-course: 1
   source-frontendmasters-catalogue: 1
+  source-git-documentation: 1
+  source-github-documentation: 1
   source-github-student-developer-pack: 1
+  source-gnu-bash-manual: 1
+  source-gnu-coreutils-manual: 1
+  source-gnu-gawk-manual: 1
+  source-gnu-make-manual: 1
+  source-gnu-sed-manual: 1
   source-gondzio-interior-point-2012: 1
+  source-google-shell-style-guide: 1
   source-gorails-catalogue: 1
   source-grinstead-snell: 2
   source-guo-cpython-internals: 1
   source-hogan-knowledge-graphs: 1
+  source-homebrew-docs: 1
   source-icop-hu-ws2627: 2
   source-interviewcake-catalogue: 1
   source-islp: 1
+  source-jq-manual: 1
+  source-just-manual: 1
   source-kaggle-winning-solutions: 2
   source-karpathy-micrograd: 1
+  source-keep-a-changelog: 1
   source-kit-algorithmen2: 1
   source-korte-vygen: 2
+  source-language-server-protocol: 1
+  source-linux-kernel-docs: 1
+  source-linux-man-pages: 1
+  source-lldb-docs: 1
   source-map-job-engineering-tools: 1
   source-map-job-git: 1
   source-map-job-polars: 1
@@ -189,25 +207,40 @@ revisions:
   source-modern-polars: 1
   source-mongodb-university: 1
   source-murphy-pml1: 1
+  source-mypy-docs: 1
   source-narwhals-concepts: 1
   source-ng-coursera: 1
   source-nielsen-nndl: 1
+  source-nist-ai-risk-management-framework: 1
   source-nyu-dl: 1
+  source-oci-image-specification: 1
+  source-openssh-manuals: 1
+  source-owasp-cheat-sheets: 1
   source-pandas-docs: 1
   source-piml-paper: 1
   source-polars-benchmark: 1
   source-polars-definitive-guide: 1
   source-polars-docs: 1
+  source-posix-specification: 1
+  source-pre-commit-docs: 1
   source-ptb-xl: 1
   source-pydata-handbook: 1
   source-python-docs: 1
+  source-python-packaging-guide: 1
   source-pytorch-tutorials: 1
   source-rd-agent-paper: 1
+  source-restic-docs: 1
   source-rex-mle-paper: 1
+  source-ripgrep-guide: 1
   source-rohrer-e2eml: 1
+  source-rsync-manual: 1
+  source-ruff-docs: 1
   source-sad-klausuren-extern: 1
   source-scalable-dataframe-systems-paper: 1
   source-scrimba-catalogue: 1
+  source-semantic-versioning: 1
+  source-shellcheck: 1
+  source-sigstore-docs: 1
   source-siim-isic-winning-solution: 1
   source-sklearn-user-guide: 3
   source-skrub: 1
@@ -218,12 +251,19 @@ revisions:
   source-stratum-paper: 1
   source-sutton-barto-rl: 1
   source-symfonycasts-catalogue: 1
+  source-systemd-manuals: 1
+  source-tmux-manual: 1
   source-toussaint-optimization-script: 1
   source-tripod-ai: 1
   source-tu-python-ml-course: 1
+  source-twelve-factor-app: 1
   source-typing-docs: 1
   source-uv-docs: 1
+  source-vim-help: 1
   source-visual-studio-dev-essentials: 1
+  source-vscode-docs: 1
+  source-xdg-base-directory-specification: 1
+  source-zsh-manual: 1
   stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
   stage-git-02-the-state-triangle-working-tree-index-and-head: 1
   stage-git-03-intentional-staging-and-atomic-commits: 1
@@ -346,7 +386,7 @@ revisions:
   study-map-amls-l13: 1
   study-map-bs-cpu-scheduling: 1
   study-map-bs-processes: 1
-  study-map-job-engineering-tools-fluency: 2
+  study-map-job-engineering-tools-fluency: 3
   study-map-job-git-fluency: 2
   study-map-job-polars-aggregation-windows: 1
   study-map-job-polars-backend-loop: 3
@@ -430,7 +470,7 @@ revisions:
   unit-bs-os-structure: 1
   unit-bs-processes: 1
   unit-icop-l01-linear-programming: 2
-  unit-job-engineering-tools-fluency: 2
+  unit-job-engineering-tools-fluency: 3
   unit-job-git-fluency: 2
   unit-job-polars-aggregation-windows: 3
   unit-job-polars-backend-loop: 5

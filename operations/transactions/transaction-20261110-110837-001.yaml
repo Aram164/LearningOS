@@ -1,0 +1,114 @@
+schema_version: 2
+id: transaction-20261110-110837-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-11-10T11:08:37+01:00'
+snapshot_before: sha256:18e041ff8fdf743c087cfa61ed46f1e3d68809e4e64a74a4e7efaa9999f6a3c5
+snapshot_after: sha256:440ae8a4c54afff6f9c9d291d3b44d22a3ceca3a14719e20c7811ed58d2fc87c
+expected_revisions:
+  source-gnu-bash-manual: 0
+  source-gnu-coreutils-manual: 0
+  source-gnu-gawk-manual: 0
+  source-gnu-sed-manual: 0
+  source-google-shell-style-guide: 0
+  source-homebrew-docs: 0
+  source-jq-manual: 0
+  source-language-server-protocol: 0
+  source-linux-man-pages: 0
+  source-lldb-docs: 0
+  source-openssh-manuals: 0
+  source-posix-specification: 0
+  source-ripgrep-guide: 0
+  source-rsync-manual: 0
+  source-shellcheck: 0
+  source-tmux-manual: 0
+  source-vim-help: 0
+  source-vscode-docs: 0
+  source-xdg-base-directory-specification: 0
+  source-zsh-manual: 0
+artifact_revisions:
+  source-gnu-bash-manual:
+    before: 0
+    after: 1
+  source-gnu-coreutils-manual:
+    before: 0
+    after: 1
+  source-gnu-gawk-manual:
+    before: 0
+    after: 1
+  source-gnu-sed-manual:
+    before: 0
+    after: 1
+  source-google-shell-style-guide:
+    before: 0
+    after: 1
+  source-homebrew-docs:
+    before: 0
+    after: 1
+  source-jq-manual:
+    before: 0
+    after: 1
+  source-language-server-protocol:
+    before: 0
+    after: 1
+  source-linux-man-pages:
+    before: 0
+    after: 1
+  source-lldb-docs:
+    before: 0
+    after: 1
+  source-openssh-manuals:
+    before: 0
+    after: 1
+  source-posix-specification:
+    before: 0
+    after: 1
+  source-ripgrep-guide:
+    before: 0
+    after: 1
+  source-rsync-manual:
+    before: 0
+    after: 1
+  source-shellcheck:
+    before: 0
+    after: 1
+  source-tmux-manual:
+    before: 0
+    after: 1
+  source-vim-help:
+    before: 0
+    after: 1
+  source-vscode-docs:
+    before: 0
+    after: 1
+  source-xdg-base-directory-specification:
+    before: 0
+    after: 1
+  source-zsh-manual:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 8c3942d9494f05211a67aebff52ae517988bd7d536038ef248585b229369c01b
+  sha256_after: dcc71d1d5a08ff26281503ecca9865ade273ab2e6774341300b811f9488d6d47
+  created: false
+metadata:
+  data_roots_sha256: sha256:6fef9d74583424a230aea71af7a548d124a72e284065d2da809b032cb1bd9c09
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-engineering-intake1-4af3a14a
+  idempotency_key: engineering-intake1
+  intent_sha256: sha256:8aa00688a4b5fd4f82a6b47c3f3da6a59b1e34550f39ec8af8e64a6bc7384610
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8aa00688a4b5fd4f82a6b47c3f3da6a59b1e34550f39ec8af8e64a6bc7384610

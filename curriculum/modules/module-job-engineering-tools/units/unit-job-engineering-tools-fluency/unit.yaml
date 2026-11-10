@@ -11,9 +11,742 @@ scope: Given a new development machine, remote host, unfamiliar repository, fail
   the security model of the credentials and protocols involved. Fluency is evidenced by reusable artifacts
   and a clean-environment capstone, not lecture completion.
 status: ready
-scope_sources: []
-source_selections: []
+scope_sources:
+- source_id: source-git-handbook-archive
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-hu-git-intro
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-progit
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-pydata-handbook
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-python-depth-drills
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-mit-missing-semester
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-posix-specification
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-gnu-coreutils-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-gnu-bash-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-shellcheck
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-google-shell-style-guide
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-python-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-linux-man-pages
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-openssh-manuals
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-tmux-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-rsync-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-ripgrep-guide
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-jq-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-gnu-sed-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-gnu-gawk-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-zsh-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-homebrew-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-xdg-base-directory-specification
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-language-server-protocol
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-vscode-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-vim-help
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-lldb-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-polars-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-git-documentation
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-python-packaging-guide
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-semantic-versioning
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-docker-documentation
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-oci-image-specification
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-twelve-factor-app
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-gnu-make-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-github-documentation
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-just-manual
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-pytest-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-ruff-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-mypy-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-pre-commit-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-hypothesis-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-nist-ai-risk-management-framework
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-keep-a-changelog
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-diataxis
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-systemd-manuals
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-restic-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-linux-kernel-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-owasp-cheat-sheets
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+- source_id: source-sigstore-docs
+  authority: reference
+  locator: Existing stage locators retained individually in the material routes; this source does not
+    expand the unit scope.
+source_selections:
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-01-01
+  locator: MIT 2026 shell lecture; "Course Overview + Introduction to the Shell · Missing Semester"; https://missing.csail.mit.edu/2026/course-shell/
+  stage_ids:
+  - stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    course shell
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-01-04
+  locator: Complete the lecture exercises and the stage's path/permission safety lab; "Course Overview
+    + Introduction to the Shell · Missing Semester"; https://missing.csail.mit.edu/2026/course-shell/#exercises
+  stage_ids:
+  - stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — course shell
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-01-05
+  locator: MIT 2020 shell telling; "Course Overview + The Shell · Missing Semester"; https://missing.csail.mit.edu/2020/course-shell/
+  stage_ids:
+  - stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — course shell
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-02-01
+  locator: MIT 2026 arguments, streams, environment, return-code, and signal sections; "Command-line Environment
+    · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/
+  stage_ids:
+  - stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-02-06
+  locator: Complete MIT's stream/return-code exercises and the argv/redirection matrix; "Command-line
+    Environment · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#exercises
+  stage_ids:
+  - stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-02-07
+  locator: MIT 2020 shell tools; "Shell Tools and Scripting · Missing Semester"; https://missing.csail.mit.edu/2020/shell-tools/
+  stage_ids:
+  - stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — shell tools
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-03-01
+  locator: MIT 2020 shell scripting and the scripting portions; "Shell Tools and Scripting · Missing Semester";
+    https://missing.csail.mit.edu/2020/shell-tools/
+  stage_ids:
+  - stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shell tools
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-03-02
+  locator: MIT 2020 shell scripting and the scripting portions; "Command-line Environment · Missing Semester";
+    https://missing.csail.mit.edu/2026/command-line-environment/
+  stage_ids:
+  - stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-04-01
+  locator: MIT 2026 processes, job control, and signals; "Command-line Environment · Missing Semester";
+    https://missing.csail.mit.edu/2026/command-line-environment/#signals
+  stage_ids:
+  - stage-missing-semester-04-processes-jobs-signals-and-resource-ownership
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-gnu-bash-manual
+  route_id: route-engineering-tools-04-05
+  locator: Bash job-control manual; "Job Control (Bash Reference Manual)"; https://www.gnu.org/software/bash/manual/html_node/Job-Control.html
+  stage_ids:
+  - stage-missing-semester-04-processes-jobs-signals-and-resource-ownership
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — www.gnu.org — Job
+    Control.html
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-05-01
+  locator: MIT 2026 remote machines and terminal multiplexers; "Command-line Environment · Missing Semester";
+    https://missing.csail.mit.edu/2026/command-line-environment/#remote-machines
+  stage_ids:
+  - stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-05-02
+  locator: MIT 2026 remote machines and terminal multiplexers; "Command-line Environment · Missing Semester";
+    https://missing.csail.mit.edu/2026/command-line-environment/#terminal-multiplexers
+  stage_ids:
+  - stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-05-07
+  locator: MIT 2020 command-line environment; "Command-line Environment · Missing Semester"; https://missing.csail.mit.edu/2020/command-line/
+  stage_ids:
+  - stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — command line
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-06-01
+  locator: MIT 2020 data-wrangling lecture; "Data Wrangling · Missing Semester"; https://missing.csail.mit.edu/2020/data-wrangling/
+  stage_ids:
+  - stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    data wrangling
+- source_id: source-pydata-handbook
+  route_id: route-engineering-tools-06-02
+  locator: IPython shell-command notebook; 01.05-IPython-And-Shell-Commands.ipynb
+  stage_ids:
+  - stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
+  purpose: Preserve the existing required-now read placement; Local material — 01.05-IPython-And-Shell-Commands.ipynb
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-06-07
+  locator: Complete the MIT data-wrangling exercises and the validated log/JSON pipelines; "Data Wrangling
+    · Missing Semester"; https://missing.csail.mit.edu/2020/data-wrangling/#exercises
+  stage_ids:
+  - stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — data wrangling
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-06-08
+  locator: MIT 2026 regex section; "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/#regular-expressions
+  stage_ids:
+  - stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — code quality
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-07-01
+  locator: MIT 2026 environment variables, aliases, dotfiles, and package managers; "Command-line Environment
+    · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#environment-variables
+  stage_ids:
+  - stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-07-02
+  locator: MIT 2026 environment variables, aliases, dotfiles, and package managers; "Command-line Environment
+    · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#aliases-and-dotfiles
+  stage_ids:
+  - stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    command line environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-08-01
+  locator: MIT 2026 development environment and tools; "Development Environment and Tools · Missing Semester";
+    https://missing.csail.mit.edu/2026/development-environment/
+  stage_ids:
+  - stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    development environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-08-05
+  locator: Complete MIT's editor/LSP exercises plus vimtutor and the broken-environment diagnosis; "Development
+    Environment and Tools · Missing Semester"; https://missing.csail.mit.edu/2026/development-environment/#exercises
+  stage_ids:
+  - stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — development environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-08-06
+  locator: MIT 2020 Vim lecture; "Editors (Vim) · Missing Semester"; https://missing.csail.mit.edu/2020/editors/
+  stage_ids:
+  - stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — editors
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-09-01
+  locator: MIT 2026 debugging lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#debugging
+  stage_ids:
+  - stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    debugging profiling
+- source_id: source-pydata-handbook
+  route_id: route-engineering-tools-09-02
+  locator: Runnable debugging notebook and Python debugging shelf; 01.06-Errors-and-Debugging.ipynb
+  stage_ids:
+  - stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  purpose: Preserve the existing required-now read placement; Local material — 01.06-Errors-and-Debugging.ipynb
+- source_id: source-python-depth-drills
+  route_id: route-engineering-tools-09-03
+  locator: Runnable debugging notebook and Python debugging shelf; SHELF.md
+  stage_ids:
+  - stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  purpose: Preserve the existing required-now read placement; Local material — SHELF.md
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-09-07
+  locator: Complete the MIT debugging exercises and the seeded-bug hypothesis journal; "Debugging and
+    Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#exercises
+  stage_ids:
+  - stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — debugging profiling
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-09-08
+  locator: MIT 2020 debugging lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2020/debugging-profiling/
+  stage_ids:
+  - stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — debugging profiling
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-10-01
+  locator: MIT 2026 profiling lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#profiling
+  stage_ids:
+  - stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    debugging profiling
+- source_id: source-pydata-handbook
+  route_id: route-engineering-tools-10-02
+  locator: Runnable profiling notebook and performance shelf; 01.07-Timing-and-Profiling.ipynb
+  stage_ids:
+  - stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query
+  purpose: Preserve the existing required-now read placement; Local material — 01.07-Timing-and-Profiling.ipynb
+- source_id: source-python-depth-drills
+  route_id: route-engineering-tools-10-03
+  locator: Runnable profiling notebook and performance shelf; SHELF.md
+  stage_ids:
+  - stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query
+  purpose: Preserve the existing required-now read placement; Local material — SHELF.md
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-11-01
+  locator: Dedicated Git track Stages 1–7 and MIT 2026 version control; "Version Control and Git · Missing
+    Semester"; https://missing.csail.mit.edu/2026/version-control/
+  stage_ids:
+  - stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    version control
+- source_id: source-git-handbook-archive
+  route_id: route-engineering-tools-11-02
+  locator: Git handbook and Pro Git; index.html
+  stage_ids:
+  - stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  purpose: Preserve the existing required-now read placement; Local material — git-handbook
+- source_id: source-progit
+  route_id: route-engineering-tools-11-03
+  locator: Git handbook and Pro Git; ProGit_2ed.pdf, PDF pp. 1-501
+  stage_ids:
+  - stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  purpose: Preserve the existing required-now read placement; Local material — ProGit_2ed.pdf
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-11-05
+  locator: Complete MIT's Git exercises then version all prior-stage lab artifacts as an atomic reviewable
+    series; "Version Control and Git · Missing Semester"; https://missing.csail.mit.edu/2026/version-control/#exercises
+  stage_ids:
+  - stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — version control
+- source_id: source-hu-git-intro
+  route_id: route-engineering-tools-11-06
+  locator: HU Git introduction; HU-intro-to-git.pdf, PDF pp. 1-26
+  stage_ids:
+  - stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — HU-intro-to-git.pdf
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-12-01
+  locator: MIT 2026 dependencies, environments, artifacts, and versioning; "Packaging and Shipping Code
+    · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/
+  stage_ids:
+  - stage-missing-semester-12-dependencies-environments-artifacts-and-versioning
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-12-06
+  locator: Complete the shipping lecture exercises and install the built wheel in a clean environment;
+    "Packaging and Shipping Code · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#exercises
+  stage_ids:
+  - stage-missing-semester-12-dependencies-environments-artifacts-and-versioning
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-13-01
+  locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+    · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#vms--containers
+  stage_ids:
+  - stage-missing-semester-13-containers-configuration-services-and-publishing
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-13-02
+  locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+    · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#configuration
+  stage_ids:
+  - stage-missing-semester-13-containers-configuration-services-and-publishing
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-13-03
+  locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+    · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#services--orchestration
+  stage_ids:
+  - stage-missing-semester-13-containers-configuration-services-and-publishing
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-13-04
+  locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+    · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#publishing
+  stage_ids:
+  - stage-missing-semester-13-containers-configuration-services-and-publishing
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    shipping code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-14-01
+  locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI; "Metaprogramming · Missing Semester";
+    https://missing.csail.mit.edu/2020/metaprogramming/
+  stage_ids:
+  - stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    metaprogramming
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-14-02
+  locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI; "Code Quality · Missing Semester";
+    https://missing.csail.mit.edu/2026/code-quality/
+  stage_ids:
+  - stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    code quality
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-15-01
+  locator: MIT 2026 code quality; "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/
+  stage_ids:
+  - stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    code quality
+- source_id: source-python-depth-drills
+  route_id: route-engineering-tools-15-03
+  locator: pytest section and testing shelf; SHELF.md
+  stage_ids:
+  - stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and
+  purpose: Preserve the existing required-now read placement; Local material — SHELF.md
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-15-08
+  locator: Complete MIT's code-quality exercises and the seeded-failure matrix for every quality layer;
+    "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/#exercises
+  stage_ids:
+  - stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — code quality
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-16-01
+  locator: MIT 2026 agentic coding; "Agentic Coding · Missing Semester"; https://missing.csail.mit.edu/2026/agentic-coding/
+  stage_ids:
+  - stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    agentic coding
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-16-03
+  locator: Complete MIT's agent exercises and the stage's bounded specification/verification/privacy labs;
+    "Agentic Coding · Missing Semester"; https://missing.csail.mit.edu/2026/agentic-coding/#exercises
+  stage_ids:
+  - stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — agentic coding
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-16-04
+  locator: MIT AI-powered development section; "Development Environment and Tools · Missing Semester";
+    https://missing.csail.mit.edu/2026/development-environment/#ai-powered-development
+  stage_ids:
+  - stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — development environment
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-17-01
+  locator: MIT 2026 Beyond the Code; "Beyond the Code · Missing Semester"; https://missing.csail.mit.edu/2026/beyond-code/
+  stage_ids:
+  - stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    beyond code
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-17-04
+  locator: Complete MIT's communication exercises and produce the README/issue/review/decision portfolio;
+    "Beyond the Code · Missing Semester"; https://missing.csail.mit.edu/2026/beyond-code/#exercises
+  stage_ids:
+  - stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — beyond code
+- source_id: source-github-documentation
+  route_id: route-engineering-tools-17-05
+  locator: GitHub pull-request review guidance; "Review pull requests - GitHub Docs"; https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
+  stage_ids:
+  - stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — docs.github.com
+    — reviewing changes in pull requests
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-18-01
+  locator: MIT 2020 Potpourri; "Potpourri · Missing Semester"; https://missing.csail.mit.edu/2020/potpourri/
+  stage_ids:
+  - stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    potpourri
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-18-06
+  locator: MIT 2019 lecture archive; "2019 Lectures · Missing Semester"; https://missing.csail.mit.edu/2019/
+  stage_ids:
+  - stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — 2019
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-19-01
+  locator: MIT 2020 security and cryptography; "Security and Cryptography · Missing Semester"; https://missing.csail.mit.edu/2020/security/
+  stage_ids:
+  - stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    security
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-19-05
+  locator: Complete MIT's security exercises and the fake-credential threat/sign/incident labs only; "Security
+    and Cryptography · Missing Semester"; https://missing.csail.mit.edu/2020/security/#exercises
+  stage_ids:
+  - stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too
+  purpose: Preserve the existing required-now practise placement; Guided exercises — missing.csail.mit.edu
+    — security
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-19-06
+  locator: MIT 2019 security and privacy lecture; "Security and Privacy · Missing Semester"; https://missing.csail.mit.edu/2019/security/
+  stage_ids:
+  - stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too
+  purpose: Preserve the existing helpful-now read placement; Alternative explanation — missing.csail.mit.edu
+    — security
+- source_id: source-mit-missing-semester
+  route_id: route-engineering-tools-20-01
+  locator: Current MIT syllabus synthesis plus the exact lecture pages assigned in Stages 1–19; "2026
+    Lectures · Missing Semester"; https://missing.csail.mit.edu/2026/
+  stage_ids:
+  - stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
+  purpose: Preserve the existing required-now read placement; Required core — missing.csail.mit.edu —
+    2026
+- source_id: source-git-handbook-archive
+  route_id: route-engineering-tools-20-03
+  locator: Historical toolbox Git handbook debugging/profiling notebooks; index.html
+  stage_ids:
+  - stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
+  purpose: Preserve the existing required-now read placement; Local material — git-handbook
+- source_id: source-pydata-handbook
+  route_id: route-engineering-tools-20-04
+  locator: Historical toolbox Git handbook debugging/profiling notebooks; 01.06-Errors-and-Debugging.ipynb
+  stage_ids:
+  - stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
+  purpose: Preserve the existing required-now read placement; Local material — 01.06-Errors-and-Debugging.ipynb
+- source_id: source-pydata-handbook
+  route_id: route-engineering-tools-20-05
+  locator: Historical toolbox Git handbook debugging/profiling notebooks; 01.07-Timing-and-Profiling.ipynb
+  stage_ids:
+  - stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
+  purpose: Preserve the existing required-now read placement; Local material — 01.07-Timing-and-Profiling.ipynb
 working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/notes.md
 artifacts: {}
 workspace_ids: []
 current_study_map: study-map-job-engineering-tools-fluency
+knowledge_map:
+  summary: The existing twenty engineering-tools stage objectives, exposed as material-routing topics
+    without changing study order.
+  nodes:
+  - id: knowledge-engineering-tools-01
+    title: The shell, filesystem, paths, permissions, and safe navigation
+    summary: Use The shell, filesystem, paths, permissions, and safe navigation fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-02
+    title: Arguments, quoting, globs, streams, pipelines, and exit status
+    summary: Use Arguments, quoting, globs, streams, pipelines, and exit status fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-03
+    title: Dependable shell scripting and humane CLI design
+    summary: Use Dependable shell scripting and humane CLI design fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-04
+    title: Processes, jobs, signals, and resource ownership
+    summary: Use Processes, jobs, signals, and resource ownership fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-05
+    title: SSH, remote execution, tmux, and durable sessions
+    summary: Use SSH, remote execution, tmux, and durable sessions fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-06
+    title: Search, regular expressions, and command-line data wrangling
+    summary: Use Search, regular expressions, and command-line data wrangling fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-07
+    title: Environment variables, PATH, dotfiles, aliases, and package managers
+    summary: Use Environment variables, PATH, dotfiles, aliases, and package managers fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-08
+    title: Editors, Vim's editing language, LSP, and IDE diagnostics
+    summary: Use Editors, Vim's editing language, LSP, and IDE diagnostics fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-09
+    title: 'Debugging: hypotheses, logs, debuggers, tracing, and minimal reproductions'
+    summary: 'Use Debugging: hypotheses, logs, debuggers, tracing, and minimal reproductions fluently
+      in a reproducible workflow, explain the underlying model, and prove it with the stage exercises
+      and a concrete artifact.'
+  - id: knowledge-engineering-tools-10
+    title: 'Profiling: measurement design, CPU, memory, I/O, and query plans'
+    summary: 'Use Profiling: measurement design, CPU, memory, I/O, and query plans fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  - id: knowledge-engineering-tools-11
+    title: 'Version-control integration: applying the Git track to tool work'
+    summary: 'Use Version-control integration: applying the Git track to tool work fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  - id: knowledge-engineering-tools-12
+    title: Dependencies, environments, artifacts, and versioning
+    summary: Use Dependencies, environments, artifacts, and versioning fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-13
+    title: Containers, configuration, services, and publishing
+    summary: Use Containers, configuration, services, and publishing fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-14
+    title: Build systems, task runners, dependency graphs, and CI
+    summary: Use Build systems, task runners, dependency graphs, and CI fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-15
+    title: 'Code quality: formatting, linting, typing, tests, hooks, and gates'
+    summary: 'Use Code quality: formatting, linting, typing, tests, hooks, and gates fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  - id: knowledge-engineering-tools-16
+    title: 'Agentic coding: specification, authority, privacy, and verification loops'
+    summary: 'Use Agentic coding: specification, authority, privacy, and verification loops fluently in
+      a reproducible workflow, explain the underlying model, and prove it with the stage exercises and
+      a concrete artifact.'
+  - id: knowledge-engineering-tools-17
+    title: 'Beyond code: documentation, issue reports, review, and collaboration'
+    summary: 'Use Beyond code: documentation, issue reports, review, and collaboration fluently in a reproducible
+      workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  - id: knowledge-engineering-tools-18
+    title: 'Systems potpourri: daemons, filesystems, backups, APIs, and personal automation'
+    summary: 'Use Systems potpourri: daemons, filesystems, backups, APIs, and personal automation fluently
+      in a reproducible workflow, explain the underlying model, and prove it with the stage exercises
+      and a concrete artifact.'
+  - id: knowledge-engineering-tools-19
+    title: Security and cryptography for everyday engineering tools
+    summary: Use Security and cryptography for everyday engineering tools fluently in a reproducible workflow,
+      explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  - id: knowledge-engineering-tools-20
+    title: 'Capstone: bootstrap, diagnose, ship, and hand off from a clean machine'
+    summary: 'Use Capstone: bootstrap, diagnose, ship, and hand off from a clean machine fluently in a
+      reproducible workflow, explain the underlying model, and prove it with the stage exercises and a
+      concrete artifact.'

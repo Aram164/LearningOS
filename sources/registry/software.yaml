@@ -959,3 +959,523 @@ sources:
     possible_use: Current authority for Polars behaviour.
   thematic_group_ids:
   - thematic-group-software
+- id: source-gnu-bash-manual
+  title: GNU Bash Reference Manual
+  type: documentation
+  url: https://www.gnu.org/software/bash/manual/bash.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.gnu.org/software/bash/manual/bash.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-gnu-coreutils-manual
+  title: GNU Coreutils Manual
+  type: documentation
+  url: https://www.gnu.org/software/coreutils/manual/coreutils.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.gnu.org/software/coreutils/manual/coreutils.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-gnu-gawk-manual
+  title: GNU Awk User’s Guide
+  type: documentation
+  url: https://www.gnu.org/software/gawk/manual/gawk.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.gnu.org/software/gawk/manual/gawk.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-gnu-sed-manual
+  title: GNU sed Manual
+  type: documentation
+  url: https://www.gnu.org/software/sed/manual/sed.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.gnu.org/software/sed/manual/sed.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-google-shell-style-guide
+  title: Google Shell Style Guide
+  type: documentation
+  url: https://google.github.io/styleguide/shellguide.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://google.github.io/styleguide/shellguide.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-homebrew-docs
+  title: Homebrew Documentation
+  type: documentation
+  url: https://docs.brew.sh/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.brew.sh/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-jq-manual
+  title: jq Manual
+  type: documentation
+  url: https://jqlang.org/manual/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://jqlang.org/manual/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-language-server-protocol
+  title: Language Server Protocol
+  type: documentation
+  url: https://microsoft.github.io/language-server-protocol/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://microsoft.github.io/language-server-protocol/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-linux-man-pages
+  title: Linux man-pages
+  type: documentation
+  url: https://man7.org/linux/man-pages/man5/proc.5.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://man7.org/linux/man-pages/man5/proc.5.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-lldb-docs
+  title: LLDB Documentation
+  type: documentation
+  url: https://lldb.llvm.org/use/tutorial.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://lldb.llvm.org/use/tutorial.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-openssh-manuals
+  title: OpenSSH Manual Pages
+  type: documentation
+  url: https://man.openbsd.org/ssh
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://man.openbsd.org/ssh
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-posix-specification
+  title: POSIX — The Open Group Base Specifications Issue 8
+  type: documentation
+  url: https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-ripgrep-guide
+  title: ripgrep User Guide
+  type: documentation
+  url: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-rsync-manual
+  title: rsync Manual
+  type: documentation
+  url: https://download.samba.org/pub/rsync/rsync.1
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://download.samba.org/pub/rsync/rsync.1
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-shellcheck
+  title: ShellCheck
+  type: software
+  url: https://www.shellcheck.net/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.shellcheck.net/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-tmux-manual
+  title: tmux Manual
+  type: documentation
+  url: https://man7.org/linux/man-pages/man1/tmux.1.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://man7.org/linux/man-pages/man1/tmux.1.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-vim-help
+  title: Vim Help
+  type: documentation
+  url: https://vimhelp.org/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://vimhelp.org/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-vscode-docs
+  title: Visual Studio Code Documentation
+  type: documentation
+  url: https://code.visualstudio.com/docs/python/environments
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://code.visualstudio.com/docs/python/environments
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-xdg-base-directory-specification
+  title: XDG Base Directory Specification
+  type: documentation
+  url: https://specifications.freedesktop.org/basedir-spec/latest/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://specifications.freedesktop.org/basedir-spec/latest/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-zsh-manual
+  title: Zsh Manual
+  type: documentation
+  url: https://zsh.sourceforge.io/Doc/Release/Files.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://zsh.sourceforge.io/Doc/Release/Files.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-diataxis
+  title: Diátaxis Documentation Framework
+  type: documentation
+  url: https://diataxis.fr/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://diataxis.fr/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-docker-documentation
+  title: Docker Documentation
+  type: documentation
+  url: https://docs.docker.com/build/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.docker.com/build/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-git-documentation
+  title: Git Reference Documentation
+  type: documentation
+  url: https://git-scm.com/docs
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://git-scm.com/docs
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-github-documentation
+  title: GitHub Documentation
+  type: documentation
+  url: https://docs.github.com/en/actions
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.github.com/en/actions
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-gnu-make-manual
+  title: GNU Make Manual
+  type: documentation
+  url: https://www.gnu.org/software/make/manual/make.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.gnu.org/software/make/manual/make.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-just-manual
+  title: Just Programmer’s Manual
+  type: documentation
+  url: https://just.systems/man/en/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://just.systems/man/en/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-keep-a-changelog
+  title: Keep a Changelog
+  type: documentation
+  url: https://keepachangelog.com/en/1.1.0/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://keepachangelog.com/en/1.1.0/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-linux-kernel-docs
+  title: Linux Kernel Documentation
+  type: documentation
+  url: https://www.kernel.org/doc/html/latest/filesystems/fuse/fuse.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.kernel.org/doc/html/latest/filesystems/fuse/fuse.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-mypy-docs
+  title: mypy Documentation
+  type: documentation
+  url: https://mypy.readthedocs.io/en/stable/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://mypy.readthedocs.io/en/stable/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-nist-ai-risk-management-framework
+  title: NIST AI Risk Management Framework and Generative AI Profile
+  type: documentation
+  url: https://www.nist.gov/itl/ai-risk-management-framework
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.nist.gov/itl/ai-risk-management-framework
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-oci-image-specification
+  title: OCI Image Specification
+  type: documentation
+  url: https://github.com/opencontainers/image-spec
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://github.com/opencontainers/image-spec
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-owasp-cheat-sheets
+  title: OWASP Cheat Sheet Series
+  type: documentation
+  url: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-pre-commit-docs
+  title: pre-commit Documentation
+  type: documentation
+  url: https://pre-commit.com/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://pre-commit.com/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-python-packaging-guide
+  title: Python Packaging User Guide
+  type: documentation
+  url: https://packaging.python.org/en/latest/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://packaging.python.org/en/latest/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-restic-docs
+  title: Restic Documentation
+  type: documentation
+  url: https://restic.readthedocs.io/en/stable/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://restic.readthedocs.io/en/stable/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-ruff-docs
+  title: Ruff Documentation
+  type: documentation
+  url: https://docs.astral.sh/ruff/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.astral.sh/ruff/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-semantic-versioning
+  title: Semantic Versioning
+  type: documentation
+  url: https://semver.org/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://semver.org/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-sigstore-docs
+  title: Sigstore Documentation
+  type: documentation
+  url: https://docs.sigstore.dev/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://docs.sigstore.dev/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-systemd-manuals
+  title: systemd Manual Pages
+  type: documentation
+  url: https://www.freedesktop.org/software/systemd/man/latest/
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://www.freedesktop.org/software/systemd/man/latest/
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-twelve-factor-app
+  title: The Twelve-Factor App
+  type: website
+  url: https://12factor.net/config
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: https://12factor.net/config
+    observed: '2026-11-10'
+    possible_use: Already assigned material in the engineering-tools study map; route binding preserves
+      its existing role.
+  thematic_group_ids:
+  - thematic-group-software

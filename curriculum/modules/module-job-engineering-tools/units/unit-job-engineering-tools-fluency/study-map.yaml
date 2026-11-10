@@ -29,10 +29,17 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — course shell
     id: resource-missing-semester-01-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 shell lecture
+    locator: MIT 2026 shell lecture; "Course Overview + Introduction to the Shell · Missing Semester";
+      https://missing.csail.mit.edu/2026/course-shell/
     url: https://missing.csail.mit.edu/2026/course-shell/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-01-01
+    angle: Introduces shell commands, paths, files, and the command-line workflow.
+    angle_detail: The shell lecture supplies the course shell introduction and file/path interaction examples;
+      the exercises provide initial shell practice. Other parts of this stage are supplied by its other
+      assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-01-02-local-material-note-programming-toolbo
     locator: Historical toolbox shell section
@@ -41,27 +48,51 @@ stages:
   - kind: reference
     label: Official reference — pubs.opengroup.org — V3_chap02.html
     id: resource-missing-semester-01-03-official-reference-pubs-opengroup-org
-    locator: POSIX shell command language
+    locator: POSIX shell command language; "Shell Command Language"; https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html
     url: https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html
     scope_triage: reference-only
+    source_id: source-posix-specification
+    route_id: route-engineering-tools-01-03
+    angle: Checks the POSIX shell language model behind portable command behavior.
+    angle_detail: POSIX Shell Command Language chapter 2 defines the shell as a command-language interpreter
+      and specifies the shell-language rules. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — course shell
     id: resource-missing-semester-01-04-guided-exercises-missing-csail-mit-edu
-    locator: Complete the lecture exercises and the stage's path/permission safety lab
+    locator: Complete the lecture exercises and the stage's path/permission safety lab; "Course Overview
+      + Introduction to the Shell · Missing Semester"; https://missing.csail.mit.edu/2026/course-shell/#exercises
     url: https://missing.csail.mit.edu/2026/course-shell/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-01-04
+    angle: Practices the lecture shell and filesystem tasks before the stage safety lab.
+    angle_detail: The verified Exercises anchor explicitly supplies shell exercises; the stage-specific
+      safety lab remains the plan's separate activity. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — course shell
     id: resource-missing-semester-01-05-alternative-explanation-missing-csail
-    locator: MIT 2020 shell telling
+    locator: MIT 2020 shell telling; "Course Overview + The Shell · Missing Semester"; https://missing.csail.mit.edu/2020/course-shell/
     url: https://missing.csail.mit.edu/2020/course-shell/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-01-05
+    angle: Provides the earlier introduction to shells and everyday command-line composition.
+    angle_detail: The introduction motivates using the computer to automate repetitive work and teaches
+      shell interaction. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — www.gnu.org — coreutils.html
     id: resource-missing-semester-01-06-optional-depth-www-gnu-org-coreutils-h
-    locator: GNU coreutils manual
+    locator: GNU coreutils manual; "GNU Coreutils 9.12"; https://www.gnu.org/software/coreutils/manual/coreutils.html
     url: https://www.gnu.org/software/coreutils/manual/coreutils.html
     scope_triage: deferred
+    source_id: source-gnu-coreutils-manual
+    route_id: route-engineering-tools-01-06
+    angle: Checks the standard GNU text and file-manipulation commands.
+    angle_detail: The Coreutils manual explicitly documents the standard programs for text and file manipulation,
+      contributing command-level detail to shell/filesystem practice. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: practise
     label: Draw terminal → shell → child process → filesystem for one command.
     id: resource-missing-semester-01-07-draw-terminal-shell-child-process-file
@@ -92,6 +123,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga/notes.md
+  knowledge_node_id: knowledge-engineering-tools-01
 - id: stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta
   number: 2
   title: Arguments, quoting, globs, streams, pipelines, and exit status
@@ -110,10 +142,17 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-02-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 arguments, streams, environment, return-code, and signal sections
+    locator: MIT 2026 arguments, streams, environment, return-code, and signal sections; "Command-line
+      Environment · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/
     url: https://missing.csail.mit.edu/2026/command-line-environment/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-02-01
+    angle: Explains shell arguments, environment, process control, and command-line workflow.
+    angle_detail: The lecture develops shell language patterns and abstractions beyond merely launching
+      programs, with the corresponding topic sections and exercises. Other parts of this stage are supplied
+      by its other assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-02-02-local-material-note-programming-toolbo
     locator: Pipes/redirection drills
@@ -122,33 +161,60 @@ stages:
   - kind: reference
     label: Official reference — www.gnu.org — bash.html
     id: resource-missing-semester-02-03-official-reference-www-gnu-org-bash-ht
-    locator: Bash expansions/pipelines/redirections
+    locator: Bash expansions/pipelines/redirections; "Bash Reference Manual"; https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions
     url: https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-02-03
+    angle: Checks Bash expansion order, word splitting, globbing, and quote removal.
+    angle_detail: The section enumerates expansion stages and specifies quote removal last; only certain
+      expansions increase the number of words. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Official reference — www.gnu.org — bash.html
     id: resource-missing-semester-02-04-official-reference-www-gnu-org-bash-ht
-    locator: Bash expansions/pipelines/redirections
+    locator: Bash expansions/pipelines/redirections; "Bash Reference Manual"; https://www.gnu.org/software/bash/manual/bash.html#Pipelines
     url: https://www.gnu.org/software/bash/manual/bash.html#Pipelines
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-02-04
+    angle: Checks pipe connections, stderr pipelines, and pipeline execution behavior.
+    angle_detail: The section defines pipelines using | or |&, describes stdout/stdin connections, and
+      explains the 2>&1 | shorthand. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — www.gnu.org — bash.html
     id: resource-missing-semester-02-05-official-reference-www-gnu-org-bash-ht
-    locator: Bash expansions/pipelines/redirections
+    locator: Bash expansions/pipelines/redirections; "Bash Reference Manual"; https://www.gnu.org/software/bash/manual/bash.html#Redirections
     url: https://www.gnu.org/software/bash/manual/bash.html#Redirections
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-02-05
+    angle: Checks input/output file-handle redirection and its left-to-right order.
+    angle_detail: The section defines opening, closing, duplicating and redirecting file handles, including
+      evaluation order. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-02-06-guided-exercises-missing-csail-mit-edu
-    locator: Complete MIT's stream/return-code exercises and the argv/redirection matrix
+    locator: Complete MIT's stream/return-code exercises and the argv/redirection matrix; "Command-line
+      Environment · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#exercises
     url: https://missing.csail.mit.edu/2026/command-line-environment/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-02-06
+    angle: Practices argument parsing, globs, substitutions, variables, and command-line control.
+    angle_detail: The verified Exercises section includes -- argument termination, ls flags, process substitution
+      and shell-variable functions. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — shell tools
     id: resource-missing-semester-02-07-alternative-explanation-missing-csail
-    locator: MIT 2020 shell tools
+    locator: MIT 2020 shell tools; "Shell Tools and Scripting · Missing Semester"; https://missing.csail.mit.edu/2020/shell-tools/
     url: https://missing.csail.mit.edu/2020/shell-tools/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-02-07
+    angle: Develops Bash scripting patterns and composable shell tools.
+    angle_detail: The lecture introduces Bash as a scripting language and presents common task patterns
+      and shell tools. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Predict argv for fifteen examples using spaces, quotes, command substitution, variables, brace
       expansion, and globs; verify with a tiny argv-printer.
@@ -179,6 +245,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta/notes.md
+  knowledge_node_id: knowledge-engineering-tools-02
 - id: stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design
   number: 3
   title: Dependable shell scripting and humane CLI design
@@ -197,16 +264,29 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — shell tools
     id: resource-missing-semester-03-01-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2020 shell scripting and the scripting portions
+    locator: MIT 2020 shell scripting and the scripting portions; "Shell Tools and Scripting · Missing
+      Semester"; https://missing.csail.mit.edu/2020/shell-tools/
     url: https://missing.csail.mit.edu/2020/shell-tools/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-03-01
+    angle: Develops Bash scripting patterns and composable shell tools.
+    angle_detail: The lecture introduces Bash as a scripting language and presents common task patterns
+      and shell tools. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-03-02-required-core-missing-csail-mit-edu-co
-    locator: MIT 2020 shell scripting and the scripting portions
+    locator: MIT 2020 shell scripting and the scripting portions; "Command-line Environment · Missing
+      Semester"; https://missing.csail.mit.edu/2026/command-line-environment/
     url: https://missing.csail.mit.edu/2026/command-line-environment/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-03-02
+    angle: Explains shell arguments, environment, process control, and command-line workflow.
+    angle_detail: The lecture develops shell language patterns and abstractions beyond merely launching
+      programs, with the corresponding topic sections and exercises. Other parts of this stage are supplied
+      by its other assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-03-03-local-material-note-programming-toolbo
     locator: Toolbox command examples
@@ -215,27 +295,53 @@ stages:
   - kind: reference
     label: Official reference — www.gnu.org — Conditional Constructs.html
     id: resource-missing-semester-03-04-official-reference-www-gnu-org-conditi
-    locator: Bash conditionals/functions/traps and ShellCheck
+    locator: Bash conditionals/functions/traps and ShellCheck; "Conditional Constructs (Bash Reference
+      Manual)"; https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html
     url: https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-03-04
+    angle: Checks Bash conditional syntax and branch/test behavior.
+    angle_detail: The Conditional Constructs section documents if and related conditional syntax; functions,
+      traps and ShellCheck are the other assigned resources. Other parts of this stage are supplied by
+      its other assigned materials.
   - kind: reference
     label: Official reference — www.gnu.org — Shell Functions.html
     id: resource-missing-semester-03-05-official-reference-www-gnu-org-shell-f
-    locator: Bash conditionals/functions/traps and ShellCheck
+    locator: Bash conditionals/functions/traps and ShellCheck; "Shell Functions (Bash Reference Manual)";
+      https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
     url: https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-03-05
+    angle: Checks grouping and execution of commands as Bash functions.
+    angle_detail: The Shell Functions section explains named command groups and their execution as shell
+      commands. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — www.gnu.org — Bourne Shell Builtins.html
     id: resource-missing-semester-03-06-official-reference-www-gnu-org-bourne
-    locator: Bash conditionals/functions/traps and ShellCheck
+    locator: Bash conditionals/functions/traps and ShellCheck; "Bourne Shell Builtins (Bash Reference
+      Manual)"; https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-trap
     url: https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-trap
     scope_triage: reference-only
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-03-06
+    angle: Checks trap actions and signal dispositions for dependable shell cleanup.
+    angle_detail: The trap builtin section specifies action execution when signals arrive and reset/ignore
+      behavior. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — www.shellcheck.net
     id: resource-missing-semester-03-07-official-reference-www-shellcheck-net
-    locator: Bash conditionals/functions/traps and ShellCheck
+    locator: Bash conditionals/functions/traps and ShellCheck; "ShellCheck – shell script analysis tool";
+      https://www.shellcheck.net/
     url: https://www.shellcheck.net/
     scope_triage: reference-only
+    source_id: source-shellcheck
+    route_id: route-engineering-tools-03-07
+    angle: Finds shell portability, quoting, and scripting mistakes through ShellCheck diagnostics.
+    angle_detail: The example script and annotations demonstrate shell analysis warnings, including shebang/portability
+      and problematic shell-code patterns. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Guided exercises — Complete both lecture exercise sets and produce the tested idempotent CLI
       required by this stage.
@@ -246,9 +352,16 @@ stages:
   - kind: reference
     label: Optional depth — google.github.io — shellguide.html
     id: resource-missing-semester-03-09-optional-depth-google-github-io-shellg
-    locator: Google Shell Style Guide
+    locator: Google Shell Style Guide; "Google Style Guides | Style guides for Google-originated open-source
+      projects"; https://google.github.io/styleguide/shellguide.html
     url: https://google.github.io/styleguide/shellguide.html
     scope_triage: deferred
+    source_id: source-google-shell-style-guide
+    route_id: route-engineering-tools-03-09
+    angle: Uses shell style and error-handling guidance to make scripts maintainable.
+    angle_detail: The Shell Style Guide includes interpreter invocation, stdout/stderr, formatting, features
+      and function/variable conventions. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Write a lab script with --help, two flags, positional validation, clear stderr, and documented
       exit codes.
@@ -279,6 +392,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design/notes.md
+  knowledge_node_id: knowledge-engineering-tools-03
 - id: stage-missing-semester-04-processes-jobs-signals-and-resource-ownership
   number: 4
   title: Processes, jobs, signals, and resource ownership
@@ -296,21 +410,39 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-04-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 processes, job control, and signals
+    locator: MIT 2026 processes, job control, and signals; "Command-line Environment · Missing Semester";
+      https://missing.csail.mit.edu/2026/command-line-environment/#signals
     url: https://missing.csail.mit.edu/2026/command-line-environment/#signals
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-04-01
+    angle: Explains Ctrl-C, SIGINT, and process signal handling with a Python example.
+    angle_detail: The section traces Ctrl-C through the shell to SIGINT and shows a Python handler that
+      ignores it. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — pubs.opengroup.org — V1_chap08.html
     id: resource-missing-semester-04-02-official-reference-pubs-opengroup-org
-    locator: POSIX process environment and Python signal handling
+    locator: POSIX process environment and Python signal handling; "Environment Variables"; https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap08.html
     url: https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap08.html
     scope_triage: reference-only
+    source_id: source-posix-specification
+    route_id: route-engineering-tools-04-02
+    angle: Checks process environment-variable definitions and utility behavior.
+    angle_detail: POSIX Base Definitions chapter 8 defines environment variables affecting multiple utilities
+      and applications; this contributes the process-environment portion, not signal handling. Other parts
+      of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — docs.python.org — signal.html
     id: resource-missing-semester-04-03-official-reference-docs-python-org-sig
-    locator: POSIX process environment and Python signal handling
+    locator: POSIX process environment and Python signal handling; "signal — Set handlers for asynchronous
+      events — Python 3.15.2 documentation"; https://docs.python.org/3/library/signal.html
     url: https://docs.python.org/3/library/signal.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-04-03
+    angle: Checks Python signal handlers and asynchronous-event handling rules.
+    angle_detail: The signal module page documents handlers for asynchronous events and Python-specific
+      signal handling. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — Complete the MIT signal exercises and the stage's foreground/background/graceful-shutdown
       matrix on lab processes only.
@@ -321,15 +453,26 @@ stages:
   - kind: read
     label: Alternative explanation — www.gnu.org — Job Control.html
     id: resource-missing-semester-04-05-alternative-explanation-www-gnu-org-jo
-    locator: Bash job-control manual
+    locator: Bash job-control manual; "Job Control (Bash Reference Manual)"; https://www.gnu.org/software/bash/manual/html_node/Job-Control.html
     url: https://www.gnu.org/software/bash/manual/html_node/Job-Control.html
     scope_triage: helpful-now
+    source_id: source-gnu-bash-manual
+    route_id: route-engineering-tools-04-05
+    angle: Explains Bash job-control facilities and where their builtins are documented.
+    angle_detail: The Job Control chapter introduces job control and links basics, builtins and variables.
+      Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — man7.org — proc.5.html
     id: resource-missing-semester-04-06-optional-depth-man7-org-proc-5-html
-    locator: Linux proc filesystem manual
+    locator: Linux proc filesystem manual; "proc(5) - Linux manual page"; https://man7.org/linux/man-pages/man5/proc.5.html
     url: https://man7.org/linux/man-pages/man5/proc.5.html
     scope_triage: deferred
+    source_id: source-linux-man-pages
+    route_id: route-engineering-tools-04-06
+    angle: Inspects Linux process and system information through the proc filesystem.
+    angle_detail: The proc(5) description identifies a process/system-information and sysctl pseudo-filesystem;
+      it is Linux-specific reference material. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Start foreground and background sleep jobs and map shell job IDs to PIDs/process groups.
     id: resource-missing-semester-04-07-start-foreground-and-background-sleep
@@ -360,6 +503,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-04-processes-jobs-signals-and-resource-ownership/notes.md
+  knowledge_node_id: knowledge-engineering-tools-04
 - id: stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions
   number: 5
   title: SSH, remote execution, tmux, and durable sessions
@@ -377,33 +521,61 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-05-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 remote machines and terminal multiplexers
+    locator: MIT 2026 remote machines and terminal multiplexers; "Command-line Environment · Missing Semester";
+      https://missing.csail.mit.edu/2026/command-line-environment/#remote-machines
     url: https://missing.csail.mit.edu/2026/command-line-environment/#remote-machines
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-05-01
+    angle: Explains interactive and non-interactive SSH, streams, and key authentication.
+    angle_detail: The section contrasts remotely versus locally evaluated pipelines and explains private-key
+      authentication. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-05-02-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 remote machines and terminal multiplexers
+    locator: MIT 2026 remote machines and terminal multiplexers; "Command-line Environment · Missing Semester";
+      https://missing.csail.mit.edu/2026/command-line-environment/#terminal-multiplexers
     url: https://missing.csail.mit.edu/2026/command-line-environment/#terminal-multiplexers
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-05-02
+    angle: Uses tmux panes, windows, detach, and reattach to keep shell sessions durable.
+    angle_detail: The section explicitly describes panes/tabs, multiple shell sessions and detaching/reattaching
+      on remote machines. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — man.openbsd.org — ssh
     id: resource-missing-semester-05-03-official-reference-man-openbsd-org-ssh
-    locator: OpenSSH and tmux manuals
+    locator: OpenSSH and tmux manuals; "ssh(1) - OpenBSD manual pages"; https://man.openbsd.org/ssh
     url: https://man.openbsd.org/ssh
     scope_triage: reference-only
+    source_id: source-openssh-manuals
+    route_id: route-engineering-tools-05-03
+    angle: Checks the SSH client interface for connecting to hosts and executing remote commands.
+    angle_detail: The ssh(1) manual is the SSH client command reference, including remote login and command
+      execution. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — man.openbsd.org — ssh_config
     id: resource-missing-semester-05-04-official-reference-man-openbsd-org-ssh
-    locator: OpenSSH and tmux manuals
+    locator: OpenSSH and tmux manuals; "ssh_config(5) - OpenBSD manual pages"; https://man.openbsd.org/ssh_config
     url: https://man.openbsd.org/ssh_config
     scope_triage: reference-only
+    source_id: source-openssh-manuals
+    route_id: route-engineering-tools-05-04
+    angle: Checks per-host SSH client configuration and connection options.
+    angle_detail: The ssh_config(5) manual defines the client configuration file and option behavior;
+      tmux is covered by a separate manual. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Official reference — man7.org — tmux.1.html
     id: resource-missing-semester-05-05-official-reference-man7-org-tmux-1-htm
-    locator: OpenSSH and tmux manuals
+    locator: OpenSSH and tmux manuals; "tmux(1) - Linux manual page"; https://man7.org/linux/man-pages/man1/tmux.1.html
     url: https://man7.org/linux/man-pages/man1/tmux.1.html
     scope_triage: reference-only
+    source_id: source-tmux-manual
+    route_id: route-engineering-tools-05-05
+    angle: Checks tmux sessions, windows, panes, key bindings, and client commands.
+    angle_detail: The tmux manpage includes clients/sessions, windows/panes, key bindings, commands, hooks
+      and options. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — Complete MIT's remote-machine/tmux exercises and the authorized disconnect/reconnect
       lab.
@@ -413,15 +585,26 @@ stages:
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — command line
     id: resource-missing-semester-05-07-alternative-explanation-missing-csail
-    locator: MIT 2020 command-line environment
+    locator: MIT 2020 command-line environment; "Command-line Environment · Missing Semester"; https://missing.csail.mit.edu/2020/command-line/
     url: https://missing.csail.mit.edu/2020/command-line/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-05-07
+    angle: Connects shell job/process control with terminal and remote-session workflows.
+    angle_detail: The lecture introduces improving shell workflow beyond running individual commands and
+      covers concurrent processes and remote work. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Optional depth — download.samba.org — rsync.1
     id: resource-missing-semester-05-08-optional-depth-download-samba-org-rsyn
-    locator: rsync manual
+    locator: rsync manual; "rsync(1) manpage"; https://download.samba.org/pub/rsync/rsync.1
     url: https://download.samba.org/pub/rsync/rsync.1
     scope_triage: deferred
+    source_id: source-rsync-manual
+    route_id: route-engineering-tools-05-08
+    angle: Checks local and remote file-copy synchronization over a remote shell or rsync daemon.
+    angle_detail: The rsync manpage describes fast local/remote copying and gives separate remote-shell
+      and daemon pull/push syntaxes. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: On an authorized lab host or local VM, inspect a host-key fingerprint before first connection.
     id: resource-missing-semester-05-09-on-an-authorized-lab-host-or-local-vm
@@ -453,6 +636,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions/notes.md
+  knowledge_node_id: knowledge-engineering-tools-05
 - id: stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
   number: 6
   title: Search, regular expressions, and command-line data wrangling
@@ -470,52 +654,98 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — data wrangling
     id: resource-missing-semester-06-01-required-core-missing-csail-mit-edu-da
-    locator: MIT 2020 data-wrangling lecture
+    locator: MIT 2020 data-wrangling lecture; "Data Wrangling · Missing Semester"; https://missing.csail.mit.edu/2020/data-wrangling/
     url: https://missing.csail.mit.edu/2020/data-wrangling/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-06-01
+    angle: Turns text data into the desired form using composable command-line transformations.
+    angle_detail: The lecture defines data wrangling as transforming text/binary formats and develops
+      command-line transformation examples. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: read
     label: Local material — 01.05-IPython-And-Shell-Commands.ipynb
     id: resource-missing-semester-06-02-local-material-01-05-ipython-and-shell
     source_id: source-pydata-handbook
-    locator: IPython shell-command notebook
+    locator: IPython shell-command notebook; 01.05-IPython-And-Shell-Commands.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.05-IPython-And-Shell-Commands.ipynb
     scope_triage: required-now
+    route_id: route-engineering-tools-06-02
+    angle: Connects IPython shell commands and shell/IPython namespace exchange.
+    angle_detail: The notebook is the shell-command chapter of the Python Data Science Handbook and supplies
+      concrete IPython-shell interaction rather than general regex or every wrangling topic. Other parts
+      of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — github.com — GUIDE.md
     id: resource-missing-semester-06-03-official-reference-github-com-guide-md
-    locator: ripgrep and jq guides plus GNU sed/awk
+    locator: ripgrep and jq guides plus GNU sed/awk; "ripgrep/GUIDE.md at master · BurntSushi/ripgrep
+      · GitHub"; https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
     url: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
     scope_triage: reference-only
+    source_id: source-ripgrep-guide
+    route_id: route-engineering-tools-06-03
+    angle: Checks recursive pattern search, filtering, encodings, and ripgrep options.
+    angle_detail: The guide explains line-by-line pattern search, recursive search, regex syntax, ignore/filter
+      behavior, file encodings and common options. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Official reference — jqlang.org — manual
     id: resource-missing-semester-06-04-official-reference-jqlang-org-manual
-    locator: ripgrep and jq guides plus GNU sed/awk
+    locator: ripgrep and jq guides plus GNU sed/awk; "jq 1.8 Manual"; https://jqlang.org/manual/
     url: https://jqlang.org/manual/
     scope_triage: reference-only
+    source_id: source-jq-manual
+    route_id: route-engineering-tools-06-04
+    angle: Transforms and extracts JSON through jq filters.
+    angle_detail: The jq manual defines programs as filters and documents extracting fields, converting
+      numbers and other input/output transformations. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Official reference — www.gnu.org — sed.html
     id: resource-missing-semester-06-05-official-reference-www-gnu-org-sed-htm
-    locator: ripgrep and jq guides plus GNU sed/awk
+    locator: ripgrep and jq guides plus GNU sed/awk; "sed, a stream editor"; https://www.gnu.org/software/sed/manual/sed.html
     url: https://www.gnu.org/software/sed/manual/sed.html
     scope_triage: reference-only
+    source_id: source-gnu-sed-manual
+    route_id: route-engineering-tools-06-05
+    angle: Checks sed stream-editing and text-transformation commands.
+    angle_detail: The sed manual identifies sed as a stream editor and documents its text-editing behavior;
+      jq and awk are separate tools. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — www.gnu.org — gawk.html
     id: resource-missing-semester-06-06-official-reference-www-gnu-org-gawk-ht
-    locator: ripgrep and jq guides plus GNU sed/awk
+    locator: ripgrep and jq guides plus GNU sed/awk; "The GNU Awk User’s Guide"; https://www.gnu.org/software/gawk/manual/gawk.html
     url: https://www.gnu.org/software/gawk/manual/gawk.html
     scope_triage: reference-only
+    source_id: source-gnu-gawk-manual
+    route_id: route-engineering-tools-06-06
+    angle: Selects records and performs field-oriented actions with awk.
+    angle_detail: The Awk guide defines selecting input records and performing operations, fitting the
+      data-wrangling portion of the stage. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — data wrangling
     id: resource-missing-semester-06-07-guided-exercises-missing-csail-mit-edu
-    locator: Complete the MIT data-wrangling exercises and the validated log/JSON pipelines
+    locator: Complete the MIT data-wrangling exercises and the validated log/JSON pipelines; "Data Wrangling
+      · Missing Semester"; https://missing.csail.mit.edu/2020/data-wrangling/#exercises
     url: https://missing.csail.mit.edu/2020/data-wrangling/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-06-07
+    angle: Practices regex matching, sed transformations, and log-data extraction.
+    angle_detail: The verified Exercises section asks about dictionary regex patterns, in-place sed hazards
+      and multi-boot log extraction. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — code quality
     id: resource-missing-semester-06-08-alternative-explanation-missing-csail
-    locator: MIT 2026 regex section
+    locator: MIT 2026 regex section; "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/#regular-expressions
     url: https://missing.csail.mit.edu/2026/code-quality/#regular-expressions
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-06-08
+    angle: Explains regex patterns for command-line search, matching, and validation.
+    angle_detail: The section defines regular expressions, demonstrates ag and go test matching, and provides
+      Python-regex examples. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Write regex examples for anchors, classes, quantifiers, alternation, groups, and backreferences;
       include a counterexample for each.
@@ -547,6 +777,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang/notes.md
+  knowledge_node_id: knowledge-engineering-tools-06
 - id: stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag
   number: 7
   title: Environment variables, PATH, dotfiles, aliases, and package managers
@@ -564,16 +795,30 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-07-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers
+    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers; "Command-line Environment
+      · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#environment-variables
     url: https://missing.csail.mit.edu/2026/command-line-environment/#environment-variables
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-07-01
+    angle: Checks shell variable assignment, quoting, substitution, and environment behavior.
+    angle_detail: The section demonstrates foo=bar versus invalid spaced assignment and contrasts single/double
+      quotes and command/process substitution. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — command line environment
     id: resource-missing-semester-07-02-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers
+    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers; "Command-line Environment
+      · Missing Semester"; https://missing.csail.mit.edu/2026/command-line-environment/#aliases-and-dotfiles
     url: https://missing.csail.mit.edu/2026/command-line-environment/#aliases-and-dotfiles
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-07-02
+    angle: Practices aliases and a versioned, repeatably installed dotfile setup.
+    angle_detail: The anchored section includes alias creation, a dotfiles repository and a repeatable
+      symlink/install script tested in a fresh VM. Other parts of this stage are supplied by its other
+      assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-07-03-local-material-note-programming-toolbo
     locator: Environment and PATH material
@@ -582,15 +827,26 @@ stages:
   - kind: reference
     label: Official reference — zsh.sourceforge.io — Files.html
     id: resource-missing-semester-07-04-official-reference-zsh-sourceforge-io
-    locator: Zsh startup files and Homebrew docs
+    locator: Zsh startup files and Homebrew docs; "5 Files (zsh)"; https://zsh.sourceforge.io/Doc/Release/Files.html
     url: https://zsh.sourceforge.io/Doc/Release/Files.html
     scope_triage: reference-only
+    source_id: source-zsh-manual
+    route_id: route-engineering-tools-07-04
+    angle: Checks the startup/shutdown file order and options governing Zsh initialization.
+    angle_detail: The Files chapter specifies startup/shutdown files beginning with /etc/zshenv and the
+      RCS/GLOBAL_RCS options. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — docs.brew.sh
     id: resource-missing-semester-07-05-official-reference-docs-brew-sh
-    locator: Zsh startup files and Homebrew docs
+    locator: Zsh startup files and Homebrew docs; "Homebrew Documentation"; https://docs.brew.sh/
     url: https://docs.brew.sh/
     scope_triage: reference-only
+    source_id: source-homebrew-docs
+    route_id: route-engineering-tools-07-05
+    angle: Finds Homebrew installation, command usage, troubleshooting, and package-management guidance.
+    angle_detail: The Homebrew documentation index links installation, man brew, troubleshooting, FAQs
+      and audience-specific administration material. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: practise
     label: Guided exercises — Complete MIT's dotfiles exercises and build the isolated, dry-running, idempotent
       installer from this stage.
@@ -601,9 +857,14 @@ stages:
   - kind: reference
     label: Optional depth — specifications.freedesktop.org — latest
     id: resource-missing-semester-07-07-optional-depth-specifications-freedesk
-    locator: XDG Base Directory specification
+    locator: XDG Base Directory specification; "XDG Base Directory Specification"; https://specifications.freedesktop.org/basedir-spec/latest/
     url: https://specifications.freedesktop.org/basedir-spec/latest/
     scope_triage: deferred
+    source_id: source-xdg-base-directory-specification
+    route_id: route-engineering-tools-07-07
+    angle: Locates configuration, data, cache, and state using XDG base directories.
+    angle_detail: The specification has explicit basics and environment-variable sections for base-directory
+      placement. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Launch clean and login/non-login shells and record which test startup files load.
     id: resource-missing-semester-07-08-launch-clean-and-login-non-login-shell
@@ -635,6 +896,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag/notes.md
+  knowledge_node_id: knowledge-engineering-tools-07
 - id: stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics
   number: 8
   title: Editors, Vim's editing language, LSP, and IDE diagnostics
@@ -652,10 +914,17 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — development environment
     id: resource-missing-semester-08-01-required-core-missing-csail-mit-edu-de
-    locator: MIT 2026 development environment and tools
+    locator: MIT 2026 development environment and tools; "Development Environment and Tools · Missing
+      Semester"; https://missing.csail.mit.edu/2026/development-environment/
     url: https://missing.csail.mit.edu/2026/development-environment/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-08-01
+    angle: Explains editor features, Vim interaction, and language-server-supported development.
+    angle_detail: The introduction defines the development environment around text editing plus syntax
+      highlighting, type checking, formatting and autocomplete. Other parts of this stage are supplied
+      by its other assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-08-02-local-material-note-programming-toolbo
     locator: VS Code/tooling section
@@ -664,33 +933,63 @@ stages:
   - kind: reference
     label: Official reference — microsoft.github.io — language server protocol
     id: resource-missing-semester-08-03-official-reference-microsoft-github-io
-    locator: Language Server Protocol and VS Code Python environments
+    locator: Language Server Protocol and VS Code Python environments; "Official page for Language Server
+      Protocol"; https://microsoft.github.io/language-server-protocol/
     url: https://microsoft.github.io/language-server-protocol/
     scope_triage: reference-only
+    source_id: source-language-server-protocol
+    route_id: route-engineering-tools-08-03
+    angle: Explains the editor-to-language-server protocol behind code intelligence.
+    angle_detail: The official overview defines LSP communication between an editor/IDE and language server
+      for autocomplete, definitions and references. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Official reference — code.visualstudio.com — environments
     id: resource-missing-semester-08-04-official-reference-code-visualstudio-c
-    locator: Language Server Protocol and VS Code Python environments
+    locator: Language Server Protocol and VS Code Python environments; "Python environments in VS Code";
+      https://code.visualstudio.com/docs/python/environments
     url: https://code.visualstudio.com/docs/python/environments
     scope_triage: reference-only
+    source_id: source-vscode-docs
+    route_id: route-engineering-tools-08-04
+    angle: Explains interpreter discovery and environment selection when diagnosing VS Code.
+    angle_detail: The Python environments page describes virtual-environment and Conda discovery, workspace
+      interpreter selection and troubleshooting environment discovery. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — development environment
     id: resource-missing-semester-08-05-guided-exercises-missing-csail-mit-edu
-    locator: Complete MIT's editor/LSP exercises plus vimtutor and the broken-environment diagnosis
+    locator: Complete MIT's editor/LSP exercises plus vimtutor and the broken-environment diagnosis; "Development
+      Environment and Tools · Missing Semester"; https://missing.csail.mit.edu/2026/development-environment/#exercises
     url: https://missing.csail.mit.edu/2026/development-environment/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-08-05
+    angle: Practices Vim and verifies IDE/language-server navigation on a real project.
+    angle_detail: The verified Exercises section includes Vim mode, VimGolf and checking language-server
+      jump-to-definition. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — editors
     id: resource-missing-semester-08-06-alternative-explanation-missing-csail
-    locator: MIT 2020 Vim lecture
+    locator: MIT 2020 Vim lecture; "Editors (Vim) · Missing Semester"; https://missing.csail.mit.edu/2020/editors/
     url: https://missing.csail.mit.edu/2020/editors/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-08-06
+    angle: Explains Vim navigation and editing as a language for manipulating code.
+    angle_detail: The lecture contrasts code navigation/editing with prose writing and motivates Vim editing
+      commands. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — vimhelp.org
     id: resource-missing-semester-08-07-optional-depth-vimhelp-org
-    locator: Vim help index
+    locator: 'Vim help index; "Vim: help.txt"; https://vimhelp.org/'
     url: https://vimhelp.org/
     scope_triage: deferred
+    source_id: source-vim-help
+    route_id: route-engineering-tools-08-07
+    angle: Finds Vim command and editing-language help by topic.
+    angle_detail: The site identifies itself as an up-to-date HTML rendering of Vim help files, with quick
+      links to help and topic indexes. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Complete vimtutor or equivalent and demonstrate ten operator+motion/text-object edits without
       arrows or mouse.
@@ -722,6 +1021,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics/notes.md
+  knowledge_node_id: knowledge-engineering-tools-08
 - id: stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
   number: 9
   title: 'Debugging: hypotheses, logs, debuggers, tracing, and minimal reproductions'
@@ -740,53 +1040,99 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — debugging profiling
     id: resource-missing-semester-09-01-required-core-missing-csail-mit-edu-de
-    locator: MIT 2026 debugging lecture
+    locator: MIT 2026 debugging lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#debugging
     url: https://missing.csail.mit.edu/2026/debugging-profiling/#debugging
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-09-01
+    angle: Uses print/logging evidence and debugger techniques to test failure hypotheses.
+    angle_detail: The Debugging section starts with printf debugging and structured logging, explicitly
+      motivating careful thought and severity/location-aware logging. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: read
     label: Local material — 01.06-Errors-and-Debugging.ipynb
     id: resource-missing-semester-09-02-local-material-01-06-errors-and-debugg
     source_id: source-pydata-handbook
-    locator: Runnable debugging notebook and Python debugging shelf
+    locator: Runnable debugging notebook and Python debugging shelf; 01.06-Errors-and-Debugging.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.06-Errors-and-Debugging.ipynb
     scope_triage: required-now
+    route_id: route-engineering-tools-09-02
+    angle: Uses IPython exceptions, tracebacks, and debugging features during diagnosis.
+    angle_detail: The notebook supplies the IPython errors/debugging treatment; it contributes debugging
+      practice rather than covering all system tracing topics. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: read
     label: Local material — SHELF.md
     id: resource-missing-semester-09-03-local-material-shelf-md
     source_id: source-python-depth-drills
-    locator: Runnable debugging notebook and Python debugging shelf
+    locator: Runnable debugging notebook and Python debugging shelf; SHELF.md
     vault_path: material://source-python-depth-drills/SHELF.md
     scope_triage: required-now
+    route_id: route-engineering-tools-09-03
+    angle: Maps debugger and traceback tools for the existing debugging lab.
+    angle_detail: 'Opened shelf section 3b: IPython debugging, pdb, traceback and introspection references.
+      The original shelf locator and study action remain unchanged; this route does not claim complete
+      coverage of the whole stage.'
   - kind: reference
     label: Official reference — docs.python.org — pdb.html
     id: resource-missing-semester-09-04-official-reference-docs-python-org-pdb
-    locator: pdb, logging cookbook, and LLDB tutorial
+    locator: pdb, logging cookbook, and LLDB tutorial; "pdb — The Python Debugger — Python 3.15.2 documentation";
+      https://docs.python.org/3/library/pdb.html
     url: https://docs.python.org/3/library/pdb.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-09-04
+    angle: Checks interactive Python debugger commands and execution control.
+    angle_detail: The pdb page defines the interactive source-code debugger and documents the Python debugger
+      interface; logging and LLDB are sibling resources. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: reference
     label: Official reference — docs.python.org — logging cookbook.html
     id: resource-missing-semester-09-05-official-reference-docs-python-org-log
-    locator: pdb, logging cookbook, and LLDB tutorial
+    locator: pdb, logging cookbook, and LLDB tutorial; "Logging Cookbook — Python 3.15.2 documentation";
+      https://docs.python.org/3/howto/logging-cookbook.html
     url: https://docs.python.org/3/howto/logging-cookbook.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-09-05
+    angle: Uses logging recipes to collect structured debugging evidence.
+    angle_detail: The Logging Cookbook identifies itself as a set of practical logging recipes; it is
+      separate from pdb and LLDB. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — lldb.llvm.org — tutorial.html
     id: resource-missing-semester-09-06-official-reference-lldb-llvm-org-tutor
-    locator: pdb, logging cookbook, and LLDB tutorial
+    locator: pdb, logging cookbook, and LLDB tutorial; "Tutorial - 🐛 LLDB"; https://lldb.llvm.org/use/tutorial.html
     url: https://lldb.llvm.org/use/tutorial.html
     scope_triage: reference-only
+    source_id: source-lldb-docs
+    route_id: route-engineering-tools-09-06
+    angle: Checks LLDB breakpoints, launching, stepping, and inspection commands.
+    angle_detail: The tutorial gives launch syntax, breakpoint examples and LLDB command/Python interfaces;
+      it is independent of Python logging. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — debugging profiling
     id: resource-missing-semester-09-07-guided-exercises-missing-csail-mit-edu
-    locator: Complete the MIT debugging exercises and the seeded-bug hypothesis journal
+    locator: Complete the MIT debugging exercises and the seeded-bug hypothesis journal; "Debugging and
+      Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#exercises
     url: https://missing.csail.mit.edu/2026/debugging-profiling/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-09-07
+    angle: Practices debugger-assisted diagnosis of a deliberately faulty algorithm.
+    angle_detail: The verified Exercises section supplies buggy merge-sort pseudocode and asks the learner
+      to fix it with a debugger. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — debugging profiling
     id: resource-missing-semester-09-08-alternative-explanation-missing-csail
-    locator: MIT 2020 debugging lecture
+    locator: MIT 2020 debugging lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2020/debugging-profiling/
     url: https://missing.csail.mit.edu/2020/debugging-profiling/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-09-08
+    angle: Gives the earlier explanation of diagnosing bugs and resource-hungry code.
+    angle_detail: The lecture separates finding functional bugs from profiling resource use and motivates
+      evidence-driven diagnosis. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Given a seeded bug, write three competing hypotheses and the cheapest discriminating observation
       for each.
@@ -818,6 +1164,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima/notes.md
+  knowledge_node_id: knowledge-engineering-tools-09
 - id: stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query
   number: 10
   title: 'Profiling: measurement design, CPU, memory, I/O, and query plans'
@@ -836,41 +1183,77 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — debugging profiling
     id: resource-missing-semester-10-01-required-core-missing-csail-mit-edu-de
-    locator: MIT 2026 profiling lecture
+    locator: MIT 2026 profiling lecture; "Debugging and Profiling · Missing Semester"; https://missing.csail.mit.edu/2026/debugging-profiling/#profiling
     url: https://missing.csail.mit.edu/2026/debugging-profiling/#profiling
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-10-01
+    angle: Finds CPU and memory hot spots and distinguishes measurement from premature optimization.
+    angle_detail: The Profiling section motivates profiling time/resources and warns that wall-clock timing
+      can mislead. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Local material — 01.07-Timing-and-Profiling.ipynb
     id: resource-missing-semester-10-02-local-material-01-07-timing-and-profil
     source_id: source-pydata-handbook
-    locator: Runnable profiling notebook and performance shelf
+    locator: Runnable profiling notebook and performance shelf; 01.07-Timing-and-Profiling.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.07-Timing-and-Profiling.ipynb
     scope_triage: required-now
+    route_id: route-engineering-tools-10-02
+    angle: Uses IPython timing and profiling tools to compare measured behavior.
+    angle_detail: The notebook supplies timing/profiling examples; it is distinct from the broader performance
+      shelf and query-plan reference. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Local material — SHELF.md
     id: resource-missing-semester-10-03-local-material-shelf-md
     source_id: source-python-depth-drills
-    locator: Runnable profiling notebook and performance shelf
+    locator: Runnable profiling notebook and performance shelf; SHELF.md
     vault_path: material://source-python-depth-drills/SHELF.md
     scope_triage: required-now
+    route_id: route-engineering-tools-10-03
+    angle: Maps timing and profiling tools for the existing measurement lab.
+    angle_detail: 'Opened shelf section 3c: profiling/timing notebooks, cProfile, timeit and tracemalloc
+      references. The original shelf locator and study action remain unchanged; this route does not claim
+      complete coverage of the whole stage.'
   - kind: reference
     label: Official reference — docs.python.org — profile.html
     id: resource-missing-semester-10-04-official-reference-docs-python-org-pro
-    locator: Python cProfile/timeit/tracemalloc
+    locator: Python cProfile/timeit/tracemalloc; "profile — Pure Python profiler — Python 3.15.2 documentation";
+      https://docs.python.org/3/library/profile.html
     url: https://docs.python.org/3/library/profile.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-10-04
+    angle: Checks the assigned Python profiling API, including its current deprecation and compatibility
+      notes.
+    angle_detail: 'The fetched /3 page is Python 3.15 documentation for the pure-Python profile module:
+      it is deprecated in 3.15, describes profiling.tracing and notes cProfile compatibility. It does
+      not itself supply timeit or tracemalloc. Other parts of this stage are supplied by its other assigned
+      materials.'
   - kind: reference
     label: Official reference — docs.python.org — timeit.html
     id: resource-missing-semester-10-05-official-reference-docs-python-org-tim
-    locator: Python cProfile/timeit/tracemalloc
+    locator: Python cProfile/timeit/tracemalloc; "timeit — Measure execution time of small code snippets
+      — Python 3.15.2 documentation"; https://docs.python.org/3/library/timeit.html
     url: https://docs.python.org/3/library/timeit.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-10-05
+    angle: Measures short code snippets with timeit rather than relying on one wall-clock run.
+    angle_detail: The timeit page documents measuring execution time of small snippets; it is separate
+      from tracing memory allocations or profiling call graphs. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: reference
     label: Official reference — docs.python.org — tracemalloc.html
     id: resource-missing-semester-10-06-official-reference-docs-python-org-tra
-    locator: Python cProfile/timeit/tracemalloc
+    locator: Python cProfile/timeit/tracemalloc; "tracemalloc — Trace memory allocations — Python 3.15.2
+      documentation"; https://docs.python.org/3/library/tracemalloc.html
     url: https://docs.python.org/3/library/tracemalloc.html
     scope_triage: reference-only
+    source_id: source-python-docs
+    route_id: route-engineering-tools-10-06
+    angle: Tracks Python memory allocations when investigating memory use.
+    angle_detail: The tracemalloc page describes tracing memory allocations; it is not a CPU profiler
+      or timing benchmark API. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — Complete MIT's profiling exercises and produce the controlled CPU/memory/query-plan
       report.
@@ -880,9 +1263,15 @@ stages:
   - kind: reference
     label: Optional depth — docs.pola.rs — query plan
     id: resource-missing-semester-10-08-optional-depth-docs-pola-rs-query-plan
-    locator: Polars query plans
+    locator: Polars query plans; "Query plan - Polars user guide"; https://docs.pola.rs/user-guide/lazy/query-plan/
     url: https://docs.pola.rs/user-guide/lazy/query-plan/
     scope_triage: deferred
+    source_id: source-polars-docs
+    route_id: route-engineering-tools-10-08
+    angle: Uses optimized and unoptimized Polars query plans to inspect lazy-query work.
+    angle_detail: The Query plan guide explains inspecting lazy queries and distinguishes optimized plan
+      presentation; this contributes query-plan inspection to the broader profiling stage. Other parts
+      of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Distinguish real/user/sys time on CPU-bound, sleep, and file-I/O lab commands.
     id: resource-missing-semester-10-09-distinguish-real-user-sys-time-on-cpu
@@ -913,6 +1302,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query/notes.md
+  knowledge_node_id: knowledge-engineering-tools-10
 - id: stage-missing-semester-11-version-control-integration-applying-the-git-track-to
   number: 11
   title: 'Version-control integration: applying the Git track to tool work'
@@ -930,43 +1320,77 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — version control
     id: resource-missing-semester-11-01-required-core-missing-csail-mit-edu-ve
-    locator: Dedicated Git track Stages 1–7 and MIT 2026 version control
+    locator: Dedicated Git track Stages 1–7 and MIT 2026 version control; "Version Control and Git · Missing
+      Semester"; https://missing.csail.mit.edu/2026/version-control/
     url: https://missing.csail.mit.edu/2026/version-control/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-11-01
+    angle: Connects Git commands to change history and collaboration.
+    angle_detail: The lecture defines version control in terms of tracking source/file changes, maintaining
+      history and facilitating collaboration. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: read
     label: Local material — git-handbook
     id: resource-missing-semester-11-02-local-material-git-handbook
     source_id: source-git-handbook-archive
-    locator: Git handbook and Pro Git
+    locator: Git handbook and Pro Git; index.html
     vault_path: material://source-git-handbook-archive/git-handbook/index.html
     scope_triage: required-now
+    route_id: route-engineering-tools-11-02
+    angle: Connects Git intentions to working-tree, index, commit-DAG, and ref changes.
+    angle_detail: The local handbook home page explicitly diagrams WT, index, HEAD, local DAG and origin/*
+      and links intention pages; it supplies the version-control contribution to the capstone, not debugging/profiling
+      notebooks. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Local material — ProGit_2ed.pdf
     id: resource-missing-semester-11-03-local-material-progit-2ed-pdf
     source_id: source-progit
-    locator: Git handbook and Pro Git
+    locator: Git handbook and Pro Git; ProGit_2ed.pdf, PDF pp. 1-501
     vault_path: material://source-progit/ProGit_2ed.pdf
     scope_triage: required-now
+    route_id: route-engineering-tools-11-03
+    angle: Explains recording changes and the working-tree/index model behind versioning lab artifacts.
+    angle_detail: Viewer page 34 starts Recording Changes to the Repository and develops tracked/untracked
+      file-state handling; this supports the stage's Git workflow component. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — git-scm.com — docs
     id: resource-missing-semester-11-04-official-reference-git-scm-com-docs
-    locator: Git reference index
+    locator: Git reference index; "Git - Reference"; https://git-scm.com/docs
     url: https://git-scm.com/docs
     scope_triage: reference-only
+    source_id: source-git-documentation
+    route_id: route-engineering-tools-11-04
+    angle: Finds the Git command references needed to version the tool-work artifacts.
+    angle_detail: The Git reference index groups configuration, cloning, snapshotting, branches, merges,
+      inspection and collaboration commands. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — version control
     id: resource-missing-semester-11-05-guided-exercises-missing-csail-mit-edu
     locator: Complete MIT's Git exercises then version all prior-stage lab artifacts as an atomic reviewable
-      series
+      series; "Version Control and Git · Missing Semester"; https://missing.csail.mit.edu/2026/version-control/#exercises
     url: https://missing.csail.mit.edu/2026/version-control/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-11-05
+    angle: Practices relating Git commands to the model and inspecting or recovering repository history.
+    angle_detail: The verified Exercises section includes graph/history inspection, blame/show, stash,
+      Git configuration and history cleanup. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: read
     label: Alternative explanation — HU-intro-to-git.pdf
     id: resource-missing-semester-11-06-alternative-explanation-hu-intro-to-gi
     source_id: source-hu-git-intro
-    locator: HU Git introduction
+    locator: HU Git introduction; HU-intro-to-git.pdf, PDF pp. 1-26
     vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
     scope_triage: helpful-now
+    route_id: route-engineering-tools-11-06
+    angle: Gives a workshop introduction to choosing changes, commits, and repository history.
+    angle_detail: Viewer page 3 explains choosing file changes for a commit and recorded author/date metadata,
+      contributing a short introductory second telling. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: practise
     label: Put the lab scripts, dotfiles, editor settings, and tests from earlier stages into a new practice
       repo while excluding machine/secret state.
@@ -996,6 +1420,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-11-version-control-integration-applying-the-git-track-to/notes.md
+  knowledge_node_id: knowledge-engineering-tools-11
 - id: stage-missing-semester-12-dependencies-environments-artifacts-and-versioning
   number: 12
   title: Dependencies, environments, artifacts, and versioning
@@ -1013,10 +1438,17 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-12-01-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2026 dependencies, environments, artifacts, and versioning
+    locator: MIT 2026 dependencies, environments, artifacts, and versioning; "Packaging and Shipping Code
+      · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/
     url: https://missing.csail.mit.edu/2026/shipping-code/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-12-01
+    angle: Explains making code run away from the original development machine.
+    angle_detail: The introduction defines shipping as turning code into a usable form independent of
+      the original machine environment, followed by packaging/configuration/container sections. Other
+      parts of this stage are supplied by its other assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-12-02-local-material-note-programming-toolbo
     locator: Virtual-environment section
@@ -1025,33 +1457,66 @@ stages:
   - kind: reference
     label: Official reference — packaging.python.org — latest
     id: resource-missing-semester-12-03-official-reference-packaging-python-or
-    locator: Python packaging/pyproject and Semantic Versioning
+    locator: Python packaging/pyproject and Semantic Versioning; "Python Packaging User Guide"; https://packaging.python.org/en/latest/
     url: https://packaging.python.org/en/latest/
     scope_triage: reference-only
+    source_id: source-python-packaging-guide
+    route_id: route-engineering-tools-12-03
+    angle: Finds package installation, dependency-management, and distribution guidance.
+    angle_detail: The Packaging User Guide index includes installing packages, managing application dependencies
+      and packaging Python projects. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — packaging.python.org — pyproject toml
     id: resource-missing-semester-12-04-official-reference-packaging-python-or
-    locator: Python packaging/pyproject and Semantic Versioning
+    locator: Python packaging/pyproject and Semantic Versioning; "pyproject.toml specification - Python
+      Packaging User Guide"; https://packaging.python.org/en/latest/specifications/pyproject-toml/
     url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
     scope_triage: reference-only
+    source_id: source-python-packaging-guide
+    route_id: route-engineering-tools-12-04
+    angle: Checks the pyproject.toml specification for package/build metadata.
+    angle_detail: The pyproject.toml specification defines that packaging configuration surface; Semantic
+      Versioning comes from the separate semver resource. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: reference
     label: Official reference — semver.org
     id: resource-missing-semester-12-05-official-reference-semver-org
-    locator: Python packaging/pyproject and Semantic Versioning
+    locator: Python packaging/pyproject and Semantic Versioning; "Semantic Versioning 2.0.0 | Semantic
+      Versioning"; https://semver.org/
     url: https://semver.org/
     scope_triage: reference-only
+    source_id: source-semantic-versioning
+    route_id: route-engineering-tools-12-05
+    angle: Checks the meaning of major, minor, and patch release versions.
+    angle_detail: The Semantic Versioning 2.0.0 specification defines version-number compatibility rules;
+      it is separate from Python packaging-file syntax. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-12-06-guided-exercises-missing-csail-mit-edu
-    locator: Complete the shipping lecture exercises and install the built wheel in a clean environment
+    locator: Complete the shipping lecture exercises and install the built wheel in a clean environment;
+      "Packaging and Shipping Code · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#exercises
     url: https://missing.csail.mit.edu/2026/shipping-code/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-12-06
+    angle: Practices environments, pyproject packaging, lockfiles, containers, and publication.
+    angle_detail: The verified Exercises section includes venv environment diffs, a pyproject package,
+      lockfiles, Docker/Compose, TestPyPI and image publication. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: reference
     label: Optional depth — packaging.python.org — binary distribution format
     id: resource-missing-semester-12-07-optional-depth-packaging-python-org-bi
-    locator: Python binary distribution format
+    locator: Python binary distribution format; "Wheel distribution format - Python Packaging User Guide";
+      https://packaging.python.org/en/latest/specifications/binary-distribution-format/
     url: https://packaging.python.org/en/latest/specifications/binary-distribution-format/
     scope_triage: deferred
+    source_id: source-python-packaging-guide
+    route_id: route-engineering-tools-12-07
+    angle: Checks the wheel distribution format and packaged artifact structure.
+    angle_detail: The page identifies itself as the wheel distribution-format specification; it is the
+      artifact-format reference, rather than a general environment tutorial. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: practise
     label: Define artifact, audience, runtime assumptions, and compatibility surface for a small Python
       CLI/library.
@@ -1083,6 +1548,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-12-dependencies-environments-artifacts-and-versioning/notes.md
+  knowledge_node_id: knowledge-engineering-tools-12
 - id: stage-missing-semester-13-containers-configuration-services-and-publishing
   number: 13
   title: Containers, configuration, services, and publishing
@@ -1100,28 +1566,52 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-13-01-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2026 containers, configuration, services, and publishing
+    locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+      · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#vms--containers
     url: https://missing.csail.mit.edu/2026/shipping-code/#vms--containers
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-13-01
+    angle: Distinguishes VM isolation from container packaging and shared-kernel execution.
+    angle_detail: The section contrasts whole-computer VMs with lighter containers sharing the host kernel
+      and introduces Docker/containerd. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-13-02-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2026 containers, configuration, services, and publishing
+    locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+      · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#configuration
     url: https://missing.csail.mit.edu/2026/shipping-code/#configuration
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-13-02
+    angle: Separates runtime configuration from code using flags, environment variables, and files.
+    angle_detail: The section shows environment/YAML examples and explains deploying the same code with
+      configuration changes. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-13-03-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2026 containers, configuration, services, and publishing
+    locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+      · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#services--orchestration
     url: https://missing.csail.mit.edu/2026/shipping-code/#services--orchestration
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-13-03
+    angle: Explains separate service containers and declarative Docker Compose orchestration.
+    angle_detail: The section discusses supporting services such as caches/databases and declaring multi-container
+      applications in YAML. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — shipping code
     id: resource-missing-semester-13-04-required-core-missing-csail-mit-edu-sh
-    locator: MIT 2026 containers, configuration, services, and publishing
+    locator: MIT 2026 containers, configuration, services, and publishing; "Packaging and Shipping Code
+      · Missing Semester"; https://missing.csail.mit.edu/2026/shipping-code/#publishing
     url: https://missing.csail.mit.edu/2026/shipping-code/#publishing
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-13-04
+    angle: Distributes built artifacts through releases, package managers, and downloadable packages.
+    angle_detail: The section explains uploading artifacts, GitHub Releases and package-manager installation
+      from source or wheels. Other parts of this stage are supplied by its other assigned materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-13-05-local-material-note-programming-toolbo
     locator: Docker section
@@ -1130,21 +1620,39 @@ stages:
   - kind: reference
     label: Official reference — docs.docker.com — build
     id: resource-missing-semester-13-06-official-reference-docs-docker-com-bui
-    locator: Docker build, OCI image spec, and Twelve-Factor config
+    locator: Docker build, OCI image spec, and Twelve-Factor config; "Docker Build | Docker Docs"; https://docs.docker.com/build/
     url: https://docs.docker.com/build/
     scope_triage: reference-only
+    source_id: source-docker-documentation
+    route_id: route-engineering-tools-13-06
+    angle: Explains building and packaging applications into portable Docker images.
+    angle_detail: The Docker Build overview describes packaging and distributing software, BuildKit, build
+      drivers, exporters and caching. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — github.com — image spec
     id: resource-missing-semester-13-07-official-reference-github-com-image-sp
-    locator: Docker build, OCI image spec, and Twelve-Factor config
+    locator: 'Docker build, OCI image spec, and Twelve-Factor config; "GitHub - opencontainers/image-spec:
+      OCI Image Format · GitHub"; https://github.com/opencontainers/image-spec'
     url: https://github.com/opencontainers/image-spec
     scope_triage: reference-only
+    source_id: source-oci-image-specification
+    route_id: route-engineering-tools-13-07
+    angle: Identifies the OCI image format and its specification documents.
+    angle_detail: The official repository identifies itself as the OCI Image Format specification and
+      supplies its specification files; it is distinct from Docker build usage and deployment configuration.
+      Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — 12factor.net — config
     id: resource-missing-semester-13-08-official-reference-12factor-net-config
-    locator: Docker build, OCI image spec, and Twelve-Factor config
+    locator: Docker build, OCI image spec, and Twelve-Factor config; "The Twelve-Factor App"; https://12factor.net/config
     url: https://12factor.net/config
     scope_triage: reference-only
+    source_id: source-twelve-factor-app
+    route_id: route-engineering-tools-13-08
+    angle: Separates deployment configuration from code using environment variables.
+    angle_detail: The Config section distinguishes per-deploy resource handles and credentials from internal
+      code wiring and describes granular environment-variable configuration. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — Complete the relevant shipping exercises and the pinned/non-root/secret-free
       clean-runtime container lab.
@@ -1155,9 +1663,15 @@ stages:
   - kind: reference
     label: Optional depth — docs.docker.com — dockerfile
     id: resource-missing-semester-13-10-optional-depth-docs-docker-com-dockerf
-    locator: Dockerfile reference
+    locator: Dockerfile reference; "Dockerfile reference | Docker Docs"; https://docs.docker.com/reference/dockerfile/
     url: https://docs.docker.com/reference/dockerfile/
     scope_triage: deferred
+    source_id: source-docker-documentation
+    route_id: route-engineering-tools-13-10
+    angle: Checks Dockerfile instructions, parser directives, and image-build behavior.
+    angle_detail: The Dockerfile reference provides instruction syntax and behavior, including parser
+      directives and BuildKit processing rules. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Containerize the Stage 12 artifact with a pinned base, .dockerignore, non-root user, entrypoint,
       and health behavior.
@@ -1190,6 +1704,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-13-containers-configuration-services-and-publishing/notes.md
+  knowledge_node_id: knowledge-engineering-tools-13
 - id: stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci
   number: 14
   title: Build systems, task runners, dependency graphs, and CI
@@ -1207,16 +1722,29 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — metaprogramming
     id: resource-missing-semester-14-01-required-core-missing-csail-mit-edu-me
-    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI
+    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI; "Metaprogramming · Missing Semester";
+      https://missing.csail.mit.edu/2020/metaprogramming/
     url: https://missing.csail.mit.edu/2020/metaprogramming/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-14-01
+    angle: Connects build dependencies, tests, and process automation.
+    angle_detail: The lecture explicitly covers systems for building/testing code and managing development
+      process. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Required core — missing.csail.mit.edu — code quality
     id: resource-missing-semester-14-02-required-core-missing-csail-mit-edu-co
-    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI
+    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI; "Code Quality · Missing Semester";
+      https://missing.csail.mit.edu/2026/code-quality/
     url: https://missing.csail.mit.edu/2026/code-quality/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-14-02
+    angle: Connects formatting, linting, testing, hooks, CI, and command runners.
+    angle_detail: The introduction explicitly lists formatting, linting, tests, pre-commit hooks, CI,
+      command runners and a regex bonus topic. Other parts of this stage are supplied by its other assigned
+      materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-14-03-local-material-note-programming-toolbo
     locator: Tool commands and Docker/test context
@@ -1225,15 +1753,27 @@ stages:
   - kind: reference
     label: Official reference — www.gnu.org — make.html
     id: resource-missing-semester-14-04-official-reference-www-gnu-org-make-ht
-    locator: GNU Make and GitHub Actions
+    locator: GNU Make and GitHub Actions; "GNU make"; https://www.gnu.org/software/make/manual/make.html
     url: https://www.gnu.org/software/make/manual/make.html
     scope_triage: reference-only
+    source_id: source-gnu-make-manual
+    route_id: route-engineering-tools-14-04
+    angle: Checks dependency-driven recompilation and make recipe behavior.
+    angle_detail: The GNU make manual describes determining which program pieces need recompilation and
+      issuing their recipes; GitHub Actions remains the separate CI resource. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — docs.github.com — actions
     id: resource-missing-semester-14-05-official-reference-docs-github-com-act
-    locator: GNU Make and GitHub Actions
+    locator: GNU Make and GitHub Actions; "GitHub Actions documentation - GitHub Docs"; https://docs.github.com/en/actions
     url: https://docs.github.com/en/actions
     scope_triage: reference-only
+    source_id: source-github-documentation
+    route_id: route-engineering-tools-14-05
+    angle: Finds GitHub Actions workflow and automation guidance for the CI lab.
+    angle_detail: The Actions documentation explains repository software-development workflow automation
+      and links guides for creating and sharing actions. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: practise
     label: Guided exercises — Complete the metaprogramming and code-quality build/CI exercises, then prove
       incremental rebuild and local/CI parity.
@@ -1244,9 +1784,15 @@ stages:
   - kind: reference
     label: Optional depth — just.systems — en
     id: resource-missing-semester-14-07-optional-depth-just-systems-en
-    locator: just command runner manual
+    locator: just command runner manual; "Introduction - Just Programmer's Manual"; https://just.systems/man/en/
     url: https://just.systems/man/en/
     scope_triage: deferred
+    source_id: source-just-manual
+    route_id: route-engineering-tools-14-07
+    angle: Saves and runs project-specific commands with just.
+    angle_detail: The manual introduction explicitly defines just as a convenient project-specific command
+      runner; it is not a dependency-graph build engine. Other parts of this stage are supplied by its
+      other assigned materials.
   - kind: practise
     label: Express the lab package pipeline as a DAG with sources, generated output, tests, package, and
       image.
@@ -1278,6 +1824,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci/notes.md
+  knowledge_node_id: knowledge-engineering-tools-14
 - id: stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and
   number: 15
   title: 'Code quality: formatting, linting, typing, tests, hooks, and gates'
@@ -1295,10 +1842,16 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — code quality
     id: resource-missing-semester-15-01-required-core-missing-csail-mit-edu-co
-    locator: MIT 2026 code quality
+    locator: MIT 2026 code quality; "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/
     url: https://missing.csail.mit.edu/2026/code-quality/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-15-01
+    angle: Connects formatting, linting, testing, hooks, CI, and command runners.
+    angle_detail: The introduction explicitly lists formatting, linting, tests, pre-commit hooks, CI,
+      command runners and a regex bonus topic. Other parts of this stage are supplied by its other assigned
+      materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-15-02-local-material-note-programming-toolbo
     locator: pytest section and testing shelf
@@ -1308,45 +1861,87 @@ stages:
     label: Local material — SHELF.md
     id: resource-missing-semester-15-03-local-material-shelf-md
     source_id: source-python-depth-drills
-    locator: pytest section and testing shelf
+    locator: pytest section and testing shelf; SHELF.md
     vault_path: material://source-python-depth-drills/SHELF.md
     scope_triage: required-now
+    route_id: route-engineering-tools-15-03
+    angle: Maps testing and mocking references for the existing code-quality stage.
+    angle_detail: 'Opened shelf section 3a: pytest fixtures/parametrization, mocking and property-testing
+      references. The original shelf locator and study action remain unchanged; this route does not claim
+      complete coverage of the whole stage.'
   - kind: reference
     label: Official reference — docs.pytest.org — stable
     id: resource-missing-semester-15-04-official-reference-docs-pytest-org-sta
-    locator: pytest, Ruff, mypy, and pre-commit
+    locator: pytest, Ruff, mypy, and pre-commit; "pytest documentation"; https://docs.pytest.org/en/stable/
     url: https://docs.pytest.org/en/stable/
     scope_triage: reference-only
+    source_id: source-pytest-docs
+    route_id: route-engineering-tools-15-04
+    angle: Finds pytest assertions, fixtures, parameterization, marks, and invocation guidance.
+    angle_detail: The pytest index exposes how-to guides for invoking pytest, assertions, fixtures, marks
+      and parameterization; it does not document the other listed quality tools. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — docs.astral.sh — ruff
     id: resource-missing-semester-15-05-official-reference-docs-astral-sh-ruff
-    locator: pytest, Ruff, mypy, and pre-commit
+    locator: pytest, Ruff, mypy, and pre-commit; "Ruff"; https://docs.astral.sh/ruff/
     url: https://docs.astral.sh/ruff/
     scope_triage: reference-only
+    source_id: source-ruff-docs
+    route_id: route-engineering-tools-15-05
+    angle: Checks Ruff linting, formatting, configuration, and integration behavior.
+    angle_detail: The documentation separately exposes the Ruff linter, formatter, configuration, rules
+      and integration sections; it does not document pytest or mypy. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: reference
     label: Official reference — mypy.readthedocs.io — stable
     id: resource-missing-semester-15-06-official-reference-mypy-readthedocs-io
-    locator: pytest, Ruff, mypy, and pre-commit
+    locator: pytest, Ruff, mypy, and pre-commit; "mypy 2.4.1 documentation"; https://mypy.readthedocs.io/en/stable/
     url: https://mypy.readthedocs.io/en/stable/
     scope_triage: reference-only
+    source_id: source-mypy-docs
+    route_id: route-engineering-tools-15-06
+    angle: Checks mypy type checking, type inference, and integration into an existing codebase.
+    angle_detail: The mypy index includes getting started, use with existing codebases, built-in types,
+      inference and its type-system reference. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Official reference — pre-commit.com
     id: resource-missing-semester-15-07-official-reference-pre-commit-com
-    locator: pytest, Ruff, mypy, and pre-commit
+    locator: pytest, Ruff, mypy, and pre-commit; "pre-commit"; https://pre-commit.com/
     url: https://pre-commit.com/
     scope_triage: reference-only
+    source_id: source-pre-commit-docs
+    route_id: route-engineering-tools-15-07
+    angle: Configures and maintains multi-language pre-commit hooks.
+    angle_detail: The introduction describes a framework for managing hooks that identify simple issues
+      before code review, with configuration and usage guidance. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — code quality
     id: resource-missing-semester-15-08-guided-exercises-missing-csail-mit-edu
-    locator: Complete MIT's code-quality exercises and the seeded-failure matrix for every quality layer
+    locator: Complete MIT's code-quality exercises and the seeded-failure matrix for every quality layer;
+      "Code Quality · Missing Semester"; https://missing.csail.mit.edu/2026/code-quality/#exercises
     url: https://missing.csail.mit.edu/2026/code-quality/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-15-08
+    angle: Practices configuring quality tools and observing CI catch seeded failures.
+    angle_detail: The verified Exercises section includes formatters/linters/hooks, unit tests/coverage
+      and CI that is intentionally broken to check detection. Other parts of this stage are supplied by
+      its other assigned materials.
   - kind: reference
     label: Optional depth — hypothesis.readthedocs.io — latest
     id: resource-missing-semester-15-09-optional-depth-hypothesis-readthedocs
-    locator: Hypothesis property-based testing
+    locator: Hypothesis property-based testing; "Hypothesis 6.170.15 documentation"; https://hypothesis.readthedocs.io/en/latest/
     url: https://hypothesis.readthedocs.io/en/latest/
     scope_triage: deferred
+    source_id: source-hypothesis-docs
+    route_id: route-engineering-tools-15-09
+    angle: Finds strategies, examples, settings, and failure replay for property-based tests.
+    angle_detail: The Hypothesis documentation exposes a tutorial, built-in/adapted/custom strategies,
+      settings and replaying failed tests. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Configure formatter, linter, type checker, and pytest for the lab package with one source of
       truth.
@@ -1378,6 +1973,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and/notes.md
+  knowledge_node_id: knowledge-engineering-tools-15
 - id: stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver
   number: 16
   title: 'Agentic coding: specification, authority, privacy, and verification loops'
@@ -1397,35 +1993,66 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — agentic coding
     id: resource-missing-semester-16-01-required-core-missing-csail-mit-edu-ag
-    locator: MIT 2026 agentic coding
+    locator: MIT 2026 agentic coding; "Agentic Coding · Missing Semester"; https://missing.csail.mit.edu/2026/agentic-coding/
     url: https://missing.csail.mit.edu/2026/agentic-coding/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-16-01
+    angle: Explains coding-agent tools, autonomy, and bounded coding workflows.
+    angle_detail: The lecture defines agents as conversational models with file, web and shell tools and
+      discusses how they are used in development. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Official reference — www.nist.gov — ai risk management framework
     id: resource-missing-semester-16-02-official-reference-www-nist-gov-ai-ris
-    locator: NIST AI Risk Management Framework
+    locator: NIST AI Risk Management Framework; "AI Risk Management Framework | NIST"; https://www.nist.gov/itl/ai-risk-management-framework
     url: https://www.nist.gov/itl/ai-risk-management-framework
     scope_triage: reference-only
+    source_id: source-nist-ai-risk-management-framework
+    route_id: route-engineering-tools-16-02
+    angle: Provides a risk-management framework for identifying and managing AI-related risks.
+    angle_detail: The NIST landing page describes the AI Risk Management Framework and profiles for managing
+      AI risks; it is governance context, not a coding-agent command tutorial. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — agentic coding
     id: resource-missing-semester-16-03-guided-exercises-missing-csail-mit-edu
     locator: Complete MIT's agent exercises and the stage's bounded specification/verification/privacy
-      labs
+      labs; "Agentic Coding · Missing Semester"; https://missing.csail.mit.edu/2026/agentic-coding/#exercises
     url: https://missing.csail.mit.edu/2026/agentic-coding/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-16-03
+    angle: Compares coding forms and practices bounded agent configuration on concrete tasks.
+    angle_detail: The verified Exercises section compares manual/autocomplete/chat/agent work and asks
+      the learner to create and test agent instructions, skills and subagents. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — development environment
     id: resource-missing-semester-16-04-alternative-explanation-missing-csail
-    locator: MIT AI-powered development section
+    locator: MIT AI-powered development section; "Development Environment and Tools · Missing Semester";
+      https://missing.csail.mit.edu/2026/development-environment/#ai-powered-development
     url: https://missing.csail.mit.edu/2026/development-environment/#ai-powered-development
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-16-04
+    angle: Distinguishes autocomplete, inline chat, and coding agents in the editor workflow.
+    angle_detail: The section explicitly separates the three forms and shows guiding model completion
+      through code and comments. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — www.nist.gov — artificial intelligence risk management framework generative
       artificial intelligence
     id: resource-missing-semester-16-05-optional-depth-www-nist-gov-artificial
-    locator: NIST Generative AI profile
+    locator: 'NIST Generative AI profile; "Artificial Intelligence Risk Management Framework: Generative
+      Artificial Intelligence Profile | NIST"; https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence'
     url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
     scope_triage: deferred
+    source_id: source-nist-ai-risk-management-framework
+    route_id: route-engineering-tools-16-05
+    angle: Adds the Generative AI Profile as optional risk-management context.
+    angle_detail: The publication abstract identifies a cross-sectoral companion profile to AI RMF 1.0
+      for generative AI, dated July 26, 2024. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: practise
     label: Rewrite a vague feature request into objective, scope, constraints, non-goals, acceptance tests,
       and authority boundaries.
@@ -1457,6 +2084,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver/notes.md
+  knowledge_node_id: knowledge-engineering-tools-16
 - id: stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col
   number: 17
   title: 'Beyond code: documentation, issue reports, review, and collaboration'
@@ -1474,39 +2102,74 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — beyond code
     id: resource-missing-semester-17-01-required-core-missing-csail-mit-edu-be
-    locator: MIT 2026 Beyond the Code
+    locator: MIT 2026 Beyond the Code; "Beyond the Code · Missing Semester"; https://missing.csail.mit.edu/2026/beyond-code/
     url: https://missing.csail.mit.edu/2026/beyond-code/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-17-01
+    angle: Develops maintainable code communication, documentation, and collaborative contribution practices.
+    angle_detail: The lecture motivates code others can understand, maintain and build on and discusses
+      communication and ecosystem participation. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Official reference — docs.github.com — using issues
     id: resource-missing-semester-17-02-official-reference-docs-github-com-usi
-    locator: GitHub issue guidance and Keep a Changelog
+    locator: GitHub issue guidance and Keep a Changelog; "Using issues - GitHub Docs"; https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues
     url: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues
     scope_triage: reference-only
+    source_id: source-github-documentation
+    route_id: route-engineering-tools-17-02
+    angle: Checks how to create and manage issues in a collaborative repository.
+    angle_detail: The Using issues landing page links issue creation, sub-issues, assignment and issue-management
+      workflows. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — keepachangelog.com — 1.1.0
     id: resource-missing-semester-17-03-official-reference-keepachangelog-com
-    locator: GitHub issue guidance and Keep a Changelog
+    locator: GitHub issue guidance and Keep a Changelog; "Keep a Changelog"; https://keepachangelog.com/en/1.1.0/
     url: https://keepachangelog.com/en/1.1.0/
     scope_triage: reference-only
+    source_id: source-keep-a-changelog
+    route_id: route-engineering-tools-17-03
+    angle: Writes a human-readable record of notable changes instead of dumping Git logs.
+    angle_detail: The guide advocates a changelog of notable changes using its versioned format and Semantic
+      Versioning conventions. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — beyond code
     id: resource-missing-semester-17-04-guided-exercises-missing-csail-mit-edu
-    locator: Complete MIT's communication exercises and produce the README/issue/review/decision portfolio
+    locator: Complete MIT's communication exercises and produce the README/issue/review/decision portfolio;
+      "Beyond the Code · Missing Semester"; https://missing.csail.mit.edu/2026/beyond-code/#exercises
     url: https://missing.csail.mit.edu/2026/beyond-code/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-17-04
+    angle: Practices useful comments, commit explanations, READMEs, and issue/review communication.
+    angle_detail: The verified Exercises section asks for comment examples, stronger commit messages,
+      README comparisons and issue-quality inspection. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: read
     label: Alternative explanation — docs.github.com — reviewing changes in pull requests
     id: resource-missing-semester-17-05-alternative-explanation-docs-github-co
-    locator: GitHub pull-request review guidance
+    locator: GitHub pull-request review guidance; "Review pull requests - GitHub Docs"; https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
     url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
     scope_triage: helpful-now
+    source_id: source-github-documentation
+    route_id: route-engineering-tools-17-05
+    angle: Checks pull-request reviewing, commenting, approval, and feedback workflows.
+    angle_detail: The review landing page describes reviewing/commenting/approving changes and includes
+      checking pull requests out locally. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Optional depth — diataxis.fr
     id: resource-missing-semester-17-06-optional-depth-diataxis-fr
-    locator: Diátaxis documentation framework
+    locator: Diátaxis documentation framework; "Diátaxis"; https://diataxis.fr/
     url: https://diataxis.fr/
     scope_triage: deferred
+    source_id: source-diataxis
+    route_id: route-engineering-tools-17-06
+    angle: Separates tutorials, how-to guides, reference, and explanation when writing documentation.
+    angle_detail: The framework distinguishes four documentation needs and contains applying/understanding
+      guidance for tutorials, how-to guides, reference and explanation. Other parts of this stage are
+      supplied by its other assigned materials.
   - kind: practise
     label: Write a README funnel answering what, why, use, install, verify, and troubleshoot for the lab
       artifact.
@@ -1540,6 +2203,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col/notes.md
+  knowledge_node_id: knowledge-engineering-tools-17
 - id: stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and
   number: 18
   title: 'Systems potpourri: daemons, filesystems, backups, APIs, and personal automation'
@@ -1558,27 +2222,49 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — potpourri
     id: resource-missing-semester-18-01-required-core-missing-csail-mit-edu-po
-    locator: MIT 2020 Potpourri
+    locator: MIT 2020 Potpourri; "Potpourri · Missing Semester"; https://missing.csail.mit.edu/2020/potpourri/
     url: https://missing.csail.mit.edu/2020/potpourri/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-18-01
+    angle: Introduces daemons, FUSE, backups, APIs, and personal automation as distinct tooling topics.
+    angle_detail: The table of contents explicitly names daemons, FUSE, backups, APIs, Hammerspoon and
+      related system tools. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — www.freedesktop.org — latest
     id: resource-missing-semester-18-02-official-reference-www-freedesktop-org
-    locator: systemd, restic, and GitHub REST API
+    locator: systemd, restic, and GitHub REST API; "systemd.index"; https://www.freedesktop.org/software/systemd/man/latest/
     url: https://www.freedesktop.org/software/systemd/man/latest/
     scope_triage: reference-only
+    source_id: source-systemd-manuals
+    route_id: route-engineering-tools-18-02
+    angle: Finds systemd daemon, service, boot, and configuration manual pages.
+    angle_detail: The systemd index lists project manpages and directives, including boot configuration
+      and system-level service tooling. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — restic.readthedocs.io — stable
     id: resource-missing-semester-18-03-official-reference-restic-readthedocs
-    locator: systemd, restic, and GitHub REST API
+    locator: "systemd, restic, and GitHub REST API; \"Restic Documentation — restic 0.19.1\n documentation\"\
+      ; https://restic.readthedocs.io/en/stable/"
     url: https://restic.readthedocs.io/en/stable/
     scope_triage: reference-only
+    source_id: source-restic-docs
+    route_id: route-engineering-tools-18-03
+    angle: Finds backup repository setup, storage backends, and recovery-related guidance.
+    angle_detail: The Restic index includes preparing repositories and local/SFTP/REST/cloud storage backends,
+      fitting the backups part of systems potpourri. Other parts of this stage are supplied by its other
+      assigned materials.
   - kind: reference
     label: Official reference — docs.github.com — rest
     id: resource-missing-semester-18-04-official-reference-docs-github-com-res
-    locator: systemd, restic, and GitHub REST API
+    locator: systemd, restic, and GitHub REST API; "GitHub REST API documentation - GitHub Docs"; https://docs.github.com/en/rest
     url: https://docs.github.com/en/rest
     scope_triage: reference-only
+    source_id: source-github-documentation
+    route_id: route-engineering-tools-18-04
+    angle: Finds API endpoints and authentication/versioning guidance for repository automation.
+    angle_detail: The REST API index explicitly describes integrations, retrieving data, workflow automation
+      and API versioning. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Guided exercises — Complete the applicable Potpourri exercises and the restore-tested backup/read-only
       API/safe automation labs.
@@ -1589,15 +2275,26 @@ stages:
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — 2019
     id: resource-missing-semester-18-06-alternative-explanation-missing-csail
-    locator: MIT 2019 lecture archive
+    locator: MIT 2019 lecture archive; "2019 Lectures · Missing Semester"; https://missing.csail.mit.edu/2019/
     url: https://missing.csail.mit.edu/2019/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-18-06
+    angle: Navigates the earlier lecture archive for backups, automation, and machine tooling.
+    angle_detail: The archive lists distinct lectures including dotfiles, backups, automation, introspection
+      and package management; it is an index, not a complete lesson by itself. Other parts of this stage
+      are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — kernel.org — FUSE overview
     id: resource-missing-semester-18-07-optional-depth-www-kernel-org-fuse-htm
-    locator: FUSE project documentation
+    locator: FUSE project documentation; "1. FUSE Overview — The Linux Kernel  documentation"; https://www.kernel.org/doc/html/latest/filesystems/fuse/fuse.html
     url: https://www.kernel.org/doc/html/latest/filesystems/fuse/fuse.html
     scope_triage: deferred
+    source_id: source-linux-kernel-docs
+    route_id: route-engineering-tools-18-07
+    angle: Explains the userspace-filesystem and filesystem-daemon model behind FUSE.
+    angle_detail: The FUSE Overview defines userspace filesystems and the processes supplying their data/metadata
+      through the kernel interface. Other parts of this stage are supplied by its other assigned materials.
   - kind: practise
     label: Inspect one harmless user service and map unit/config, process, logs, restart policy, and permissions
       without changing a system service.
@@ -1629,6 +2326,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and/notes.md
+  knowledge_node_id: knowledge-engineering-tools-18
 - id: stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too
   number: 19
   title: Security and cryptography for everyday engineering tools
@@ -1647,45 +2345,86 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — security
     id: resource-missing-semester-19-01-required-core-missing-csail-mit-edu-se
-    locator: MIT 2020 security and cryptography
+    locator: MIT 2020 security and cryptography; "Security and Cryptography · Missing Semester"; https://missing.csail.mit.edu/2020/security/
     url: https://missing.csail.mit.edu/2020/security/
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-19-01
+    angle: Explains the cryptographic concepts behind hashing, encryption, and secure tooling.
+    angle_detail: The lecture explicitly scopes itself to security/cryptography concepts relevant to tools
+      covered earlier, including hash functions. Other parts of this stage are supplied by its other assigned
+      materials.
   - kind: reference
     label: Official reference — www.openssh.com — manual.html
     id: resource-missing-semester-19-02-official-reference-www-openssh-com-man
-    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    locator: 'OpenSSH manuals, OWASP secrets management, and Sigstore; "OpenSSH: Manual Pages"; https://www.openssh.com/manual.html'
     url: https://www.openssh.com/manual.html
     scope_triage: reference-only
+    source_id: source-openssh-manuals
+    route_id: route-engineering-tools-19-02
+    angle: Finds OpenSSH client, server, and configuration manual pages.
+    angle_detail: The manual index lists ssh, sshd and client/server configuration manuals and states
+      that they reflect OpenSSH development-release documentation. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: reference
     label: Official reference — cheatsheetseries.owasp.org — Secrets_Management_Cheat_Sheet.html
     id: resource-missing-semester-19-03-official-reference-cheatsheetseries-ow
-    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    locator: OpenSSH manuals, OWASP secrets management, and Sigstore; "Secrets Management - OWASP Cheat
+      Sheet Series"; https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
     url: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
     scope_triage: reference-only
+    source_id: source-owasp-cheat-sheets
+    route_id: route-engineering-tools-19-03
+    angle: Checks credential storage, access, rotation, auditing, and secret lifecycle decisions.
+    angle_detail: The cheat sheet has explicit sections for auditing, secret lifecycle, TLS, break-glass
+      recovery and memory handling. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — docs.sigstore.dev
     id: resource-missing-semester-19-04-official-reference-docs-sigstore-dev
-    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    locator: OpenSSH manuals, OWASP secrets management, and Sigstore; "Overview - Sigstore"; https://docs.sigstore.dev/
     url: https://docs.sigstore.dev/
     scope_triage: reference-only
+    source_id: source-sigstore-docs
+    route_id: route-engineering-tools-19-04
+    angle: Explains signing and verifying software artifacts for supply-chain security.
+    angle_detail: The overview describes improving software supply-chain security through signing and
+      verification of releases, images, binaries and other artifacts. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: practise
     label: Guided exercises — missing.csail.mit.edu — security
     id: resource-missing-semester-19-05-guided-exercises-missing-csail-mit-edu
-    locator: Complete MIT's security exercises and the fake-credential threat/sign/incident labs only
+    locator: Complete MIT's security exercises and the fake-credential threat/sign/incident labs only;
+      "Security and Cryptography · Missing Semester"; https://missing.csail.mit.edu/2020/security/#exercises
     url: https://missing.csail.mit.edu/2020/security/#exercises
     scope_triage: required-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-19-05
+    angle: Practices entropy reasoning, artifact hash verification, and encryption on lab material.
+    angle_detail: The verified Exercises section includes password entropy, hashing an OS image and encrypting/decrypting
+      a local file. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Alternative explanation — missing.csail.mit.edu — security
     id: resource-missing-semester-19-06-alternative-explanation-missing-csail
-    locator: MIT 2019 security and privacy lecture
+    locator: MIT 2019 security and privacy lecture; "Security and Privacy · Missing Semester"; https://missing.csail.mit.edu/2019/security/
     url: https://missing.csail.mit.edu/2019/security/
     scope_triage: helpful-now
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-19-06
+    angle: Provides the earlier threat-model-focused security and privacy explanation.
+    angle_detail: The lecture frames security/privacy in terms of a threat model and defenses chosen to
+      match it. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Optional depth — cheatsheetseries.owasp.org — Threat_Modeling_Cheat_Sheet.html
     id: resource-missing-semester-19-07-optional-depth-cheatsheetseries-owasp
-    locator: OWASP threat-modeling cheat sheet
+    locator: OWASP threat-modeling cheat sheet; "Threat Modeling - OWASP Cheat Sheet Series"; https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html
     url: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html
     scope_triage: deferred
+    source_id: source-owasp-cheat-sheets
+    route_id: route-engineering-tools-19-07
+    angle: Structures threat identification, mitigations, and validation for the security lab.
+    angle_detail: The threat-modeling sheet organizes threat identification, response and mitigations,
+      and review/validation; it is not an SSH command manual. Other parts of this stage are supplied by
+      its other assigned materials.
   - kind: practise
     label: Build a threat model with assets, actors, entry points, trust boundaries, abuse cases, mitigations,
       and residual risk for the lab shipping pipeline.
@@ -1718,6 +2457,7 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too/notes.md
+  knowledge_node_id: knowledge-engineering-tools-19
 - id: stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
   number: 20
   title: 'Capstone: bootstrap, diagnose, ship, and hand off from a clean machine'
@@ -1737,10 +2477,18 @@ stages:
   - kind: read
     label: Required core — missing.csail.mit.edu — 2026
     id: resource-missing-semester-20-01-required-core-missing-csail-mit-edu-20
-    locator: Current MIT syllabus synthesis plus the exact lecture pages assigned in Stages 1–19
+    locator: Current MIT syllabus synthesis plus the exact lecture pages assigned in Stages 1–19; "2026
+      Lectures · Missing Semester"; https://missing.csail.mit.edu/2026/
     url: https://missing.csail.mit.edu/2026/
     scope_triage: required-now
-  - kind: read
+    source_id: source-mit-missing-semester
+    route_id: route-engineering-tools-20-01
+    angle: Navigates the current lecture pages for capstone revision.
+    angle_detail: The syllabus index lists shell, command-line environment, editor tools, debugging/profiling,
+      Git, shipping, agents, collaboration and code quality. The linked lessons, rather than this index
+      alone, supply the capstone content. Other parts of this stage are supplied by its other assigned
+      materials.
+  - kind: reference
     label: Local material — note-programming-toolbox-bootcamp.md
     id: resource-missing-semester-20-02-local-material-note-programming-toolbo
     locator: Historical toolbox Git handbook debugging/profiling notebooks
@@ -1750,23 +2498,37 @@ stages:
     label: Local material — git-handbook
     id: resource-missing-semester-20-03-local-material-git-handbook
     source_id: source-git-handbook-archive
-    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    locator: Historical toolbox Git handbook debugging/profiling notebooks; index.html
     vault_path: material://source-git-handbook-archive/git-handbook/index.html
     scope_triage: required-now
+    route_id: route-engineering-tools-20-03
+    angle: Connects Git intentions to working-tree, index, commit-DAG, and ref changes.
+    angle_detail: The local handbook home page explicitly diagrams WT, index, HEAD, local DAG and origin/*
+      and links intention pages; it supplies the version-control contribution to the capstone, not debugging/profiling
+      notebooks. Other parts of this stage are supplied by its other assigned materials.
   - kind: read
     label: Local material — 01.06-Errors-and-Debugging.ipynb
     id: resource-missing-semester-20-04-local-material-01-06-errors-and-debugg
     source_id: source-pydata-handbook
-    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    locator: Historical toolbox Git handbook debugging/profiling notebooks; 01.06-Errors-and-Debugging.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.06-Errors-and-Debugging.ipynb
     scope_triage: required-now
+    route_id: route-engineering-tools-20-04
+    angle: Uses IPython exceptions, tracebacks, and debugging features during diagnosis.
+    angle_detail: The notebook supplies the IPython errors/debugging treatment; it contributes debugging
+      practice rather than covering all system tracing topics. Other parts of this stage are supplied
+      by its other assigned materials.
   - kind: read
     label: Local material — 01.07-Timing-and-Profiling.ipynb
     id: resource-missing-semester-20-05-local-material-01-07-timing-and-profil
     source_id: source-pydata-handbook
-    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    locator: Historical toolbox Git handbook debugging/profiling notebooks; 01.07-Timing-and-Profiling.ipynb
     vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.07-Timing-and-Profiling.ipynb
     scope_triage: required-now
+    route_id: route-engineering-tools-20-05
+    angle: Uses IPython timing and profiling tools to compare measured behavior.
+    angle_detail: The notebook supplies timing/profiling examples; it is distinct from the broader performance
+      shelf and query-plan reference. Other parts of this stage are supplied by its other assigned materials.
   - kind: reference
     label: Official reference — Use each tool's official reference already assigned; do not add a new
       tool during the capstone.
@@ -1831,3 +2593,4 @@ stages:
   attachments: []
   source_feedback: []
   working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c/notes.md
+  knowledge_node_id: knowledge-engineering-tools-20

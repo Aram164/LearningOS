@@ -23,13 +23,10 @@
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
 recorded: '2026-11-10'
-note: 'SOURCE-PLAN-PATH-MISSING: 15 danglers repaired via unit.plan.revise'
-total: 570
-distinct_signatures: 48
+note: 'G8 engineering-tools: bind retained resources, routes, angles and source dispositions'
+total: 499
+distinct_signatures: 46
 signatures:
-- code: RESOURCE-SCOPE-NO-DISPOSITION
-  path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
-  count: 12
 - code: RESOURCE-SCOPE-NO-DISPOSITION
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
   count: 59
@@ -117,9 +114,6 @@ signatures:
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
   count: 1
-- code: RESOURCE-SCOPE-NO-SOURCE
-  path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
-  count: 59
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
   count: 16
