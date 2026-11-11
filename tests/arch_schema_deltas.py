@@ -52,6 +52,15 @@ def _before_approved_c1_schema(operation: str, raw: bytes) -> dict:
         return live
     if operation not in {"goal.decide", "route.patch"}:
         return json.loads(raw)
+    if operation == "route.patch":
+        # The C1 packet predates the A11-approved line-quotation description.
+        # Undo only that wording before checking the exact C1 digest.
+        raw = raw.replace(
+            b"local readable material needs a quote at an explicit PDF page, "
+            b"transcript window, or plain-text line range.",
+            b"local readable material needs a quote at an explicit page/window.",
+            1,
+        )
     packet = _c1_packet()
     change = packet["changes"][f"request_schemas.{operation}.schema.json"]
     assert hashlib.sha256(raw).hexdigest() == change["after"], operation

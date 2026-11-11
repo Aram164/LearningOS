@@ -171,13 +171,25 @@ def test_real_repository_navigation_projection_is_complete(real_manifest):
         source["id"] for source in sources if not source["thematic_group_ids"]
     }
     if job_modules:
-        # These three exact records are provenance/material identities from the
-        # approved collapse.  Giving them thematic peers here would be the same
-        # unreviewed inference the migration is required to avoid.
         assert ungrouped_sources == {
+            # Provenance and material identities from the approved Job collapse.
             "source-polars-definitive-guide",
             "source-scalable-dataframe-systems-paper",
             "source-stratum-paper",
+            # Metadata-only sources registered to preserve existing Python
+            # engineering and Polars study choices without assigning a Domain.
+            "source-httpx-code",
+            "source-hypothesis-code",
+            "source-networkx-code",
+            "source-pluggy-code",
+            "source-polars-birds-eye-view",
+            "source-polars-cookbook-code",
+            "source-polars-definitive-guide-code",
+            "source-polars-expression-engine-talk",
+            "source-pydantic-code",
+            "source-pytest-code",
+            "source-spark-sql-paper",
+            "source-structlog-code",
         }
     else:
         assert ungrouped_sources == set()

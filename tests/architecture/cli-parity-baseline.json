@@ -5601,7 +5601,7 @@
           "type": "json_object",
           "choices": null,
           "required": false,
-          "help": "One reviewed covers claim for this exact route: claim_id, evidence and optional read revisions. Required for covered material-identity changes; local readable material needs a quote at an explicit page/window.",
+          "help": "One reviewed covers claim for this exact route: claim_id, evidence and optional read revisions. Required for covered material-identity changes; local readable material needs a quote at an explicit PDF page, transcript window, or plain-text line range.",
           "metavar": null,
           "action": "store"
         }

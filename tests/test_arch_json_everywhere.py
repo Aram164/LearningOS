@@ -498,11 +498,9 @@ def test_json_flag_keeps_b_success_bytes_identical(mini_repo, tmp_path):
 def test_s13_base_marks_every_d16_approval_new():
     """At S13 every live D16 approval is new; two writers retired later.
 
-    Later approved surface additions (the C1 packet's cli.goal/cli.route-patch
-    rows; the A11-approved --report-out of 2026-10-31) are undone by the
-    helpers before the historical comparison, so the proof keeps meaning
-    exactly what it meant at acceptance: the D16 batch itself added only
-    --json.
+    The helpers undo the later approved C1 changes, --report-out flag, and
+    route.patch quotation wording. The historical comparison verifies that
+    the D16 batch itself added only --json.
     """
     historical = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
     for prefix in ("cli.", "request_schemas."):
