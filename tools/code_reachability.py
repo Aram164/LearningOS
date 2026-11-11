@@ -48,6 +48,7 @@ ENTRYPOINTS = (
     "manifest_contract.py",
     "migrations/curriculum_v2.py",
     "migrations/route_identity_v13.py",
+    "material_outline.py",
     "material_text.py",
     "material_toc.py",
     "material_summarize.py",

@@ -29,6 +29,7 @@ Used by: `ai-action-store`, `ai-delivery`, `backup`, `contracts`, `derived-store
 
 - A locator must bind its own source bytes; never widen an invalid requested window. Pinning: `tests/test_material_span.py`.
 - The full-text material search index is a self-describing, disposable read-only artifact under `generated/material-search/` that validates live material bytes and reports text-cache freshness and corpus coverage on every query. Pinning: `tests/test_material_search.py`.
+- Search hits are section groups. A page belongs to the PDF outline section that owns it, read from the digest-keyed `generated/material-outlines/` cache that `tools/material_outline.py` harvests; a document's pages without a section form one explicit unsectioned group with its reason. `limit` and `offset` count groups over one fixed candidate scan. A query equal to a registered concept label or alias also searches the concept's other names. Pinning: `tests/test_material_search.py`.
 
 Plain Markdown and text quotations use `line_start` and `line_end`, one-based
 and inclusive, on the exact `material://` file. A declared locator line span

@@ -40,6 +40,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. Dry-run plan by default; acts only with `--apply`. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
+| `material_outline.py` | bounded materials maintenance | Harvests PDF bookmarks into the digest-keyed outline-section cache (`generated/material-outlines/<sha256>.json`) that `material.search` groups hits by; `--check` reports, `--refresh` writes missing or invalid entries and prunes orphans. |
 | `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity — serving a durable analysis note first when one binds the exact source and range. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
 | `move_map.py` | supported maintenance | Applies a module move map to files, imports and path-keyed text (OD9); `--check` plans, `--apply` moves. |

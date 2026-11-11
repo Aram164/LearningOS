@@ -119,7 +119,16 @@ def outline_toc(path: Path, depth: int) -> list[tuple[int, str, int | None]]:
         import pypdf
     except ImportError as exc:  # pragma: no cover - declared in pyproject
         raise SystemExit("pypdf is required: make setup") from exc
-    reader = pypdf.PdfReader(str(path))
+    return outline_rows(pypdf.PdfReader(str(path)), depth)
+
+
+def outline_rows(reader, depth: int) -> list[tuple[int, str, int | None]]:
+    """``(level, title, 1-based PDF page or None)`` in outline order.
+
+    Walks an already-open reader, so a caller that hashed the bytes it
+    parsed (``tools/material_outline.py``) reads the outline of exactly
+    those bytes instead of reopening the path.
+    """
     rows: list[tuple[int, str, int | None]] = []
 
     def walk(items, level: int = 0) -> None:

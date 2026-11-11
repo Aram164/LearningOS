@@ -127,6 +127,9 @@ queries:
     - queries a disposable, self-describing read-only index of the page-text cache opened in mode=ro
     - normalizes queries with Unicode NFC and casefold before tokenization; refuses empty, punctuation-only, overlong (>500 chars or >32 terms), and out-of-range offset/limit requests
     - ranks candidates deterministically by BM25 tier (exact phrase, stopword-filtered AND, stopword-filtered OR) and breaks ties by (rank, sha256, page_no); reports has_more pagination
+    - a query equal to a registered concept label or alias also searches that concept's other registered names in the phrase and AND tiers, ranked together, and reports them in expansion
+    - groups candidate pages by the PDF outline section that owns them (digest-keyed generated/material-outlines/ cache); a document's pages without a section form one explicit unsectioned group with its reason; each hit is one group at its best page, listing its matched pages and a span_pages range of at most 20 pages
+    - limit and offset count groups over one fixed scan of at most 1000 candidate pages, so a group never moves between result pages; scan_truncated reports a capped scan
     - resolves route bindings and verifies live material file bytes per call (stat first, sha256 on mismatch); excludes indexed SHAs whose live file bytes changed or disappeared
     - applies --unit and --module filters over complete SHA binding sets inside SQL before LIMIT, and refuses unknown unit or module ids
     - discloses text-cache freshness (matches_text_cache and changed_shas) and corpus coverage (documents without text, excluded cache entries, unindexed route materials, and scope_complete) on every ok response; reports unavailable only for index_missing, index_corrupt, or index_incompatible

@@ -35,7 +35,7 @@ from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.snapshot import Repo
 from learning_os.store.derived.store import DERIVED_TOP_DIR
 from learning_os.store.manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
-from learning_os.store.materials.search_index import SEARCH_TOP_DIR
+from learning_os.store.materials.search_index import OUTLINE_TOP_DIR, SEARCH_TOP_DIR
 
 
 def generate_all(repo: Repo, generated_at: str | None = None, *,
@@ -101,12 +101,12 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
 _KEEP_NAMES = {".gitkeep", ".DS_Store"}
 
 #: Sibling producers the publisher must not garbage-collect. The page-text
-#: cache, the summary cache, the dossier cache, and the derived-state cache
-#: live under generated/ (gitignored, disposable) but are owned by their own
-#: tools with their own invalidation; a rebuild of the projection must
-#: leave them alone.
+#: cache, the summary cache, the dossier cache, the derived-state cache, the
+#: search index and the outline-section cache live under generated/
+#: (gitignored, disposable) but are owned by their own tools with their own
+#: invalidation; a rebuild of the projection must leave them alone.
 _KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
-                            DERIVED_TOP_DIR, SEARCH_TOP_DIR})
+                            DERIVED_TOP_DIR, SEARCH_TOP_DIR, OUTLINE_TOP_DIR})
 
 
 _KEEP_REPORT_PREFIX = "validation-report"

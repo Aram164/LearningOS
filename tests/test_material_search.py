@@ -25,6 +25,7 @@ for _p in (str(TESTS_DIR), str(TOOLS_DIR)):
         sys.path.insert(0, _p)
 
 import build_material_search_index as builder  # noqa: E402
+import material_outline  # noqa: E402
 import material_text  # noqa: E402
 import materials_manifest  # noqa: E402
 from conftest import build_mini_repo  # noqa: E402
@@ -38,12 +39,21 @@ from learning_os.derive.projection.outputs import generate_all, write_outputs  #
 from learning_os.domain.failures import NotFound, WriteRefused  # noqa: E402
 from learning_os.domain.material_inventory import render_manifest  # noqa: E402
 from learning_os.store.loading import load_repo  # noqa: E402
+from learning_os.store.materials import search_index  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
+    OutlineSection,
     build_tiered_queries,
     check_index_integrity,
     execute_search,
+    expand_query_names,
+    get_outline_base_dir,
     get_search_base_dir,
+    load_outline,
+    normalize_outline,
     open_index,
+    outline_payload,
+    parse_outline_payload,
+    span_pages_for,
 )
 
 needs_pdftotext = pytest.mark.skipif(shutil.which("pdftotext") is None, reason="pdftotext missing")
@@ -58,6 +68,34 @@ def _validate_response(payload: dict[str, object]) -> None:
     doc = dict(payload)
     doc.setdefault("snapshot_id", DUMMY_SNAPSHOT)
     jsonschema.validate(doc, RESPONSE_SCHEMA)
+
+
+def _cached_pdf(world: Path, pdf: Path) -> tuple[str, int]:
+    """(digest, page count) of a materials PDF, from its text-cache record."""
+    import hashlib
+
+    sha = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    record = json.loads(
+        (world / "generated" / "text-cache" / sha / "index.json").read_text(encoding="utf-8"))
+    return sha, int(record["pages"])
+
+
+def _write_outline(world: Path, sha: str, page_total: int,
+                   sections: list[OutlineSection], status: str = "present") -> Path:
+    base = get_outline_base_dir(world)
+    base.mkdir(parents=True, exist_ok=True)
+    target = base / f"{sha}.json"
+    target.write_text(json.dumps(outline_payload(
+        sha, "fixture.pdf", page_total, status, sections, "tests"), indent=1), encoding="utf-8")
+    return target
+
+
+def _write_page_outline(world: Path, pdf: Path) -> str:
+    """One section per page, as a slide deck with per-slide bookmarks has."""
+    sha, pages = _cached_pdf(world, pdf)
+    _write_outline(world, sha, pages, [
+        OutlineSection(f"Slide {page}", 0, (), page, page) for page in range(1, pages + 1)])
+    return sha
 
 
 def _refresh_manifest_and_text_cache(root: Path) -> None:
@@ -443,6 +481,12 @@ def test_shared_pdf_across_units_and_sql_pre_limit_filtering(world: Path) -> Non
     )
     _refresh_manifest_and_text_cache(world)
     builder.build_index_generation(world, force=True)
+    # Hits are section groups: per-page sections keep every matching page its
+    # own group, so the distractor's 20 sections still crowd a limit of 5 and
+    # only a filter applied inside SQL before LIMIT can surface lecture-01.
+    lecture_pdf = world.parent / "materials" / "source-demo-book" / "lecture-01.pdf"
+    _write_page_outline(world, lecture_pdf)
+    _write_page_outline(world, distractor_pdf)
 
     # Unfiltered search at limit=5 is dominated by distractor.pdf
     res_unfiltered = execute_search(world, "Expected", limit=5)
@@ -531,7 +575,9 @@ def test_nfd_input_punctuation_refusal_has_more_and_deterministic_order(
         (h["sha256"], h["page"]) for h in nfd_res.hits
     ]
 
-    # Paging and deterministic order across pages 1-3 at limit=5 vs one call at limit=15
+    # Paging and deterministic order across pages 1-3 at limit=5 vs one call at limit=15.
+    # Per-page sections make each matching page its own group (one hit each).
+    _write_page_outline(world, world.parent / "materials" / "source-demo-book" / "lecture-01.pdf")
     one_15 = execute_search(world, "Expected", limit=15, offset=0)
     assert len(one_15.hits) == 15
     assert one_15.has_more is True
@@ -642,6 +688,249 @@ def test_legacy_cache_records_labeled_and_empty_index_refused(
     assert rc == 1
     assert "legacy — run --refresh" in captured.err
     assert active_db.is_file()
+
+
+def test_outline_normalization_owns_pages_and_keeps_ancestors() -> None:
+    """The last heading on a page owns it; ancestors come from outline order."""
+    rows = [
+        (0, "Front matter", 1),
+        (0, "6 Probability", 10),
+        (1, "6.1 Big idea", 11),
+        (1, "6.2 Fundamentals", 12),
+        (2, "6.2.1  Bayes\u2019 Theorem", 14),
+        (2, "6.2.2 Prediction", 17),
+        (1, "dangling", None),        # unresolvable destination: dropped
+        (1, "out of range", 99),      # outside the document: dropped
+        (0, "", 18),                  # untitled: dropped
+        (0, "7 Errors", 20),
+        (1, "7.1 Same page child", 20),   # same start page: the later row owns it
+    ]
+    status, sections = normalize_outline(rows, 25)
+    assert status == "present"
+    owned = [(row.title, row.start_page, row.end_page) for row in sections]
+    assert owned == [
+        ("Front matter", 1, 9), ("6 Probability", 10, 10), ("6.1 Big idea", 11, 11),
+        ("6.2 Fundamentals", 12, 13), ("6.2.1 Bayes\u2019 Theorem", 14, 16),
+        ("6.2.2 Prediction", 17, 19), ("7.1 Same page child", 20, 25),
+    ]
+    bayes = sections[4]
+    assert bayes.level == 2 and bayes.path == ("6 Probability", "6.2 Fundamentals")
+    assert normalize_outline([], 10) == ("absent", [])
+    assert normalize_outline([(0, "x", None), (0, "y", 50)], 10) == ("unusable", [])
+
+    record = search_index.OutlineRecord("present", 25, tuple(sections[1:]))
+    assert record.locate(3) == (None, "before-first-heading")
+    assert record.locate(15) == (3, None)
+    assert search_index.OutlineRecord("absent", 25).locate(3) == (None, "no-outline")
+    assert search_index.OutlineRecord("not-harvested").locate(3) == (None, "not-harvested")
+
+    # The widest range equals material-span's page cap, and grows only
+    # through neighbouring matched pages.
+    from learning_os.store.materials.slices import MAX_SLICE_PAGES
+    assert search_index.MAX_SPAN_PAGES == MAX_SLICE_PAGES
+    assert span_pages_for(288, [287, 288, 289]) == "pdf pp. 287-289"
+    assert span_pages_for(288, [288, 300]) == "pdf p. 288"
+    assert span_pages_for(5, [1, 3, 5, 7]) == "pdf pp. 1-7"
+    assert span_pages_for(1, list(range(1, 60))) == "pdf pp. 1-20"
+
+
+def test_outline_payload_validation_fails_closed() -> None:
+    sha = "a" * 64
+    good = outline_payload(sha, "x.pdf", 10, "present",
+                           [OutlineSection("One", 0, (), 1, 4),
+                            OutlineSection("Two", 0, (), 5, 10)], "tests")
+    assert parse_outline_payload(good, sha) is not None
+    assert parse_outline_payload(good, "b" * 64) is None
+    for mutate in (
+        lambda d: d.update(schema_version=True),
+        lambda d: d.update(normalizer="material-outline-0"),
+        lambda d: d.update(status="mystery"),
+        lambda d: d.update(status="absent"),                         # sections contradict status
+        lambda d: d["sections"][1].update(start_page=4),            # overlap
+        lambda d: d["sections"][1].update(end_page=11),             # beyond the page count
+        lambda d: d["sections"][0].update(level=-1),
+        lambda d: d["sections"][0].update(path="not-a-list"),
+        lambda d: d["sections"][0].update(title=""),
+    ):
+        broken = json.loads(json.dumps(good))
+        mutate(broken)
+        assert parse_outline_payload(broken, sha) is None, broken
+
+
+def test_query_names_expand_only_on_an_exact_concept_name() -> None:
+    concepts = {
+        "concept-bayes-theorem": {"label": "Bayes' theorem",
+                                  "aliases": ["Satz von Bayes", "Bayes rule"]},
+        "concept-other": {"label": "Other", "aliases": ["PDF"]},
+    }
+    names, ids = expand_query_names("Satz  von BAYES", concepts)
+    assert ids == ["concept-bayes-theorem"]
+    assert names == ["satz von bayes", "bayes theorem", "bayes rule"]
+    assert expand_query_names("Bayes theorem", concepts)[0] == [
+        "bayes theorem", "satz von bayes", "bayes rule"]
+    # A concept name inside a longer question is not a request for the concept.
+    assert expand_query_names("Satz von Bayes Beispiel", concepts) == (
+        ["satz von bayes beispiel"], [])
+    assert expand_query_names("pdf", None) == (["pdf"], [])
+    # Without extra names the tiers are exactly the single-query tiers.
+    assert build_tiered_queries("Satz von Bayes", []) == build_tiered_queries("Satz von Bayes")
+    tiers = dict(build_tiered_queries("Erwartungswert", ["expected value"]))
+    assert tiers["exact_phrase"] == '"erwartungswert" OR "expected value"'
+    assert tiers["conjunction"] == '("erwartungswert") OR ("expected" AND "value")'
+    assert "disjunction" not in tiers
+
+
+@needs_pdftotext
+def test_hits_group_by_outline_section_with_explicit_unsectioned_groups(world: Path) -> None:
+    """One hit per section group; pages before the first heading and documents
+    without an outline land in explicit unsectioned groups with a reason."""
+    lecture = world.parent / "materials" / "source-demo-book" / "lecture-01.pdf"
+    lecture_sha, pages = _cached_pdf(world, lecture)
+    _write_outline(world, lecture_sha, pages, [
+        OutlineSection("1 Expectation", 0, (), 3, 9),
+        OutlineSection("2 Tail bounds", 0, (), 10, 24),
+    ])
+    res = execute_search(world, "Expected value", limit=10)
+    _validate_response(res.to_dict())
+    groups = [(h["section"]["title"] if h["section"] else None, h["unsectioned"],
+               h["pages"], h["pages_total"]) for h in res.hits]
+    # Equal BM25 scores tie-break by page, so groups rank at their first page.
+    assert groups == [
+        (None, "before-first-heading", [1, 2], 2),
+        ("1 Expectation", None, [3, 4, 5, 6, 7, 8, 9], 7),
+        ("2 Tail bounds", None, list(range(10, 21)), 11),
+    ]
+    assert [h["rank"] for h in res.hits] == [1, 2, 3]
+    for hit in res.hits:
+        assert hit["page"] in hit["pages"]
+        assert (hit["section"] is None) != (hit["unsectioned"] is None)
+        # span_reference still opens the best page, as before grouping.
+        assert hit["span_reference"]["pages"] == f"pdf p. {hit['page']}"
+    tail = next(h for h in res.hits if h["section"] and h["section"]["title"] == "2 Tail bounds")
+    assert tail["section"] == {"title": "2 Tail bounds", "level": 0, "path": [],
+                               "start_page": 10, "end_page": 24}
+    assert tail["span_pages"] == "pdf pp. 10-20"
+
+    # A cache file that fails validation, an outline-less document, and a
+    # digest never harvested each say so.
+    outline_file = get_outline_base_dir(world) / f"{lecture_sha}.json"
+    outline_file.write_text("{not json", encoding="utf-8")
+    assert {h["unsectioned"] for h in execute_search(world, "Expected", limit=5).hits} == {
+        "cache-invalid"}
+    assert load_outline(world, lecture_sha).status == "cache-invalid"
+    _write_outline(world, lecture_sha, pages, [], status="absent")
+    assert {h["unsectioned"] for h in execute_search(world, "Expected", limit=5).hits} == {
+        "no-outline"}
+    outline_file.unlink()
+    only = execute_search(world, "Expected", limit=5).hits
+    assert [(h["unsectioned"], h["pages_total"]) for h in only] == [("not-harvested", 20)]
+
+
+@needs_pdftotext
+def test_group_paging_is_stable_across_offsets(world: Path) -> None:
+    """limit/offset count groups over one fixed scan: no group repeats or moves."""
+    lecture = world.parent / "materials" / "source-demo-book" / "lecture-01.pdf"
+    lecture_sha, pages = _cached_pdf(world, lecture)
+    _write_outline(world, lecture_sha, pages, [
+        OutlineSection(f"Part {i}", 0, (), start, min(start + 2, pages))
+        for i, start in enumerate(range(1, pages + 1, 3), start=1)])
+    whole = execute_search(world, "Expected", limit=50)
+    keys = [(h["sha256"], h["section"]["title"]) for h in whole.hits]
+    assert len(keys) == len(set(keys)) == 7 and whole.has_more is False
+    paged: list[tuple[str, str]] = []
+    for offset in range(0, 7, 2):
+        window = execute_search(world, "Expected", limit=2, offset=offset)
+        _validate_response(window.to_dict())
+        assert window.has_more is (offset + 2 < 7)
+        assert [h["rank"] for h in window.hits] == list(range(offset + 1, offset + 1 + len(window.hits)))
+        paged.extend((h["sha256"], h["section"]["title"]) for h in window.hits)
+    assert paged == keys
+    assert sum(h["pages_total"] for h in whole.hits) == 20
+
+
+@needs_pdftotext
+def test_scan_cap_bounds_candidates_and_reports_truncation(
+    world: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _write_page_outline(world, world.parent / "materials" / "source-demo-book" / "lecture-01.pdf")
+    full = execute_search(world, "Expected", limit=50)
+    assert full.scan_truncated is False and len(full.hits) == 20
+    monkeypatch.setattr(search_index, "SCAN_PAGE_CAP", 6)
+    capped = execute_search(world, "Expected", limit=50)
+    _validate_response(capped.to_dict())
+    assert capped.scan_truncated is True and capped.has_more is False
+    assert [h["page"] for h in capped.hits] == [h["page"] for h in full.hits[:6]]
+
+
+@needs_pdftotext
+def test_concept_alias_finds_the_same_material_in_both_languages(world: Path) -> None:
+    """`Erwartungswert` (alias) and `Expected value` (label) find the same pages."""
+    german = world.parent / "materials" / "source-demo-book" / "skript-de.pdf"
+    write_minimal_pdf(german, ["Der Erwartungswert gewichtet jedes Ergebnis",
+                               "Varianz und Streuung"])
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+
+    by_alias = execute_search(world, "Erwartungswert", limit=50)
+    by_label = execute_search(world, "Expected value", limit=50)
+    for res in (by_alias, by_label):
+        _validate_response(res.to_dict())
+        assert res.expansion is not None
+        assert res.expansion["concepts"] == ["concept-expected-value"]
+    assert by_alias.expansion["names"] == ["erwartungswert", "expected value"]
+    assert by_label.expansion["names"] == ["expected value", "erwartungswert"]
+    found = {h["material"] for h in by_alias.hits}
+    assert {"source-demo-book/skript-de.pdf", "source-demo-book/lecture-01.pdf"} <= found
+    assert {h["material"] for h in by_label.hits} == found
+
+    # No exact concept name, no expansion: the German page stays out of reach.
+    plain = execute_search(world, "Erwartungswert gewichtet", limit=50)
+    assert plain.expansion is None
+    assert {h["material"] for h in plain.hits} == {"source-demo-book/skript-de.pdf"}
+
+
+@needs_pdftotext
+def test_material_outline_tool_harvests_bookmarks_and_skips_changed_bytes(world: Path) -> None:
+    from pypdf import PdfReader, PdfWriter
+
+    lecture = world.parent / "materials" / "source-demo-book" / "lecture-01.pdf"
+    writer = PdfWriter(clone_from=PdfReader(str(lecture)))
+    chapter = writer.add_outline_item("1 Expectation", 0)
+    writer.add_outline_item("1.1 Weights", 1, parent=chapter)
+    writer.add_outline_item("2 Bounds", 16)
+    with lecture.open("wb") as handle:
+        writer.write(handle)
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+    sha, pages = _cached_pdf(world, lecture)
+
+    paths = {"text_cache": world / "generated" / "text-cache",
+             "outline_dir": get_outline_base_dir(world),
+             "materials_root": world.parent / "materials"}
+    pending = material_outline.run(refresh=False, **paths)
+    assert pending["outcomes"].get("not-harvested", 0) >= 1
+    first = material_outline.run(refresh=True, **paths)
+    assert first["outcomes"]["written-present"] == 1
+    record = load_outline(world, sha)
+    assert [(s.title, s.path, s.start_page, s.end_page) for s in record.sections] == [
+        ("1 Expectation", (), 1, 1), ("1.1 Weights", ("1 Expectation",), 2, 16),
+        ("2 Bounds", (), 17, pages)]
+    assert material_outline.main(["--check", "--repo", str(world)]) == 0
+    again = material_outline.run(refresh=True, **paths)
+    assert not any(name.startswith("written") for name in again["outcomes"])
+
+    hit = execute_search(world, "Chebyshev", limit=1).hits[0]
+    assert hit["section"]["title"] == "2 Bounds" and hit["section"]["start_page"] == 17
+
+    # An orphaned entry is pruned; bytes that no longer match the digest are
+    # never cached under it.
+    orphan = get_outline_base_dir(world) / f"{'e' * 64}.json"
+    orphan.write_text("{}", encoding="utf-8")
+    (get_outline_base_dir(world) / f"{sha}.json").unlink()
+    lecture.write_bytes(lecture.read_bytes() + b"\n% changed\n")
+    changed = material_outline.run(refresh=True, **paths)
+    assert changed["outcomes"]["skipped-changed-file"] == 1 and changed["pruned"] == 1
+    assert not (get_outline_base_dir(world) / f"{sha}.json").exists()
 
 
 @pytest.mark.live_install

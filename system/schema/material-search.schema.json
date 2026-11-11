@@ -232,6 +232,39 @@
         }
       }
     },
+    "expansion": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "concepts",
+        "names"
+      ],
+      "properties": {
+        "concepts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "names": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "scan_truncated": {
+      "type": "boolean"
+    },
     "hits": {
       "type": "array",
       "items": {
@@ -248,7 +281,12 @@
           "is_mapped",
           "bindings",
           "bindings_total",
-          "span_reference"
+          "span_reference",
+          "section",
+          "unsectioned",
+          "pages",
+          "pages_total",
+          "span_pages"
         ],
         "properties": {
           "rank": {
@@ -341,6 +379,72 @@
                 "pattern": "^sha256:[a-f0-9]{64}$"
               }
             }
+          },
+          "section": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "level",
+              "path",
+              "start_page",
+              "end_page"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "path": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "start_page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "end_page": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "unsectioned": {
+            "enum": [
+              null,
+              "before-first-heading",
+              "no-outline",
+              "not-harvested",
+              "cache-invalid"
+            ]
+          },
+          "pages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "pages_total": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "span_pages": {
+            "type": "string",
+            "pattern": "^pdf (p\\. [0-9]+|pp\\. [0-9]+-[0-9]+)$"
           }
         }
       }

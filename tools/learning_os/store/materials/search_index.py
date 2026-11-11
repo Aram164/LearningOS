@@ -8,23 +8,32 @@ Architecture (ADR-020):
 - Per-call route bindings and live file freshness checks (stat first, hash on mismatch)
 - Coverage and text-cache freshness disclosure on every response
 - Bounded input validation, deferred snippet computation, and VM-step budget backstop
+- Hits grouped by PDF outline section (digest-keyed outline cache under
+  `generated/material-outlines/`, harvested by `tools/material_outline.py`), with
+  an explicit unsectioned group per document; limit and offset count groups over
+  one fixed candidate scan so paging is stable
+- A query equal to a registered concept label or alias also searches that
+  concept's other registered names, and says so in `expansion`
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import sqlite3
 import unicodedata
+from bisect import bisect_right
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from functools import cached_property
 from pathlib import Path
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import unit_routes
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.suggest import with_suggestions
-from learning_os.domain.validation import SEARCH_TOP_DIR
+from learning_os.domain.validation import OUTLINE_TOP_DIR, SEARCH_TOP_DIR
 from learning_os.store.loading import load_repo
 from learning_os.store.materials.resolution import (
     resolve_route_material_files,
@@ -46,22 +55,35 @@ __all__ = [
     "MAX_SEARCH_LIMIT",
     "MAX_SEARCH_OFFSET",
     "MaterialBinding",
+    "OUTLINE_NORMALIZER",
+    "OUTLINE_SCHEMA_VERSION",
+    "OUTLINE_TOP_DIR",
+    "OutlineRecord",
+    "OutlineSection",
+    "SCAN_PAGE_CAP",
     "SCHEMA_VERSION",
     "SEARCH_TOP_DIR",
     "STOPWORDS",
     "SearchHit",
     "SearchResult",
+    "UNSECTIONED_REASONS",
     "build_tiered_queries",
     "check_index_integrity",
     "compute_text_cache_fingerprint",
     "derive_title_from_material",
     "execute_search",
+    "expand_query_names",
+    "get_outline_base_dir",
     "get_search_base_dir",
+    "load_outline",
     "material_bindings",
     "material_bindings_with_paths",
     "norm_token",
+    "normalize_outline",
     "normalize_query_terms",
     "open_index",
+    "outline_payload",
+    "parse_outline_payload",
     "resolve_file_sha256",
     "sanitize_fts5_term",
 ]
@@ -76,6 +98,36 @@ MAX_QUERY_TERMS = 32
 MAX_BINDINGS_RETURNED = 10
 VM_STEP_CALLBACK_INTERVAL = 1000
 DEFAULT_VM_STEP_BUDGET = 20_000_000
+
+#: Candidate pages scanned per query, whatever the requested window. Groups are
+#: built over this one fixed scan, so a section never moves between result
+#: pages and `has_more` means the same thing at every offset.
+SCAN_PAGE_CAP = 1000
+#: Matched pages listed per group (best-ranked first, then sorted); the exact
+#: count within the scan is `pages_total`.
+MAX_GROUP_PAGES = 50
+#: Widest `span_pages` range, equal to `material-span`'s 20-page cap
+#: (`learning_os.store.materials.slices.MAX_SLICE_PAGES`, pinned by a test).
+MAX_SPAN_PAGES = 20
+#: At most this many names are searched for one query: the query itself plus
+#: the other registered names of the concepts it names exactly.
+MAX_EXPANSION_NAMES = 8
+
+#: The outline-section cache contract shared with tools/material_outline.py.
+OUTLINE_SCHEMA_VERSION = 1
+OUTLINE_NORMALIZER = "material-outline-1"
+OUTLINE_STATUSES = frozenset({"present", "absent", "unreadable", "unusable"})
+MAX_OUTLINE_SECTIONS = 5000
+MAX_SECTION_TITLE = 200
+MAX_SECTION_PATH = 8
+#: Why a page belongs to its document's explicit unsectioned group.
+UNSECTIONED_REASONS = (
+    "before-first-heading",  # the outline starts after this page
+    "no-outline",            # the PDF has no usable bookmarks
+    "not-harvested",         # no outline cache entry for this digest
+    "cache-invalid",         # the cache entry failed validation
+)
+_OUTLINE_FILE_RE = re.compile(r"^([0-9a-f]{64})\.json$")
 
 _HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
 _INDEX_FILE_RE = re.compile(r"^index-([0-9a-f]{16})\.sqlite3$")
@@ -188,34 +240,100 @@ def normalize_query_terms(raw_query: str) -> list[str]:
     return [w for w in clean.split() if len(w) > 0]
 
 
-def build_tiered_queries(raw_query: str) -> list[tuple[str, str]]:
-    """Build tiered query formulations: exact phrase -> AND -> OR."""
+def _content_words(words: Sequence[str]) -> list[str]:
+    """Stopword-filtered words, or all words when every one is a stopword."""
+    content = [w for w in words if w not in STOPWORDS]
+    return content if content else list(words)
+
+
+def build_tiered_queries(
+    raw_query: str, extra_names: Sequence[str] = ()
+) -> list[tuple[str, str]]:
+    """Build tiered query formulations: exact phrase -> AND -> OR.
+
+    ``extra_names`` are further normalized names of the same concept
+    (``expand_query_names``). They join the phrase and conjunction tiers as
+    alternatives ranked together by BM25, so every registered name of a
+    concept finds the same pages; the disjunction tier stays the query's own
+    words. Without extra names the tiers are exactly the single-query ones.
+    """
     words = normalize_query_terms(raw_query)
     if not words:
         return []
 
-    clean = " ".join(words)
+    names = [words]
+    for extra in extra_names:
+        extra_words = normalize_query_terms(extra)
+        if extra_words and extra_words not in names:
+            names.append(extra_words)
     tiers: list[tuple[str, str]] = []
 
-    # Tier 1: Exact Phrase (if multi-word)
-    if len(words) > 1:
-        escaped_phrase = sanitize_fts5_term(clean)
-        tiers.append(("exact_phrase", f'"{escaped_phrase}"'))
+    # Tier 1: Exact Phrase. A lone query phrases only when multi-word; with
+    # extra names every name joins, a single word as a one-word phrase, so no
+    # name outranks another by its word count.
+    phrased = names if len(names) > 1 else [name for name in names if len(name) > 1]
+    phrases = [f'"{sanitize_fts5_term(" ".join(name))}"' for name in phrased]
+    if phrases:
+        tiers.append(("exact_phrase", " OR ".join(phrases)))
 
-    # Filter stopwords for conjunction and disjunction
-    content_words = [w for w in words if w not in STOPWORDS]
-    if not content_words:
-        content_words = words
+    # Tier 2: Content terms AND (one conjunction per name, alternatives ORed)
+    conjunctions = [
+        " AND ".join(f'"{sanitize_fts5_term(w)}"' for w in _content_words(name))
+        for name in names
+    ]
+    if len(conjunctions) == 1:
+        tiers.append(("conjunction", conjunctions[0]))
+    else:
+        tiers.append(("conjunction", " OR ".join(f"({c})" for c in conjunctions)))
 
-    # Tier 2: Content terms AND
-    escaped_and_terms = [f'"{sanitize_fts5_term(w)}"' for w in content_words]
-    tiers.append(("conjunction", " AND ".join(escaped_and_terms)))
-
-    # Tier 3: Content terms OR (if more than 1 term)
+    # Tier 3: Content terms OR (if more than 1 term) — the query's own words
+    content_words = _content_words(words)
     if len(content_words) > 1:
-        tiers.append(("disjunction", " OR ".join(escaped_and_terms)))
+        escaped_or_terms = [f'"{sanitize_fts5_term(w)}"' for w in content_words]
+        tiers.append(("disjunction", " OR ".join(escaped_or_terms)))
 
     return tiers
+
+
+def expand_query_names(
+    raw_query: str, concepts: Mapping[str, object] | None
+) -> tuple[list[str], list[str]]:
+    """The query plus every other registered name of the concepts it names.
+
+    A concept is named when the normalized query equals its normalized label
+    or one of its normalized aliases (``knowledge/concepts.yaml``). Partial
+    matches never expand: a word that happens to be an alias inside a longer
+    question is not a request for that concept. Returns ``(names, concept
+    ids)``: the normalized query first, then the matched concepts' other names
+    in registry order (concepts by id), at most ``MAX_EXPANSION_NAMES`` names.
+    No match returns ``([query], [])``.
+    """
+    query = " ".join(normalize_query_terms(raw_query))
+    names = [query] if query else []
+    if not query or not concepts:
+        return names, []
+    matched: list[str] = []
+    for concept_id in sorted(concepts):
+        concept = concepts[concept_id]
+        if not isinstance(concept, Mapping):
+            continue
+        raw_names: list[object] = [concept.get("label")]
+        aliases = concept.get("aliases")
+        if isinstance(aliases, list):
+            raw_names.extend(aliases)
+        normalized = [
+            " ".join(normalize_query_terms(name))
+            for name in raw_names
+            if isinstance(name, str)
+        ]
+        normalized = [name for name in normalized if name]
+        if query not in normalized:
+            continue
+        matched.append(concept_id)
+        for name in normalized:
+            if name not in names and len(name.split()) <= MAX_QUERY_TERMS:
+                names.append(name)
+    return names[:MAX_EXPANSION_NAMES], matched
 
 
 def derive_title_from_material(material: str, sha256: str) -> str:
@@ -223,6 +341,218 @@ def derive_title_from_material(material: str, sha256: str) -> str:
     if material:
         return Path(material).stem.replace("-", " ").replace("_", " ").title()
     return sha256[:12]
+
+
+@dataclass(frozen=True)
+class OutlineSection:
+    """One PDF outline heading and the physical pages it owns.
+
+    Pages are PDF page numbers (the viewer's page box, cover = 1). A section
+    owns its start page up to the page before the next heading starts; the
+    last section ends at the document's last page.
+    """
+
+    title: str
+    level: int
+    path: tuple[str, ...]
+    start_page: int
+    end_page: int
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "title": self.title,
+            "level": self.level,
+            "path": list(self.path),
+            "start_page": self.start_page,
+            "end_page": self.end_page,
+        }
+
+
+@dataclass(frozen=True)
+class OutlineRecord:
+    """One document's outline sections, or why a page has none."""
+
+    status: str
+    page_total: int = 0
+    sections: tuple[OutlineSection, ...] = ()
+
+    @cached_property
+    def _starts(self) -> list[int]:
+        return [row.start_page for row in self.sections]
+
+    def locate(self, page: int) -> tuple[int | None, str | None]:
+        """``(section index, None)``, or ``(None, unsectioned reason)``."""
+        if self.status in ("not-harvested", "cache-invalid"):
+            return None, self.status
+        if not self.sections:
+            return None, "no-outline"
+        index = bisect_right(self._starts, page) - 1
+        if index < 0:
+            return None, "before-first-heading"
+        if page > self.sections[index].end_page:
+            # The index pages came from a different page count than the
+            # outline: the cache entry does not describe these bytes.
+            return None, "cache-invalid"
+        return index, None
+
+
+def _clean_heading(title: str) -> str:
+    text = unicodedata.normalize("NFC", title)
+    text = "".join(ch if ch.isprintable() else " " for ch in text)
+    return " ".join(text.split())[:MAX_SECTION_TITLE]
+
+
+def normalize_outline(
+    rows: Sequence[tuple[int, str, int | None]], page_total: int
+) -> tuple[str, list[OutlineSection]]:
+    """Turn raw outline rows into page-owning sections (``status, sections``).
+
+    ``rows`` are ``(level, title, page or None)`` in outline order, as
+    ``tools/material_toc.outline_rows`` reads them. Rows without a page inside
+    the document, or without a title, are dropped. Ancestor paths come from
+    outline order; ownership comes from page order: when several headings start
+    on one page, the last one in outline order owns it (the deepest heading of
+    that page). Status is ``absent`` with no rows and ``unusable`` when no row
+    survives; otherwise ``present``.
+    """
+    if not rows:
+        return "absent", []
+    stack: list[str] = []
+    usable: list[tuple[int, int, str, int, tuple[str, ...]]] = []
+    for order, (raw_level, raw_title, page) in enumerate(rows):
+        level = max(0, int(raw_level))
+        title = _clean_heading(str(raw_title))
+        del stack[level:]
+        path = tuple(stack[-MAX_SECTION_PATH:])
+        stack.append(title)
+        if not title or not isinstance(page, int) or isinstance(page, bool):
+            continue
+        if not 1 <= page <= page_total:
+            continue
+        usable.append((page, order, title, level, path))
+    if not usable:
+        return "unusable", []
+    usable.sort(key=lambda row: (row[0], row[1]))
+    owners = [row for i, row in enumerate(usable)
+              if i + 1 == len(usable) or usable[i + 1][0] != row[0]]
+    sections: list[OutlineSection] = []
+    for i, (page, _order, title, level, path) in enumerate(owners[:MAX_OUTLINE_SECTIONS]):
+        end = owners[i + 1][0] - 1 if i + 1 < len(owners) else page_total
+        sections.append(OutlineSection(title, level, path, page, end))
+    if len(owners) > MAX_OUTLINE_SECTIONS:
+        last = sections[-1]
+        sections[-1] = OutlineSection(last.title, last.level, last.path,
+                                      last.start_page, page_total)
+    return "present", sections
+
+
+def outline_payload(
+    sha256: str, material: str, page_total: int, status: str,
+    sections: Sequence[OutlineSection], generator: str,
+) -> dict[str, object]:
+    """The one cache-file shape for ``generated/material-outlines/<sha256>.json``."""
+    return {
+        "_generated": {
+            "generator": generator,
+            "warning": f"GENERATED file - do not edit; rebuilt by python {generator} --refresh",
+        },
+        "schema_version": OUTLINE_SCHEMA_VERSION,
+        "normalizer": OUTLINE_NORMALIZER,
+        "sha256": sha256,
+        "material": material,
+        "page_total": page_total,
+        "status": status,
+        "sections": [section.to_dict() for section in sections],
+    }
+
+
+def _strict_int(value: object) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def parse_outline_payload(data: object, sha256: str) -> OutlineRecord | None:
+    """A validated outline record, or None when the payload is not one.
+
+    Fails closed on any deviation from ``outline_payload``: wrong digest,
+    schema or normalizer, unknown status, sections out of order, overlapping,
+    or outside the page count.
+    """
+    if not isinstance(data, dict):
+        return None
+    if _strict_int(data.get("schema_version")) != OUTLINE_SCHEMA_VERSION:
+        return None
+    if data.get("normalizer") != OUTLINE_NORMALIZER or data.get("sha256") != sha256:
+        return None
+    status = data.get("status")
+    page_total = _strict_int(data.get("page_total"))
+    raw_sections = data.get("sections")
+    if (status not in OUTLINE_STATUSES or page_total is None or page_total < 0
+            or not isinstance(raw_sections, list)
+            or len(raw_sections) > MAX_OUTLINE_SECTIONS
+            or (status == "present") != bool(raw_sections)):
+        return None
+    sections: list[OutlineSection] = []
+    previous_end = 0
+    for row in raw_sections:
+        if not isinstance(row, dict):
+            return None
+        title = row.get("title")
+        level = _strict_int(row.get("level"))
+        start = _strict_int(row.get("start_page"))
+        end = _strict_int(row.get("end_page"))
+        path = row.get("path")
+        if (not isinstance(title, str) or not title or len(title) > MAX_SECTION_TITLE
+                or level is None or level < 0 or start is None or end is None
+                or not isinstance(path, list) or len(path) > MAX_SECTION_PATH
+                or not all(isinstance(part, str) for part in path)
+                or start <= previous_end or end < start or end > page_total):
+            return None
+        sections.append(OutlineSection(title, level, tuple(path), start, end))
+        previous_end = end
+    return OutlineRecord(str(status), page_total, tuple(sections))
+
+
+def get_outline_base_dir(repo_root: Path) -> Path:
+    return repo_root / "generated" / OUTLINE_TOP_DIR
+
+
+def load_outline(repo_root: Path, sha256: str) -> OutlineRecord:
+    """The cached outline for one digest; never raises for a bad cache entry."""
+    if _HEX64_RE.match(sha256) is None:
+        return OutlineRecord("cache-invalid")
+    path = get_outline_base_dir(repo_root) / f"{sha256}.json"
+    try:
+        raw = path.read_bytes()
+    except FileNotFoundError:
+        return OutlineRecord("not-harvested")
+    except OSError:
+        return OutlineRecord("cache-invalid")
+    try:
+        data = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return OutlineRecord("cache-invalid")
+    record = parse_outline_payload(data, sha256)
+    return record if record is not None else OutlineRecord("cache-invalid")
+
+
+def span_pages_for(best: int, pages: Sequence[int]) -> str:
+    """The house-style page range around the best page, at most 20 pages.
+
+    Grows from ``best`` through neighbouring matched pages at most two pages
+    apart, so a section's adjacent hits read as one range and a distant hit
+    in the same group does not widen it.
+    """
+    ordered = sorted(set(pages) | {best})
+    i = ordered.index(best)
+    lo = hi = i
+    while (lo > 0 and ordered[lo] - ordered[lo - 1] <= 2
+           and ordered[hi] - ordered[lo - 1] < MAX_SPAN_PAGES):
+        lo -= 1
+    while (hi + 1 < len(ordered) and ordered[hi + 1] - ordered[hi] <= 2
+           and ordered[hi + 1] - ordered[lo] < MAX_SPAN_PAGES):
+        hi += 1
+    start, end = ordered[lo], ordered[hi]
+    return f"pdf p. {start}" if start == end else f"pdf pp. {start}-{end}"
 
 
 @dataclass(frozen=True)
@@ -279,6 +609,11 @@ class SearchHit:
     bindings: list[dict[str, object]]
     bindings_total: int
     span_reference: dict[str, object] | None = None
+    section: dict[str, object] | None = None
+    unsectioned: str | None = None
+    pages: list[int] = field(default_factory=list)
+    pages_total: int = 0
+    span_pages: str = ""
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -293,6 +628,11 @@ class SearchHit:
             "bindings": self.bindings,
             "bindings_total": self.bindings_total,
             "span_reference": self.span_reference,
+            "section": self.section,
+            "unsectioned": self.unsectioned,
+            "pages": self.pages,
+            "pages_total": self.pages_total,
+            "span_pages": self.span_pages,
         }
 
 
@@ -307,6 +647,8 @@ class SearchResult:
     coverage: dict[str, object] | None = None
     reason: str | None = None
     message: str | None = None
+    expansion: dict[str, object] | None = None
+    scan_truncated: bool = False
 
     def to_dict(self) -> dict[str, object]:
         out: dict[str, object] = {
@@ -324,6 +666,8 @@ class SearchResult:
                 "changed_shas": [],
             }
             out["coverage"] = self.coverage or {}
+            out["expansion"] = self.expansion
+            out["scan_truncated"] = self.scan_truncated
         else:
             out["reason"] = self.reason
             out["message"] = self.message
@@ -1005,7 +1349,9 @@ def _resolve_live_bindings_and_scope(
 
 def _query_fts_hits(
     reader: IndexReader,
+    repo_root: Path,
     clean_query: str,
+    extra_names: Sequence[str],
     limit: int,
     offset: int,
     unit_id: str | None,
@@ -1015,8 +1361,15 @@ def _query_fts_hits(
     dead_shas: set[str],
     allowed_shas: set[str] | None,
     vm_step_budget: int,
-) -> tuple[bool, list[dict[str, object]]]:
-    """Run tiered FTS5 queries with a VM-step budget and materialize page snippets."""
+) -> tuple[bool, bool, list[dict[str, object]]]:
+    """Run tiered FTS5 queries, group pages by outline section, page over groups.
+
+    One scan of at most ``SCAN_PAGE_CAP`` candidate pages, whatever the
+    window, so groups and their order are identical at every offset. A group
+    is one document's section (or its explicit unsectioned group); it ranks at
+    its best page, and the window is ``groups[offset : offset + limit]``.
+    Returns ``(has_more, scan_truncated, hits)``.
+    """
     con = reader.connect()
     steps_taken = 0
     budget_exceeded = False
@@ -1054,29 +1407,49 @@ def _query_fts_hits(
         "FROM material_fts WHERE material_fts MATCH ? AND rowid = ?;"
     )
 
-    fetch_cap = offset + limit + 1
     raw_candidates: list[tuple[int, str, int, float, str]] = []
     seen_keys: set[tuple[str, int]] = set()
 
     try:
-        for _tier_name, fts_expr in build_tiered_queries(clean_query):
-            if len(raw_candidates) >= fetch_cap:
+        for _tier_name, fts_expr in build_tiered_queries(clean_query, extra_names):
+            if len(raw_candidates) > SCAN_PAGE_CAP:
                 break
-            cur.execute(rank_sql, (fts_expr, *filter_params, fetch_cap))
+            cur.execute(rank_sql, (fts_expr, *filter_params, SCAN_PAGE_CAP + 1))
             for row in cur.fetchall():
                 rowid, sha, page_no, score = int(row[0]), str(row[1]), int(row[2]), float(row[3])
                 key = (sha, page_no)
                 if key not in seen_keys:
                     seen_keys.add(key)
                     raw_candidates.append((rowid, sha, page_no, score, fts_expr))
-                    if len(raw_candidates) >= fetch_cap:
+                    if len(raw_candidates) > SCAN_PAGE_CAP:
                         break
+        scan_truncated = len(raw_candidates) > SCAN_PAGE_CAP
+        candidates = raw_candidates[:SCAN_PAGE_CAP]
 
-        has_more = len(raw_candidates) > (offset + limit)
+        outlines: dict[str, OutlineRecord] = {}
+        groups: dict[tuple[str, int], list[tuple[int, str, int, float, str]]] = {}
+        located: dict[tuple[str, int], tuple[int | None, str | None]] = {}
+        for candidate in candidates:
+            sha, page_no = candidate[1], candidate[2]
+            outline = outlines.get(sha)
+            if outline is None:
+                outline = load_outline(repo_root, sha)
+                outlines[sha] = outline
+            index, reason = outline.locate(page_no)
+            group_key = (sha, -1 if index is None else index)
+            if group_key not in groups:
+                groups[group_key] = []
+                located[group_key] = (index, reason)
+            groups[group_key].append(candidate)
+
+        ordered_keys = list(groups)
+        has_more = len(ordered_keys) > (offset + limit)
         hits: list[dict[str, object]] = []
-        for rank_idx, (rowid, sha, page_no, score, fts_expr) in enumerate(
-            raw_candidates[offset : offset + limit], start=offset + 1
+        for rank_idx, group_key in enumerate(
+            ordered_keys[offset : offset + limit], start=offset + 1
         ):
+            members = groups[group_key]
+            rowid, sha, page_no, score, fts_expr = members[0]
             cur.execute(snippet_sql, (fts_expr, rowid))
             snip_row = cur.fetchone()
             snippet_text = str(snip_row[0]) if snip_row and snip_row[0] is not None else ""
@@ -1087,6 +1460,8 @@ def _query_fts_hits(
                 else route_sha_to_path.get(sha, "")
             )
             sha_bindings = bindings_by_sha.get(sha, [])
+            index, reason = located[group_key]
+            listed = sorted(member[2] for member in members[:MAX_GROUP_PAGES])
             hit = SearchHit(
                 rank=rank_idx,
                 sha256=sha,
@@ -1105,9 +1480,16 @@ def _query_fts_hits(
                     unit_id=unit_id,
                     module_id=module_id,
                 ),
+                section=(
+                    outlines[sha].sections[index].to_dict() if index is not None else None
+                ),
+                unsectioned=reason,
+                pages=listed,
+                pages_total=len(members),
+                span_pages=span_pages_for(page_no, listed),
             )
             hits.append(hit.to_dict())
-        return has_more, hits
+        return has_more, scan_truncated, hits
     except sqlite3.DatabaseError as exc:
         if budget_exceeded:
             raise WriteRefused(
@@ -1135,6 +1517,12 @@ def execute_search(
     """Execute a bounded search query over the self-describing FTS5 index."""
     clean_query = _validate_search_request(query, limit, offset)
     loaded_repo = _load_and_validate_repo(repo_root, repo, unit_id, module_id)
+    names, expanded_concepts = expand_query_names(
+        clean_query, loaded_repo.concepts if loaded_repo is not None else None
+    )
+    expansion: dict[str, object] | None = (
+        {"concepts": expanded_concepts, "names": names} if expanded_concepts else None
+    )
 
     try:
         reader = open_index(repo_root, index_path=index_path)
@@ -1169,12 +1557,15 @@ def execute_search(
                 fingerprint=reader.meta["fingerprint"],
                 freshness=freshness,
                 coverage=coverage,
+                expansion=expansion,
             )
 
         try:
-            has_more, hits = _query_fts_hits(
+            has_more, scan_truncated, hits = _query_fts_hits(
                 reader=reader,
+                repo_root=repo_root,
                 clean_query=clean_query,
+                extra_names=names[1:],
                 limit=limit,
                 offset=offset,
                 unit_id=unit_id,
@@ -1201,6 +1592,8 @@ def execute_search(
             fingerprint=reader.meta["fingerprint"],
             freshness=freshness,
             coverage=coverage,
+            expansion=expansion,
+            scan_truncated=scan_truncated,
         )
     finally:
         reader.close()

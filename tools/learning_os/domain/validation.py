@@ -169,12 +169,15 @@ GENERATED_ALLOWED = {
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 SEARCH_TOP_DIR = "material-search"
+# Digest-keyed PDF outline sections, harvested by tools/material_outline.py and
+# read by material.search to group hits by section.
+OUTLINE_TOP_DIR = "material-outlines"
 # The directories the generated tree holds: the projection's own (reports,
 # collection views) and the caches owned by sibling producers. A test pins it
 # against what the projection writes and keeps.
 GENERATED_DIRECTORIES = frozenset({
     "reports", "collections", "text-cache", "summaries", "dossiers",
-    "derived-state", SEARCH_TOP_DIR,
+    "derived-state", SEARCH_TOP_DIR, OUTLINE_TOP_DIR,
 })
 
 # Warnings about the environment *around* the authored content — a stale

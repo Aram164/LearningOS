@@ -53,7 +53,7 @@
       "type": "integer",
       "minimum": 1,
       "maximum": 50,
-      "description": "maximum number of ranked candidates to return (default: 10, max: 50)",
+      "description": "maximum number of ranked section groups to return, one hit each (default: 10, max: 50)",
       "x-los-cli": {
         "flags": [
           "--limit"
@@ -76,7 +76,7 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 200,
-      "description": "result offset for pagination (default: 0, max: 200)",
+      "description": "number of ranked section groups to skip, for pagination (default: 0, max: 200)",
       "x-los-cli": {
         "flags": [
           "--offset"

@@ -144,3 +144,37 @@ discoverability transcript shows an agent reading a PDF-only result as
 hint.
 
 A search hit is retrieval evidence, not coverage evidence.
+
+## 2026-11-12: section groups and concept names
+
+Plan A step 1 (`outputs/learningos-agent-first/PLAN-A-retrieval-and-route-identity.md`
+in the workspace) adds two read-side behaviours. Neither changes what the index is.
+
+**Sections are a second disposable cache, not index rows.** Outline headings
+come from each PDF's bookmarks and are keyed by file digest under
+`generated/material-outlines/<sha256>.json`, written by
+`tools/material_outline.py` from the exact bytes it hashed. The index stays
+a pure function of the text cache (decision 1 above); a missing or damaged
+outline entry only turns a group into an explicit unsectioned one
+(`not-harvested`, `cache-invalid`). Encrypted PDFs get no outline, because
+the shared PDF reader refuses encrypted bytes.
+
+**A hit is a section group.** Candidate pages group by the section that owns
+them; a document's pages without a section form one unsectioned group with
+its reason. Each hit is one group at its best page, with the group's matched
+pages and a `span_pages` range of at most 20 pages; `span_reference` still
+opens the best page, so an excerpt stays inside `material-span`'s cut-off.
+`limit` and `offset` count groups over one fixed scan of at most 1,000
+candidate pages, so a group never moves between result pages;
+`scan_truncated` reports a capped scan. Reason: an agent pays per distinct
+place it reads, and a page list fills its limit with neighbouring pages of
+one section. A slide deck that bookmarks every slide still yields one group
+per slide, because the outline is the authority.
+
+**A concept name is language-independent.** When the normalized query equals
+a registered concept label or alias (`knowledge/concepts.yaml`), the phrase
+and AND tiers also search the concept's other names, ranked together by
+BM25, and the response reports them in `expansion`. Only an exact name
+expands: a concept word inside a longer question does not. The OR tier stays
+the query's own words.
+

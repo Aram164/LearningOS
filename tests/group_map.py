@@ -286,6 +286,7 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/material_summarize.py", frozenset({"materials", "studyplan"})),
     ("tools/material_text.py", frozenset({"materials"})),
     ("tools/material_toc.py", frozenset({"materials"})),
+    ("tools/material_outline.py", frozenset({"materials"})),
     ("tools/ingest_transcript.py", frozenset({"materials"})),
     ("tools/build_materials_index.py", frozenset({"materials"})),
     ("tools/build_materials_tree.py", frozenset({"materials"})),
