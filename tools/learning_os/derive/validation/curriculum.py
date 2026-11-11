@@ -1,4 +1,4 @@
-"""Modules, curriculum tree, study maps and learning paths."""
+"""Modules, curriculum tree and study maps."""
 
 from __future__ import annotations
 

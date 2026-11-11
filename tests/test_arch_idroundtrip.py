@@ -582,7 +582,7 @@ def owner_selected_values(operation: str, pointer: str,
 
 
 def check_owner_value(owner: str, sub_pointer: str, value: object, *,
-                      manifest=None, repo=None, candidates=(),
+                      manifest=None, candidates=(),
                       repository=None, delivery_dir=None,
                       delivery_sha256=None, artifact_map=None,
                       executed=None, service=None, registry=None,
@@ -599,8 +599,7 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
     if owner == "inspect-reference":
         payload = platform_handlers.record_payload(manifest, value)
         if payload is None:
-            payload = platform_handlers.structural_payload(
-                manifest, value, repo)
+            payload = platform_handlers.structural_payload(manifest, value)
         if payload is None:
             return ("miss", platform_handlers.inspect_not_found(
                 value, candidates))
@@ -669,28 +668,21 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
 def _synthetic_manifest():
     """A manifest exercising every inspect resolution class (SPEC (ay)).
 
-    Record ids, one old project alias, a curriculum stage, a detour, two
-    project structure nodes (nested), a project milestone, and one id
-    shared by two owners (ambiguity). Path stages come from the paired
-    synthetic repo (they are not projected).
+    Record ids, one old project alias, a curriculum stage, a detour, and
+    one id shared by two owners (ambiguity).
     """
     manifest = {
         "records": [
             {"id": "note-demo", "type": "note", "path": "knowledge/notes/note-demo.md"},
-            {"id": "project-demo", "type": "project",
-             "path": "work/projects/project-demo.yaml",
-             "structure": {"nodes": [
-                 {"id": "step-top", "children": [
-                     {"id": "step-nested", "children": []}]},
-                 {"id": "workstream-1", "children": []},
-                 {"id": "shared-x", "children": []},
-             ]},
-             "milestone_ids": ["milestone-1"]},
+            {"id": "module-demo", "type": "module",
+             "path": "curriculum/modules/module-demo/module.yaml"},
         ],
-        "project_aliases": {"module-old": "project-demo"},
+        "project_aliases": {"project-old": "module-demo"},
         "stages": [
             {"id": "stage-l01", "unit_id": "unit-demo-l01",
              "study_map_id": "map-l01", "module_id": "module-demo"},
+            {"id": "shared-x", "unit_id": "unit-demo-l02",
+             "study_map_id": "map-l02", "module_id": "module-demo"},
         ],
         "study_maps": [
             {"id": "map-l01", "unit_id": "unit-demo-l01",
@@ -699,13 +691,6 @@ def _synthetic_manifest():
         ],
     }
     return manifest
-
-
-def _synthetic_repo():
-    """A repo stub with no learning paths (retired in rev3 Group 11)."""
-    from types import SimpleNamespace
-
-    return SimpleNamespace()
 
 
 def test_owner_table_matches_the_inventory_exactly():
@@ -882,22 +867,19 @@ def test_inspect_owner_resolves_every_class_alias_and_order():
     import copy
 
     manifest = _synthetic_manifest()
-    repo = _synthetic_repo()
     frozen = copy.deepcopy(manifest)
-    candidates = platform_handlers._inspect_candidates(manifest, repo)
+    candidates = platform_handlers._inspect_candidates(manifest)
     assert candidates == [
-        "note-demo", "project-demo", "stage-l01", "detour-1", "shared-x",
-        "step-top", "step-nested", "workstream-1", "shared-x",
-        "milestone-1",
+        "note-demo", "module-demo", "stage-l01", "shared-x", "detour-1",
+        "shared-x",
     ]
     executed = []
     # Every candidate resolves through the real owner, in requested order.
-    requested = ["note-demo", "stage-l01", "detour-1", "step-nested",
-                 "workstream-1", "milestone-1", "shared-x"]
+    requested = ["note-demo", "stage-l01", "detour-1", "shared-x"]
     payloads = [
         check_owner_value(
             "inspect-reference", f"/properties/more_ids/items/{i}", value,
-            manifest=manifest, repo=repo, candidates=candidates,
+            manifest=manifest, candidates=candidates,
             executed=executed)[1]
         for i, value in enumerate(requested)]
     assert [p["id"] for p in payloads] == requested
@@ -905,27 +887,20 @@ def test_inspect_owner_resolves_every_class_alias_and_order():
     assert payloads[1]["structural_kind"] == "curriculum-stage"
     assert payloads[1]["edit_via"] == "plan-edit-context unit-demo-l01 --stage-id stage-l01"
     assert payloads[2]["structural_kind"] == "detour"
-    assert payloads[3]["structural_kind"] == "project-node"
-    assert payloads[3]["node_path"] == ["step-top", "step-nested"]
-    assert payloads[4]["structural_kind"] == "project-node"
-    assert payloads[5]["structural_kind"] == "project-milestone"
-    assert payloads[5]["project_id"] == "project-demo"
-    assert payloads[6]["structural_kind"] == "ambiguous"
-    assert [c["structural_kind"] for c in payloads[6]["candidates"]] == [
-        "detour", "project-node"]
-    # Alias equivalence: the old alias resolves to the same record.
+    assert payloads[3]["structural_kind"] == "ambiguous"
+    assert [c["structural_kind"] for c in payloads[3]["candidates"]] == [
+        "curriculum-stage", "detour"]
+    # Alias equivalence: the old project id resolves to its canonical owner.
     status, aliased = check_owner_value(
-        "inspect-reference", "/properties/id", "module-old",
-        manifest=manifest, repo=repo, candidates=candidates,
+        "inspect-reference", "/properties/id", "project-old",
+        manifest=manifest, candidates=candidates,
         executed=executed)
     assert status == "resolved"
-    assert aliased["id"] == "project-demo"
-    assert aliased["resolved_from"] == "module-old"
+    assert aliased["id"] == "module-demo"
+    assert aliased["resolved_from"] == "project-old"
     assert executed == [
         "/properties/more_ids/items/0", "/properties/more_ids/items/1",
         "/properties/more_ids/items/2", "/properties/more_ids/items/3",
-        "/properties/more_ids/items/4", "/properties/more_ids/items/5",
-        "/properties/more_ids/items/6",
         "/properties/id",
     ]
     assert manifest == frozen, f"A6 the inspect owner mutated its input — {FIX}"
@@ -935,18 +910,17 @@ def test_inspect_owner_miss_keeps_message_and_candidates():
     import copy
 
     manifest = _synthetic_manifest()
-    repo = _synthetic_repo()
     frozen = copy.deepcopy(manifest)
-    candidates = platform_handlers._inspect_candidates(manifest, repo)
+    candidates = platform_handlers._inspect_candidates(manifest)
     status, message = check_owner_value(
         "inspect-reference", "/properties/id", "note-demx",
-        manifest=manifest, repo=repo, candidates=candidates)
+        manifest=manifest, candidates=candidates)
     assert status == "miss"
     assert message.startswith("record not found: note-demx")
     assert "note-demo" in message
     status, structural = check_owner_value(
         "inspect-reference", "/properties/id", "stage-zzz",
-        manifest=manifest, repo=repo, candidates=candidates)
+        manifest=manifest, candidates=candidates)
     assert status == "miss"
     assert structural.startswith("record not found: stage-zzz (no curriculum stage")
     assert manifest == frozen, f"A6 the inspect owner mutated its input — {FIX}"
@@ -1207,15 +1181,15 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
 
     named = rich_world(mini_repo)
     assert named, f"A6 rich_world returned no named ids — {FIX}"
-    manifest, repo = _fresh_manifest_and_repo(mini_repo)
-    candidates = platform_handlers._inspect_candidates(manifest, repo)
+    manifest, _repo = _fresh_manifest_and_repo(mini_repo)
+    candidates = platform_handlers._inspect_candidates(manifest)
     assert candidates, f"A6 fixture has no inspectable ids — {FIX}"
     before = canonical_fingerprint(mini_repo)
     # Every fixture candidate resolves through the dispatched owner.
     for value in candidates:
         status, _ = check_owner_value(
             "inspect-reference", "/properties/id", value,
-            manifest=manifest, repo=repo, candidates=candidates)
+            manifest=manifest, candidates=candidates)
         assert status == "resolved", f"A6 fixture id {value!r} misses — {FIX}"
     # Requested batch order and the unknown-id refusal through the handler.
     ctx = OpContext(root=mini_repo, operation="inspect",

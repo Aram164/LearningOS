@@ -214,6 +214,65 @@ def test_unresolved_note_concept_is_error(mini_repo):
     assert "REF-CONCEPT" in codes(run(mini_repo), "E")
 
 
+def _source_plan_path_codes(mini_repo, plan_path, *, provenance="operator"):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    study_map = (mini_repo / "curriculum" / "modules" / "module-demo" / "units"
+                 / "unit-demo-l01" / "study-map.yaml")
+    data = yaml.safe_load(study_map.read_text(encoding="utf-8"))
+    data["source_plan"].update(path=plan_path, provenance=provenance)
+    study_map.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    return [issue.code for issue in run(mini_repo)
+            if issue.code.startswith(("SOURCE-PLAN-PATH-", "URI-"))]
+
+
+@pytest.mark.parametrize(("plan_path", "expected"), [
+    # A repository file under any authored root, a reference URI, or a web address.
+    ("work/active/workspace-demo/CONTEXT.md", []),
+    ("curriculum/modules/module-demo/module.yaml", []),
+    ("note://note-demo", []),
+    ("https://example.org/roadmap", []),
+    # A repository-relative file must exist wherever it lives; the archive is
+    # where a completed workspace's cited paths end up.
+    ("work/active/workspace-demo/outputs/gone.md", ["SOURCE-PLAN-PATH-MISSING"]),
+    ("archive/workspaces/2026/workspace-gone/CONTEXT.md", ["SOURCE-PLAN-PATH-MISSING"]),
+    ("curriculum/modules/module-ghost/source-map.yaml", ["SOURCE-PLAN-PATH-MISSING"]),
+    ("curriculum/modules", ["SOURCE-PLAN-PATH-MISSING"]),
+    ("Job/plans/job-track-demo.yaml", ["SOURCE-PLAN-PATH-MISSING"]),
+    ("replace-with-reviewed-plan.yaml", ["SOURCE-PLAN-PATH-MISSING"]),
+    # A path that leaves the repository resolves on one machine only.
+    ("/Users/someone/workbench/module-plan.yaml", ["SOURCE-PLAN-PATH-EXTERNAL"]),
+    ("../workbench/module-plan.yaml", ["SOURCE-PLAN-PATH-EXTERNAL"]),
+    ("work/../../elsewhere/module-plan.yaml", ["SOURCE-PLAN-PATH-EXTERNAL"]),
+    # A reference URI is held to the same rule as every other one.
+    ("note://note-ghost", ["URI-NOTE"]),
+])
+def test_source_plan_path_resolves_from_the_repository(mini_repo, plan_path, expected):
+    assert _source_plan_path_codes(mini_repo, plan_path) == expected
+
+
+def test_source_plan_path_preserves_migrated_job_origin_label(mini_repo):
+    assert _source_plan_path_codes(
+        mini_repo, "Job/plans/job-track-demo.yaml", provenance="migrated-mini-plan",
+    ) == []
+
+
+def test_source_plan_path_rejects_a_symlink_outside_the_repository(mini_repo, tmp_path):
+    external = tmp_path / "external-plan.yaml"
+    external.write_text("plan: external\n", encoding="utf-8")
+    link = mini_repo / "linked-plan.yaml"
+    link.symlink_to(external)
+    assert _source_plan_path_codes(mini_repo, link.name) == ["SOURCE-PLAN-PATH-EXTERNAL"]
+
+
+def test_an_absolute_source_plan_path_is_external_even_when_the_file_exists(mini_repo):
+    """The file being present on this machine is exactly what hid the defect."""
+    present = mini_repo / "work" / "active" / "workspace-demo" / "CONTEXT.md"
+    assert present.is_file()
+    assert _source_plan_path_codes(mini_repo, str(present)) == ["SOURCE-PLAN-PATH-EXTERNAL"]
+
+
 def test_relation_related_to_rejected(mini_repo):
     f = mini_repo / "knowledge" / "concept-relations.yaml"
     data = yaml.safe_load(f.read_text())

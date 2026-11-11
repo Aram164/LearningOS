@@ -671,7 +671,7 @@ def test_structured_progress_stays_core_side_in_projection(mini_repo):
         "progress": {"updated": "2026-09-26", "summary": "Worked §1.",
                       "next": "Again."},
     }]}
-    [projected] = project_stages(repo, data, "working_note")
+    [projected] = project_stages(repo, data)
     assert "progress" not in projected
     assert projected["status"] == "active"
 

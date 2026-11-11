@@ -1,4 +1,4 @@
-"""Stage and learning-path state machines: one status action applied in place.
+"""The stage state machine: one status action applied in place.
 
 Pure rules over loaded records. Callers refuse invalid actions first; these
 functions assume a valid action and receive the clock as a callable, so the
@@ -11,7 +11,6 @@ import datetime as dt
 from collections.abc import Callable
 
 STAGE_ACTIONS = ("active", "paused", "complete", "skipped", "revisit")
-PATH_ACTIONS = ("active", "complete", "skipped")
 
 
 def apply_stage_action(data: dict, unit_data: dict, stage: dict, action: str,
@@ -47,34 +46,6 @@ def apply_stage_action(data: dict, unit_data: dict, stage: dict, action: str,
             data["status"] = "ready-to-shelve"
             data.setdefault("shelving", {})["state"] = "draft"
             unit_data["status"] = "ready-to-shelve"
-
-
-def apply_path_action(data: dict, stage: dict, action: str,
-                      today: Callable[[], dt.date]) -> None:
-    """Move a learning-path ``stage`` by ``action`` (active, complete or skipped)."""
-    stages = data.get("stages", []) or []
-    if action == "active":
-        for other in stages:
-            if other.get("status") == "active":
-                other["status"] = "pending"
-        stage["status"] = "active"
-        stage.pop("completed", None)
-        data["current_stage"] = stage["id"]
-        data["status"] = "active"
-    else:
-        stage["status"] = action
-        if action == "complete":
-            stage["completed"] = today().isoformat()
-        following = next((s for s in stages[stages.index(stage) + 1:]
-                          if s.get("status") == "pending"), None)
-        if following:
-            following["status"] = "active"
-            data["current_stage"] = following["id"]
-            data["status"] = "active"
-        else:
-            data["status"] = "ready-to-shelve"
-            shelving = data.setdefault("shelving", {})
-            shelving["state"] = "draft"
 
 
 def progress_entry(summary: str, upcoming: str | None,

@@ -184,10 +184,15 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
   `angle_detail` for the hover.
 - **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
-- **W** `SOURCE-PLAN-PATH-MISSING` — a study map's `source_plan.path` points
-  into the repository's `work/` area and does not exist. Absolute paths, URI
-  forms, `../` escapes and `Job/…` paths name evidence outside the repository
-  and are not checked.
+- **W** `SOURCE-PLAN-PATH-MISSING` — a study map's repository-relative
+  `source_plan.path` does not resolve to a file. A reference URI such as
+  `note://…` is checked as a URI instead, a web address is left to the online
+  audit, and a `Job/…` origin label from the mini-plan migration names a frozen
+  legacy original and is not followed.
+- **W** `SOURCE-PLAN-PATH-EXTERNAL` — a study map's `source_plan.path` is an
+  absolute path, contains `..`, or escapes the repository through a symlink.
+  Cite the reviewed record inside the repository, such as the coverage audit
+  in the workspace's `outputs/`.
 - **W** `RESOURCE-SCOPE-ROUTE-UNDECLARED` — a stage resource teaches an authored material route that the module's source map does not declare for this unit (undeclared, or owned by another unit).
 - **W** `RESOURCE-SCOPE-NO-SOURCE` — a stage resource names no `source_id`, so module adoption cannot be checked.
 - **W** `RESOURCE-SCOPE-UNADOPTED` — a stage resource names a source the module's source map does not declare.
@@ -249,7 +254,10 @@ the underlying activity validly elicits the claimed evidence.
 
 ## Operating contract
 
-- The vendor-neutral operating entry is `system/OPERATOR.md`; `system/CLAUDE.md` is the short task adapter and `system/OPERATOR-POLICY.md` holds the deeper policy. Root `CLAUDE.md` and the `LearningOS/` project-root entry are symlinks to the adapter, so copies cannot drift — the former hand-maintained `CLAUDE-SYNC` warning is retired (2026-07-17).
+- The vendor-neutral operating entry is `system/OPERATOR.md`. The repository's
+  `CLAUDE.md` points to the short adapter in `system/CLAUDE.md`, and the
+  `LearningOS/` project-root entry links to that adapter. The detailed policy
+  lives in `system/OPERATOR-POLICY.md`.
 - **E** Living operator instructions never copy the current data or manifest
   contract number. They point to the producer-owned declaration, while dated
   ADRs and contract history remain free to name historical versions.

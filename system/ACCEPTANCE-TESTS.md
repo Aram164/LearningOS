@@ -64,7 +64,7 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] Active workspace scaffolds validate; required body sections present.
 - [ ] Standing workspaces validate and are exempt from archival expectations.
 - [ ] Active workspace count 8+ produces a warning.
-- [ ] Completed path-owning workspaces remain in place; separately migrated path-free archives preserve the whole workspace and are excluded from normal indexes (WORKFLOWS §11).
+- [ ] Completed workspaces remain in place; separately migrated archives preserve the whole workspace and are excluded from normal indexes (WORKFLOWS §11).
 - [ ] Durable outputs remain under `knowledge/`.
 
 ## H. Modules

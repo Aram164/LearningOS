@@ -210,7 +210,6 @@ def project_study_maps(repo: Repo, revision: Revision,
             "stages": project_stages(
                 repo,
                 data,
-                "working_note",
                 routes_by_unit.get((study_map.module_id, study_map.unit_id), ()),
                 git_table,
             ),

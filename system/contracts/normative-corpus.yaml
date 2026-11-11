@@ -824,8 +824,8 @@ documents:
     owner: workflows
     summary: >-
       Executable Scrut transcript of WORKFLOWS §11: complete the
-      path-owning workspace in place, rebuild and validate, and leave
-      it unmoved per the M-05 decision.
+      workspace in place, rebuild and validate, and leave it unmoved;
+      no gateway capability archives a workspace.
 
   - path: system/procedures/move-or-rename-a-note.md
     audience: operator

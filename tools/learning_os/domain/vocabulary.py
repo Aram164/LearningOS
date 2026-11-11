@@ -16,8 +16,6 @@ ID_RE = re.compile(r"^(note|concept|ability|source|workspace|module)-[a-z0-9]+(?
 PROGRAM_ID_RE = re.compile(r"^program-[a-z0-9]+(?:-[a-z0-9]+)*$")
 UNIT_ID_RE = re.compile(r"^unit-[a-z0-9]+(?:-[a-z0-9]+)*$")
 STUDY_MAP_ID_RE = re.compile(r"^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$")
-PROJECT_ID_RE = re.compile(r"^project-[a-z0-9]+(?:-[a-z0-9]+)*$")
-PROJECT_RELATION_ID_RE = re.compile(r"^relationship-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # Inline #tags in Garden notes (CLAUDE.md §14). Conservative: a tag starts with
 # a lowercase letter (so ATX headings "# H", shebangs, "#1" issue refs and hex

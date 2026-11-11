@@ -1,4 +1,4 @@
-"""Record projection for work/: workspaces, learning paths, coordination."""
+"""Record projection for work/: workspaces and coordination."""
 
 from __future__ import annotations
 

@@ -44,7 +44,7 @@ The rest of this file is the full manual; the four commands are under
 
 - **What binds:** `system/contracts/normative-corpus.yaml` — every `system/*.md` and `system/adr/*.md` file classified exactly once (class, status, authority, owner, supersession). Read it before treating anything under `system/` as law; `make check` fails if a document is added without being classified or if a retired one still claims to bind.
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
-- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the short task adapter; deeper policy lives in `system/OPERATOR-POLICY.md`. Root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to `system/CLAUDE.md`
+- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the short task adapter; deeper policy lives in `system/OPERATOR-POLICY.md`. Root `CLAUDE.md` is a two-line pointer to it, and the `LearningOS/` project-root entry is a symlink to `system/CLAUDE.md`
 - **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed the same day (`migration/final-report.md`). This repository is the operational root.
 - **Legacy:** the frozen pre-v3 tree is shelved at `../legacy/`; the former Job source retained after ADR-013 is at `../legacy/Job/`.

@@ -1,9 +1,8 @@
-"""Stage projection, shared by study maps and learning paths.
+"""Stage projection for study maps.
 
-Both carry an ordered list of stages with resolvable resources and one working
-note; they disagree only about what that note field is called. Writing the rule
-twice is how the two drifted before — a resource resolution fixed on one side
-and not the other is invisible until an interface renders the wrong list.
+A study map carries an ordered list of stages with resolvable resources and one
+working note. The rule lives here once, so a resource resolution cannot be fixed
+for one reader and not another.
 """
 
 from __future__ import annotations
@@ -124,13 +123,12 @@ def _without_runtime_keys(record: dict, keys: tuple[str, ...]) -> dict:
     return {k: v for k, v in record.items() if k not in keys}
 
 
-def project_stages(repo: Repo, data: dict, note_key: str,
+def project_stages(repo: Repo, data: dict,
                    resource_routes: Iterable[dict] = (),
                    git_table: dict[str, str] | None = None) -> list[dict]:
     """Project ``data['stages']`` with resources resolved and notes inlined.
 
-    ``note_key`` is the field naming the stage's working note: ``working_note``
-    for a study map, ``notes_path`` for a learning path. A snapshot
+    Each stage names its working note in ``working_note``. A snapshot
     transaction passes its attempt table; ``None`` reads live.
     """
     projected_stages: list[dict] = []
@@ -146,10 +144,10 @@ def project_stages(repo: Repo, data: dict, note_key: str,
             ]
         elif isinstance(stage, dict) and "resources" not in stage:
             # The manifest contract publishes a stable collection even when a
-            # learning-path stage has no resource rows.  Preserve malformed
-            # authored values so schema validation still fails closed.
+            # stage has no resource rows.  Preserve malformed authored values
+            # so schema validation still fails closed.
             projected["resources"] = []
-        note_ref = stage.get(note_key) if isinstance(stage, dict) else None
+        note_ref = stage.get("working_note") if isinstance(stage, dict) else None
         note_file = repo.root / str(note_ref) if note_ref else None
         try:
             if note_file:

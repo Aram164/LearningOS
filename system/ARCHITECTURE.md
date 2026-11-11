@@ -80,7 +80,7 @@ They do not introduce an independent knowledge entity for goals.
 
 ### 2.4 Preserved historical context
 
-Completed path-owning workspaces remain in place; path-free workspaces may be archived whole through a separately reviewed migration (WORKFLOWS §11). Archived workspaces preserve context and provenance but are excluded from normal concept retrieval once durable notes exist. The frozen legacy tree is historical context.
+A completed workspace remains in place; it may be archived whole only through a separately reviewed migration (WORKFLOWS §11). Archived workspaces preserve context and provenance but are excluded from normal concept retrieval once durable notes exist. The frozen legacy tree is historical context.
 
 ### 2.5 Deterministically generated artifacts
 
@@ -248,7 +248,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Agent friction notes | `work/complaints/` | dated Markdown, one file per issue; never in the inbox |
 | Resolved inbox drops | `archive/inbox/<year>/` | moved byte-identical via `inbox.resolve`, never overwritten |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
-| Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | whole path-free workspace; path-owning workspaces complete in place (WORKFLOWS §11) |
+| Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | a whole workspace, moved only by a separately reviewed migration; completion happens in place (WORKFLOWS §11) |
 | External material with a registered source | `LearningOS/materials/<area>/…/<slug>/` (topic tree) | `material://<source-id>/…` resolves via `materials/.flat/source-<id>` symlinks |
 | External material not yet registered | `LearningOS/materials/_unsorted/` | temporary; registered then moved |
 | Code repositories | `LearningOS/projects/<name>/` | untouched internally |
@@ -460,10 +460,10 @@ work/active/<workspace-id>/
 2. warranted source evaluations and concept relations are added;
 3. dependencies referencing the workspace are cleared from `COORDINATION.md`;
 4. generated outputs are rebuilt;
-5. a path-owning workspace completes at its existing location, preserving
-   its notes and references. A path-free workspace may move whole to
-   `archive/workspaces/<year>/` through the separately reviewed migration in
-   WORKFLOWS §11; no archive gateway capability exists.
+5. the workspace completes at its existing location, preserving its notes
+   and references. It may move whole to `archive/workspaces/<year>/` only
+   through the separately reviewed migration in WORKFLOWS §11, after its
+   explicit path links are checked; no archive gateway capability exists.
 
 Do not rewrite an archived workspace to make it tidy.
 

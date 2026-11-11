@@ -118,34 +118,14 @@ def with_coordination_digests(root: Path, payload: dict) -> dict:
     return {**payload, **fields}
 
 
-def _structure_nodes(structure):
-    """(node, node_path) pairs for a project structure tree, in order."""
-    found = []
-
-    def visit(nodes, path):
-        for node in nodes or []:
-            if not isinstance(node, dict) or not isinstance(node.get("id"), str):
-                continue
-            here = [*path, node["id"]]
-            found.append((node, here))
-            visit(node.get("children"), here)
-
-    if isinstance(structure, dict):
-        visit(structure.get("nodes"), [])
-    return found
-
-
-def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None:
+def structural_payload(manifest: dict, record_id: str) -> dict | None:
     """Resolve a structural sub-id to its owner context, or None.
 
-    Pure over the manifest except for learning-path stages, which are not
-    projected and need the loaded repo. Curriculum stages answer with
-    their projected row plus the plan-edit-context invocation that owns
-    edits (inspect carries no revision guards); path stages, detours,
-    and project nodes answer with their row plus owners; bare milestone
-    ids answer with their owning projects, since milestones carry no
-    record of their own. Several owners for one id answer one ambiguous
-    payload with every candidate in stable order.
+    Pure over the manifest. A curriculum stage answers with its projected
+    row plus the plan-edit-context invocation that owns edits (inspect
+    carries no revision guards); a detour answers with its row plus its
+    owners. Several owners for one id answer one ambiguous payload with
+    every candidate in stable order.
     """
     matches: list[dict] = []
     for stage in manifest.get("stages", []) or []:
@@ -170,30 +150,8 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
                     "study_map_id": study_map.get("id"),
                     "module_id": study_map.get("module_id"),
                 })
-    for record in manifest.get("records", []) or []:
-        if not isinstance(record, dict) or record.get("type") != "project":
-            continue
-        for node, node_path in _structure_nodes(record.get("structure")):
-            if node["id"] == record_id:
-                matches.append({
-                    "id": record_id, "structural_kind": "project-node",
-                    "node": dict(node), "project_id": record.get("id"),
-                    "node_path": node_path, "record_path": record.get("path"),
-                })
-        if record_id in (record.get("milestone_ids", []) or []):
-            matches.append({
-                "id": record_id, "structural_kind": "project-milestone",
-                "project_id": record.get("id"), "record_path": record.get("path"),
-                "note": ("milestones carry no record of their own; "
-                         "the owning project is the record"),
-            })
     if not matches:
         return None
-    node_projects = {match["project_id"] for match in matches
-                     if match["structural_kind"] == "project-node"}
-    matches = [match for match in matches
-               if match["structural_kind"] != "project-milestone"
-               or match["project_id"] not in node_projects]
     if len(matches) == 1:
         return matches[0]
     return {"id": record_id, "structural_kind": "ambiguous",
@@ -201,10 +159,10 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
 
 
 #: Id prefixes that name structural sub-records rather than records.
-STRUCTURAL_PREFIXES = ("stage-", "detour-", "step-", "workstream-", "milestone-")
+STRUCTURAL_PREFIXES = ("stage-", "detour-")
 
 
-def _inspect_candidates(manifest: dict, repo=None, *, include_paths=True) -> list[str]:
+def _inspect_candidates(manifest: dict) -> list[str]:
     """Every id ``inspect`` could have resolved: records plus structural ids."""
     ids = [row.get("id") for row in manifest.get("records", []) or []
            if isinstance(row, dict) and isinstance(row.get("id"), str)]
@@ -215,20 +173,14 @@ def _inspect_candidates(manifest: dict, repo=None, *, include_paths=True) -> lis
             continue
         ids.extend(detour.get("id") for detour in study_map.get("detours", []) or []
                    if isinstance(detour, dict) and isinstance(detour.get("id"), str))
-    for record in manifest.get("records", []) or []:
-        if not isinstance(record, dict) or record.get("type") != "project":
-            continue
-        ids.extend(node["id"] for node, _ in _structure_nodes(record.get("structure")))
-        ids.extend(mid for mid in record.get("milestone_ids", []) or []
-                   if isinstance(mid, str))
     return ids
 
 
 def inspect_not_found(record_id: str, candidates=()) -> str:
     if isinstance(record_id, str) and record_id.startswith(STRUCTURAL_PREFIXES):
         return with_suggestions(
-            f"record not found: {record_id} (no curriculum stage, "
-            "detour, project node, or milestone carries this id)",
+            f"record not found: {record_id} (no curriculum stage or "
+            "detour carries this id)",
             record_id, candidates)
     return not_found("record", record_id, candidates)
 
@@ -236,12 +188,11 @@ def inspect_not_found(record_id: str, candidates=()) -> str:
 def describe_unresolved_reference(manifest, record_id):
     """Name the record that references an unresolvable id, if there is one.
 
-    Milestones and project structure nodes resolve through
-    ``structural_payload``, so an advertised id that still misses is a
-    dangling ``*_ids`` cross-reference (the validator refuses those; inspect
-    reads without validating). On an inspect miss, point the caller at the
-    referring record instead of a bare not-found. Returns None when nothing
-    references the id.
+    Records and structural ids resolve before this is asked, so an
+    advertised id that still misses is a dangling ``*_ids`` cross-reference
+    (the validator refuses those; inspect reads without validating). On an
+    inspect miss, point the caller at the referring record instead of a
+    bare not-found. Returns None when nothing references the id.
     """
     for record in manifest.get("records", []) or []:
         referrer = record.get("id")
@@ -268,20 +219,19 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
     root = ctx.root
     try:
         snapshot = _snapshot(root)
-        manifest, repo = _fresh_manifest_and_repo(root, snapshot_id=snapshot)
+        manifest, _repo = _fresh_manifest_and_repo(root, snapshot_id=snapshot)
         records = []
         for record_id in ids:
             record = record_payload(manifest, record_id)
             if record is None:
-                record = structural_payload(manifest, record_id, repo)
+                record = structural_payload(manifest, record_id)
             if record is not None:
                 record = with_coordination_digests(root, record)
             if record is None:
                 # The hint stays out of the refusal message: it is a
                 # separate stderr line (R2 extra_stderr), never part of
                 # the complaint.
-                message = inspect_not_found(
-                    record_id, _inspect_candidates(manifest, repo, include_paths=record_id.startswith("stage-")))
+                message = inspect_not_found(record_id, _inspect_candidates(manifest))
                 hint = describe_unresolved_reference(manifest, record_id)
                 extra = (f"los: hint: {hint}",) if hint else ()
                 raise WriteRefused(
@@ -324,12 +274,12 @@ def inspect(ctx: OpContext, req: dict) -> Result:
     if req.get("more_ids"):
         return _inspect_batch(ctx, req)
     root = ctx.root
-    manifest, repo = _fresh_manifest_and_repo(root)
+    manifest, _repo = _fresh_manifest_and_repo(root)
     payload = record_payload(manifest, req["id"])
     if payload is None:
-        payload = structural_payload(manifest, req["id"], repo)
+        payload = structural_payload(manifest, req["id"])
     if payload is None:
-        message = inspect_not_found(req["id"], _inspect_candidates(manifest, repo))
+        message = inspect_not_found(req["id"], _inspect_candidates(manifest))
         hint = describe_unresolved_reference(manifest, req["id"])
         extra = (f"los: hint: {hint}",) if hint else ()
         raise WriteRefused(

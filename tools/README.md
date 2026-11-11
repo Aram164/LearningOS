@@ -25,7 +25,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
 | `system_map.py` | supported development gate | Checks module ownership, named references, layers and generated developer-map blocks; `--write` regenerates those blocks. Never a canonical validation rule. |
-| `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
+| `tree_contract.py` | supported contract tool | Checks both generated architecture trees by default and regenerates them with `--write`. |
 | `doc_blocks.py` | supported contract tool | Checks or regenerates documentation counts, command names and procedure links from their metadata owners; validation blocks stale or malformed projections. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |
 | `contract_bundle.py` | prototype contract tool | Side-by-side manifest contract bundler (Point-3 prototype); build/check only, never a canonical writer. |
@@ -47,6 +47,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
 | `library_reconciliation.py` | read-only diagnostic | Occurrence-level reconciliation of the old resource lists against the source registry (two-pass source intake); reads only declared inputs and writes only inside its workspace, never canonical records. |
+| `evaluate_operator_questions.py` | read-only evaluation tool | Offline question-to-procedure evaluation over the held-out operator questions in `tests/fixtures/verified_operator_questions/`: `prepare` emits the public task package without the answer key, `score` grades submitted answers against it. Writes only the `--out` file it is given. |
 | `plan_write_audit.py` | read-only diagnostic | Reports commit co-occurrence of plan changes and newly added receipt documents across available Git refs; it does not prove per-write gateway provenance. |
 | `receipt_drift.py` | read-only diagnostic (`make receipt-drift`) | Reports canonical plan/module files whose bytes no longer match the last gateway receipt, records under no receipt, and snapshot-chain gaps — the boundary 16 hand-edit detector; report-only, gates nothing. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |

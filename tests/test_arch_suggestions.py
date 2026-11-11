@@ -598,8 +598,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
     from ``repo.concepts`` as ``plan_continuation`` checks them;
     modules from ``repo.modules``, except the compact domain, which is
     the ``repo.module_source_maps`` the compaction planner matches
-    against; workspaces from ``repo.workspaces``; projects from the
-    registry stems ``_project_ids`` lists;
+    against; workspaces from ``repo.workspaces``;
     inspect references from ``_inspect_candidates``; deliveries
     from the delivery directory entries; digests from the request's
     own real digest at the row's pointer. SPEC (bv) item 1 adds:
@@ -778,19 +777,12 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = list(repo.workspaces)
         return ordered, set(ordered)
-    if kind == "project":
-        # SPEC (bv) item 1: the same _project_ids function the
-        # converted handler passes to its NotFound (platform.py).
-        from learning_os.app.handlers import platform as platform_handlers
-
-        ordered = platform_handlers._project_ids(ctx.root)
-        return ordered, set(ordered)
     if owner == "inspect-reference":
         from learning_os.app.handlers import platform as platform_handlers
         from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 
-        manifest, repo = _fresh_manifest_and_repo(ctx.root)
-        ordered = platform_handlers._inspect_candidates(manifest, repo)
+        manifest, _repo = _fresh_manifest_and_repo(ctx.root)
+        ordered = platform_handlers._inspect_candidates(manifest)
         return ordered, _inspect_membership(manifest, ordered)
     if owner == "ai-delivery-exchange":
         deliveries = ctx.root / _DELIVERIES_REL
@@ -2397,7 +2389,7 @@ def test_resolving_alias_expands_absence_membership():
     from learning_os.app.handlers import platform as platform_handlers
 
     manifest = _aliased_manifest()
-    ordered = platform_handlers._inspect_candidates(manifest, None)
+    ordered = platform_handlers._inspect_candidates(manifest)
     assert ordered == ["aa"]
     membership = _inspect_membership(manifest, ordered)
     assert membership == {"aa", "ab"}

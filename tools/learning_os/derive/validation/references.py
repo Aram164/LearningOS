@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Literal
 
 from learning_os.derive.routes import iter_route_references
@@ -14,6 +14,7 @@ from learning_os.domain.validation import (
     markdown_link_targets,
 )
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES
+from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 
 
 @dataclass(frozen=True)
@@ -477,22 +478,13 @@ class ChecksReferences:
             if data.get("unit_id") != study_map.unit_id:
                 self.err("MAP-OWNER", f"study map '{smid}' declares unit '{data.get('unit_id')}' but lives under '{study_map.unit_id}'", where)
             source_plan = data.get("source_plan")
-            plan_path = source_plan.get("path") if isinstance(source_plan, dict) else None
-            if isinstance(plan_path, str) and plan_path:
-                # Only paths into this tree's own work/ area are checked:
-                # absolute paths, URI forms (note://…), ../ escapes and
-                # Job/… paths name evidence that lives outside the
-                # repository by design.
-                from pathlib import PurePosixPath
-
-                pure = PurePosixPath(plan_path)
-                if pure.parts and pure.parts[0] == "work" and not pure.is_absolute():
-                    if not (r.root / plan_path).exists():
-                        self.warn(
-                            "SOURCE-PLAN-PATH-MISSING",
-                            f"study map '{smid}' source_plan.path '{plan_path}' does not exist",
-                            where,
-                        )
+            if isinstance(source_plan, dict):
+                plan_path = source_plan.get("path")
+                if isinstance(plan_path, str) and plan_path:
+                    self._check_source_plan_path(
+                        smid, plan_path, where,
+                        migrated=source_plan.get("provenance") == "migrated-mini-plan",
+                    )
             for stage in data.get("stages", []) or []:
                 for resource in stage.get("resources", []) or []:
                     sid = resource.get("source_id") if isinstance(resource, dict) else None
@@ -628,6 +620,39 @@ class ChecksReferences:
                 elif ws.archived:
                     self.err("COORD-DEP", f"COORDINATION dependency cites archived workspace '{wid}'",
                              "work/COORDINATION.md")
+
+    def _check_source_plan_path(
+        self, smid: str, plan_path: str, where: str, *, migrated: bool,
+    ) -> None:
+        """Check URIs and local provenance files, preserving migrated origin labels."""
+        if parse_reference_uri(plan_path) is not None:
+            self._check_uri(plan_path, where)
+            return
+        pure = PurePosixPath(plan_path)
+        external = pure.is_absolute() or ".." in pure.parts
+        if not external and migrated and pure.parts[:1] == ("Job",):
+            return
+        root = self.repo.root
+        target = root / pure
+        if not external:
+            try:
+                target = resolve_symlinks_inside(root, target, strict=False)
+            except PathBoundaryError:
+                external = True
+        if external:
+            self.warn(
+                "SOURCE-PLAN-PATH-EXTERNAL",
+                f"study map '{smid}' source_plan.path '{plan_path}' leaves the repository; "
+                "cite the reviewed record inside it, such as the coverage audit in the "
+                "workspace's outputs",
+                where,
+            )
+        elif not target.is_file():
+            self.warn(
+                "SOURCE-PLAN-PATH-MISSING",
+                f"study map '{smid}' source_plan.path '{plan_path}' does not resolve to a file",
+                where,
+            )
 
     def _check_uri(self, ref: str, where: str):
         r = self.repo

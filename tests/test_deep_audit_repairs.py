@@ -173,8 +173,7 @@ def test_projection_never_reads_out_of_root_working_notes(tmp_path: Path):
 
     [stage] = project_stages(
         repo,
-        {"stages": [{"id": "stage-demo", "notes_path": "../outside.md"}]},
-        "notes_path",
+        {"stages": [{"id": "stage-demo", "working_note": "../outside.md"}]},
     )
     assert stage["notes_text"] == ""
 

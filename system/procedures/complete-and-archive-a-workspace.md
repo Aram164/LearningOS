@@ -82,7 +82,7 @@ $ (set -o pipefail; los validate | tail -n 1)
 0 error(s), 12 warning(s) — OK
 ```
 
-## The path-owning workspace stays in place (M-05)
+## The completed workspace stays in place
 
 ```scrut
 $ $H/los-assert-file work/active/workspace-demo/CONTEXT.md --exists

@@ -135,7 +135,7 @@
   },
   "x-los-cli-command": {
     "name": "bootstrap",
-    "help": "machine bootstrap with active learning paths",
+    "help": "operator bootstrap: full, brief, or compact pages",
     "description": null,
     "epilog": null,
     "mutually_exclusive": [],

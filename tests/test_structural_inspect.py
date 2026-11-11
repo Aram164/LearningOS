@@ -1,10 +1,9 @@
 """Structural IDs resolve through inspect with their owners.
 
-Curriculum and path stages, detours, project nodes, and milestones are
-not manifest records, but agents meet their IDs in schemas, plans, and
-errors. `inspect` resolves each to its row plus owners instead of
-archaeology; stage edits still start at plan-edit-context for the
-revision guards.
+Curriculum stages and detours are not manifest records, but agents meet
+their IDs in schemas, plans, and errors. `inspect` resolves each to its
+row plus owners instead of archaeology; stage edits still start at
+plan-edit-context for the revision guards.
 """
 
 from __future__ import annotations
@@ -59,53 +58,6 @@ def test_detour_answers_with_owners():
     assert payload["unit_id"] == "unit-a"
 
 
-def test_project_node_answers_with_path_and_record():
-    manifest = _manifest(records=[{
-        "id": "project-a", "type": "project", "path": "projects/registry/a.yaml",
-        "milestone_ids": [],
-        "structure": {"kind": "linear", "nodes": [{
-            "id": "workstream-a", "title": "W", "kind": "workstream",
-            "status": "active", "children": [{
-                "id": "step-a", "title": "S", "kind": "step",
-                "status": "active",
-            }],
-        }]},
-    }])
-    payload = structural_payload(manifest, "step-a")
-    assert payload["structural_kind"] == "project-node"
-    assert payload["project_id"] == "project-a"
-    assert payload["node_path"] == ["workstream-a", "step-a"]
-    assert payload["record_path"] == "projects/registry/a.yaml"
-    assert payload["node"]["title"] == "S"
-
-
-def test_bare_milestone_answers_with_owning_projects():
-    manifest = _manifest(records=[
-        {"id": "project-a", "type": "project", "path": "projects/registry/a.yaml",
-         "milestone_ids": ["milestone-ship"], "structure": {"kind": "linear", "nodes": []}},
-        {"id": "project-b", "type": "project", "path": "projects/registry/b.yaml",
-         "milestone_ids": ["milestone-ship"], "structure": {"kind": "linear", "nodes": []}},
-    ])
-    payload = structural_payload(manifest, "milestone-ship")
-    assert payload["structural_kind"] == "ambiguous"
-    assert [candidate["project_id"] for candidate in payload["candidates"]] == [
-        "project-a", "project-b"]
-    assert "no record of their own" in payload["candidates"][0]["note"]
-
-
-def test_milestone_node_and_listing_merge_to_the_node():
-    manifest = _manifest(records=[{
-        "id": "project-a", "type": "project", "path": "projects/registry/a.yaml",
-        "milestone_ids": ["milestone-both"],
-        "structure": {"kind": "linear", "nodes": [{
-            "id": "milestone-both", "title": "M", "kind": "milestone",
-            "status": "active",
-        }]},
-    }])
-    payload = structural_payload(manifest, "milestone-both")
-    assert payload["structural_kind"] == "project-node"
-
-
 def test_unknown_id_answers_none():
     manifest = _manifest(stages=[_stage("stage-a")])
     assert structural_payload(manifest, "stage-missing") is None
@@ -142,18 +94,8 @@ def test_cli_inspect_unknown_structural_id_names_the_search(mini_repo):
     root = _fixture_repo(mini_repo)
     missing = run_los(root, "inspect", "stage-missing")
     assert missing.returncode == 2
-    assert "no curriculum stage, detour" in missing.stderr
+    assert "no curriculum stage or detour carries this id" in missing.stderr
     assert "record not found: stage-missing" in missing.stderr
     plain = run_los(root, "inspect", "note-missing")
     assert plain.returncode == 2
     assert plain.stderr.strip() == "los: INVALID_REQUEST: record not found: note-missing"
-
-
-def test_overnight_inspection_loads_only_workspaces(mini_repo, monkeypatch):
-
-    from learning_os.app import projection
-    def forbidden(_root):
-        raise AssertionError("inspect must not load the full repo")
-    monkeypatch.setattr(projection, "load_repo", forbidden)
-    payload = structural_payload(_manifest(stages=[_stage("stage-both")]), "stage-both", projection._LazyRepo(mini_repo))
-    assert payload["structural_kind"] == "curriculum-stage"

@@ -54,7 +54,7 @@ MANIFEST_NODES = [
     "project_garden_entries", "_academic_deadlines", "adoption_counts",
     "source_fingerprint", "_git_state",
     "project_collections", "project_concepts", "project_coordination",
-    "project_learning_paths", "project_module_source_maps", "project_modules",
+    "project_module_source_maps", "project_modules",
     "project_notes", "project_programs", "project_project_aliases",
     "project_sources",
     "project_stages", "project_study_maps", "project_thematic_groups",
