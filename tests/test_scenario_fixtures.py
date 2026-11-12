@@ -20,7 +20,12 @@ from learning_os.app.validation_service import collect
 from learning_os.derive.learning_runtime import collect_requirements
 from learning_os.derive.semantics.lineage import load_ledger
 from learning_os.domain.material_inventory import render_manifest
-from learning_os.domain.material_refs import compact_map, expand_map, unit_routes
+from learning_os.domain.material_refs import (
+    compact_map,
+    compaction_expected,
+    expand_map,
+    unit_routes,
+)
 from learning_os.store.loader import load_repo
 from learning_os.store.materials.resolution import (
     material_location,
@@ -180,8 +185,12 @@ def test_every_family_is_present(tmp_path):
         raw, repo.module_source_maps["module-demo"],
         "module-demo", "unit-demo-l01")
     assert compact != raw
-    assert expand_map(compact, repo.module_source_maps["module-demo"],
-                      "module-demo", "unit-demo-l01") == study_map.data
+    # Lossless except the route identity each new reference carries (Plan A
+    # step 3): the same expectation the compaction check itself enforces.
+    expanded = expand_map(compact, repo.module_source_maps["module-demo"],
+                          "module-demo", "unit-demo-l01")
+    assert expanded == compaction_expected(study_map.data, raw, compact)
+    assert expanded["stages"][0]["resources"][-1]["route_id"] == l01_route["id"]
     # Amendment (ag) item 1: the stored initial counter, uncollected.
     stored, baseline_data = load_baseline(root)
     assert stored == INITIAL_WARNING_SIGNATURES

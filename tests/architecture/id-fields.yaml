@@ -246,6 +246,13 @@ fields:
   decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map;
     owner executed in test_arch_idroundtrip'
 - operation: material.span
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+  decision: 'Plan A 2026-11-12: app/handlers/materials.py _pinned_digest compares the
+    opened file''s bytes with the pin, never a known-value lookup (like capture.create);
+    plain string, both spellings accepted like delivery_sha256'
+- operation: material.span
   pointer: /properties/route_id
   kind: route
   lookup: true
