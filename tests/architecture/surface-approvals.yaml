@@ -1,5 +1,17 @@
 schema: 1
 approvals:
+  - key: cli.material-span
+    change: changed
+    plan_ref: "PLAN-A step 2: material-span --material PDF form and --file-sha256 pin; unit/route positionals become optional"
+    pre_approved_by: "Aram 2026-11-12: alright resume mechanical work if any design desicion arises make it and record it"
+  - key: request_schemas.material.search.schema.json
+    change: changed
+    plan_ref: "PLAN-A step 1: section groups, span_pages, expansion and scan_truncated on the search answer"
+    pre_approved_by: "Aram 2026-11-12: alright resume mechanical work if any design desicion arises make it and record it"
+  - key: request_schemas.material.span.schema.json
+    change: changed
+    plan_ref: "PLAN-A step 2: material form request fields"
+    pre_approved_by: "Aram 2026-11-12: alright resume mechanical work if any design desicion arises make it and record it"
   - key: request_schemas.route.patch.schema.json
     change: changed
     plan_ref: "9aeb032: document exact plain-text line ranges alongside PDF pages and transcript windows"

@@ -12671,9 +12671,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28173,9 +28177,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28205,9 +28213,13 @@
           "resource_index": null,
           "extract": true,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28236,9 +28248,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28267,9 +28283,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28298,9 +28318,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28329,9 +28353,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28362,9 +28390,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28397,9 +28429,13 @@
           "resource_index": 0,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28432,9 +28468,13 @@
           "resource_index": 0,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28467,9 +28507,13 @@
           "resource_index": 0,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28500,9 +28544,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42669,9 +42717,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42700,9 +42752,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42732,9 +42788,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42764,9 +42824,13 @@
           "resource_index": 1,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42795,9 +42859,13 @@
           "resource_index": null,
           "extract": true,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42827,9 +42895,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": "X",
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42858,9 +42930,13 @@
           "resource_index": null,
           "extract": false,
           "pages": null,
+          "material": null,
+          "file_sha256": null,
           "expected_snapshot": null,
-          "func": "learning_os.commands.material_span.cmd_material_span"
-        }
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.span"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42880,9 +42956,10 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--pages PAGES]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         unit_id route_id\nlos material-span: error: unrecognized arguments: --bogus-flag-xyz\n",
-          "first_line": "usage: los material-span [-h] [--json] [--stage STAGE_ID]"
-        }
+          "first_line": "usage: los material-span [-h] [--json] [--stage STAGE_ID]",
+          "stderr": "usage: los material-span [-h] [--json] [--stage STAGE_ID]\n                         [--resource-index RESOURCE_INDEX] [--extract]\n                         [--pages PAGES] [--material RELPATH]\n                         [--file-sha256 SHA256]\n                         [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [unit_id] [route_id]\nlos material-span: error: unrecognized arguments: --bogus-flag-xyz\n"
+        },
+        "stdout": ""
       }
     },
     {

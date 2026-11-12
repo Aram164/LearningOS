@@ -687,7 +687,7 @@ def test_capability_schema_check_passes():
 
 
 def _normalize_claim_surface_observation(parser, argv, recorded):
-    """Keep old-source observations; account only for the three added fields.
+    """Keep old-source observations; account only for the five added fields.
 
     Changed command declarations own their usage prefix. Error bodies, exits,
     stdout and all historical argument values remain exact.
@@ -695,13 +695,24 @@ def _normalize_claim_surface_observation(parser, argv, recorded):
     result = copy.deepcopy(recorded)
     command = argv[0] if argv else ""
     additions = {"goal": {"authorize": False, "audit_file": None},
-                 "route-patch": {"claim_evidence": None}}
+                 "route-patch": {"claim_evidence": None},
+                 "material-span": {"material": None, "file_sha256": None}}
     if command not in additions:
         return result
     if "namespace" in result:
         for name, default in additions[command].items():
             assert name not in result["namespace"], (command, name)
             result["namespace"][name] = default
+    elif command == "material-span":
+        # Plan A step 2 changed the usage line; the error body stays exact.
+        prefix, separator, body = result["error"]["stderr"].partition(
+            "los material-span: error:")
+        assert separator and prefix.startswith("usage: los material-span")
+        action = next(action for action in parser._actions
+                      if isinstance(action, argparse._SubParsersAction))
+        usage = action.choices[command].format_usage()
+        result["error"]["stderr"] = usage + separator + body
+        result["error"]["first_line"] = usage.strip().splitlines()[0]
     elif command == "goal":
         frozen_error_cases = {
             ("goal", "X", "--reject", "--reject", "--defer"),

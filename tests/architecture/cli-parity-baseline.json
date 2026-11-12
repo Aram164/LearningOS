@@ -736,12 +736,13 @@
       ]
     },
     "material-span": {
-      "help": "describe one exact route and optionally inspect local content",
+      "help": "describe one exact route, or read pages of one PDF by path, and optionally inspect local content",
       "description": null,
       "epilog": null,
       "prog": "los material-span",
       "defaults": {
-        "func": "learning_os.commands.material_span.cmd_material_span"
+        "_operation": "'material.span'",
+        "func": "learning_os.adapters.cli.invoke"
       },
       "groups": [],
       "actions": [
@@ -779,12 +780,12 @@
         {
           "option_strings": [],
           "dest": "unit_id",
-          "nargs": null,
+          "nargs": "?",
           "const_repr": "None",
           "default_repr": "None",
           "type": null,
           "choices": null,
-          "required": true,
+          "required": false,
           "help": null,
           "metavar": null,
           "action": "store"
@@ -792,12 +793,12 @@
         {
           "option_strings": [],
           "dest": "route_id",
-          "nargs": null,
+          "nargs": "?",
           "const_repr": "None",
           "default_repr": "None",
           "type": null,
           "choices": null,
-          "required": true,
+          "required": false,
           "help": null,
           "metavar": null,
           "action": "store"
@@ -860,6 +861,36 @@
           "required": false,
           "help": "with --extract on a PDF: explicit page ranges in the locator house style (e.g. \"pdf pp. 21-26\"); replaces the route locator's page selection for this call, still capped at 20 pages per call",
           "metavar": "PAGES",
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--material"
+          ],
+          "dest": "material",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "PDF-only form instead of UNIT ROUTE: a regular PDF's path relative to the materials root, as a material-search hit's material_reference names it (including _unsorted/); needs --extract and --pages; absolute paths, traversal, symlinks below the root and .flat refuse",
+          "metavar": "RELPATH",
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--file-sha256"
+          ],
+          "dest": "file_sha256",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "refuse with exit 3 unless the opened file hashes to this digest (a search hit's file_sha256), so a stale reference never reads changed bytes; the route form pins a single-file route",
+          "metavar": "SHA256",
           "action": "store"
         },
         {
