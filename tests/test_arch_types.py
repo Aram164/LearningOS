@@ -19,7 +19,15 @@ def test_new_production_modules_have_strict_coverage():
     current = {path.relative_to(ROOT).as_posix()
                for path in (ROOT / "tools/learning_os").rglob("*.py")}
     checked = set(config["files"])
-    assert not checked - current, f"stale strict modules: {sorted(checked - current)}"
+    # Top-level tools/*.py scripts (the hook entrypoint study_hooks.py, like
+    # seal_envelope.py) sit outside the learning_os package the walk below
+    # covers. The files list may also name such existing scripts so a new
+    # production entrypoint is strict-checked instead of silently untyped; a
+    # listed path that does not exist still fails the check above.
+    tools_scripts = {path.relative_to(ROOT).as_posix()
+                     for path in (ROOT / "tools").glob("*.py")}
+    assert not checked - current - tools_scripts, (
+        f"stale strict modules: {sorted(checked - current - tools_scripts)}")
     assert not current - legacy - checked, f"new modules missing strict coverage: {sorted(current - legacy - checked)}"
 
 

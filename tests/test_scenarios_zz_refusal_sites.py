@@ -3378,8 +3378,9 @@ def _prove_study_overdue(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
 def _prove_study_adoptable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
     """An ended session's entries refuse another session's new span (fixture-inexpressible).
 
-    A recorded end comes from the Stop hook, and one scenario clock cannot
-    express two idle hours; the proof records the end through the store.
+    A recorded end comes from the SessionEnd hook (ADR-021 decision 5: Stop
+    never records an end), and one scenario clock cannot express two idle
+    hours; the proof records the end through the store.
     """
     from learning_os.store.materials.reading_cards import ReadingStore
 
@@ -3388,8 +3389,7 @@ def _prove_study_adoptable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None
                              tmp_path, monkeypatch)
     assert outcome.ok is True
     store = ReadingStore(root)
-    for index in range(3):
-        store.stop(_STUDY_S1, continuing=index > 0)
+    store.session_end(_STUDY_S1)
     (tmp_path / "second").mkdir()
     outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(3, _STUDY_S2),
                                  tmp_path / "second", monkeypatch)

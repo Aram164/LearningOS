@@ -23,6 +23,7 @@ from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.materials.reading_cards import (
     ADOPT_IDLE,
     MAX_OPEN_ENTRIES,
+    Read,
     ReadingStore,
     admit_card,
     store_root,
@@ -136,6 +137,12 @@ def test_the_study_read_nests_the_unchanged_material_span_answer(world):
     assert plain["contract"] == "material-span-v1" and "study" not in plain
 
 
+def test_a_discontiguous_selection_refuses_one_read_per_contiguous_range(world):
+    message = _refused(_read(world, A, "pdf pp. 2 and 4"), "discontiguous")
+    assert '--pages "pdf p. 2"' in message and '--pages "pdf p. 4"' in message
+    assert _store(world).entries() == []
+
+
 # ---- the turn cap -------------------------------------------------------------------
 
 
@@ -203,7 +210,13 @@ def test_a_recorded_end_makes_a_session_adoptable_at_once(world):
     store = _store(world)
     for index in range(3):
         store.stop(A, continuing=index > 0)
+    # Stop asks and marks overdue but never records an end (ADR-021 decision 5):
+    # the session can still resume, so its entries are not adoptable yet.
+    still_live = _settle(world, B, "--adopt", A)
+    assert still_live.returncode != 0 and "still live" in still_live.stderr
+    store.session_end(A)
     adopted = _ok(_settle(world, B, "--adopt", A))
+    assert adopted["replayed"] is False
     assert [row["entry"] for row in adopted["entries"]] == [entry]
 
 
@@ -286,14 +299,29 @@ def test_coverage_is_page_containment_and_redundant_needs_a_containing_card(worl
     redundant = _ok(_settle(world, A, narrow, "--dismiss", "redundant", "--covering-card", card))
     assert redundant["outcome"] == "dismissed-redundant"
     contained = _ok(_read(world, B, "pdf p. 3"))
+    # The card covers every caller; A's own dismissal of the narrow entry does
+    # not cover B (ADR-021 decision 4), so only the card is coverage here.
     assert contained["study"]["reads"][0] == {**contained["study"]["reads"][0], "state": "covered",
-                                              "entry": None, "covered_by": [card, narrow]}
+                                              "entry": None, "covered_by": [card]}
     straddle = _ok(_read(world, B, "pdf pp. 3-5"))
     assert straddle["study"]["reads"][0]["state"] == "opened"
     refused = _settle(world, B, _entry(straddle), "--dismiss", "redundant", "--covering-card", card)
     assert refused.returncode != 0 and "does not hold pdf pp. 3-5" in refused.stderr
     _ok(_settle(world, B, _entry(straddle), "--dismiss", "irrelevant", "--reason", "a worked aside"))
-    assert _ok(_read(world, A, "pdf p. 5"))["study"]["reads"][0]["state"] == "covered"
+    straddle_entry = _entry(straddle)
+    # A dismissal closes the obligation only for the dismissing session (ADR-021
+    # decision 4): A's later read of the dismissed page still opens, and B's
+    # dismissal is surfaced as prior-dismissal memory, never as coverage.
+    later = _ok(_read(world, A, "pdf p. 5"))
+    assert later["study"]["reads"][0]["state"] == "opened"
+    assert [row["kind"] for row in later["study"]["memory"]] == ["prior-dismissal"]
+    assert later["study"]["memory"][0]["entry"] == straddle_entry
+    assert later["study"]["memory"][0]["outcome"] == "dismissed-irrelevant"
+    assert later["study"]["memory"][0]["reason"] == "a worked aside"
+    # B's own re-read of the dismissed range stays covered by its dismissal.
+    own = _ok(_read(world, B, "pdf p. 5"))
+    assert own["study"]["reads"][0] == {**own["study"]["reads"][0], "state": "covered",
+                                        "entry": None, "covered_by": [straddle_entry]}
 
 
 def test_cards_follow_the_bytes_not_the_path(world):
@@ -421,6 +449,44 @@ def test_study_scope_serves_compact_cards_and_plain_calls_do_not(world):
     served = context["study_cards"]["items"][0]
     assert served["review"] == "unreviewed" and "pointers" not in served
     assert "study_cards" not in _ok(_los(world, "material-context", "result"))
+
+
+# ---- durability ------------------------------------------------------------------------
+
+
+def test_a_torn_log_tail_is_truncated_before_the_next_append(tmp_path):
+    store = ReadingStore(Path(__file__).resolve().parents[1], root=tmp_path / "store")
+    read = Read(digest="a" * 64, material=BOOK, start=1, end=1, text_sha256="b" * 64)
+    entry = store.admit(A, [read]).opened[0]["entry"]
+    log = store.root / "log" / f"{A}.jsonl"
+    with log.open("a", encoding="utf-8") as handle:
+        handle.write('{"record":"log","torn":')  # a crash mid-append leaves partial bytes
+    saved = store.save(A, entry, json.loads(_card(1, 1)))
+    assert saved.outcome == "saved"
+    lines = log.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1 and json.loads(lines[0])["outcome"] == "saved"
+
+
+def test_a_crash_mid_commit_is_completed_by_the_journal_replay(tmp_path, monkeypatch):
+    store = ReadingStore(Path(__file__).resolve().parents[1], root=tmp_path / "store")
+    read = Read(digest="a" * 64, material=BOOK, start=1, end=1, text_sha256="b" * 64)
+    entry = store.admit(A, [read]).opened[0]["entry"]
+
+    def crash(self, operations):
+        raise RuntimeError("crash mid-commit")
+
+    monkeypatch.setattr(ReadingStore, "_apply", crash)
+    with pytest.raises(RuntimeError):
+        store.save(A, entry, json.loads(_card(1, 1)))
+    monkeypatch.undo()
+    assert list((store.root / ".journal").glob("*.json")), "the journal outlives the crash"
+    replayed = store.save(A, entry, json.loads(_card(1, 1)))
+    assert replayed.replayed is True and replayed.outcome == "saved"
+    assert replayed.card is not None and replayed.card["version"] == 1
+    assert store.entries(session=A) == []
+    assert not list((store.root / ".journal").glob("*.json"))
+    lines = (store.root / "log" / f"{A}.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1 and json.loads(lines[0])["outcome"] == "saved"
 
 
 # ---- admission unit checks ----------------------------------------------------------------

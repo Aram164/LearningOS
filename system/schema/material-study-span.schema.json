@@ -38,12 +38,13 @@
           }
         },
         "memory": {
-          "description": "What is already known about the read pages: exact durable analysis notes first, then current unreviewed private cards. Never coverage evidence.",
+          "description": "What is already known about the read pages: exact durable analysis notes first, then current unreviewed private cards, then prior settled dismissals of the range from other sessions (prior-dismissal, informational). Never coverage evidence.",
           "type": "array",
           "items": {
             "type": "object",
             "required": ["kind"],
-            "properties": {"kind": {"enum": ["analysis-note", "card", "dismissal"]}}
+            "properties": {"kind": {"enum": ["analysis-note", "card", "dismissal",
+                                             "prior-dismissal"]}}
           }
         },
         "open_entries": {

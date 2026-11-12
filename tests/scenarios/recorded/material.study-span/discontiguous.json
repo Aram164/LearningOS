@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: source-demo-book/lecture-01.pdf pdf pp. 2-4 names 2 discontiguous page runs, and one excerpt is one combined text, so a study read of it cannot carry the exact digest of the pages a card would cover; issue one read per contiguous range, e.g. --pages \"pdf p. 2\" then --pages \"pdf p. 4\"\n",
+  "stdout": "",
+  "stdout_json": null
+}

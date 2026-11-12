@@ -1188,9 +1188,18 @@ def _study_reads(ctx, payload) -> tuple[list[Read], list[dict]]:
                 "one excerpt, so a study read returns no text and opens no entry; read fewer "
                 f'pages, e.g. --pages "pdf p. {first}"',
                 site=f"{ctx.operation}.clipped", prefixed=True, exit_code=2)
+        runs = _span_runs(pages)
+        if len(runs) > 1:
+            raise WriteRefused(
+                f"{material} {pages_label(min(pages), max(pages))} names {len(runs)} "
+                "discontiguous page runs, and one excerpt is one combined text, so a "
+                "study read of it cannot carry the exact digest of the pages a card "
+                "would cover; issue one read per contiguous range, e.g. "
+                f'--pages "pdf p. {runs[0][0]}" then --pages "pdf p. {runs[-1][0]}"',
+                site=f"{ctx.operation}.discontiguous", prefixed=True, exit_code=2)
         digest = str(span["file_sha256"]).removeprefix("sha256:")
         text_sha = hashlib.sha256(excerpt.encode("utf-8")).hexdigest()
-        for start, end in _span_runs(pages):
+        for start, end in runs:
             reads.append(Read(digest=digest, material=material, start=start, end=end,
                               text_sha256=text_sha))
             described.append({"material": material, "file_sha256": f"sha256:{digest}",
@@ -1292,6 +1301,13 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
                                    "outcome": item["settlement"]["outcome"],
                                    "reason": item["settlement"].get("reason"),
                                    "covering_card": item["settlement"].get("covering_card")})
+        for item in state.get("prior_dismissals", []):
+            if ("prior-dismissal", item["entry"]) not in seen:
+                seen.add(("prior-dismissal", item["entry"]))
+                memory.append({"kind": "prior-dismissal", **entry_view(item),
+                               "outcome": item["settlement"]["outcome"],
+                               "reason": item["settlement"].get("reason"),
+                               "covering_card": item["settlement"].get("covering_card")})
         entry = state.get("entry")
         rows.append({**described_read, "state": state["state"],
                      "entry": entry["entry"] if entry else None, "covered_by": covered_by})

@@ -15,13 +15,20 @@ They make the reading memory something an agent cannot miss:
   out of the trees that hold raw page text or the private store; edits go to
   temporary scratch only. Anything else refuses with the supported command.
 - ``stop``: at turn end asks the agent to settle open entries, at most twice,
-  then marks the rest overdue and records the end.
+  then marks the rest overdue. A turn end never records a session end.
+- ``session-end``: records the session's end (SessionEnd), so its unsettled
+  entries become adoptable; the two-hour idle rule covers ungraceful exits.
 - ``profile --out DIR``: writes a disposable ``DIR/.claude/settings.json`` that
   wires these hooks to this checkout. It never overwrites an existing file;
   installing a profile in the live LearningOS folder is a separate operation.
 
 Hook input arrives as JSON on stdin; decisions leave as JSON on stdout. Any
-failure inside ``pre-tool-use`` denies the call (fail closed).
+failure inside ``pre-tool-use`` denies the call (fail closed), and the profile
+registers it with ``onFailure: "block"`` (Claude Code v2.1.295+) so a hook that
+never starts blocks too. SessionStart and Stop keep the default failure
+behaviour: a blocked Stop could loop the turn on a transient failure, and a
+failed SessionStart still fails capture closed at the gateway, because
+PreToolUse-injected study reads create their own session records.
 """
 
 from __future__ import annotations
@@ -38,7 +45,7 @@ import string
 import sys
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import cast
 
 TOOLS = Path(__file__).resolve().parent
 CORE = TOOLS.parent
@@ -146,7 +153,7 @@ def _looks_like_path(value: str) -> bool:
         (".pdf", ".md", ".txt", ".json", ".yaml", ".sqlite3", ".jsonl"))
 
 
-def _strings(value: Any) -> list[str]:
+def _strings(value: object) -> list[str]:
     if isinstance(value, str):
         return [value]
     if isinstance(value, dict):
@@ -470,7 +477,7 @@ def _subtree_reaches(root: Path, protected: list[Path]) -> bool:
     return False
 
 
-def check_file_tool(tool: str, tool_input: dict, cwd: Path) -> None:
+def check_file_tool(tool: str, tool_input: dict[str, object], cwd: Path) -> None:
     protected = protected_reads(CORE)
     if tool in READ_TOOLS:
         target = tool_input.get(READ_TOOLS[tool])
@@ -506,20 +513,23 @@ def check_file_tool(tool: str, tool_input: dict, cwd: Path) -> None:
 
 # --------------------------------------------------------------------- events
 
-def _decision(decision: str, reason: str, updated: dict | None = None) -> dict:
-    output: dict[str, Any] = {"hookEventName": "PreToolUse", "permissionDecision": decision,
+def _decision(decision: str, reason: str,
+              updated: dict[str, object] | None = None) -> dict[str, object]:
+    output: dict[str, object] = {"hookEventName": "PreToolUse", "permissionDecision": decision,
                               "permissionDecisionReason": reason}
     if updated is not None:
         output["updatedInput"] = updated
     return {"hookSpecificOutput": output}
 
 
-def pre_tool_use(event: dict) -> dict:
+def pre_tool_use(event: dict[str, object]) -> dict[str, object]:
     """The fence for one tool call (step 4); refusals carry the supported form."""
     session = event.get("session_id")
     tool = event.get("tool_name")
-    tool_input = event.get("tool_input") if isinstance(event.get("tool_input"), dict) else {}
-    cwd = Path(event.get("cwd") or os.getcwd())
+    raw_input = event.get("tool_input")
+    tool_input: dict[str, object] = raw_input if isinstance(raw_input, dict) else {}
+    raw_cwd = event.get("cwd")
+    cwd = Path(raw_cwd if isinstance(raw_cwd, str) and raw_cwd else os.getcwd())
     try:
         if not valid_session(session):
             raise Refused("the study profile needs Claude Code's session id in the hook input")
@@ -548,7 +558,7 @@ def pre_tool_use(event: dict) -> dict:
                                  f"{type(exc).__name__}: {exc}")
 
 
-def session_start(event: dict) -> str:
+def session_start(event: dict[str, object]) -> str:
     """The injected entry text: what to run first and what this session owes."""
     session = event.get("session_id")
     lines = [
@@ -592,7 +602,7 @@ def session_start(event: dict) -> str:
     return "\n".join(lines)
 
 
-def stop(event: dict) -> dict | None:
+def stop(event: dict[str, object]) -> dict[str, object] | None:
     """Turn end (C1.3): ask at most twice, then mark open entries overdue."""
     session = event.get("session_id")
     if not valid_session(session):
@@ -611,16 +621,35 @@ def stop(event: dict) -> dict | None:
         return {"decision": "block", "reason": (
             f"Settle your reading entries before ending the turn (ask {decision.asked} of 2): "
             f"{listing}. For each, save a card or dismiss it: "
-            + "  ||  ".join(settle_command(row["entry"]) for row in decision.entries))}
+            + "  ||  ".join(settle_command(cast(str, row["entry"]))
+                            for row in decision.entries))}
     if decision.overdue:
         return {"systemMessage": "Reading entries left unsettled are now overdue: "
-                + ", ".join(row["entry"] for row in decision.overdue)}
+                + ", ".join(cast(str, row["entry"]) for row in decision.overdue)}
     return None
+
+
+def session_end(event: dict[str, object]) -> str:
+    """Session termination (C7): record the end so adoption can proceed."""
+    session = event.get("session_id")
+    if not valid_session(session):
+        return ""
+    store = ReadingStore(CORE)
+    try:
+        if not store.exists():
+            return ""
+        store.session_end(session)
+    except ReadingStoreError as exc:
+        print(f"study profile: the reading store is unavailable at session end: {exc}",
+              file=sys.stderr)
+        return ""
+    return ("Reading memory: session end recorded; this session's unsettled "
+            "entries are adoptable.")
 
 
 # -------------------------------------------------------------------- profile
 
-def profile_settings(core: Path = CORE) -> dict:
+def profile_settings(core: Path = CORE) -> dict[str, object]:
     """The study profile's settings for one checkout: hooks plus deny rules."""
     python = shlex.quote(str(core / ".venv" / "bin" / "python"))
     hooks = shlex.quote(str(core / "tools" / "study_hooks.py"))
@@ -635,9 +664,13 @@ def profile_settings(core: Path = CORE) -> dict:
                                          "timeout": 60}]}],
             "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command",
                                                        "command": f"{python} {hooks} pre-tool-use",
-                                                       "timeout": 60}]}],
+                                                       "timeout": 60,
+                                                       "onFailure": "block"}]}],
             "Stop": [{"hooks": [{"type": "command", "command": f"{python} {hooks} stop",
                                  "timeout": 60}]}],
+            "SessionEnd": [{"hooks": [{"type": "command",
+                                       "command": f"{python} {hooks} session-end",
+                                       "timeout": 60}]}],
         },
         "permissions": {"deny": deny},
     }
@@ -662,13 +695,14 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("session-start", help="SessionStart hook: hook JSON on stdin")
     sub.add_parser("pre-tool-use", help="PreToolUse hook: hook JSON on stdin")
     sub.add_parser("stop", help="Stop hook: hook JSON on stdin")
+    sub.add_parser("session-end", help="SessionEnd hook: hook JSON on stdin")
     profile = sub.add_parser("profile", help="write a disposable study profile into DIR/.claude")
     profile.add_argument("--out", required=True, type=Path,
                          help="the LearningOS-shaped folder that receives .claude/settings.json")
     return parser
 
 
-def _read_event() -> dict:
+def _read_event() -> dict[str, object]:
     try:
         value = json.loads(sys.stdin.read() or "{}")
     except ValueError:
@@ -687,6 +721,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.event == "session-start":
         print(session_start(event))
+        return 0
+    if args.event == "session-end":
+        message = session_end(event)
+        if message:
+            print(message)
         return 0
     result = stop(event)
     if result is not None:

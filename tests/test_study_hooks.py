@@ -259,6 +259,26 @@ def test_stop_asks_twice_then_marks_overdue_and_session_start_reports_it(world):
     assert "now overdue" in replies[2]["systemMessage"]
     start = _hook(world, "session-start", {"session_id": S, "source": "resume"})
     assert "1 overdue entries" in start.stdout
+    # Stop only asks and marks overdue; a turn end never records an end, so the
+    # session can still resume and its entries are not adoptable yet
+    # (ADR-021 decision 5).
+    other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
+    assert "No adoptable entries." in other.stdout
+    assert "--adopt" not in other.stdout
+    ended = _hook(world, "session-end", {"session_id": S})
+    assert ended.returncode == 0, ended.stderr
+    other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
+    assert f"los material-card-settle --adopt {S}" in other.stdout
+
+
+def test_session_end_records_the_end_and_an_unknown_session_is_harmless(world):
+    _, _, updated = _pre(world, "Bash", {"command": (
+        f"los material-span --material {BOOK} --pages 'pdf p. 4' --extract")})
+    assert subprocess.run(updated["command"], shell=True, capture_output=True).returncode == 0
+    assert _hook(world, "session-end", {"session_id": OTHER}).returncode == 0
+    result = _hook(world, "session-end", {"session_id": S})
+    assert result.returncode == 0, result.stderr
+    assert "session end recorded" in result.stdout
     other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
     assert f"los material-card-settle --adopt {S}" in other.stdout
 
@@ -300,8 +320,9 @@ def test_the_profile_writer_wires_the_hooks_and_never_overwrites(tmp_path):
                              "--out", str(tmp_path)], capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stderr
     settings = json.loads((tmp_path / ".claude" / "settings.json").read_text())
-    assert set(settings["hooks"]) == {"SessionStart", "PreToolUse", "Stop"}
+    assert set(settings["hooks"]) == {"SessionStart", "PreToolUse", "Stop", "SessionEnd"}
     assert settings["hooks"]["PreToolUse"][0]["matcher"] == "*"
+    assert settings["hooks"]["PreToolUse"][0]["hooks"][0]["onFailure"] == "block"
     assert any(rule.startswith("Read(//") and "/materials/**" in rule
                for rule in settings["permissions"]["deny"])
     again = subprocess.run([sys.executable, str(ROOT / "tools/study_hooks.py"), "profile",

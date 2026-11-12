@@ -35,22 +35,38 @@ the hooks, never left to a prompt) and "keep cards private".
 4. **The gate.** A study read (`material.study-span`) computes the unchanged
    `material-span-v1` answer, nests it under `span` in `material-study-span-v1`,
    and before returning any text persists an open reading entry for every PDF
-   span that no current card or settled dismissal of the same digest contains
-   (page containment). If the entry cannot be persisted, the read refuses. A
-   session may hold four open entries; a new uncovered span refuses while the
-   session holds an overdue entry or any ended or idle session's entries are
+   span that no current card of the same digest contains, and that none of the
+   caller's own settled dismissals contains (page containment). Saved cards
+   provide reusable coverage for every caller; a dismissal closes the
+   obligation for the dismissing session only — another session's dismissal
+   never covers a later read, and settled dismissals of the range from any
+   session are surfaced in the study answer as `prior-dismissal` memory, never
+   as coverage. If the entry cannot be persisted, the read refuses. A session
+   may hold four open entries; a new uncovered span refuses while the session
+   holds an overdue entry or any ended or idle session's entries are
    adoptable. Pending spans, covered spans, search, context, settlement and
    adoption always stay available, and every refusal names the entries and the
-   exact settle or adopt command. A clipped, truncated or non-PDF extraction
-   returns no text and opens nothing.
+   exact settle or adopt command. A clipped, truncated or non-PDF extraction,
+   and a discontiguous `--pages` selection, return no text and open nothing.
 5. **Session identity comes from the harness.** `tools/study_hooks.py` runs as
    the study profile's Claude Code hooks. `PreToolUse` injects `--session` from
    its own input, refuses an agent-supplied session, rewrites `material-span
    --extract` into the study read, keeps Bash to an allowlist and keeps file tools
-   out of every tree that holds raw page text or the store. `Stop` asks twice,
-   then marks the turn's open entries overdue and records the end. Adoption is
-   the one agent-supplied session: it is accepted only for a session with a
-   recorded end or no gateway call for two hours.
+   out of every tree that holds raw page text or the store; its handler is
+   registered with `onFailure: "block"` (Claude Code v2.1.295+), so a hook that
+   fails to start or crashes cannot let a call past the fence — capture fails
+   closed at the harness level too. `Stop` fires per turn: it asks twice, then
+   marks the turn's open entries overdue; it never records an end. `SessionEnd`
+   fires when a session terminates and records that end. Inactivity covers
+   ungraceful exits: a session with no gateway call for two hours (the default
+   threshold; a trial world injects a shorter one for deterministic G2 runs) is
+   adoptable without a recorded end. Adoption is the one agent-supplied
+   session: it is accepted only for a session with a recorded end and no later
+   call, or no gateway call for two hours. SessionStart and Stop keep the
+   default hook failure behaviour: a blocked Stop could loop the turn on a
+   transient failure, and a failed SessionStart still fails capture closed at
+   the gateway, because PreToolUse-injected study reads create their own
+   session records.
 6. **Unreviewed, never evidence.** Served cards say `review: unreviewed` and
    `coverage_evidence: false`; concept ids are checked when a card is served and
    dangling ones are marked. A card never counts as source-coverage evidence.
@@ -65,7 +81,13 @@ live folder is a separate operation, not part of this decision.
 ## Consequences
 
 - The private store has no Git history; versions and the log stand in for it,
-  and backups are its only copy.
+  and backups are its only copy. A crash mid-append can leave a torn last line
+  in `log/<session>.jsonl`; every append first truncates the file to its last
+  complete line, so replay never meets a partial line.
+- A study read refuses a discontiguous `--pages` selection
+  (`material.study-span.discontiguous`): the returned excerpt is one combined
+  text, so only a read of one contiguous range gives its entry the exact
+  digest of the pages it names. Read each contiguous range separately.
 - Under the profile, Markdown and notebook materials are not readable as study
   reads (cards are keyed by PDF page range).
 - Obsidian's `material-span` and the manifest are unchanged, so the UI needs no

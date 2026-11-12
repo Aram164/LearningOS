@@ -5,7 +5,7 @@ The store sits beside the repository, never inside it::
     <LearningOS>/reading-memory/
         cards/<sha256>/p<start>-<end>/v<N>.json   immutable card versions
         pending/<entry>.json                     open or overdue reading debts
-        settled/<entry>.json                     settled debts (dismissals cover)
+        settled/<entry>.json                     settled debts (a dismissal covers its session)
         sessions/<session>.json                  last call, recorded end, Stop asks
         log/<session>.jsonl                      one line per save, dismissal, adoption
         .journal/  .lock                         crash-safe multi-file updates
@@ -19,10 +19,13 @@ PDF ``inspected_range``) and validate against
 
 A card is keyed by file digest and page range; the path is only where the
 bytes were last seen, so moving a file keeps its cards. A range is covered when
-every page lies inside one current card or one settled dismissal for the same
-digest. Every write runs under one ``flock`` and goes through a journal, so a
+every page lies inside one current card for the same digest, or inside one
+settled dismissal of the caller's own session — another session's dismissal
+never covers a later read, it is surfaced as prior-dismissal memory instead.
+Every write runs under one ``flock`` and goes through a journal, so a
 settlement writes the card version, closes the entry and appends the log line
-as one update even across a crash.
+as one update even across a crash; an append first repairs a torn journal
+tail left by a crash.
 
 This module decides; it never raises a gateway refusal. Callers turn the
 returned decisions into typed refusals with their own sites.
@@ -41,7 +44,7 @@ import stat
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TypeGuard, cast
 
 from learning_os.store import observations
 
@@ -99,8 +102,8 @@ def store_root(core_root: Path) -> Path:
     return Path(core_root).resolve().parent / STORE_DIRNAME
 
 
-def valid_session(value: object) -> bool:
-    """A Claude Code session id: a lowercase canonical UUID."""
+def valid_session(value: object) -> TypeGuard[str]:
+    """A Claude Code session id: a lowercase canonical UUID (narrows to str)."""
     return isinstance(value, str) and SESSION_RE.fullmatch(value) is not None
 
 
@@ -136,12 +139,12 @@ def _parse_time(value: object) -> dt.datetime | None:
     return parsed if parsed.tzinfo is not None else parsed.astimezone()
 
 
-def _canonical(value: Any) -> bytes:
+def _canonical(value: object) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True,
                       separators=(",", ":")).encode("utf-8")
 
 
-def _record_bytes(value: dict[str, Any]) -> bytes:
+def _record_bytes(value: dict[str, object]) -> bytes:
     return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=1) + "\n").encode("utf-8")
 
 
@@ -151,6 +154,11 @@ def _contains(outer: dict[str, int], start: int, end: int) -> bool:
 
 def _overlaps(outer: dict[str, int], start: int, end: int) -> bool:
     return outer["start"] <= end and start <= outer["end"]
+
+
+def _row_range(row: dict[str, object]) -> dict[str, int]:
+    """The inspected_range of a loaded record: a JSON object with start and end."""
+    return cast("dict[str, int]", row["inspected_range"])
 
 
 def settle_command(entry: str) -> str:
@@ -188,11 +196,11 @@ class Admission:
     """
 
     refusal: str | None
-    states: list[dict[str, Any]] = field(default_factory=list)
-    opened: list[dict[str, Any]] = field(default_factory=list)
-    blocking: list[dict[str, Any]] = field(default_factory=list)
-    adoptable: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
-    open_entries: list[dict[str, Any]] = field(default_factory=list)
+    states: list[dict[str, object]] = field(default_factory=list)
+    opened: list[dict[str, object]] = field(default_factory=list)
+    blocking: list[dict[str, object]] = field(default_factory=list)
+    adoptable: dict[str, list[dict[str, object]]] = field(default_factory=dict)
+    open_entries: list[dict[str, object]] = field(default_factory=list)
 
 
 @dataclass
@@ -200,10 +208,10 @@ class Settlement:
     """One settlement or adoption, as written or as replayed."""
 
     outcome: str
-    entries: list[dict[str, Any]]
-    card: dict[str, Any] | None = None
+    entries: list[dict[str, object]]
+    card: dict[str, object] | None = None
     replayed: bool = False
-    remaining: list[dict[str, Any]] = field(default_factory=list)
+    remaining: list[dict[str, object]] = field(default_factory=list)
 
 
 @dataclass
@@ -223,9 +231,9 @@ class StopDecision:
     """What the Stop hook does at turn end (C1.3)."""
 
     block: bool
-    entries: list[dict[str, Any]]
+    entries: list[dict[str, object]]
     asked: int
-    overdue: list[dict[str, Any]] = field(default_factory=list)
+    overdue: list[dict[str, object]] = field(default_factory=list)
 
 
 class ReadingStore:
@@ -320,8 +328,39 @@ class ReadingStore:
         os.replace(temp, path)
         self._fsync_dir(path.parent)
 
-    def _append_line(self, path: Path, line: dict[str, Any], key: str) -> None:
+    def _repair_log_tail(self, path: Path) -> None:
+        """Truncate a torn JSONL tail to its last complete newline (fsync).
+
+        A crash mid-append leaves partial bytes after the last newline, which
+        key-based dedupe would silently skip forever; nothing else truncates
+        them. Appends run under the store lock, so repairing here is safe.
+        """
+        try:
+            descriptor = os.open(path, os.O_RDWR | os.O_NOFOLLOW)
+        except FileNotFoundError:
+            return
+        except OSError as exc:
+            raise ReadingStoreError(f"the reading log is unreadable: {path}: {exc}") from exc
+        try:
+            size = os.fstat(descriptor).st_size
+            if size == 0:
+                return
+            data = b""
+            while len(data) < size:
+                chunk = os.read(descriptor, size - len(data))
+                if not chunk:
+                    break
+                data += chunk
+            if data.endswith(b"\n"):
+                return
+            os.ftruncate(descriptor, data.rfind(b"\n") + 1)
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+
+    def _append_line(self, path: Path, line: dict[str, object], key: str) -> None:
         path.parent.mkdir(mode=_DIR_MODE, parents=True, exist_ok=True)
+        self._repair_log_tail(path)
         with contextlib.suppress(FileNotFoundError):
             for existing in path.read_text(encoding="utf-8").splitlines():
                 with contextlib.suppress(ValueError):
@@ -335,20 +374,21 @@ class ReadingStore:
         finally:
             os.close(descriptor)
 
-    def _apply(self, operations: list[dict[str, Any]]) -> None:
+    def _apply(self, operations: list[dict[str, object]]) -> None:
         for operation in operations:
-            path = self.root / operation["path"]
+            path = self.root / cast(str, operation["path"])
             if operation["op"] == "write":
-                self._write_file(path, operation["data"].encode("utf-8"))
+                self._write_file(path, cast(str, operation["data"]).encode("utf-8"))
             elif operation["op"] == "delete":
                 with contextlib.suppress(FileNotFoundError):
                     path.unlink()
             elif operation["op"] == "append":
-                self._append_line(path, operation["line"], operation["key"])
+                self._append_line(path, cast("dict[str, object]", operation["line"]),
+                                  cast(str, operation["key"]))
             else:
                 raise ReadingStoreError(f"unknown journal operation: {operation['op']!r}")
 
-    def _commit(self, operations: list[dict[str, Any]]) -> None:
+    def _commit(self, operations: list[dict[str, object]]) -> None:
         """Apply several file changes as one update (journal, then apply, then drop)."""
         if not operations:
             return
@@ -377,7 +417,7 @@ class ReadingStore:
                 raise ReadingStoreError(
                     f"the reading store holds an unreadable journal {path.name}: {exc}") from exc
 
-    def _load(self, path: Path) -> dict[str, Any]:
+    def _load(self, path: Path) -> dict[str, object]:
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
@@ -386,7 +426,7 @@ class ReadingStore:
             raise ReadingStoreError(f"reading-store record is not an object: {path}")
         return value
 
-    def _validated(self, record: dict[str, Any]) -> str:
+    def _validated(self, record: dict[str, object]) -> str:
         from learning_os.store.contracts.json_schema import validate_contract
 
         try:
@@ -395,21 +435,22 @@ class ReadingStore:
             raise ReadingStoreError(str(exc)) from exc
         return _record_bytes(record).decode("utf-8")
 
-    def _write_op(self, relative: str, record: dict[str, Any]) -> dict[str, Any]:
+    def _write_op(self, relative: str, record: dict[str, object]) -> dict[str, object]:
         return {"op": "write", "path": relative, "data": self._validated(record)}
 
     # ----------------------------------------------------------------- reads
 
-    def entries(self, *, session: str | None = None, settled: bool = False) -> list[dict[str, Any]]:
+    def entries(self, *, session: str | None = None, settled: bool = False) -> list[dict[str, object]]:
         directory = self.root / ("settled" if settled else "pending")
         if not directory.is_dir():
             return []
         rows = [self._load(path) for path in sorted(directory.glob("rd-*.json"))]
         if session is not None:
             rows = [row for row in rows if row.get("session") == session]
-        return sorted(rows, key=lambda row: (row.get("opened_at") or "", row["entry"]))
+        return sorted(rows, key=lambda row: (cast(str, row.get("opened_at") or ""),
+                                             cast(str, row["entry"])))
 
-    def entry(self, name: str) -> tuple[dict[str, Any] | None, bool]:
+    def entry(self, name: str) -> tuple[dict[str, object] | None, bool]:
         """The entry and whether it is settled, or (None, False)."""
         if ENTRY_RE.fullmatch(name) is None:
             return None, False
@@ -419,12 +460,12 @@ class ReadingStore:
                 return self._load(path), settled
         return None, False
 
-    def cards(self, digest: str) -> list[dict[str, Any]]:
+    def cards(self, digest: str) -> list[dict[str, object]]:
         """The newest version of every card for one digest."""
         directory = self.root / "cards" / digest
         if DIGEST_RE.fullmatch(digest) is None or not directory.is_dir():
             return []
-        found = []
+        found: list[dict[str, object]] = []
         for range_dir in sorted(directory.iterdir()):
             if _RANGE_DIR_RE.fullmatch(range_dir.name) is None or not range_dir.is_dir():
                 continue
@@ -434,16 +475,16 @@ class ReadingStore:
                 found.append(self._load(versions[-1][1]))
         return found
 
-    def all_cards(self) -> list[dict[str, Any]]:
+    def all_cards(self) -> list[dict[str, object]]:
         directory = self.root / "cards"
         if not directory.is_dir():
             return []
-        rows: list[dict[str, Any]] = []
+        rows: list[dict[str, object]] = []
         for digest_dir in sorted(directory.iterdir()):
             rows.extend(self.cards(digest_dir.name))
         return rows
 
-    def card(self, name: str) -> dict[str, Any] | None:
+    def card(self, name: str) -> dict[str, object] | None:
         """The newest version of one card, by its handle."""
         match = CARD_RE.fullmatch(name or "")
         directory = self.root / "cards"
@@ -456,38 +497,62 @@ class ReadingStore:
                     return row
         return None
 
-    def covering(self, digest: str, start: int, end: int) -> list[dict[str, Any]]:
-        """Current cards, then settled dismissals, that contain the range (C4)."""
-        rows: list[dict[str, Any]] = [
+    def covering(self, digest: str, start: int, end: int, *,
+                 session: str) -> list[dict[str, object]]:
+        """Current cards, plus this session's own settled dismissals, for the range (C4).
+
+        A saved card is reusable coverage for every caller. A dismissal closes
+        the obligation only for the session that dismissed it (ADR-021 decision
+        4): another session's one-time judgement never suppresses this
+        session's reading memory.
+        """
+        rows: list[dict[str, object]] = [
             card for card in self.cards(digest)
-            if _contains(card["inspected_range"], start, end)]
-        rows.sort(key=lambda card: (card["inspected_range"]["end"] - card["inspected_range"]["start"],
-                                    card["card"]))
+            if _contains(_row_range(card), start, end)]
+        rows.sort(key=lambda card: (_row_range(card)["end"] - _row_range(card)["start"],
+                                    cast(str, card["card"])))
         for entry in self.entries(settled=True):
-            settlement = entry.get("settlement") or {}
+            settlement = cast("dict[str, object]", entry.get("settlement") or {})
             if (entry["recorded_source_digest"] == digest
+                    and entry.get("session") == session
                     and settlement.get("outcome") in ("dismissed-irrelevant", "dismissed-redundant")
-                    and _contains(entry["inspected_range"], start, end)):
+                    and _contains(_row_range(entry), start, end)):
                 rows.append(entry)
         return rows
 
-    def session(self, name: str) -> dict[str, Any] | None:
+    def prior_dismissals(self, digest: str, start: int, end: int) -> list[dict[str, object]]:
+        """Settled dismissals of this range from any session, for surfacing only.
+
+        Informational, never coverage (ADR-021 decision 4): a study read of a
+        range another session dismissed still opens its own entry, and the
+        answer names the prior dismissal as ``prior-dismissal`` memory.
+        """
+        found: list[dict[str, object]] = []
+        for entry in self.entries(settled=True):
+            settlement = cast("dict[str, object]", entry.get("settlement") or {})
+            if (entry["recorded_source_digest"] == digest
+                    and settlement.get("outcome") in ("dismissed-irrelevant", "dismissed-redundant")
+                    and _contains(_row_range(entry), start, end)):
+                found.append(entry)
+        return found
+
+    def session(self, name: str) -> dict[str, object] | None:
         path = self.root / "sessions" / f"{name}.json"
         return self._load(path) if valid_session(name) and path.is_file() else None
 
-    def _session_record(self, name: str) -> dict[str, Any]:
+    def _session_record(self, name: str) -> dict[str, object]:
         return self.session(name) or {
             "record": "session", "schema_version": 1, "session": name,
             "started_at": None, "last_call_at": None, "ended_at": None, "stop_blocks": 0}
 
-    def _last_activity(self, name: str, entries: Iterable[dict[str, Any]]) -> dt.datetime | None:
+    def _last_activity(self, name: str, entries: Iterable[dict[str, object]]) -> dt.datetime | None:
         record = self.session(name) or {}
         moments = [_parse_time(record.get("last_call_at")), _parse_time(record.get("started_at"))]
         moments += [_parse_time(row.get("opened_at")) for row in entries]
         present = [moment for moment in moments if moment is not None]
         return max(present) if present else None
 
-    def ended(self, name: str, now: dt.datetime, entries: Iterable[dict[str, Any]] = ()) -> bool:
+    def ended(self, name: str, now: dt.datetime, entries: Iterable[dict[str, object]] = ()) -> bool:
         """A recorded end with no later call, or no gateway call for two hours (C7)."""
         record = self.session(name) or {}
         ended_at = _parse_time(record.get("ended_at"))
@@ -497,44 +562,45 @@ class ReadingStore:
         last = self._last_activity(name, entries)
         return last is None or now - last >= ADOPT_IDLE
 
-    def adoptable(self, caller: str | None, now: dt.datetime) -> dict[str, list[dict[str, Any]]]:
+    def adoptable(self, caller: str | None, now: dt.datetime) -> dict[str, list[dict[str, object]]]:
         """Unsettled entries of ended or idle sessions other than the caller."""
-        by_session: dict[str, list[dict[str, Any]]] = {}
+        by_session: dict[str, list[dict[str, object]]] = {}
         for row in self.entries():
             if row["session"] != caller:
-                by_session.setdefault(row["session"], []).append(row)
+                by_session.setdefault(cast(str, row["session"]), []).append(row)
         return {name: rows for name, rows in sorted(by_session.items())
                 if self.ended(name, now, rows)}
 
     # ----------------------------------------------------------------- serve
 
-    def served_card(self, card: dict[str, Any], known_concepts: Iterable[str] | None,
-                    *, compact: bool = False) -> dict[str, Any]:
+    def served_card(self, card: dict[str, object], known_concepts: Iterable[str] | None,
+                    *, compact: bool = False) -> dict[str, object]:
         """One card as reads return it: visibly unreviewed, dangling concepts marked."""
-        rng = card["inspected_range"]
-        concepts = list(card.get("concepts") or [])
+        rng = _row_range(card)
+        concepts = list(cast("list[str]", card.get("concepts") or []))
         known = set(known_concepts) if known_concepts is not None else None
         dangling = [name for name in concepts if known is not None and name not in known]
-        paraphrase = card["paraphrase"]
-        value: dict[str, Any] = {
+        paraphrase = cast(str, card["paraphrase"])
+        value: dict[str, object] = {
             "card": card["card"], "version": card["version"],
             "pages": pages_label(rng["start"], rng["end"]),
             "material": card["material"],
             "file_sha256": f"sha256:{card['recorded_source_digest']}",
-            "kinds": list(card["kinds"]),
+            "kinds": list(cast("list[str]", card["kinds"])),
             "paraphrase": paraphrase if not compact or len(paraphrase) <= 300
             else paraphrase[:297].rstrip() + "...",
             "concepts": concepts, "dangling_concepts": dangling,
             "review": "unreviewed", "coverage_evidence": False,
         }
         if not compact:
-            value["pointers"] = [dict(row) for row in card["pointers"]]
-            value["written"] = dict(card["written"])
+            value["pointers"] = [dict(row) for row in
+                                 cast("list[dict[str, object]]", card["pointers"])]
+            value["written"] = dict(cast("dict[str, object]", card["written"]))
         return value
 
     # ------------------------------------------------------------------ gate
 
-    def _touch_op(self, name: str, now: dt.datetime, *, start: bool = False) -> dict[str, Any]:
+    def _touch_op(self, name: str, now: dt.datetime, *, start: bool = False) -> dict[str, object]:
         record = self._session_record(name)
         record["last_call_at"] = _iso(now)
         if start:
@@ -554,20 +620,22 @@ class ReadingStore:
         moment = now or observations.now()
         with self.locked(create=True):
             mine = self.entries(session=session)
-            states: list[dict[str, Any]] = []
+            states: list[dict[str, object]] = []
             new: list[Read] = []
             for read in reads:
-                covering = self.covering(read.digest, read.start, read.end)
+                covering = self.covering(read.digest, read.start, read.end, session=session)
                 if covering:
                     states.append({"read": read, "state": "covered", "covering": covering})
                     continue
                 pending = next((row for row in mine
                                 if row["recorded_source_digest"] == read.digest
-                                and _contains(row["inspected_range"], read.start, read.end)), None)
+                                and _contains(_row_range(row), read.start, read.end)), None)
                 if pending is not None:
                     states.append({"read": read, "state": "pending", "entry": pending})
                     continue
-                states.append({"read": read, "state": "opened"})
+                states.append({"read": read, "state": "opened",
+                               "prior_dismissals": self.prior_dismissals(
+                                   read.digest, read.start, read.end)})
                 new.append(read)
             admission = Admission(refusal=None, states=states)
             open_rows = [row for row in mine if row["state"] == "open"]
@@ -599,7 +667,7 @@ class ReadingStore:
                     admission.opened.append(record)
                 for state in states:
                     if state["state"] == "opened":
-                        read = state["read"]
+                        read = cast(Read, state["read"])
                         state["entry"] = next(row for row in admission.opened
                                               if row["recorded_source_digest"] == read.digest
                                               and row["inspected_range"] == {"start": read.start,
@@ -610,23 +678,24 @@ class ReadingStore:
 
     # ------------------------------------------------------------ settlement
 
-    def _owned(self, session: str, name: str, request_sha: str) -> tuple[dict[str, Any] | None, Settlement | None]:
+    def _owned(self, session: str, name: str, request_sha: str) -> tuple[dict[str, object] | None, Settlement | None]:
         """The caller's open entry, or a replay of an existing settlement."""
         if ENTRY_RE.fullmatch(name or "") is None:
             raise SettleRefusal("unknown-entry", f"not an entry handle: {name!r} (rd- and 16 hex)")
         row, settled = self.entry(name)
         if row is None:
-            open_names = [entry["entry"] for entry in self.entries(session=session)]
+            open_names = [cast(str, entry["entry"])
+                          for entry in self.entries(session=session)]
             raise SettleRefusal(
                 "unknown-entry", f"no reading entry {name}",
                 remedy=("your unsettled entries: " + ", ".join(open_names)) if open_names
                 else "you hold no unsettled entries")
         if settled:
-            settlement = row.get("settlement") or {}
-            original = session in (row.get("adopted_from") or [])
+            settlement = cast("dict[str, object]", row.get("settlement") or {})
+            original = session in cast("list[str]", row.get("adopted_from") or [])
             if settlement.get("request_sha256") == request_sha or original:
-                return None, Settlement(outcome=settlement.get("outcome", ""), entries=[row],
-                                        replayed=True)
+                return None, Settlement(outcome=cast(str, settlement.get("outcome", "")),
+                                        entries=[row], replayed=True)
             raise SettleRefusal(
                 "already-settled",
                 f"{name} is already settled as {settlement.get('outcome')} by session "
@@ -634,14 +703,14 @@ class ReadingStore:
         if row["session"] != session:
             raise SettleRefusal(
                 "not-owner", f"{name} belongs to session {row['session']}, not this one",
-                remedy=(adopt_command(row["session"])
+                remedy=(adopt_command(cast(str, row["session"]))
                         + "  (only once that session has ended or made no call for two hours)"))
         return row, None
 
-    def _close(self, session: str, row: dict[str, Any], outcome: str, now: dt.datetime,
-               request_sha: str, *, card: dict[str, Any] | None = None, reason: str | None = None,
+    def _close(self, session: str, row: dict[str, object], outcome: str, now: dt.datetime,
+               request_sha: str, *, card: dict[str, object] | None = None, reason: str | None = None,
                covering_card: str | None = None, observed: str | None = None,
-               ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+               ) -> tuple[list[dict[str, object]], dict[str, object]]:
         closed = dict(row, state="settled", settlement={
             "outcome": outcome, "at": _iso(now), "session": session,
             "request_sha256": request_sha,
@@ -660,7 +729,7 @@ class ReadingStore:
             self._touch_op(session, now),
         ], closed
 
-    def _remaining(self, session: str) -> list[dict[str, Any]]:
+    def _remaining(self, session: str) -> list[dict[str, object]]:
         return self.entries(session=session)
 
     def save(self, session: str, name: str, card_input: object, *,
@@ -675,9 +744,9 @@ class ReadingStore:
                 replay.card = self._recorded_card(replay.entries[0])
                 return replay
             assert row is not None
-            card_fields = admit_card(card_input, row["inspected_range"])
-            digest = row["recorded_source_digest"]
-            rng = row["inspected_range"]
+            digest = cast(str, row["recorded_source_digest"])
+            rng = _row_range(row)
+            card_fields = admit_card(card_input, rng)
             handle = card_name(digest, rng["start"], rng["end"])
             directory = f"cards/{digest}/p{rng['start']}-{rng['end']}"
             existing = sorted(int(match.group(1)) for path in (self.root / directory).glob("v*.json")
@@ -695,13 +764,15 @@ class ReadingStore:
             return Settlement(outcome="saved", entries=[closed], card=card,
                               remaining=self._remaining(session))
 
-    def _recorded_card(self, row: dict[str, Any]) -> dict[str, Any] | None:
-        reference = (row.get("settlement") or {}).get("card")
+    def _recorded_card(self, row: dict[str, object]) -> dict[str, object] | None:
+        settlement = cast("dict[str, object]", row.get("settlement") or {})
+        reference = settlement.get("card")
         if not reference:
             return None
-        rng = row["inspected_range"]
-        path = (self.root / "cards" / row["recorded_source_digest"]
-                / f"p{rng['start']}-{rng['end']}" / f"v{reference['version']}.json")
+        rng = _row_range(row)
+        card_ref = cast("dict[str, object]", reference)
+        path = (self.root / "cards" / cast(str, row["recorded_source_digest"])
+                / f"p{rng['start']}-{rng['end']}" / f"v{card_ref['version']}.json")
         return self._load(path) if path.is_file() else None
 
     def dismiss(self, session: str, name: str, reason_kind: str, *, reason: str | None = None,
@@ -716,7 +787,7 @@ class ReadingStore:
                 replay.remaining = self._remaining(session)
                 return replay
             assert row is not None
-            rng = row["inspected_range"]
+            rng = _row_range(row)
             if reason_kind == "irrelevant":
                 text = (reason or "").strip()
                 if not REASON_MIN <= len(text) <= REASON_MAX or covering_card is not None:
@@ -733,9 +804,10 @@ class ReadingStore:
                         "holds these pages) and no --reason")
                 card = self.card(covering_card)
                 if (card is None or card["recorded_source_digest"] != row["recorded_source_digest"]
-                        or not _contains(card["inspected_range"], rng["start"], rng["end"])):
-                    candidates = [row2["card"] for row2 in self.covering(
-                        row["recorded_source_digest"], rng["start"], rng["end"])
+                        or not _contains(_row_range(card), rng["start"], rng["end"])):
+                    candidates = [cast(str, row2["card"]) for row2 in self.covering(
+                        cast(str, row["recorded_source_digest"]), rng["start"], rng["end"],
+                        session=session)
                         if row2.get("record") == "card"]
                     raise SettleRefusal(
                         "not-covering",
@@ -765,8 +837,8 @@ class ReadingStore:
                 replay.remaining = self._remaining(session)
                 return replay
             assert row is not None
-            seen = observe_local_material(materials_root, row["material"],
-                                          row["recorded_source_digest"])
+            seen = observe_local_material(materials_root, cast(str, row["material"]),
+                                          cast(str, row["recorded_source_digest"]))
             status = seen["status"]
             if gone:
                 if status in ("current", "stale"):
@@ -785,7 +857,18 @@ class ReadingStore:
                     raise SettleRefusal(
                         "source-check",
                         f"{row['material']} is absent; close the entry with --source-gone")
-                if observed is None or bare_digest(observed) != seen["live_digest"]:
+                if observed is None:
+                    raise SettleRefusal(
+                        "source-check",
+                        "--source-changed needs --observed-sha256 (the file's current bytes)")
+                try:
+                    given = bare_digest(observed)
+                except ValueError:
+                    raise SettleRefusal(
+                        "source-check",
+                        "--observed-sha256 must be a SHA-256 digest "
+                        "(bare hex or sha256: prefixed)") from None
+                if given != seen["live_digest"]:
                     raise SettleRefusal(
                         "source-check",
                         f"--observed-sha256 must equal the file's current bytes "
@@ -805,9 +888,9 @@ class ReadingStore:
             theirs = self.entries(session=other)
             if not theirs:
                 mine = [row for row in self.entries(session=session)
-                        if other in (row.get("adopted_from") or [])]
+                        if other in cast("list[str]", row.get("adopted_from") or [])]
                 done = [row for row in self.entries(session=session, settled=True)
-                        if other in (row.get("adopted_from") or [])]
+                        if other in cast("list[str]", row.get("adopted_from") or [])]
                 if mine or done:
                     return Settlement(outcome="adopted", entries=mine + done, replayed=True,
                                       remaining=self._remaining(session))
@@ -818,12 +901,13 @@ class ReadingStore:
                     "adopt-live",
                     f"session {other} is still live: it has no recorded end and made a gateway "
                     "call within the last two hours; its entries are not yours to settle")
-            operations = []
-            moved = []
+            operations: list[dict[str, object]] = []
+            moved: list[dict[str, object]] = []
             for row in theirs:
                 record = dict(row, session=session, state="overdue",
                               overdue_at=row.get("overdue_at") or _iso(moment),
-                              adopted_from=[*(row.get("adopted_from") or []), other])
+                              adopted_from=[*cast("list[str]", row.get("adopted_from") or []),
+                                            other])
                 operations.append(self._write_op(f"pending/{row['entry']}.json", record))
                 line = {"record": "log", "schema_version": 1, "at": _iso(moment),
                         "session": session, "entry": row["entry"], "outcome": "adopted",
@@ -840,31 +924,52 @@ class ReadingStore:
     # ------------------------------------------------------------------ hooks
 
     def stop(self, session: str, *, continuing: bool, now: dt.datetime | None = None) -> StopDecision:
-        """Turn end: ask twice, then mark open entries overdue and record the end (C1.3)."""
+        """Turn end: ask twice, then mark open entries overdue (C1.3).
+
+        Stop fires per turn, so it never records an end: only ``session_end``
+        (the SessionEnd hook) or the two-hour idle threshold makes a session's
+        unsettled entries adoptable (C7, ADR-021 decision 5).
+        """
         moment = now or observations.now()
         with self.locked(create=True):
             record = self._session_record(session)
-            asked = int(record.get("stop_blocks") or 0) if continuing else 0
+            asked = int(cast(int, record.get("stop_blocks") or 0)) if continuing else 0
             mine = self.entries(session=session)
             if mine and asked < STOP_ASKS:
                 record["stop_blocks"] = asked + 1
                 self._commit([self._write_op(f"sessions/{session}.json", record)])
                 return StopDecision(block=True, entries=mine, asked=asked + 1)
-            operations = []
-            overdue = []
+            operations: list[dict[str, object]] = []
+            overdue: list[dict[str, object]] = []
             for row in mine:
                 if row["state"] == "open":
                     marked = dict(row, state="overdue", overdue_at=_iso(moment))
                     operations.append(self._write_op(f"pending/{row['entry']}.json", marked))
                     overdue.append(marked)
             record["stop_blocks"] = 0
-            record["ended_at"] = _iso(moment)
             operations.append(self._write_op(f"sessions/{session}.json", record))
             self._commit(operations)
             return StopDecision(block=False, entries=mine, asked=asked, overdue=overdue)
 
+    def session_end(self, name: str, *, now: dt.datetime | None = None) -> None:
+        """Session termination: record the end and reset the Stop counter (C7).
 
-def admit_card(value: object, rng: dict[str, int]) -> dict[str, Any]:
+        The SessionEnd hook calls this when a session terminates; with the
+        two-hour idle threshold it is the only thing that makes a session's
+        unsettled entries adoptable. The stored schema needs no change: a
+        session record already carries ``ended_at``.
+        """
+        if not valid_session(name):
+            raise ReadingStoreError(f"not a session id: {name!r}")
+        moment = now or observations.now()
+        with self.locked(create=True):
+            record = self._session_record(name)
+            record["ended_at"] = _iso(moment)
+            record["stop_blocks"] = 0
+            self._commit([self._write_op(f"sessions/{name}.json", record)])
+
+
+def admit_card(value: object, rng: dict[str, int]) -> dict[str, object]:
     """The admitted card fields, or a refusal naming the first structural defect (step 3)."""
     def bad(message: str) -> SettleRefusal:
         return SettleRefusal("bad-card", f"card refused: {message}")
@@ -885,7 +990,7 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, Any]:
     pointers = value.get("pointers")
     if not isinstance(pointers, list) or not 1 <= len(pointers) <= MAX_POINTERS:
         raise bad(f"pointers must be a list of 1-{MAX_POINTERS} {{page, kind, label}} objects")
-    kept = []
+    kept: list[dict[str, object]] = []
     for index, pointer in enumerate(pointers):
         if not isinstance(pointer, dict) or set(pointer) != {"page", "kind", "label"}:
             raise bad(f"pointer {index} must be exactly {{page, kind, label}}")
@@ -910,9 +1015,9 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, Any]:
             "concepts": list(concepts)}
 
 
-def entry_view(row: dict[str, Any]) -> dict[str, Any]:
+def entry_view(row: dict[str, object]) -> dict[str, object]:
     """One entry as refusals and reads name it."""
-    rng = row["inspected_range"]
+    rng = _row_range(row)
     return {"entry": row["entry"], "state": row["state"], "material": row["material"],
             "file_sha256": f"sha256:{row['recorded_source_digest']}",
             "pages": pages_label(rng["start"], rng["end"]), "session": row["session"]}
