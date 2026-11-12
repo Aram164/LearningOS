@@ -25,6 +25,22 @@ OTHER = "dddddddd-4444-4444-8444-444444444444"
 BOOK = "_unsorted/review/book.pdf"
 
 
+@pytest.fixture(autouse=True)
+def _in_process_store(monkeypatch, tmp_path):
+    """In-process hook calls record activity in a temporary store.
+
+    The hook writes the store beside the Core that holds it (decision P11).
+    Run from a live checkout, the in-process cases below would otherwise
+    create ``LearningOS/reading-memory/`` or write fake sessions into the
+    learner's own store.
+    """
+    real = study_hooks.ReadingStore
+    store = tmp_path / "in-process-reading-memory"
+    monkeypatch.setattr(study_hooks, "ReadingStore",
+                        lambda core, root=None: real(core, root=root or store))
+    return store
+
+
 # ---- in-process: the Bash allowlist ------------------------------------------------
 
 
@@ -96,7 +112,10 @@ def test_material_span_extract_becomes_the_study_read_with_the_hooks_session():
     assert " material-span unit-demo-l01 route-x" in describe and "--session" not in describe
 
 
-def test_search_context_and_settle_receive_the_session_and_other_commands_do_not():
+def test_search_context_and_settle_receive_the_session_and_other_commands_do_not(
+        _in_process_store):
+    beside = study_hooks.CORE.parent / "reading-memory"
+    existed = beside.exists()
     for command in ("los material-search 'naive Bayes' --limit 3",
                     "los material-context Bayes",
                     "los material-card-settle --adopt " + OTHER):
@@ -104,6 +123,11 @@ def test_search_context_and_settle_receive_the_session_and_other_commands_do_not
         assert decision == "allow" and rewritten.endswith(f"--session {S}"), command
     _, _, status = _decision(_bash("los bootstrap --brief"))
     assert status.endswith("los.py bootstrap --brief")
+    # P11: an allowed gateway call records the session's activity, here in the
+    # test's own store and never beside this checkout.
+    assert (_in_process_store / "sessions" / f"{S}.json").is_file()
+    assert beside.exists() == existed
+    assert not (beside / "sessions" / f"{S}.json").exists()
 
 
 def test_pipes_to_head_and_the_reviewed_record_pairing_are_allowed(tmp_path):
