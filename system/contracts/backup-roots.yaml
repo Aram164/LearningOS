@@ -45,6 +45,13 @@ roots:
       - archive/inbox
       - curriculum/quarantine/masters-planning/comparisons
       - curriculum/quarantine/masters-planning/promotions
+      # Chapter summaries are judgments an agent wrote and a reviewer admitted
+      # (tools/material_summarize.py --promote); nothing rebuilds them from the
+      # material bytes, unlike every other cache under generated/. This is the
+      # one declared tree whose own path holds an excluded name: declaring it
+      # admits exactly this tree, while excluded names still prune everything
+      # found below it and every undeclared sibling under generated/.
+      - generated/summaries
     files:
       # Handler-owned decisions and frozen audit samples are recovery evidence;
       # the domain loader does not read them, so read observation cannot cover it.

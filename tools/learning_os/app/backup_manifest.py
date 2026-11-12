@@ -171,9 +171,18 @@ def _inside(authority: Path, relative: str) -> Path:
     return lexical
 
 
-def _admit_file(authority: Path, path: Path, excluded: set[str]) -> bool:
+def _admit_file(authority: Path, path: Path, excluded: set[str],
+                scope: Path | None = None) -> bool:
+    """A regular, non-linked file inside ``authority``, outside excluded names.
+
+    ``scope`` is the declared tree being walked: excluded names prune what
+    lies below a declaration, never the declared path itself, so an exactly
+    declared ``generated/summaries`` is admitted while every undeclared tree
+    under ``generated/`` stays out.
+    """
     try:
-        relative = path.relative_to(authority)
+        path.relative_to(authority)
+        relative = path.relative_to(scope if scope is not None else authority)
     except ValueError:
         return False
     if any(part in excluded for part in relative.parts):
@@ -293,8 +302,9 @@ def _admitted_paths(authority: Path, declared: dict[str, Any],
         if _admit_file(authority, path, excluded):
             found.add(path.relative_to(authority).as_posix())
     for relative in declared["trees"]:
-        if any(part in excluded for part in PurePosixPath(relative).parts):
-            continue
+        # A declaration admits its own path even where a component is an
+        # excluded name (`generated/summaries`); the walk below still prunes
+        # excluded names, and `_inside` still refuses a linked component.
         tree = _inside(authority, relative)
         tree_stat = _inspect_path(tree)
         if tree_stat is None or not stat.S_ISDIR(tree_stat.st_mode):
@@ -315,7 +325,7 @@ def _admitted_paths(authority: Path, declared: dict[str, Any],
                     )
             for name in files:
                 path = Path(parent) / name
-                if _admit_file(authority, path, excluded):
+                if _admit_file(authority, path, excluded, scope=tree):
                     found.add(path.relative_to(authority).as_posix())
     return found
 

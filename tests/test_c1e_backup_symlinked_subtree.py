@@ -84,3 +84,97 @@ def test_overnight_alias_restore_rejects_escapes_before_touching_files(tmp_path)
     (materials / ".flat").symlink_to(outside, target_is_directory=True)
     result = _rebuild_materials_alias_layer({"materials_aliases": {"safe": "real"}}, materials, core)
     assert not result["ok"] and list(outside.iterdir()) == []
+
+
+# ---- generated/summaries is backed up; its generated siblings are not ----------
+# Plan A step 4. The summary cache holds reviewed judgments nothing can rebuild;
+# every other tree under generated/ is a disposable cache.
+
+SUMMARY_SHA = "b" * 64
+
+
+def _summary_world(root):
+    summary_dir = root / "generated" / "summaries" / SUMMARY_SHA / "pages-1-2"
+    summary_dir.mkdir(parents=True)
+    (summary_dir / "summary.md").write_text(
+        "<!-- GENERATED file - do not edit; promoted by tools/material_summarize.py --promote -->\n"
+        "A reviewed two-page summary.\n", encoding="utf-8")
+    (summary_dir / "meta.json").write_text(json.dumps({
+        "_generated": {"generator": "tools/material_summarize.py"},
+        "sha256": SUMMARY_SHA, "pages": [1, 2]}), encoding="utf-8")
+    sibling = root / "generated" / "text-cache" / SUMMARY_SHA
+    sibling.mkdir(parents=True)
+    (sibling / "index.json").write_text('{"_generated": {}}', encoding="utf-8")
+    (root / "generated" / "manifest.json").write_text('{"_generated": {}}', encoding="utf-8")
+    outside = root.parent / "outside-summary.md"
+    outside.write_text("not part of any backup", encoding="utf-8")
+    (summary_dir / "linked.md").symlink_to(outside)
+    return summary_dir
+
+
+def _core_generated(manifest):
+    return {(row["path"], row["sha256"]) for row in manifest["entries"]
+            if row["root"] == "core" and row["path"].startswith("generated/")}
+
+
+def test_summary_tree_is_inventoried_exactly_and_restores_byte_for_byte(mini_repo, tmp_path):
+    import hashlib
+    import shutil
+
+    from repo_builders import run_los
+
+    ui = _build_ui(mini_repo.parent)
+    summary_dir = _summary_world(mini_repo)
+    result = run_los(mini_repo, "backup-manifest", "--stdout")
+    assert result.returncode == 0, result.stderr
+    manifest = json.loads(result.stdout)
+    if "result" in manifest and isinstance(manifest["result"], dict):
+        manifest = manifest["result"]
+    inventoried = _core_generated(manifest)
+    expected = {
+        (f"generated/summaries/{SUMMARY_SHA}/pages-1-2/{name}",
+         "sha256:" + hashlib.sha256((summary_dir / name).read_bytes()).hexdigest())
+        for name in ("summary.md", "meta.json")}
+    # Exactly the two summary files: no text-cache sibling, no top-level
+    # generated file, and the link inside the tree is not followed.
+    assert inventoried == expected
+
+    manifest_path = tmp_path / "backup" / "manifest.json"
+    manifest_path.parent.mkdir()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    restored = tmp_path / "backup" / "restored"
+    shutil.copytree(mini_repo, restored / "core", symlinks=True)
+    shutil.copytree(mini_repo.parent / "materials", restored / "materials", symlinks=True)
+    shutil.copytree(ui, restored / "ui", symlinks=True)
+    args = ("backup-verify", "--manifest", str(manifest_path),
+            "--restored-core", str(restored / "core"), "--restored-ui", str(restored / "ui"),
+            "--restored-materials", str(restored / "materials"), "--checksums-only")
+    verified = run_los(mini_repo, *args)
+    assert verified.returncode == 0, verified.stdout + verified.stderr
+    assert json.loads(verified.stdout)["ok"] is True
+    after = {(path, "sha256:" + hashlib.sha256((restored / "core" / path).read_bytes()).hexdigest())
+             for path, _digest in inventoried}
+    assert after == inventoried
+
+    # A summary lost in the restore is reported missing; one changed, a mismatch.
+    lost = restored / "core" / "generated" / "summaries" / SUMMARY_SHA / "pages-1-2" / "meta.json"
+    lost.unlink()
+    (lost.parent / "summary.md").write_text("tampered", encoding="utf-8")
+    broken = json.loads(run_los(mini_repo, *args).stdout)
+    assert broken["ok"] is False
+    assert {(row["path"].rsplit("/", 1)[-1], row["issue"]) for row in broken["issues"]} == {
+        ("meta.json", "missing"), ("summary.md", "checksum-mismatch")}
+
+
+def test_a_linked_directory_inside_the_summary_tree_refuses_the_inventory(mini_repo):
+    from repo_builders import run_los
+
+    _build_ui(mini_repo.parent)
+    summary_dir = _summary_world(mini_repo)
+    elsewhere = mini_repo.parent / "elsewhere"
+    (elsewhere / "deep").mkdir(parents=True)
+    (elsewhere / "deep" / "summary.md").write_text("moved away", encoding="utf-8")
+    (summary_dir.parent / "pages-3-4").symlink_to(elsewhere, target_is_directory=True)
+    result = run_los(mini_repo, "backup-manifest", "--stdout")
+    assert result.returncode != 0
+    assert "symlinked directory" in result.stderr
