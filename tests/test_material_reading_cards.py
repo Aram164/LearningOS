@@ -8,6 +8,7 @@ is involved, and each case is one check.
 
 from __future__ import annotations
 
+import datetime as dt
 import hashlib
 import json
 import os
@@ -214,10 +215,33 @@ def test_a_recorded_end_makes_a_session_adoptable_at_once(world):
     # the session can still resume, so its entries are not adoptable yet.
     still_live = _settle(world, B, "--adopt", A)
     assert still_live.returncode != 0 and "still live" in still_live.stderr
-    store.session_end(A)
+    now = dt.datetime.fromisoformat(NOW)
+    store.session_end(A, now=now)
+    assert A in store.adoptable(B, now)
+    store.touch(A, start=True, now=now)
+    still_live = _settle(world, B, "--adopt", A)
+    assert still_live.returncode != 0 and "still live" in still_live.stderr
+    store.session_end(A, now=now)
     adopted = _ok(_settle(world, B, "--adopt", A))
     assert adopted["replayed"] is False
     assert [row["entry"] for row in adopted["entries"]] == [entry]
+
+
+def test_adopting_the_same_entry_back_logs_each_transfer(tmp_path):
+    store = ReadingStore(Path(__file__).resolve().parents[1], root=tmp_path / "store")
+    now = dt.datetime.fromisoformat(NOW)
+    read = Read(digest="a" * 64, material=BOOK, start=1, end=1, text_sha256="b" * 64)
+    entry = store.admit(A, [read], now=now).opened[0]["entry"]
+
+    for owner, adopter in ((A, B), (B, A), (A, B)):
+        store.session_end(owner, now=now)
+        result = store.adopt(adopter, owner, now=now)
+        assert not result.replayed and result.entries[0]["entry"] == entry
+
+    assert store.adopt(B, A, now=now).replayed
+    log = (store.root / "log" / f"{B}.jsonl").read_text().splitlines()
+    assert len(log) == 2
+    assert all(json.loads(line)["entry"] == entry for line in log)
 
 
 # ---- settlement ---------------------------------------------------------------------
@@ -279,6 +303,13 @@ def test_source_changed_and_source_gone_are_checked_by_the_gateway(world):
     assert closed["outcome"] == "source-changed"
     present = _settle(world, A, gone_entry, "--source-gone")
     assert present.returncode != 0 and "still there" in present.stderr
+    outside = world.parent / "outside.pdf"
+    gone.rename(outside)
+    gone.symlink_to(outside)
+    _refused(_settle(world, A, gone_entry, "--source-gone"), "outside the materials boundary")
+    gone.unlink()
+    gone.symlink_to(gone.with_name("missing-target.pdf"))
+    _refused(_settle(world, A, gone_entry, "--source-gone"), "still exists")
     gone.unlink()
     assert _ok(_settle(world, A, gone_entry, "--source-gone"))["outcome"] == "source-gone"
     assert _store(world).entries(session=A) == []

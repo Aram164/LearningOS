@@ -13,6 +13,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -130,16 +131,18 @@ def test_search_context_and_settle_receive_the_session_and_other_commands_do_not
     assert not (beside / "sessions" / f"{S}.json").exists()
 
 
-def test_pipes_to_head_and_the_reviewed_record_pairing_are_allowed(tmp_path):
+def test_pipes_to_head_and_the_reviewed_record_pairing_are_allowed():
     decision, _, rewritten = _decision(_bash("los material-search Bayes | head -n 20"))
     assert decision == "allow" and rewritten.endswith("| /usr/bin/head -n 20")
-    record = tmp_path / "rec.json"
-    command = (".venv/bin/python tools/seal_envelope.py --capability capture.create "
-               f"--payload '{{\"text\": \"note\"}}' --key k1 --guards auto --check-out {record} "
-               f"&& cat {record}")
-    decision, reason, rewritten = _decision(_bash(command))
-    assert decision == "allow", reason
-    assert rewritten.endswith(f"&& /bin/cat {os.path.realpath(record)}")
+    # CI's pytest basetemp is outside the profile's scratch roots.
+    with tempfile.TemporaryDirectory(prefix="los-study-receipt-") as scratch:
+        record = Path(scratch) / "rec.json"
+        command = (".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                   f"--payload '{{\"text\": \"note\"}}' --key k1 --guards auto --check-out {record} "
+                   f"&& cat {record}")
+        decision, reason, rewritten = _decision(_bash(command))
+        assert decision == "allow", reason
+        assert rewritten.endswith(f"&& /bin/cat {os.path.realpath(record)}")
     assert _decision(_bash("los status 2>&1 | head -n 5"))[0] == "allow"
 
 
