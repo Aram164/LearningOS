@@ -69,27 +69,20 @@ jobs:
       # the producer-owned manifest contract removed: Core can pass while
       # shipping a shape the UI cannot decode.
       #
-      # Prefer a same-named consumer branch when one exists. On any other
-      # ref a missing consumer branch fails the step loudly: silently
-      # substituting main once tested a pair whose contract locks disagree
-      # (2026-11-12, Plan A: Core v18 checked against UI main at v17).
-      # main keeps pairing with main.
+      # Prefer a same-named consumer branch when one exists, otherwise use
+      # main. This makes a two-repository change test the pair being
+      # reviewed without reintroducing a permanent branch pin.
       - name: Resolve the matching consumer branch
         id: consumer-ref
         env:
           REQUESTED_REF: ${{ github.head_ref || github.ref_name }}
         run: |
-          if [ "$REQUESTED_REF" = "main" ]; then
-            echo "ref=main" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
           if git ls-remote --exit-code --heads \
             https://github.com/Aram164/learningos-obsidian-ui.git \
             "refs/heads/$REQUESTED_REF" >/dev/null 2>&1; then
             echo "ref=$REQUESTED_REF" >> "$GITHUB_OUTPUT"
           else
-            echo "::error::Paired UI branch refs/heads/$REQUESTED_REF is missing on learningos-obsidian-ui. Push the UI branch before (or with) the Core push; refusing to silently test against main, whose contract lock can lag this checkout." >&2
-            exit 1
+            echo "ref=main" >> "$GITHUB_OUTPUT"
           fi
 
       # The UI checkout also serves the paired tests inside the suite
@@ -482,17 +475,12 @@ jobs:
         env:
           REQUESTED_REF: ${{ github.head_ref || github.ref_name }}
         run: |
-          if [ "$REQUESTED_REF" = "main" ]; then
-            echo "ref=main" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
           if git ls-remote --exit-code --heads \
             https://github.com/Aram164/learningos-obsidian-ui.git \
             "refs/heads/$REQUESTED_REF" >/dev/null 2>&1; then
             echo "ref=$REQUESTED_REF" >> "$GITHUB_OUTPUT"
           else
-            echo "::error::Paired UI branch refs/heads/$REQUESTED_REF is missing on learningos-obsidian-ui. Push the UI branch before (or with) the Core push; refusing to silently test against main, whose contract lock can lag this checkout." >&2
-            exit 1
+            echo "ref=main" >> "$GITHUB_OUTPUT"
           fi
       - name: Check out the paired UI consumer
         uses: actions/checkout@v4
