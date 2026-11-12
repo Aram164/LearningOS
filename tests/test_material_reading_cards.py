@@ -197,9 +197,11 @@ def test_adoption_refuses_a_live_session_and_takes_an_idle_or_ended_one(world):
     # Adopted debts are B's overdue debts: settle before any new span (G2).
     _refused(_read(world, B, "pdf p. 10", now=LATER), "overdue reading entries")
     _ok(_settle(world, B, entry, "--card", _card(8, 8), now=LATER))
-    # The original session's later settle replays idempotently.
-    replay = _ok(_settle(world, A, entry, "--dismiss", "irrelevant", "--reason", "late duplicate", now=LATER))
-    assert replay["replayed"] is True and replay["outcome"] == "saved"
+    # B retrying its exact card settlement replays idempotently; A can no longer settle or mask a conflict.
+    exact = _ok(_settle(world, B, entry, "--card", _card(8, 8), now=LATER))
+    assert exact["replayed"] is True and exact["outcome"] == "saved"
+    _refused(_settle(world, A, entry, "--dismiss", "irrelevant", "--reason", "late duplicate", now=LATER),
+             "already settled")
     retry = _ok(_settle(world, B, "--adopt", A, now=LATER))
     assert retry["replayed"] is True
     log = (store_root(world) / "log" / f"{B}.jsonl").read_text().splitlines()
@@ -542,3 +544,152 @@ def test_card_admission_names_the_first_structural_defect():
 
 def test_idle_window_is_two_hours():
     assert ADOPT_IDLE.total_seconds() == 7200
+
+
+def test_cross_session_settled_card_permutations_fail_closed(world):
+    from learning_os.store.materials.reading_cards import ReadingStoreError, SettleRefusal
+
+    store = _store(world)
+    rd = Read(digest="a" * 64, material=BOOK, start=2, end=3, text_sha256="b" * 64)
+    c = "cccccccc-3333-4333-8333-333333333333"
+
+    # Case 1: A opens -> ends -> B adopts -> B saves card1.
+    t0 = dt.datetime.fromisoformat(NOW)
+    e1 = store.admit(A, [rd], now=t0).opened[0]["entry"]
+    store.session_end(A, now=t0)
+    store.adopt(B, A, now=t0)
+    c1 = json.loads(_card(2, 3))
+    c2 = json.loads(_card(1, 5))
+    first = store.save(B, e1, c1, now=t0)
+    assert first.outcome == "saved" and not first.replayed
+
+    # Exact retry by settler B replays idempotently.
+    assert store.save(B, e1, c1, now=t0).replayed is True
+    # Conflicting settle by settler B, any settle by original A, or identical settle by C must fail closed.
+    for _caller, fn in [
+        ("B diff card", lambda: store.save(B, e1, c2, now=t0)),
+        ("B dismiss", lambda: store.dismiss(B, e1, "irrelevant", reason="changed mind", now=t0)),
+        ("A identical save", lambda: store.save(A, e1, c1, now=t0)),
+        ("A dismiss", lambda: store.dismiss(A, e1, "irrelevant", reason="late", now=t0)),
+        ("C identical save", lambda: store.save(c, e1, c1, now=t0)),
+    ]:
+        with pytest.raises((SettleRefusal, ReadingStoreError)):
+            fn()
+
+    # Case 2: B adopts -> B dismisses -> A trying to save/dismiss (even identical) must fail closed.
+    rd2 = Read(digest="d" * 64, material=BOOK, start=4, end=5, text_sha256="e" * 64)
+    e2 = store.admit(A, [rd2], now=t0).opened[0]["entry"]
+    store.session_end(A, now=t0)
+    store.adopt(B, A, now=t0)
+    d1 = store.dismiss(B, e2, "irrelevant", reason="boilerplate", now=t0)
+    assert d1.outcome == "dismissed-irrelevant"
+    assert store.dismiss(B, e2, "irrelevant", reason="boilerplate", now=t0).replayed is True
+    with pytest.raises(SettleRefusal, match="already settled"):
+        store.save(A, e2, json.loads(_card(4, 5)), now=t0)
+    with pytest.raises(SettleRefusal, match="already settled"):
+        store.dismiss(A, e2, "irrelevant", reason="boilerplate", now=t0)
+    with pytest.raises((SettleRefusal, ReadingStoreError)):
+        store.dismiss(c, e2, "irrelevant", reason="boilerplate", now=t0)
+
+
+def test_crash_temp_files_stay_in_journal_and_are_cleaned_on_recovery(world, tmp_path):
+    from learning_os.app.backup_manifest import build_backup_manifest
+
+    store = _store(world)
+    rd = Read(digest="a" * 64, material=BOOK, start=1, end=2, text_sha256="b" * 64)
+    entry = store.admit(A, [rd]).opened[0]["entry"]
+
+    # Simulate legacy and in-journal interrupted temp files across store trees.
+    stale_pending = store.root / "pending" / f".{entry}.json.tmp-999999"
+    stale_pending.write_text("{", encoding="utf-8")
+    stale_journal = store.root / ".journal" / ".card.json.tmp-999999"
+    stale_journal.parent.mkdir(parents=True, exist_ok=True)
+    stale_journal.write_text("{", encoding="utf-8")
+    stale_card = store.root / "cards" / ("a" * 64) / ".v0001.json.tmp-999999"
+    stale_card.parent.mkdir(parents=True, exist_ok=True)
+    stale_card.write_text("{", encoding="utf-8")
+
+    # Failed write unlinks its own temp file cleanly via BaseException cleanup.
+    observed_temps: list[Path] = []
+    real_replace = os.replace
+
+    def fail_once(src, dst):
+        if "reading-memory" in str(dst) and str(dst).endswith(f"{entry}.json"):
+            observed_temps.append(Path(src))
+            raise RuntimeError("injected replace failure")
+        return real_replace(src, dst)
+
+    mp = pytest.MonkeyPatch()
+    try:
+        mp.setattr(os, "replace", fail_once)
+        with pytest.raises(RuntimeError, match="injected replace failure"):
+            store.save(A, entry, json.loads(_card(1, 2)))
+    finally:
+        mp.undo()
+    assert observed_temps and observed_temps[0].parent == store.root / ".journal"
+    assert not observed_temps[0].exists()
+
+    # build_backup_manifest takes the store lock (triggering recovery) and excludes temp files.
+    ui = _build_ui(world.parent)
+    manifest = build_backup_manifest(world, ui_root=ui)
+    rm_paths = [row["path"] for row in manifest["entries"] if row["root"] == "reading-memory"]
+    assert not any(".tmp-" in p for p in rm_paths), rm_paths
+    assert not stale_pending.exists()
+    assert not stale_journal.exists()
+    assert not stale_card.exists()
+
+
+def test_backup_manifest_serializes_with_concurrent_reading_card_settle(world):
+    import threading
+
+    from learning_os.app.backup_manifest import build_backup_manifest
+
+    store = _store(world)
+    rd = Read(digest="a" * 64, material=BOOK, start=6, end=7, text_sha256="b" * 64)
+    entry = store.admit(A, [rd]).opened[0]["entry"]
+    ui = _build_ui(world.parent)
+
+    started = threading.Event()
+    proceed = threading.Event()
+    errors: list[BaseException] = []
+    manifests: list[dict] = []
+
+    real_replace = os.replace
+
+    def barrier_replace(src, dst):
+        if Path(dst).name == f"{entry}.json" and "settled" in str(dst):
+            started.set()
+            proceed.wait(timeout=10)
+        return real_replace(src, dst)
+
+    def run_backup():
+        try:
+            manifests.append(build_backup_manifest(world, ui_root=ui))
+        except BaseException as exc:  # pragma: no cover - captured for assertion
+            errors.append(exc)
+
+    mp = pytest.MonkeyPatch()
+    mp.setattr(os, "replace", barrier_replace)
+    backup_thread = None
+    try:
+        save_thread = threading.Thread(
+            target=lambda: store.save(A, entry, json.loads(_card(6, 7))),
+        )
+        save_thread.start()
+        assert started.wait(timeout=10)
+        backup_thread = threading.Thread(target=run_backup)
+        backup_thread.start()
+        proceed.set()
+        save_thread.join(timeout=10)
+        backup_thread.join(timeout=10)
+    finally:
+        proceed.set()
+        if backup_thread is not None and backup_thread.is_alive():
+            backup_thread.join(timeout=2)
+        mp.undo()
+
+    assert not errors, errors
+    assert len(manifests) == 1
+    rm_paths = {row["path"] for row in manifests[0]["entries"] if row["root"] == "reading-memory"}
+    assert f"settled/{entry}.json" in rm_paths
+    assert f"pending/{entry}.json" not in rm_paths

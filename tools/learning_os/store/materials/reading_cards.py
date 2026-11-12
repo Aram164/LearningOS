@@ -310,14 +310,26 @@ class ReadingStore:
                 return
         except FileNotFoundError:
             pass
-        temp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        # Stage temp files in .journal so crash leftovers stay out of backup_manifest roots.
+        journal_dir = self.root / ".journal"
+        journal_dir.mkdir(mode=_DIR_MODE, parents=True, exist_ok=True)
+        temp = journal_dir / f".{path.name}.tmp-{os.getpid()}"
         descriptor = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, _FILE_MODE)
         try:
-            os.write(descriptor, data)
-            os.fsync(descriptor)
-        finally:
-            os.close(descriptor)
-        os.replace(temp, path)
+            try:
+                view = memoryview(data)
+                written = 0
+                while written < len(view):
+                    written += os.write(descriptor, view[written:])
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
+            os.replace(temp, path)
+        except BaseException:
+            with contextlib.suppress(OSError):
+                temp.unlink()
+            raise
+        self._fsync_dir(journal_dir)
         self._fsync_dir(path.parent)
 
     def _repair_log_tail(self, path: Path) -> None:
@@ -398,16 +410,26 @@ class ReadingStore:
 
     def _recover(self) -> None:
         directory = self.root / ".journal"
-        if not directory.is_dir():
-            return
-        for path in sorted(directory.glob("*.json")):
-            try:
-                operations = json.loads(path.read_text(encoding="utf-8"))["operations"]
-                self._apply(operations)
-                path.unlink()
-            except (OSError, ValueError, KeyError, TypeError) as exc:
-                raise ReadingStoreError(
-                    f"the reading store holds an unreadable journal {path.name}: {exc}") from exc
+        if directory.is_dir():
+            for path in sorted(directory.glob("*.json")):
+                try:
+                    operations = json.loads(path.read_text(encoding="utf-8"))["operations"]
+                    self._apply(operations)
+                    path.unlink()
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    raise ReadingStoreError(
+                        f"the reading store holds an unreadable journal {path.name}: {exc}") from exc
+        data_trees = ("cards", "pending", "settled", "sessions", "log")
+        for tree in (directory, *(self.root / name for name in data_trees)):
+            if not tree.is_dir():
+                continue
+            for stale in sorted(tree.rglob(".*.tmp-*")):
+                try:
+                    if not stale.is_symlink() and stale.is_file():
+                        stale.unlink()
+                except OSError as exc:
+                    raise ReadingStoreError(
+                        f"cannot clean stale reading-store temp file {stale.name}: {exc}") from exc
 
     def _load(self, path: Path) -> dict[str, object]:
         try:
@@ -686,8 +708,8 @@ class ReadingStore:
                 else "you hold no unsettled entries")
         if settled:
             settlement = cast("dict[str, object]", row.get("settlement") or {})
-            original = session in cast("list[str]", row.get("adopted_from") or [])
-            if settlement.get("request_sha256") == request_sha or original:
+            if (settlement.get("session") == session
+                    and settlement.get("request_sha256") == request_sha):
                 return None, Settlement(outcome=cast(str, settlement.get("outcome", "")),
                                         entries=[row], replayed=True)
             raise SettleRefusal(

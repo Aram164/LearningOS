@@ -124,7 +124,10 @@ def _scratch_path_problem(root: Path, raw: str, flag: str) -> str | None:
     invisible to the canonical fingerprint and to Git, so scratch there can
     never move the snapshot or enter the canonical tree.
     """
-    target = Path(raw).resolve()
+    try:
+        target = Path(raw).expanduser().resolve()
+    except (RuntimeError, ValueError, OSError) as exc:
+        return f"cannot resolve {flag} {raw!r}: {exc}"
     if not (target == root or root in target.parents):
         return None
     venv = root / ".venv"

@@ -82,10 +82,12 @@ UNSCANNED_DESTS = frozenset({
 })
 
 #: Tools that never touch files and may run as they are.
+# Subagents ("Agent", "Task") are intentionally absent: they inherit session_id and
+# open separate context windows with file/Bash access, violating single-session slot discipline.
 PASS_TOOLS = frozenset({
     "TodoWrite", "TaskCreate", "TaskUpdate", "TaskList", "TaskGet", "TaskOutput",
     "TaskStop", "AskUserQuestion", "ExitPlanMode", "EnterPlanMode", "ToolSearch",
-    "BashOutput", "KillShell", "KillBash", "Agent", "Task", "WebFetch", "WebSearch",
+    "BashOutput", "KillShell", "KillBash", "WebFetch", "WebSearch",
     "Skill", "SlashCommand",
 })
 
@@ -143,14 +145,28 @@ def _inside(path: Path, roots: list[Path]) -> bool:
     return False
 
 
+def _expand(value: str) -> Path:
+    try:
+        return Path(value).expanduser()
+    except (RuntimeError, ValueError, OSError) as exc:
+        raise Refused(f"could not resolve path {value!r}: {exc}") from exc
+
+
 def _resolve(value: str, cwd: Path) -> Path:
-    path = Path(value)
+    path = _expand(value)
     return path if path.is_absolute() else cwd / path
 
 
 def _looks_like_path(value: str) -> bool:
     return "/" in value or value.startswith((".", "~")) or value.endswith(
         (".pdf", ".md", ".txt", ".json", ".yaml", ".sqlite3", ".jsonl"))
+
+
+def _is_file_or_symlink(path: Path) -> bool:
+    try:
+        return os.path.islink(path) or path.is_file()
+    except (ValueError, OSError):
+        return False
 
 
 def _strings(value: object) -> list[str]:
@@ -166,17 +182,30 @@ def _strings(value: object) -> list[str]:
 def _refuse_protected(values: list[str], cwd: Path, core: Path, what: str) -> None:
     protected = protected_reads(core)
     for value in values:
-        if _looks_like_path(value) and _inside(_resolve(value, cwd), protected):
-            raise Refused(
-                f"{what} names {value!r}, which lies in a tree the study profile keeps "
-                "closed (raw page text or the private reading store). Read pages through "
-                "los material-span --material PATH --pages \"pdf p. N\" --extract.")
+        expanded = _expand(value)
+        candidates = [expanded if expanded.is_absolute() else cwd / expanded]
+        if not expanded.is_absolute() and cwd != core:
+            candidates.append(core / expanded)
+        for candidate in candidates:
+            if (_looks_like_path(value) or _is_file_or_symlink(candidate)) and _inside(
+                candidate, protected
+            ):
+                raise Refused(
+                    f"{what} names {value!r}, which lies in a tree the study profile keeps "
+                    "closed (raw page text or the private reading store). Read pages through "
+                    "los material-span --material PATH --pages \"pdf p. N\" --extract.")
 
 
 def _scan_json_file(value: str, cwd: Path, core: Path, what: str) -> None:
     path = _resolve(value, cwd)
     if _inside(path, protected_reads(core)):
         raise Refused(f"{what} {value!r} lies in a closed tree")
+    try:
+        is_regular = path.is_file()
+    except (ValueError, OSError) as exc:
+        raise Refused(f"{what} {value!r} must be a readable JSON file: {exc}") from exc
+    if not is_regular:
+        raise Refused(f"{what} {value!r} must be a readable JSON file")
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
@@ -497,9 +526,27 @@ def check_file_tool(tool: str, tool_input: dict[str, object], cwd: Path) -> None
                 "records change through los and seal_envelope.py")
         return
     if tool in SEARCH_TOOLS:
-        pattern = tool_input.get("pattern") if tool == "Glob" else None
-        if isinstance(pattern, str) and (pattern.startswith("/") or ".." in Path(pattern).parts):
-            raise Refused("Glob patterns may not be absolute or climb with ..; pass path instead")
+        def _unsafe_search_glob(value: str) -> bool:
+            if value.startswith(("/", "~")) or ".." in Path(value).parts:
+                return True
+            return any(
+                sub.lstrip().startswith(("/", "~", ".."))
+                for chunk in value.split("{")
+                for sub in chunk.split(",")
+            )
+
+        if tool == "Glob":
+            pattern = tool_input.get("pattern")
+            if pattern is not None and (not isinstance(pattern, str) or _unsafe_search_glob(pattern)):
+                raise Refused(
+                    "Glob patterns may not be absolute, start with ~, or climb with ..; "
+                    "pass path instead")
+        if tool == "Grep":
+            glob_arg = tool_input.get("glob")
+            if glob_arg is not None and (not isinstance(glob_arg, str) or _unsafe_search_glob(glob_arg)):
+                raise Refused(
+                    "Grep glob filters may not be absolute, start with ~, or climb with ..; "
+                    "pass path instead")
         base = tool_input.get("path") or str(cwd)
         if not isinstance(base, str) or _inside(_resolve(base, cwd), protected) or \
                 _subtree_reaches(_resolve(base, cwd), protected):
@@ -668,6 +715,8 @@ def profile_settings(core: Path = CORE) -> dict[str, object]:
                                                        "onFailure": "block"}]}],
             "Stop": [{"hooks": [{"type": "command", "command": f"{python} {hooks} stop",
                                  "timeout": 60}]}],
+            "SubagentStop": [{"hooks": [{"type": "command", "command": f"{python} {hooks} stop",
+                                         "timeout": 60}]}],
             "SessionEnd": [{"hooks": [{"type": "command",
                                        "command": f"{python} {hooks} session-end",
                                        "timeout": 60}]}],

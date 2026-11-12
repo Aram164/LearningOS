@@ -323,7 +323,7 @@ def test_the_profile_writer_wires_the_hooks_and_never_overwrites(tmp_path):
                              "--out", str(tmp_path)], capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stderr
     settings = json.loads((tmp_path / ".claude" / "settings.json").read_text())
-    assert set(settings["hooks"]) == {"SessionStart", "PreToolUse", "Stop", "SessionEnd"}
+    assert set(settings["hooks"]) == {"SessionStart", "PreToolUse", "Stop", "SubagentStop", "SessionEnd"}
     assert settings["hooks"]["PreToolUse"][0]["matcher"] == "*"
     assert settings["hooks"]["PreToolUse"][0]["hooks"][0]["onFailure"] == "block"
     assert any(rule.startswith("Read(//") and "/materials/**" in rule
@@ -331,3 +331,101 @@ def test_the_profile_writer_wires_the_hooks_and_never_overwrites(tmp_path):
     again = subprocess.run([sys.executable, str(ROOT / "tools/study_hooks.py"), "profile",
                             "--out", str(tmp_path)], capture_output=True, text=True, timeout=60)
     assert again.returncode != 0
+
+
+def test_tilde_and_bare_symlink_paths_cannot_bypass_study_hooks(monkeypatch, tmp_path):
+    learningos = tmp_path / "LearningOS"
+    fake_core = learningos / "repository"
+    fake_core.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(study_hooks, "CORE", fake_core)
+    materials = learningos / "materials" / "course"
+    materials.mkdir(parents=True, exist_ok=True)
+    secret_doc = materials / "notes.md"
+    secret_doc.write_text("protected raw text", encoding="utf-8")
+    secret_csv = materials / "data.csv"
+    secret_csv.write_text("a,b\n1,2\n", encoding="utf-8")
+    secret_json = materials / "secret.json"
+    secret_json.write_text('{"x": 1}', encoding="utf-8")
+
+    monkeypatch.setenv("HOME", str(learningos))
+    session = "cccccccc-3333-4333-8333-333333333333"
+    ok_dir = tmp_path / "work"
+    ok_dir.mkdir(exist_ok=True)
+    bare_csv_link = ok_dir / "bare_csv_link"
+    bare_csv_link.symlink_to(secret_csv)
+    raw_payload = ok_dir / "raw_payload.json"
+    raw_payload.write_text(json.dumps({"file": "~/materials/course/data.csv"}), encoding="utf-8")
+    fifo_path = ok_dir / "pipe.json"
+    os.mkfifo(fifo_path)
+
+    denied_calls = [
+        ("Read", {"file_path": "~/materials/course/notes.md"}),
+        ("Read", {"file_path": "bare_csv_link"}),
+        ("Grep", {"pattern": "protected", "path": "~"}),
+        ("Grep", {"pattern": "protected", "path": "~/materials/course"}),
+        ("Grep", {"pattern": "protected", "path": str(ok_dir), "glob": "../materials/**"}),
+        ("Grep", {"pattern": "protected", "path": str(ok_dir), "glob": "~/materials/**"}),
+        ("Glob", {"pattern": "**/*", "path": "~"}),
+        ("Glob", {"pattern": "~/materials/**", "path": str(ok_dir)}),
+        ("Glob", {"pattern": "{*.md,~/materials/**}", "path": str(ok_dir)}),
+        ("LS", {"path": "~/reading-memory"}),
+        ("Bash", {"command": "los capture --file '~/materials/course/notes.md'"}),
+        ("Bash", {"command": "los capture --file='~/materials/course/notes.md'"}),
+        ("Bash", {"command": "los capture --file bare_csv_link"}),
+        ("Bash", {"command": f"los capability capture.create --payload-file {raw_payload}"}),
+        ("Bash", {"command": "los capability capture.create --payload-file '~/materials/course/secret.json'"}),
+        ("Bash", {"command": "los capability capture.create --payload-file bare_csv_link"}),
+        ("Bash", {"command": f"los capability capture.create --payload-file {fifo_path}"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             "--key k1 --payload '{\"file\":\"~/materials/course/notes.md\"}'"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             "--key k2 --payload '{\"file\":\"bare_csv_link\"}'"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             "--key k3 --payload '@~/materials/course/secret.json'"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             f"--key k4 --payload '@{raw_payload}'"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             "--key k5 --guards-from '~/materials/course/secret.json' --payload '{}'"}),
+        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                             "--key k6 --payload '{\"file\":\"generated/text-cache/page.txt\"}'"}),
+        ("Agent", {"prompt": "read materials"}),
+        ("Task", {"prompt": "read materials"}),
+    ]
+    for tool_name, tool_input in denied_calls:
+        out = study_hooks.pre_tool_use({
+            "session_id": session,
+            "cwd": str(ok_dir),
+            "tool_name": tool_name,
+            "tool_input": tool_input,
+        })
+        assert out["hookSpecificOutput"]["permissionDecision"] == "deny", (
+            tool_name, tool_input, out
+        )
+
+    # Non-scratch HOME tilde target from cwd=/tmp must still fail scratch check cleanly.
+    monkeypatch.setenv("HOME", "/nonexistent-study-home")
+    out_tilde = study_hooks.pre_tool_use({
+        "session_id": session,
+        "cwd": "/tmp",
+        "tool_name": "Bash",
+        "tool_input": {
+            "command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
+                       "--key k7 --payload '{\"text\":\"ok\"}' --out '~/out.json'"
+        },
+    })
+    assert out_tilde["hookSpecificOutput"]["permissionDecision"] == "deny"
+
+
+def test_subagent_stop_shares_open_debt_gate_and_seal_scratch_expands_tilde(
+        monkeypatch, tmp_path):
+    settings = study_hooks.profile_settings()
+    sub_stop = settings["hooks"]["SubagentStop"][0]["hooks"][0]
+    assert sub_stop["command"].endswith(" stop")
+
+    import seal_envelope
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    monkeypatch.setenv("HOME", str(repo))
+    problem = seal_envelope._scratch_path_problem(repo, "~/work/probe.json", "--out")
+    assert problem is not None and ".venv" in problem

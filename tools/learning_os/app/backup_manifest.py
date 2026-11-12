@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import hashlib
 import json
@@ -19,7 +20,7 @@ import yaml
 from learning_os.store import observations
 from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.contracts.manifest_contract import declared_version
-from learning_os.store.materials.reading_cards import store_root
+from learning_os.store.materials.reading_cards import ReadingStore, ReadingStoreError, store_root
 
 #: The private reading store (ADR-021): a backup root only while it exists.
 READING_MEMORY = "reading-memory"
@@ -395,12 +396,22 @@ def build_backup_manifest(
         # prunes excluded directory names before descending, so a tree the
         # contract deliberately skips is never read, never fails, and is never
         # confused with one that could not be read.
-        for rel in _admitted_paths(authority, declared, excluded):
-            path = authority / rel
-            entries[(label, rel)] = {
-                "root": label, "path": rel, "size": path.stat().st_size,
-                "sha256": _sha256_file(path),
-            }
+        try:
+            with (
+                ReadingStore(root, root=authority).locked(create=False)
+                if label == READING_MEMORY
+                else contextlib.nullcontext(True)
+            ):
+                for rel in _admitted_paths(authority, declared, excluded):
+                    path = authority / rel
+                    entries[(label, rel)] = {
+                        "root": label, "path": rel, "size": path.stat().st_size,
+                        "sha256": _sha256_file(path),
+                    }
+        except ReadingStoreError as exc:
+            raise BackupManifestError(
+                f"reading store lock failed during backup manifest: {exc}"
+            ) from exc
         if label == "ui":
             # Derived, not declared: the contract names `plugin-assets.json` and
             # this reads what that declares, so the shipping inventory has one
