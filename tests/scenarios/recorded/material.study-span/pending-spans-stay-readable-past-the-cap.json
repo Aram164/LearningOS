@@ -1,0 +1,625 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 1",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.1 ---\\nExpected value, page 1 of 24: an outcome is a value a variable can take\\n\",\"excerpt_truncated\":false,\"pages\":[1],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"state\":\"opened\",\"entry\":\"rd-0a66896b42bf3744\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-0a66896b42bf3744\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.1 ---\nExpected value, page 1 of 24: an outcome is a value a variable can take\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                1
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "state": "opened"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 2",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.2 ---\\nExpected value, page 2 of 24: probability weights every outcome\\n\",\"excerpt_truncated\":false,\"pages\":[2],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"state\":\"opened\",\"entry\":\"rd-a4b88dcaf74944c1\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-0a66896b42bf3744\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-a4b88dcaf74944c1\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (2 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.2 ---\nExpected value, page 2 of 24: probability weights every outcome\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                2
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (2 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "state": "opened"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 1,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 3",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.3 ---\\nExpected value, page 3 of 24: weights are nonnegative and sum to one\\n\",\"excerpt_truncated\":false,\"pages\":[3],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"state\":\"opened\",\"entry\":\"rd-108eefb088581a4b\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-0a66896b42bf3744\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-a4b88dcaf74944c1\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-108eefb088581a4b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (3 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.3 ---\nExpected value, page 3 of 24: weights are nonnegative and sum to one\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                3
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (3 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-108eefb088581a4b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 3",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-108eefb088581a4b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 3",
+              "state": "opened"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 2,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 4",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.4 ---\\nExpected value, page 4 of 24: expectation is the weighted sum\\n\",\"excerpt_truncated\":false,\"pages\":[4],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 4\",\"state\":\"opened\",\"entry\":\"rd-54c2f4db3643976b\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-0a66896b42bf3744\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-108eefb088581a4b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-a4b88dcaf74944c1\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-54c2f4db3643976b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 4\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (4 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-54c2f4db3643976b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-54c2f4db3643976b --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.4 ---\nExpected value, page 4 of 24: expectation is the weighted sum\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                4
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (4 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-54c2f4db3643976b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-54c2f4db3643976b --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-108eefb088581a4b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 3",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-54c2f4db3643976b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 4",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-54c2f4db3643976b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 4",
+              "state": "opened"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 3,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 2",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.2 ---\\nExpected value, page 2 of 24: probability weights every outcome\\n\",\"excerpt_truncated\":false,\"pages\":[2],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"state\":\"pending\",\"entry\":\"rd-a4b88dcaf74944c1\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-0a66896b42bf3744\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 1\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-108eefb088581a4b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-54c2f4db3643976b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 4\",\"session\":\"11111111-1111-4111-8111-111111111111\"},{\"entry\":\"rd-a4b88dcaf74944c1\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (4 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-54c2f4db3643976b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-54c2f4db3643976b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.2 ---\nExpected value, page 2 of 24: probability weights every outcome\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                2
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (4 of at most 4): save a card or dismiss it. los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-54c2f4db3643976b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-54c2f4db3643976b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-0a66896b42bf3744",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 1",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-108eefb088581a4b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 3",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-54c2f4db3643976b",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 4",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            },
+            {
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "state": "pending"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 4,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 5",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: this read would hold more than 4 open reading entries in one turn; settle one first (pending spans stay readable): rd-0a66896b42bf3744 (source-demo-book/lecture-01.pdf pdf p. 1), rd-108eefb088581a4b (source-demo-book/lecture-01.pdf pdf p. 3), rd-54c2f4db3643976b (source-demo-book/lecture-01.pdf pdf p. 4), rd-a4b88dcaf74944c1 (source-demo-book/lecture-01.pdf pdf p. 2)\n  next: los material-card-settle rd-0a66896b42bf3744 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-0a66896b42bf3744 --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-108eefb088581a4b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-54c2f4db3643976b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-54c2f4db3643976b --dismiss irrelevant --reason '<why>'  ||  los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 5,
+      "transport": "cli"
+    }
+  ]
+}

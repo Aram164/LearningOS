@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: session 22222222-2222-4222-8222-222222222222 holds no unsettled entries\n",
+  "stdout": "",
+  "stdout_json": null
+}

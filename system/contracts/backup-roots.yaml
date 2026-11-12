@@ -98,6 +98,19 @@ roots:
     trees:
       - .
     files: []
+  # The private reading store beside the Core checkout (ADR-021): cards, open and
+  # settled reading entries, session records and the settlement logs. Nothing
+  # rebuilds them, and they never enter Core Git, so a backup is their only
+  # copy. Inventoried only while the store exists; its lock and in-flight
+  # journal are not state.
+  reading-memory:
+    trees:
+      - cards
+      - pending
+      - settled
+      - sessions
+      - log
+    files: []
 excluded_names:
   - .DS_Store
   - .git

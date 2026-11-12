@@ -1291,6 +1291,19 @@ documents:
     amends:
       - system/ARCHITECTURE.md
 
+  - path: system/adr/ADR-021-private-reading-memory-2026-11-12.md
+    audience: developer
+    applies_to: []
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Keeps reading cards and reading debts in a private, owner-only store
+      beside the repository (LearningOS/reading-memory/), outside Core Git,
+      the materials inventory and the manifest, and collects every uncovered
+      study read as a debt the gateway and the study profile's hooks enforce.
+
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md

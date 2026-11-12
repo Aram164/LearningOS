@@ -1,0 +1,39 @@
+{
+ "card": "card-939260683c5957ea-p2-3",
+ "concepts": [
+  "concept-demo"
+ ],
+ "inspected_range": {
+  "end": 3,
+  "start": 2
+ },
+ "kinds": [
+  "statement",
+  "worked-example"
+ ],
+ "material": "source-demo-book/book.pdf",
+ "paraphrase": "States the demo theorem and works one numeric example on the next page.",
+ "pointers": [
+  {
+   "kind": "statement",
+   "label": "the theorem",
+   "page": 2
+  },
+  {
+   "kind": "worked-example",
+   "label": "numeric example",
+   "page": 3
+  }
+ ],
+ "record": "card",
+ "recorded_source_digest": "939260683c5957ea177021cd1277520c30ee37c69a8d60768a5060a4147f3f7f",
+ "review": "unreviewed",
+ "schema_version": 1,
+ "supersedes": null,
+ "version": 1,
+ "written": {
+  "at": "2026-11-12T10:00:00+01:00",
+  "entry": "rd-3ca20c4f3c53effe",
+  "session": "0f1e2d3c-4b5a-4968-8776-655443322110"
+ }
+}

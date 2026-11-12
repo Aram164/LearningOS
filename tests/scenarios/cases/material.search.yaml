@@ -43,4 +43,9 @@ cases:
     transport: cli
     argv: [material-search, Chebyshev, --offset, 201]
     expect: {site: material.search.offset-too-large}
+  - id: malformed-session
+    kind: refusal
+    transport: cli
+    argv: [material-search, Bayes, --session, not-a-session]
+    expect: {site: material.search.bad-session}
 untriggered: []

@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 65
-schema_fingerprint: sha256:549b28c8069814f0c39dfb2630dfe6500d454fab6f09a3b59b660d9957349744
-record_schemas: 36
+contract_version: 66
+schema_fingerprint: sha256:3c6511aac6fc14d6b6466a87cf6e56c362488410dc856df887c26e5edf5da67f
+record_schemas: 37
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -470,3 +470,11 @@ history:
     path records remain and no migration is required
   migration: null
   fixture: tests/fixtures/formats/v63/
+- version: 66
+  adopted: '2026-11-12'
+  note: 'Additive: system/schema/material-reading-card.schema.json governs the private
+    reading store beside the repository (LearningOS/reading-memory/, ADR-021): card
+    versions, reading entries, session records and settlement log lines. Core writes
+    them outside the repository; no existing record changes shape, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v66/

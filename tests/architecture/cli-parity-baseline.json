@@ -402,7 +402,8 @@
       "epilog": null,
       "prog": "los material-context",
       "defaults": {
-        "func": "learning_os.commands.reads.cmd_material_context"
+        "_operation": "'material.context'",
+        "func": "learning_os.adapters.cli.invoke"
       },
       "groups": [],
       "actions": [
@@ -598,6 +599,21 @@
           "required": false,
           "help": "observations digest from the previous page; required when continuing past offset 0",
           "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--session"
+          ],
+          "dest": "session",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "study scope, injected by the study profile's PreToolUse hook: also return the compact private reading cards relevant to the answer (unreviewed, never coverage evidence)",
+          "metavar": "SESSION",
           "action": "store"
         }
       ]

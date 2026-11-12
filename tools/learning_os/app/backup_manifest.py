@@ -19,6 +19,10 @@ import yaml
 from learning_os.store import observations
 from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.contracts.manifest_contract import declared_version
+from learning_os.store.materials.reading_cards import store_root
+
+#: The private reading store (ADR-021): a backup root only while it exists.
+READING_MEMORY = "reading-memory"
 
 
 class BackupManifestError(ValueError):
@@ -81,8 +85,9 @@ def _load_contract(root: Path) -> dict[str, Any]:
             or value.get("contract") != "learningos-backup-roots":
         raise BackupManifestError("backup root contract has an unsupported shape")
     roots = value.get("roots")
-    if not isinstance(roots, dict) or set(roots) != {"core", "ui", "materials"}:
-        raise BackupManifestError("backup root contract must declare core, ui, and materials")
+    if not isinstance(roots, dict) or set(roots) != {"core", "ui", "materials", READING_MEMORY}:
+        raise BackupManifestError(
+            "backup root contract must declare core, ui, materials and reading-memory")
     for label, row in roots.items():
         if not isinstance(row, dict):
             raise BackupManifestError(f"backup root {label} must be an object")
@@ -336,17 +341,20 @@ def backup_authorities(
     ui_root: Path | None = None,
     materials_root: Path | None = None,
 ) -> dict[str, Path]:
-    """The three resolved backup authorities for one Core checkout.
+    """The resolved backup authorities for one Core checkout.
 
     Shared by the inventory and by the `--out` guard, because the two must
     agree about what "inside a backed-up root" means. Keeping a second copy
     of the sibling defaults for the guard would be two lists that must match.
+    The private reading store is always named here, so no manifest can be
+    written into it, but it is inventoried only while it exists.
     """
     root = root.resolve()
     return {
         "core": root,
         "ui": (ui_root or root.parent / "obsidian-ui").resolve(),
         "materials": (materials_root or root.parent / "materials").resolve(),
+        READING_MEMORY: store_root(root),
     }
 
 
@@ -368,6 +376,14 @@ def build_backup_manifest(
         raise BackupManifestError("backup omits durable operational writes: " + ", ".join(omitted))
     excluded = set(contract.get("excluded_names") or [])
     entries: dict[tuple[str, str], dict[str, Any]] = {}
+    if _inspect_path(authorities[READING_MEMORY]) is None:
+        # No reading has been recorded yet: an absent store is not a root of
+        # this backup, and a restore that later holds one reports it unaccounted.
+        authorities = {label: path for label, path in authorities.items()
+                       if label != READING_MEMORY}
+    elif authorities[READING_MEMORY].is_symlink():
+        raise BackupManifestError(
+            f"backup authority is a symlink: {READING_MEMORY}: {authorities[READING_MEMORY]}")
     for label, authority in authorities.items():
         if not authority.is_dir():
             raise BackupManifestError(f"backup authority is unavailable: {label}: {authority}")
@@ -520,6 +536,7 @@ def verify_backup_manifest(
     restored_ui: Path,
     restored_materials: Path,
 ) -> dict[str, Any]:
+    """Check a restore against its manifest; the reading store sits beside the restored Core."""
     try:
         validate_contract(root, "backup-manifest.schema.json", manifest)
     except ValueError as exc:
@@ -528,6 +545,7 @@ def verify_backup_manifest(
         "core": restored_core.resolve(),
         "ui": restored_ui.resolve(),
         "materials": restored_materials.resolve(),
+        READING_MEMORY: store_root(restored_core),
     }
     issues = []
     rows = list(manifest["entries"])
@@ -718,6 +736,9 @@ def verify_restored_system(
     restored_roots = (
         restored_core.resolve(), restored_ui.resolve(), restored_materials.resolve(),
     )
+    if READING_MEMORY in manifest.get("roots", []):
+        live_roots += (store_root(root),)
+        restored_roots += (store_root(restored_core),)
     if any(_overlaps(restored, live) for restored in restored_roots for live in live_roots):
         raise BackupManifestError(
             "restore verification requires three new directories outside every live root"

@@ -78,7 +78,9 @@ def _materialise(version: str, repo_root, tmp_path):
     (root.parent / "materials").mkdir()
 
     for tree in sorted(p for p in fixture.iterdir() if p.is_dir()):
-        shutil.copytree(tree, root / tree.name)
+        # The private reading store lives beside the repository (ADR-021), never in it.
+        target = root.parent / tree.name if tree.name == "reading-memory" else root / tree.name
+        shutil.copytree(tree, target)
 
     # Current schemas and current contract — deliberately not the frozen ones.
     shutil.copytree(repo_root / "system" / "schema", root / "system" / "schema")
@@ -123,6 +125,35 @@ def test_frozen_format_parses_into_the_expected_record_families(version, repo_ro
     }
     empty = sorted(name for name, records in populated.items() if not records)
     assert empty == [], f"format {version} fixture covers no {empty}"
+
+
+@pytest.mark.parametrize("version", [
+    version for version in FORMATS
+    if (Path(__file__).parent / "fixtures" / "formats" / version / "reading-memory").is_dir()])
+def test_frozen_reading_memory_still_validates(version, repo_root, tmp_path):
+    """Frozen private-store records (ADR-021) still validate and still read.
+
+    The store sits beside the repository, so the repository validator never
+    sees it; this asks the same old-data-new-rules question of its records.
+    """
+    from learning_os.store.contracts.json_schema import validate_contract
+    from learning_os.store.materials.reading_cards import SCHEMA_NAME, ReadingStore
+
+    root = _materialise(version, repo_root, tmp_path)
+    store = root.parent / "reading-memory"
+    records = 0
+    for path in sorted(store.rglob("*.json")):
+        validate_contract(repo_root, SCHEMA_NAME, json.loads(path.read_text(encoding="utf-8")),
+                          label=f"{version} {path.relative_to(store)}")
+        records += 1
+    for path in sorted(store.rglob("*.jsonl")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            validate_contract(repo_root, SCHEMA_NAME, json.loads(line),
+                              label=f"{version} {path.relative_to(store)}")
+            records += 1
+    assert records, f"{version} freezes no reading-memory records"
+    reader = ReadingStore(root)
+    assert reader.entries() and reader.entries(settled=True) and reader.all_cards()
 
 
 def test_fixture_is_data_only(repo_root):

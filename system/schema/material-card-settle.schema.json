@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-card-settle-v1",
+  "title": "Reading entry settlement response",
+  "description": "One settlement of a private reading entry, or one adoption (material.card.settle, ADR-021): what was recorded or replayed, the served card, and the caller's remaining unsettled entries.",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract",
+    "session",
+    "outcome",
+    "replayed",
+    "entries",
+    "card",
+    "remaining"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "contract": {
+      "const": "material-card-settle-v1"
+    },
+    "session": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "outcome": {
+      "enum": [
+        "saved",
+        "dismissed-irrelevant",
+        "dismissed-redundant",
+        "source-changed",
+        "source-gone",
+        "adopted"
+      ]
+    },
+    "replayed": {
+      "type": "boolean"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "card": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "card",
+            "version",
+            "pages",
+            "material",
+            "file_sha256",
+            "kinds",
+            "paraphrase",
+            "review",
+            "coverage_evidence"
+          ],
+          "properties": {
+            "review": {
+              "const": "unreviewed"
+            },
+            "coverage_evidence": {
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "remaining": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry",
+        "state",
+        "material",
+        "file_sha256",
+        "pages",
+        "session"
+      ],
+      "properties": {
+        "entry": {
+          "type": "string",
+          "pattern": "^rd-[0-9a-f]{16}$"
+        },
+        "state": {
+          "enum": [
+            "open",
+            "overdue",
+            "settled"
+          ]
+        },
+        "material": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "pages": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

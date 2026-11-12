@@ -1,0 +1,130 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "material-study-span",
+        "--material",
+        "source-demo-book/lecture-01.pdf",
+        "--pages",
+        "pdf p. 2",
+        "--extract",
+        "--session",
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":null,\"module_id\":null,\"route_id\":null,\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"locator\":null,\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"bindings\":[{\"module\":\"module-demo\",\"unit\":\"unit-demo-l01\",\"route\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"bindings_total\":1,\"analysis_refs\":{\"analysis_notes\":[],\"analysis_notes_total\":0,\"analysis_notes_truncated\":false},\"spans\":[{\"material_uri\":null,\"material\":\"source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.2 ---\\nExpected value, page 2 of 24: probability weights every outcome\\n\",\"excerpt_truncated\":false,\"pages\":[2],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"state\":\"opened\",\"entry\":\"rd-a4b88dcaf74944c1\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-a4b88dcaf74944c1\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 2\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-a4b88dcaf74944c1 --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'\"}}\n",
+      "stdout_json": {
+        "contract": "material-study-span-v1",
+        "schema_version": 1,
+        "snapshot_id": "<FIXTURE_SNAPSHOT>",
+        "span": {
+          "analysis_refs": {
+            "analysis_notes": [],
+            "analysis_notes_total": 0,
+            "analysis_notes_truncated": false
+          },
+          "availability": "local-observed",
+          "bindings": [
+            {
+              "module": "module-demo",
+              "route": "route-b2f1f80014860a929a3af0bc",
+              "source_id": "source-demo-book",
+              "unit": "unit-demo-l01"
+            }
+          ],
+          "bindings_total": 1,
+          "contract": "material-span-v1",
+          "expansion": null,
+          "locator": null,
+          "material": "source-demo-book/lecture-01.pdf",
+          "module_id": null,
+          "next_action": null,
+          "route_id": null,
+          "schema_version": 1,
+          "snapshot_id": "<FIXTURE_SNAPSHOT>",
+          "source_id": "source-demo-book",
+          "spans": [
+            {
+              "binding": {
+                "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "material": "source-demo-book/lecture-01.pdf",
+                "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                "resolution": "resolved",
+                "source_id": "source-demo-book"
+              },
+              "excerpt": "--- PDF p.2 ---\nExpected value, page 2 of 24: probability weights every outcome\n",
+              "excerpt_truncated": false,
+              "extraction": "complete",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "format": "pdf",
+              "material": "source-demo-book/lecture-01.pdf",
+              "material_uri": null,
+              "page_total": 24,
+              "pages": [
+                2
+              ]
+            }
+          ],
+          "unit_id": null,
+          "url": null
+        },
+        "study": {
+          "limit": 4,
+          "memory": [],
+          "next_action": "Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-a4b88dcaf74944c1 --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-a4b88dcaf74944c1 --dismiss irrelevant --reason '<why>'",
+          "open_entries": [
+            {
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "session": "11111111-1111-4111-8111-111111111111",
+              "state": "open"
+            }
+          ],
+          "reads": [
+            {
+              "covered_by": [],
+              "entry": "rd-a4b88dcaf74944c1",
+              "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "material": "source-demo-book/lecture-01.pdf",
+              "pages": "pdf p. 2",
+              "state": "opened"
+            }
+          ],
+          "session": "11111111-1111-4111-8111-111111111111"
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "material-card-settle",
+        "--adopt",
+        "11111111-1111-4111-8111-111111111111",
+        "--session",
+        "22222222-2222-4222-8222-222222222222"
+      ],
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: session 11111111-1111-4111-8111-111111111111 is still live: it has no recorded end and made a gateway call within the last two hours; its entries are not yours to settle\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

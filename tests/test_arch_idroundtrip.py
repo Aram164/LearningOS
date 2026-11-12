@@ -248,6 +248,7 @@ def test_inventory_digest_representations():
         ("coordination.section.revise",
          "/properties/expected_content_sha256"),
         ("material.span", "/properties/file_sha256"),
+        ("material.study-span", "/properties/file_sha256"),
         ("module.plan.import", "/properties/package_sha256"),
     })
     checked = 0

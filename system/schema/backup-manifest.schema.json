@@ -10,7 +10,10 @@
     "schema_version": {"const": 1},
     "type": {"const": "backup-manifest"},
     "generated_at": {"type": "string", "format": "date-time"},
-    "roots": {"const": ["core", "materials", "ui"]},
+    "roots": {
+      "description": "The inventoried authorities. reading-memory, the private reading store beside the Core checkout (ADR-021), is listed only when the store existed at backup time.",
+      "enum": [["core", "materials", "ui"], ["core", "materials", "reading-memory", "ui"]]
+    },
     "entries": {
       "type": "array",
       "items": {
@@ -18,7 +21,7 @@
         "additionalProperties": false,
         "required": ["root", "path", "size", "sha256"],
         "properties": {
-          "root": {"enum": ["core", "materials", "ui"]},
+          "root": {"enum": ["core", "materials", "reading-memory", "ui"]},
           "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
           "size": {"type": "integer", "minimum": 0},
           "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}

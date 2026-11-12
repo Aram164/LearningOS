@@ -47,6 +47,8 @@ _SUBCOMMAND_ORDER = (
     "material-search",
     "ability-context",
     "material-span",
+    "material-study-span",
+    "material-card-settle",
     "search",
     "intelligence-scan",
     "goal",

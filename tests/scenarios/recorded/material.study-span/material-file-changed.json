@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 3,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: --material source-demo-book/lecture-01.pdf changed since the reference was made: expected sha256:0000000000000000000000000000000000000000000000000000000000000000, the file now hashes to sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5; search again for a current reference\n",
+  "stdout": "",
+  "stdout_json": null
+}

@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/material.card.settle",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "entry": {
+      "type": "string",
+      "description": "the reading entry to settle (rd- and 16 hex), as a study read or a refusal names it; omit with --adopt",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "ENTRY",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "card": {
+      "type": "object",
+      "description": "save a card for the entry: JSON {\"paraphrase\", \"kinds\", \"pointers\": [{\"page\", \"kind\", \"label\"}], \"concepts\"?}; every pointer inside the entry's pages, every kind backed by a pointer",
+      "x-los-cli": {
+        "flags": [
+          "--card"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": "JSON",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "dismiss": {
+      "type": "string",
+      "enum": [
+        "irrelevant",
+        "redundant"
+      ],
+      "description": "dismiss the entry instead: irrelevant (with --reason) or redundant (with --covering-card)",
+      "x-los-cli": {
+        "flags": [
+          "--dismiss"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "irrelevant",
+          "redundant"
+        ],
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "reason": {
+      "type": "string",
+      "description": "with --dismiss irrelevant: why these pages do not matter, 5-300 characters",
+      "x-los-cli": {
+        "flags": [
+          "--reason"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "covering_card": {
+      "type": "string",
+      "description": "with --dismiss redundant: the current card of the same file that already holds every page of the entry",
+      "x-los-cli": {
+        "flags": [
+          "--covering-card"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "CARD",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "source_changed": {
+      "type": "boolean",
+      "description": "close the entry because its file's bytes changed; needs --observed-sha256, which the gateway checks against the file",
+      "x-los-cli": {
+        "flags": [
+          "--source-changed"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "observed_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "with --source-changed: the digest the file hashes to now (sha256:<hex>); refused unless it equals the live bytes",
+      "x-los-cli": {
+        "flags": [
+          "--observed-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": "SHA256",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": false
+    },
+    "source_gone": {
+      "type": "boolean",
+      "description": "close the entry because its file is no longer at its last-seen path; the gateway checks the absence",
+      "x-los-cli": {
+        "flags": [
+          "--source-gone"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "adopt": {
+      "type": "string",
+      "description": "take over every unsettled entry of SESSION, which must have ended or made no gateway call for two hours; the entries become overdue debts of this session",
+      "x-los-cli": {
+        "flags": [
+          "--adopt"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "SESSION",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "session": {
+      "type": "string",
+      "description": "the calling study session, injected by the study profile's PreToolUse hook (a lowercase UUID); required",
+      "x-los-cli": {
+        "flags": [
+          "--session"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "SESSION",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "material-card-settle",
+    "help": "settle a reading entry: save a card, dismiss it, close it for a changed or missing source, or adopt a dead session's entries",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:material.card.settle",
+    "parser_factory": false
+  }
+}

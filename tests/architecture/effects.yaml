@@ -10,6 +10,7 @@
 "tools/learning_os/store/ai_actions/storage.py": operational
 "tools/learning_os/app/backup_manifest.py": operational
 "tools/learning_os/store/session_ledger.py": operational
+"tools/learning_os/store/materials/reading_cards.py": operational
 "tools/learning_os/store/warning_baseline.py": operational
 "tools/migrations/**": migration
 "tools/*.py": tooling

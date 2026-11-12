@@ -104,7 +104,7 @@ def test_exactly_91_cli_bindings_and_union():
     aliases = _aliases()
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 91, len(with_cli)  # 95 minus 5 retired, plus inspect rename net -4 (rev3 Group 11)
+    assert len(with_cli) == 93, len(with_cli)  # 95 minus 5 retired, plus inspect rename net -4 (rev3 Group 11); +2 Plan C study read and settlement
     assert len(with_cli) == len(primaries), (len(with_cli), len(primaries))
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)

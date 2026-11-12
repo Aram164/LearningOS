@@ -62,6 +62,7 @@ ENTRYPOINTS = (
     "schema_contract.py",
     "seal_envelope.py",
     "stress_check.py",
+    "study_hooks.py",
     "tree_contract.py",
     "system_map.py",
     "validate.py",

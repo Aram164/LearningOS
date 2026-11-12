@@ -255,6 +255,27 @@
         "transport_only": false,
         "envelope_owned": false
       }
+    },
+    "session": {
+      "type": "string",
+      "description": "study scope, injected by the study profile's PreToolUse hook: also return the compact private reading cards relevant to the answer (unreviewed, never coverage evidence)",
+      "x-los-cli": {
+        "flags": [
+          "--session"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "SESSION",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
     }
   },
   "x-los-cli-command": {

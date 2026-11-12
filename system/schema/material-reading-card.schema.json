@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-reading-card.schema.json",
+  "title": "Private reading memory record",
+  "description": "One record of the private reading store beside the repository (LearningOS/reading-memory/, ADR-021): a card version, a reading entry, a session record, or one settlement log line. Core writes these records; they never enter Core Git, the materials inventory or the published manifest. Cards keep the material_analysis binding concepts: a materials-relative material path (last seen), the bare recorded_source_digest the card is keyed by, and an inclusive physical PDF inspected_range.",
+  "x-governs": "record",
+  "type": "object",
+  "required": ["record", "schema_version"],
+  "properties": {
+    "record": {"enum": ["card", "entry", "session", "log"]},
+    "schema_version": {"const": 1}
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/card"},
+    {"$ref": "#/$defs/entry"},
+    {"$ref": "#/$defs/session"},
+    {"$ref": "#/$defs/log"}
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "session_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "entry_handle": {"type": "string", "pattern": "^rd-[0-9a-f]{16}$"},
+    "card_handle": {"type": "string", "pattern": "^card-[0-9a-f]{16}-p[1-9][0-9]*-[1-9][0-9]*$"},
+    "time": {"type": "string", "format": "date-time"},
+    "material": {
+      "description": "Materials-relative path where the bytes were last seen; never the card key.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!materials/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "range": {
+      "description": "Inclusive physical PDF pages (cover = 1), as in material_analysis.inspected_range.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "integer", "minimum": 1},
+        "end": {"type": "integer", "minimum": 1}
+      }
+    },
+    "kind": {
+      "enum": ["intuition", "visual", "statement", "derivation", "proof",
+               "worked-example", "exercises", "solutions", "application", "overview"]
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record", "schema_version", "card", "version", "material",
+                   "recorded_source_digest", "inspected_range", "paraphrase", "kinds",
+                   "pointers", "concepts", "review", "written", "supersedes"],
+      "properties": {
+        "record": {"const": "card"},
+        "schema_version": {"const": 1},
+        "card": {"$ref": "#/$defs/card_handle"},
+        "version": {"type": "integer", "minimum": 1},
+        "material": {"$ref": "#/$defs/material"},
+        "recorded_source_digest": {"$ref": "#/$defs/digest"},
+        "inspected_range": {"$ref": "#/$defs/range"},
+        "paraphrase": {"type": "string", "minLength": 20, "maxLength": 800},
+        "kinds": {
+          "type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/kind"}
+        },
+        "pointers": {
+          "type": "array", "minItems": 1, "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["page", "kind", "label"],
+            "properties": {
+              "page": {"type": "integer", "minimum": 1},
+              "kind": {"$ref": "#/$defs/kind"},
+              "label": {"type": "string", "minLength": 1, "maxLength": 160}
+            }
+          }
+        },
+        "concepts": {
+          "type": "array", "maxItems": 12, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "review": {"const": "unreviewed"},
+        "written": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["session", "entry", "at"],
+          "properties": {
+            "session": {"$ref": "#/$defs/session_id"},
+            "entry": {"$ref": "#/$defs/entry_handle"},
+            "at": {"$ref": "#/$defs/time"}
+          }
+        },
+        "supersedes": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record", "schema_version", "entry", "session", "material",
+                   "recorded_source_digest", "inspected_range", "text_sha256", "opened_at",
+                   "state", "overdue_at", "adopted_from", "settlement"],
+      "properties": {
+        "record": {"const": "entry"},
+        "schema_version": {"const": 1},
+        "entry": {"$ref": "#/$defs/entry_handle"},
+        "session": {"$ref": "#/$defs/session_id"},
+        "material": {"$ref": "#/$defs/material"},
+        "recorded_source_digest": {"$ref": "#/$defs/digest"},
+        "inspected_range": {"$ref": "#/$defs/range"},
+        "text_sha256": {"$ref": "#/$defs/digest"},
+        "opened_at": {"$ref": "#/$defs/time"},
+        "state": {"enum": ["open", "overdue", "settled"]},
+        "overdue_at": {"oneOf": [{"$ref": "#/$defs/time"}, {"type": "null"}]},
+        "adopted_from": {"type": "array", "items": {"$ref": "#/$defs/session_id"}},
+        "settlement": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["outcome", "at", "session", "request_sha256", "card", "reason",
+                           "covering_card", "observed_sha256"],
+              "properties": {
+                "outcome": {"enum": ["saved", "dismissed-irrelevant", "dismissed-redundant",
+                                     "source-changed", "source-gone"]},
+                "at": {"$ref": "#/$defs/time"},
+                "session": {"$ref": "#/$defs/session_id"},
+                "request_sha256": {"$ref": "#/$defs/digest"},
+                "card": {
+                  "oneOf": [
+                    {"type": "null"},
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["card", "version"],
+                      "properties": {
+                        "card": {"$ref": "#/$defs/card_handle"},
+                        "version": {"type": "integer", "minimum": 1}
+                      }
+                    }
+                  ]
+                },
+                "reason": {"type": ["string", "null"], "maxLength": 300},
+                "covering_card": {"oneOf": [{"$ref": "#/$defs/card_handle"}, {"type": "null"}]},
+                "observed_sha256": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"state": {"const": "settled"}}},
+          "then": {"properties": {"settlement": {"type": "object"}}},
+          "else": {"properties": {"settlement": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"state": {"const": "open"}}},
+          "then": {"properties": {"overdue_at": {"type": "null"}}}
+        }
+      ]
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record", "schema_version", "session", "started_at", "last_call_at",
+                   "ended_at", "stop_blocks"],
+      "properties": {
+        "record": {"const": "session"},
+        "schema_version": {"const": 1},
+        "session": {"$ref": "#/$defs/session_id"},
+        "started_at": {"oneOf": [{"$ref": "#/$defs/time"}, {"type": "null"}]},
+        "last_call_at": {"oneOf": [{"$ref": "#/$defs/time"}, {"type": "null"}]},
+        "ended_at": {"oneOf": [{"$ref": "#/$defs/time"}, {"type": "null"}]},
+        "stop_blocks": {"type": "integer", "minimum": 0, "maximum": 2}
+      }
+    },
+    "log": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record", "schema_version", "at", "session", "entry", "outcome",
+                   "card_version", "from_session", "key"],
+      "properties": {
+        "record": {"const": "log"},
+        "schema_version": {"const": 1},
+        "at": {"$ref": "#/$defs/time"},
+        "session": {"$ref": "#/$defs/session_id"},
+        "entry": {"$ref": "#/$defs/entry_handle"},
+        "outcome": {"enum": ["saved", "dismissed-irrelevant", "dismissed-redundant",
+                             "source-changed", "source-gone", "adopted"]},
+        "card_version": {"type": ["integer", "null"], "minimum": 1},
+        "from_session": {"oneOf": [{"$ref": "#/$defs/session_id"}, {"type": "null"}]},
+        "key": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

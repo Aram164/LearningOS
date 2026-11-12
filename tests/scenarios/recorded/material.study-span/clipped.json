@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: source-demo-book/lecture-01.pdf pdf pp. 1-20 does not fit one excerpt, so a study read returns no text and opens no entry; read fewer pages, e.g. --pages \"pdf p. 1\"\n",
+  "stdout": "",
+  "stdout_json": null
+}

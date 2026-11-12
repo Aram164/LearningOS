@@ -1,0 +1,88 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-study-span-v1\",\"span\":{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-01.pdf\",\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot <FIXTURE_SNAPSHOT>\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"analysis_notes_total\":0,\"analysis_notes_truncated\":false,\"expand\":\"plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot <FIXTURE_SNAPSHOT>\"},\"spans\":[{\"material_uri\":\"material://source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"complete\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"excerpt\":\"--- PDF p.3 ---\\nExpected value, page 3 of 24: weights are nonnegative and sum to one\\n\",\"excerpt_truncated\":false,\"pages\":[3],\"page_total\":24}],\"expansion\":null},\"study\":{\"session\":\"11111111-1111-4111-8111-111111111111\",\"reads\":[{\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"state\":\"opened\",\"entry\":\"rd-108eefb088581a4b\",\"covered_by\":[]}],\"memory\":[],\"open_entries\":[{\"entry\":\"rd-108eefb088581a4b\",\"state\":\"open\",\"material\":\"source-demo-book/lecture-01.pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"pages\":\"pdf p. 3\",\"session\":\"11111111-1111-4111-8111-111111111111\"}],\"limit\":4,\"next_action\":\"Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-108eefb088581a4b --card '{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'\"}}\n",
+  "stdout_json": {
+    "contract": "material-study-span-v1",
+    "schema_version": 1,
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
+    "span": {
+      "analysis_refs": {
+        "analysis_by_resolution": {},
+        "analysis_notes": [],
+        "analysis_notes_total": 0,
+        "analysis_notes_truncated": false,
+        "approved_assessment_routes": [],
+        "expand": "plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot <FIXTURE_SNAPSHOT>",
+        "related_count": 1,
+        "related_expand": "plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot <FIXTURE_SNAPSHOT>",
+        "stale_assessment_routes": []
+      },
+      "availability": "local-observed",
+      "contract": "material-span-v1",
+      "expansion": null,
+      "locator": "lecture-01.pdf",
+      "module_id": "module-demo",
+      "next_action": null,
+      "route_id": "route-b2f1f80014860a929a3af0bc",
+      "schema_version": 1,
+      "snapshot_id": "<FIXTURE_SNAPSHOT>",
+      "source_id": "source-demo-book",
+      "spans": [
+        {
+          "binding": {
+            "live_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+            "material": "source-demo-book/lecture-01.pdf",
+            "recorded_source_digest": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+            "resolution": "resolved",
+            "source_id": "source-demo-book"
+          },
+          "excerpt": "--- PDF p.3 ---\nExpected value, page 3 of 24: weights are nonnegative and sum to one\n",
+          "excerpt_truncated": false,
+          "extraction": "complete",
+          "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+          "format": "pdf",
+          "material_uri": "material://source-demo-book/lecture-01.pdf",
+          "page_total": 24,
+          "pages": [
+            3
+          ]
+        }
+      ],
+      "unit_id": "unit-demo-l01",
+      "url": null
+    },
+    "study": {
+      "limit": 4,
+      "memory": [],
+      "next_action": "Before the turn ends, settle each open entry (1 of at most 4): save a card or dismiss it. los material-card-settle rd-108eefb088581a4b --card '{\"paraphrase\": \"<what these pages do, in your words>\", \"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, \"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  los material-card-settle rd-108eefb088581a4b --dismiss irrelevant --reason '<why>'",
+      "open_entries": [
+        {
+          "entry": "rd-108eefb088581a4b",
+          "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+          "material": "source-demo-book/lecture-01.pdf",
+          "pages": "pdf p. 3",
+          "session": "11111111-1111-4111-8111-111111111111",
+          "state": "open"
+        }
+      ],
+      "reads": [
+        {
+          "covered_by": [],
+          "entry": "rd-108eefb088581a4b",
+          "file_sha256": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+          "material": "source-demo-book/lecture-01.pdf",
+          "pages": "pdf p. 3",
+          "state": "opened"
+        }
+      ],
+      "session": "11111111-1111-4111-8111-111111111111"
+    }
+  }
+}

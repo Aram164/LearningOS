@@ -265,6 +265,17 @@
     "scan_truncated": {
       "type": "boolean"
     },
+    "study": {
+      "description": "Present only with --session (study scope, ADR-021): how many private cards the hits carry.",
+      "type": "object",
+      "required": ["session", "cards", "review"],
+      "properties": {
+        "session": {"type": "string"},
+        "cards": {"type": "integer", "minimum": 0},
+        "review": {"type": "string"},
+        "cards_unavailable": {"type": "string"}
+      }
+    },
     "hits": {
       "type": "array",
       "items": {
@@ -475,6 +486,19 @@
           "span_pages": {
             "type": "string",
             "pattern": "^pdf (p\\. [0-9]+|pp\\. [0-9]+-[0-9]+)$"
+          },
+          "cards": {
+            "description": "Study scope only (--session, ADR-021): at most three current private reading cards of this file whose pages overlap span_pages. Unreviewed, never coverage evidence.",
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["card", "version", "pages", "kinds", "paraphrase", "review", "coverage_evidence"],
+              "properties": {
+                "review": {"const": "unreviewed"},
+                "coverage_evidence": {"const": false}
+              }
+            }
           }
         }
       }

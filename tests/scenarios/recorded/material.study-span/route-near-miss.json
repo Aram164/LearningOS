@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: route not found: route-b2f1f80014860a929a3af0bd in unit-demo-l01 (did you mean: route-b2f1f80014860a929a3af0bc?)\n",
+  "stdout": "",
+  "stdout_json": null
+}

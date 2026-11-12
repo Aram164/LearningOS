@@ -48,7 +48,8 @@ def _without_stage6_choice(actual: dict) -> dict:
     actual = copy.deepcopy(actual)
     for key, value in actual.get("error", {}).items():
         if isinstance(value, str) and ("usage: los" in value or "choose from" in value):
-            for verb in ("study-sequence", "material-search"):
+            for verb in ("study-sequence", "material-search", "material-study-span",
+                         "material-card-settle"):
                 actual["error"][key] = (
                     actual["error"][key]
                     .replace(f",{verb}", "")
@@ -502,7 +503,8 @@ def test_generated_parser_matches_baseline_structure():
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     live = _normalize_describe(arch_cli_describe.describe(los.build_parser()))
     expected = _normalize_describe(baseline)
-    for added in ("study-sequence", "material-search"):
+    for added in ("study-sequence", "material-search", "material-study-span",
+                  "material-card-settle"):
         assert added in live["subparsers"]
         live["order"].remove(added)
         live["subparsers"].pop(added)
@@ -696,18 +698,20 @@ def _normalize_claim_surface_observation(parser, argv, recorded):
     command = argv[0] if argv else ""
     additions = {"goal": {"authorize": False, "audit_file": None},
                  "route-patch": {"claim_evidence": None},
-                 "material-span": {"material": None, "file_sha256": None}}
+                 "material-span": {"material": None, "file_sha256": None},
+                 # Plan C: the hook-injected study scope.
+                 "material-context": {"session": None}}
     if command not in additions:
         return result
     if "namespace" in result:
         for name, default in additions[command].items():
             assert name not in result["namespace"], (command, name)
             result["namespace"][name] = default
-    elif command == "material-span":
-        # Plan A step 2 changed the usage line; the error body stays exact.
+    elif command in ("material-span", "material-context"):
+        # Plan A step 2 and Plan C changed the usage line; the error body stays exact.
         prefix, separator, body = result["error"]["stderr"].partition(
-            "los material-span: error:")
-        assert separator and prefix.startswith("usage: los material-span")
+            f"los {command}: error:")
+        assert separator and prefix.startswith(f"usage: los {command}")
         action = next(action for action in parser._actions
                       if isinstance(action, argparse._SubParsersAction))
         usage = action.choices[command].format_usage()

@@ -1,0 +1,116 @@
+operation: material.study-span
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: study-read
+    kind: success
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: null}
+  - id: study-read-route
+    kind: success
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --extract, --pages, "pdf p. 3", --session, "11111111-1111-4111-8111-111111111111"]
+    a5_base: true
+    expect: {site: null}
+  - id: study-read-placement-base
+    kind: success
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo, --resource-index, 3, --extract, --pages, "pdf p. 3", --session, "11111111-1111-4111-8111-111111111111"]
+    a5_base: true
+    expect: {site: null}
+  - id: pending-spans-stay-readable-past-the-cap
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 1", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 3", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 4", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 5", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.study-span.limit}
+  - id: another-session-is-not-blocked
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 1", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 3", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 4", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 5", --extract, --session, "22222222-2222-4222-8222-222222222222"]}
+  - id: missing-session
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract]
+    expect: {site: material.study-span.bad-session}
+  - id: malformed-session
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, not-a-session]
+    expect: {site: material.study-span.bad-session}
+  - id: needs-extract
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.needs-extract}
+  - id: clipped
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf pp. 1-24", --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.clipped}
+  - id: material-missing
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/nope.pdf, --pages, "pdf p. 1", --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.material-missing}
+  - id: material-file-changed
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 1", --extract, --file-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000", --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.file-changed}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-nope, route-b2f1f80014860a929a3af0bc, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.unknown-unit}
+  - id: route-near-miss
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bd, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.unknown-route}
+  - id: route-unknown
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-nope, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.unknown-route}
+  - id: stage-without-index
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.stage-needs-index}
+  - id: placement-missing
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-nope, --resource-index, 0, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.unknown-placement}
+  - id: placement-foreign
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo, --resource-index, 0, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.placement-foreign}
+  - id: placement-no-map
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l02, route-7d42915c4988c513e6caa207, --stage, stage-demo, --resource-index, 0, --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.placement-needs-map}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --extract, --pages, "pdf p. 3", --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000", --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.stale-snapshot}
+untriggered:
+  - {site: material.study-span.placement-source-mismatch, reason: fixture-inexpressible}
+  - {site: material.study-span.read-failed, reason: os-error-only}
+  - {site: material.study-span.store-unavailable, reason: os-error-only}
+  - {site: material.study-span.not-pdf, reason: fixture-inexpressible}
+  - {site: material.study-span.overdue, reason: fixture-inexpressible}
+  - {site: material.study-span.adoptable, reason: fixture-inexpressible}

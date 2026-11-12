@@ -245,6 +245,13 @@ fields:
   owner_shape: scalar
   decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map;
     owner executed in test_arch_idroundtrip'
+- operation: material.card.settle
+  pointer: /properties/observed_sha256
+  kind: digest
+  lookup: false
+  decision: 'Plan C 2026-11-12: store/materials/reading_cards.py close_source compares
+    the claimed digest with the bytes the gateway observes at the entry''s last-seen
+    path, never a known-value lookup'
 - operation: material.span
   pointer: /properties/file_sha256
   kind: digest
@@ -261,6 +268,25 @@ fields:
   kind: stage
   lookup: true
 - operation: material.span
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: material.study-span
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+  decision: 'Plan C 2026-11-12: the study read passes material-span''s pin through
+    unchanged (app/handlers/materials.py _pinned_digest compares the opened file''s
+    bytes); plain string, both spellings accepted like material.span'
+- operation: material.study-span
+  pointer: /properties/route_id
+  kind: route
+  lookup: true
+- operation: material.study-span
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: material.study-span
   pointer: /properties/unit_id
   kind: unit
   lookup: true

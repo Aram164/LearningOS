@@ -40,6 +40,18 @@ from learning_os.domain.vocabulary import FRONTMATTER_RE
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.fs import note_bytes as _note_bytes
 from learning_os.store.material_analysis import observe_local_material
+from learning_os.store.materials.reading_cards import (
+    MAX_OPEN_ENTRIES,
+    Read,
+    ReadingStore,
+    ReadingStoreError,
+    SettleRefusal,
+    adopt_command,
+    entry_view,
+    pages_label,
+    settle_command,
+    valid_session,
+)
 from learning_os.store.materials.resolution import (
     project_material_resource,
     resolve_route_material_files,
@@ -1122,6 +1134,322 @@ def material_span(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
+# ---------------------------------------------------------------------------
+# Private reading memory (Plan C, ADR-021): the study read, settlement and the
+# study scope of search and context. The store module decides; these handlers
+# turn its decisions into typed refusals and contracts.
+
+
+def _study_session(ctx, req, *, required: bool):
+    """The hook-injected study session, or None when the call has no study scope."""
+    session = req.get("session")
+    if session is None and not required:
+        return None
+    if not valid_session(session):
+        raise WriteRefused(
+            "the study session is missing or malformed: the study profile's hook "
+            "supplies --session from its own input (a lowercase UUID), and an agent "
+            f"never types it (got {session!r})",
+            site=f"{ctx.operation}.bad-session", prefixed=True, exit_code=2)
+    return session
+
+
+def _span_runs(pages) -> list[tuple[int, int]]:
+    """Contiguous inclusive runs of the physical pages an extraction returned."""
+    runs: list[tuple[int, int]] = []
+    for page in sorted(set(pages)):
+        if runs and page == runs[-1][1] + 1:
+            runs[-1] = (runs[-1][0], page)
+        else:
+            runs.append((page, page))
+    return runs
+
+
+def _study_reads(ctx, payload) -> tuple[list[Read], list[dict]]:
+    """The gated PDF spans of one material-span answer, or a refusal (P2, P3)."""
+    reads: list[Read] = []
+    described: list[dict] = []
+    for span in payload.get("spans", []):
+        excerpt = span.get("excerpt")
+        if span.get("extraction") == "unreadable" or not excerpt:
+            continue  # nothing was returned, so nothing is owed
+        material = (span.get("binding") or {}).get("material") or span.get("material")
+        if span.get("format") != "pdf":
+            raise WriteRefused(
+                f"{material or span.get('material_uri')} is not a PDF: a study read keys "
+                "reading memory by PDF page range, so non-PDF text is not served under the "
+                "study profile",
+                site=f"{ctx.operation}.not-pdf", prefixed=True, exit_code=2)
+        pages = list(span.get("pages") or [])
+        if span.get("extraction") != "complete" or span.get("excerpt_truncated"):
+            first = pages[0] if pages else 1
+            raise WriteRefused(
+                f"{material} {pages_label(min(pages), max(pages)) if pages else ''} does not fit "
+                "one excerpt, so a study read returns no text and opens no entry; read fewer "
+                f'pages, e.g. --pages "pdf p. {first}"',
+                site=f"{ctx.operation}.clipped", prefixed=True, exit_code=2)
+        digest = str(span["file_sha256"]).removeprefix("sha256:")
+        text_sha = hashlib.sha256(excerpt.encode("utf-8")).hexdigest()
+        for start, end in _span_runs(pages):
+            reads.append(Read(digest=digest, material=material, start=start, end=end,
+                              text_sha256=text_sha))
+            described.append({"material": material, "file_sha256": f"sha256:{digest}",
+                              "pages": pages_label(start, end)})
+    return reads, described
+
+
+def _exact_notes(root, repo, read: Read) -> list[dict]:
+    """Durable analysis notes bound to these exact bytes and containing the range."""
+    found = []
+    for note in _analysis_notes(repo):
+        binding = note.meta["material_analysis"]
+        rng = binding.get("inspected_range") or {}
+        if (binding.get("recorded_source_digest") == read.digest
+                and isinstance(rng.get("start"), int) and isinstance(rng.get("end"), int)
+                and rng["start"] <= read.start and read.end <= rng["end"]):
+            found.append({
+                "kind": "analysis-note", "note_id": note.id,
+                "path": note.path.relative_to(root).as_posix(),
+                "review": note.meta.get("semantic_review"),
+                "resolution": binding.get("resolution"),
+                "inspected_range": dict(rng),
+                "pages": pages_label(rng["start"], rng["end"]),
+            })
+    return found
+
+
+def _gate_entries(rows) -> str:
+    return ", ".join(f"{row['entry']} ({row['material']} {pages_label(row['inspected_range']['start'], row['inspected_range']['end'])})"
+                     for row in rows)
+
+
+@register("material.study-span", kind="query", effects=OperationEffects.DERIVED_WRITE)
+def material_study_span(ctx: OpContext, req: dict) -> Result:
+    """A study read: the material-span read, gated by the private reading memory (C1).
+
+    The unchanged material-span answer is computed first, in memory. A PDF
+    span no current card or settled dismissal contains then needs a pending
+    entry, persisted before this returns; the gate may refuse instead, and
+    then no text leaves the gateway.
+    """
+    session = _study_session(ctx, req, required=True)
+    if not req.get("extract"):
+        raise WriteRefused(
+            "material-study-span always reads text; pass --extract (the study hook "
+            "rewrites material-span ... --extract into this command)",
+            site=f"{ctx.operation}.needs-extract", prefixed=True, exit_code=2)
+    span_req = {key: value for key, value in req.items() if key != "session"}
+    payload = material_span(ctx, span_req).payload
+    reads, described = _study_reads(ctx, payload)
+    store = ReadingStore(ctx.root)
+    try:
+        admission = store.admit(session, reads)
+    except ReadingStoreError as exc:
+        raise WriteRefused(
+            f"the reading store cannot record this read, so no text is returned: {exc}",
+            site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2) from exc
+    if admission.refusal == "overdue":
+        raise WriteRefused(
+            "this session holds overdue reading entries; settle them before reading new "
+            f"pages (pending spans stay readable): {_gate_entries(admission.blocking)}",
+            site=f"{ctx.operation}.overdue", prefixed=True, exit_code=2,
+            remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
+    if admission.refusal == "adoptable":
+        named = "; ".join(f"session {name}: {_gate_entries(rows)}"
+                          for name, rows in admission.adoptable.items())
+        raise WriteRefused(
+            "an ended or idle session left unsettled reading entries; adopt and settle "
+            f"them before reading new pages: {named}",
+            site=f"{ctx.operation}.adoptable", prefixed=True, exit_code=2,
+            remedy="  ||  ".join(adopt_command(name) for name in admission.adoptable))
+    if admission.refusal == "limit":
+        raise WriteRefused(
+            f"this read would hold more than {MAX_OPEN_ENTRIES} open reading entries in one "
+            f"turn; settle one first (pending spans stay readable): {_gate_entries(admission.blocking)}",
+            site=f"{ctx.operation}.limit", prefixed=True, exit_code=2,
+            remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
+    repo = ctx.repo()
+    known = set(repo.concepts)
+    rows, memory, seen = [], [], set()
+    for state, described_read in zip(admission.states, described, strict=True):
+        read = state["read"]
+        for note in _exact_notes(ctx.root, repo, read):
+            if ("note", note["note_id"]) not in seen:
+                seen.add(("note", note["note_id"]))
+                memory.append(note)
+        covered_by = []
+        for item in state.get("covering", []):
+            if item.get("record") == "card":
+                covered_by.append(item["card"])
+                if ("card", item["card"]) not in seen:
+                    seen.add(("card", item["card"]))
+                    memory.append({"kind": "card", **store.served_card(item, known)})
+            else:
+                covered_by.append(item["entry"])
+                if ("dismissal", item["entry"]) not in seen:
+                    seen.add(("dismissal", item["entry"]))
+                    memory.append({"kind": "dismissal", **entry_view(item),
+                                   "outcome": item["settlement"]["outcome"],
+                                   "reason": item["settlement"].get("reason"),
+                                   "covering_card": item["settlement"].get("covering_card")})
+        entry = state.get("entry")
+        rows.append({**described_read, "state": state["state"],
+                     "entry": entry["entry"] if entry else None, "covered_by": covered_by})
+    for read in reads:
+        for card in store.cards(read.digest):
+            rng = card["inspected_range"]
+            if (("card", card["card"]) not in seen and rng["start"] <= read.end
+                    and read.start <= rng["end"]):
+                seen.add(("card", card["card"]))
+                memory.append({"kind": "card", **store.served_card(card, known)})
+    memory.sort(key=lambda row: 0 if row["kind"] == "analysis-note" else 1)
+    open_rows = [entry_view(row) for row in admission.open_entries]
+    next_action = None
+    if open_rows:
+        next_action = (
+            f"Before the turn ends, settle each open entry ({len(open_rows)} of at most "
+            f"{MAX_OPEN_ENTRIES}): save a card or dismiss it. "
+            + "  ||  ".join(settle_command(row["entry"]) for row in open_rows[:MAX_OPEN_ENTRIES]))
+    return Result({
+        "schema_version": 1, "snapshot_id": payload["snapshot_id"],
+        "contract": "material-study-span-v1", "span": payload,
+        "study": {"session": session, "reads": rows, "memory": memory,
+                  "open_entries": open_rows, "limit": MAX_OPEN_ENTRIES,
+                  "next_action": next_action},
+    })
+
+
+def _settle_result(ctx, repo, session, settlement, store) -> Result:
+    known = set(repo.concepts)
+    return Result({
+        "schema_version": 1, "contract": "material-card-settle-v1",
+        "session": session, "outcome": settlement.outcome,
+        "replayed": settlement.replayed,
+        "entries": [entry_view(row) for row in settlement.entries],
+        "card": (store.served_card(settlement.card, known)
+                 if settlement.card is not None else None),
+        "remaining": [entry_view(row) for row in settlement.remaining],
+    })
+
+
+@register("material.card.settle", kind="tool", effects=OperationEffects.DERIVED_WRITE)
+def material_card_settle(ctx: OpContext, req: dict) -> Result:
+    """Settle one reading entry, or adopt an ended or idle session's entries (step 3, C7)."""
+    session = _study_session(ctx, req, required=True)
+    modes = [name for name in ("card", "dismiss", "source_changed", "source_gone", "adopt")
+             if req.get(name) not in (None, False)]
+    entry = req.get("entry")
+    if len(modes) != 1 or (modes == ["adopt"]) == (entry is not None):
+        raise WriteRefused(
+            "material-card-settle takes ENTRY with exactly one of --card JSON, --dismiss "
+            "irrelevant|redundant, --source-changed or --source-gone; or --adopt SESSION "
+            "without ENTRY",
+            site=f"{ctx.operation}.bad-form", prefixed=True, exit_code=2)
+    if req.get("observed_sha256") is not None and modes != ["source_changed"]:
+        raise WriteRefused(
+            "--observed-sha256 belongs to --source-changed only",
+            site=f"{ctx.operation}.bad-form", prefixed=True, exit_code=2)
+    store = ReadingStore(ctx.root)
+    repo = ctx.repo()
+    try:
+        if modes == ["card"]:
+            settlement = store.save(session, entry, req["card"])
+        elif modes == ["dismiss"]:
+            settlement = store.dismiss(session, entry, req["dismiss"], reason=req.get("reason"),
+                                       covering_card=req.get("covering_card"))
+        elif modes == ["adopt"]:
+            settlement = store.adopt(session, req["adopt"])
+        else:
+            settlement = store.close_source(
+                session, entry, gone=modes == ["source_gone"],
+                observed=req.get("observed_sha256"),
+                materials_root=repo.learningos_root / "materials")
+    except ReadingStoreError as exc:
+        raise WriteRefused(
+            f"the reading store cannot be updated; the entry stays as it was: {exc}",
+            site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2) from exc
+    except SettleRefusal as exc:
+        if exc.slug == "bad-card":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.bad-card", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "bad-dismissal":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.bad-dismissal", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "not-covering":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.not-covering", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "source-check":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.source-check", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "already-settled":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.already-settled", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "not-owner":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.not-owner", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug == "adopt-live":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.adopt-live", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        if exc.slug in ("bad-adopt", "nothing-to-adopt"):
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.bad-adopt", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
+        raise WriteRefused(str(exc), site=f"{ctx.operation}.unknown-entry", prefixed=True,
+                           exit_code=2, remedy=exc.remedy) from exc
+    return _settle_result(ctx, repo, session, settlement, store)
+
+
+def _study_hit_cards(ctx, repo, session, payload) -> None:
+    """Attach compact current cards to each search hit whose pages they overlap."""
+    store = ReadingStore(ctx.root)
+    known = set(repo.concepts)
+    attached = 0
+    study: dict = {"session": session,
+                   "review": "unreviewed private cards; never coverage evidence"}
+    try:
+        for hit in payload.get("hits", []):
+            digest = str(hit.get("sha256") or "").removeprefix("sha256:")
+            ranges = parse_locator_page_ranges(str(hit.get("span_pages") or ""))
+            if not ranges:
+                hit["cards"] = []
+                continue
+            start, end = ranges[0][0], ranges[-1][1]
+            cards = [store.served_card(card, known, compact=True)
+                     for card in store.cards(digest)
+                     if card["inspected_range"]["start"] <= end
+                     and start <= card["inspected_range"]["end"]]
+            hit["cards"] = cards[:3]
+            attached += len(hit["cards"])
+    except ReadingStoreError as exc:
+        study["cards_unavailable"] = str(exc)
+    study["cards"] = attached
+    payload["study"] = study
+
+
+def _study_context_cards(ctx, repo, *, raw_terms, concept_id, material) -> dict:
+    """Current cards matching the need: every query word, the concept, the material."""
+    store = ReadingStore(ctx.root)
+    known = set(repo.concepts)
+    words = [term.casefold() for term in raw_terms]
+    try:
+        rows = store.all_cards()
+    except ReadingStoreError as exc:
+        return {"items": [], "total": 0, "cards_unavailable": str(exc)}
+    matched = []
+    for card in rows:
+        if material and card["material"] != material:
+            continue
+        if concept_id and concept_id not in (card.get("concepts") or []):
+            continue
+        text = " ".join([card["paraphrase"], *(row["label"] for row in card["pointers"])]).casefold()
+        if any(word not in text for word in words):
+            continue
+        matched.append(card)
+    matched.sort(key=lambda card: (card["material"], card["inspected_range"]["start"], card["card"]))
+    return {"items": [store.served_card(card, known, compact=True) for card in matched[:5]],
+            "total": len(matched),
+            "review": "unreviewed private cards; never coverage evidence"}
+
+
 ASSESSMENT_TEXT_FIELDS = ("contribution", "assumptions", "notation",
                           "exercise_value", "best_for", "limitations",
                           "locator")
@@ -1455,6 +1783,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
     """Find saved explanations from an explanation need."""
     root = ctx.root
     try:
+        session = _study_session(ctx, req, required=False)
         try:
             # An explicit limit passes through verbatim, so 0 reaches the
             # 1..maximum check and is refused by the existing bad-window
@@ -1756,6 +2085,10 @@ def material_context(ctx: OpContext, req: dict) -> Result:
                 for item in returned):
             payload["expand"] = {"anchors": _anchor_expansion_command(
                 req, limit, snapshot, observed)}
+        if session is not None:
+            payload["study_cards"] = _study_context_cards(
+                ctx, repo, raw_terms=raw_terms, concept_id=concept_id,
+                material=material_ref)
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
@@ -1793,6 +2126,7 @@ def material_search(ctx: OpContext, req: dict) -> Result:
     )
 
     root = ctx.root
+    session = _study_session(ctx, req, required=False)
     raw_query = req.get("query") or ""
     if not isinstance(raw_query, str) or not raw_query.strip():
         raise WriteRefused(
@@ -1888,6 +2222,8 @@ def material_search(ctx: OpContext, req: dict) -> Result:
     snapshot_val = _snapshot(root)
     payload = search_res.to_dict()
     payload["snapshot_id"] = snapshot_val
+    if session is not None:
+        _study_hit_cards(ctx, repo, session, payload)
 
     return Result(payload)
 

@@ -1,0 +1,81 @@
+operation: material.card.settle
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: save
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --card, '{"paraphrase": "Introduces the lecture topic and states the first definition.", "kinds": ["statement"], "pointers": [{"page": 2, "kind": "statement", "label": "first definition"}]}', --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --card, '{"paraphrase": "Introduces the lecture topic and states the first definition.", "kinds": ["statement"], "pointers": [{"page": 2, "kind": "statement", "label": "first definition"}]}', --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "22222222-2222-4222-8222-222222222222"]}
+  - id: dismiss-irrelevant
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, irrelevant, --reason, "a title page with no content", --session, "11111111-1111-4111-8111-111111111111"]}
+  - id: missing-session
+    kind: refusal
+    transport: cli
+    argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, irrelevant, --reason, "no session given"]
+    expect: {site: material.card.settle.bad-session}
+  - id: no-mode
+    kind: refusal
+    transport: cli
+    argv: [material-card-settle, rd-a4b88dcaf74944c1, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.card.settle.bad-form}
+  - id: unknown-entry
+    kind: refusal
+    transport: cli
+    argv: [material-card-settle, rd-0000000000000000, --dismiss, irrelevant, --reason, "nothing here", --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.card.settle.unknown-entry}
+  - id: bad-card
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --card, '{"paraphrase": "A card whose only pointer lies outside the read pages.", "kinds": ["statement"], "pointers": [{"page": 9, "kind": "statement", "label": "elsewhere"}]}', --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.card.settle.bad-card}
+  - id: bad-dismissal
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, irrelevant, --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.card.settle.bad-dismissal}
+  - id: not-covering
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, redundant, --covering-card, card-395ded80ff4a721e-p9-9, --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.card.settle.not-covering}
+  - id: source-unchanged
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --source-changed, --observed-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000", --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.card.settle.source-check}
+  - id: already-settled
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --card, '{"paraphrase": "Introduces the lecture topic and states the first definition.", "kinds": ["statement"], "pointers": [{"page": 2, "kind": "statement", "label": "first definition"}]}', --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, irrelevant, --reason, "changed my mind", --session, "11111111-1111-4111-8111-111111111111"]}
+    expect: {site: material.card.settle.already-settled}
+  - id: not-owner
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --dismiss, irrelevant, --reason, "not mine", --session, "22222222-2222-4222-8222-222222222222"]}
+    expect: {site: material.card.settle.not-owner}
+  - id: adopt-live
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, --adopt, "11111111-1111-4111-8111-111111111111", --session, "22222222-2222-4222-8222-222222222222"]}
+    expect: {site: material.card.settle.adopt-live}
+  - id: nothing-to-adopt
+    kind: refusal
+    transport: cli
+    argv: [material-card-settle, --adopt, "22222222-2222-4222-8222-222222222222", --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.card.settle.bad-adopt}
+untriggered:
+  - {site: material.card.settle.store-unavailable, reason: os-error-only}

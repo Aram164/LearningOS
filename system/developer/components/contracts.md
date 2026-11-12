@@ -18,7 +18,7 @@ Load and enforce declared shapes, capabilities, scopes and documentation authori
 <!-- system-map:begin name=edges -->
 Depends on: `domain`, `materials`, `transactions`.
 
-Used by: `ai-delivery`, `backup`, `cli-adapter`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `legacy-archive`, `masters-planning`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
+Used by: `ai-delivery`, `backup`, `cli-adapter`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `legacy-archive`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

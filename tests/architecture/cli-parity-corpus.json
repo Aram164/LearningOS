@@ -4052,8 +4052,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -10845,8 +10848,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11379,8 +11385,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11419,8 +11428,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11455,8 +11467,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11493,8 +11508,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11533,8 +11551,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11573,8 +11594,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11615,8 +11639,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11653,8 +11680,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11693,8 +11723,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -11731,8 +11764,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -12582,8 +12618,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27603,8 +27642,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27637,8 +27679,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27672,8 +27717,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27707,8 +27755,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27743,8 +27794,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27785,8 +27839,11 @@
           "offset": 1,
           "expected_snapshot": "sha256:ac0eddef5a3c78e2abcc20ba5941b2ba613d600b9125e10d827683c5628c60bc",
           "expected_observations": "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6",
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27818,8 +27875,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27853,8 +27913,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27889,8 +27952,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27924,8 +27990,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27959,8 +28028,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -27995,8 +28067,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28031,8 +28106,11 @@
           "offset": 1,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28069,8 +28147,11 @@
           "offset": 1,
           "expected_snapshot": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28111,8 +28192,11 @@
           "offset": 1,
           "expected_snapshot": "sha256:ac0eddef5a3c78e2abcc20ba5941b2ba613d600b9125e10d827683c5628c60bc",
           "expected_observations": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -28147,8 +28231,11 @@
           "offset": 0,
           "expected_snapshot": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42264,8 +42351,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42297,8 +42387,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42331,8 +42424,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42365,8 +42461,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42399,8 +42498,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42432,8 +42534,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42465,8 +42570,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42499,8 +42607,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42533,8 +42644,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42567,8 +42681,11 @@
           "offset": 1,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42601,8 +42718,11 @@
           "offset": 0,
           "expected_snapshot": "X",
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42635,8 +42755,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": "X",
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42668,8 +42791,11 @@
           "offset": 0,
           "expected_snapshot": null,
           "expected_observations": null,
-          "func": "learning_os.commands.reads.cmd_material_context"
-        }
+          "session": null,
+          "func": "learning_os.adapters.cli.invoke",
+          "_operation": "material.context"
+        },
+        "stdout": ""
       }
     },
     {
@@ -42687,9 +42813,10 @@
       "result": {
         "error": {
           "exit": 2,
-          "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\n                            [--purpose PURPOSE] [--unit UNIT]\n                            [--include-related] [--include-anchors]\n                            [--material REF] [--limit LIMIT] [--offset OFFSET]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-observations EXPECTED_OBSERVATIONS]\n                            [query]\nlos material-context: error: unrecognized arguments: --bogus-flag-xyz\n",
-          "first_line": "usage: los material-context [-h] [--json] [--concept CONCEPT]"
-        }
+          "first_line": "usage: los material-context [-h] [--json] [--concept CONCEPT]",
+          "stderr": "usage: los material-context [-h] [--json] [--concept CONCEPT]\n                            [--purpose PURPOSE] [--unit UNIT]\n                            [--include-related] [--include-anchors]\n                            [--material REF] [--limit LIMIT] [--offset OFFSET]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-observations EXPECTED_OBSERVATIONS]\n                            [--session SESSION]\n                            [query]\nlos material-context: error: unrecognized arguments: --bogus-flag-xyz\n"
+        },
+        "stdout": ""
       }
     },
     {

@@ -1,0 +1,30 @@
+{
+ "adopted_from": [],
+ "entry": "rd-3ca20c4f3c53effe",
+ "inspected_range": {
+  "end": 3,
+  "start": 2
+ },
+ "material": "source-demo-book/book.pdf",
+ "opened_at": "2026-11-12T10:00:00+01:00",
+ "overdue_at": null,
+ "record": "entry",
+ "recorded_source_digest": "939260683c5957ea177021cd1277520c30ee37c69a8d60768a5060a4147f3f7f",
+ "schema_version": 1,
+ "session": "0f1e2d3c-4b5a-4968-8776-655443322110",
+ "settlement": {
+  "at": "2026-11-12T10:00:00+01:00",
+  "card": {
+   "card": "card-939260683c5957ea-p2-3",
+   "version": 1
+  },
+  "covering_card": null,
+  "observed_sha256": null,
+  "outcome": "saved",
+  "reason": null,
+  "request_sha256": "34711ce1d2dc96054648125cd883e64dd98dba271d39acd996861d0c3675f365",
+  "session": "0f1e2d3c-4b5a-4968-8776-655443322110"
+ },
+ "state": "settled",
+ "text_sha256": "6fb98b854f773486c4b1b87ef6b5e095fb2021b5adcbef464a52af30c3089835"
+}

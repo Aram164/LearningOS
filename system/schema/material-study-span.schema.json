@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-study-span-v1",
+  "title": "Material study read response",
+  "description": "A study read (material.study-span, ADR-021): the unchanged material-span-v1 answer for the same request, nested under span, plus the reading-memory gate's study block. Obsidian's material-span-v1 is not changed by this contract.",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "snapshot_id", "contract", "span", "study"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "contract": {"const": "material-study-span-v1"},
+    "span": {"$ref": "https://learningos.local/schema/material-span.schema.json"},
+    "study": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session", "reads", "memory", "open_entries", "limit", "next_action"],
+      "properties": {
+        "session": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["material", "file_sha256", "pages", "state", "entry", "covered_by"],
+            "properties": {
+              "material": {"type": "string", "minLength": 1},
+              "file_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+              "pages": {"type": "string", "minLength": 1},
+              "state": {"enum": ["covered", "pending", "opened"]},
+              "entry": {"type": ["string", "null"], "pattern": "^rd-[0-9a-f]{16}$"},
+              "covered_by": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        },
+        "memory": {
+          "description": "What is already known about the read pages: exact durable analysis notes first, then current unreviewed private cards. Never coverage evidence.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {"kind": {"enum": ["analysis-note", "card", "dismissal"]}}
+          }
+        },
+        "open_entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["entry", "state", "material", "file_sha256", "pages", "session"],
+            "properties": {
+              "entry": {"type": "string", "pattern": "^rd-[0-9a-f]{16}$"},
+              "state": {"enum": ["open", "overdue"]},
+              "material": {"type": "string", "minLength": 1},
+              "file_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+              "pages": {"type": "string", "minLength": 1},
+              "session": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "limit": {"type": "integer", "minimum": 1},
+        "next_action": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

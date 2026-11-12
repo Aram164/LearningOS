@@ -3336,6 +3336,176 @@ for _overnight_op, _overnight_slug in (("stage.attachment.add", "no-working-note
         _prove_overnight_learner_backstops, operation=_overnight_op)
 
 
+# --- private reading memory (Plan C, ADR-021) ---------------------------------------
+
+_STUDY_S1 = "11111111-1111-4111-8111-111111111111"
+_STUDY_S2 = "22222222-2222-4222-8222-222222222222"
+_STUDY_PDF = "source-demo-book/lecture-01.pdf"
+
+
+def _study_argv(page: int, session: str) -> list:
+    return ["material-study-span", "--material", _STUDY_PDF, "--pages", f"pdf p. {page}",
+            "--extract", "--session", session]
+
+
+def _study_line(operation: str, slug: str) -> list:
+    return [{"operation": operation, "kind": "failure", "site": f"{operation}.{slug}",
+             "class": "WriteRefused", "exit_code": 2}]
+
+
+def _prove_study_overdue(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """A Stop-marked overdue entry refuses a new span (fixture-inexpressible).
+
+    Only the study profile's Stop hook marks entries overdue, and no
+    scenario step runs a hook; the proof calls the store's Stop logic.
+    """
+    from learning_os.store.materials.reading_cards import ReadingStore
+
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+    outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(2, _STUDY_S1),
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is True and lines == []
+    store = ReadingStore(root)
+    for index in range(3):
+        store.stop(_STUDY_S1, continuing=index > 0)
+    (tmp_path / "second").mkdir()
+    outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(3, _STUDY_S1),
+                                 tmp_path / "second", monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "overdue")
+
+
+def _prove_study_adoptable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """An ended session's entries refuse another session's new span (fixture-inexpressible).
+
+    A recorded end comes from the Stop hook, and one scenario clock cannot
+    express two idle hours; the proof records the end through the store.
+    """
+    from learning_os.store.materials.reading_cards import ReadingStore
+
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+    outcome, _ = _a9_run_cli(root, "material.study-span", _study_argv(2, _STUDY_S1),
+                             tmp_path, monkeypatch)
+    assert outcome.ok is True
+    store = ReadingStore(root)
+    for index in range(3):
+        store.stop(_STUDY_S1, continuing=index > 0)
+    (tmp_path / "second").mkdir()
+    outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(3, _STUDY_S2),
+                                 tmp_path / "second", monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "adoptable")
+
+
+def _prove_study_store_unavailable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """A store that cannot be written refuses the read (os-error-only)."""
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+    (root.parent / "reading-memory").write_text("not a directory", encoding="utf-8")
+    outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(2, _STUDY_S1),
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "store-unavailable")
+
+
+def _prove_settle_store_unavailable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """A store that cannot be written refuses a settlement (os-error-only)."""
+    root = _a9_world("material.card.settle", "nothing-to-adopt", tmp_path).root
+    (root.parent / "reading-memory").write_text("not a directory", encoding="utf-8")
+    outcome, lines = _a9_run_cli(
+        root, "material.card.settle",
+        ["material-card-settle", "--adopt", _STUDY_S2, "--session", _STUDY_S1],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.card.settle", "store-unavailable")
+
+
+def _prove_study_not_pdf(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """A non-PDF excerpt refuses (fixture-inexpressible: no fixture route reads text)."""
+    import learning_os.app.handlers.materials as materials
+
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+    real = materials.material_span
+
+    def text_span(ctx, req):
+        result = real(ctx, req)
+        for span in result.payload["spans"]:
+            span["format"] = "md"
+        return result
+
+    monkeypatch.setattr(materials, "material_span", text_span)
+    outcome, lines = _a9_run_cli(root, "material.study-span", _study_argv(2, _STUDY_S1),
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "not-pdf")
+
+
+def _prove_study_read_failed(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """An OSError mid-read fires the inherited site (os-error-only)."""
+    import learning_os.app.handlers.materials as materials
+
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(materials, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(
+        root, "material.study-span",
+        ["material-study-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc",
+         "--extract", "--pages", "pdf p. 3", "--session", _STUDY_S1], tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "read-failed")
+
+
+def _prove_study_placement_source_mismatch(mini_repo: Path, tmp_path: Path,
+                                           monkeypatch) -> None:
+    """The inherited placement gate fires for the study read (fixture-inexpressible).
+
+    Same injection as the material.span proof: a belonging use plus a
+    flipped loaded source, then the study read of that placement.
+    """
+    import learning_os.app.handlers.materials as materials
+    import learning_os.store.loading.curriculum as curriculum
+
+    root = _a9_world("material.study-span", "study-read", tmp_path).root
+    real_expand = curriculum.expand_map
+
+    def flipped(data, source_map, module_id, unit_id):
+        expanded = real_expand(data, source_map, module_id, unit_id)
+        for stage in expanded.get("stages", []):
+            for resource in stage.get("resources", []):
+                resource["source_id"] = "source-other"
+        return expanded
+
+    real_entry = materials._route_entry
+
+    def belonging(ctx, routes, study_map, source_map, unit, route_id):
+        entry = real_entry(ctx, routes, study_map, source_map, unit, route_id)
+        entry["uses"].append({"stage_id": "stage-demo", "resource_index": 0})
+        return entry
+
+    monkeypatch.setattr(curriculum, "expand_map", flipped)
+    monkeypatch.setattr(materials, "_route_entry", belonging)
+    outcome, lines = _a9_run_cli(
+        root, "material.study-span",
+        ["material-study-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc",
+         "--stage", "stage-demo", "--resource-index", "0", "--extract", "--session", _STUDY_S1],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.study-span", "placement-source-mismatch")
+
+
+_PROOF_FNS.update({
+    "material.study-span.overdue": _prove_study_overdue,
+    "material.study-span.adoptable": _prove_study_adoptable,
+    "material.study-span.store-unavailable": _prove_study_store_unavailable,
+    "material.study-span.not-pdf": _prove_study_not_pdf,
+    "material.study-span.read-failed": _prove_study_read_failed,
+    "material.study-span.placement-source-mismatch": _prove_study_placement_source_mismatch,
+    "material.card.settle.store-unavailable": _prove_settle_store_unavailable,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)

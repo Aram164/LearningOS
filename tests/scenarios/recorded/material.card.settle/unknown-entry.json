@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: no reading entry rd-0000000000000000\n  next: you hold no unsettled entries\n",
+  "stdout": "",
+  "stdout_json": null
+}

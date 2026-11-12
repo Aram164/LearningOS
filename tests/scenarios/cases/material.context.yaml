@@ -83,5 +83,10 @@ cases:
     transport: cli
     argv: [material-context, derivation, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.context.stale-snapshot}
+  - id: malformed-session
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --session, not-a-session]
+    expect: {site: material.context.bad-session}
 untriggered:
   - {site: material.context.read-failed, reason: os-error-only}

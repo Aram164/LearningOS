@@ -31,6 +31,34 @@ queries:
     - the PDF-only material form (--material RELPATH --pages --extract) reads a regular PDF below the resolved materials root, including _unsorted/, with no unit or route; absolute paths, traversal, symlink components below the root and the reserved .flat directory refuse; the digest check and the extraction use the bytes of one opened file, under the same page and excerpt limits
     - the material form reports the routes whose resolved files are that exact file, and a null source id unless they name exactly one source
     - --file-sha256 refuses with exit 3 when the opened file's bytes no longer hash to the pinned digest; the route form pins only a single-file route
+  material.study-span:
+    handler: material_study_span
+    cli_command: material-study-span
+    kind: query
+    result: material-study-span-v1
+    schema: system/schema/material-study-span.schema.json
+    invariants:
+    - effects derived-write to the private reading store beside the repository (LearningOS/reading-memory/, ADR-021); never a repository, inventory or manifest write
+    - nests the unchanged material-span-v1 answer for the same request under span; Obsidian's material-span is not routed here
+    - requires the hook-injected --session; a missing or malformed session refuses
+    - a PDF span that no current card or settled dismissal of the same digest contains persists an open reading entry before any text returns; if the entry cannot be persisted the read refuses
+    - a span inside one of the session's pending entries, or covered, opens nothing; a clipped, truncated or non-PDF extraction returns no text and opens nothing
+    - a new uncovered span refuses while the session holds an overdue entry, while any ended or idle session's entries are adoptable, or when it would hold more than four open entries; every refusal names the entries and the exact settle or adopt command
+    - returns exact durable analysis notes first, then the covering unreviewed cards; concept ids are checked when served and dangling ones are marked; a card is never coverage evidence
+  material.card.settle:
+    handler: material_card_settle
+    cli_command: material-card-settle
+    kind: tool
+    result: material-card-settle-v1
+    schema: system/schema/material-card-settle.schema.json
+    invariants:
+    - effects derived-write to the private reading store only; no receipt, the store's own append-only log records each save, dismissal and adoption
+    - a save admits a card only with every page pointer inside the entry's recorded pages and every treatment kind backed by a pointer; a re-save of a card writes a new version and keeps the old one
+    - dismissals are irrelevant with a reason, or redundant with a current card of the same digest that contains every page of the entry
+    - --source-changed and --source-gone close an entry only after the gateway observes the changed digest or the absence
+    - one atomic update writes the card version, closes the entry and appends the log line; retries replay idempotently and a refused settlement leaves the entry open
+    - --adopt moves the unsettled entries of a session with a recorded end, or no gateway call for two hours, to the caller as overdue entries; a live session's entries refuse
+    - requires the hook-injected --session; entries of other sessions refuse
   study.sequence:
     handler: study_sequence
     cli_command: study-sequence

@@ -1208,6 +1208,13 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("goal.decide.unknown-goal", "unknown-goal"),
     ("material.span", "/properties/stage_id"):
         ("material.span.unknown-placement", "placement-missing"),
+    # Plan C (ADR-021): the study read reuses material.span's lookups.
+    ("material.study-span", "/properties/unit_id"):
+        ("material.study-span.unknown-unit", "unknown-unit"),
+    ("material.study-span", "/properties/route_id"):
+        ("material.study-span.unknown-route", "route-near-miss"),
+    ("material.study-span", "/properties/stage_id"):
+        ("material.study-span.unknown-placement", "placement-missing"),
 }
 
 #: The expected complaint form per anchored pointer (SPEC (bk) item 1,
@@ -1348,6 +1355,14 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("material.span", "/properties/stage_id"):
         ("legacy-verbatim",
          "placement is missing or ambiguous in this unit"),
+    # Plan C (ADR-021): the study read reuses material.span's complaints.
+    ("material.study-span", "/properties/unit_id"):
+        ("legacy", "unknown unit {miss}"),
+    ("material.study-span", "/properties/route_id"):
+        ("legacy", "route not found: {miss} in unit-demo-l01"),
+    ("material.study-span", "/properties/stage_id"):
+        ("legacy-verbatim",
+         "placement is missing or ambiguous in this unit"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -1394,6 +1409,10 @@ _CLI_REFUSED_POINTERS = frozenset({
     # SPEC (cq) items 3 and 6: the repaired CLI lookup anchors.
     ("goal.decide", "/properties/goal_id/items"),
     ("material.span", "/properties/stage_id"),
+    # Plan C (ADR-021): the study read's lookup anchors.
+    ("material.study-span", "/properties/unit_id"),
+    ("material.study-span", "/properties/route_id"),
+    ("material.study-span", "/properties/stage_id"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): single-case CLI anchors.
     ("ai-action.status", "/properties/request_id"),
     ("ai-action.prepare", "/properties/action_id"),
