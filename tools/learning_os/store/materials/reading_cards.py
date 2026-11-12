@@ -107,14 +107,6 @@ def valid_session(value: object) -> TypeGuard[str]:
     return isinstance(value, str) and SESSION_RE.fullmatch(value) is not None
 
 
-def bare_digest(value: str) -> str:
-    """Bare 64-hex digest from either read-surface spelling."""
-    text = value.removeprefix("sha256:")
-    if DIGEST_RE.fullmatch(text) is None:
-        raise ValueError(f"not a SHA-256 digest: {value!r}")
-    return text
-
-
 def card_name(digest: str, start: int, end: int) -> str:
     """The stable card handle for one digest and page range (C3)."""
     return f"card-{digest[:16]}-p{start}-{end}"
@@ -603,6 +595,8 @@ class ReadingStore:
     def _touch_op(self, name: str, now: dt.datetime, *, start: bool = False) -> dict[str, object]:
         record = self._session_record(name)
         record["last_call_at"] = _iso(now)
+        # A later call reactivates the session even within the same clock second.
+        record["ended_at"] = None
         if start:
             record["started_at"] = _iso(now)
         return self._write_op(f"sessions/{name}.json", record)
@@ -840,12 +834,29 @@ class ReadingStore:
             seen = observe_local_material(materials_root, cast(str, row["material"]),
                                           cast(str, row["recorded_source_digest"]))
             status = seen["status"]
+            if status == "outside-boundary":
+                raise SettleRefusal("source-check",
+                                    f"{row['material']} resolves outside the materials boundary")
             if gone:
                 if status in ("current", "stale"):
                     raise SettleRefusal(
                         "source-check",
                         f"{row['material']} is still there (status {status}); --source-gone "
                         "closes only an entry whose file is absent")
+                # The shared observer also reports unreadable paths as missing.
+                # Closing a debt requires an observed absence.
+                try:
+                    (materials_root / cast(str, row["material"])).lstat()
+                except FileNotFoundError:
+                    pass
+                except OSError as exc:
+                    raise SettleRefusal(
+                        "source-check",
+                        f"cannot verify that {row['material']} is absent") from exc
+                else:
+                    raise SettleRefusal(
+                        "source-check",
+                        f"{row['material']} still exists; --source-gone requires an absent path")
                 outcome, kept = "source-gone", None
             else:
                 if status == "current":
@@ -861,14 +872,13 @@ class ReadingStore:
                     raise SettleRefusal(
                         "source-check",
                         "--source-changed needs --observed-sha256 (the file's current bytes)")
-                try:
-                    given = bare_digest(observed)
-                except ValueError:
+                observed_digest = observed.removeprefix("sha256:")
+                if DIGEST_RE.fullmatch(observed_digest) is None:
                     raise SettleRefusal(
                         "source-check",
                         "--observed-sha256 must be a SHA-256 digest "
-                        "(bare hex or sha256: prefixed)") from None
-                if given != seen["live_digest"]:
+                        "(bare hex or sha256: prefixed)")
+                if observed_digest != seen["live_digest"]:
                     raise SettleRefusal(
                         "source-check",
                         f"--observed-sha256 must equal the file's current bytes "
@@ -904,18 +914,19 @@ class ReadingStore:
             operations: list[dict[str, object]] = []
             moved: list[dict[str, object]] = []
             for row in theirs:
+                adopted_from = [*cast("list[str]", row.get("adopted_from") or []), other]
                 record = dict(row, session=session, state="overdue",
                               overdue_at=row.get("overdue_at") or _iso(moment),
-                              adopted_from=[*cast("list[str]", row.get("adopted_from") or []),
-                                            other])
+                              adopted_from=adopted_from)
                 operations.append(self._write_op(f"pending/{row['entry']}.json", record))
                 line = {"record": "log", "schema_version": 1, "at": _iso(moment),
                         "session": session, "entry": row["entry"], "outcome": "adopted",
                         "card_version": None, "from_session": other}
                 self._validated(dict(line, key="0" * 64))
+                hop = f"{row['entry']}\0adopted\0{other}\0{len(adopted_from)}"
                 operations.append({
                     "op": "append", "path": f"log/{session}.jsonl", "line": line,
-                    "key": hashlib.sha256(f"{row['entry']}\0adopted\0{other}".encode()).hexdigest()})
+                    "key": hashlib.sha256(hop.encode()).hexdigest()})
                 moved.append(record)
             operations.append(self._touch_op(session, moment))
             self._commit(operations)
@@ -1026,7 +1037,7 @@ def entry_view(row: dict[str, object]) -> dict[str, object]:
 __all__ = [
     "ADOPT_IDLE", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME", "TREATMENT_KINDS",
     "Admission", "Read", "ReadingStore", "ReadingStoreError", "SettleRefusal",
-    "Settlement", "StopDecision", "adopt_command", "admit_card", "bare_digest",
+    "Settlement", "StopDecision", "adopt_command", "admit_card",
     "card_name", "entry_view", "pages_label", "settle_command", "store_root",
     "valid_session",
 ]
