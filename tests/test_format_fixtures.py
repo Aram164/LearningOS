@@ -207,6 +207,14 @@ def test_nothing_the_validator_applies_to_records_is_an_artifact(
     assert not offenders, "Validator applied non-record schemas: " + ", ".join(offenders)
 
 
+def _mutate_schema_title(path: Path) -> None:
+    before = path.read_bytes()
+    data = json.loads(before.decode("utf-8"))
+    data["title"] = f"{data.get('title', '')} edited"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    assert path.read_bytes() != before
+
+
 def test_classification_decides_the_fingerprint(repo_root, tmp_path):
     from learning_os.store.contracts.data_contract import fingerprint
 
@@ -214,32 +222,30 @@ def test_classification_decides_the_fingerprint(repo_root, tmp_path):
     shutil.copytree(repo_root / "system" / "schema", schema_dir)
 
     base_fingerprint = fingerprint(schema_dir)
+    by_kind: dict[str, list[tuple[Path, dict]]] = {"artifact": [], "record": []}
+    for path in sorted(schema_dir.glob("*.schema.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        kind = data.get("x-governs")
+        if kind in by_kind:
+            by_kind[kind].append((path, data))
+    assert by_kind["artifact"] and by_kind["record"]
 
-    artifact_schema = None
-    for path in schema_dir.glob("*.schema.json"):
-        if json.loads(path.read_text(encoding="utf-8")).get("x-governs") == "artifact":
-            artifact_schema = path
-            break
-    assert artifact_schema is not None
+    # Deterministic selection plus explicit coverage of an artifact schema lacking `title`.
+    artifact_targets = [by_kind["artifact"][0][0]]
+    titleless_artifact = next((p for p, d in by_kind["artifact"] if "title" not in d), None)
+    if titleless_artifact is not None and titleless_artifact not in artifact_targets:
+        artifact_targets.append(titleless_artifact)
 
-    data = json.loads(artifact_schema.read_text(encoding="utf-8"))
-    data["title"] += " edited"
-    artifact_schema.write_text(json.dumps(data), encoding="utf-8")
+    for artifact_schema in artifact_targets:
+        _mutate_schema_title(artifact_schema)
+        assert fingerprint(schema_dir) == base_fingerprint, (
+            "Editing an artifact schema should leave the fingerprint unchanged"
+        )
 
-    assert fingerprint(schema_dir) == base_fingerprint, "Editing an artifact schema should leave the fingerprint unchanged"
-
-    record_schema = None
-    for path in schema_dir.glob("*.schema.json"):
-        if json.loads(path.read_text(encoding="utf-8")).get("x-governs") == "record":
-            record_schema = path
-            break
-    assert record_schema is not None
-
-    data = json.loads(record_schema.read_text(encoding="utf-8"))
-    data["title"] += " edited"
-    record_schema.write_text(json.dumps(data), encoding="utf-8")
-
-    assert fingerprint(schema_dir) != base_fingerprint, "Editing a record schema should change the fingerprint"
+    _mutate_schema_title(by_kind["record"][0][0])
+    assert fingerprint(schema_dir) != base_fingerprint, (
+        "Editing a record schema should change the fingerprint"
+    )
 
 
 def test_unclassified_schema_still_counts_as_record(repo_root, tmp_path):
