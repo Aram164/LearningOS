@@ -46,7 +46,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 17
+contract_version: 18
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -98,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v17.schema.json
-schema_sha256: sha256:fbb36ea2d86abfeac746af6c2dcc12b5d02d2bbd76659d019bbf73cee8382ff7
+schema_path: system/contracts/manifest-v18.schema.json
+schema_sha256: sha256:5d442f3670da4e66266e1eb03ad920ba6b64f2e9d487621303b76736accc8c8f
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -202,3 +202,10 @@ history:
   adopted: '2026-11-09'
   note: 'v17: retire learning paths and the empty project collections'
   mirrored_in_ui: contracts/manifest-v17.lock.json
+- version: 18
+  adopted: '2026-11-12'
+  note: 'v18: every material_ref expansion carries its resolved route_id, so a stage
+    that overrides a locator still names its route; no shape change. Paired with the
+    material-only material-span reader and route-free search references (Plan A steps
+    2-3).'
+  mirrored_in_ui: contracts/manifest-v18.lock.json

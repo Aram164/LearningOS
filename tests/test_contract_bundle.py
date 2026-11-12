@@ -1,6 +1,6 @@
 """Prototype contract bundler: closure, digest, and registry parity.
 
-Exercises the checked-in v17 schemas (``full_repo``): the bundler must resolve
+Exercises the checked-in v18 schemas (``full_repo``): the bundler must resolve
 exactly the verified closure, digest canonical content (never mere
 serialization), and admit exactly the identities the live Core validator
 admits through ``schema_registry()``.
@@ -27,10 +27,10 @@ from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = pytest.mark.full_repo
 
-V15_REL = "system/contracts/manifest-v17.schema.json"
+V15_REL = "system/contracts/manifest-v18.schema.json"
 SCHEMA_DIR_REL = "system/schema"
 
-# The v17 root references sources.schema.json for the projected discovery
+# The v18 root references sources.schema.json for the projected discovery
 # record. The remaining transitive resources are learning-plan and
 # material-comparison-defs. Learning-path and project schemas were retired
 # with their records in rev3 Group 11.
@@ -101,7 +101,7 @@ def test_bundle_envelope_carries_generated_warning(repo_root: Path) -> None:
 def test_serialization_does_not_change_digest(repo_root: Path, tmp_path: Path) -> None:
     schema_copy = tmp_path / "schema"
     _copy_tree_with_indent(repo_root / SCHEMA_DIR_REL, schema_copy, indent=2)
-    root_copy = tmp_path / "manifest-v17.schema.json"
+    root_copy = tmp_path / "manifest-v18.schema.json"
     root_value = json.loads((repo_root / V15_REL).read_text(encoding="utf-8"))
     root_copy.write_text(json.dumps(root_value, indent=4), encoding="utf-8")
     assert root_copy.read_bytes() != (repo_root / V15_REL).read_bytes()

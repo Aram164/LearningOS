@@ -28,6 +28,9 @@ queries:
     - one exact registered route yields common source identity, locator, type, availability, and observed digest
     - local extraction is on demand and bounded; remote sources are never fetched implicitly
     - unreadable or changed bytes remain explicit and no semantic judgment is inferred
+    - the PDF-only material form (--material RELPATH --pages --extract) reads a regular PDF below the resolved materials root, including _unsorted/, with no unit or route; absolute paths, traversal, symlink components below the root and the reserved .flat directory refuse; the digest check and the extraction use the bytes of one opened file, under the same page and excerpt limits
+    - the material form reports the routes whose resolved files are that exact file, and a null source id unless they name exactly one source
+    - --file-sha256 refuses with exit 3 when the opened file's bytes no longer hash to the pinned digest; the route form pins only a single-file route
   study.sequence:
     handler: study_sequence
     cli_command: study-sequence
@@ -114,6 +117,7 @@ queries:
     - excerpts are bounded (8 note snippets — a title label or true file line numbers — 3 assessment fields); default 5 items, at most 20
     - analysis-note anchors preview at most 8 per note with exact totals and clipping flags (purpose matches first); the complete index lists only via --include-anchors
     - source freshness is observed live per result; review state and resolution are reported, never inferred
+    - an assessment result names its route beside the route id with route_title and route_angle from the current source map, at most 200 characters each, and null when the route is no longer there
     - empty results describe the searched records only, never the absence of an explanation
     - continuation requires the snapshot and observations_sha256 guards; changed canonical data, observed material bytes, or normalized filters refuse mixed pages, even when an assessment remains stale
   material.search:

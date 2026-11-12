@@ -46,6 +46,7 @@ from learning_os.domain.material_refs import (
     PATCH_FIELDS,
     MaterialReferenceError,
     compact_map,
+    compaction_expected,
     expand_map,
     matching_routes,
     persist_route_ids,
@@ -224,7 +225,10 @@ def compaction_plan(repo, module_id):
         compact, refs = compact_map(raw, source_map, module_id, sm.unit_id)
         if compact == raw:
             continue
-        if expand_map(compact, source_map, module_id, sm.unit_id) != sm.data:
+        # Lossless means: the loaded map plus the route identity each new
+        # reference carries, and nothing else (material_refs.compaction_expected).
+        if expand_map(compact, source_map, module_id, sm.unit_id) != compaction_expected(
+                sm.data, raw, compact):
             raise WriteRefused(f"compaction changed {sm.id}")
         _changed_write(writes, sm.path, compact)
         used.update(refs)

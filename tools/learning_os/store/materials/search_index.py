@@ -609,6 +609,7 @@ class SearchHit:
     bindings: list[dict[str, object]]
     bindings_total: int
     span_reference: dict[str, object] | None = None
+    material_reference: dict[str, object] | None = None
     section: dict[str, object] | None = None
     unsectioned: str | None = None
     pages: list[int] = field(default_factory=list)
@@ -628,6 +629,7 @@ class SearchHit:
             "bindings": self.bindings,
             "bindings_total": self.bindings_total,
             "span_reference": self.span_reference,
+            "material_reference": self.material_reference,
             "section": self.section,
             "unsectioned": self.unsectioned,
             "pages": self.pages,
@@ -1309,8 +1311,10 @@ def _resolve_live_bindings_and_scope(
     dict[str, str],
     set[str],
     set[str] | None,
+    dict[str, str],
 ]:
-    """Compute live route bindings, dead SHAs, and optional scope filter SHAs."""
+    """Compute live route bindings, dead SHAs, optional scope filter SHAs, and
+    the physical materials path whose bytes this call verified for each SHA."""
     memo: dict[Path, str] = {}
     bindings_by_sha: dict[str, list[MaterialBinding]] = {}
     route_sha_to_path: dict[str, str] = {}
@@ -1321,16 +1325,25 @@ def _resolve_live_bindings_and_scope(
 
     materials_root = repo_root.parent / "materials"
     dead_shas: set[str] = set()
+    verified: dict[str, str] = {}
     if materials_root.is_dir() and (reader.files or bindings_by_sha):
         live_shas: set[str] = set(bindings_by_sha.keys())
-        for rel_path in reader.files:
+        for rel_path in sorted(reader.files):
             pdf_path = materials_root / rel_path
             if pdf_path.is_file() and not pdf_path.is_symlink():
                 try:
-                    live_shas.add(resolve_file_sha256(pdf_path, materials_root, reader.files, memo))
+                    sha = resolve_file_sha256(pdf_path, materials_root, reader.files, memo)
                 except OSError:
                     continue
+                live_shas.add(sha)
+                verified[rel_path] = sha
         dead_shas = set(reader.docs.keys()) - live_shas
+    live_paths: dict[str, str] = {}
+    for rel_path, sha in verified.items():
+        live_paths.setdefault(sha, rel_path)
+    for sha, doc in reader.docs.items():
+        if doc.material and verified.get(doc.material) == sha:
+            live_paths[sha] = doc.material
 
     allowed_shas: set[str] | None = None
     if unit_id is not None or module_id is not None:
@@ -1344,7 +1357,27 @@ def _resolve_live_bindings_and_scope(
                 for b in b_list
             )
         }
-    return bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas
+    return bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas, live_paths
+
+
+def _material_reference(
+    sha: str, page: int, live_paths: Mapping[str, str]
+) -> dict[str, object] | None:
+    """A route-free reference to a page whose file bytes this call verified.
+
+    Opened with ``material-span --material … --pages … --extract
+    --file-sha256 …``; None when no physical PDF path holding these bytes was
+    observed (for example without a materials tree).
+    """
+    rel = live_paths.get(sha)
+    if not rel or not rel.lower().endswith(".pdf") or ".flat" in Path(rel).parts:
+        return None
+    return {
+        "material": rel,
+        "pages": f"pdf p. {page}",
+        "extract": True,
+        "file_sha256": f"sha256:{sha}",
+    }
 
 
 def _query_fts_hits(
@@ -1361,6 +1394,7 @@ def _query_fts_hits(
     dead_shas: set[str],
     allowed_shas: set[str] | None,
     vm_step_budget: int,
+    live_paths: Mapping[str, str],
 ) -> tuple[bool, bool, list[dict[str, object]]]:
     """Run tiered FTS5 queries, group pages by outline section, page over groups.
 
@@ -1480,6 +1514,7 @@ def _query_fts_hits(
                     unit_id=unit_id,
                     module_id=module_id,
                 ),
+                material_reference=_material_reference(sha, page_no, live_paths),
                 section=(
                     outlines[sha].sections[index].to_dict() if index is not None else None
                 ),
@@ -1535,7 +1570,7 @@ def execute_search(
         )
 
     try:
-        bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas = (
+        bindings_by_sha, route_sha_to_path, dead_shas, allowed_shas, live_paths = (
             _resolve_live_bindings_and_scope(repo_root, loaded_repo, reader, unit_id, module_id)
         )
         freshness = _compute_text_cache_freshness(repo_root, reader.cache_records)
@@ -1575,6 +1610,7 @@ def execute_search(
                 dead_shas=dead_shas,
                 allowed_shas=allowed_shas,
                 vm_step_budget=vm_step_budget,
+                live_paths=live_paths,
             )
         except GenerationError as err:
             return SearchResult(

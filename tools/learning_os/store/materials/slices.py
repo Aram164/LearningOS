@@ -230,6 +230,7 @@ class SliceResolutionError(Exception):
 
     def __init__(self, route_id: str, reason: str):
         self.route_id = route_id
+        self.reason = reason
         super().__init__(f"route {route_id} requires deep review but {reason}")
 
 
@@ -375,6 +376,26 @@ def _pdf_part_for_pages(route_id: str, material_uri: str, reader: Any,
         text="".join(chunks),
         file_sha256=file_sha256,
     )
+
+
+def pdf_part_from_bytes(label: str, content: bytes,
+                        pages: list[tuple[int, int]]) -> SlicePart:
+    """One bounded PDF part from bytes the caller already holds.
+
+    For a reader that opened, checked and hashed exactly these bytes (the
+    material form of ``material.span``): the selection obeys the same
+    ``MAX_SLICE_PAGES`` cap as a route slice, and nothing is reopened by
+    path. ``label`` names the material in a ``SliceResolutionError``.
+    """
+    try:
+        reader = pdf_reader(content)
+        total = len(reader.pages)
+    except Exception as exc:
+        raise SliceResolutionError(
+            label, f"its file cannot be parsed as PDF: {exc}") from exc
+    selected, status = _select_pages(total, pages)
+    return _pdf_part_for_pages(label, "", reader, total, selected, status,
+                               sha256_bytes(content))
 
 
 def _read_text_part(route_id: str, material_uri: str, path: Path) -> SlicePart:

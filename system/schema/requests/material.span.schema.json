@@ -4,10 +4,7 @@
   "x-governs": "artifact",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "route_id",
-    "unit_id"
-  ],
+  "required": [],
   "properties": {
     "json": {
       "type": "boolean",
@@ -32,18 +29,18 @@
     },
     "unit_id": {
       "type": "string",
-      "description": "unit holding the route to describe; unknown ids refuse with suggestions",
+      "description": "unit holding the route to describe; unknown ids refuse with suggestions; omit with --material",
       "x-los-cli": {
         "flags": [],
         "position": 0,
         "action": "store",
-        "nargs": null,
+        "nargs": "?",
         "const": null,
         "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -53,18 +50,18 @@
     },
     "route_id": {
       "type": "string",
-      "description": "exact id of the route to describe, as plan-edit-context reports it",
+      "description": "exact id of the route to describe, as plan-edit-context reports it; omit with --material",
       "x-los-cli": {
         "flags": [],
         "position": 1,
         "action": "store",
-        "nargs": null,
+        "nargs": "?",
         "const": null,
         "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -158,6 +155,48 @@
         "envelope_owned": false
       }
     },
+    "material": {
+      "type": "string",
+      "description": "PDF-only form instead of UNIT ROUTE: a regular PDF's path relative to the materials root, as a material-search hit's material_reference names it (including _unsorted/); needs --extract and --pages; absolute paths, traversal, symlinks below the root and .flat refuse",
+      "x-los-cli": {
+        "flags": [
+          "--material"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "RELPATH",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "file_sha256": {
+      "type": "string",
+      "description": "refuse with exit 3 unless the opened file hashes to this digest (a search hit's file_sha256), so a stale reference never reads changed bytes; the route form pins a single-file route",
+      "x-los-cli": {
+        "flags": [
+          "--file-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "SHA256",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "expected_snapshot": {
       "type": "string",
       "description": "optimistic concurrency token from manifest _generated.snapshot_id",
@@ -182,7 +221,7 @@
   },
   "x-los-cli-command": {
     "name": "material-span",
-    "help": "describe one exact route and optionally inspect local content",
+    "help": "describe one exact route, or read pages of one PDF by path, and optionally inspect local content",
     "description": null,
     "epilog": null,
     "mutually_exclusive": [],

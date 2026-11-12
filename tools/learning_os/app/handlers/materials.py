@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
+import os
 import re
+import stat
 from pathlib import Path, PurePosixPath
 
 import yaml
@@ -42,7 +45,11 @@ from learning_os.store.materials.resolution import (
     resolve_route_material_files,
     sha256_file,
 )
-from learning_os.store.materials.slices import SliceResolutionError, parse_locator_page_ranges
+from learning_os.store.materials.slices import (
+    SliceResolutionError,
+    parse_locator_page_ranges,
+    pdf_part_from_bytes,
+)
 from learning_os.store.materials.slices import read_part as _read_part
 from learning_os.store.materials.slices import route_material_files as _route_material_files
 from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
@@ -717,11 +724,219 @@ def _placement_route(ctx, repo, unit, source_map, routes, route, req):
     return selected, f" --stage {stage_id} --resource-index {index}"
 
 
+_SHA256_PIN_RE = re.compile(r"(?:sha256:)?([0-9a-f]{64})")
+
+#: Registered route bindings listed for one material-form file.
+MAX_MATERIAL_BINDINGS = 10
+
+#: Analysis notes listed for one material-form file.
+MAX_MATERIAL_NOTES = 20
+
+
+def _form_refusal(ctx, message):
+    return WriteRefused(message, site=f"{ctx.operation}.bad-form")
+
+
+def _pinned_digest(ctx, raw):
+    """``sha256:<hex>`` from ``--file-sha256``, or None when not given."""
+    if raw is None:
+        return None
+    match = _SHA256_PIN_RE.fullmatch(raw) if isinstance(raw, str) else None
+    if match is None:
+        raise _form_refusal(
+            ctx, "--file-sha256 must be a SHA-256 digest such as a search hit's "
+                 "file_sha256 (sha256:<64 lowercase hex>)")
+    return f"sha256:{match.group(1)}"
+
+
+def _refuse_changed(ctx, where, pinned, observed):
+    raise WriteRefused(
+        f"{where} changed since the reference was made: expected {pinned}, "
+        f"the file now hashes to {observed}; search again for a current reference",
+        site=f"{ctx.operation}.file-changed", prefixed=True, exit_code=3)
+
+
+def _read_material_pdf(ctx, materials_root: Path, relative) -> tuple[Path, bytes]:
+    """One regular PDF below the resolved materials root, read through one descriptor.
+
+    The configured root is resolved first, so a root that is itself a link
+    (a copied trial world) keeps working. Below it every component is opened
+    relative to its parent's descriptor without following links, so a
+    symlink anywhere below the root refuses and no component can be swapped
+    between the check and the read. The digest check and the extraction both
+    use the bytes read here; nothing is reopened by path.
+    """
+    def bad(message):
+        return WriteRefused(message, site=f"{ctx.operation}.bad-material")
+
+    if not isinstance(relative, str) or not relative or "\\" in relative or "\x00" in relative:
+        raise bad(f"--material must be a materials-root-relative path: {relative!r}")
+    pure = PurePosixPath(relative)
+    if (pure.is_absolute() or pure.as_posix() != relative
+            or any(part in {"", ".", ".."} for part in pure.parts)):
+        raise bad("--material must be a canonical materials-root-relative path "
+                  f"without traversal: {relative!r}")
+    if ".flat" in pure.parts:
+        raise bad("--material may not pass through the reserved .flat alias "
+                  "directory; use the physical path a material-search hit names")
+    if pure.suffix.lower() != ".pdf":
+        raise bad(f"--material reads PDFs only: {relative!r}")
+    try:
+        base = materials_root.resolve(strict=True)
+    except OSError as exc:
+        raise WriteRefused(f"the materials root is unavailable: {materials_root}",
+                           site=f"{ctx.operation}.material-missing") from exc
+    directory = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    descriptors: list[int] = []
+    try:
+        descriptors.append(os.open(base, directory))
+        for part in pure.parts[:-1]:
+            descriptors.append(os.open(part, directory | os.O_NOFOLLOW,
+                                       dir_fd=descriptors[-1]))
+        handle = os.open(pure.parts[-1], os.O_RDONLY | os.O_NOFOLLOW,
+                         dir_fd=descriptors[-1])
+        descriptors.append(handle)
+        if not stat.S_ISREG(os.fstat(handle).st_mode):
+            raise bad(f"--material is not a regular file: {relative!r}")
+        chunks = []
+        while chunk := os.read(handle, 1 << 20):
+            chunks.append(chunk)
+    except FileNotFoundError as exc:
+        raise WriteRefused(f"no file at --material {relative!r} below the materials root",
+                           site=f"{ctx.operation}.material-missing") from exc
+    except OSError as exc:
+        if exc.errno in (errno.ELOOP, errno.ENOTDIR):
+            raise bad(f"--material {relative!r} passes through a symlink or a "
+                      "non-directory below the materials root") from exc
+        raise
+    finally:
+        for descriptor in reversed(descriptors):
+            os.close(descriptor)
+    return base.joinpath(*pure.parts), b"".join(chunks)
+
+
+def _material_route_bindings(repo, physical: Path) -> list[dict]:
+    """Every (module, unit, route) whose resolved files include this exact file."""
+    found, seen = [], set()
+    for unit_id in sorted(repo.units):
+        unit = repo.units[unit_id]
+        source_map = repo.module_source_maps.get(unit.module_id)
+        if not isinstance(source_map, dict):
+            continue
+        for route in unit_routes(source_map, unit.module_id, unit.id):
+            route_id = route.get("id")
+            if not route_id or (unit.id, route_id) in seen:
+                continue
+            for resolved in resolve_route_material_files(repo, route):
+                try:
+                    same = Path(resolved.path).resolve() == physical
+                except OSError:
+                    same = False
+                if same:
+                    seen.add((unit.id, route_id))
+                    found.append({"module": unit.module_id, "unit": unit.id,
+                                  "route": route_id, "source_id": route.get("source_id")})
+                    break
+    return found
+
+
+def _material_analysis_refs(root, repo, relative) -> dict:
+    """Analysis notes bound to this exact materials path: ids, never bodies."""
+    refs = []
+    for note in _analysis_notes(repo):
+        binding = note.meta["material_analysis"]
+        if binding.get("material") != relative:
+            continue
+        refs.append({
+            "note_id": note.id,
+            "source_id": binding.get("source_id"),
+            "scope": "direct",
+            "resolution": binding.get("resolution"),
+            "review": note.meta.get("semantic_review"),
+            "inspected_range": binding.get("inspected_range") or {},
+            "freshness": _freshness_label(root, binding),
+            "path": note.path.relative_to(root).as_posix(),
+        })
+    return {"analysis_notes": refs[:MAX_MATERIAL_NOTES],
+            "analysis_notes_total": len(refs),
+            "analysis_notes_truncated": len(refs) > MAX_MATERIAL_NOTES}
+
+
+def _material_form_span(ctx, req) -> Result:
+    """``material-span --material RELPATH --pages … --extract``: no unit, no route."""
+    root = ctx.root
+    snapshot = _snapshot(root, req.get("expected_snapshot"))
+    if any(req.get(key) is not None for key in
+           ("unit_id", "route_id", "stage_id", "resource_index")):
+        raise _form_refusal(ctx, "--material replaces UNIT, ROUTE and the stage "
+                                 "placement; pass one form, not both")
+    pages_text = req.get("pages")
+    parsed = (parse_locator_page_ranges(pages_text.strip())
+              if isinstance(pages_text, str) else [])
+    if not req.get("extract") or not parsed:
+        raise _form_refusal(
+            ctx, '--material needs --extract and --pages with explicit PDF pages '
+                 'in the locator house style, e.g. "pdf p. 287" or "pdf pp. 287-289"')
+    pinned = _pinned_digest(ctx, req.get("file_sha256"))
+    repo = ctx.repo()
+    relative = req["material"]
+    physical, content = _read_material_pdf(
+        ctx, repo.learningos_root / "materials", relative)
+    digest = "sha256:" + hashlib.sha256(content).hexdigest()
+    if pinned is not None and digest != pinned:
+        _refuse_changed(ctx, f"--material {relative}", pinned, digest)
+    bindings = _material_route_bindings(repo, physical)
+    sources = {row["source_id"] for row in bindings if row.get("source_id")}
+    source_id = next(iter(sources)) if len(sources) == 1 else None
+    bare = digest.removeprefix("sha256:")
+    entry = {"material_uri": None, "material": relative, "format": "pdf",
+             "file_sha256": digest, "extraction": "not-requested",
+             "binding": {"resolution": "resolved", "source_id": source_id,
+                         "material": relative, "recorded_source_digest": bare,
+                         "live_source_digest": bare}}
+    try:
+        part = pdf_part_from_bytes(relative, content, parsed)
+        excerpt = part.text[:MAX_EXCERPT]
+        entry.update({"extraction": part.status, "excerpt": excerpt,
+                      "excerpt_truncated": len(part.text) > MAX_EXCERPT,
+                      "pages": list(part.pages), "page_total": part.page_total})
+    except SliceResolutionError as exc:
+        entry.update({"extraction": "unreadable", "reason": exc.reason})
+    next_action = None
+    if entry.get("excerpt_truncated") or entry.get("extraction") == "range-truncated":
+        next_action = ("This excerpt is cut off. Rerun material-span --material "
+                       f"{relative!r} with fewer --pages, e.g. one page at a time.")
+    payload = {
+        "contract": "material-span-v1", "unit_id": None, "module_id": None,
+        "route_id": None, "source_id": source_id, "material": relative,
+        "locator": None, "url": None, "availability": "local-observed",
+        "next_action": next_action,
+        "bindings": bindings[:MAX_MATERIAL_BINDINGS],
+        "bindings_total": len(bindings),
+        "analysis_refs": _material_analysis_refs(root, repo, relative),
+        "spans": [entry],
+        "expansion": None,
+    }
+    _snapshot(root, snapshot)
+    return Result({"schema_version": 1, "snapshot_id": snapshot, **payload})
+
+
 @register("material.span", kind="query", effects=OperationEffects.READ)
 def material_span(ctx: OpContext, req: dict) -> Result:
-    """One common source-span description, with optional bounded local inspection."""
+    """One common source-span description, with optional bounded local inspection.
+
+    Two forms: an exact unit route (``UNIT ROUTE``), or a PDF named by its
+    materials-root-relative path (``--material``), which needs no route.
+    """
     root = ctx.root
     try:
+        if req.get("material") is not None:
+            return _material_form_span(ctx, req)
+        if req.get("unit_id") is None or req.get("route_id") is None:
+            raise _form_refusal(
+                ctx, 'material-span needs UNIT ROUTE, or --material RELPATH '
+                     '--pages "pdf p. N" --extract')
+        pinned = _pinned_digest(ctx, req.get("file_sha256"))
         snapshot = _snapshot(root, req.get("expected_snapshot"))
         repo = ctx.repo()
         unit = repo.units.get(req["unit_id"])
@@ -807,12 +1022,19 @@ def material_span(ctx: OpContext, req: dict) -> Result:
             item for item in analysis["stale_assessment_routes"] if item == route["id"]]
         spans = []
         materials_real = (repo.learningos_root / "materials").resolve()
+        if pinned is not None and len(files) != 1:
+            raise _form_refusal(
+                ctx, f"--file-sha256 pins one file; route {route['id']} resolves "
+                     f"{len(files)} local file(s)")
         for resolved in files:
             path = Path(resolved.path)
             entry = {"material_uri": resolved.material_uri,
                      "format": path.suffix.lower().lstrip(".") or "unknown",
                      "file_sha256": sha256_file(path),
                      "extraction": "not-requested"}
+            if pinned is not None and entry["file_sha256"] != pinned:
+                _refuse_changed(ctx, f"route {route['id']}'s file", pinned,
+                                entry["file_sha256"])
             # A ready analysis binding: exactly what the draft needs,
             # minus inspected_range, in the stored canonical form
             # (materials-relative path, bare hex). Additive only.
@@ -1058,6 +1280,13 @@ def _anchor_selection(anchors, purpose):
     seen = {id(anchor) for anchor in matches}
     return (matches + [anchor for anchor in anchors
                        if id(anchor) not in seen], len(matches))
+
+def _clipped_name(value):
+    """A route's title or angle for display beside its id, bounded; else None."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return value[:_ANCHOR_TEXT_LIMIT]
+
 
 def _clip_anchor_text(anchor):
     """The anchor with every long text field bounded, naming what clipped."""
@@ -1351,6 +1580,9 @@ def material_context(ctx: OpContext, req: dict) -> Result:
         # served in some stage, which bears on every result bound to
         # that source, however the query scoped the pool.
         evidence = _use_evidence(repo)
+        # Readable names beside every route id the answer carries: a bare
+        # route-<hash> tells the reader nothing about which material it is.
+        named_routes = _route_material_index(repo, None) if assessments else {}
         pool = {
             "analysis_notes": len(notes),
             "assessments": len(assessments),
@@ -1425,12 +1657,15 @@ def material_context(ctx: OpContext, req: dict) -> Result:
                     f"dossier-material:{path}": digest
                     for path, digest in material_hashes.items()
                 })
+            named = named_routes.get(assessment.get("route_id"), (None, {}))[1]
             items.append({
                 "origin": "unit-assessment",
                 "unit_id": unit_id, "synthesis_id": synthesis_id,
                 "use_evidence": _evidence_label(
                     evidence.get(assessment.get("source_id")) or {}),
                 "route_id": assessment.get("route_id"),
+                "route_title": _clipped_name(named.get("title")),
+                "route_angle": _clipped_name(named.get("angle")),
                 "source_id": assessment.get("source_id"),
                 "locator": assessment.get("locator"),
                 "review_status": assessment.get("review_status"),

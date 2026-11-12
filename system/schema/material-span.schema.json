@@ -9,12 +9,21 @@
     "schema_version": {"const": 1},
     "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "contract": {"const": "material-span-v1"},
-    "unit_id": {"type": "string"}, "module_id": {"type": "string"},
-    "route_id": {"type": "string"}, "source_id": {"type": "string"},
+    "unit_id": {"type": ["string", "null"]}, "module_id": {"type": ["string", "null"]},
+    "route_id": {"type": ["string", "null"]}, "source_id": {"type": ["string", "null"]},
+    "material": {"type": "string", "minLength": 1},
+    "bindings": {"type": "array", "maxItems": 10, "items": {"type": "object", "additionalProperties": false, "required": ["module", "unit", "route", "source_id"], "properties": {"module": {"type": "string"}, "unit": {"type": "string"}, "route": {"type": "string"}, "source_id": {"type": ["string", "null"]}}}},
+    "bindings_total": {"type": "integer", "minimum": 0},
     "locator": {"type": ["string", "null"]}, "url": {"type": ["string", "null"]},
     "availability": {"enum": ["local-observed", "local-unavailable", "remote-unobserved", "unavailable"]},
+    "next_action": {"type": ["string", "null"]},
     "analysis_refs": {"type": "object"},
     "spans": {"type": "array", "items": {"type": "object"}},
     "expansion": {"type": ["string", "null"]}
-  }
+  },
+  "allOf": [
+    {"if": {"required": ["material"]},
+     "then": {"required": ["bindings", "bindings_total"], "properties": {"unit_id": {"const": null}, "module_id": {"const": null}, "route_id": {"const": null}}},
+     "else": {"properties": {"unit_id": {"type": "string"}, "module_id": {"type": "string"}, "route_id": {"type": "string"}, "source_id": {"type": "string"}}}}
+  ]
 }

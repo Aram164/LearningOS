@@ -847,3 +847,111 @@ def test_route_patch_refuses_an_evidential_change_with_a_dossier(mini_repo):
                    "--check")
     assert proc.returncode != 0
     assert "replacement dossier" in proc.stderr
+
+
+# ---- route identity through expansion (Plan A step 3) -------------------------
+
+PART_TWO = "route-demo-book-part-two"
+
+
+def _two_routes_one_source(root):
+    """Two routes of one source for one unit; the second placement overrides
+    its locator, so only the route id can say which route it is."""
+    repo, route_id, smid = material_fixture(root)
+    source_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_path.read_text())
+    first = source_map["sources"][0]["unit_routes"][0]
+    first["id"] = route_id
+    source_map["sources"][0]["unit_routes"].append({
+        **copy.deepcopy(first), "id": PART_TWO, "title": "Part two",
+        "locator": "pdf pp. 6-10", "angle": "Part two angle"})
+    write_yaml(source_path, source_map)
+    sm_path = repo.study_maps[smid].path
+    data = yaml.safe_load(sm_path.read_text())
+    data["stages"][0]["resources"] = [
+        {"id": "resource-one", "kind": "read", "scope_triage": "required-now",
+         "material_ref": {"route_id": route_id,
+                          "inherit": ["label", "source_id", "locator", "angle"]}},
+        {"id": "resource-two", "kind": "read", "scope_triage": "helpful-now",
+         "locator": "pdf p. 7",
+         "material_ref": {"route_id": PART_TWO, "inherit": ["label", "source_id", "angle"]}},
+    ]
+    write_yaml(sm_path, data)
+    return load_repo(root), route_id, smid
+
+
+def test_expansion_carries_the_route_id_even_under_a_locator_override(mini_repo):
+    from learning_os.domain.material_refs import matching_routes, unit_routes
+
+    repo, route_id, smid = _two_routes_one_source(mini_repo)
+    sm = repo.study_maps[smid]
+    one, two = sm.data["stages"][0]["resources"]
+    assert one["route_id"] == route_id and two["route_id"] == PART_TWO
+    assert two["locator"] == "pdf p. 7" and two["label"] == "Part two"
+    routes = unit_routes(repo.module_source_maps[sm.module_id], sm.module_id, sm.unit_id)
+    # Without the id the legacy guards find nothing: the override hides the route.
+    legacy = {k: v for k, v in two.items() if k != "route_id"}
+    assert matching_routes(legacy, routes) == []
+    assert [r["id"] for r in matching_routes(two, routes)] == [PART_TWO]
+    projected = build_manifest(repo, "T1")["study_maps"]
+    resources = next(m for m in projected if m["id"] == smid)["stages"][0]["resources"]
+    assert [r["route_id"] for r in resources] == [route_id, PART_TWO]
+    # An explicit id equal to the reference stays; a different one still refuses.
+    authored = copy.deepcopy(sm.authored_data)
+    authored["stages"][0]["resources"][1]["route_id"] = PART_TWO
+    source_map = repo.module_source_maps[sm.module_id]
+    assert expand_map(authored, source_map, sm.module_id, sm.unit_id) == sm.data
+    authored["stages"][0]["resources"][1]["route_id"] = route_id
+    with pytest.raises(MaterialReferenceError, match="route_id"):
+        expand_map(authored, source_map, sm.module_id, sm.unit_id)
+
+
+def test_the_overridden_placement_reads_its_own_route(mini_repo):
+    _two_routes_one_source(mini_repo)
+    result = run_los(mini_repo, "material-span", "unit-demo-l01", PART_TWO,
+                     "--stage", "stage-demo", "--resource-index", "1")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["route_id"] == PART_TWO and data["locator"] == "pdf p. 7"
+
+
+def test_compaction_of_a_route_less_resource_adds_only_its_route_id(mini_repo):
+    repo, route_id, smid = material_fixture(mini_repo)
+    sm = repo.study_maps[smid]
+    data = yaml.safe_load(sm.path.read_text())
+    for row in data["stages"][0]["resources"]:
+        row.pop("route_id", None)
+    write_yaml(sm.path, data)
+    repo = load_repo(mini_repo)
+    before = copy.deepcopy(repo.study_maps[smid].data)
+    assert "route_id" not in before["stages"][0]["resources"][0]
+    writes, _artifacts, summary = compaction_plan(repo, "module-demo")
+    assert summary["referenced_routes"] == 1
+    stored = yaml.safe_load(writes[sm.path])
+    assert stored["stages"][0]["resources"][0]["material_ref"]["route_id"] == route_id
+    assert "route_id" not in stored["stages"][0]["resources"][0]
+    sm.path.write_text(writes[sm.path], encoding="utf-8")
+    source_path = repo.module_source_map_origins["module-demo"]
+    if source_path in writes:
+        source_path.write_text(writes[source_path], encoding="utf-8")
+    after = load_repo(mini_repo).study_maps[smid].data
+    expected = copy.deepcopy(before)
+    for row in expected["stages"][0]["resources"][:2]:
+        row["route_id"] = route_id
+    assert after == expected
+
+
+def test_saves_keep_compact_storage_without_writing_the_route_id(mini_repo):
+    repo, _route_id, smid = _two_routes_one_source(mini_repo)
+    sm = repo.study_maps[smid]
+    authored_before = copy.deepcopy(sm.authored_data)
+    progressed = approved_v2_cli(
+        mini_repo, "stage-progress", sm.unit_id, "stage-demo", "active",
+        artifact_ids=[sm.unit_id, sm.id], idempotency_key="progress-two-routes",
+    )
+    assert progressed.returncode == 0, progressed.stdout + progressed.stderr
+    saved = load_repo(mini_repo).study_maps[smid]
+    assert saved.data["stages"][0]["status"] == "active"
+    assert saved.authored_data["stages"][0]["resources"] == \
+        authored_before["stages"][0]["resources"]
+    assert all("route_id" not in row for row in saved.authored_data["stages"][0]["resources"])

@@ -282,6 +282,7 @@
           "bindings",
           "bindings_total",
           "span_reference",
+          "material_reference",
           "section",
           "unsectioned",
           "pages",
@@ -367,6 +368,35 @@
               },
               "route": {
                 "type": "string"
+              },
+              "pages": {
+                "type": "string"
+              },
+              "extract": {
+                "const": true
+              },
+              "file_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              }
+            }
+          },
+          "material_reference": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "material",
+              "pages",
+              "extract",
+              "file_sha256"
+            ],
+            "properties": {
+              "material": {
+                "type": "string",
+                "minLength": 1
               },
               "pages": {
                 "type": "string"

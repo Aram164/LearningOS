@@ -1,7 +1,7 @@
 """Prototype: Python jsonschema vs Ajv standalone differential agreement.
 
 Paired-gate test: needs the sibling UI checkout (which carries the checked-in
-Ajv validator), node, and the v17 bundle. Skips with an explicit reason when
+Ajv validator), node, and the v18 bundle. Skips with an explicit reason when
 the UI sibling or node is absent, so Core stays usable alone; a missing
 checked-in validator is a failure, never a skip. Verdict booleans are
 compared, not error sets (Ajv reports short; Python reports all).
@@ -24,7 +24,7 @@ from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 
-V16_REL = "system/contracts/manifest-v17.schema.json"
+V16_REL = "system/contracts/manifest-v18.schema.json"
 VALIDATOR_REL = "contract-prototype/generated/manifest.validator.cjs"
 VERDICT_REL = "scripts/ajv-verdict.mjs"
 FIXTURE_REL = "fixture-vault/generated/manifest.json"
@@ -323,7 +323,7 @@ def test_prototype_lock_matches_production_lock(repo_root: Path) -> None:
     """Every scalar the generator emits must equal the hand-mirrored lock."""
 
     ui = _paired_ui(repo_root)
-    production = json.loads((ui / "contracts" / "manifest-v17.lock.json").read_text(
+    production = json.loads((ui / "contracts" / "manifest-v18.lock.json").read_text(
         encoding="utf-8"))
     prototype = json.loads((ui / "contract-prototype" / "generated"
                             / "manifest.prototype.lock.json").read_text(encoding="utf-8"))

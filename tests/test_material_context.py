@@ -1131,3 +1131,25 @@ def test_concept_alone_still_refuses_unknown_concepts(mini_repo):
     proc = run_los(mini_repo, "material-context", "--concept", "concept-ghost")
     assert proc.returncode == 2
     assert "unknown concept" in proc.stderr
+
+
+def test_assessment_results_name_their_route_beside_its_id(mini_repo):
+    """Plan A step 3: a route id is never returned without its title and angle."""
+    _seed_unit(mini_repo)
+    [item] = _context(mini_repo, "--concept", "concept-expected-value")["items"]
+    source_map = yaml.safe_load((mini_repo / "curriculum/modules/module-demo/source-map.yaml")
+                                .read_text(encoding="utf-8"))
+    route = next(row for entry in source_map["sources"] for row in entry["unit_routes"]
+                 if isinstance(row, dict) and row.get("id") == "route-demo-density")
+    keys = list(item)
+    assert keys.index("route_title") == keys.index("route_id") + 1
+    assert item["route_title"] == route["title"][:200]
+    assert item["route_angle"] == route["angle"][:200]
+    # A dossier row whose route left the source map keeps its id and says so.
+    synthesis = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    data = yaml.safe_load(synthesis.read_text(encoding="utf-8"))
+    data["route_assessments"][0]["route_id"] = "route-demo-gone"
+    write_yaml(synthesis, data)
+    [gone] = _context(mini_repo, "--concept", "concept-expected-value")["items"]
+    assert gone["route_id"] == "route-demo-gone"
+    assert gone["route_title"] is None and gone["route_angle"] is None

@@ -2,6 +2,8 @@
 
 Authored maps may be compact; the loaded model and public manifest stay fully
 expanded. An explicit field list preserves absence and stage-specific overrides.
+Every expanded reference keeps its resolved ``route_id``, so a consumer never
+has to rediscover the route from fields a stage may override.
 There is no cross-unit fallback and no title-only identity resolution.
 """
 
@@ -95,7 +97,33 @@ def expand_map(data: dict, source_map: dict, module_id: str, unit_id: str) -> di
                 resource[field] = copy.deepcopy(route[owner_field])
             if resource.get("source_id", route.get("source_id")) != route.get("source_id"):
                 raise MaterialReferenceError("material_ref conflicts with the resource source_id")
+            resource.setdefault("route_id", rid)
     return expanded
+
+
+def compaction_expected(effective: dict, before: dict, compact: dict) -> dict:
+    """The effective map a lossless compaction of ``before`` must expand to.
+
+    ``effective`` is ``before`` expanded. A resource that compaction newly
+    turns into a ``material_ref`` gains exactly one field when expanded: the
+    route identity the reference carries. Everything else must be unchanged,
+    so the checks compare against ``effective`` plus those identities and
+    still refuse any other difference.
+    """
+    expected = copy.deepcopy(effective)
+    for stage_index, (old_stage, new_stage) in enumerate(
+            zip(before.get("stages") or [], compact.get("stages") or [], strict=False)):
+        if not isinstance(old_stage, dict) or not isinstance(new_stage, dict):
+            continue
+        pairs = zip(old_stage.get("resources") or [], new_stage.get("resources") or [],
+                    strict=False)
+        for index, (old, new) in enumerate(pairs):
+            if (isinstance(new, dict) and isinstance(new.get("material_ref"), dict)
+                    and not (isinstance(old, dict) and "material_ref" in old)):
+                target = expected["stages"][stage_index]["resources"][index]
+                if isinstance(target, dict):
+                    target.setdefault("route_id", new["material_ref"]["route_id"])
+    return expected
 
 
 def compact_map(data: dict, source_map: dict, module_id: str, unit_id: str) -> tuple[dict, set[str]]:
@@ -130,9 +158,9 @@ def compact_map(data: dict, source_map: dict, module_id: str, unit_id: str) -> t
                 continue
             stage["resources"][index] = candidate
             used.add(route["id"])
-    if expand_map(compact, source_map, module_id, unit_id) != expand_map(
-        data, source_map, module_id, unit_id,
-    ):
+    expected = compaction_expected(
+        expand_map(data, source_map, module_id, unit_id), data, compact)
+    if expand_map(compact, source_map, module_id, unit_id) != expected:
         raise MaterialReferenceError("material compaction changed the effective study map")
     return compact, used
 
@@ -185,8 +213,14 @@ def preserve_map_refs(study_map, data: dict) -> dict:
                 continue
             fields = [k for k in ref["inherit"] if k in resource and resource[k] == previous[k]]
             if fields:
+                explicit = {k: v for k, v in resource.items() if k not in fields}
+                if (explicit.get("route_id") == ref["route_id"]
+                        and "route_id" not in raw[i]):
+                    # Expansion wrote the reference's own route id; storing it
+                    # beside the reference would only add bytes to the map.
+                    del explicit["route_id"]
                 stage["resources"][i] = {
                     "material_ref": {"route_id": ref["route_id"], "inherit": fields},
-                    **{k: v for k, v in resource.items() if k not in fields},
+                    **explicit,
                 }
     return output

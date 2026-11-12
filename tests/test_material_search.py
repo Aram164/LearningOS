@@ -933,6 +933,63 @@ def test_material_outline_tool_harvests_bookmarks_and_skips_changed_bytes(world:
     assert not (get_outline_base_dir(world) / f"{sha}.json").exists()
 
 
+def _open_material_reference(world: Path, ref: dict[str, object]) -> dict[str, object]:
+    ctx = OpContext(root=world, operation="material.span", channel="cli",
+                    invocation="query", gateway=None)
+    outcome = REGISTRY["material.span"].handler(ctx, {
+        "unit_id": None, "route_id": None, "material": ref["material"],
+        "pages": ref["pages"], "extract": ref["extract"], "file_sha256": ref["file_sha256"]})
+    assert outcome is not None
+    return outcome.payload
+
+
+@needs_pdftotext
+def test_every_verified_hit_carries_a_material_reference_that_opens(world: Path) -> None:
+    """Unrouted and routed hits alike can be opened by path, pinned to their bytes."""
+    unrouted = world.parent / "materials" / "_unsorted" / "review" / "loose.pdf"
+    write_minimal_pdf(unrouted, ["intro", "Chebyshev bound in an unrouted review"])
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+    res = execute_search(world, "Chebyshev", limit=10)
+    _validate_response(res.to_dict())
+    by_material = {h["material"]: h for h in res.hits}
+    loose = by_material["_unsorted/review/loose.pdf"]
+    assert loose["span_reference"] is None and loose["is_mapped"] is False
+    assert loose["material_reference"] == {
+        "material": "_unsorted/review/loose.pdf", "pages": "pdf p. 2", "extract": True,
+        "file_sha256": f"sha256:{loose['sha256']}"}
+    opened = _open_material_reference(world, loose["material_reference"])
+    assert opened["source_id"] is None and opened["route_id"] is None
+    assert "Chebyshev bound in an unrouted review" in opened["spans"][0]["excerpt"]
+    routed = by_material["source-demo-book/lecture-01.pdf"]
+    assert routed["span_reference"] is not None
+    assert routed["material_reference"]["material"] == "source-demo-book/lecture-01.pdf"
+    opened = _open_material_reference(world, routed["material_reference"])
+    assert opened["source_id"] == "source-demo-book" and opened["bindings_total"] >= 1
+
+
+@needs_pdftotext
+def test_a_hit_reference_refuses_a_file_replaced_after_the_search(world: Path) -> None:
+    """Risk row 1: the file changes between search and read; the stale pin refuses."""
+    res = execute_search(world, "Chebyshev", limit=1)
+    ref = res.hits[0]["material_reference"]
+    lecture = world.parent / "materials" / str(ref["material"])
+    write_minimal_pdf(lecture, ["replaced after the search"] * 24)
+    with pytest.raises(WriteRefused) as caught:
+        _open_material_reference(world, ref)
+    assert caught.value.site == "material.span.file-changed"
+    assert caught.value.exit_code == 3
+
+
+@needs_pdftotext
+def test_no_material_reference_without_observed_bytes(world: Path) -> None:
+    materials = world.parent / "materials"
+    materials.rename(world.parent / "materials-away")
+    res = execute_search(world, "Chebyshev", limit=5)
+    _validate_response(res.to_dict())
+    assert res.hits and all(h["material_reference"] is None for h in res.hits)
+
+
 @pytest.mark.live_install
 def test_live_install_smoke() -> None:
     """Optional live-install smoke test (skipped under -m 'not live_install' in CI)."""

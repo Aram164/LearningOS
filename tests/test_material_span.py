@@ -539,3 +539,205 @@ def test_plain_text_extract_carries_no_hint(mini_repo: Path):
     data = json.loads(result.stdout)
     assert data["spans"][0]["format"] != "pdf"
     assert data["next_action"] is None
+
+
+# ---- the PDF-only material form (Plan A step 2) -------------------------------
+
+
+def _material_pdf(root: Path, relative: str, texts: list[str]) -> Path:
+    path = root.parent / "materials" / relative
+    write_minimal_pdf(path, texts)
+    return path
+
+
+def _material_span(root: Path, relative: str, *extra: str, pages: str = "pdf p. 2"):
+    return run_los(root, "material-span", "--material", relative, "--pages", pages,
+                   "--extract", *extra)
+
+
+def _site(root: Path, req: dict) -> str:
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.materials import material_span
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = OpContext(root=root, operation="material.span", channel="cli",
+                    invocation="query", gateway=None)
+    with pytest.raises(WriteRefused) as caught:
+        material_span(ctx, {"unit_id": None, "route_id": None, **req})
+    return caught.value.site
+
+
+def _validate_span(payload: dict) -> None:
+    import jsonschema
+
+    schema = json.loads((Path(__file__).resolve().parents[1]
+                         / "system/schema/material-span.schema.json").read_text(encoding="utf-8"))
+    jsonschema.validate(payload, schema)
+
+
+def test_material_form_reads_an_unrouted_pdf_page(mini_repo: Path):
+    import hashlib
+
+    add_curriculum(mini_repo)
+    path = _material_pdf(mini_repo, "_unsorted/review/notes.pdf",
+                         ["cover page", "naive Bayes worked example", "appendix"])
+    digest = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    result = _material_span(mini_repo, "_unsorted/review/notes.pdf",
+                            "--file-sha256", digest)
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    _validate_span(data)
+    assert (data["unit_id"], data["module_id"], data["route_id"]) == (None, None, None)
+    assert data["source_id"] is None and data["bindings"] == [] and data["bindings_total"] == 0
+    assert data["material"] == "_unsorted/review/notes.pdf"
+    span = data["spans"][0]
+    assert span["file_sha256"] == digest and span["extraction"] == "complete"
+    assert span["pages"] == [2] and span["page_total"] == 3
+    assert "naive Bayes worked example" in span["excerpt"]
+    assert "cover page" not in span["excerpt"]
+    assert span["binding"]["source_id"] is None
+    # A bare hex pin is the same pin.
+    bare = _material_span(mini_repo, "_unsorted/review/notes.pdf",
+                          "--file-sha256", digest.removeprefix("sha256:"))
+    assert bare.returncode == 0, bare.stderr
+
+
+def test_material_form_keeps_the_page_and_excerpt_limits(mini_repo: Path):
+    add_curriculum(mini_repo)
+    _material_pdf(mini_repo, "_unsorted/long.pdf",
+                  [f"page {n} " + "x" * 400 for n in range(1, 31)])
+    result = _material_span(mini_repo, "_unsorted/long.pdf", pages="pdf pp. 1-30")
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    span = data["spans"][0]
+    assert span["extraction"] == "range-truncated" and span["pages"] == list(range(1, 21))
+    assert len(span["excerpt"]) == 6000 and span["excerpt_truncated"] is True
+    assert "fewer --pages" in data["next_action"]
+    beyond = json.loads(_material_span(mini_repo, "_unsorted/long.pdf",
+                                       pages="pdf p. 31").stdout)["spans"][0]
+    assert beyond["extraction"] == "unreadable"
+    assert "outside this 30-page file" in beyond["reason"]
+
+
+def test_material_form_names_the_routes_that_bind_the_file(mini_repo: Path):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    _material_pdf(mini_repo, "demo/lecture-01.pdf", ["one", "two"])
+    route_id = _route(mini_repo)
+    data = json.loads(_material_span(mini_repo, "demo/lecture-01.pdf").stdout)
+    assert data["bindings"] == [{"module": "module-demo", "unit": "unit-demo-l01",
+                                 "route": route_id, "source_id": "source-demo-book"}]
+    assert data["source_id"] == "source-demo-book"
+    assert data["spans"][0]["binding"]["source_id"] == "source-demo-book"
+
+
+@pytest.mark.parametrize("relative", [
+    "/etc/notes.pdf", "../outside.pdf", "_unsorted/../_unsorted/notes.pdf",
+    "_unsorted//notes.pdf", "./_unsorted/notes.pdf", "_unsorted\\notes.pdf",
+    ".flat/source-demo-book/notes.pdf", "_unsorted/notes.txt",
+])
+def test_material_form_refuses_paths_outside_the_physical_tree(mini_repo, relative):
+    add_curriculum(mini_repo)
+    _material_pdf(mini_repo, "_unsorted/notes.pdf", ["a", "b"])
+    result = _material_span(mini_repo, relative)
+    assert result.returncode == 2, result.stdout
+    assert result.stdout == ""
+    assert _site(mini_repo, {"material": relative, "pages": "pdf p. 1",
+                             "extract": True}) == "material.span.bad-material"
+
+
+def test_material_form_refuses_links_below_the_root_but_not_a_linked_root(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    _material_pdf(mini_repo, "_unsorted/notes.pdf", ["a", "naive Bayes"])
+    materials = mini_repo.parent / "materials"
+    (materials / "linked-dir").symlink_to(materials / "_unsorted", target_is_directory=True)
+    (materials / "_unsorted" / "linked.pdf").symlink_to(materials / "_unsorted" / "notes.pdf")
+    (materials / "_unsorted" / "folder.pdf").mkdir()
+    for relative in ("linked-dir/notes.pdf", "_unsorted/linked.pdf", "_unsorted/folder.pdf"):
+        assert _material_span(mini_repo, relative).returncode == 2, relative
+        assert _site(mini_repo, {"material": relative, "pages": "pdf p. 1",
+                                 "extract": True}) == "material.span.bad-material"
+    assert _site(mini_repo, {"material": "_unsorted/absent.pdf", "pages": "pdf p. 1",
+                             "extract": True}) == "material.span.material-missing"
+    # A copied trial world reaches its materials through a link: the root is
+    # resolved first, so reads below it still work (review D4).
+    real = tmp_path / "real-materials"
+    materials.rename(real)
+    materials.symlink_to(real, target_is_directory=True)
+    linked_root = _material_span(mini_repo, "_unsorted/notes.pdf")
+    assert linked_root.returncode == 0, linked_root.stderr
+    assert "naive Bayes" in json.loads(linked_root.stdout)["spans"][0]["excerpt"]
+
+
+@pytest.mark.parametrize("req", [
+    {"material": "_unsorted/notes.pdf", "pages": "pdf p. 1", "extract": True,
+     "unit_id": "unit-demo-l01"},
+    {"material": "_unsorted/notes.pdf", "pages": "pdf p. 1", "extract": True,
+     "stage_id": "stage-demo", "resource_index": 0},
+    {"material": "_unsorted/notes.pdf", "pages": "pdf p. 1", "extract": False},
+    {"material": "_unsorted/notes.pdf", "pages": None, "extract": True},
+    {"material": "_unsorted/notes.pdf", "pages": "21-26", "extract": True},
+    {"material": "_unsorted/notes.pdf", "pages": "pdf p. 1", "extract": True,
+     "file_sha256": "sha256:short"},
+    {"unit_id": "unit-demo-l01"},
+    {},
+])
+def test_material_span_refuses_mixed_or_incomplete_forms(mini_repo, req):
+    add_curriculum(mini_repo)
+    _material_pdf(mini_repo, "_unsorted/notes.pdf", ["a", "b"])
+    assert _site(mini_repo, req) == "material.span.bad-form"
+
+
+def test_a_stale_pin_refuses_changed_bytes_with_exit_3(mini_repo: Path):
+    """A reference from an earlier search never reads bytes that changed since."""
+    import hashlib
+
+    add_curriculum(mini_repo)
+    path = _material_pdf(mini_repo, "_unsorted/notes.pdf", ["a", "naive Bayes"])
+    pinned = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    write_minimal_pdf(path, ["a", "replaced after the search"])
+    stale = _material_span(mini_repo, "_unsorted/notes.pdf", "--file-sha256", pinned)
+    assert stale.returncode == 3, stale.stdout
+    assert stale.stdout == ""
+    assert "changed since the reference was made" in stale.stderr
+    assert _site(mini_repo, {"material": "_unsorted/notes.pdf", "pages": "pdf p. 2",
+                             "extract": True, "file_sha256": pinned}) == "material.span.file-changed"
+
+
+def test_route_form_pin_reads_a_single_file_route_and_refuses_a_changed_one(mini_repo):
+    import hashlib
+
+    route_id = _thirty_page_deck(mini_repo)
+    path = mini_repo.parent / "materials/demo/lecture-01.pdf"
+    pinned = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    plain = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                    "--extract", "--pages", "pdf p. 25")
+    pinned_run = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                         "--extract", "--pages", "pdf p. 25", "--file-sha256", pinned)
+    assert pinned_run.returncode == 0, pinned_run.stderr
+    # The pin changes nothing about the answer; it only adds the refusal.
+    assert json.loads(pinned_run.stdout) == json.loads(plain.stdout)
+    wrong = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                    "--extract", "--file-sha256", "sha256:" + "0" * 64)
+    assert wrong.returncode == 3 and wrong.stdout == ""
+
+
+def test_route_form_pin_refuses_a_route_without_exactly_one_local_file(mini_repo):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0].pop("material", None)
+    sources["sources"][0]["url"] = "https://example.invalid/book"
+    write_yaml(source_path, sources)
+    route_id = _route(mini_repo)
+    refused = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                      "--extract", "--file-sha256", "sha256:" + "0" * 64)
+    assert refused.returncode == 2 and "pins one file" in refused.stderr
+    assert _site(mini_repo, {"unit_id": "unit-demo-l01", "route_id": route_id,
+                             "extract": True,
+                             "file_sha256": "sha256:" + "0" * 64}) == "material.span.bad-form"
