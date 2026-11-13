@@ -59,6 +59,7 @@ from learning_os.store.materials.resolution import (
 )
 from learning_os.store.materials.slices import (
     SliceResolutionError,
+    parse_explicit_page_ranges,
     parse_locator_page_ranges,
     pdf_part_from_bytes,
 )
@@ -883,7 +884,7 @@ def _material_form_span(ctx, req) -> Result:
         raise _form_refusal(ctx, "--material replaces UNIT, ROUTE and the stage "
                                  "placement; pass one form, not both")
     pages_text = req.get("pages")
-    parsed = (parse_locator_page_ranges(pages_text.strip())
+    parsed = (parse_explicit_page_ranges(pages_text.strip())
               if isinstance(pages_text, str) else [])
     if not req.get("extract") or not parsed:
         raise _form_refusal(
@@ -991,7 +992,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
         explicit_pages: list[tuple[int, int]] | None = None
         pages_text = req.get("pages")
         if pages_text is not None:
-            parsed = parse_locator_page_ranges(
+            parsed = parse_explicit_page_ranges(
                 pages_text.strip()) if isinstance(pages_text, str) else []
             if not parsed:
                 raise WriteRefused(
@@ -1165,10 +1166,11 @@ def _span_runs(pages) -> list[tuple[int, int]]:
     return runs
 
 
-def _study_reads(ctx, payload) -> tuple[list[Read], list[dict]]:
+def _study_reads(ctx, payload) -> tuple[list[Read], list[dict], list[dict]]:
     """The gated PDF spans of one material-span answer, or a refusal (P2, P3)."""
     reads: list[Read] = []
     described: list[dict] = []
+    span_refs: list[dict] = []
     for span in payload.get("spans", []):
         excerpt = span.get("excerpt")
         if span.get("extraction") == "unreadable" or not excerpt:
@@ -1204,7 +1206,8 @@ def _study_reads(ctx, payload) -> tuple[list[Read], list[dict]]:
                               text_sha256=text_sha))
             described.append({"material": material, "file_sha256": f"sha256:{digest}",
                               "pages": pages_label(start, end)})
-    return reads, described
+            span_refs.append(span)
+    return reads, described, span_refs
 
 
 def _exact_notes(root, repo, read: Read) -> list[dict]:
@@ -1251,9 +1254,13 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
             "material-study-span always reads text; pass --extract (the study hook "
             "rewrites material-span ... --extract into this command)",
             site=f"{ctx.operation}.needs-extract", prefixed=True, exit_code=2)
-    span_req = {key: value for key, value in req.items() if key != "session"}
+    span_req = {
+        key: value for key, value in req.items()
+        if key not in ("session", "omit_covered_text")
+    }
+    omit_covered = bool(req.get("omit_covered_text"))
     payload = material_span(ctx, span_req).payload
-    reads, described = _study_reads(ctx, payload)
+    reads, described, span_refs = _study_reads(ctx, payload)
     store = ReadingStore(ctx.root)
     try:
         admission = store.admit(session, reads)
@@ -1284,7 +1291,10 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     repo = ctx.repo()
     known = set(repo.concepts)
     rows, memory, seen = [], [], set()
-    for state, described_read in zip(admission.states, described, strict=True):
+    for state, described_read, span_ref in zip(admission.states, described, span_refs, strict=True):
+        if omit_covered and state["state"] == "covered":
+            span_ref.pop("excerpt", None)
+            span_ref["excerpt_omitted"] = "covered"
         read = state["read"]
         for note in _exact_notes(ctx.root, repo, read):
             if ("note", note["note_id"]) not in seen:

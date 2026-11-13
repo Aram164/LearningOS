@@ -112,11 +112,22 @@ def test_pages_flag_keeps_the_cap_and_the_out_of_range_refusal(mini_repo: Path):
 
 def test_pages_flag_refuses_blank_and_unparseable_values(mini_repo: Path):
     route_id = _thirty_page_deck(mini_repo)
-    for value in ("", "21-26"):
+    for value in ("", "21-26", "pdf p. 1, foo", "pdf p. 1,"):
         refused = run_los(mini_repo, "material-span", "unit-demo-l01",
                           route_id, "--extract", "--pages", value)
         assert refused.returncode == 2, refused.stdout
         assert "--pages" in refused.stderr
+
+
+def test_pages_flag_parses_comma_separated_pages_instead_of_dropping_tail(mini_repo: Path):
+    route_id = _thirty_page_deck(mini_repo)
+    multi = run_los(mini_repo, "material-span", "unit-demo-l01",
+                    route_id, "--extract", "--pages", "pdf p. 1,4")
+    assert multi.returncode == 0, multi.stderr
+    span = json.loads(multi.stdout)["spans"][0]
+    assert span["pages"] == [1, 4]
+    assert "--- PDF p.1 ---" in span["excerpt"]
+    assert "--- PDF p.4 ---" in span["excerpt"]
 
 
 def test_pages_digest_recheck_still_refuses_changed_bytes(mini_repo, monkeypatch):

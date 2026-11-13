@@ -116,7 +116,11 @@ files recorded in this session's ledger may be staged — the ledger itself
 lives in the git dir and is never staged. The protected Canvas files are
 always excluded. Commit and optional push occur only after explicit
 confirmation. To end the ownership window without committing, rerun with
-`--close`: it deletes only this session's ledger.
+`--close`: it deletes only this session's ledger. Inside sandboxed study mode
+(`tools/study_launch.py`), canonical writes already run host validation during
+`tools/seal_envelope.py --submit`, manual `validate.py` needs `--no-report`
+(`materials/` stays unmounted), and `los session-end` / commits run outside
+study mode (`study_launch.py` closes the reading-memory session on exit).
 
 ```scrut
 $ los session-end

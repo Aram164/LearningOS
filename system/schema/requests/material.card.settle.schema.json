@@ -48,7 +48,7 @@
     },
     "card": {
       "type": "object",
-      "description": "save a card for the entry: JSON {\"paraphrase\", \"kinds\", \"pointers\": [{\"page\", \"kind\", \"label\"}], \"concepts\"?}; every pointer inside the entry's pages, every kind backed by a pointer",
+      "description": "save a card for the entry: JSON {\"paraphrase\", \"kinds\", \"pointers\": [{\"page\", \"kind\", \"label\"}], \"concepts\"?}; allowed kinds: intuition, visual, statement, derivation, proof, worked-example, exercises, solutions, application, overview; every pointer inside the entry's pages, every kind backed by a pointer",
       "x-los-cli": {
         "flags": [
           "--card"

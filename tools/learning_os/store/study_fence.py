@@ -229,7 +229,14 @@ def _match_study_anchor(
             raise StudyFenceRefused(
                 f"study mode blocks {label} inside protected LearningOS tree: {real_target}"
             )
-    raise StudyFenceRefused(f"study mode blocks {label} outside the study boundary: {real_target}")
+    hint = (
+        f" (write scratch files under $LOS_SCRATCH_DIR: {scratch_dir})"
+        if scratch_dir is not None
+        else ""
+    )
+    raise StudyFenceRefused(
+        f"study mode blocks {label} outside the study boundary: {real_target}{hint}"
+    )
 
 
 def _open_study_dir_fd(

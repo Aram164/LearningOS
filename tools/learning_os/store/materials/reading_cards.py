@@ -153,10 +153,12 @@ def _row_range(row: dict[str, object]) -> dict[str, int]:
 
 def settle_command(entry: str) -> str:
     """The exact save and dismiss forms for one entry (C1.6)."""
+    allowed = ", ".join(TREATMENT_KINDS)
     return (f"los material-card-settle {entry} --card "
             "'{\"paraphrase\": \"<what these pages do, in your words>\", "
             "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
             "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'"
+            f" (kinds: {allowed})"
             f"  |  los material-card-settle {entry} --dismiss irrelevant "
             "--reason '<why>'")
 

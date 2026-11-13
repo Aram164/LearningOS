@@ -1,5 +1,17 @@
 schema: 1
 approvals:
+  - key: cli.material-study-span
+    change: changed
+    plan_ref: "outputs/2026-11-13-trial-findings-evidence-and-fix-plan.md F1 (--omit-covered-text opt-in on material-study-span)"
+    pre_approved_by: "Aram 2026-11-13: document trial findings and fix issues that were exposed, run full gates upstream"
+  - key: request_schemas.material.study-span.schema.json
+    change: changed
+    plan_ref: "outputs/2026-11-13-trial-findings-evidence-and-fix-plan.md F1 (--omit-covered-text request field on material.study-span)"
+    pre_approved_by: "Aram 2026-11-13: document trial findings and fix issues that were exposed, run full gates upstream"
+  - key: request_schemas.material.card.settle.schema.json
+    change: changed
+    plan_ref: "outputs/2026-11-13-trial-findings-evidence-and-fix-plan.md F5 (list allowed TREATMENT_KINDS in card option description)"
+    pre_approved_by: "Aram 2026-11-13: document trial findings and fix issues that were exposed, run full gates upstream"
   - key: cli.material-span
     change: changed
     plan_ref: "PLAN-A step 2: material-span --material PDF form and --file-sha256 pin; unit/route positionals become optional"

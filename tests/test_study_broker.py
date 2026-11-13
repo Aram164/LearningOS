@@ -291,6 +291,19 @@ def test_material_span_rewrite_session_pinning_and_adopt(tmp_path: Path) -> None
     assert "--extract" in cmd
     assert cmd[-2:] == ["--session", SESSION]
 
+    # material-span --extract --omit-covered-text forwards cleanly through material-study-span.
+    res_omit = broker.handle_request({
+        "tool": "los",
+        "argv": [
+            "material-span", "--material", BOOK, "--pages", "pdf p. 1",
+            "--extract", "--omit-covered-text",
+        ],
+        "cwd": str(core),
+    })
+    assert res_omit.exit_code == 0, res_omit.stderr
+    assert "--omit-covered-text" in runner.calls[-1][0]
+    assert "material-study-span" in runner.calls[-1][0]
+
     # material-span without --extract stays material-span and does not inject --session.
     res_meta = broker.handle_request({
         "tool": "los",
@@ -1486,3 +1499,36 @@ def test_call_dir_fd_op_retries_transient_einval() -> None:
         call_dir_fd_op(_persistent_einval)
     assert exhausted.value.errno == errno.EINVAL
     assert persistent_calls == 4
+
+
+def test_session_end_refusal_and_scratch_boundary_hints(tmp_path: Path) -> None:
+    from learning_os.store.study_fence import StudyFenceRefused, check_study_path
+
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+
+    refused_end = broker.handle_request({
+        "tool": "los",
+        "argv": ["session-end"],
+        "cwd": str(core),
+    })
+    assert refused_end.exit_code == 2
+    assert "study broker: command 'session-end' is not allowed in study mode" in refused_end.stderr
+    assert "seal_envelope.py --submit" in refused_end.stderr
+    assert "outside study mode" in refused_end.stderr
+
+    outside = tmp_path / "outside.json"
+    with pytest.raises(StudyFenceRefused) as caught:
+        check_study_path(
+            str(outside),
+            core_root=core,
+            scratch_dir=scratch,
+            cwd=core,
+            label="--check-out",
+            allow_core=True,
+        )
+    msg = str(caught.value)
+    assert "outside the study boundary" in msg
+    assert "$LOS_SCRATCH_DIR" in msg
+    assert str(scratch) in msg

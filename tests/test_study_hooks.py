@@ -125,7 +125,9 @@ def test_session_start_touches_store_and_reports_clean_state(_in_process_store: 
     beside = study_hooks.CORE.parent / "reading-memory"
     existed = beside.exists()
     out = study_hooks.session_start({"session_id": S, "source": "startup"})
-    assert "los bootstrap --brief" in out
+    assert ".venv/bin/python tools/los.py bootstrap --brief" in out
+    assert "--omit-covered-text" in out
+    assert "$LOS_SCRATCH_DIR" in out
     assert "No adoptable entries." in out
     assert "no overdue entries" in out
     assert (_in_process_store / "sessions" / f"{S}.json").is_file()
@@ -211,7 +213,7 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
         # Client payload omits or mismatches session_id; host broker pins broker.session_id.
         started = _hook(world, "session-start", {"session_id": OTHER}, env=sock_env)
         assert started.returncode == 0, started.stderr
-        assert "los bootstrap --brief" in started.stdout
+        assert ".venv/bin/python tools/los.py bootstrap --brief" in started.stdout
 
         stopped = _hook(world, "stop", {"session_id": OTHER, "stop_hook_active": False}, env=sock_env)
         assert stopped.returncode == 0, stopped.stderr
@@ -233,7 +235,7 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
     # Dead broker socket degrades UX nudges without crashing Claude turns.
     dead_start = _hook(world, "session-start", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
     assert dead_start.returncode == 0
-    assert "los bootstrap --brief" in dead_start.stdout
+    assert ".venv/bin/python tools/los.py bootstrap --brief" in dead_start.stdout
     dead_stop = _hook(world, "stop", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
     assert dead_stop.returncode == 0
     assert dead_stop.stdout == ""

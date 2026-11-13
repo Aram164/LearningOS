@@ -647,3 +647,34 @@ def test_compact_mode_without_report_keeps_warning_details(mini_repo, repo_root)
         assert str(issue) in proc.stdout
     assert lines[-1].endswith("OK") or "OK (" in lines[-1]
     assert "warning(s)" in lines[-1]
+
+
+def test_validate_permission_error_on_report_gives_clean_hint(mini_repo, monkeypatch, capsys):
+    import sys
+    from pathlib import Path
+
+    import validate as validate_tool
+
+    real_write_text = Path.write_text
+
+    def deny_report(self: Path, *args, **kwargs):
+        if self.name == "validation-report.md":
+            raise PermissionError(1, "Operation not permitted")
+        return real_write_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", deny_report)
+    monkeypatch.delenv("LOS_GATE_SOCK", raising=False)
+    monkeypatch.setattr(sys, "argv", ["validate.py", "--compact", "--root", str(mini_repo)])
+    rc = validate_tool.main()
+    captured = capsys.readouterr()
+    assert rc == 2
+    assert "--no-report" in captured.err
+    assert "Traceback" not in captured.err
+
+    monkeypatch.setenv("LOS_GATE_SOCK", "/tmp/study.sock")
+    rc_study = validate_tool.main()
+    captured_study = capsys.readouterr()
+    assert rc_study == 2
+    assert "--no-report" in captured_study.err
+    assert "seal_envelope.py --submit" in captured_study.err
+    assert "materials/" in captured_study.err

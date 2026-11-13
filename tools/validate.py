@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import os
+import sys
 import time as _time
 from pathlib import Path
 
@@ -101,9 +103,22 @@ def main() -> int:
     if not args.no_report:
         generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
         report_dir = root / "generated" / "reports"
-        report_dir.mkdir(parents=True, exist_ok=True)
-        (report_dir / "validation-report.md").write_text(
-            render_report(issues, generated_at), encoding="utf-8")
+        try:
+            report_dir.mkdir(parents=True, exist_ok=True)
+            (report_dir / "validation-report.md").write_text(
+                render_report(issues, generated_at), encoding="utf-8")
+        except PermissionError as exc:
+            study_note = (
+                " Inside study mode, pass --no-report (materials/ is unmounted "
+                "and seal_envelope.py --submit already validates canonical writes)."
+                if os.environ.get("LOS_GATE_SOCK")
+                else " Pass --no-report for read-only validation."
+            )
+            print(
+                f"validate.py: cannot write generated/reports/validation-report.md ({exc}).{study_note}",
+                file=sys.stderr,
+            )
+            return 2
 
     if pins is not None:
         # Offline runs refresh the status cache; --online results depend
