@@ -12,6 +12,7 @@ Load authored records and expand declared references into repository read models
 - `tools/learning_os/store/codec.py`
 - `tools/learning_os/store/layout.py`
 - `tools/learning_os/store/fs.py`
+- `tools/learning_os/store/study_fence.py`
 
 ## Entry points
 
