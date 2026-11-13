@@ -151,21 +151,29 @@ def _row_range(row: dict[str, object]) -> dict[str, int]:
     return cast("dict[str, int]", row["inspected_range"])
 
 
+LOS_COMMAND = ".venv/bin/python tools/los.py"
+
+
+def treatment_kinds_hint() -> str:
+    """Allowed card treatment kinds as standalone prose, never inside shell commands."""
+    return "Allowed card kinds: " + ", ".join(TREATMENT_KINDS) + "."
+
+
 def settle_command(entry: str) -> str:
     """The exact save and dismiss forms for one entry (C1.6)."""
-    allowed = ", ".join(TREATMENT_KINDS)
-    return (f"los material-card-settle {entry} --card "
-            "'{\"paraphrase\": \"<what these pages do, in your words>\", "
-            "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
-            "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'"
-            f" (kinds: {allowed})"
-            f"  |  los material-card-settle {entry} --dismiss irrelevant "
-            "--reason '<why>'")
+    return (
+        f"{LOS_COMMAND} material-card-settle {entry} --card "
+        "'{\"paraphrase\": \"<what these pages do, in your words>\", "
+        "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
+        "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  "
+        f"{LOS_COMMAND} material-card-settle {entry} --dismiss irrelevant "
+        "--reason '<why>'"
+    )
 
 
 def adopt_command(session: str) -> str:
     """The exact adoption form for one ended or idle session (C7)."""
-    return f"los material-card-settle --adopt {session}"
+    return f"{LOS_COMMAND} material-card-settle --adopt {session}"
 
 
 @dataclass(frozen=True)
@@ -724,9 +732,10 @@ class ReadingStore:
                 f"{settlement.get('session')}; a different settlement would rewrite it")
         if row["session"] != session:
             raise SettleRefusal(
-                "not-owner", f"{name} belongs to session {row['session']}, not this one",
-                remedy=(adopt_command(cast(str, row["session"]))
-                        + "  (only once that session has ended or made no call for two hours)"))
+                "not-owner",
+                f"{name} belongs to session {row['session']}, not this one "
+                "(adopt only once that session has ended or made no call for two hours)",
+                remedy=adopt_command(cast(str, row["session"])))
         return row, None
 
     def _close(self, session: str, row: dict[str, object], outcome: str, now: dt.datetime,
@@ -1063,9 +1072,9 @@ def entry_view(row: dict[str, object]) -> dict[str, object]:
 
 
 __all__ = [
-    "ADOPT_IDLE", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME", "TREATMENT_KINDS",
-    "Admission", "Read", "ReadingStore", "ReadingStoreError", "SettleRefusal",
-    "Settlement", "StopDecision", "adopt_command", "admit_card",
+    "ADOPT_IDLE", "LOS_COMMAND", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME",
+    "TREATMENT_KINDS", "Admission", "Read", "ReadingStore", "ReadingStoreError",
+    "SettleRefusal", "Settlement", "StopDecision", "adopt_command", "admit_card",
     "card_name", "entry_view", "pages_label", "settle_command",
-    "store_root", "valid_session",
+    "store_root", "treatment_kinds_hint", "valid_session",
 ]

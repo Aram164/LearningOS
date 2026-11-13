@@ -661,7 +661,8 @@ class StudyBroker:
                 if subcmd == "session-end":
                     hint = (
                         " (seal_envelope.py --submit already validates canonical "
-                        "writes; commit or run los session-end outside study mode)"
+                        "writes; commit or run .venv/bin/python tools/los.py session-end "
+                        "outside study mode)"
                     )
                 return _refuse(
                     f"study broker: command {subcmd!r} is not allowed in study mode{hint}"

@@ -50,6 +50,7 @@ from learning_os.store.materials.reading_cards import (
     entry_view,
     pages_label,
     settle_command,
+    treatment_kinds_hint,
     valid_session,
 )
 from learning_os.store.materials.resolution import (
@@ -1271,7 +1272,8 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     if admission.refusal == "overdue":
         raise WriteRefused(
             "this session holds overdue reading entries; settle them before reading new "
-            f"pages (pending spans stay readable): {_gate_entries(admission.blocking)}",
+            f"pages (pending spans stay readable): {_gate_entries(admission.blocking)}. "
+            f"{treatment_kinds_hint()}",
             site=f"{ctx.operation}.overdue", prefixed=True, exit_code=2,
             remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
     if admission.refusal == "adoptable":
@@ -1285,7 +1287,8 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     if admission.refusal == "limit":
         raise WriteRefused(
             f"this read would hold more than {MAX_OPEN_ENTRIES} open reading entries in one "
-            f"turn; settle one first (pending spans stay readable): {_gate_entries(admission.blocking)}",
+            f"turn; settle one first (pending spans stay readable): "
+            f"{_gate_entries(admission.blocking)}. {treatment_kinds_hint()}",
             site=f"{ctx.operation}.limit", prefixed=True, exit_code=2,
             remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
     repo = ctx.repo()
@@ -1338,7 +1341,8 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     if open_rows:
         next_action = (
             f"Before the turn ends, settle each open entry ({len(open_rows)} of at most "
-            f"{MAX_OPEN_ENTRIES}): save a card or dismiss it. "
+            f"{MAX_OPEN_ENTRIES}): save a card or dismiss it. {treatment_kinds_hint()} "
+            "Commands: "
             + "  ||  ".join(settle_command(row["entry"]) for row in open_rows[:MAX_OPEN_ENTRIES]))
     return Result({
         "schema_version": 1, "snapshot_id": payload["snapshot_id"],
