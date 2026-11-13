@@ -171,6 +171,97 @@ def test_session_uuid_codex_args_and_entrypoint_contract(
     assert "--runtime" in help_proc.stdout and "--resume-runtime-id" in help_proc.stdout
 
 
+def test_resolve_runtime_and_cmd_paths_keep_core_cwd_and_symlinks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    learningos = tmp_path / "LearningOS"
+    core = learningos / "repository"
+    outside = tmp_path / "outside"
+    for p in (core / ".venv/bin", core / "tools", learningos / "materials/_unsorted", outside):
+        p.mkdir(parents=True, exist_ok=True)
+    real_python = tmp_path / "real-python"
+    real_python.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    real_python.chmod(0o755)
+    venv_py = core / ".venv/bin/python"
+    venv_py.symlink_to(real_python)
+    (core / "tools/los.py").write_text("# stub\n", encoding="utf-8")
+    (learningos / "materials/_unsorted/book.pdf").write_text("%PDF", encoding="utf-8")
+    wrapper = outside / "wrapper.sh"
+    wrapper.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    wrapper.chmod(0o755)
+    cfg = outside / "cfg.json"
+    cfg.write_text("{}", encoding="utf-8")
+
+    real_core = Path(os.path.realpath(core))
+    real_parent = Path(os.path.realpath(learningos))
+    real_outside = Path(os.path.realpath(outside))
+    real_materials = Path(os.path.realpath(learningos / "materials"))
+
+    # Caller in LearningOS/ running caller-relative `repository/.venv/bin/python`:
+    # preserves symlinked .venv path (never dereferencing to real_python) and resolves script arg.
+    resolved_cmd = study_launch._resolve_runtime_command(
+        runtime=None,
+        use_cmd=True,
+        extra=[
+            "--",
+            "repository/.venv/bin/python",
+            "repository/tools/los.py",
+            "-c",
+            "repository/.venv/bin/python",
+            "status",
+        ],
+        caller_cwd=real_parent,
+        real_core=real_core,
+    )
+    assert resolved_cmd == [
+        str(real_core / ".venv/bin/python"),
+        str(real_core / "tools/los.py"),
+        "-c",
+        "repository/.venv/bin/python",  # -c inline code string stays untouched
+        "status",
+    ]
+
+    # Core-relative `.venv/bin/python tools/los.py` stays untouched regardless of caller_cwd.
+    core_cmd = study_launch._resolve_runtime_command(
+        runtime=None,
+        use_cmd=True,
+        extra=["--", ".venv/bin/python", "tools/los.py", "status", "--json"],
+        caller_cwd=real_outside,
+        real_core=real_core,
+    )
+    assert core_cmd == [".venv/bin/python", "tools/los.py", "status", "--json"]
+
+    # Outside caller-relative `./wrapper.sh --cfg=./cfg.json` resolves absolutely;
+    # protected materials path `_unsorted/book.pdf` is never rewritten even from materials/.
+    outside_cmd = study_launch._resolve_runtime_command(
+        runtime=None,
+        use_cmd=True,
+        extra=["--", "./wrapper.sh", "--cfg=./cfg.json"],
+        caller_cwd=real_outside,
+        real_core=real_core,
+    )
+    assert outside_cmd == [str(real_outside / "wrapper.sh"), f"--cfg={real_outside / 'cfg.json'}"]
+
+    mat_cmd = study_launch._resolve_runtime_command(
+        runtime=None,
+        use_cmd=True,
+        extra=["--", ".venv/bin/python", "tools/los.py", "material-span", "--material", "_unsorted/book.pdf"],
+        caller_cwd=real_materials,
+        real_core=real_core,
+    )
+    assert mat_cmd[-1] == "_unsorted/book.pdf"
+
+    # Relative `PATH` hits for `--runtime` become absolute so switching cwd to real_core cannot break exec.
+    monkeypatch.chdir(real_outside)
+    monkeypatch.setattr(study_launch.shutil, "which", lambda name: "./wrapper.sh")
+    rt_cmd = study_launch._resolve_runtime_command(
+        runtime="claude",
+        use_cmd=False,
+        extra=["--", "--settings", "./cfg.json"],
+        caller_cwd=real_outside,
+        real_core=real_core,
+    )
+    assert rt_cmd == [str(real_outside / "wrapper.sh"), "--settings", str(real_outside / "cfg.json")]
+
+
 def test_non_darwin_or_missing_sandbox_exec_fails_closed(tmp_path: Path) -> None:
     core = tmp_path / "LearningOS" / "repository"
     core.mkdir(parents=True)
@@ -989,3 +1080,89 @@ assert stop2.stdout.strip() == ""
     )
     assert rt_proc.returncode == 0, rt_proc.stdout + rt_proc.stderr
     assert list((learningos / "reading-memory/pending").glob("rd-*.json")) == []
+
+    # 4. Caller-relative `--cmd` executables (`repository/.venv/bin/python` from LearningOS/ and
+    # `./caller-wrapper.sh` from outside/) still launch inside `real_core` so dynamically emitted
+    # `.venv/bin/python tools/los.py ...` hints work identically while Seatbelt boundaries hold.
+    rel_py_script = (
+        "import json, os, shlex, subprocess, sys\n"
+        "from pathlib import Path\n"
+        f"assert Path(os.path.realpath(os.getcwd())) == Path({str(real_core)!r}), os.getcwd()\n"
+        "assert sys.prefix != sys.base_prefix, (sys.prefix, sys.base_prefix)\n"
+        "span = subprocess.run(\n"
+        "    ['.venv/bin/python', 'tools/los.py', 'material-study-span',\n"
+        f"     '--material', {BOOK!r}, '--pages', 'pdf p. 3', '--extract'],\n"
+        "    capture_output=True, text=True, check=True,\n"
+        ")\n"
+        "span_obj = json.loads(span.stdout)\n"
+        "next_action = span_obj['study']['next_action']\n"
+        "save_lines = [\n"
+        "    ln.strip() for ln in next_action.splitlines()\n"
+        "    if ln.strip().startswith('.venv/bin/python tools/los.py material-card-settle ') and '--card' in ln\n"
+        "]\n"
+        "assert len(save_lines) == 1, next_action\n"
+        "settle_cmd = save_lines[0].replace(\n"
+        "    \"'{\\\"paraphrase\\\": \\\"<what these pages do, in your words>\\\", \\\"kinds\\\": [\\\"<kind>\\\"], \\\"pointers\\\": [{\\\"page\\\": <page>, \\\"kind\\\": \\\"<kind>\\\", \\\"label\\\": \\\"<what is there>\\\"}]}'\",\n"
+        "    shlex.quote(json.dumps({'paraphrase': 'Page 3 caller-relative exec test.', 'kinds': ['statement'], 'pointers': [{'page': 3, 'kind': 'statement', 'label': 'p3'}]})),\n"
+        ")\n"
+        "subprocess.run(['sh', '-c', settle_cmd], check=True)\n"
+        "try:\n"
+        "    Path('../blocked-from-rel-cmd.txt').write_text('no', encoding='utf-8')\n"
+        "    raise SystemExit(9)\n"
+        "except PermissionError:\n"
+        "    pass\n"
+        "try:\n"
+        "    Path('../materials/secret.txt').read_text(encoding='utf-8')\n"
+        "    raise SystemExit(10)\n"
+        "except PermissionError:\n"
+        "    pass\n"
+    )
+    rel_exec_proc = subprocess.run(
+        [
+            str(core / ".venv/bin/python"),
+            "repository/tools/study_launch.py",
+            "--cmd",
+            "--",
+            "repository/.venv/bin/python",
+            "-c",
+            rel_py_script,
+        ],
+        cwd=str(learningos),
+        env=base_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert rel_exec_proc.returncode == 0, rel_exec_proc.stdout + rel_exec_proc.stderr
+
+    caller_wrapper = outside / "caller-wrapper.sh"
+    caller_wrapper.write_text(
+        f"""#!/bin/sh
+set -eu
+[ "$(cd . && pwd -P)" = "{real_core}" ]
+.venv/bin/python tools/los.py status --json >/dev/null
+if touch ../blocked-wrapper.txt 2>/dev/null; then
+  exit 9
+fi
+exit 0
+""",
+        encoding="utf-8",
+    )
+    caller_wrapper.chmod(0o755)
+    wrapper_proc = subprocess.run(
+        [
+            str(core / ".venv/bin/python"),
+            str(core / "tools/study_launch.py"),
+            "--root",
+            str(core),
+            "--cmd",
+            "--",
+            "./caller-wrapper.sh",
+        ],
+        cwd=str(outside),
+        env=base_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert wrapper_proc.returncode == 0, wrapper_proc.stdout + wrapper_proc.stderr
