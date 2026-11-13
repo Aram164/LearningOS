@@ -21,13 +21,28 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
+import os
 import secrets
 import sys
 from pathlib import Path
 
+from learning_os.adapters.study_broker import (
+    GATE_SOCK_ENV,
+    SEAL_GUARDS_STDIN_ENV,
+    build_seal_parser,
+    normalize_check_record,
+    send_broker_request,
+)
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
+from learning_os.app.gateway import (
+    STUDY_FENCE_CORE_ENV,
+    STUDY_FENCE_SCRATCH_ENV,
+    check_study_path,
+)
 from learning_os.app.registry import REGISTRY
+from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
@@ -108,6 +123,18 @@ def _bind_file_digests(root: Path, capability: str, payload: dict,
                 or not isinstance(value, str) or value == "-":
             continue
         source = Path(value).expanduser().resolve()
+        fence_core = os.environ.get(STUDY_FENCE_CORE_ENV)
+        if fence_core:
+            fence_scratch = os.environ.get(STUDY_FENCE_SCRATCH_ENV)
+            try:
+                check_study_path(
+                    value,
+                    core_root=Path(fence_core),
+                    scratch_dir=Path(fence_scratch) if fence_scratch else None,
+                    label=name,
+                )
+            except WriteRefused as exc:
+                raise ValueError(str(exc)) from exc
         if not source.is_file():
             continue  # the handler's own refusal names the missing file
         bound[name] = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
@@ -138,39 +165,12 @@ def _scratch_path_problem(root: Path, raw: str, flag: str) -> str | None:
             ".venv/ scratch")
 
 
-def _normalize_check_record(record):
-    """Accept a gateway ``--report-out`` check report as a check record.
-
-    A saved ``--check --report-out`` report carries the same guards inside
-    its gateway envelope; normalize it to the schema-1 record shape so one
-    reviewed file can go straight from ``--check`` to sealing.
-    """
-    if isinstance(record, dict) and record.get("schema") is None \
-            and record.get("mode") == "check" \
-            and record.get("ok") is True \
-            and isinstance(record.get("gateway_envelope"), dict) \
-            and isinstance(record.get("expected_snapshot"), str) \
-            and isinstance(record.get("expected_revisions"), dict):
-        envelope = record["gateway_envelope"]
-        return {
-            "schema": 1,
-            "ok": record.get("ok"),
-            "capability": record.get("capability") or envelope.get("capability"),
-            "expected_snapshot": record["expected_snapshot"],
-            "expected_revisions": record["expected_revisions"],
-            "payload": envelope.get("payload"),
-            "idempotency_key": record.get("idempotency_key"),
-        }
-    return record
+_normalize_check_record = normalize_check_record
 
 
-def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
-    """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
-
-    Refuses a record that is unreadable, of another schema, failed, for
-    another capability, or for another payload than the one being sealed.
-    """
-    record = _normalize_check_record(json.loads(Path(path).read_text(encoding="utf-8")))
+def _guards_from_record(
+    record: object, capability: str, payload: dict,
+) -> tuple[str, dict[str, int]]:
     # S13 candidate J9-J12: record validation, in SPEC order.
     if not isinstance(record, dict) or record.get("schema") != 1:
         raise ValueError("--guards-from record schema must be 1")
@@ -184,6 +184,16 @@ def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict
             != json.dumps(record.get("payload"), sort_keys=True)):
         raise ValueError("--guards-from record payload differs from the sealing payload")
     return record["expected_snapshot"], dict(record["expected_revisions"])
+
+
+def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
+    """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
+
+    Refuses a record that is unreadable, of another schema, failed, for
+    another capability, or for another payload than the one being sealed.
+    """
+    record = _normalize_check_record(json.loads(Path(path).read_text(encoding="utf-8")))
+    return _guards_from_record(record, capability, payload)
 
 
 class _DryRunCapture(Exception):
@@ -618,7 +628,7 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
 
 
 def _submit(root: Path, args: argparse.Namespace, payload: dict,
-            session_id: str | None) -> int:
+            session_id: str | None, *, guards_record: dict | None = None) -> int:
     """Seal in process and hand the envelope to the gateway (agent-cost D1).
 
     The gateway reads the exact file this call sealed: a new attempt of its
@@ -636,8 +646,12 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
     from learning_os.domain.failures import TransactionFailure, WriteRefused
 
     try:
-        guards = (_record_guards(args.guards_from, args.capability, payload)
-                  if args.guards_from else None)
+        if guards_record is not None:
+            guards = _guards_from_record(guards_record, args.capability, payload)
+        elif args.guards_from:
+            guards = _record_guards(args.guards_from, args.capability, payload)
+        else:
+            guards = None
         sealed, fresh = _seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
             channel=args.channel, approval_kind=args.approval_kind,
@@ -646,12 +660,15 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
     _commit.LAST_VALIDATION.set(None)
+    old_stdin = sys.stdin
     try:
+        sys.stdin = io.StringIO(sealed.read_text(encoding="utf-8"))
         code = cmd_capability(argparse.Namespace(
             root=str(root), name=args.capability,
-            payload_file=str(sealed),
+            payload_file="-",
             replay_only=False, _parser_factory=los.build_parser))
     finally:
+        sys.stdin = old_stdin
         if fresh:
             _settle_attempt(root, args.key, sealed)
     if code == 0:
@@ -684,61 +701,78 @@ def build_parser() -> argparse.ArgumentParser:
     Factored out of ``main`` so the A11 surface snapshot can introspect the
     same parser that defines the flags, instead of a second copy that drifts.
     """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", default=None,
-                        help="repository root (default: the checkout holding tools/)")
-    parser.add_argument("--capability", default=None,
-                        help="capability name (required unless derived from a "
-                             "--guards-from record)")
-    parser.add_argument("--payload", default=None,
-                        help="payload JSON, or @PATH to a JSON file (required "
-                             "unless derived from a --guards-from record)")
-    parser.add_argument("--key", default=None,
-                        help="idempotency key (required unless the --guards-from "
-                             "record carries it)")
-    parser.add_argument("--request-id", default=None,
-                        help="request id (default: a fresh request-<key>-<random> "
-                             "per run, as §25c step 4 asks; to retry, resubmit the "
-                             "saved envelope instead of re-sealing)")
-    parser.add_argument("--channel", default="operator",
-                        help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}")
-    parser.add_argument("--session-id", default=None,
-                        help="sealed session identity for this write's ledger "
-                             "rows (default: none — resolution falls back to "
-                             "LOS_SESSION_ID, then the channel; WORKFLOWS §25c "
-                             "step 4)")
-    parser.add_argument("--approval-kind", default="operator-approval",
-                        help=f"one of: {', '.join(sorted(APPROVAL_KINDS))}")
-    parser.add_argument("--snapshot", default=None,
-                        help="expected snapshot (default: read live)")
-    parser.add_argument("--revision", action="append", default=[],
-                        help="guard ART=REV; repeatable")
-    guards = parser.add_mutually_exclusive_group()
-    guards.add_argument("--guards", default=None, choices=("auto",),
-                        help="guard derivation: 'auto' runs the capability's "
-                             "handler as a gateway dry run that stops before "
-                             "any write, and reads revisions under the same "
-                             "lock as the snapshot. Explicit --revision "
-                             "entries override derived ones.")
-    guards.add_argument("--guards-from", default=None, metavar="PATH",
-                        help="seal from a check record at PATH instead of "
-                             "deriving guards (mutually exclusive with "
-                             "--guards and explicit guards)")
-    parser.add_argument("--check-out", default=None, metavar="PATH",
-                        help="with --guards auto on a registered operation, "
-                             "also write the check record to PATH")
-    parser.add_argument("--out", default=None,
-                        help="write the envelope here (default: stdout)")
-    parser.add_argument("--submit", action="store_true",
-                        help="seal with derived guards, or with a reviewed "
-                             "--guards-from record's, and submit through the "
-                             "gateway in this one call, printing its result; "
-                             "a retry with the same --key and payload replays "
-                             "the committed receipt")
-    return parser
+    return build_seal_parser(__doc__)
+
+
+def _dispatch_via_socket(
+    gate_sock: str,
+    raw_argv: list[str],
+    args: argparse.Namespace,
+) -> int:
+    """Route a seal_envelope call through LOS_GATE_SOCK while performing local scratch I/O."""
+    guards_from_raw: str | None = None
+    if args.guards_from:
+        try:
+            guards_from_raw = Path(args.guards_from).expanduser().read_text(encoding="utf-8")
+        except OSError as exc:
+            print(f"seal_envelope: cannot read --guards-from {args.guards_from}: {exc}",
+                  file=sys.stderr)
+            return 2
+    payload_at_raw: str | None = None
+    if isinstance(args.payload, str) and args.payload.startswith("@"):
+        try:
+            payload_at_raw = Path(args.payload[1:]).expanduser().read_text(encoding="utf-8")
+        except OSError as exc:
+            print(f"seal_envelope: cannot read --payload {args.payload}: {exc}",
+                  file=sys.stderr)
+            return 2
+    try:
+        resp = send_broker_request(
+            gate_sock,
+            {
+                "tool": "seal_envelope",
+                "argv": raw_argv,
+                "cwd": os.getcwd(),
+                "guards_from_text": guards_from_raw,
+                "payload_at_text": payload_at_raw,
+            },
+        )
+    except (OSError, ValueError) as exc:
+        print(f"seal_envelope: study broker unavailable ({exc}); failing closed",
+              file=sys.stderr)
+        return 2
+    err = resp.get("stderr")
+    if isinstance(err, str) and err:
+        sys.stderr.write(err)
+    check_out_raw = resp.get("check_out_text")
+    if args.check_out and isinstance(check_out_raw, str):
+        try:
+            check_target = Path(args.check_out).expanduser()
+            check_target.parent.mkdir(parents=True, exist_ok=True)
+            check_target.write_text(check_out_raw, encoding="utf-8")
+        except OSError as exc:
+            print(f"seal_envelope: cannot write --check-out {args.check_out}: {exc}",
+                  file=sys.stderr)
+            return 2
+    code_val = resp.get("exit_code")
+    exit_code = int(code_val) if isinstance(code_val, int) else 2
+    out = resp.get("stdout")
+    if args.out and exit_code == 0 and isinstance(out, str):
+        try:
+            out_target = Path(args.out).expanduser()
+            out_target.parent.mkdir(parents=True, exist_ok=True)
+            out_target.write_text(out, encoding="utf-8")
+        except OSError as exc:
+            print(f"seal_envelope: cannot write --out {args.out}: {exc}",
+                  file=sys.stderr)
+            return 2
+    elif isinstance(out, str) and out:
+        sys.stdout.write(out)
+    return exit_code
 
 
 def main(argv: list[str] | None = None) -> int:
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -806,13 +840,30 @@ def main(argv: list[str] | None = None) -> int:
     # The reviewed record carries the identity the submit applies (issue
     # #86): with --guards-from, derive capability, payload and key from it,
     # and refuse an explicit flag that contradicts what was reviewed.
+    root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
+    for flag, raw in (("--out", args.out), ("--check-out", args.check_out)):
+        if raw:
+            problem = _scratch_path_problem(root, raw, flag)
+            if problem:
+                print(problem, file=sys.stderr)
+                return 2
+
+    gate_sock = os.environ.get(GATE_SOCK_ENV)
+    if gate_sock:
+        return _dispatch_via_socket(gate_sock, raw_argv, args)
+
     record = None
     derived_payload = False
     explicit_payload_given = args.payload is not None
     if args.guards_from:
         try:
-            record = _normalize_check_record(
-                json.loads(Path(args.guards_from).read_text(encoding="utf-8")))
+            guards_raw = (
+                sys.stdin.read()
+                if args.guards_from == "-"
+                and os.environ.get(SEAL_GUARDS_STDIN_ENV) == "1"
+                else Path(args.guards_from).read_text(encoding="utf-8")
+            )
+            record = _normalize_check_record(json.loads(guards_raw))
         except (OSError, ValueError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2
@@ -867,15 +918,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
 
-    root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
-    for flag, raw in (("--out", args.out), ("--check-out", args.check_out)):
-        if raw:
-            problem = _scratch_path_problem(root, raw, flag)
-            if problem:
-                print(problem, file=sys.stderr)
-                return 2
-    payload = _bind_file_digests(root, args.capability, payload,
-                                 force=derived_payload)
+    try:
+        payload = _bind_file_digests(root, args.capability, payload,
+                                     force=derived_payload)
+    except ValueError as exc:
+        print(f"seal_envelope: {exc}", file=sys.stderr)
+        return 2
 
     if explicit_payload is not None:
         # Binding may add digest fields, so the restated payload is compared
@@ -888,12 +936,12 @@ def main(argv: list[str] | None = None) -> int:
             return 2
 
     if args.submit:
-        return _submit(root, args, payload, sealed_session)
+        return _submit(root, args, payload, sealed_session, guards_record=record)
 
     request_id = args.request_id or _fresh_request_id(args.key)
     if args.guards_from:
         try:
-            snapshot, revisions = _record_guards(args.guards_from, args.capability, payload)
+            snapshot, revisions = _guards_from_record(record, args.capability, payload)
         except (ValueError, OSError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2

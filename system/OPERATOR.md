@@ -331,14 +331,12 @@ submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
 NAME --payload JSON --key KEY --submit`. It binds any file the payload names
 to its bytes; a write that needs review first is `--guards auto --check-out
 REC`, then `--guards-from REC --submit`. Use a fresh, attempt-specific
-`REC` outside the repository, or under the checkout's gitignored `.venv/`
-scratch when the harness confines writes to the checkout. Print the record in the same invocation as
-the check (append `&& cat REC`, so a failed check keeps its failure status
-and no stale record is shown), inspect the proposed change, target, and
-guards in that result, and only then submit in a separate invocation. If
-the printed record is truncated or incomplete, do not submit. Never chain
-check and submit in one invocation, and never treat a successful check
-exit as approval.
+`REC` outside the repository (under `$LOS_SCRATCH_DIR` in a study launch, or
+another external temporary directory), inspect `REC` directly to review the
+proposed change, exact target, and guards, and only then submit in a separate
+invocation. If the read check record is truncated or incomplete, do not
+submit. Never chain check and submit in one invocation, and never treat a
+successful check exit as approval.
 When Aram starts a message with `log:`, treat the following text as an explicit
 request to capture it verbatim. If the stage was explicitly identified in the
 current conversation, append it to that stage's working note through
@@ -365,6 +363,30 @@ require loading every schema, historical review, or unrelated workflow into
 context.
 
 Procedure: [capture routing](procedures/capture-routing.md); [write envelopes](procedures/build-write-envelope.md).
+
+### Sandboxed study mode
+
+Study sessions launch across runtimes (such as `.venv/bin/python
+tools/study_launch.py --runtime claude`, `--runtime codex`, `--runtime gemini`,
+or `--cmd -- ...`) via `tools/study_launch.py`,
+which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
+`/usr/bin/sandbox-exec` Seatbelt and forwards gateway calls over
+`LOS_GATE_SOCK` through the host-side default-deny broker
+(`tools/learning_os/adapters/study_broker.py`). Seatbelt denies reads to
+`LearningOS/materials/`, `LearningOS/reading-memory/`,
+`generated/text-cache/`, `generated/material-search/`,
+`generated/material-outlines/`, `generated/derived-state/`, and non-`.gitkeep`
+entries under `operations/ai-actions/requests/`, and denies all writes to
+`LearningOS/`, while allocating `$LOS_SCRATCH_DIR` outside `LearningOS/` for
+temporary files and `--check-out` / `--out` artifacts.
+
+Boundary scope: Seatbelt isolates LearningOS data and reading-memory integrity
+with `(allow default)` for ordinary system/runtime files outside those closed
+trees rather than full-host confinement. `tools/study_launch.py` owns session
+creation, `--root` and host `LOS_OBSERVATIONS` pinning, and `session_end` on
+exit; `tools/study_hooks.py` supplies only optional UX
+lifecycle nudges (`session-start`, `stop`, `SubagentStop`, and opt-in
+`profile --out`).
 
 ## Report observed problems
 

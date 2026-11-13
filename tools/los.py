@@ -26,12 +26,25 @@ conflict.
 
 from __future__ import annotations
 
-from learning_os.adapters.cli_entry import run  # noqa: E402
+import os
+import sys
+
 from learning_os.adapters.cli_parser import build_parser  # noqa: E402
 
 
-def main() -> int:
-    return run(build_parser().parse_args())
+def main(argv: list[str] | None = None) -> int:
+    gate_sock = os.environ.get("LOS_GATE_SOCK")
+    if gate_sock:
+        from learning_os.adapters.study_broker import dispatch_los_via_socket
+
+        args_list = list(sys.argv[1:] if argv is None else argv)
+        return dispatch_los_via_socket(gate_sock, args_list)
+
+    from learning_os.adapters.cli_entry import run  # noqa: E402
+
+    parser = build_parser()
+    args = parser.parse_args() if argv is None else parser.parse_args(argv)
+    return run(args)
 
 
 if __name__ == "__main__":

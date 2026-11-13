@@ -1,13 +1,14 @@
-"""The study profile's hooks: the fence, the rewrite and turn ends (Plan C, ADR-021).
+"""Optional UX hooks for the study profile: session nudges, turn ends, and settings (Plan C/D, ADR-021).
 
-Synthetic hook inputs, no model. Path fences and the ordinary-write probes run
-against a world that carries its own copy of ``tools/`` (a symlink would
-resolve back to this checkout), so every rewritten command acts on the world.
+Client-side Bash/path enforcement moved to Seatbelt (`tools/study_launch.py`)
+and `learning_os.adapters.study_broker` in Plan D; `tools/study_hooks.py` now
+retains only UX hints (`session-start`), turn-end debt reminders (`stop` /
+`SubagentStop`), standalone `session-end`, opt-in Claude `--settings` emission,
+and `LOS_GATE_SOCK` broker forwarding during Seatbelt study runs.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import shutil
@@ -17,8 +18,12 @@ import tempfile
 from pathlib import Path
 
 import pytest
+import seal_envelope
 import study_hooks
-from repo_builders import _structural_fixture, add_curriculum, write_minimal_pdf
+from repo_builders import add_curriculum, write_minimal_pdf
+
+from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, StudyBroker
+from learning_os.store.materials.reading_cards import ReadingStore
 
 ROOT = Path(__file__).resolve().parents[1]
 S = "cccccccc-3333-4333-8333-333333333333"
@@ -27,154 +32,22 @@ BOOK = "_unsorted/review/book.pdf"
 
 
 @pytest.fixture(autouse=True)
-def _in_process_store(monkeypatch, tmp_path):
-    """In-process hook calls record activity in a temporary store.
-
-    The hook writes the store beside the Core that holds it (decision P11).
-    Run from a live checkout, the in-process cases below would otherwise
-    create ``LearningOS/reading-memory/`` or write fake sessions into the
-    learner's own store.
-    """
+def _in_process_store(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """In-process hook calls record activity in a temporary store, never live checkout."""
     real = study_hooks.ReadingStore
     store = tmp_path / "in-process-reading-memory"
-    monkeypatch.setattr(study_hooks, "ReadingStore",
-                        lambda core, root=None: real(core, root=root or store))
+    monkeypatch.setattr(
+        study_hooks,
+        "ReadingStore",
+        lambda core, root=None: real(core, root=root or store),
+    )
     return store
 
 
-# ---- in-process: the Bash allowlist ------------------------------------------------
-
-
-def _bash(command: str, cwd: Path = ROOT, session: str = S) -> dict:
-    return study_hooks.pre_tool_use({"session_id": session, "tool_name": "Bash",
-                                     "tool_input": {"command": command, "description": "x"},
-                                     "cwd": str(cwd), "hook_event_name": "PreToolUse"})
-
-
-def _decision(output: dict) -> tuple[str, str, str | None]:
-    hook = output["hookSpecificOutput"]
-    return (hook["permissionDecision"], hook["permissionDecisionReason"],
-            (hook.get("updatedInput") or {}).get("command"))
-
-
-@pytest.mark.parametrize("command", [
-    "ls materials",
-    "cd repository && los status",
-    "los status; ls",
-    "los status > /tmp/out.json",
-    "los status 2>/tmp/err",
-    "los status < /tmp/in",
-    "los status | cat",
-    'los material-search "$(cat /tmp/x)"',
-    "los material-search `whoami`",
-    "los material-search ${HOME}",
-    "los status &",
-    "los status || true",
-    "los status\nls",
-    "los material-search x | head",
-    "los material-search x | head -n 5 /etc/hosts",
-    "los material-search x | jq -c '.hits | .[0]'",
-    "los material-search x | head -n 5 && cat ../materials/x.pdf",
-    "los status && /bin/cat ../materials/x.pdf",
-    "cat /tmp/rec.json",
-    "python3 -c 'print(1)'",
-    "LOS_OBSERVATIONS=/tmp/o.json los status",
-    "los --root /tmp/elsewhere status",
-    "los --r /tmp/elsewhere status",
-    "los ai-action-prepare x unit unit-x",
-    f"los material-span --material {BOOK} --pages 'pdf p. 1' --extract --session {OTHER}",
-    f"los material-search Bayes --s {OTHER}",
-    f"los material-search Bayes --session={OTHER}",
-    "los material-search *.pdf",
-    "los material-search ~/x",
-    "los capture --file ../materials/a.pdf",
-    ".venv/bin/python tools/seal_envelope.py --root /tmp/x --capability capture.create --payload '{}' --key k",
-    ".venv/bin/python tools/seal_envelope.py --capability capture.create --payload '{\"file\": \"../materials/a.pdf\"}' --key k --submit",
-    ".venv/bin/python tools/seal_envelope.py --capability capture.create --payload '{}' --key k --guards auto --check-out tools/rec.json",
-])
-def test_the_allowlist_refuses_everything_else(command):
-    decision, reason, rewritten = _decision(_bash(command))
-    assert decision == "deny", (command, rewritten)
-    assert reason
-
-
-def test_material_span_extract_becomes_the_study_read_with_the_hooks_session():
-    decision, _, rewritten = _decision(
-        _bash(f"los material-span --material {BOOK} --pages 'pdf pp. 2-3' --extract"))
-    assert decision == "allow"
-    assert rewritten.startswith(f"{study_hooks.CORE_PYTHON} {study_hooks.LOS_SCRIPT} material-study-span ")
-    assert rewritten.endswith(f"--session {S}")
-    # An abbreviation argparse would accept is still the extract form.
-    _, _, abbreviated = _decision(
-        _bash(f".venv/bin/python tools/los.py material-span --material {BOOK} --pages 'pdf p. 2' --ext"))
-    assert " material-study-span " in abbreviated
-    # Without --extract nothing is read, so nothing is rewritten or injected.
-    _, _, describe = _decision(_bash("los material-span unit-demo-l01 route-x"))
-    assert " material-span unit-demo-l01 route-x" in describe and "--session" not in describe
-
-
-def test_search_context_and_settle_receive_the_session_and_other_commands_do_not(
-        _in_process_store):
-    beside = study_hooks.CORE.parent / "reading-memory"
-    existed = beside.exists()
-    for command in ("los material-search 'naive Bayes' --limit 3",
-                    "los material-context Bayes",
-                    "los material-card-settle --adopt " + OTHER):
-        decision, _, rewritten = _decision(_bash(command))
-        assert decision == "allow" and rewritten.endswith(f"--session {S}"), command
-    _, _, status = _decision(_bash("los bootstrap --brief"))
-    assert status.endswith("los.py bootstrap --brief")
-    # P11: an allowed gateway call records the session's activity, here in the
-    # test's own store and never beside this checkout.
-    assert (_in_process_store / "sessions" / f"{S}.json").is_file()
-    assert beside.exists() == existed
-    assert not (beside / "sessions" / f"{S}.json").exists()
-
-
-def test_pipes_to_head_and_the_reviewed_record_pairing_are_allowed():
-    decision, _, rewritten = _decision(_bash("los material-search Bayes | head -n 20"))
-    assert decision == "allow" and rewritten.endswith("| /usr/bin/head -n 20")
-    # CI's pytest basetemp is outside the profile's scratch roots.
-    with tempfile.TemporaryDirectory(prefix="los-study-receipt-") as scratch:
-        record = Path(scratch) / "rec.json"
-        command = (".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                   f"--payload '{{\"text\": \"note\"}}' --key k1 --guards auto --check-out {record} "
-                   f"&& cat {record}")
-        decision, reason, rewritten = _decision(_bash(command))
-        assert decision == "allow", reason
-        assert rewritten.endswith(f"&& /bin/cat {os.path.realpath(record)}")
-    assert _decision(_bash("los status 2>&1 | head -n 5"))[0] == "allow"
-
-
-def test_a_missing_session_or_a_crash_refuses_every_call(monkeypatch):
-    assert _decision(_bash("los status", session=""))[0] == "deny"
-
-    def broken(*args):
-        raise RuntimeError("boom")
-
-    monkeypatch.setattr(study_hooks, "rewrite_bash", broken)
-    decision, reason, _ = _decision(_bash("los status"))
-    assert decision == "deny" and "hook failed" in reason
-
-
-def test_unknown_and_mcp_tools_refuse_and_harmless_tools_pass():
-    def tool(name, tool_input=None):
-        return _decision(study_hooks.pre_tool_use(
-            {"session_id": S, "tool_name": name, "tool_input": tool_input or {}, "cwd": str(ROOT)}))[0]
-
-    assert tool("mcp__filesystem__read_file", {"path": "/x"}) == "deny"
-    assert tool("SomeFutureTool") == "deny"
-    assert tool("TodoWrite", {"todos": []}) == "allow"
-
-
-# ---- a world with its own code: fences, writes, turn ends --------------------------
-
-
 @pytest.fixture(scope="module")
-def code_copy(tmp_path_factory) -> Path:
-    copy = tmp_path_factory.mktemp("study-code") / "tools"
-    shutil.copytree(ROOT / "tools", copy,
-                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+def code_copy(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    copy = tmp_path_factory.mktemp("study-hooks-code") / "tools"
+    shutil.copytree(ROOT / "tools", copy, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     return copy
 
 
@@ -183,75 +56,89 @@ def world(mini_repo: Path, code_copy: Path) -> Path:
     add_curriculum(mini_repo)
     shutil.copytree(code_copy, mini_repo / "tools", dirs_exist_ok=True)
     (mini_repo / ".venv").symlink_to(ROOT / ".venv", target_is_directory=True)
-    write_minimal_pdf(mini_repo.parent / "materials" / BOOK,
-                      [f"page {n} on evidence" for n in range(1, 6)])
-    for tree in ("generated/text-cache/abc", "generated/material-search",
-                 "operations/ai-actions/requests/r/attachments/slices"):
-        (mini_repo / tree).mkdir(parents=True, exist_ok=True)
-    (mini_repo / "generated/text-cache/abc/p1.txt").write_text("raw page text")
-    alias = mini_repo.parent / "workbench" / "old"
-    alias.mkdir(parents=True)
-    (alias / "materials").symlink_to(mini_repo.parent / "materials", target_is_directory=True)
+    write_minimal_pdf(
+        mini_repo.parent / "materials" / BOOK,
+        [f"page {n} on evidence" for n in range(1, 6)],
+    )
     return mini_repo
 
 
-def _hook(world: Path, event_name: str, payload: dict) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(world / "tools/study_hooks.py"), event_name],
-                          input=json.dumps(payload), capture_output=True, text=True, timeout=120,
-                          env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"))
+def _hook(
+    world: Path,
+    event_name: str,
+    payload: dict[str, object],
+    *,
+    env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    run_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    run_env.pop(GATE_SOCK_ENV, None)
+    if env is not None:
+        run_env.update(env)
+    return subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), event_name],
+        input=json.dumps(payload),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        env=run_env,
+    )
 
 
-def _pre(world: Path, tool: str, tool_input: dict, cwd: Path | None = None) -> tuple[str, str, dict]:
-    result = _hook(world, "pre-tool-use", {"session_id": S, "tool_name": tool,
-                                           "tool_input": tool_input, "cwd": str(cwd or world.parent)})
-    assert result.returncode == 0, result.stderr
-    hook = json.loads(result.stdout)["hookSpecificOutput"]
-    return hook["permissionDecision"], hook["permissionDecisionReason"], hook.get("updatedInput") or {}
+def _open_study_span(world: Path, page: int, *, session: str = S) -> dict[str, object]:
+    proc = subprocess.run(
+        [
+            str(world / ".venv/bin/python"),
+            str(world / "tools/los.py"),
+            "--root",
+            str(world),
+            "material-study-span",
+            "--material",
+            BOOK,
+            "--pages",
+            f"pdf p. {page}",
+            "--extract",
+            "--session",
+            session,
+        ],
+        cwd=str(world),
+        capture_output=True,
+        text=True,
+        timeout=120,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+    )
+    assert proc.returncode == 0, proc.stderr
+    return json.loads(proc.stdout)
 
 
-def test_file_tools_stay_out_of_raw_text_and_the_store(world):
-    learningos = world.parent
-    closed = [learningos / "materials" / BOOK,
-              learningos / "workbench" / "old" / "materials" / BOOK,  # path alias
-              world / "generated/text-cache/abc/p1.txt",
-              world / "generated/material-search/index.sqlite3",
-              world / "operations/ai-actions/requests/r/attachments/slices/route.md",
-              learningos / "reading-memory" / "pending" / "rd-0000000000000000.json"]
-    for path in closed:
-        assert _pre(world, "Read", {"file_path": str(path)})[0] == "deny", path
-    assert _pre(world, "Read", {"file_path": str(world / "system/contracts/capabilities.yaml")})[0] == "allow"
-    assert _pre(world, "Grep", {"pattern": "Bayes"})[0] == "deny"  # cwd is LearningOS/
-    assert _pre(world, "Grep", {"pattern": "Bayes", "path": str(learningos / "workbench")})[0] == "deny"
-    assert _pre(world, "Grep", {"pattern": "x", "path": str(world / "knowledge")})[0] == "allow"
-    assert _pre(world, "Glob", {"pattern": "../materials/**/*.pdf", "path": str(world)})[0] == "deny"
-    assert _pre(world, "Glob", {"pattern": "**/*.pdf"})[0] == "deny"
-    scratch = Path(os.path.realpath(study_hooks.scratch_roots()[0])) / "study-scratch.json"
-    assert _pre(world, "Write", {"file_path": str(scratch), "content": "{}"})[0] == "allow"
-    for path in (world / "tools/learning_os/store/materials/reading_cards.py",
-                 learningos / ".claude" / "settings.json",
-                 learningos / "reading-memory" / "pending" / "rd-0000000000000000.json"):
-        assert _pre(world, "Edit", {"file_path": str(path), "old_string": "a", "new_string": "b"})[0] == "deny"
+def test_client_side_ast_and_file_fences_were_removed() -> None:
+    for removed in ("pre_tool_use", "rewrite_bash", "check_file_tool", "_subtree_reaches"):
+        assert not hasattr(study_hooks, removed), removed
+    subparsers = [
+        action.choices
+        for action in study_hooks.build_parser()._actions
+        if hasattr(action, "choices") and isinstance(action.choices, dict)
+    ]
+    assert subparsers and "pre-tool-use" not in subparsers[0]
 
 
-def test_rewritten_reads_run_from_any_folder_and_capture_the_hooks_session(world):
-    for cwd, form in ((world.parent, "repository/.venv/bin/python repository/tools/los.py"),
-                      (world, ".venv/bin/python tools/los.py"), (world.parent, "los")):
-        decision, _, updated = _pre(world, "Bash", {"command": (
-            f"{form} material-span --material {BOOK} --pages 'pdf p. 2' --extract")}, cwd=cwd)
-        assert decision == "allow"
-        ran = subprocess.run(updated["command"], shell=True, cwd=cwd, capture_output=True, text=True,
-                             timeout=120)
-        assert ran.returncode == 0, ran.stderr
-        study = json.loads(ran.stdout)
-        assert study["contract"] == "material-study-span-v1" and study["study"]["session"] == S
-    pending = list((world.parent / "reading-memory" / "pending").glob("rd-*.json"))
-    assert len(pending) == 1 and json.loads(pending[0].read_text())["session"] == S
+def test_session_start_touches_store_and_reports_clean_state(_in_process_store: Path) -> None:
+    beside = study_hooks.CORE.parent / "reading-memory"
+    existed = beside.exists()
+    out = study_hooks.session_start({"session_id": S, "source": "startup"})
+    assert "los bootstrap --brief" in out
+    assert "No adoptable entries." in out
+    assert "no overdue entries" in out
+    assert (_in_process_store / "sessions" / f"{S}.json").is_file()
+    assert beside.exists() == existed
+    assert not (beside / "sessions" / f"{S}.json").exists()
+
+    no_sid = study_hooks.session_start({"source": "startup"})
+    assert "No session id arrived" in no_sid
 
 
-def test_stop_asks_twice_then_marks_overdue_and_session_start_reports_it(world):
-    _, _, updated = _pre(world, "Bash", {"command": (
-        f"los material-span --material {BOOK} --pages 'pdf p. 3' --extract")})
-    assert subprocess.run(updated["command"], shell=True, capture_output=True).returncode == 0
+def test_stop_asks_twice_then_marks_overdue_and_session_start_reports_it(world: Path) -> None:
+    study = _open_study_span(world, 3)
+    assert study["contract"] == "material-study-span-v1"
     replies = []
     for active in (False, True, True):
         result = _hook(world, "stop", {"session_id": S, "stop_hook_active": active})
@@ -260,24 +147,23 @@ def test_stop_asks_twice_then_marks_overdue_and_session_start_reports_it(world):
     assert [reply.get("decision") for reply in replies] == ["block", "block", None]
     assert "material-card-settle rd-" in replies[0]["reason"]
     assert "now overdue" in replies[2]["systemMessage"]
+
     start = _hook(world, "session-start", {"session_id": S, "source": "resume"})
     assert "1 overdue entries" in start.stdout
-    # Stop only asks and marks overdue; a turn end never records an end, so the
-    # session can still resume and its entries are not adoptable yet
-    # (ADR-021 decision 5).
+
+    # Stop only asks and marks overdue; a turn end never records a session end.
     other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
     assert "No adoptable entries." in other.stdout
     assert "--adopt" not in other.stdout
+
     ended = _hook(world, "session-end", {"session_id": S})
     assert ended.returncode == 0, ended.stderr
     other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
     assert f"los material-card-settle --adopt {S}" in other.stdout
 
 
-def test_session_end_records_the_end_and_an_unknown_session_is_harmless(world):
-    _, _, updated = _pre(world, "Bash", {"command": (
-        f"los material-span --material {BOOK} --pages 'pdf p. 4' --extract")})
-    assert subprocess.run(updated["command"], shell=True, capture_output=True).returncode == 0
+def test_session_end_records_end_and_unknown_session_is_harmless(world: Path) -> None:
+    _open_study_span(world, 4)
     assert _hook(world, "session-end", {"session_id": OTHER}).returncode == 0
     result = _hook(world, "session-end", {"session_id": S})
     assert result.returncode == 0, result.stderr
@@ -286,144 +172,76 @@ def test_session_end_records_the_end_and_an_unknown_session_is_harmless(world):
     assert f"los material-card-settle --adopt {S}" in other.stdout
 
 
-def test_a_stage_note_and_a_resource_append_complete_under_the_profile(world, tmp_path):
-    def run(command: str) -> dict:
-        decision, reason, updated = _pre(world, "Bash", {"command": command}, cwd=world)
-        assert decision == "allow", reason
-        ran = subprocess.run(updated["command"], shell=True, cwd=world, capture_output=True,
-                             text=True, timeout=300)
-        assert ran.returncode == 0, ran.stdout + ran.stderr
-        return json.loads(ran.stdout)
-
-    note = json.dumps({"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
-                       "text": "studied the evidence pages under the profile"})
-    written = run(f".venv/bin/python tools/seal_envelope.py --capability stage.note.write "
-                  f"--payload '{note}' --key profile-note-1 --guards auto --submit")
-    assert written["ok"] is True
-    _structural_fixture(world)
-    draft = tmp_path / "append.json"
-    draft.write_text(json.dumps({"unit_id": "unit-demo-l01", "structural_edit": {
-        "reason": "Append the named route without creating a study obligation.",
-        "resource_append": {"stage_id": "stage-demo", "resource": {
-            "id": "resource-profile-append",
-            "material_ref": {"route_id": "route-demo-book",
-                             "inherit": ["label", "source_id", "locator", "angle", "angle_detail"]}}}}}))
-    digest = "sha256:" + hashlib.sha256(draft.read_bytes()).hexdigest()
-    payload = json.dumps({"unit_id": "unit-demo-l01", "file": str(draft), "file_sha256": digest,
-                          "replace": True})
-    appended = run(f".venv/bin/python tools/seal_envelope.py --capability unit.map.import "
-                   f"--payload '{payload}' --key profile-append-1 --guards auto --submit")
-    assert appended["ok"] is True
-    receipts = list((world / "operations/transactions").glob("transaction-*.yaml"))
-    assert len(receipts) >= 2
-
-
-def test_the_profile_writer_wires_the_hooks_and_never_overwrites(tmp_path):
-    result = subprocess.run([sys.executable, str(ROOT / "tools/study_hooks.py"), "profile",
-                             "--out", str(tmp_path)], capture_output=True, text=True, timeout=60)
+def test_profile_writer_wires_ux_hooks_only_and_never_overwrites(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools/study_hooks.py"), "profile", "--out", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
     assert result.returncode == 0, result.stderr
-    settings = json.loads((tmp_path / ".claude" / "settings.json").read_text())
-    assert set(settings["hooks"]) == {"SessionStart", "PreToolUse", "Stop", "SubagentStop", "SessionEnd"}
-    assert settings["hooks"]["PreToolUse"][0]["matcher"] == "*"
-    assert settings["hooks"]["PreToolUse"][0]["hooks"][0]["onFailure"] == "block"
-    assert any(rule.startswith("Read(//") and "/materials/**" in rule
-               for rule in settings["permissions"]["deny"])
-    again = subprocess.run([sys.executable, str(ROOT / "tools/study_hooks.py"), "profile",
-                            "--out", str(tmp_path)], capture_output=True, text=True, timeout=60)
-    assert again.returncode != 0
-
-
-def test_tilde_and_bare_symlink_paths_cannot_bypass_study_hooks(monkeypatch, tmp_path):
-    learningos = tmp_path / "LearningOS"
-    fake_core = learningos / "repository"
-    fake_core.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(study_hooks, "CORE", fake_core)
-    materials = learningos / "materials" / "course"
-    materials.mkdir(parents=True, exist_ok=True)
-    secret_doc = materials / "notes.md"
-    secret_doc.write_text("protected raw text", encoding="utf-8")
-    secret_csv = materials / "data.csv"
-    secret_csv.write_text("a,b\n1,2\n", encoding="utf-8")
-    secret_json = materials / "secret.json"
-    secret_json.write_text('{"x": 1}', encoding="utf-8")
-
-    monkeypatch.setenv("HOME", str(learningos))
-    session = "cccccccc-3333-4333-8333-333333333333"
-    ok_dir = tmp_path / "work"
-    ok_dir.mkdir(exist_ok=True)
-    bare_csv_link = ok_dir / "bare_csv_link"
-    bare_csv_link.symlink_to(secret_csv)
-    raw_payload = ok_dir / "raw_payload.json"
-    raw_payload.write_text(json.dumps({"file": "~/materials/course/data.csv"}), encoding="utf-8")
-    fifo_path = ok_dir / "pipe.json"
-    os.mkfifo(fifo_path)
-
-    denied_calls = [
-        ("Read", {"file_path": "~/materials/course/notes.md"}),
-        ("Read", {"file_path": "bare_csv_link"}),
-        ("Grep", {"pattern": "protected", "path": "~"}),
-        ("Grep", {"pattern": "protected", "path": "~/materials/course"}),
-        ("Grep", {"pattern": "protected", "path": str(ok_dir), "glob": "../materials/**"}),
-        ("Grep", {"pattern": "protected", "path": str(ok_dir), "glob": "~/materials/**"}),
-        ("Glob", {"pattern": "**/*", "path": "~"}),
-        ("Glob", {"pattern": "~/materials/**", "path": str(ok_dir)}),
-        ("Glob", {"pattern": "{*.md,~/materials/**}", "path": str(ok_dir)}),
-        ("LS", {"path": "~/reading-memory"}),
-        ("Bash", {"command": "los capture --file '~/materials/course/notes.md'"}),
-        ("Bash", {"command": "los capture --file='~/materials/course/notes.md'"}),
-        ("Bash", {"command": "los capture --file bare_csv_link"}),
-        ("Bash", {"command": f"los capability capture.create --payload-file {raw_payload}"}),
-        ("Bash", {"command": "los capability capture.create --payload-file '~/materials/course/secret.json'"}),
-        ("Bash", {"command": "los capability capture.create --payload-file bare_csv_link"}),
-        ("Bash", {"command": f"los capability capture.create --payload-file {fifo_path}"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             "--key k1 --payload '{\"file\":\"~/materials/course/notes.md\"}'"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             "--key k2 --payload '{\"file\":\"bare_csv_link\"}'"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             "--key k3 --payload '@~/materials/course/secret.json'"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             f"--key k4 --payload '@{raw_payload}'"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             "--key k5 --guards-from '~/materials/course/secret.json' --payload '{}'"}),
-        ("Bash", {"command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                             "--key k6 --payload '{\"file\":\"generated/text-cache/page.txt\"}'"}),
-        ("Agent", {"prompt": "read materials"}),
-        ("Task", {"prompt": "read materials"}),
-    ]
-    for tool_name, tool_input in denied_calls:
-        out = study_hooks.pre_tool_use({
-            "session_id": session,
-            "cwd": str(ok_dir),
-            "tool_name": tool_name,
-            "tool_input": tool_input,
-        })
-        assert out["hookSpecificOutput"]["permissionDecision"] == "deny", (
-            tool_name, tool_input, out
-        )
-
-    # Non-scratch HOME tilde target from cwd=/tmp must still fail scratch check cleanly.
-    monkeypatch.setenv("HOME", "/nonexistent-study-home")
-    out_tilde = study_hooks.pre_tool_use({
-        "session_id": session,
-        "cwd": "/tmp",
-        "tool_name": "Bash",
-        "tool_input": {
-            "command": ".venv/bin/python tools/seal_envelope.py --capability capture.create "
-                       "--key k7 --payload '{\"text\":\"ok\"}' --out '~/out.json'"
-        },
-    })
-    assert out_tilde["hookSpecificOutput"]["permissionDecision"] == "deny"
-
-
-def test_subagent_stop_shares_open_debt_gate_and_seal_scratch_expands_tilde(
-        monkeypatch, tmp_path):
-    settings = study_hooks.profile_settings()
+    settings = json.loads((tmp_path / ".claude" / "settings.json").read_text(encoding="utf-8"))
+    assert set(settings["hooks"]) == {"SessionStart", "Stop", "SubagentStop", "SessionEnd"}
+    assert "permissions" not in settings
+    for entries in settings["hooks"].values():
+        for entry in entries:
+            for hook in entry["hooks"]:
+                assert "onFailure" not in hook
     sub_stop = settings["hooks"]["SubagentStop"][0]["hooks"][0]
     assert sub_stop["command"].endswith(" stop")
 
-    import seal_envelope
+    again = subprocess.run(
+        [sys.executable, str(ROOT / "tools/study_hooks.py"), "profile", "--out", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert again.returncode != 0
 
+
+def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world: Path) -> None:
+    _open_study_span(world, 2)
+    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losh-", dir="/tmp")))
+    sock_path = sock_dir / "g.sock"
+    broker = StudyBroker(world, S)
+    server = BrokerServer(broker, sock_path)
+    server.start()
+    try:
+        sock_env = {GATE_SOCK_ENV: str(sock_path)}
+        # Client payload omits or mismatches session_id; host broker pins broker.session_id.
+        started = _hook(world, "session-start", {"session_id": OTHER}, env=sock_env)
+        assert started.returncode == 0, started.stderr
+        assert "los bootstrap --brief" in started.stdout
+
+        stopped = _hook(world, "stop", {"session_id": OTHER, "stop_hook_active": False}, env=sock_env)
+        assert stopped.returncode == 0, stopped.stderr
+        decision = json.loads(stopped.stdout)
+        assert decision["decision"] == "block"
+        assert "material-card-settle rd-" in decision["reason"]
+
+        # Inside Seatbelt, study_launch owns session_end on exit; hook SessionEnd no-ops safely.
+        ended = _hook(world, "session-end", {"session_id": S}, env=sock_env)
+        assert ended.returncode == 0
+        assert ended.stdout == ""
+        store = ReadingStore(world)
+        session_row = json.loads((store.root / "sessions" / f"{S}.json").read_text(encoding="utf-8"))
+        assert session_row.get("ended_at") is None
+    finally:
+        server.close()
+        shutil.rmtree(sock_dir, ignore_errors=True)
+
+    # Dead broker socket degrades UX nudges without crashing Claude turns.
+    dead_start = _hook(world, "session-start", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
+    assert dead_start.returncode == 0
+    assert "los bootstrap --brief" in dead_start.stdout
+    dead_stop = _hook(world, "stop", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
+    assert dead_stop.returncode == 0
+    assert dead_stop.stdout == ""
+
+
+def test_seal_scratch_path_problem_expands_tilde(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
     monkeypatch.setenv("HOME", str(repo))

@@ -6,6 +6,7 @@ import contextlib
 import hashlib
 import io
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -23,7 +24,56 @@ from learning_os.store.contracts.gateway import (
 )
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
+from learning_os.store.materials.reading_cards import protected_reads
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
+
+STUDY_FENCE_CORE_ENV = "LOS_STUDY_FENCE_CORE"
+STUDY_FENCE_SCRATCH_ENV = "LOS_STUDY_FENCE_SCRATCH"
+
+
+def _real_path(raw_path: Path | str, *, cwd: Path | None = None) -> Path:
+    expanded = Path(raw_path).expanduser()
+    if not expanded.is_absolute() and cwd is not None:
+        expanded = cwd / expanded
+    return Path(os.path.realpath(expanded))
+
+
+def _is_within(candidate: Path, base: Path) -> bool:
+    real_base = Path(os.path.realpath(base))
+    return candidate == real_base or real_base in candidate.parents
+
+
+def check_study_path(
+    raw_path: str,
+    *,
+    core_root: Path,
+    scratch_dir: Path | None,
+    cwd: Path | None = None,
+    label: str = "file input",
+    allow_core: bool = True,
+) -> Path:
+    """Enforce the study-mode read/write fence against protected subtrees and external paths."""
+    if not isinstance(raw_path, str) or not raw_path.strip() or raw_path == "-":
+        raise WriteRefused(f"study mode requires a concrete path for {label}")
+    try:
+        real_target = _real_path(raw_path, cwd=cwd)
+    except (RuntimeError, ValueError, OSError) as exc:
+        raise WriteRefused(f"study mode cannot resolve {label} {raw_path!r}: {exc}") from exc
+    for closed in protected_reads(core_root):
+        if _is_within(real_target, closed):
+            raise WriteRefused(
+                f"study mode blocks {label} inside protected LearningOS tree: {real_target}"
+            )
+    allowed_roots: list[Path] = []
+    if allow_core:
+        allowed_roots.append(core_root)
+    if scratch_dir is not None:
+        allowed_roots.append(scratch_dir)
+    if not any(_is_within(real_target, root) for root in allowed_roots):
+        raise WriteRefused(
+            f"study mode blocks {label} outside the study boundary: {real_target}"
+        )
+    return real_target
 
 
 def read_content_bound_file(
@@ -43,6 +93,15 @@ def read_content_bound_file(
         raise WriteRefused(
             f"GatewayEnvelopeV2 {label} must be a real path with an approved SHA-256; "
             "unbound stdin is not allowed"
+        )
+    fence_core = os.environ.get(STUDY_FENCE_CORE_ENV)
+    if fence_core:
+        fence_scratch = os.environ.get(STUDY_FENCE_SCRATCH_ENV)
+        check_study_path(
+            path_value,
+            core_root=Path(fence_core),
+            scratch_dir=Path(fence_scratch) if fence_scratch else None,
+            label=label,
         )
     source = Path(path_value).expanduser().resolve()
     if not source.is_file():

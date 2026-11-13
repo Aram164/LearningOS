@@ -7,8 +7,10 @@ of record ownership. Product ownership remains in `system/ARCHITECTURE.md`.
 
 ## Where to change what
 
-Start at `tools/los.py`. The adapters parse; the app pipeline admits and
-coordinates; handlers own operation families. Derivations compute views and
+Start at `tools/los.py`. The adapters parse (including the study-session
+`LOS_GATE_SOCK` broker in `tools/learning_os/adapters/study_broker.py` launched by
+`tools/study_launch.py`); the app pipeline admits and coordinates; handlers own
+operation families. Derivations compute views and
 judgments over loaded state; store owns loading, contracts and persistence;
 domain holds semantic leaves. Follow one component below instead of reading
 every package. `tools/README.md` classifies the separate executable tools.

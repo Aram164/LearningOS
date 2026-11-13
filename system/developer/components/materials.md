@@ -23,7 +23,7 @@ Resolve and observe registered material bytes, exact spans and evidence bindings
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `domain`, `loading`, `transactions`.
 
-Used by: `ai-action-store`, `ai-delivery`, `backup`, `contracts`, `derived-store`, `learner-derivations`, `legacy-archive`, `masters-planning`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
+Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `contracts`, `derived-store`, `learner-derivations`, `legacy-archive`, `masters-planning`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants
@@ -46,6 +46,7 @@ line ranges. All forms bind the registered digest and reject changed bytes.
 - `tests/test_material_search.py`
 - `tests/test_material_reading_cards.py`
 - `tests/test_study_hooks.py`
+- `tests/test_study_launch.py`
 
 ## Binding ADRs
 

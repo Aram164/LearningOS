@@ -1049,6 +1049,21 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, object]:
             "concepts": list(concepts)}
 
 
+def protected_reads(core: Path) -> list[Path]:
+    """Subtrees holding raw materials, reading memory, raw-text caches, or AI requests (PLAN-D D1)."""
+    resolved = Path(core).resolve()
+    learningos = resolved.parent
+    return [
+        learningos / "materials",
+        learningos / STORE_DIRNAME,
+        resolved / "generated" / "text-cache",
+        resolved / "generated" / "material-search",
+        resolved / "generated" / "material-outlines",
+        resolved / "generated" / "derived-state",
+        resolved / "operations" / "ai-actions" / "requests",
+    ]
+
+
 def entry_view(row: dict[str, object]) -> dict[str, object]:
     """One entry as refusals and reads name it."""
     rng = _row_range(row)
@@ -1061,6 +1076,6 @@ __all__ = [
     "ADOPT_IDLE", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME", "TREATMENT_KINDS",
     "Admission", "Read", "ReadingStore", "ReadingStoreError", "SettleRefusal",
     "Settlement", "StopDecision", "adopt_command", "admit_card",
-    "card_name", "entry_view", "pages_label", "settle_command", "store_root",
-    "valid_session",
+    "card_name", "entry_view", "pages_label", "protected_reads", "settle_command",
+    "store_root", "valid_session",
 ]

@@ -76,11 +76,13 @@ files = [
   "tools/learning_os/app/agent_reporting.py",
   "tools/learning_os/app/agent_plans.py",
   "tools/learning_os/adapters/agent_workers.py",
+  "tools/learning_os/adapters/study_broker.py",
   "tools/learning_os/derive/validation/revision_ledger.py",
   "tools/learning_os/derive/projection/projection/records_aliases.py",
   "tools/learning_os/store/materials/search_index.py",
   "tools/learning_os/store/materials/reading_cards.py",
   "tools/study_hooks.py",
+  "tools/study_launch.py",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).
