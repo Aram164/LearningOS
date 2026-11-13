@@ -27,20 +27,17 @@ import secrets
 import sys
 from pathlib import Path
 
-from learning_os.adapters.study_broker import (
-    GATE_SOCK_ENV,
+from learning_os.adapters.seal_parser import (
     SEAL_GUARDS_STDIN_ENV,
     build_seal_parser,
     normalize_check_record,
+)
+from learning_os.adapters.study_broker import (
+    GATE_SOCK_ENV,
     send_broker_request,
     write_local_output_file,
 )
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
-from learning_os.app.gateway import (
-    STUDY_FENCE_CORE_ENV,
-    STUDY_FENCE_SCRATCH_ENV,
-    read_optional_study_or_staged_file,
-)
 from learning_os.app.registry import REGISTRY
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.gateway import (
@@ -50,6 +47,11 @@ from learning_os.store.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.study_fence import (
+    STUDY_FENCE_CORE_ENV,
+    STUDY_FENCE_SCRATCH_ENV,
+    read_optional_study_or_staged_file,
+)
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
 REQUEST_ID_MAX = 128

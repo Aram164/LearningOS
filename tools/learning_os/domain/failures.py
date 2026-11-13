@@ -258,6 +258,10 @@ class WriteRefused(Exception):
         self.extra_stderr = extra_stderr
 
 
+class StudyFenceRefused(WriteRefused):
+    """A study-mode boundary, staged-manifest, or symlink rule refused the path."""
+
+
 class ToolFailure(WriteRefused):
     """An external tool failed; preserve its exit while adapters render once."""
 

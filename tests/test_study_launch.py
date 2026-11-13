@@ -26,9 +26,9 @@ from repo_builders import (
 from learning_os.store.materials.reading_cards import (
     ADOPT_IDLE,
     ReadingStore,
-    protected_reads,
     valid_session,
 )
+from learning_os.store.study_fence import protected_reads
 
 ROOT = Path(__file__).resolve().parents[1]
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")

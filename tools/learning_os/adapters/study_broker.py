@@ -29,18 +29,26 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from learning_os.adapters import cli_parser
-from learning_os.app.gateway import (
+from learning_os.adapters.seal_parser import (
+    SEAL_GUARDS_STDIN_ENV,
+    build_seal_parser,
+    normalize_check_record,
+)
+from learning_os.domain.failures import WriteRefused
+from learning_os.store.materials.reading_cards import valid_session
+from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     STUDY_STAGED_MANIFEST_ENV,
     check_study_new_output_path,
     check_study_path,
+    find_real_ancestor,
+    is_within,
+    open_dir_chain_nofollow,
+    protected_reads,
     read_optional_study_or_staged_file,
     read_study_file,
 )
-from learning_os.domain.failures import WriteRefused
-from learning_os.store.contracts.gateway import APPROVAL_KINDS, GATEWAY_CHANNELS
-from learning_os.store.materials.reading_cards import valid_session
 
 GATE_SOCK_ENV = "LOS_GATE_SOCK"
 
@@ -136,90 +144,6 @@ EXTERNAL_INPUT_PATH_KEYS: frozenset[str] = frozenset({
 })
 
 ALLOWED_HOOK_EVENTS: frozenset[str] = frozenset({"session-start", "stop"})
-
-SEAL_GUARDS_STDIN_ENV = "LOS_SEAL_GUARDS_STDIN"
-
-_SEAL_DOC = """Seal one GatewayEnvelopeV2 from caller-supplied intent (WORKFLOWS §25c)."""
-
-
-def build_seal_parser(description: str | None = None) -> argparse.ArgumentParser:
-    """Build the seal_envelope.py CLI parser (shared by A11 snapshot, CLI, and broker)."""
-    parser = argparse.ArgumentParser(description=description or _SEAL_DOC)
-    parser.add_argument("--root", default=None,
-                        help="repository root (default: the checkout holding tools/)")
-    parser.add_argument("--capability", default=None,
-                        help="capability name (required unless derived from a "
-                             "--guards-from record)")
-    parser.add_argument("--payload", default=None,
-                        help="payload JSON, or @PATH to a JSON file (required "
-                             "unless derived from a --guards-from record)")
-    parser.add_argument("--key", default=None,
-                        help="idempotency key (required unless the --guards-from "
-                             "record carries it)")
-    parser.add_argument("--request-id", default=None,
-                        help="request id (default: a fresh request-<key>-<random> "
-                             "per run, as §25c step 4 asks; to retry, resubmit the "
-                             "saved envelope instead of re-sealing)")
-    parser.add_argument("--channel", default="operator",
-                        help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}")
-    parser.add_argument("--session-id", default=None,
-                        help="sealed session identity for this write's ledger "
-                             "rows (default: none — resolution falls back to "
-                             "LOS_SESSION_ID, then the channel; WORKFLOWS §25c "
-                             "step 4)")
-    parser.add_argument("--approval-kind", default="operator-approval",
-                        help=f"one of: {', '.join(sorted(APPROVAL_KINDS))}")
-    parser.add_argument("--snapshot", default=None,
-                        help="expected snapshot (default: read live)")
-    parser.add_argument("--revision", action="append", default=[],
-                        help="guard ART=REV; repeatable")
-    guards = parser.add_mutually_exclusive_group()
-    guards.add_argument("--guards", default=None, choices=("auto",),
-                        help="guard derivation: 'auto' runs the capability's "
-                             "handler as a gateway dry run that stops before "
-                             "any write, and reads revisions under the same "
-                             "lock as the snapshot. Explicit --revision "
-                             "entries override derived ones.")
-    guards.add_argument("--guards-from", default=None, metavar="PATH",
-                        help="seal from a check record at PATH instead of "
-                             "deriving guards (mutually exclusive with "
-                             "--guards and explicit guards)")
-    parser.add_argument("--check-out", default=None, metavar="PATH",
-                        help="with --guards auto on a registered operation, "
-                             "also write the check record to PATH")
-    parser.add_argument("--out", default=None,
-                        help="write the envelope here (default: stdout)")
-    parser.add_argument("--submit", action="store_true",
-                        help="seal with derived guards, or with a reviewed "
-                             "--guards-from record's, and submit through the "
-                             "gateway in this one call, printing its result; "
-                             "a retry with the same --key and payload replays "
-                             "the committed receipt")
-    return parser
-
-
-def normalize_check_record(record: object) -> object:
-    """Normalize a ``--check --report-out`` record to the schema-1 check record shape."""
-    if (
-        isinstance(record, dict)
-        and record.get("schema") is None
-        and record.get("mode") == "check"
-        and record.get("ok") is True
-        and isinstance(record.get("gateway_envelope"), dict)
-        and isinstance(record.get("expected_snapshot"), str)
-        and isinstance(record.get("expected_revisions"), dict)
-    ):
-        envelope = record["gateway_envelope"]
-        return {
-            "schema": 1,
-            "ok": record.get("ok"),
-            "capability": record.get("capability") or envelope.get("capability"),
-            "expected_snapshot": record["expected_snapshot"],
-            "expected_revisions": record["expected_revisions"],
-            "payload": envelope.get("payload"),
-            "idempotency_key": record.get("idempotency_key"),
-        }
-    return record
 
 
 @dataclass(frozen=True)
@@ -629,7 +553,7 @@ class StudyBroker:
             return str(self.stage_root)
         default_tmp = Path(os.path.realpath(tempfile.gettempdir()))
         for base in (self.core_root, self.scratch_dir):
-            if base is not None and (default_tmp == base or base in default_tmp.parents):
+            if base is not None and is_within(default_tmp, base):
                 return str(Path(os.path.realpath("/tmp")))
         return None
 
@@ -644,11 +568,8 @@ class StudyBroker:
             raise WriteRefused(f"study broker: cannot resolve cwd {raw_cwd!r}: {exc}") from exc
         if not resolved.is_dir():
             raise WriteRefused(f"study broker: client cwd does not exist: {resolved}")
-        from learning_os.store.materials.reading_cards import protected_reads
-
         for closed in protected_reads(self.core_root):
-            real_closed = Path(os.path.realpath(closed))
-            if resolved == real_closed or real_closed in resolved.parents:
+            if is_within(resolved, closed):
                 raise WriteRefused(
                     f"study broker: client cwd inside protected tree: {resolved}"
                 )
@@ -1326,48 +1247,19 @@ def send_broker_request(sock_path: str, payload: dict[str, object]) -> dict[str,
     return {str(k): v for k, v in decoded.items()}
 
 
-def _open_dir_nofollow(dir_fd: int, part: str, dir_flags: int) -> int:
-    try:
-        return os.open(part, dir_flags, dir_fd=dir_fd)
-    except OSError as exc:
-        is_link = False
-        if exc.errno in (errno.ELOOP, errno.ENOTDIR):
-            with contextlib.suppress(OSError):
-                is_link = stat.S_ISLNK(os.lstat(part, dir_fd=dir_fd).st_mode)
-        if exc.errno == errno.ELOOP or is_link:
-            raise OSError(errno.ELOOP, "Refusing symlink parent target", part) from exc
-        raise
-
-
 def _open_local_parent_dir_fd(
     parent: Path,
     *,
     mkdir_parents: bool,
     scratch_dir: Path | None,
 ) -> int:
-    dir_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    if hasattr(os, "O_CLOEXEC"):
-        dir_flags |= os.O_CLOEXEC
     lex_parent = Path(os.path.abspath(parent))
     if scratch_dir is not None:
         real_scratch = Path(os.path.realpath(scratch_dir))
-        matched: Path | None = None
-        if lex_parent == real_scratch or real_scratch in lex_parent.parents:
-            matched = real_scratch
-        else:
-            root_str = str(real_scratch)
-            for anc in reversed((lex_parent, *lex_parent.parents)):
-                if str(anc) == "/":
-                    continue
-                try:
-                    if os.path.realpath(anc) == root_str:
-                        matched = anc
-                        break
-                except (OSError, ValueError):
-                    continue
+        matched = find_real_ancestor(lex_parent, real_scratch)
         if matched is None:
             raise OSError(errno.EACCES, "Refusing output outside study scratch", str(parent))
-        rel_parts = lex_parent.relative_to(matched).parts
+        _anc, rel_parts = matched
         if any(part in ("", ".", "..") for part in rel_parts):
             raise OSError(errno.EINVAL, "Refusing invalid local output directory", str(parent))
         base_path: Path = real_scratch
@@ -1397,35 +1289,7 @@ def _open_local_parent_dir_fd(
     if tail_parts and not mkdir_parents:
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(parent))
 
-    try:
-        dir_fd = os.open(base_path, dir_flags)
-    except OSError as exc:
-        if exc.errno == errno.ENOTDIR and base_path.is_symlink():
-            raise OSError(errno.ELOOP, "Refusing symlink parent target", str(base_path)) from exc
-        raise
-
-    for part in tail_parts:
-        try:
-            next_fd = _open_dir_nofollow(dir_fd, part, dir_flags)
-        except FileNotFoundError:
-            try:
-                os.mkdir(part, 0o755, dir_fd=dir_fd)
-            except FileExistsError:
-                pass
-            except OSError:
-                os.close(dir_fd)
-                raise
-            try:
-                next_fd = _open_dir_nofollow(dir_fd, part, dir_flags)
-            except OSError:
-                os.close(dir_fd)
-                raise
-        except OSError:
-            os.close(dir_fd)
-            raise
-        os.close(dir_fd)
-        dir_fd = next_fd
-    return dir_fd
+    return open_dir_chain_nofollow(base_path, tail_parts, create_missing=mkdir_parents)
 
 
 def write_local_output_file(

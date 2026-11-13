@@ -37,13 +37,13 @@ from learning_os.adapters.study_broker import (
     send_broker_request,
     write_local_output_file,
 )
-from learning_os.app.gateway import (
+from learning_os.app.gateway import read_content_bound_file
+from learning_os.domain.failures import WriteRefused
+from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
-    read_content_bound_file,
+    protected_reads,
 )
-from learning_os.domain.failures import WriteRefused
-from learning_os.store.materials.reading_cards import protected_reads
 
 ROOT = Path(__file__).resolve().parents[1]
 SESSION = "cccccccc-3333-4333-8333-333333333333"

@@ -34,9 +34,9 @@ from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, Study
 from learning_os.store.materials.reading_cards import (
     ReadingStore,
     ReadingStoreError,
-    protected_reads,
     valid_session,
 )
+from learning_os.store.study_fence import is_within, protected_reads
 
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")
 LEARNINGOS_STUDY_NAMESPACE = uuid.UUID("7f3b0c4a-5e2d-4c8a-9b1f-3e6d1a2c4b8e")
@@ -45,12 +45,6 @@ RUNTIMES = ("claude", "codex", "gemini")
 
 def _sbpl_quote(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
-
-
-def _is_within(candidate: Path, base: Path) -> bool:
-    real_candidate = Path(os.path.realpath(candidate))
-    real_base = Path(os.path.realpath(base))
-    return real_candidate == real_base or real_base in real_candidate.parents
 
 
 def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
@@ -122,7 +116,7 @@ def _resolve_runtime_command(
 
 def _allocate_outside_dir(prefix: str, real_learningos: Path) -> Path:
     candidate = Path(os.path.realpath(tempfile.mkdtemp(prefix=prefix)))
-    if _is_within(candidate, real_learningos):
+    if is_within(candidate, real_learningos):
         shutil.rmtree(candidate, ignore_errors=True)
         candidate = Path(
             os.path.realpath(tempfile.mkdtemp(prefix=prefix, dir="/tmp"))

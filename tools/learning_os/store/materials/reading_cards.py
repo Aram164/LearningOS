@@ -47,9 +47,7 @@ from pathlib import Path
 from typing import TypeGuard, cast
 
 from learning_os.store import observations
-
-#: The store directory, a sibling of the Core checkout (C2).
-STORE_DIRNAME = "reading-memory"
+from learning_os.store.study_fence import READING_MEMORY_DIRNAME as STORE_DIRNAME
 
 #: The stored-data schema every record validates against before it is written (C6).
 SCHEMA_NAME = "material-reading-card.schema.json"
@@ -1049,21 +1047,6 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, object]:
             "concepts": list(concepts)}
 
 
-def protected_reads(core: Path) -> list[Path]:
-    """Subtrees holding raw materials, reading memory, raw-text caches, or AI requests (PLAN-D D1)."""
-    resolved = Path(core).resolve()
-    learningos = resolved.parent
-    return [
-        learningos / "materials",
-        learningos / STORE_DIRNAME,
-        resolved / "generated" / "text-cache",
-        resolved / "generated" / "material-search",
-        resolved / "generated" / "material-outlines",
-        resolved / "generated" / "derived-state",
-        resolved / "operations" / "ai-actions" / "requests",
-    ]
-
-
 def entry_view(row: dict[str, object]) -> dict[str, object]:
     """One entry as refusals and reads name it."""
     rng = _row_range(row)
@@ -1076,6 +1059,6 @@ __all__ = [
     "ADOPT_IDLE", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME", "TREATMENT_KINDS",
     "Admission", "Read", "ReadingStore", "ReadingStoreError", "SettleRefusal",
     "Settlement", "StopDecision", "adopt_command", "admit_card",
-    "card_name", "entry_view", "pages_label", "protected_reads", "settle_command",
+    "card_name", "entry_view", "pages_label", "settle_command",
     "store_root", "valid_session",
 ]
