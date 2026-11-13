@@ -88,16 +88,45 @@ def build_seatbelt_profile(
 _RUNTIME_PATH_FLAGS = ("--settings", "--mcp-config", "--plugin-dir", "--add-dir")
 
 
-def _resolve_caller_path(value: str, *, caller_cwd: Path, real_core: Path) -> str:
-    if not value or value.startswith("~"):
+def _is_relative_path_token(value: str) -> bool:
+    if not value or len(value) >= 1024 or "\n" in value or value.startswith(("~", "-")):
+        return False
+    candidate = Path(value)
+    if candidate.is_absolute():
+        return False
+    return (
+        "/" in value
+        or (os.altsep is not None and os.altsep in value)
+        or value in (".", "..")
+        or value.startswith(("./", "../"))
+    )
+
+
+def _resolve_caller_path(
+    value: str,
+    *,
+    caller_cwd: Path,
+    real_core: Path,
+    protected: Sequence[Path] = (),
+) -> str:
+    if not value or len(value) >= 1024 or "\n" in value or value.startswith("~"):
         return value
     candidate = Path(value)
     if candidate.is_absolute():
         return value
-    caller_target = caller_cwd / candidate
-    if not (real_core / candidate).exists() and caller_target.exists():
-        return str(caller_target.resolve())
-    return value
+    try:
+        if (real_core / candidate).exists():
+            return value
+        caller_target = caller_cwd / candidate
+        if not caller_target.exists():
+            return value
+        real_target = Path(os.path.realpath(caller_target))
+    except OSError:
+        return value
+    if any(is_within(real_target, closed) for closed in protected):
+        return value
+    # Keep symlinks intact (e.g. .venv/bin/python -> homebrew python) while making the path absolute.
+    return os.path.abspath(caller_target)
 
 
 def _normalize_caller_args(
@@ -108,12 +137,15 @@ def _normalize_caller_args(
 ) -> list[str]:
     if caller_cwd == real_core:
         return list(extra)
+    protected = tuple(Path(os.path.realpath(p)) for p in protected_reads(real_core))
     out: list[str] = []
     expect_path = False
     for token in extra:
         if expect_path:
             out.append(
-                _resolve_caller_path(token, caller_cwd=caller_cwd, real_core=real_core)
+                _resolve_caller_path(
+                    token, caller_cwd=caller_cwd, real_core=real_core, protected=protected
+                )
             )
             expect_path = False
             continue
@@ -126,37 +158,46 @@ def _normalize_caller_args(
             prefix = f"{flag}="
             if token.startswith(prefix):
                 rewritten = prefix + _resolve_caller_path(
-                    token[len(prefix):], caller_cwd=caller_cwd, real_core=real_core
+                    token[len(prefix):],
+                    caller_cwd=caller_cwd,
+                    real_core=real_core,
+                    protected=protected,
                 )
                 break
         out.append(rewritten)
     return out
 
 
-def _select_launch_cwd(
-    *,
-    real_core: Path,
-    caller_cwd: Path,
+def _normalize_cmd_args(
     command: Sequence[str],
-    use_cmd: bool,
-) -> Path:
-    if not use_cmd or caller_cwd == real_core:
-        return real_core
-    cmd0 = command[0]
-    cmd_path = Path(cmd0)
-    is_relative_path = not cmd_path.is_absolute() and (
-        "/" in cmd0
-        or (os.altsep is not None and os.altsep in cmd0)
-        or cmd0 in (".", "..")
-        or cmd0.startswith(("./", "../"))
-    )
-    if (
-        is_relative_path
-        and not (real_core / cmd_path).exists()
-        and (caller_cwd / cmd_path).exists()
-    ):
-        return caller_cwd
-    return real_core
+    *,
+    caller_cwd: Path,
+    real_core: Path,
+) -> list[str]:
+    if caller_cwd == real_core:
+        return list(command)
+    protected = tuple(Path(os.path.realpath(p)) for p in protected_reads(real_core))
+    out: list[str] = []
+    prev_token = ""
+    for idx, token in enumerate(command):
+        if prev_token == "-c" and idx > 0:
+            out.append(token)
+            prev_token = token
+            continue
+        if token.startswith("--") and "=" in token:
+            flag, raw_val = token.split("=", 1)
+            if _is_relative_path_token(raw_val):
+                resolved = _resolve_caller_path(
+                    raw_val, caller_cwd=caller_cwd, real_core=real_core, protected=protected
+                )
+                token = f"{flag}={resolved}"
+        elif _is_relative_path_token(token):
+            token = _resolve_caller_path(
+                token, caller_cwd=caller_cwd, real_core=real_core, protected=protected
+            )
+        out.append(token)
+        prev_token = token
+    return out
 
 
 def _resolve_runtime_command(
@@ -173,6 +214,8 @@ def _resolve_runtime_command(
     if use_cmd:
         if not tail:
             raise ValueError("--cmd requires a command to execute")
+        if caller_cwd is not None and real_core is not None:
+            return _normalize_cmd_args(tail, caller_cwd=caller_cwd, real_core=real_core)
         return tail
     assert runtime is not None
     if caller_cwd is not None and real_core is not None:
@@ -180,16 +223,17 @@ def _resolve_runtime_command(
     binary = shutil.which(runtime)
     if binary is None:
         raise ValueError(f"runtime binary {runtime!r} was not found on PATH")
+    binary_path = os.path.abspath(binary)
     if runtime == "codex":
         return [
-            binary,
+            binary_path,
             "-s",
             "danger-full-access",
             "-c",
             "shell_environment_policy.inherit=all",
             *tail,
         ]
-    return [binary, *tail]
+    return [binary_path, *tail]
 
 
 def _allocate_outside_dir(prefix: str, real_learningos: Path) -> Path:
@@ -416,17 +460,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     except ValueError as exc:
         print(f"study_launch: {exc}", file=sys.stderr)
         return 2
-    child_cwd = _select_launch_cwd(
-        real_core=real_core,
-        caller_cwd=caller_cwd,
-        command=command,
-        use_cmd=bool(args.cmd),
-    )
     return launch_study(
         core_root=core_root,
         command=command,
         session_id=session_id,
-        cwd=child_cwd,
+        cwd=real_core,
     )
 
 
