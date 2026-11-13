@@ -134,6 +134,27 @@
         "envelope_owned": false
       }
     },
+    "omit_covered_text": {
+      "type": "boolean",
+      "description": "when a returned PDF span is already covered by a current reading card or settled dismissal, omit its primary excerpt text (recording excerpt_omitted: \"covered\") while still returning covering reading cards, dismissals, and analysis notes",
+      "x-los-cli": {
+        "flags": [
+          "--omit-covered-text"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "pages": {
       "type": "string",
       "description": "with --extract on a PDF: explicit page ranges in the locator house style (e.g. \"pdf pp. 21-26\"); replaces the route locator's page selection for this call, still capped at 20 pages per call",

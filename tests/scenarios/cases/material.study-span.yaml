@@ -62,6 +62,18 @@ cases:
     transport: cli
     argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf pp. 2 and 4", --extract, --session, "11111111-1111-4111-8111-111111111111"]
     expect: {site: material.study-span.discontiguous}
+  - id: discontiguous-comma
+    kind: refusal
+    transport: cli
+    argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 1,4", --extract, --session, "11111111-1111-4111-8111-111111111111"]
+    expect: {site: material.study-span.discontiguous}
+  - id: omit-covered-text
+    kind: sequence
+    steps:
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-card-settle, rd-a4b88dcaf74944c1, --card, '{"paraphrase": "Introduces the lecture topic and states the first definition.", "kinds": ["statement"], "pointers": [{"page": 2, "kind": "statement", "label": "first definition"}]}', --session, "11111111-1111-4111-8111-111111111111"]}
+      - {transport: cli, argv: [material-study-span, --material, source-demo-book/lecture-01.pdf, --pages, "pdf p. 2", --extract, --omit-covered-text, --session, "22222222-2222-4222-8222-222222222222"]}
+    expect: {exit: 0}
   - id: material-missing
     kind: refusal
     transport: cli

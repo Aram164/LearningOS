@@ -134,6 +134,14 @@ transcripts, notebooks and scanned pages are not searched: an empty result,
 or one with PDF hits only, says nothing about them. When `material-span`
 returns a cut-off extract, its `next_action` carries this same instruction.
 
+In sandboxed study mode (`--session` / study launch), inspect inline
+`study_cards` returned by `material-search` and `material-context` before
+opening PDF pages, narrow unsectioned PDFs to the hit's `span_reference` /
+uncovered pages rather than wide multi-page ranges, add `--omit-covered-text`
+on `material-study-span` (or `material-span ... --extract`) when checking
+already-covered spans without repeating raw PDF text, and dismiss isolated
+irrelevant pages with `--dismiss irrelevant`.
+
 The learner's own notes are searched separately, over their full bodies:
 
 ```scrut

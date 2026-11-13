@@ -40,6 +40,7 @@ from learning_os.store.materials.slices import (
     UnknownConceptIds,
     build_unit_slices,
     continuation_record_dict,
+    parse_explicit_page_ranges,
     parse_locator_page_ranges,
     plan_continuation,
 )
@@ -126,6 +127,30 @@ def test_locator_page_ranges_parse_only_pdf_house_style(locator, expected):
 
 def test_locator_page_ranges_rejects_non_strings():
     assert parse_locator_page_ranges(None) == []
+
+
+@pytest.mark.parametrize(("pages_arg", "expected"), [
+    ("pdf p. 4", [(4, 4)]),
+    ("pdf pp. 21-26", [(21, 26)]),
+    ("PDF p. 13\u201315", [(13, 15)]),
+    ("pdf p. 1,4", [(1, 1), (4, 4)]),
+    ("pdf pp. 1-2, 4, 6-7", [(1, 2), (4, 4), (6, 7)]),
+    ("pdf p. 3 and 5", [(3, 3), (5, 5)]),
+    ("p. 9, pp. 1-2", [(9, 9), (1, 2)]),
+    ("slides 20-38", [(20, 38)]),
+    ("Physical PDF p. 132", [(132, 132)]),
+    ("pdf p. 1, pdf p. 4", [(1, 1), (4, 4)]),
+    ("", []),
+    ("21-26", []),
+    ("pdf p. 1, foo", []),
+    ("pdf p. 1, 0", []),
+    ("pdf pp. 5-2", []),
+    ("pdf p. 1,", []),
+    ("pdf p. 1 (printed p. 1)", []),
+    (None, []),
+])
+def test_explicit_page_ranges_parse_strictly(pages_arg, expected):
+    assert parse_explicit_page_ranges(pages_arg) == expected
 
 
 @pytest.mark.parametrize("locator, expected", [

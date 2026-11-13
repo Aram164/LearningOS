@@ -886,3 +886,52 @@ def test_reading_store_never_imports_or_acquires_operator_lock():
                     assert not alias.name.startswith("learning_os.app"), (py_path, alias.name)
             elif isinstance(node, ast.Name):
                 assert node.id not in {"operator_lock", "_operator_lock", "escalate_operator_lock"}, py_path
+
+
+def test_omit_covered_text_strips_only_covered_excerpts(world):
+    first = _ok(_read(world, A, "pdf p. 2"))
+    entry = _entry(first)
+    assert "excerpt" in first["span"]["spans"][0]
+    _ok(_settle(world, A, entry, "--card", _card(2, 2)))
+
+    # On an already-covered span, --omit-covered-text omits raw excerpt text while serving the card.
+    covered = _ok(_los(
+        world, "material-study-span", "--material", BOOK, "--pages", "pdf p. 2",
+        "--extract", "--omit-covered-text", "--session", B,
+    ))
+    assert covered["study"]["reads"][0]["state"] == "covered"
+    span = covered["span"]["spans"][0]
+    assert "excerpt" not in span
+    assert span["excerpt_omitted"] == "covered"
+    assert [item["kind"] for item in covered["study"]["memory"]] == ["card"]
+
+    # On an uncovered span, --omit-covered-text still returns the excerpt needed to write a card.
+    uncovered = _ok(_los(
+        world, "material-study-span", "--material", BOOK, "--pages", "pdf p. 4",
+        "--extract", "--omit-covered-text", "--session", B,
+    ))
+    assert uncovered["study"]["reads"][0]["state"] == "opened"
+    assert "excerpt" in uncovered["span"]["spans"][0]
+    assert "excerpt_omitted" not in uncovered["span"]["spans"][0]
+
+
+def test_comma_separated_discontiguous_pages_refuse_fail_closed_in_study(world):
+    refused = _los(
+        world, "material-study-span", "--material", BOOK, "--pages", "pdf p. 1,4",
+        "--extract", "--session", A,
+    )
+    assert refused.returncode == 2
+    assert refused.stdout == ""
+    assert "discontiguous" in refused.stderr
+    assert _store(world).entries(session=A) == []
+
+
+def test_settle_hints_and_cli_help_advertise_treatment_kinds(world):
+    from learning_os.store.materials.reading_cards import TREATMENT_KINDS, settle_command
+
+    hint = settle_command("rd-0123456789abcdef")
+    help_out = _los(world, "material-card-settle", "--help")
+    assert help_out.returncode == 0
+    for kind in TREATMENT_KINDS:
+        assert kind in hint
+        assert kind in help_out.stdout

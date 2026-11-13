@@ -69,7 +69,7 @@ def session_start(event: dict[str, object]) -> str:
         except (OSError, ValueError, RuntimeError) as exc:
             return (
                 "LearningOS study profile (reading memory, ADR-021).\n"
-                f"- Study broker hook unavailable ({exc}); use los bootstrap --brief."
+                f"- Study broker hook unavailable ({exc}); use .venv/bin/python tools/los.py bootstrap --brief."
             )
         stdout = response.get("stdout")
         if isinstance(stdout, str) and stdout.strip():
@@ -84,13 +84,22 @@ def session_start(event: dict[str, object]) -> str:
     session = event.get("session_id")
     lines = [
         "LearningOS study profile (reading memory, ADR-021).",
-        "- Start with: los bootstrap --brief. Find pages: los material-search \"QUERY\". "
-        "Read pages: los material-span --material PATH --pages \"pdf p. N\" --extract "
-        "(or los material-span UNIT ROUTE --extract).",
+        "- Start with: .venv/bin/python tools/los.py bootstrap --brief. "
+        "Search first: .venv/bin/python tools/los.py material-search \"QUERY\" "
+        "(or material-context) to check existing reading cards before opening PDFs.",
+        "- Read narrow pages first (`span_reference` / targeted `pdf p. N`, avoiding wide bundles "
+        "over unsectioned PDFs): .venv/bin/python tools/los.py material-span --material PATH "
+        "--pages \"pdf p. N\" --extract (or material-span UNIT ROUTE --extract). "
+        "Add --omit-covered-text when checking an already-covered span; dismiss isolated irrelevant "
+        "pages with --dismiss irrelevant.",
         f"- Reading pages that no card covers opens a reading entry. Hold at most "
         f"{MAX_OPEN_ENTRIES} open entries, and settle each before your turn ends: "
-        "los material-card-settle ENTRY --card '{...}' or --dismiss irrelevant --reason '...'. "
-        "Cards are private and unreviewed; reads show them beside the text.",
+        ".venv/bin/python tools/los.py material-card-settle ENTRY --card '{...}' or --dismiss "
+        "irrelevant --reason '...'. Cards are private and unreviewed; reads show them beside the text "
+        "unless --omit-covered-text is passed.",
+        "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
+        "(seal_envelope.py --submit validates on the host; run validate.py with --no-report "
+        "inside study mode and commit outside study mode).",
     ]
     if not valid_session(session):
         return "\n".join([*lines, "- No session id arrived: study reads will refuse."])

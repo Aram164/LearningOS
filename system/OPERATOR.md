@@ -388,6 +388,22 @@ exit; `tools/study_hooks.py` supplies only optional UX
 lifecycle nudges (`session-start`, `stop`, `SubagentStop`, and opt-in
 `profile --out`).
 
+Study workflow boundaries:
+
+- **Reuse existing reading memory first:** Run `material-search` or
+  `material-context` first (both return matching `study_cards` inline), target
+  exact `span_reference` / uncovered pages rather than wide unsectioned PDF
+  ranges, pass `--omit-covered-text` on `material-study-span` (or
+  `material-span ... --extract`) when checking covered cards without repeating
+  raw PDF text, and dismiss isolated off-topic pages via
+  `material-card-settle ENTRY --dismiss irrelevant --reason '...'`.
+- **Scratch, validation, and closing:** Point `--check-out`, `--out`, and
+  `--report-out` under `$LOS_SCRATCH_DIR`. Inside Seatbelt, `materials/` is
+  unmounted (`W MATERIALS-OFFLINE`) and `LearningOS/` is read-only: use
+  `.venv/bin/python tools/validate.py --compact --no-report` if running manual
+  validation, rely on host validation printed by `tools/seal_envelope.py --submit`,
+  and commit or run `session-end` outside study mode.
+
 ## Report observed problems
 
 Aram's standing instruction: whenever an operator encounters a problem, a

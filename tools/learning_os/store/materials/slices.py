@@ -309,6 +309,46 @@ def parse_locator_page_ranges(locator: str) -> list[tuple[int, int]]:
     return list(dict.fromkeys(value for _, value in sorted(ranges, key=lambda row: row[0])))
 
 
+_EXPLICIT_LEAD_PREFIX = re.compile(
+    r"^(?:(?:physical\s+)?pdf\s+pp?(?:\.\s*|\s+)|slides?\s+|pp?(?:\.\s*|\s+))",
+    re.IGNORECASE,
+)
+_EXPLICIT_OPT_PREFIX = re.compile(
+    r"^(?:(?:physical\s+)?pdf\s+pp?(?:\.\s*|\s+)|slides?\s+|pp?(?:\.\s*|\s+))?",
+    re.IGNORECASE,
+)
+_EXPLICIT_SEP = re.compile(r"\s*(?:,|\band\b)\s*", re.IGNORECASE)
+_EXPLICIT_RANGE = re.compile(r"^(\d+)(?:\s*[-\u2013]\s*(\d+))?$")
+
+
+def parse_explicit_page_ranges(locator: str) -> list[tuple[int, int]]:
+    """Strictly parse explicit CLI ``--pages`` specs; return ``[]`` on unconsumed tokens."""
+    if not isinstance(locator, str):
+        return []
+    spec = locator.strip()
+    if not spec or _EXPLICIT_LEAD_PREFIX.match(spec) is None:
+        return []
+    clauses = _EXPLICIT_SEP.split(spec)
+    if any(not clause for clause in clauses):
+        return []
+    ranges: list[tuple[int, int]] = []
+    for index, clause in enumerate(clauses):
+        prefix_re = _EXPLICIT_LEAD_PREFIX if index == 0 else _EXPLICIT_OPT_PREFIX
+        match_prefix = prefix_re.match(clause)
+        if match_prefix is None:
+            return []
+        body = clause[match_prefix.end():].strip()
+        range_match = _EXPLICIT_RANGE.fullmatch(body)
+        if range_match is None:
+            return []
+        start = int(range_match.group(1))
+        end = int(range_match.group(2)) if range_match.group(2) is not None else start
+        if start < 1 or start > end:
+            return []
+        ranges.append((start, end))
+    return list(dict.fromkeys(ranges))
+
+
 def _select_pages(total: int, requested: list[tuple[int, int]]) -> tuple[tuple[int, ...], str]:
     """Clamp requested (or default) pages to ``MAX_SLICE_PAGES`` with a status."""
     if total < 1:

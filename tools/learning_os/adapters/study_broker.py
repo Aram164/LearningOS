@@ -657,8 +657,14 @@ class StudyBroker:
                 return _refuse(err or "study broker: missing or invalid los subcommand")
             assert idx is not None
             if subcmd not in ALLOWED_LOS_COMMANDS:
+                hint = ""
+                if subcmd == "session-end":
+                    hint = (
+                        " (seal_envelope.py --submit already validates canonical "
+                        "writes; commit or run los session-end outside study mode)"
+                    )
                 return _refuse(
-                    f"study broker: command {subcmd!r} is not allowed in study mode"
+                    f"study broker: command {subcmd!r} is not allowed in study mode{hint}"
                 )
             rewritten = list(argv)
             target_cmd = subcmd
@@ -1260,7 +1266,11 @@ def _open_local_parent_dir_fd(
         real_scratch = Path(os.path.realpath(scratch_dir))
         matched = find_real_ancestor(lex_parent, real_scratch)
         if matched is None:
-            raise OSError(errno.EACCES, "Refusing output outside study scratch", str(parent))
+            raise OSError(
+                errno.EACCES,
+                f"Refusing output outside study scratch ($LOS_SCRATCH_DIR={real_scratch})",
+                str(parent),
+            )
         _anc, rel_parts = matched
         if any(part in ("", ".", "..") for part in rel_parts):
             raise OSError(errno.EINVAL, "Refusing invalid local output directory", str(parent))

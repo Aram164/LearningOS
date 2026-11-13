@@ -39,7 +39,7 @@ queries:
     schema: system/schema/material-study-span.schema.json
     invariants:
     - effects derived-write to the private reading store beside the repository (LearningOS/reading-memory/, ADR-021); never a repository, inventory or manifest write
-    - nests the unchanged material-span-v1 answer for the same request under span; Obsidian's material-span is not routed here
+    - nests the unchanged material-span-v1 answer for the same request under span (unless --omit-covered-text omits covered spans' repeated primary excerpt after computing digests); Obsidian's material-span is not routed here
     - requires the hook-injected --session; a missing or malformed session refuses
     - a PDF span that no current card or settled dismissal of the same digest contains persists an open reading entry before any text returns; if the entry cannot be persisted the read refuses
     - a span inside one of the session's pending entries, or covered, opens nothing; a clipped, truncated or non-PDF extraction returns no text and opens nothing
