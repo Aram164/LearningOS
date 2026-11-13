@@ -58,7 +58,11 @@ def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
     return str(uuid.uuid5(LEARNINGOS_STUDY_NAMESPACE, f"{runtime}:{external_id}"))
 
 
-def build_seatbelt_profile(core_root: Path) -> str:
+def build_seatbelt_profile(
+    core_root: Path,
+    *,
+    deny_extra_subpaths: Sequence[Path] = (),
+) -> str:
     """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout."""
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
@@ -79,6 +83,11 @@ def build_seatbelt_profile(core_root: Path) -> str:
         f'(literal "{_sbpl_quote(str(real_gitkeep))}"))'
     )
     lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(real_learningos))}"))')
+    for extra in deny_extra_subpaths:
+        real_extra = Path(os.path.realpath(extra))
+        quoted = _sbpl_quote(str(real_extra))
+        lines.append(f'(deny file-read* (subpath "{quoted}"))')
+        lines.append(f'(deny file-write* (subpath "{quoted}"))')
     return "\n".join(lines) + "\n"
 
 
@@ -111,14 +120,18 @@ def _resolve_runtime_command(
     return [binary, *tail]
 
 
-def _allocate_scratch_dir(real_learningos: Path) -> Path:
-    candidate = Path(os.path.realpath(tempfile.mkdtemp(prefix="los-study-scratch-")))
+def _allocate_outside_dir(prefix: str, real_learningos: Path) -> Path:
+    candidate = Path(os.path.realpath(tempfile.mkdtemp(prefix=prefix)))
     if _is_within(candidate, real_learningos):
         shutil.rmtree(candidate, ignore_errors=True)
         candidate = Path(
-            os.path.realpath(tempfile.mkdtemp(prefix="los-study-scratch-", dir="/tmp"))
+            os.path.realpath(tempfile.mkdtemp(prefix=prefix, dir="/tmp"))
         )
     return candidate
+
+
+def _allocate_scratch_dir(real_learningos: Path) -> Path:
+    return _allocate_outside_dir("los-study-scratch-", real_learningos)
 
 
 def _resolve_session_id(
@@ -198,36 +211,15 @@ def launch_study(
     real_core = Path(os.path.realpath(core_root.resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
     store = ReadingStore(real_core)
-    try:
-        store.touch(session_id, start=True)
-    except ReadingStoreError as exc:
-        print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
-        return 2
 
-    scratch_dir = _allocate_scratch_dir(real_learningos)
-    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losg-", dir="/tmp")))
-    sock_path = sock_dir / "gate.sock"
-    sb_path = sock_dir / "study.sb"
-    sb_path.write_text(build_seatbelt_profile(real_core), encoding="utf-8")
-
-    broker = StudyBroker(
-        real_core,
-        session_id,
-        scratch_dir=scratch_dir,
-        observations_path=os.environ.get("LOS_OBSERVATIONS"),
-    )
-    server = BrokerServer(broker, sock_path)
-    server.start()
-
-    child_env = dict(os.environ)
-    child_env[GATE_SOCK_ENV] = str(sock_path)
-    child_env["LOS_SESSION_ID"] = session_id
-    child_env["LOS_SCRATCH_DIR"] = str(scratch_dir)
-    child_env["TMPDIR"] = str(scratch_dir)
-    child_env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
-
+    session_started = False
+    scratch_dir: Path | None = None
+    sock_dir: Path | None = None
+    stage_dir: Path | None = None
+    server: BrokerServer | None = None
     proc: subprocess.Popen[bytes] | None = None
     terminated_by_signal = False
+    sigterm_installed = False
     prev_sigterm = signal.getsignal(signal.SIGTERM)
 
     def _on_sigterm(_signum: int, _frame: FrameType | None) -> None:
@@ -236,8 +228,44 @@ def launch_study(
         if proc is not None and proc.poll() is None:
             proc.terminate()
 
-    signal.signal(signal.SIGTERM, _on_sigterm)
     try:
+        try:
+            store.touch(session_id, start=True)
+            session_started = True
+        except ReadingStoreError as exc:
+            print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
+            return 2
+
+        scratch_dir = _allocate_scratch_dir(real_learningos)
+        sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losg-", dir="/tmp")))
+        stage_dir = _allocate_outside_dir("losb-", real_learningos)
+        sock_path = sock_dir / "gate.sock"
+        sb_path = sock_dir / "study.sb"
+        sb_path.write_text(
+            build_seatbelt_profile(real_core, deny_extra_subpaths=(stage_dir,)),
+            encoding="utf-8",
+        )
+
+        broker = StudyBroker(
+            real_core,
+            session_id,
+            scratch_dir=scratch_dir,
+            stage_root=stage_dir,
+            observations_path=os.environ.get("LOS_OBSERVATIONS"),
+        )
+        server = BrokerServer(broker, sock_path)
+        server.start()
+
+        child_env = dict(os.environ)
+        child_env[GATE_SOCK_ENV] = str(sock_path)
+        child_env["LOS_SESSION_ID"] = session_id
+        child_env["LOS_SCRATCH_DIR"] = str(scratch_dir)
+        child_env["TMPDIR"] = str(scratch_dir)
+        child_env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
+
+        signal.signal(signal.SIGTERM, _on_sigterm)
+        sigterm_installed = True
+
         proc = subprocess.Popen(
             [str(effective_sandbox), "-f", str(sb_path), *command],
             env=child_env,
@@ -254,7 +282,8 @@ def launch_study(
                 proc.wait()
         return 130
     finally:
-        signal.signal(signal.SIGTERM, prev_sigterm)
+        if sigterm_installed:
+            signal.signal(signal.SIGTERM, prev_sigterm)
         if proc is not None and proc.poll() is None:
             proc.terminate()
             try:
@@ -262,13 +291,19 @@ def launch_study(
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait()
-        server.close()
-        try:
-            ReadingStore(real_core).session_end(session_id)
-        except ReadingStoreError as exc:
-            print(f"study_launch: failed to record session_end: {exc}", file=sys.stderr)
-        shutil.rmtree(sock_dir, ignore_errors=True)
-        shutil.rmtree(scratch_dir, ignore_errors=True)
+        if server is not None:
+            server.close()
+        if session_started:
+            try:
+                ReadingStore(real_core).session_end(session_id)
+            except ReadingStoreError as exc:
+                print(f"study_launch: failed to record session_end: {exc}", file=sys.stderr)
+        if stage_dir is not None:
+            shutil.rmtree(stage_dir, ignore_errors=True)
+        if sock_dir is not None:
+            shutil.rmtree(sock_dir, ignore_errors=True)
+        if scratch_dir is not None:
+            shutil.rmtree(scratch_dir, ignore_errors=True)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

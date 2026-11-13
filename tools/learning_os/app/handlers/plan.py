@@ -37,7 +37,7 @@ from learning_os.app.claim_admission import anchor_report, lineage_artifacts
 from learning_os.app.claim_admission import prepare_claim_admission as _phaseB_validate
 from learning_os.app.claim_admission import render_claim_lineage as _phaseB_ledger_text
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import prepare_review_envelope
+from learning_os.app.gateway import STUDY_FENCE_CORE_ENV, prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
@@ -159,8 +159,12 @@ def _verify_observed_material(root: Path, contract: dict,
     if not review_report:
         return None
     try:
-        with open(review_report, encoding="utf-8") as handle:
-            report = json.load(handle)
+        _, raw_bytes = _read_content_bound_file(review_report, label="review_report")
+        report = json.loads(raw_bytes.decode("utf-8"))
+    except WriteRefused:
+        if os.environ.get(STUDY_FENCE_CORE_ENV):
+            raise
+        return None
     except (OSError, ValueError):
         return None
     binding = report.get("observed_material") if isinstance(report, dict) else None

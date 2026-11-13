@@ -15,9 +15,20 @@ from pathlib import Path
 
 import pytest
 import study_launch
-from repo_builders import add_curriculum, write_minimal_pdf
+from repo_builders import (
+    _compact_revision,
+    _compact_setup,
+    add_curriculum,
+    write_minimal_pdf,
+    write_yaml,
+)
 
-from learning_os.store.materials.reading_cards import ADOPT_IDLE, protected_reads, valid_session
+from learning_os.store.materials.reading_cards import (
+    ADOPT_IDLE,
+    ReadingStore,
+    protected_reads,
+    valid_session,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")
@@ -583,5 +594,240 @@ with open(out, "w", encoding="utf-8") as fh:
             session_id=S1,
         )
         assert rc_dead == 2
+        assert "study broker unavailable" in (
+            subprocess.run(
+                [str(core / ".venv/bin/python"), str(core / "tools/los.py"), "status", "--json"],
+                cwd=str(core),
+                env=dict(os.environ, LOS_GATE_SOCK=str(bogus), PYTHONDONTWRITEBYTECODE="1"),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            ).stderr
+        )
     finally:
         shutil.rmtree(bogus.parent, ignore_errors=True)
+
+
+def test_launcher_startup_failures_clean_up_resources_and_leave_session_recoverable(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Requirement 5: failures at every startup stage reap temp dirs, signal handler, and session."""
+    core = _make_study_world(mini_repo)
+    learningos = core.parent
+    fake_sandbox = tmp_path / "fake-sandbox-exec"
+    fake_sandbox.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    fake_sandbox.chmod(0o755)
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+
+    created_dirs: list[Path] = []
+    orig_mkdtemp = tempfile.mkdtemp
+
+    def _tracking_mkdtemp(*args: object, **kwargs: object) -> str:
+        path = Path(os.path.realpath(orig_mkdtemp(*args, **kwargs)))  # type: ignore[arg-type]
+        created_dirs.append(path)
+        return str(path)
+
+    prev_sigterm = signal.getsignal(signal.SIGTERM)
+    session_file = learningos / "reading-memory/sessions" / f"{S1}.json"
+
+    def _assert_clean_and_recoverable() -> None:
+        assert created_dirs, "expected launcher to allocate at least one temp directory"
+        for temp_dir in created_dirs:
+            assert not temp_dir.exists(), f"orphaned startup directory survived: {temp_dir}"
+        created_dirs.clear()
+        assert signal.getsignal(signal.SIGTERM) is prev_sigterm
+        assert session_file.is_file()
+        row = json.loads(session_file.read_text(encoding="utf-8"))
+        assert row.get("ended_at") is not None
+        # Session state remains immediately recoverable (touch start=True & session_end succeed).
+        ReadingStore(core).touch(S1, start=True)
+        reopened = json.loads(session_file.read_text(encoding="utf-8"))
+        assert reopened.get("started_at") is not None
+        assert reopened.get("ended_at") is None
+        ReadingStore(core).session_end(S1)
+        assert json.loads(session_file.read_text(encoding="utf-8")).get("ended_at") is not None
+
+    # 1. Fault during stage_dir allocation (after session_started, scratch_dir, and sock_dir exist).
+    monkeypatch.setattr(tempfile, "mkdtemp", _tracking_mkdtemp)
+    orig_allocate = study_launch._allocate_outside_dir
+
+    def _fail_stage_alloc(prefix: str, real_learningos: Path) -> Path:
+        if prefix == "losb-":
+            raise OSError("simulated stage allocation failure")
+        return orig_allocate(prefix, real_learningos)
+
+    with monkeypatch.context() as mp:
+        mp.setattr(study_launch, "_allocate_outside_dir", _fail_stage_alloc)
+        with pytest.raises(OSError, match="simulated stage allocation failure"):
+            study_launch.launch_study(
+                core_root=core,
+                command=["/usr/bin/true"],
+                session_id=S1,
+                sandbox_exec=fake_sandbox,
+                platform="darwin",
+            )
+    _assert_clean_and_recoverable()
+
+    # 2. Fault during BrokerServer bind/startup (scratch_dir, sock_dir, stage_dir, and study.sb exist).
+    class _FailingBrokerServer:
+        def __init__(self, *_args: object, **_kwargs: object) -> None:
+            raise OSError("simulated socket bind failure")
+
+    with monkeypatch.context() as mp:
+        mp.setattr(study_launch, "BrokerServer", _FailingBrokerServer)
+        with pytest.raises(OSError, match="simulated socket bind failure"):
+            study_launch.launch_study(
+                core_root=core,
+                command=["/usr/bin/true"],
+                session_id=S1,
+                sandbox_exec=fake_sandbox,
+                platform="darwin",
+            )
+    _assert_clean_and_recoverable()
+
+    # 3. Fault during sandbox Popen (after BrokerServer.start() and signal.signal() succeeded).
+    orig_popen = subprocess.Popen
+
+    def _fail_popen(*args: object, **kwargs: object) -> subprocess.Popen[bytes]:
+        if isinstance(args[0], (list, tuple)) and str(fake_sandbox) == str(args[0][0]):
+            raise OSError("simulated sandbox-exec launch failure")
+        return orig_popen(*args, **kwargs)  # type: ignore[call-overload,no-any-return]
+
+    with monkeypatch.context() as mp:
+        mp.setattr(subprocess, "Popen", _fail_popen)
+        with pytest.raises(OSError, match="simulated sandbox-exec launch failure"):
+            study_launch.launch_study(
+                core_root=core,
+                command=["/usr/bin/true"],
+                session_id=S1,
+                sandbox_exec=fake_sandbox,
+                platform="darwin",
+            )
+    _assert_clean_and_recoverable()
+
+    # Subsequent session launches cleanly end-to-end with exit 0.
+    monkeypatch.undo()
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+    if DARWIN_SEATBELT:
+        rc = study_launch.launch_study(
+            core_root=core,
+            command=[sys.executable, "-c", "print('recovered')"],
+            session_id=S1,
+        )
+        assert rc == 0
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
+def test_seatbelt_denies_host_stage_dir_and_allows_mediated_unit_plan_report_out(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Host broker stage dir stays Seatbelt-inaccessible while mediated --report-out succeeds."""
+    core = _make_study_world(mini_repo)
+    _compact_setup(core)
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+
+    draft_src = tmp_path / "draft-template.yaml"
+    write_yaml(
+        draft_src,
+        _compact_revision(
+            core,
+            route_changes={
+                "update": [
+                    {
+                        "route_id": "route-demo-book",
+                        "fields": {"angle": "Seatbelt mediated revision angle."},
+                    }
+                ]
+            },
+        ),
+    )
+
+    probe = tmp_path / "seatbelt_stage_probe.py"
+    probe.write_text(
+        f"""
+import errno, json, os, shutil, subprocess
+from pathlib import Path
+
+core = Path({str(core)!r})
+tmp_root = Path({str(tmp_path)!r})
+scratch = Path(os.environ["LOS_SCRATCH_DIR"])
+
+# 1. Host stage dirs (losb-*) must be unreadable and unwritable from inside Seatbelt.
+stage_dirs = list(tmp_root.glob("losb-*"))
+assert stage_dirs, f"expected losb-* dir under {{tmp_root}}"
+for sd in stage_dirs:
+    try:
+        list(sd.iterdir())
+        raise AssertionError(f"Seatbelt allowed listing host stage dir {{sd}}")
+    except PermissionError as exc:
+        assert exc.errno == errno.EPERM
+    try:
+        (sd / "tamper.txt").write_text("tamper", encoding="utf-8")
+        raise AssertionError(f"Seatbelt allowed writing host stage dir {{sd}}")
+    except PermissionError as exc:
+        assert exc.errno == errno.EPERM
+
+# 2. Mediated unit-plan-revise --check --report-out writes report.json cleanly inside scratch.
+draft = scratch / "rev.yaml"
+shutil.copy2(Path({str(draft_src)!r}), draft)
+report_out = scratch / "report.json"
+ok = subprocess.run(
+    [
+        str(core / ".venv/bin/python"),
+        str(core / "tools/los.py"),
+        "unit-plan-revise",
+        "unit-demo-l01",
+        "--file",
+        str(draft),
+        "--check",
+        "--report-out",
+        str(report_out),
+    ],
+    cwd=str(core),
+    capture_output=True,
+    text=True,
+)
+assert ok.returncode == 0, ok.stderr
+assert report_out.is_file()
+assert json.loads(report_out.read_text(encoding="utf-8"))["ok"] is True
+
+# 3. Symlink --report-out is refused with specific symlink/boundary error.
+outside = tmp_root / "outside-target.json"
+outside.write_text('{{"intact": true}}\\n', encoding="utf-8")
+sym = scratch / "sym-report.json"
+sym.symlink_to(outside)
+bad = subprocess.run(
+    [
+        str(core / ".venv/bin/python"),
+        str(core / "tools/los.py"),
+        "unit-plan-revise",
+        "unit-demo-l01",
+        "--file",
+        str(draft),
+        "--check",
+        "--report-out",
+        str(sym),
+    ],
+    cwd=str(core),
+    capture_output=True,
+    text=True,
+)
+assert bad.returncode == 2
+assert (
+    "study mode blocks symlink" in bad.stderr
+    or "outside the study boundary" in bad.stderr
+), bad.stderr
+""",
+        encoding="utf-8",
+    )
+
+    rc = study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(probe)],
+        session_id=S1,
+    )
+    assert rc == 0
+    assert (tmp_path / "outside-target.json").read_text(encoding="utf-8") == '{"intact": true}\n'

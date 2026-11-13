@@ -2,17 +2,28 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
 import shutil
+import socket
 import subprocess
+import sys
 import tempfile
+import threading
+import time
 from pathlib import Path
 
 import pytest
 import seal_envelope
-from repo_builders import add_curriculum, write_minimal_pdf
+from repo_builders import (
+    _compact_revision,
+    _compact_setup,
+    add_curriculum,
+    write_minimal_pdf,
+    write_yaml,
+)
 
 from learning_os.adapters.study_broker import (
     ALLOWED_CAPABILITIES,
@@ -22,6 +33,9 @@ from learning_os.adapters.study_broker import (
     ALLOWED_STUDY_COMMANDS,
     BrokerServer,
     StudyBroker,
+    dispatch_los_via_socket,
+    send_broker_request,
+    write_local_output_file,
 )
 from learning_os.app.gateway import (
     STUDY_FENCE_CORE_ENV,
@@ -706,3 +720,715 @@ def test_live_unix_socket_end_to_end_round_trip_and_fail_closed(
         timeout=60,
     )
     assert dead_proc.returncode == 2
+    assert "study broker unavailable" in dead_proc.stderr
+
+
+def test_broker_socket_incomplete_and_oversized_requests_never_stall_healthy_clients(
+    tmp_path: Path,
+) -> None:
+    """Requirement 1: stalled partial or oversized socket frames refuse fast without blocking peers."""
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner(rc=0, out='{"ok": true}\n')
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losres-", dir="/tmp")))
+    sock_path = sock_dir / "gate.sock"
+    server = BrokerServer(
+        broker,
+        sock_path,
+        read_timeout_s=0.35,
+        write_timeout_s=1.0,
+        max_request_bytes=512,
+        max_workers=8,
+    )
+    server.start()
+    try:
+        # 1. Stalled incomplete request stays open without newline; healthy peer must still succeed.
+        stalled = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        stalled.settimeout(3.0)
+        stalled.connect(str(sock_path))
+        stalled.sendall(b'{"tool": "los", "argv": ["stat')
+
+        try:
+            healthy = send_broker_request(
+                str(sock_path),
+                {"tool": "los", "argv": ["status", "--json"]},
+            )
+            assert healthy["exit_code"] == 0, healthy
+            assert healthy["stdout"] == '{"ok": true}\n'
+            assert len(runner.calls) == 1
+
+            chunks: list[bytes] = []
+            while True:
+                data = stalled.recv(4096)
+                if not data:
+                    break
+                chunks.append(data)
+            stalled_resp = json.loads(b"".join(chunks).decode("utf-8"))
+            assert stalled_resp["exit_code"] == 2
+            assert "timed out after" in stalled_resp["stderr"]
+        finally:
+            stalled.close()
+
+        # 2. Oversized request (both newline-terminated and streaming) fails closed cleanly.
+        for with_newline in (True, False):
+            big = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            big.settimeout(3.0)
+            big.connect(str(sock_path))
+            try:
+                frame = b'{"tool":"los","argv":["status"],"pad":"' + (b"x" * 1024) + b'"}'
+                if with_newline:
+                    frame += b"\n"
+                try:
+                    big.sendall(frame)
+                except OSError:
+                    pass
+                out_chunks: list[bytes] = []
+                while True:
+                    try:
+                        chunk = big.recv(4096)
+                    except OSError:
+                        break
+                    if not chunk:
+                        break
+                    out_chunks.append(chunk)
+                big_resp = json.loads(b"".join(out_chunks).decode("utf-8"))
+                assert big_resp["exit_code"] == 2
+                assert "exceeds max size" in big_resp["stderr"]
+            finally:
+                big.close()
+
+        # Broker remains healthy after timeout + oversize rejections.
+        after = send_broker_request(str(sock_path), {"tool": "los", "argv": ["status", "--json"]})
+        assert after["exit_code"] == 0
+        assert len(runner.calls) == 2
+    finally:
+        server.close()
+        shutil.rmtree(sock_dir, ignore_errors=True)
+
+
+def _pid_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def _wait_pid_dead(pid: int, timeout_s: float = 2.5) -> bool:
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        if not _pid_alive(pid):
+            return True
+        time.sleep(0.02)
+    return not _pid_alive(pid)
+
+
+def test_broker_core_subprocess_timeout_kills_process_group_and_recovers(
+    tmp_path: Path,
+) -> None:
+    """Requirement 2: hung Core subprocess + grandchild is killed and broker stays usable."""
+    core, scratch = _make_broker_world(tmp_path)
+    pids_file = scratch / "pids.json"
+    hang_flag = scratch / "hang.flag"
+    hang_flag.write_text("1", encoding="utf-8")
+
+    stub_los = core / "tools/los.py"
+    stub_los.write_text(
+        f"""
+import json, os, subprocess, sys, time
+from pathlib import Path
+
+hang_flag = Path({str(hang_flag)!r})
+pids_file = Path({str(pids_file)!r})
+if hang_flag.exists():
+    grand = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    pids_file.write_text(json.dumps({{"child": os.getpid(), "grand": grand.pid}}), encoding="utf-8")
+    sys.stdout.flush()
+    time.sleep(60)
+else:
+    print(json.dumps({{"ok": True, "args": sys.argv[1:]}}))
+""",
+        encoding="utf-8",
+    )
+
+    broker = StudyBroker(
+        core,
+        SESSION,
+        scratch_dir=scratch,
+        python_executable=Path(sys.executable),
+        core_timeout_s=0.35,
+    )
+    res_timeout = broker.handle_request({
+        "tool": "los",
+        "argv": ["status", "--json"],
+        "cwd": str(core),
+    })
+    assert res_timeout.exit_code == 2
+    assert "timed out after" in res_timeout.stderr
+    pids = json.loads(pids_file.read_text(encoding="utf-8"))
+    assert _wait_pid_dead(pids["child"]), f"orphan child {pids['child']} survived"
+    assert _wait_pid_dead(pids["grand"]), f"orphan grandchild {pids['grand']} survived"
+
+    # Removing hang trigger leaves the same broker healthy on subsequent requests.
+    hang_flag.unlink()
+    res_ok = broker.handle_request({
+        "tool": "los",
+        "argv": ["status", "--json"],
+        "cwd": str(core),
+    })
+    assert res_ok.exit_code == 0, res_ok.stderr
+    assert json.loads(res_ok.stdout)["ok"] is True
+
+    # Server close() also cancels an active hung process group without deadlocking.
+    hang_flag.write_text("1", encoding="utf-8")
+    pids_file.unlink()
+    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="loskill-", dir="/tmp")))
+    sock_path = sock_dir / "gate.sock"
+    long_broker = StudyBroker(
+        core,
+        SESSION,
+        scratch_dir=scratch,
+        python_executable=Path(sys.executable),
+        core_timeout_s=30.0,
+    )
+    server = BrokerServer(long_broker, sock_path)
+    server.start()
+    thread_exc: list[BaseException] = []
+    client_thread = threading.Thread(
+        target=lambda: _capture_client(str(sock_path), thread_exc),
+        daemon=True,
+    )
+    try:
+        client_thread.start()
+        deadline = time.monotonic() + 5.0
+        while not pids_file.exists() and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert pids_file.exists(), "Core stub did not start in time"
+        pids2 = json.loads(pids_file.read_text(encoding="utf-8"))
+    finally:
+        server.close()
+        client_thread.join(timeout=3.0)
+        shutil.rmtree(sock_dir, ignore_errors=True)
+    assert not client_thread.is_alive()
+    assert _wait_pid_dead(pids2["child"])
+    assert _wait_pid_dead(pids2["grand"])
+
+
+def _capture_client(sock_path: str, exc_out: list[BaseException]) -> None:
+    try:
+        send_broker_request(sock_path, {"tool": "los", "argv": ["status", "--json"]})
+    except BaseException as exc:
+        exc_out.append(exc)
+
+
+def test_path_race_concurrent_symlink_swap_blocks_secret_disclosure(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Requirement 3: concurrent symlink swapping never discloses outside or protected files."""
+    add_curriculum(mini_repo)
+    shutil.copytree(
+        ROOT / "tools",
+        mini_repo / "tools",
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+    )
+    (mini_repo / ".venv").symlink_to(ROOT / ".venv", target_is_directory=True)
+
+    outside_secret = tmp_path / "outside-secret.txt"
+    outside_secret.write_text("TOP_SECRET_CANARY_999\n", encoding="utf-8")
+    protected_secret = mini_repo.parent / "materials" / "secret-race.txt"
+    protected_secret.parent.mkdir(parents=True, exist_ok=True)
+    protected_secret.write_text("PROTECTED_MATERIAL_CANARY\n", encoding="utf-8")
+
+    scratch = Path(os.path.realpath(tmp_path / "scratch"))
+    scratch.mkdir(parents=True, exist_ok=True)
+    race_file = scratch / "capture-race.md"
+    race_file.write_text("Safe study capture text\n", encoding="utf-8")
+
+    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losrace-", dir="/tmp")))
+    sock_path = sock_dir / "gate.sock"
+    broker = StudyBroker(mini_repo, SESSION, scratch_dir=scratch)
+    server = BrokerServer(broker, sock_path)
+    server.start()
+
+    stop_race = threading.Event()
+
+    def _swapper() -> None:
+        counter = 0
+        while not stop_race.is_set():
+            tmp_entry = scratch / f".swap-{counter}"
+            try:
+                if counter % 2 == 0:
+                    tmp_entry.symlink_to(outside_secret)
+                else:
+                    tmp_entry.write_text("Safe study capture text\n", encoding="utf-8")
+                os.replace(tmp_entry, race_file)
+            except OSError:
+                tmp_entry.unlink(missing_ok=True)
+            counter += 1
+
+    racer = threading.Thread(target=_swapper, daemon=True)
+    py = str(mini_repo / ".venv/bin/python")
+    seal_py = str(mini_repo / "tools/seal_envelope.py")
+    env = dict(os.environ, LOS_GATE_SOCK=str(sock_path), PYTHONDONTWRITEBYTECODE="1")
+    try:
+        racer.start()
+        for idx in range(8):
+            proc = subprocess.run(
+                [
+                    py,
+                    seal_py,
+                    "--capability",
+                    "capture.create",
+                    "--payload",
+                    json.dumps({"file": str(race_file)}),
+                    "--key",
+                    f"race-key-{idx}",
+                    "--guards",
+                    "auto",
+                    "--submit",
+                ],
+                cwd=str(mini_repo),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+            assert "TOP_SECRET_CANARY_999" not in proc.stdout
+            assert "TOP_SECRET_CANARY_999" not in proc.stderr
+            if proc.returncode != 0:
+                assert proc.returncode == 2, proc.stderr
+                assert (
+                    "study mode blocks symlink" in proc.stderr
+                    or "outside the study boundary" in proc.stderr
+                ), proc.stderr
+            else:
+                res = json.loads(proc.stdout.splitlines()[0])
+                assert res["ok"] is True
+    finally:
+        stop_race.set()
+        racer.join(timeout=2.0)
+        server.close()
+        shutil.rmtree(sock_dir, ignore_errors=True)
+
+    # Every committed capture under knowledge/ must hold ONLY safe bytes, never the canary.
+    for path in (mini_repo / "knowledge").rglob("*"):
+        if path.is_file():
+            content = path.read_text(encoding="utf-8", errors="replace")
+            assert "TOP_SECRET_CANARY_999" not in content
+
+    # Direct O_NOFOLLOW fence enforcement inside Core rejects symlink swaps & nested dir symlinks.
+    monkeypatch.setenv(STUDY_FENCE_CORE_ENV, str(mini_repo))
+    monkeypatch.setenv(STUDY_FENCE_SCRATCH_ENV, str(scratch))
+    monkeypatch.delenv("LOS_STUDY_STAGED_MANIFEST", raising=False)
+    sym_direct = scratch / "direct-sym.md"
+    sym_direct.symlink_to(protected_secret)
+    with pytest.raises(WriteRefused, match=r"study mode blocks (symlink|direct|file)"):
+        read_content_bound_file(str(sym_direct), label="race file")
+    sym_dir = scratch / "dir-sym"
+    sym_dir.symlink_to(tmp_path)
+    with pytest.raises(WriteRefused, match="study mode blocks symlink"):
+        read_content_bound_file(str(sym_dir / "outside-secret.txt"), label="nested sym")
+    dangling = scratch / "dangling-sym.md"
+    dangling.symlink_to(scratch / "missing-target.md")
+    with pytest.raises(WriteRefused, match="study mode blocks symlink"):
+        read_content_bound_file(str(dangling), label="dangling sym")
+
+
+def test_privileged_output_paths_cannot_overwrite_or_escape_via_symlinks(
+    mini_repo: Path, tmp_path: Path,
+) -> None:
+    """Requirement 4: --report-out, --check-out, and --out block overwrites and symlinks."""
+    _compact_setup(mini_repo)
+    shutil.copytree(
+        ROOT / "tools",
+        mini_repo / "tools",
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+    )
+    (mini_repo / ".venv").symlink_to(ROOT / ".venv", target_is_directory=True)
+
+    scratch = Path(os.path.realpath(tmp_path / "scratch"))
+    scratch.mkdir(parents=True, exist_ok=True)
+    draft = scratch / "revision.yaml"
+    write_yaml(
+        draft,
+        _compact_revision(
+            mini_repo,
+            route_changes={
+                "update": [
+                    {
+                        "route_id": "route-demo-book",
+                        "fields": {"angle": "A sharper mediated study angle."},
+                    }
+                ]
+            },
+        ),
+    )
+
+    outside_sentinel = tmp_path / "outside-sentinel.json"
+    outside_sentinel.write_text('{"sentinel": "intact"}\n', encoding="utf-8")
+    outside_dir = tmp_path / "outside-dir"
+    outside_dir.mkdir()
+    outside_existing_sub = outside_dir / "existing-sub"
+    outside_existing_sub.mkdir()
+
+    sym_to_outside = scratch / "sym-out.json"
+    sym_to_outside.symlink_to(outside_sentinel)
+    sym_dir_to_outside = scratch / "sym-dir"
+    sym_dir_to_outside.symlink_to(outside_dir)
+    dangling_in_scratch = scratch / "dangling-out.json"
+    dangling_in_scratch.symlink_to(scratch / "never-created.json")
+    existing_in_scratch = scratch / "existing.json"
+    existing_in_scratch.write_text('{"keep": true}\n', encoding="utf-8")
+    hard_to_outside = scratch / "hard-out.json"
+    os.link(outside_sentinel, hard_to_outside)
+    hard_to_scratch = scratch / "hard-scratch.json"
+    os.link(existing_in_scratch, hard_to_scratch)
+
+    sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losout-", dir="/tmp")))
+    sock_path = sock_dir / "gate.sock"
+    stage_root = tmp_path / "broker-stage"
+    broker = StudyBroker(mini_repo, SESSION, scratch_dir=scratch, stage_root=stage_root)
+    server = BrokerServer(broker, sock_path)
+    server.start()
+
+    py = str(mini_repo / ".venv/bin/python")
+    los_py = str(mini_repo / "tools/los.py")
+    seal_py = str(mini_repo / "tools/seal_envelope.py")
+    env = dict(
+        os.environ,
+        LOS_GATE_SOCK=str(sock_path),
+        LOS_SCRATCH_DIR=str(scratch),
+        PYTHONDONTWRITEBYTECODE="1",
+    )
+    try:
+        # 1. Valid mediated unit-plan-revise --check --report-out writes locally with matching SHA-256.
+        valid_report = scratch / "mediated-report.json"
+        ok_rev = subprocess.run(
+            [
+                py,
+                los_py,
+                "unit-plan-revise",
+                "unit-demo-l01",
+                "--file",
+                str(draft),
+                "--check",
+                "--report-out",
+                str(valid_report),
+            ],
+            cwd=str(mini_repo),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert ok_rev.returncode == 0, ok_rev.stderr
+        assert valid_report.is_file()
+        compact = json.loads(ok_rev.stdout)
+        saved_meta = compact["saved_report"]
+        assert Path(saved_meta["path"]) == valid_report
+        assert saved_meta["sha256"] == "sha256:" + hashlib.sha256(valid_report.read_bytes()).hexdigest()
+        assert json.loads(valid_report.read_text(encoding="utf-8"))["ok"] is True
+
+        # 2. Symlink, symlinked dir (both existing-sub and nested), hardlinks, dangling symlink,
+        #    protected path, outside-scratch path, pre-existing file, and == draft refusals
+        #    hold identically across both CLI-mediated execution and direct broker RPC.
+        bad_report_targets = [
+            (str(sym_to_outside), ("study mode blocks symlink", "outside the study boundary")),
+            (str(sym_dir_to_outside / "leak.json"), ("study mode blocks symlink", "outside the study boundary")),
+            (str(sym_dir_to_outside / "existing-sub" / "leak.json"), ("study mode blocks symlink", "outside the study boundary")),
+            (str(dangling_in_scratch), ("study mode blocks symlink",)),
+            (str(hard_to_outside), ("already exists; refusing to overwrite",)),
+            (str(hard_to_scratch), ("already exists; refusing to overwrite",)),
+            (str(outside_dir / "leak.json"), ("outside the study boundary",)),
+            (str(mini_repo / "operations/ai-actions/requests/leak.json"), ("inside protected LearningOS tree", "outside the study boundary")),
+            (str(mini_repo / "knowledge/leak.json"), ("outside the study boundary",)),
+            (str(existing_in_scratch), ("already exists; refusing to overwrite",)),
+            (str(scratch), ("must be a file inside study scratch",)),
+            (str(draft), ("must not replace the reviewed draft",)),
+        ]
+        for bad_path, expected_fragments in bad_report_targets:
+            bad_proc = subprocess.run(
+                [
+                    py,
+                    los_py,
+                    "unit-plan-revise",
+                    "unit-demo-l01",
+                    "--file",
+                    str(draft),
+                    "--check",
+                    "--report-out",
+                    bad_path,
+                ],
+                cwd=str(mini_repo),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+            assert bad_proc.returncode == 2, (bad_path, bad_proc.stderr)
+            assert any(frag in bad_proc.stderr for frag in expected_fragments), (
+                bad_path,
+                bad_proc.stderr,
+            )
+
+        # 3. seal_envelope --check-out and --out reject symlinks, hardlinks, dangling symlinks,
+        #    parent symlinks (existing-sub + nested), outside-scratch, and protected paths
+        #    across CLI shim and direct socket RPC.
+        payload_json = json.dumps({"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "x"})
+        bad_seal_targets = [
+            (str(sym_to_outside), ("study mode blocks symlink",)),
+            (str(sym_dir_to_outside / "leak.json"), ("study mode blocks symlink",)),
+            (str(sym_dir_to_outside / "existing-sub" / "leak.json"), ("study mode blocks symlink",)),
+            (str(dangling_in_scratch), ("study mode blocks symlink",)),
+            (str(hard_to_outside), ("study mode blocks hardlink",)),
+            (str(hard_to_scratch), ("study mode blocks hardlink",)),
+            (str(outside_dir / "leak.json"), ("outside the study boundary",)),
+            (str(scratch), ("must be a file inside study scratch",)),
+            (
+                str(mini_repo / "operations/ai-actions/requests/leak.json"),
+                ("refusing to write", "inside protected LearningOS tree", "outside the study boundary"),
+            ),
+        ]
+        for flag in ("--check-out", "--out"):
+            for bad_path, expected_fragments in bad_seal_targets:
+                seal_bad = subprocess.run(
+                    [
+                        py,
+                        seal_py,
+                        "--capability",
+                        "stage.note.write",
+                        "--payload",
+                        payload_json,
+                        "--key",
+                        f"k-cli-{flag.strip('-')}",
+                        "--guards",
+                        "auto",
+                        flag,
+                        bad_path,
+                    ],
+                    cwd=str(mini_repo),
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                )
+                assert seal_bad.returncode == 2, (flag, bad_path, seal_bad.stderr)
+                assert any(frag in seal_bad.stderr for frag in expected_fragments), (
+                    flag,
+                    bad_path,
+                    seal_bad.stderr,
+                )
+
+        # Verify invalid --report-out, --check-out, and --out are rejected on direct RPC BEFORE
+        # any privileged Core execution begins (runner spy calls == 0).
+        core_runner_calls = 0
+
+        def _never_run_core(*_args: object, **_kwargs: object) -> tuple[int, str, str]:
+            nonlocal core_runner_calls
+            core_runner_calls += 1
+            raise AssertionError("privileged Core should never run for invalid output path")
+
+        spy_broker = StudyBroker(
+            mini_repo,
+            SESSION,
+            scratch_dir=scratch,
+            stage_root=stage_root,
+            runner=_never_run_core,
+        )
+        spy_sock = sock_dir / "spy.sock"
+        spy_server = BrokerServer(spy_broker, spy_sock)
+        spy_server.start()
+        try:
+            for bad_path, expected_fragments in bad_report_targets:
+                direct_los = send_broker_request(
+                    str(spy_sock),
+                    {
+                        "tool": "los",
+                        "argv": [
+                            "unit-plan-revise",
+                            "unit-demo-l01",
+                            "--file",
+                            str(draft),
+                            "--check",
+                            "--report-out",
+                            bad_path,
+                        ],
+                        "cwd": str(mini_repo),
+                    },
+                )
+                assert direct_los["exit_code"] == 2, (bad_path, direct_los)
+                err_text = str(direct_los.get("stderr", ""))
+                assert any(frag in err_text for frag in expected_fragments), (bad_path, err_text)
+
+            for flag in ("--check-out", "--out"):
+                for bad_path, expected_fragments in bad_seal_targets:
+                    broker_fragments = tuple(
+                        frag for frag in expected_fragments if frag != "refusing to write"
+                    )
+                    direct_resp = send_broker_request(
+                        str(spy_sock),
+                        {
+                            "tool": "seal_envelope",
+                            "argv": [
+                                "--capability",
+                                "stage.note.write",
+                                "--payload",
+                                payload_json,
+                                "--key",
+                                f"k-rpc-{flag.strip('-')}",
+                                "--guards",
+                                "auto",
+                                flag,
+                                bad_path,
+                            ],
+                            "cwd": str(mini_repo),
+                        },
+                    )
+                    assert direct_resp["exit_code"] == 2, (flag, bad_path, direct_resp)
+                    err_text = str(direct_resp.get("stderr", ""))
+                    assert any(frag in err_text for frag in broker_fragments), (
+                        flag,
+                        bad_path,
+                        err_text,
+                    )
+            assert core_runner_calls == 0
+        finally:
+            spy_server.close()
+
+        # Valid --check-out and --out write cleanly locally in scratch without touching core.
+        valid_check = scratch / "mediated-seal-check.json"
+        valid_env = scratch / "mediated-seal-env.json"
+        seal_check_ok = subprocess.run(
+            [
+                py,
+                seal_py,
+                "--capability",
+                "stage.note.write",
+                "--payload",
+                payload_json,
+                "--key",
+                "k-valid-check",
+                "--guards",
+                "auto",
+                "--check-out",
+                str(valid_check),
+            ],
+            cwd=str(mini_repo),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert seal_check_ok.returncode == 0, seal_check_ok.stderr
+        assert json.loads(valid_check.read_text(encoding="utf-8"))["ok"] is True
+
+        seal_out_ok = subprocess.run(
+            [
+                py,
+                seal_py,
+                "--capability",
+                "stage.note.write",
+                "--payload",
+                payload_json,
+                "--key",
+                "k-valid-out",
+                "--guards",
+                "auto",
+                "--out",
+                str(valid_env),
+            ],
+            cwd=str(mini_repo),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert seal_out_ok.returncode == 0, seal_out_ok.stderr
+        assert json.loads(valid_env.read_text(encoding="utf-8"))["capability"] == "stage.note.write"
+
+        # Client-side local output helper refuses symlinks, hardlinks, parent symlinks, and outside-scratch targets.
+        for bad_local, expected_errnos in (
+            (sym_to_outside, (errno.ELOOP,)),
+            (dangling_in_scratch, (errno.ELOOP,)),
+            (sym_dir_to_outside / "nested" / "leak.json", (errno.ELOOP,)),
+            (sym_dir_to_outside / "existing-sub" / "leak.json", (errno.ELOOP,)),
+            (hard_to_outside, (errno.EMLINK,)),
+            (hard_to_scratch, (errno.EMLINK,)),
+            (outside_dir / "escape.json", (errno.EACCES,)),
+        ):
+            with pytest.raises(OSError) as exc_info:
+                write_local_output_file(
+                    str(bad_local), '{"pwn": true}\n', mkdir_parents=True, scratch_dir=scratch,
+                )
+            assert exc_info.value.errno in expected_errnos, (bad_local, exc_info.value)
+
+        # Concurrent parent-directory symlink swap during client local write cannot write to outside_dir.
+        race_dir = scratch / "race-parent"
+        stop_race = threading.Event()
+        errors_race: list[BaseException] = []
+
+        def _swap_parent() -> None:
+            while not stop_race.is_set():
+                try:
+                    if race_dir.is_symlink():
+                        race_dir.unlink()
+                    elif race_dir.exists():
+                        shutil.rmtree(race_dir, ignore_errors=True)
+                    race_dir.symlink_to(outside_dir)
+                except OSError:
+                    pass
+
+        swapper = threading.Thread(target=_swap_parent, daemon=True)
+        swapper.start()
+        try:
+            for i in range(40):
+                try:
+                    write_local_output_file(
+                        str(race_dir / "sub" / f"out-{i}.json"),
+                        '{"ok": true}\n',
+                        mkdir_parents=True,
+                        scratch_dir=scratch,
+                    )
+                except OSError as exc:
+                    if exc.errno not in (errno.ELOOP, errno.EEXIST, errno.ENOENT, errno.ENOTDIR):
+                        errors_race.append(exc)
+        finally:
+            stop_race.set()
+            swapper.join(timeout=2.0)
+        assert not errors_race, errors_race
+        assert not (outside_dir / "sub").exists()
+
+        assert outside_sentinel.read_text(encoding="utf-8") == '{"sentinel": "intact"}\n'
+        assert existing_in_scratch.read_text(encoding="utf-8") == '{"keep": true}\n'
+        assert not (outside_dir / "leak.json").exists()
+        assert not (outside_existing_sub / "leak.json").exists()
+        assert not (outside_dir / "escape.json").exists()
+        assert not (mini_repo / "operations/ai-actions/requests/leak.json").exists()
+
+        # 4. Client local --report-out write fails closed if target becomes a symlink or hardlink before write.
+        old_cwd = os.getcwd()
+        os.chdir(mini_repo)
+        try:
+            res = dispatch_los_via_socket(
+                str(sock_path),
+                [
+                    "unit-plan-revise",
+                    "unit-demo-l01",
+                    "--file",
+                    str(draft),
+                    "--check",
+                    "--report-out",
+                    str(dangling_in_scratch),
+                ],
+            )
+            assert res == 2
+        finally:
+            os.chdir(old_cwd)
+        assert not (scratch / "never-created.json").exists()
+    finally:
+        server.close()
+        shutil.rmtree(sock_dir, ignore_errors=True)

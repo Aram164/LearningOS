@@ -34,12 +34,13 @@ from learning_os.adapters.study_broker import (
     build_seal_parser,
     normalize_check_record,
     send_broker_request,
+    write_local_output_file,
 )
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
 from learning_os.app.gateway import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
-    check_study_path,
+    read_optional_study_or_staged_file,
 )
 from learning_os.app.registry import REGISTRY
 from learning_os.domain.failures import WriteRefused
@@ -122,12 +123,11 @@ def _bind_file_digests(root: Path, capability: str, payload: dict,
                 or (name in payload and not force) \
                 or not isinstance(value, str) or value == "-":
             continue
-        source = Path(value).expanduser().resolve()
         fence_core = os.environ.get(STUDY_FENCE_CORE_ENV)
         if fence_core:
             fence_scratch = os.environ.get(STUDY_FENCE_SCRATCH_ENV)
             try:
-                check_study_path(
+                _study_path, content = read_optional_study_or_staged_file(
                     value,
                     core_root=Path(fence_core),
                     scratch_dir=Path(fence_scratch) if fence_scratch else None,
@@ -135,9 +135,14 @@ def _bind_file_digests(root: Path, capability: str, payload: dict,
                 )
             except WriteRefused as exc:
                 raise ValueError(str(exc)) from exc
-        if not source.is_file():
-            continue  # the handler's own refusal names the missing file
-        bound[name] = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
+            if content is None:
+                continue  # the handler's own refusal names the missing file
+        else:
+            source = Path(value).expanduser().resolve()
+            if not source.is_file():
+                continue  # the handler's own refusal names the missing file
+            content = source.read_bytes()
+        bound[name] = "sha256:" + hashlib.sha256(content).hexdigest()
         print(f"seal_envelope: bound {name} to the bytes of {value}", file=sys.stderr)
     return bound
 
@@ -747,9 +752,7 @@ def _dispatch_via_socket(
     check_out_raw = resp.get("check_out_text")
     if args.check_out and isinstance(check_out_raw, str):
         try:
-            check_target = Path(args.check_out).expanduser()
-            check_target.parent.mkdir(parents=True, exist_ok=True)
-            check_target.write_text(check_out_raw, encoding="utf-8")
+            write_local_output_file(args.check_out, check_out_raw, mkdir_parents=True)
         except OSError as exc:
             print(f"seal_envelope: cannot write --check-out {args.check_out}: {exc}",
                   file=sys.stderr)
@@ -759,9 +762,7 @@ def _dispatch_via_socket(
     out = resp.get("stdout")
     if args.out and exit_code == 0 and isinstance(out, str):
         try:
-            out_target = Path(args.out).expanduser()
-            out_target.parent.mkdir(parents=True, exist_ok=True)
-            out_target.write_text(out, encoding="utf-8")
+            write_local_output_file(args.out, out, mkdir_parents=True)
         except OSError as exc:
             print(f"seal_envelope: cannot write --out {args.out}: {exc}",
                   file=sys.stderr)
