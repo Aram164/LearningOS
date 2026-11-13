@@ -161,7 +161,7 @@ def test_stop_asks_twice_then_marks_overdue_and_session_start_reports_it(world: 
     ended = _hook(world, "session-end", {"session_id": S})
     assert ended.returncode == 0, ended.stderr
     other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
-    assert f"los material-card-settle --adopt {S}" in other.stdout
+    assert f".venv/bin/python tools/los.py material-card-settle --adopt {S}" in other.stdout
 
 
 def test_session_end_records_end_and_unknown_session_is_harmless(world: Path) -> None:
@@ -171,7 +171,7 @@ def test_session_end_records_end_and_unknown_session_is_harmless(world: Path) ->
     assert result.returncode == 0, result.stderr
     assert "session end recorded" in result.stdout
     other = _hook(world, "session-start", {"session_id": OTHER, "source": "startup"})
-    assert f"los material-card-settle --adopt {S}" in other.stdout
+    assert f".venv/bin/python tools/los.py material-card-settle --adopt {S}" in other.stdout
 
 
 def test_profile_writer_wires_ux_hooks_only_and_never_overwrites(tmp_path: Path) -> None:

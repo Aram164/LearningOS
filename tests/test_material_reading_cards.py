@@ -190,7 +190,7 @@ def test_adoption_refuses_a_live_session_and_takes_an_idle_or_ended_one(world):
     _ok(_read(world, B, "pdf p. 9"))
     # Two hours without a gateway call make A adoptable, which blocks every other session's new spans.
     blocked = _refused(_read(world, B, "pdf p. 10", now=LATER), "adopt and settle them")
-    assert entry in blocked and f"los material-card-settle --adopt {A}" in blocked
+    assert entry in blocked and f".venv/bin/python tools/los.py material-card-settle --adopt {A}" in blocked
     adopted = _ok(_settle(world, B, "--adopt", A, now=LATER))
     assert adopted["outcome"] == "adopted" and [row["entry"] for row in adopted["entries"]] == [entry]
     assert adopted["entries"][0]["state"] == "overdue"
@@ -927,11 +927,26 @@ def test_comma_separated_discontiguous_pages_refuse_fail_closed_in_study(world):
 
 
 def test_settle_hints_and_cli_help_advertise_treatment_kinds(world):
-    from learning_os.store.materials.reading_cards import TREATMENT_KINDS, settle_command
+    from learning_os.store.materials.reading_cards import (
+        LOS_COMMAND,
+        TREATMENT_KINDS,
+        adopt_command,
+        settle_command,
+        treatment_kinds_hint,
+    )
 
-    hint = settle_command("rd-0123456789abcdef")
+    cmd = settle_command("rd-0123456789abcdef")
+    adopt = adopt_command(A)
+    kinds_prose = treatment_kinds_hint()
+    assert cmd.startswith(f"{LOS_COMMAND} material-card-settle rd-0123456789abcdef ")
+    assert adopt == f"{LOS_COMMAND} material-card-settle --adopt {A}"
+    assert "(kinds:" not in cmd
+    payload = _ok(_read(world, A, "pdf p. 2"))
+    next_action = payload["study"]["next_action"]
+    assert f"Commands: {LOS_COMMAND} material-card-settle " in next_action
     help_out = _los(world, "material-card-settle", "--help")
     assert help_out.returncode == 0
     for kind in TREATMENT_KINDS:
-        assert kind in hint
+        assert kind in kinds_prose
+        assert kind in next_action
         assert kind in help_out.stdout

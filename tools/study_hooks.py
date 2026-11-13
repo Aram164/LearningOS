@@ -42,6 +42,7 @@ from learning_os.store.materials.reading_cards import (  # noqa: E402
     adopt_command,
     entry_view,
     settle_command,
+    treatment_kinds_hint,
     valid_session,
 )
 
@@ -95,8 +96,8 @@ def session_start(event: dict[str, object]) -> str:
         f"- Reading pages that no card covers opens a reading entry. Hold at most "
         f"{MAX_OPEN_ENTRIES} open entries, and settle each before your turn ends: "
         ".venv/bin/python tools/los.py material-card-settle ENTRY --card '{...}' or --dismiss "
-        "irrelevant --reason '...'. Cards are private and unreviewed; reads show them beside the text "
-        "unless --omit-covered-text is passed.",
+        f"irrelevant --reason '...'. {treatment_kinds_hint()} Cards are private and unreviewed; "
+        "reads show them beside the text unless --omit-covered-text is passed.",
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
         "(seal_envelope.py --submit validates on the host; run validate.py with --no-report "
         "inside study mode and commit outside study mode).",
@@ -185,7 +186,7 @@ def stop(event: dict[str, object]) -> dict[str, object] | None:
             "decision": "block",
             "reason": (
                 f"Settle your reading entries before ending the turn (ask {decision.asked} of 2): "
-                f"{listing}. For each, save a card or dismiss it: "
+                f"{listing}. {treatment_kinds_hint()} For each, save a card or dismiss it: "
                 + "  ||  ".join(
                     settle_command(cast(str, row["entry"]))
                     for row in decision.entries
