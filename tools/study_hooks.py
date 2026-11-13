@@ -39,9 +39,9 @@ from learning_os.store.materials.reading_cards import (  # noqa: E402
     MAX_OPEN_ENTRIES,
     ReadingStore,
     ReadingStoreError,
-    adopt_command,
     entry_view,
-    settle_command,
+    join_adopt_commands,
+    join_settle_commands,
     treatment_kinds_hint,
     valid_session,
 )
@@ -85,18 +85,22 @@ def session_start(event: dict[str, object]) -> str:
     session = event.get("session_id")
     lines = [
         "LearningOS study profile (reading memory, ADR-021).",
-        "- Start with: .venv/bin/python tools/los.py bootstrap --brief. "
-        "Search first: .venv/bin/python tools/los.py material-search \"QUERY\" "
-        "(or material-context) to check existing reading cards before opening PDFs.",
-        "- Read narrow pages first (`span_reference` / targeted `pdf p. N`, avoiding wide bundles "
-        "over unsectioned PDFs): .venv/bin/python tools/los.py material-span --material PATH "
-        "--pages \"pdf p. N\" --extract (or material-span UNIT ROUTE --extract). "
-        "Add --omit-covered-text when checking an already-covered span; dismiss isolated irrelevant "
-        "pages with --dismiss irrelevant.",
+        "- Start with:\n"
+        "  .venv/bin/python tools/los.py bootstrap --brief\n"
+        "- Search first to check existing reading cards before opening PDFs:\n"
+        "  .venv/bin/python tools/los.py material-search \"QUERY\"\n"
+        "  .venv/bin/python tools/los.py material-context \"QUERY\"",
+        "- Read narrow pages first (`span_reference` / targeted `pdf p. N`, avoiding wide "
+        "bundles over unsectioned PDFs):\n"
+        "  .venv/bin/python tools/los.py material-span --material PATH --pages \"pdf p. N\" --extract\n"
+        "  .venv/bin/python tools/los.py material-span UNIT ROUTE --extract\n"
+        "  Add --omit-covered-text when checking an already-covered span; dismiss isolated "
+        "irrelevant pages with --dismiss irrelevant.",
         f"- Reading pages that no card covers opens a reading entry. Hold at most "
-        f"{MAX_OPEN_ENTRIES} open entries, and settle each before your turn ends: "
-        ".venv/bin/python tools/los.py material-card-settle ENTRY --card '{...}' or --dismiss "
-        f"irrelevant --reason '...'. {treatment_kinds_hint()} Cards are private and unreviewed; "
+        f"{MAX_OPEN_ENTRIES} open entries, and settle each before your turn ends:\n"
+        "  .venv/bin/python tools/los.py material-card-settle ENTRY --card '{...}'\n"
+        "  .venv/bin/python tools/los.py material-card-settle ENTRY --dismiss irrelevant --reason '...'\n"
+        f"  {treatment_kinds_hint()} Cards are private and unreviewed; "
         "reads show them beside the text unless --omit-covered-text is passed.",
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
         "(seal_envelope.py --submit validates on the host; run validate.py with --no-report "
@@ -132,8 +136,8 @@ def session_start(event: dict[str, object]) -> str:
         count = sum(len(rows) for rows in adoptable.values())
         lines.append(
             f"- {count} entries of ended or idle sessions are adoptable; adopt and "
-            "settle them before reading new pages: "
-            + "; ".join(adopt_command(name) for name in adoptable)
+            "settle them before reading new pages:\n"
+            + join_adopt_commands(adoptable)
         )
     else:
         lines.append("- No adoptable entries.")
@@ -186,10 +190,10 @@ def stop(event: dict[str, object]) -> dict[str, object] | None:
             "decision": "block",
             "reason": (
                 f"Settle your reading entries before ending the turn (ask {decision.asked} of 2): "
-                f"{listing}. {treatment_kinds_hint()} For each, save a card or dismiss it: "
-                + "  ||  ".join(
-                    settle_command(cast(str, row["entry"]))
-                    for row in decision.entries
+                f"{listing}. {treatment_kinds_hint()} Save a card or dismiss each entry by "
+                "running one command at a time:\n"
+                + join_settle_commands(
+                    cast(str, row["entry"]) for row in decision.entries
                 )
             ),
         }

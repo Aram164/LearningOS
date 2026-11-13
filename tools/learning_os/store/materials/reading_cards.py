@@ -160,20 +160,38 @@ def treatment_kinds_hint() -> str:
 
 
 def settle_command(entry: str) -> str:
-    """The exact save and dismiss forms for one entry (C1.6)."""
-    return (
+    """The exact save and dismiss commands for one entry, separated without shell operators (C1.6)."""
+    save = (
         f"{LOS_COMMAND} material-card-settle {entry} --card "
         "'{\"paraphrase\": \"<what these pages do, in your words>\", "
         "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
-        "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'  |  "
+        "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'"
+    )
+    dismiss = (
         f"{LOS_COMMAND} material-card-settle {entry} --dismiss irrelevant "
         "--reason '<why>'"
     )
+    return f"{save}\nOr dismiss that entry:\n{dismiss}"
+
+
+def join_settle_commands(entries: Iterable[str]) -> str:
+    """Format settle commands for one or more entries without shell operators."""
+    entry_list = list(entries)
+    if not entry_list:
+        return ""
+    if len(entry_list) == 1:
+        return settle_command(entry_list[0])
+    return "\n".join(f"Entry {entry}:\n{settle_command(entry)}" for entry in entry_list)
 
 
 def adopt_command(session: str) -> str:
     """The exact adoption form for one ended or idle session (C7)."""
     return f"{LOS_COMMAND} material-card-settle --adopt {session}"
+
+
+def join_adopt_commands(sessions: Iterable[str]) -> str:
+    """Format adopt commands for one or more sessions without shell operators."""
+    return "\n".join(adopt_command(session) for session in sessions)
 
 
 @dataclass(frozen=True)
@@ -1075,6 +1093,6 @@ __all__ = [
     "ADOPT_IDLE", "LOS_COMMAND", "MAX_OPEN_ENTRIES", "STOP_ASKS", "STORE_DIRNAME",
     "TREATMENT_KINDS", "Admission", "Read", "ReadingStore", "ReadingStoreError",
     "SettleRefusal", "Settlement", "StopDecision", "adopt_command", "admit_card",
-    "card_name", "entry_view", "pages_label", "settle_command",
-    "store_root", "treatment_kinds_hint", "valid_session",
+    "card_name", "entry_view", "join_adopt_commands", "join_settle_commands",
+    "pages_label", "settle_command", "store_root", "treatment_kinds_hint", "valid_session",
 ]
