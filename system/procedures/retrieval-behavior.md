@@ -135,7 +135,8 @@ or one with PDF hits only, says nothing about them. When `material-span`
 returns a cut-off extract, its `next_action` carries this same instruction.
 
 In sandboxed study mode (`--session` / study launch), inspect inline
-`study_cards` returned by `material-search` and `material-context` before
+reading cards (`hits[].cards` and `study` on `material-search`; `study_cards`
+on `material-context`) before
 opening PDF pages, narrow unsectioned PDFs to the hit's `span_reference` /
 uncovered pages rather than wide multi-page ranges, add `--omit-covered-text`
 on `material-study-span` (or `material-span ... --extract`) when checking

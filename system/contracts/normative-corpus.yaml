@@ -1302,7 +1302,25 @@ documents:
       Keeps reading cards and reading debts in a private, owner-only store
       beside the repository (LearningOS/reading-memory/), outside Core Git,
       the materials inventory and the manifest, and collects every uncovered
-      study read as a debt the gateway and the study profile's hooks enforce.
+      study read as a debt the gateway collects (session isolation amended by
+      ADR-022).
+
+  - path: system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md
+    audience: developer
+    applies_to: []
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Establishes the OS-enforced study boundary (macOS Seatbelt plus
+      host-side default-deny broker over LOS_GATE_SOCK), extends read denial
+      to generated/summaries/, declares optional LearningOS/.claude UX hooks,
+      scopes host runtime caches and Claude-only v1 certification, and records
+      Option B fidelity for covered spans.
+    amends:
+      - system/adr/ADR-021-private-reading-memory-2026-11-12.md
+      - system/ARCHITECTURE.md
 
   # ---- dated reviews (findings, not decisions) -----------------------------
 

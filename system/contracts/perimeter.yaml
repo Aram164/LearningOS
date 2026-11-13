@@ -169,6 +169,15 @@ entries:
       (ADR-021); created on demand outside Core Git, never required ahead of
       first use.
 
+  - path: LearningOS/.claude
+    kind: directory
+    optional: true
+    owner: agent-config
+    purpose: >-
+      Opt-in study-profile Claude Code UX hook settings
+      (tools/study_hooks.py profile --out LearningOS; ADR-022); optional and
+      outside Core Git.
+
   - path: LearningOS/projects
     kind: directory
     owner: projects

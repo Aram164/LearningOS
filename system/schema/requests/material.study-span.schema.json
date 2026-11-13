@@ -115,7 +115,7 @@
     },
     "extract": {
       "type": "boolean",
-      "description": "required: a study read always reads the bounded excerpt (the study hook rewrites material-span --extract into this command)",
+      "description": "required: a study read always reads the bounded excerpt (the study broker rewrites material-span --extract into this command)",
       "x-los-cli": {
         "flags": [
           "--extract"
@@ -222,7 +222,7 @@
     },
     "session": {
       "type": "string",
-      "description": "the calling study session, injected by the study profile's PreToolUse hook from its own input (a lowercase UUID); a study read without it refuses",
+      "description": "the calling study session UUID, pinned by the study broker over LOS_GATE_SOCK (or supplied directly off-sandbox); a study read without it refuses",
       "x-los-cli": {
         "flags": [
           "--session"

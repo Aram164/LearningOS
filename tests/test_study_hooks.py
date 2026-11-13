@@ -126,6 +126,7 @@ def test_session_start_touches_store_and_reports_clean_state(_in_process_store: 
     existed = beside.exists()
     out = study_hooks.session_start({"session_id": S, "source": "startup"})
     assert ".venv/bin/python tools/los.py bootstrap --brief" in out
+    assert "LOS_GATE_SOCK unset" in out
     assert "--omit-covered-text" in out
     assert "$LOS_SCRATCH_DIR" in out
     assert "No adoptable entries." in out

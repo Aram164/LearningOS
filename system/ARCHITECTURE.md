@@ -771,3 +771,19 @@ resolving to canonical Module, Unit or workspace owners; a broken alias still
 fails validation. The historical Project collections and their manifest keys
 are retired. Producer/consumer change mechanics:
 [projection component](developer/components/projection.md).
+
+## Sandboxed study mode
+
+Study-mode agents run under a launcher-built macOS Seatbelt sandbox
+(`tools/study_launch.py`) paired with an unsandboxed default-deny AF_UNIX
+gateway broker (`tools/learning_os/adapters/study_broker.py`). Seatbelt
+denies reads across the closed material, text-cache, search-index, outline,
+derived-state, summary, request-slice, and private `LearningOS/reading-memory/`
+trees defined in `tools/learning_os/store/study_fence.py` while denying all
+writes to `LearningOS/`. Gateway reads and study-store writes traverse
+`LOS_GATE_SOCK` with launcher-pinned session identity; canonical writes remain
+separated on the host behind signed approval envelopes
+(`tools/seal_envelope.py`). Optional UX lifecycle hooks live in
+`LearningOS/.claude` (`optional: true` in `system/contracts/perimeter.yaml`).
+Decisions and scope boundaries:
+[ADR-022](adr/ADR-022-sandboxed-study-isolation-2026-11-13.md).

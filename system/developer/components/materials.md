@@ -53,3 +53,4 @@ line ranges. All forms bind the registered digest and reject changed bytes.
 - `system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md`
 - `system/adr/ADR-020-derived-material-search-index-2026-11-08.md`
 - `system/adr/ADR-021-private-reading-memory-2026-11-12.md`
+- `system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md`

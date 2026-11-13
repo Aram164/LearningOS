@@ -226,7 +226,7 @@
     },
     "session": {
       "type": "string",
-      "description": "the calling study session, injected by the study profile's PreToolUse hook (a lowercase UUID); required",
+      "description": "the calling study session UUID, pinned by the study broker over LOS_GATE_SOCK (or supplied directly off-sandbox); required",
       "x-los-cli": {
         "flags": [
           "--session"
