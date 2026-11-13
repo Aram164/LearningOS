@@ -8,7 +8,7 @@ import json
 import shutil
 from pathlib import Path, PurePosixPath
 
-import jsonschema
+from jsonschema import ValidationError
 
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import prepare_review_envelope
@@ -20,7 +20,7 @@ from learning_os.app.registry import OperationEffects, register
 from learning_os.domain import ids
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
-from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.codec import render_exact_note as _analysis_render_exact_note
 from learning_os.store.contracts.batch_notes import (
     ANALYSIS_FIELDS,
     ANALYSIS_FIELDS_ORDERED,
@@ -30,6 +30,7 @@ from learning_os.store.contracts.batch_notes import (
     BATCH_MAX_NOTES,
     BATCH_MIN_NOTES,
 )
+from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.material_analysis import (
     binding_consistent,
@@ -206,22 +207,13 @@ def _analysis_safe(root: Path, path: Path) -> Path:
 
 
 def _analysis_schema(root: Path, name: str, data: object) -> None:
-    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    validator = load_standalone_validator(
+        root / f"system/schema/{name}.schema.json", format_checker=True,
+    )
     try:
-        jsonschema.Draft202012Validator(
-            schema, format_checker=jsonschema.FormatChecker()).validate(data)
-    except jsonschema.ValidationError as exc:
+        validator.validate(data)
+    except ValidationError as exc:
         raise WriteRefused(f"{name}: {exc.message}") from exc
-
-
-def _analysis_render_exact_note(meta: dict, body: bytes) -> bytes:
-    """Frontmatter plus the body bytes verbatim.
-
-    Unlike the ordinary renderer this never strips leading whitespace: the
-    bytes after the frontmatter block are exactly the preserved analysis.
-    """
-    front = "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n"
-    return front.encode("utf-8") + body
 
 
 def _analysis_destination(root: Path, note_id: str, relpath: object) -> Path:

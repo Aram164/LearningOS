@@ -67,4 +67,3 @@ def session_end_command(ctx: OpContext, req: dict) -> Result:
             str(exc), site=f"{ctx.operation}.head-changed",
             prefixed=True, exit_code=2) from exc
     return Result(outcome)
-    return Result(outcome)

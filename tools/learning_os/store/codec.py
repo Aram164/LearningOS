@@ -21,6 +21,12 @@ def render_frontmatter(meta: dict, body: str) -> str:
     return "---\n" + dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
 
+def render_exact_note(meta: dict, body: bytes) -> bytes:
+    """Frontmatter plus *body* bytes verbatim (preserving leading whitespace)."""
+    front = "---\n" + dump_yaml(meta).rstrip() + "\n---\n\n"
+    return front.encode("utf-8") + body
+
+
 def dump_study_map(study_map, data: dict) -> str:
     from learning_os.domain.material_refs import preserve_map_refs
 

@@ -1315,19 +1315,13 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
         entry = state.get("entry")
         rows.append({**described_read, "state": state["state"],
                      "entry": entry["entry"] if entry else None, "covered_by": covered_by})
-    try:
-        with store.locked(create=False):
-            for read in reads:
-                for card in store.cards(read.digest):
-                    rng = card["inspected_range"]
-                    if (("card", card["card"]) not in seen and rng["start"] <= read.end
-                            and read.start <= rng["end"]):
-                        seen.add(("card", card["card"]))
-                        memory.append({"kind": "card", **store.served_card(card, known)})
-    except ReadingStoreError as exc:
-        raise WriteRefused(
-            f"the reading store cannot be read, so no text is returned: {exc}",
-            site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2) from exc
+    for read in reads:
+        for card in admission.overlapping_cards.get(read.digest, ()):
+            rng = card["inspected_range"]
+            if (("card", card["card"]) not in seen and rng["start"] <= read.end
+                    and read.start <= rng["end"]):
+                seen.add(("card", card["card"]))
+                memory.append({"kind": "card", **store.served_card(card, known)})
     memory.sort(key=lambda row: 0 if row["kind"] == "analysis-note" else 1)
     open_rows = [entry_view(row) for row in admission.open_entries]
     next_action = None

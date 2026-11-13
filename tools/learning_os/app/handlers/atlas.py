@@ -7,9 +7,8 @@ import json
 from datetime import UTC
 from pathlib import Path
 
-import jsonschema
 import yaml
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import ValidationError
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
@@ -26,7 +25,10 @@ from learning_os.store.contracts.atlas_question import (
     QUESTION_HANDLER_OWNED,
 )
 from learning_os.store.contracts.gateway import current_gateway_request
-from learning_os.store.contracts.json_schema import validate_contract
+from learning_os.store.contracts.json_schema import (
+    load_standalone_validator,
+    validate_contract,
+)
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import artifact_revision
@@ -44,10 +46,12 @@ def _safe(root: Path, path: Path) -> Path:
     return path
 
 def _schema(root: Path, name: str, data: object) -> None:
-    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    validator = load_standalone_validator(
+        root / f"system/schema/{name}.schema.json", format_checker=True,
+    )
     try:
-        jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
-    except jsonschema.ValidationError as exc:
+        validator.validate(data)
+    except ValidationError as exc:
         raise WriteRefused(f"{name}: {exc.message}") from exc
 
 RELATION_ARTIFACT = "registry-concept-relations"
@@ -232,10 +236,11 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             "created_at": observations.now().astimezone(UTC).isoformat(),
             "state": "candidate",
         }
-        schema = json.loads(
-            (root / "system/schema/ability-candidate.schema.json").read_text())
-        errors = sorted(Draft202012Validator(
-            schema, format_checker=FormatChecker()).iter_errors(row), key=str)
+        validator = load_standalone_validator(
+            root / "system/schema/ability-candidate.schema.json",
+            format_checker=True,
+        )
+        errors = sorted(validator.iter_errors(row), key=str)
         if errors:
             raise WriteRefused(
                 f"ability candidate: {errors[0].message}",

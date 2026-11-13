@@ -191,6 +191,7 @@ class Admission:
     blocking: list[dict[str, object]] = field(default_factory=list)
     adoptable: dict[str, list[dict[str, object]]] = field(default_factory=dict)
     open_entries: list[dict[str, object]] = field(default_factory=list)
+    overlapping_cards: dict[str, list[dict[str, object]]] = field(default_factory=dict)
 
 
 @dataclass
@@ -689,6 +690,10 @@ class ReadingStore:
                                                                              "end": read.end})
                 admission.open_entries = list(mine) + admission.opened
             self._commit(operations)
+            admission.overlapping_cards = {
+                digest: self.cards(digest)
+                for digest in dict.fromkeys(read.digest for read in reads)
+            }
             return admission
 
     # ------------------------------------------------------------ settlement

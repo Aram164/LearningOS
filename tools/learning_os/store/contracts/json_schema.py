@@ -2,12 +2,55 @@
 
 from __future__ import annotations
 
+import functools
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 from referencing import Registry, Resource
+
+
+@functools.lru_cache(maxsize=64)
+def _compiled_validator(
+    schema_text: str,
+    *,
+    use_format: bool,
+) -> Draft202012Validator:
+    schema = json.loads(schema_text)
+    return Draft202012Validator(
+        schema,
+        format_checker=FormatChecker() if use_format else None,
+    )
+
+
+def load_standalone_validator(
+    schema_path: Path,
+    *,
+    format_checker: bool = False,
+) -> Draft202012Validator:
+    """Compile and cache a standalone validator keyed by live schema text."""
+    return _compiled_validator(
+        schema_path.read_text(encoding="utf-8"),
+        use_format=format_checker,
+    )
+
+
+def transaction_receipt_errors(
+    schema_root: Path,
+    receipt: Mapping[str, object],
+) -> tuple[bool, list[ValidationError]]:
+    """Return ``(schema_present, sorted_errors)`` for a transaction receipt."""
+    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
+    if not schema_path.is_file():
+        return (False, [])
+    validator = load_standalone_validator(schema_path)
+    errors = sorted(
+        validator.iter_errors(receipt),
+        key=lambda error: list(error.path),
+    )
+    return (True, errors)
 
 
 class ContractValidationError(ValueError):

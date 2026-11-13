@@ -32,7 +32,6 @@ from pathlib import Path
 from typing import NoReturn
 
 import yaml
-from jsonschema import Draft202012Validator
 
 from learning_os.domain.failures import (
     PostCommitFailure,
@@ -58,6 +57,7 @@ from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
 )
+from learning_os.store.contracts.json_schema import transaction_receipt_errors
 from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
     require_write_scope,
@@ -618,14 +618,12 @@ def _inspect_commit_receipt(root: Path, intent: Mapping) -> tuple[str, str]:
     if not isinstance(data, dict):
         return ("CONTRADICTORY", "the receipt is not a mapping")
     schema_root = _default_authority_root(root) or root
-    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
-    if not schema_path.is_file():
-        return ("CONTRADICTORY", "no receipt schema can verify the receipt")
     try:
-        schema = json.loads(schema_path.read_text(encoding="utf-8"))
-        invalid = list(Draft202012Validator(schema).iter_errors(data))
+        present, invalid = transaction_receipt_errors(schema_root, data)
     except (OSError, ValueError):
         return ("CONTRADICTORY", "the receipt schema cannot be read")
+    if not present:
+        return ("CONTRADICTORY", "no receipt schema can verify the receipt")
     if invalid:
         return ("CONTRADICTORY", "the receipt fails schema validation")
     if data.get("id") != intent.get("transaction_id"):
@@ -2237,26 +2235,17 @@ class TransactionService:
                     "subject_sha256": run.request.approval_subject_sha256,
                 },
             }
-        receipt_schema = json.loads(
-            (self.authority_root or self.root).joinpath(
-                "system", "schema", "transaction-receipt.schema.json"
-            ).read_text(encoding="utf-8")
-        ) if (self.authority_root or self.root).joinpath(
-            "system", "schema", "transaction-receipt.schema.json"
-        ).is_file() else None
-        if receipt_schema is not None:
-            receipt_errors = sorted(
-                Draft202012Validator(receipt_schema).iter_errors(receipt),
-                key=lambda error: list(error.path),
+        present, receipt_errors = transaction_receipt_errors(
+            self.authority_root or self.root, receipt,
+        )
+        if present and receipt_errors:
+            detail = "; ".join(
+                f"/{'/'.join(str(part) for part in error.path)}: {error.message}"
+                for error in receipt_errors[:4]
             )
-            if receipt_errors:
-                detail = "; ".join(
-                    f"/{'/'.join(str(part) for part in error.path)}: {error.message}"
-                    for error in receipt_errors[:4]
-                )
-                raise TransactionFailure(
-                    f"transaction receipt v{receipt['schema_version']} is invalid: {detail}"
-                )
+            raise TransactionFailure(
+                f"transaction receipt v{receipt['schema_version']} is invalid: {detail}"
+            )
         if run.receipt_path.exists():
             raise TransactionFailure(f"receipt path already exists: {run.receipt_path}")
         # Mark uncertainty BEFORE entering the operation that can expose

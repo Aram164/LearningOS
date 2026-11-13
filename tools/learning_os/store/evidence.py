@@ -17,12 +17,10 @@ always has.
 from __future__ import annotations
 
 import hashlib
-import json
 from collections.abc import Mapping
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator
 
 from learning_os.domain.failures import (
     ReplayEvidenceError,
@@ -31,6 +29,10 @@ from learning_os.domain.failures import (
 )
 from learning_os.domain.transaction import TransactionResult
 from learning_os.store.contracts.gateway import GatewayRequestContext
+from learning_os.store.contracts.json_schema import (
+    load_standalone_validator,
+    transaction_receipt_errors,
+)
 from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches, write_target
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.revisions import dump_revisions, load_revisions, revision_ledger_path
@@ -248,16 +250,11 @@ def verify_committed_evidence(
         raise ReplayEvidenceError("idempotent receipt is not a mapping")
 
     schema_root = authority_root or default_authority_root(root) or root
-    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
-    if not schema_path.is_file():
+    present, schema_errors = transaction_receipt_errors(schema_root, receipt)
+    if not present:
         raise ReplayEvidenceError(
             "no transaction receipt schema available to verify replay evidence"
         )
-    receipt_schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    schema_errors = sorted(
-        Draft202012Validator(receipt_schema).iter_errors(receipt),
-        key=lambda error: list(error.path),
-    )
     if schema_errors:
         detail = "; ".join(
             f"{'/'.join(str(part) for part in error.path) or '<receipt>'}: {error.message}"
@@ -528,7 +525,7 @@ def shared_ledgers_proven_since(
     schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
     try:
         validator = (
-            Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8")))
+            load_standalone_validator(schema_path)
             if schema_path.is_file()
             else None
         )

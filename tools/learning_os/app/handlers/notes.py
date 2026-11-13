@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-import jsonschema
+from jsonschema import ValidationError
 
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
@@ -29,6 +29,8 @@ from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, FRONTMATTER_RE
 from learning_os.store import observations
 from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.codec import render_exact_note as _render_exact_note
+from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.derived import DerivedError, evaluate
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.fs import bytes_inside_owner as _bytes_inside_owner
@@ -302,25 +304,16 @@ def _safe(root: Path, path: Path) -> Path:
 
 
 def _schema(root: Path, name: str, data: object) -> None:
-    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    validator = load_standalone_validator(
+        root / f"system/schema/{name}.schema.json", format_checker=True,
+    )
     try:
-        jsonschema.Draft202012Validator(
-            schema, format_checker=jsonschema.FormatChecker()).validate(data)
-    except jsonschema.ValidationError as exc:
+        validator.validate(data)
+    except ValidationError as exc:
         raise WriteRefused(
             f"{name}: {exc.message}",
             site="note.create.bad-note-schema",
         ) from exc
-
-
-def _render_exact_note(meta: dict, body: bytes) -> bytes:
-    """Frontmatter plus the body bytes verbatim.
-
-    This never strips leading whitespace: the
-    bytes after the frontmatter block are exactly the approved capture.
-    """
-    front = "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n"
-    return front.encode("utf-8") + body
 
 
 def _destination(root: Path, note_id: str, relpath: object) -> Path:

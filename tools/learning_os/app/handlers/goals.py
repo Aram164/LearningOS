@@ -9,7 +9,6 @@ import re
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
@@ -31,6 +30,7 @@ from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import GatewayRequestContext, intent_sha256
+from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.session_ledger import current_session_id as _current_session_id
@@ -44,13 +44,10 @@ LEDGER_RELATIVE = "operations/goal-ledger.yaml"
 
 
 def _validate_ledger(root, data: dict) -> list[str]:
-    schema = json.loads(
-        (root / "system/schema/goal-ledger.schema.json").read_text(
-            encoding="utf-8"))
-    errors = sorted(
-        Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(data),
-        key=str,
+    validator = load_standalone_validator(
+        root / "system/schema/goal-ledger.schema.json", format_checker=True,
     )
+    errors = sorted(validator.iter_errors(data), key=str)
     return [f"goal ledger: {error.message}" for error in errors]
 
 

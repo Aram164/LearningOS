@@ -5,8 +5,6 @@ from __future__ import annotations
 import json
 from datetime import UTC
 
-from jsonschema import Draft202012Validator, FormatChecker
-
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
@@ -31,6 +29,7 @@ from learning_os.store.contracts.gateway import (
     intent_sha256,
     verified_gateway_snapshot,
 )
+from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 
@@ -566,8 +565,11 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
             row["supersedes"] = req["supersedes"]
         if set(row["conditions"]) & set(row.get("conditions_not_met", [])):
             raise WriteRefused("condition cannot be both met and not met")
-        schema = json.loads((root / "system/schema/ability-observation.schema.json").read_text())
-        errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(row), key=str)
+        validator = load_standalone_validator(
+            root / "system/schema/ability-observation.schema.json",
+            format_checker=True,
+        )
+        errors = sorted(validator.iter_errors(row), key=str)
         if errors:
             raise WriteRefused(f"ability observation: {errors[0].message}")
         old = path.read_text(encoding="utf-8") if path.exists() else ""
