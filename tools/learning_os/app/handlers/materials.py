@@ -46,10 +46,10 @@ from learning_os.store.materials.reading_cards import (
     ReadingStore,
     ReadingStoreError,
     SettleRefusal,
-    adopt_command,
     entry_view,
+    join_adopt_commands,
+    join_settle_commands,
     pages_label,
-    settle_command,
     treatment_kinds_hint,
     valid_session,
 )
@@ -1275,7 +1275,7 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
             f"pages (pending spans stay readable): {_gate_entries(admission.blocking)}. "
             f"{treatment_kinds_hint()}",
             site=f"{ctx.operation}.overdue", prefixed=True, exit_code=2,
-            remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
+            remedy=join_settle_commands(str(row["entry"]) for row in admission.blocking))
     if admission.refusal == "adoptable":
         named = "; ".join(f"session {name}: {_gate_entries(rows)}"
                           for name, rows in admission.adoptable.items())
@@ -1283,14 +1283,14 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
             "an ended or idle session left unsettled reading entries; adopt and settle "
             f"them before reading new pages: {named}",
             site=f"{ctx.operation}.adoptable", prefixed=True, exit_code=2,
-            remedy="  ||  ".join(adopt_command(name) for name in admission.adoptable))
+            remedy=join_adopt_commands(name for name in admission.adoptable))
     if admission.refusal == "limit":
         raise WriteRefused(
             f"this read would hold more than {MAX_OPEN_ENTRIES} open reading entries in one "
             f"turn; settle one first (pending spans stay readable): "
             f"{_gate_entries(admission.blocking)}. {treatment_kinds_hint()}",
             site=f"{ctx.operation}.limit", prefixed=True, exit_code=2,
-            remedy="  ||  ".join(settle_command(row["entry"]) for row in admission.blocking))
+            remedy=join_settle_commands(str(row["entry"]) for row in admission.blocking))
     repo = ctx.repo()
     known = set(repo.concepts)
     rows, memory, seen = [], [], set()
@@ -1342,8 +1342,8 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
         next_action = (
             f"Before the turn ends, settle each open entry ({len(open_rows)} of at most "
             f"{MAX_OPEN_ENTRIES}): save a card or dismiss it. {treatment_kinds_hint()} "
-            "Commands: "
-            + "  ||  ".join(settle_command(row["entry"]) for row in open_rows[:MAX_OPEN_ENTRIES]))
+            "Commands:\n"
+            + join_settle_commands(str(row["entry"]) for row in open_rows[:MAX_OPEN_ENTRIES]))
     return Result({
         "schema_version": 1, "snapshot_id": payload["snapshot_id"],
         "contract": "material-study-span-v1", "span": payload,

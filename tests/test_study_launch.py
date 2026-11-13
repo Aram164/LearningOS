@@ -831,3 +831,161 @@ assert (
     )
     assert rc == 0
     assert (tmp_path / "outside-target.json").read_text(encoding="utf-8") == '{"intact": true}\n'
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
+def test_study_launch_cwd_independence_from_core_parent_and_runtime_simulation(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = _make_study_world(mini_repo)
+    learningos = core.parent
+    outside = tmp_path / "outside-caller"
+    outside.mkdir()
+    real_core = Path(os.path.realpath(core))
+    base_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+
+    # 1. Core-relative `--cmd -- .venv/bin/python tools/los.py ...` works from Core, Parent, and Outside.
+    invocations = [
+        (core, [str(core / ".venv/bin/python"), "tools/study_launch.py", "--cmd", "--",
+                ".venv/bin/python", "tools/los.py", "status", "--json"]),
+        (learningos, [str(core / ".venv/bin/python"), "repository/tools/study_launch.py",
+                      "--cmd", "--", ".venv/bin/python", "tools/los.py", "status", "--json"]),
+        (learningos, [str(core / ".venv/bin/python"), "repository/tools/study_launch.py",
+                      "--root", "repository", "--cmd", "--",
+                      ".venv/bin/python", "tools/los.py", "status", "--json"]),
+        (outside, [str(core / ".venv/bin/python"), str(core / "tools/study_launch.py"),
+                   "--root", str(core), "--cmd", "--",
+                   ".venv/bin/python", "tools/los.py", "status", "--json"]),
+        # Caller-relative executable/script paths from LearningOS/ parent keep working too.
+        (learningos, [str(core / ".venv/bin/python"), "repository/tools/study_launch.py",
+                      "--cmd", "--", "repository/.venv/bin/python",
+                      "repository/tools/los.py", "status", "--json"]),
+    ]
+    for caller_dir, argv in invocations:
+        proc = subprocess.run(
+            argv, cwd=str(caller_dir), env=base_env,
+            capture_output=True, text=True, timeout=60,
+        )
+        assert proc.returncode == 0, (caller_dir, argv, proc.stderr)
+        assert Path(os.path.realpath(json.loads(proc.stdout)["root"])) == real_core
+
+    # 2. Parent-dir `--cmd -- sh -c` executes generated commands, `--omit-covered-text`,
+    # seal_envelope, and preserves Seatbelt write refusal cleanly.
+    s_flow = "abababab-1111-4111-8111-111111111111"
+    shell_script = (
+        ".venv/bin/python tools/los.py material-study-span --material _unsorted/review/book.pdf "
+        "--pages 'pdf p. 1' --extract > \"$LOS_SCRATCH_DIR/span1.json\" && "
+        "ENTRY=$(.venv/bin/python -c 'import json, os; print(json.load(open(os.environ[\"LOS_SCRATCH_DIR\"]+\"/span1.json\"))[\"study\"][\"reads\"][0][\"entry\"])') && "
+        ".venv/bin/python tools/los.py material-card-settle \"$ENTRY\" --card "
+        "'{\"paraphrase\":\"Evidence paragraph summary on page 1.\",\"kinds\":[\"statement\"],\"pointers\":[{\"page\":1,\"kind\":\"statement\",\"label\":\"claim\"}]}' >/dev/null && "
+        ".venv/bin/python tools/los.py material-study-span --material _unsorted/review/book.pdf "
+        "--pages 'pdf p. 1' --extract > \"$LOS_SCRATCH_DIR/covered_default.json\" && "
+        ".venv/bin/python tools/los.py material-study-span --material _unsorted/review/book.pdf "
+        "--pages 'pdf p. 1' --extract --omit-covered-text > \"$LOS_SCRATCH_DIR/covered_omitted.json\" && "
+        ".venv/bin/python -c 'import json, os, pathlib\n"
+        "s = os.environ[\"LOS_SCRATCH_DIR\"]\n"
+        "d = json.loads(pathlib.Path(s + \"/covered_default.json\").read_text())\n"
+        "o = json.loads(pathlib.Path(s + \"/covered_omitted.json\").read_text())\n"
+        "assert \"Evidence paragraph on page 1.\" in d[\"span\"][\"spans\"][0][\"excerpt\"]\n"
+        "assert \"excerpt_omitted\" not in d[\"span\"][\"spans\"][0]\n"
+        "assert d[\"study\"][\"memory\"][0][\"review\"] == \"unreviewed\" and d[\"study\"][\"memory\"][0][\"coverage_evidence\"] is False\n"
+        "assert o[\"span\"][\"spans\"][0][\"excerpt_omitted\"] == \"covered\" and \"excerpt\" not in o[\"span\"][\"spans\"][0]\n"
+        "try:\n"
+        "  pathlib.Path(\"../blocked.txt\").write_text(\"no\")\n"
+        "  raise SystemExit(9)\n"
+        "except PermissionError:\n"
+        "  pass\n"
+        "' && "
+        ".venv/bin/python tools/seal_envelope.py --capability stage.note.write "
+        "--payload '{\"unit_id\":\"unit-demo-l01\",\"stage_id\":\"stage-demo\",\"text\":\"from parent cwd\"}' "
+        "--key parent-cwd-k1 --guards auto --submit >/dev/null"
+    )
+    flow_proc = subprocess.run(
+        [
+            str(core / ".venv/bin/python"),
+            "repository/tools/study_launch.py",
+            "--session", s_flow,
+            "--cmd", "--", "sh", "-c", shell_script,
+        ],
+        cwd=str(learningos), env=base_env,
+        capture_output=True, text=True, timeout=60,
+    )
+    assert flow_proc.returncode == 0, flow_proc.stderr
+
+    # 3. `--runtime claude` launched from LearningOS/ (core.parent) starts in real_core, resolves
+    # relative `--settings` cleanly, executes SessionStart/Stop hooks without shell operators, and
+    # executes extracted save command directly from Stop hook output.
+    ext_profile = tmp_path / "ext-profile"
+    prof = subprocess.run(
+        [str(core / ".venv/bin/python"), "repository/tools/study_hooks.py",
+         "profile", "--out", str(ext_profile)],
+        cwd=str(learningos), env=base_env, capture_output=True, text=True, timeout=60,
+    )
+    assert prof.returncode == 0, prof.stderr
+    rel_settings = os.path.relpath(ext_profile / ".claude/settings.json", learningos)
+
+    fakebin = tmp_path / "fakebin"
+    fakebin.mkdir()
+    fake_claude = fakebin / "claude"
+    fake_claude.write_text(
+        f"""#!{sys.executable}
+import json, os, shlex, subprocess, sys
+from pathlib import Path
+
+assert Path(os.path.realpath(os.getcwd())) == Path({str(real_core)!r}), os.getcwd()
+idx = sys.argv.index("--settings")
+settings_path = Path(sys.argv[idx + 1])
+assert settings_path.is_absolute() and settings_path.is_file(), settings_path
+settings = json.loads(settings_path.read_text(encoding="utf-8"))
+start_cmd = settings["hooks"]["SessionStart"][0]["hooks"][0]["command"]
+stop_cmd = settings["hooks"]["Stop"][0]["hooks"][0]["command"]
+
+start_res = subprocess.run(["sh", "-c", start_cmd], input='{{}}', capture_output=True, text=True, check=True)
+assert ".venv/bin/python tools/los.py bootstrap --brief" in start_res.stdout
+
+# Execute an unhooked/hooked study span and verify Stop gives standalone executable commands.
+span = subprocess.run([".venv/bin/python", "tools/los.py", "material-study-span",
+                       "--material", {BOOK!r}, "--pages", "pdf p. 2", "--extract"],
+                      capture_output=True, text=True, check=True)
+assert "Evidence paragraph on page 2." in span.stdout
+
+stop1 = subprocess.run(["sh", "-c", stop_cmd], input='{{"stop_hook_active": false}}',
+                       capture_output=True, text=True, check=True)
+stop_obj = json.loads(stop1.stdout)
+assert stop_obj["decision"] == "block"
+reason = stop_obj["reason"]
+for bad in (" | ", " || ", "; ", " && "):
+    assert bad not in reason, bad
+save_lines = [ln.strip() for ln in reason.splitlines()
+              if ln.strip().startswith(".venv/bin/python tools/los.py material-card-settle ") and "--card" in ln]
+assert len(save_lines) == 1, reason
+filled = save_lines[0].replace(
+    "'{{\\"paraphrase\\": \\"<what these pages do, in your words>\\", \\"kinds\\": [\\"<kind>\\"], \\"pointers\\": [{{\\"page\\": <page>, \\"kind\\": \\"<kind>\\", \\"label\\": \\"<what is there>\\"}}]}}'",
+    shlex.quote(json.dumps({{"paraphrase": "Runtime simulation summary for page 2.", "kinds": ["statement"],
+                            "pointers": [{{"page": 2, "kind": "statement", "label": "p2"}}]}})),
+)
+subprocess.run(["sh", "-c", filled], check=True)
+stop2 = subprocess.run(["sh", "-c", stop_cmd], input='{{"stop_hook_active": false}}',
+                       capture_output=True, text=True, check=True)
+assert stop2.stdout.strip() == ""
+""",
+        encoding="utf-8",
+    )
+    fake_claude.chmod(0o755)
+
+    runtime_env = dict(base_env, PATH=f"{fakebin}{os.pathsep}{base_env.get('PATH', '')}")
+    rt_proc = subprocess.run(
+        [
+            str(core / ".venv/bin/python"),
+            "repository/tools/study_launch.py",
+            "--runtime", "claude",
+            "--", "--settings", rel_settings, "--setting-sources", "", "-p", "smoke",
+        ],
+        cwd=str(learningos),
+        env=runtime_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert rt_proc.returncode == 0, rt_proc.stdout + rt_proc.stderr
+    assert list((learningos / "reading-memory/pending").glob("rd-*.json")) == []

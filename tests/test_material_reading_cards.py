@@ -941,12 +941,90 @@ def test_settle_hints_and_cli_help_advertise_treatment_kinds(world):
     assert cmd.startswith(f"{LOS_COMMAND} material-card-settle rd-0123456789abcdef ")
     assert adopt == f"{LOS_COMMAND} material-card-settle --adopt {A}"
     assert "(kinds:" not in cmd
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in cmd
     payload = _ok(_read(world, A, "pdf p. 2"))
     next_action = payload["study"]["next_action"]
-    assert f"Commands: {LOS_COMMAND} material-card-settle " in next_action
+    assert f"Commands:\n{LOS_COMMAND} material-card-settle " in next_action
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in next_action
     help_out = _los(world, "material-card-settle", "--help")
     assert help_out.returncode == 0
     for kind in TREATMENT_KINDS:
         assert kind in kinds_prose
         assert kind in next_action
         assert kind in help_out.stdout
+
+
+def test_generated_commands_separate_alternatives_and_preserve_covered_source_extract(world):
+    from learning_os.store.materials.reading_cards import (
+        LOS_COMMAND,
+        join_adopt_commands,
+        join_settle_commands,
+    )
+
+    joined_settle = join_settle_commands(["rd-1111111111111111", "rd-2222222222222222"])
+    joined_adopt = join_adopt_commands([A, B])
+    for text in (joined_settle, joined_adopt):
+        for sep in (" | ", " || ", "; ", " && "):
+            assert sep not in text
+    cmd_lines = [line for line in joined_settle.splitlines() if LOS_COMMAND in line]
+    assert len(cmd_lines) == 4
+    assert all(line.startswith(f"{LOS_COMMAND} material-card-settle rd-") for line in cmd_lines)
+    adopt_lines = [line for line in joined_adopt.splitlines() if line]
+    assert adopt_lines == [
+        f"{LOS_COMMAND} material-card-settle --adopt {A}",
+        f"{LOS_COMMAND} material-card-settle --adopt {B}",
+    ]
+
+    # Multi-entry next_action and cap refusal omit shell pipelines and operators.
+    first = _ok(_read(world, A, "pdf p. 1"))
+    entry1 = _entry(first)
+    second = _ok(_read(world, A, "pdf p. 2"))
+    entry2 = _entry(second)
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in second["study"]["next_action"]
+    assert f"Entry {entry1}:" in second["study"]["next_action"]
+    assert f"Entry {entry2}:" in second["study"]["next_action"]
+
+    _ok(_read(world, A, "pdf p. 3"))
+    fourth = _ok(_read(world, A, "pdf p. 4"))
+    entry4 = _entry(fourth)
+    limit_err = _refused(_read(world, A, "pdf p. 5"), "more than 4 open reading entries")
+    limit_next = limit_err.split("  next: ", 1)[1]
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in limit_next
+    assert f"\n{LOS_COMMAND} material-card-settle {entry4} --card " in limit_next
+
+    # Adoptable refusal across ended sessions separates --adopt commands without || or ;.
+    _ok(_read(world, B, "pdf p. 6"))
+    store = _store(world)
+    store.session_end(A)
+    store.session_end(B)
+    C = "cccccccc-3333-4333-8333-333333333333"
+    adopt_err = _refused(_read(world, C, "pdf p. 7"), "adopt and settle them")
+    adopt_next = adopt_err.split("  next: ", 1)[1]
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in adopt_next
+    assert f"{LOS_COMMAND} material-card-settle --adopt {A}" in adopt_next
+    assert f"{LOS_COMMAND} material-card-settle --adopt {B}" in adopt_next
+
+    # Source fidelity baseline (Option B): default covered study reads preserve raw excerpt
+    # and unreviewed/non-evidence card metadata; --omit-covered-text remains explicit opt-in.
+    assert _settle(world, C, "--adopt", A).returncode == 0
+    assert _settle(world, C, entry4, "--card", _card(4, 4)).returncode == 0
+    default_covered = _ok(_read(world, C, "pdf p. 4"))
+    assert "page 4 on Bayes and evidence" in default_covered["span"]["spans"][0]["excerpt"]
+    assert "excerpt_omitted" not in default_covered["span"]["spans"][0]
+    assert default_covered["study"]["reads"][0]["state"] == "covered"
+    assert default_covered["study"]["memory"][0]["review"] == "unreviewed"
+    assert default_covered["study"]["memory"][0]["coverage_evidence"] is False
+
+    omitted = _ok(_los(
+        world, "material-study-span", "--material", BOOK, "--pages", "pdf p. 4",
+        "--extract", "--omit-covered-text", "--session", C,
+    ))
+    assert omitted["span"]["spans"][0]["excerpt_omitted"] == "covered"
+    assert "excerpt" not in omitted["span"]["spans"][0]
+    assert omitted["study"]["memory"][0]["review"] == "unreviewed"
+    assert omitted["study"]["memory"][0]["coverage_evidence"] is False

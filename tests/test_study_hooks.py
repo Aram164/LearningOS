@@ -249,3 +249,80 @@ def test_seal_scratch_path_problem_expands_tilde(
     monkeypatch.setenv("HOME", str(repo))
     problem = seal_envelope._scratch_path_problem(repo, "~/work/probe.json", "--out")
     assert problem is not None and ".venv" in problem
+
+
+def test_hooks_separate_commands_without_shell_operators_and_work_from_parent_dir(
+    world: Path, tmp_path: Path,
+) -> None:
+    profile_dir = tmp_path / "ext-profile"
+    prof_proc = subprocess.run(
+        [
+            str(world / ".venv/bin/python"),
+            "repository/tools/study_hooks.py",
+            "profile",
+            "--out",
+            str(profile_dir),
+        ],
+        cwd=str(world.parent),
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert prof_proc.returncode == 0, prof_proc.stderr
+    settings = json.loads((profile_dir / ".claude/settings.json").read_text(encoding="utf-8"))
+    start_hook_cmd = settings["hooks"]["SessionStart"][0]["hooks"][0]["command"]
+    stop_hook_cmd = settings["hooks"]["Stop"][0]["hooks"][0]["command"]
+
+    # Open two entries for S, verify Stop emits standalone commands without shell operators.
+    _open_study_span(world, 1, session=S)
+    _open_study_span(world, 2, session=S)
+    stop_proc = subprocess.run(
+        ["sh", "-c", stop_hook_cmd],
+        cwd=str(world.parent),
+        input=json.dumps({"session_id": S, "stop_hook_active": False}),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+    )
+    assert stop_proc.returncode == 0, stop_proc.stderr
+    stop_payload = json.loads(stop_proc.stdout)
+    assert stop_payload["decision"] == "block"
+    reason = stop_payload["reason"]
+    cmd_block = reason.split("running one command at a time:\n", 1)[1]
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in cmd_block
+    settle_lines = [
+        line.strip()
+        for line in cmd_block.splitlines()
+        if line.strip().startswith(".venv/bin/python tools/los.py material-card-settle ")
+    ]
+    assert len(settle_lines) == 4  # save + dismiss per entry
+
+    # End two sessions so SessionStart lists multiple adoptable sessions on separate lines.
+    _open_study_span(world, 3, session=OTHER)
+    assert _hook(world, "session-end", {"session_id": S}).returncode == 0
+    assert _hook(world, "session-end", {"session_id": OTHER}).returncode == 0
+    third = "11111111-9999-4999-8999-999999999999"
+    start_proc = subprocess.run(
+        ["sh", "-c", start_hook_cmd],
+        cwd=str(world.parent),
+        input=json.dumps({"session_id": third, "source": "startup"}),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+    )
+    assert start_proc.returncode == 0, start_proc.stderr
+    adopt_section = start_proc.stdout.split("before reading new pages:\n", 1)[1]
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in adopt_section
+    for line in start_proc.stdout.splitlines():
+        stripped = line.strip()
+        if ".venv/bin/python tools/los.py " in stripped:
+            for sep in (" | ", " || ", "; ", " && "):
+                assert sep not in stripped
+            assert "(or " not in stripped
+            assert " or --dismiss" not in stripped
+    assert f".venv/bin/python tools/los.py material-card-settle --adopt {S}" in start_proc.stdout
+    assert f".venv/bin/python tools/los.py material-card-settle --adopt {OTHER}" in start_proc.stdout
