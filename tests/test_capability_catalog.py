@@ -39,12 +39,27 @@ def test_every_public_command_is_bound_to_its_declared_cli_handler(repo_root: Pa
             assert handler.__name__ == f"cmd_{definition.handler}"
 
 
+# Path-backed capabilities not covered by inline/content-bound transport must
+# bind each external file input to its digest and consume bytes once.
+_FILE_INPUTS_V2: dict[str, tuple[tuple[str, str, bool], ...]] = {
+    "capture.create": (("file", "file_sha256", False),),
+    "collection.create": (("file", "file_sha256", False),),
+    "module.create": (("file", "file_sha256", False),),
+    "module.plan.import": (("file", "file_sha256", False),),
+    "note.revise": (("file", "file_sha256", False),),
+    "program.semester.update": (("file", "file_sha256", False),),
+    "review.prepare": (("items_file", "items_file_sha256", False),),
+    "stage.attachment.add": (("file", "file_sha256", False),),
+    "unit.map.import": (("file", "file_sha256", False),),
+    "unit.note.append": (("attachment", "attachment_sha256", True),),
+}
+
+
 def test_every_v2_external_file_input_is_content_bound_or_inline_only(
     repo_root: Path,
 ):
     """A newly exposed file path cannot silently approve only its pathname."""
     import los
-    from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.app.gateway import _CONTENT_BOUND_V2
     from learning_os.store.contracts.payloads import payload_fields, subparsers
 
@@ -86,7 +101,6 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
     import inspect
 
     import los
-    from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.app.registry import REGISTRY
     from learning_os.store.contracts.payloads import subparsers
 

@@ -187,21 +187,13 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
                             payload: dict, reviewed_content: bytes,
                             reviewed_sha256: str,
                             review_report: str | None) -> GatewayDispatch:
-    """The raising twin of the reviewed-apply transport (SPEC R3, PLAN 4.1).
+    """Validate reviewed bytes and report, then return a ``GatewayDispatch``.
 
-    Verifies the reviewed bytes, report and saved gateway envelope exactly
-    as ``reviewed_envelope_apply`` did, raising typed refusals with the
-    identical messages, then dispatches the saved envelope through the
-    transport entrypoint ``adapters.capability.cmd_capability`` in-process
-    and returns its exact streams and exit as a ``CommandOutput`` carrier.
-
-    The two adapter imports are dynamic: ``adapters.capability`` imports
-    the pipeline, which imports this package for registration, so any
-    static edge from here to the transport would cycle back through
-    the registry (``code_reachability`` has no cycle exception). The
-    runtime dependency is real and documented here; ``import_module``
-    is the codebase's established late-binding mechanism
-    (``cli_parser._resolve_handler``).
+    Verifies that ``reviewed_content`` still hashes to ``reviewed_sha256`` and
+    that ``review_report`` carries a matching, validated V2 ``gateway_envelope``
+    (including exact capability, payload, snapshot, and revisions), raising
+    ``WriteRefused`` on mismatch before handing the envelope to ``pipeline.py``
+    for dispatch.
     """
     actual = "sha256:" + hashlib.sha256(reviewed_content).hexdigest()
     if actual != reviewed_sha256:

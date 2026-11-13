@@ -61,16 +61,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
-  - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::open
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
-      possible'
-  - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::unlink
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
-      possible'
   - signature: tools/learning_os/app/handlers/plan.py::_save_check_report_and_compact::unlink
     count: 1
     since: approved
