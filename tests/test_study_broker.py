@@ -42,6 +42,7 @@ from learning_os.domain.failures import WriteRefused
 from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
+    call_dir_fd_op,
     protected_reads,
 )
 
@@ -1432,3 +1433,56 @@ def test_privileged_output_paths_cannot_overwrite_or_escape_via_symlinks(
     finally:
         server.close()
         shutil.rmtree(sock_dir, ignore_errors=True)
+
+
+def test_call_dir_fd_op_retries_transient_einval() -> None:
+    """Transient APFS EINVAL mid-rmdir is retried, while settled/non-EINVAL errnos surface."""
+    success_calls = 0
+
+    def _transient_then_ok() -> str:
+        nonlocal success_calls
+        success_calls += 1
+        if success_calls == 1:
+            raise OSError(errno.EINVAL, "Invalid argument")
+        return "ok"
+
+    assert call_dir_fd_op(_transient_then_ok) == "ok"
+    assert success_calls == 2
+
+    transient_calls = 0
+
+    def _transient_then_enoent() -> int:
+        nonlocal transient_calls
+        transient_calls += 1
+        if transient_calls < 3:
+            raise OSError(errno.EINVAL, "Invalid argument")
+        raise OSError(errno.ENOENT, "No such file or directory")
+
+    with pytest.raises(OSError) as settled:
+        call_dir_fd_op(_transient_then_enoent)
+    assert settled.value.errno == errno.ENOENT
+    assert transient_calls == 3
+
+    eloop_calls = 0
+
+    def _immediate_eloop() -> int:
+        nonlocal eloop_calls
+        eloop_calls += 1
+        raise OSError(errno.ELOOP, "Too many levels of symbolic links")
+
+    with pytest.raises(OSError) as eloop:
+        call_dir_fd_op(_immediate_eloop)
+    assert eloop.value.errno == errno.ELOOP
+    assert eloop_calls == 1
+
+    persistent_calls = 0
+
+    def _persistent_einval() -> int:
+        nonlocal persistent_calls
+        persistent_calls += 1
+        raise OSError(errno.EINVAL, "Invalid argument")
+
+    with pytest.raises(OSError) as exhausted:
+        call_dir_fd_op(_persistent_einval)
+    assert exhausted.value.errno == errno.EINVAL
+    assert persistent_calls == 4

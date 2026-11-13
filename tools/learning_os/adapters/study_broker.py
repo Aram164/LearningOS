@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import errno
+import functools
 import io
 import json
 import os
@@ -40,6 +41,7 @@ from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     STUDY_STAGED_MANIFEST_ENV,
+    call_dir_fd_op,
     check_study_new_output_path,
     check_study_path,
     find_real_ancestor,
@@ -1322,7 +1324,9 @@ def write_local_output_file(
     if hasattr(os, "O_CLOEXEC"):
         file_flags |= os.O_CLOEXEC
     try:
-        fd = os.open(target.name, file_flags, 0o644, dir_fd=parent_fd)
+        fd = call_dir_fd_op(
+            functools.partial(os.open, target.name, file_flags, 0o644, dir_fd=parent_fd)
+        )
     finally:
         os.close(parent_fd)
     try:

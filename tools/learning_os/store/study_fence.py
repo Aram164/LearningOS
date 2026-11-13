@@ -10,12 +10,17 @@ from __future__ import annotations
 
 import contextlib
 import errno
+import functools
 import json
 import os
 import stat
+import time
+from collections.abc import Callable
 from pathlib import Path
 
 from learning_os.domain.failures import StudyFenceRefused
+
+_DIR_FD_EINVAL_ATTEMPTS = 4
 
 STUDY_FENCE_CORE_ENV = "LOS_STUDY_FENCE_CORE"
 STUDY_FENCE_SCRATCH_ENV = "LOS_STUDY_FENCE_SCRATCH"
@@ -99,6 +104,20 @@ def open_dir_nofollow(dir_fd: int, part: str, dir_flags: int) -> int:
         raise
 
 
+def call_dir_fd_op[T](op: Callable[[], T]) -> T:
+    """Retry a pinned dir_fd syscall transiently rejected with EINVAL mid-rmdir on Darwin."""
+    # Concurrent rmdir on APFS briefly yields EINVAL on a pinned dir_fd before
+    # reporting ENOENT on subsequent calls; retrying preserves O_NOFOLLOW guarantees.
+    for _ in range(_DIR_FD_EINVAL_ATTEMPTS - 1):
+        try:
+            return op()
+        except OSError as exc:
+            if exc.errno != errno.EINVAL:
+                raise
+            time.sleep(0)
+    return op()
+
+
 def open_dir_chain_nofollow(
     base_path: Path,
     dir_parts: tuple[str, ...],
@@ -126,7 +145,7 @@ def open_dir_chain_nofollow(
                 os.close(dir_fd)
                 raise
             try:
-                os.mkdir(part, 0o755, dir_fd=dir_fd)
+                call_dir_fd_op(functools.partial(os.mkdir, part, 0o755, dir_fd=dir_fd))
             except FileExistsError:
                 pass
             except OSError:
