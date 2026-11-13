@@ -1232,7 +1232,11 @@ def _gate_entries(rows) -> str:
                      for row in rows)
 
 
-@register("material.study-span", kind="query", effects=OperationEffects.DERIVED_WRITE)
+# Lock-order invariant (Phase D watch-point): shared or exclusive operator_lock
+# ALWAYS precedes ReadingStore.locked(), and ReadingStore (store layer) never
+# acquires operator_lock. Declaring lock="shared" on both study operations keeps
+# that order invariant even if CLI metadata sets _operation_kind="tool".
+@register("material.study-span", kind="query", lock="shared", effects=OperationEffects.DERIVED_WRITE)
 def material_study_span(ctx: OpContext, req: dict) -> Result:
     """A study read: the material-span read, gated by the private reading memory (C1).
 

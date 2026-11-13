@@ -766,3 +766,123 @@ def test_study_context_and_search_lock_without_creating_absent_store_and_recover
     assert len(hit_payload["hits"][0]["cards"]) == 2
     assert hit_payload["study"]["cards"] == 2
     assert not list((store.root / ".journal").glob("*.json"))
+
+
+def test_reading_store_lock_order_follows_operator_lock(world, monkeypatch):
+    """Whenever operator_lock and ReadingStore.locked() are both held, operator_lock comes first."""
+    import argparse
+    import contextlib
+
+    from learning_os.app import lock as app_lock
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.registry import REGISTRY
+    from learning_os.store.materials import search_index
+
+    assert REGISTRY["material.study-span"].lock == "shared"
+    assert REGISTRY["material.card.settle"].lock == "shared"
+
+    events: list[tuple[str, str, bool | None]] = []
+    real_op_lock = app_lock.operator_lock
+    real_rs_locked = ReadingStore.locked
+
+    @contextlib.contextmanager
+    def recording_op_lock(root, *, shared=False):
+        events.append(("operator", "enter", shared))
+        try:
+            with real_op_lock(root, shared=shared):
+                yield
+        finally:
+            events.append(("operator", "exit", shared))
+
+    @contextlib.contextmanager
+    def recording_rs_locked(self, *, create=True):
+        events.append(("reading_store", "enter", create))
+        try:
+            with real_rs_locked(self, create=create) as present:
+                yield present
+        finally:
+            events.append(("reading_store", "exit", create))
+
+    monkeypatch.setattr(pipeline_module, "_operator_lock", recording_op_lock)
+    monkeypatch.setattr(ReadingStore, "locked", recording_rs_locked)
+
+    span_args = argparse.Namespace(
+        root=str(world), _operation="material.study-span", json=True,
+        material=BOOK, pages="pdf p. 5", extract=True, session=A,
+    )
+    span_outcome = pipeline_module.run_cli(world, "material.study-span", span_args)
+    assert span_outcome.exit_code == 0, span_outcome.stderr
+    assert events[0] == ("operator", "enter", True)
+    assert events[-1] == ("operator", "exit", True)
+    assert ("reading_store", "enter", True) in events
+    assert events.index(("operator", "enter", True)) < events.index(("reading_store", "enter", True))
+    assert events.index(("reading_store", "exit", True)) < events.index(("operator", "exit", True))
+    entry_id = json.loads(span_outcome.stdout)["study"]["reads"][0]["entry"]
+
+    events.clear()
+    settle_args = argparse.Namespace(
+        root=str(world), _operation="material.card.settle", _operation_kind="tool",
+        json=True, entry=entry_id, card=json.loads(_card(5, 5)), session=A,
+    )
+    settle_outcome = pipeline_module.run_cli(world, "material.card.settle", settle_args)
+    assert settle_outcome.exit_code == 0, settle_outcome.stderr
+    assert events == [
+        ("operator", "enter", True),
+        ("reading_store", "enter", True),
+        ("reading_store", "exit", True),
+        ("operator", "exit", True),
+    ]
+
+    events.clear()
+    ctx_args = argparse.Namespace(
+        root=str(world), _operation="material.context", json=True,
+        query="Restates", session=B,
+    )
+    ctx_outcome = pipeline_module.run_cli(world, "material.context", ctx_args)
+    assert ctx_outcome.exit_code == 0, ctx_outcome.stderr
+    assert events == [
+        ("operator", "enter", True),
+        ("reading_store", "enter", False),
+        ("reading_store", "exit", False),
+        ("operator", "exit", True),
+    ]
+
+    from types import SimpleNamespace
+
+    events.clear()
+    digest = hashlib.sha256((world.parent / "materials" / BOOK).read_bytes()).hexdigest()
+    monkeypatch.setattr(search_index, "execute_search", lambda *a, **kw: SimpleNamespace(
+        to_dict=lambda: {
+            "schema_version": 1, "query": "Restates",
+            "hits": [{"sha256": f"sha256:{digest}", "span_pages": "pdf p. 5", "score": 1.0}],
+        },
+    ))
+    search_args = argparse.Namespace(
+        root=str(world), _operation="material.search", json=True,
+        query="Restates", session=B, limit=5, offset=0,
+    )
+    search_outcome = pipeline_module.run_cli(world, "material.search", search_args)
+    assert search_outcome.exit_code == 0, search_outcome.stderr
+    assert events == [
+        ("operator", "enter", True),
+        ("reading_store", "enter", False),
+        ("reading_store", "exit", False),
+        ("operator", "exit", True),
+    ]
+
+
+def test_reading_store_never_imports_or_acquires_operator_lock():
+    """The store layer (and ReadingStore) structurally never imports operator_lock."""
+    import ast
+
+    store_dir = Path(__file__).resolve().parents[1] / "tools" / "learning_os" / "store"
+    for py_path in sorted(store_dir.rglob("*.py")):
+        tree = ast.parse(py_path.read_text(encoding="utf-8"), filename=str(py_path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module:
+                assert not node.module.startswith("learning_os.app"), (py_path, node.module)
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    assert not alias.name.startswith("learning_os.app"), (py_path, alias.name)
+            elif isinstance(node, ast.Name):
+                assert node.id not in {"operator_lock", "_operator_lock", "escalate_operator_lock"}, py_path

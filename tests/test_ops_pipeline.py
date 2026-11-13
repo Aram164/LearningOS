@@ -192,6 +192,103 @@ def test_unknown_kind_falls_back_to_exclusive_lock(pipe, lock_calls, mini_repo):
     assert lock_calls == [False]
 
 
+def test_operation_lock_override_beats_cli_operation_kind(pipe, lock_calls, mini_repo):
+    pipe("query")
+    outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, argparse.Namespace(**vars(_ns(mini_repo)), _operation_kind="tool"),
+    )
+    assert outcome.exit_code == 0
+    assert lock_calls == []
+
+    lock_calls.clear()
+    pipe("query", lock="shared")
+    outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, argparse.Namespace(**vars(_ns(mini_repo)), _operation_kind="tool"),
+    )
+    assert outcome.exit_code == 0
+    assert lock_calls == [True]
+
+    lock_calls.clear()
+    pipe("tool", lock="exclusive")
+    outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, argparse.Namespace(**vars(_ns(mini_repo)), _operation_kind="query"),
+    )
+    assert outcome.exit_code == 0
+    assert lock_calls == [False]
+
+
+@pytest.mark.parametrize("kind,lock_mode,expected_calls", [
+    ("query", None, [True]),
+    ("command", None, [False]),
+    ("porcelain", None, [False]),
+    ("tool", None, []),
+    ("tool", "shared", [True]),
+    ("tool", "exclusive", [False]),
+])
+def test_operation_lock_programmatic_invoke_and_invoke_outcome(
+    pipe, lock_calls, mini_repo, kind, lock_mode, expected_calls,
+):
+    pipe(kind, lock=lock_mode)
+    assert cli_adapter.invoke(_ns(mini_repo, json=True)) == 0
+    assert lock_calls == expected_calls
+
+    lock_calls.clear()
+    outcome = cli_adapter.invoke_outcome(_ns(mini_repo, json=True))
+    assert outcome.exit_code == 0
+    assert lock_calls == expected_calls
+
+
+@pytest.mark.parametrize("kind,lock_mode,expected_cli_locks", [
+    ("tool", None, [False]),
+    ("tool", "shared", [True, False]),
+    ("query", None, [True, False]),
+    ("tool", "exclusive", [False, False]),
+    ("command", None, [False, False]),
+])
+def test_operation_lock_across_gateway_dispatch_and_cmd_capability(
+    pipe, lock_calls, mini_repo, tmp_path, monkeypatch, kind, lock_mode, expected_cli_locks,
+):
+    from learning_os.adapters import capability as capability_adapter
+    from learning_os.app.proposal import GatewayDispatch
+
+    _write_gateway_wiring(mini_repo)
+    seen_payloads: list[dict] = []
+
+    def handler(ctx, req):
+        if ctx.gateway is None:
+            envelope = approved_v2_envelope(
+                mini_repo, capability=TEST_OP, payload={}, artifact_ids=[],
+                idempotency_key=f"dispatch-{kind}-{lock_mode}",
+            )
+            return Result(GatewayDispatch(envelope))
+        seen_payloads.append(req)
+        return Result({"echo": req.get("alpha"), "n": req.get("beta")})
+
+    pipe(kind, handler=handler, lock=lock_mode)
+    cli_args = argparse.Namespace(**vars(_ns(mini_repo)), _parser_factory=_test_parser_factory)
+    cli_outcome = pipeline_module.run_cli(mini_repo, TEST_OP, cli_args)
+    assert cli_outcome.exit_code == 0, cli_outcome.stdout + cli_outcome.stderr
+    assert lock_calls == expected_cli_locks
+    assert len(seen_payloads) == 1
+
+    # Direct cmd_capability / run_gateway always takes exclusive operator_lock.
+    lock_calls.clear()
+    env_file = tmp_path / f"cap-{kind}-{lock_mode}.json"
+    env_file.write_text(json.dumps(approved_v2_envelope(
+        mini_repo, capability=TEST_OP, payload={}, artifact_ids=[],
+        idempotency_key=f"cap-{kind}-{lock_mode}",
+    )), encoding="utf-8")
+    monkeypatch.setattr("sys.stdout", __import__("io").StringIO())
+    monkeypatch.setattr("sys.stderr", __import__("io").StringIO())
+    code = capability_adapter.cmd_capability(argparse.Namespace(
+        root=str(mini_repo), name=TEST_OP, payload_file=str(env_file),
+        replay_only=False, _parser_factory=_test_parser_factory,
+    ))
+    assert code == 0
+    assert lock_calls == [False]
+    assert len(seen_payloads) == 2
+
+
 def test_req_filters_to_schema_properties(pipe, mini_repo):
     calls = pipe("query")
     pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
