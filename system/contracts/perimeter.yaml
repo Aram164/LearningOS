@@ -159,6 +159,16 @@ entries:
       addressable as material:// through the managed ingest. This is the one
       directory a perimeter-level duplicate is measured against.
 
+  - path: LearningOS/reading-memory
+    kind: directory
+    optional: true
+    owner: learningos
+    annotation: private reading-memory store, created on demand (ADR-021)
+    purpose: >-
+      Private reading-memory store holding session logs and reading cards
+      (ADR-021); created on demand outside Core Git, never required ahead of
+      first use.
+
   - path: LearningOS/projects
     kind: directory
     owner: projects

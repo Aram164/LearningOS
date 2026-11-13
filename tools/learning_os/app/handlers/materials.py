@@ -1311,13 +1311,19 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
         entry = state.get("entry")
         rows.append({**described_read, "state": state["state"],
                      "entry": entry["entry"] if entry else None, "covered_by": covered_by})
-    for read in reads:
-        for card in store.cards(read.digest):
-            rng = card["inspected_range"]
-            if (("card", card["card"]) not in seen and rng["start"] <= read.end
-                    and read.start <= rng["end"]):
-                seen.add(("card", card["card"]))
-                memory.append({"kind": "card", **store.served_card(card, known)})
+    try:
+        with store.locked(create=False):
+            for read in reads:
+                for card in store.cards(read.digest):
+                    rng = card["inspected_range"]
+                    if (("card", card["card"]) not in seen and rng["start"] <= read.end
+                            and read.start <= rng["end"]):
+                        seen.add(("card", card["card"]))
+                        memory.append({"kind": "card", **store.served_card(card, known)})
+    except ReadingStoreError as exc:
+        raise WriteRefused(
+            f"the reading store cannot be read, so no text is returned: {exc}",
+            site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2) from exc
     memory.sort(key=lambda row: 0 if row["kind"] == "analysis-note" else 1)
     open_rows = [entry_view(row) for row in admission.open_entries]
     next_action = None
@@ -1348,7 +1354,7 @@ def _settle_result(ctx, repo, session, settlement, store) -> Result:
     })
 
 
-@register("material.card.settle", kind="tool", effects=OperationEffects.DERIVED_WRITE)
+@register("material.card.settle", kind="tool", lock="shared", effects=OperationEffects.DERIVED_WRITE)
 def material_card_settle(ctx: OpContext, req: dict) -> Result:
     """Settle one reading entry, or adopt an ended or idle session's entries (step 3, C7)."""
     session = _study_session(ctx, req, required=True)
@@ -1422,19 +1428,20 @@ def _study_hit_cards(ctx, repo, session, payload) -> None:
     study: dict = {"session": session,
                    "review": "unreviewed private cards; never coverage evidence"}
     try:
-        for hit in payload.get("hits", []):
-            digest = str(hit.get("sha256") or "").removeprefix("sha256:")
-            ranges = parse_locator_page_ranges(str(hit.get("span_pages") or ""))
-            if not ranges:
-                hit["cards"] = []
-                continue
-            start, end = ranges[0][0], ranges[-1][1]
-            cards = [store.served_card(card, known, compact=True)
-                     for card in store.cards(digest)
-                     if card["inspected_range"]["start"] <= end
-                     and start <= card["inspected_range"]["end"]]
-            hit["cards"] = cards[:3]
-            attached += len(hit["cards"])
+        with store.locked(create=False):
+            for hit in payload.get("hits", []):
+                digest = str(hit.get("sha256") or "").removeprefix("sha256:")
+                ranges = parse_locator_page_ranges(str(hit.get("span_pages") or ""))
+                if not ranges:
+                    hit["cards"] = []
+                    continue
+                start, end = ranges[0][0], ranges[-1][1]
+                cards = [store.served_card(card, known, compact=True)
+                         for card in store.cards(digest)
+                         if card["inspected_range"]["start"] <= end
+                         and start <= card["inspected_range"]["end"]]
+                hit["cards"] = cards[:3]
+                attached += len(hit["cards"])
     except ReadingStoreError as exc:
         study["cards_unavailable"] = str(exc)
     study["cards"] = attached
@@ -1447,7 +1454,8 @@ def _study_context_cards(ctx, repo, *, raw_terms, concept_id, material) -> dict:
     known = set(repo.concepts)
     words = [term.casefold() for term in raw_terms]
     try:
-        rows = store.all_cards()
+        with store.locked(create=False):
+            rows = store.all_cards()
     except ReadingStoreError as exc:
         return {"items": [], "total": 0, "cards_unavailable": str(exc)}
     matched = []

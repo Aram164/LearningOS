@@ -226,12 +226,19 @@ def _commit_with_gesture(ctx, operation: str, result):
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
-    Takes the shared operator lock for a query, the exclusive lock for a
-    command or porcelain operation, and no lock for a tool. Any other kind
-    string takes the exclusive lock (fail-safe default, S13 candidate J17).
+    Honors an explicit ``entry.lock`` override first (``shared`` / ``exclusive``);
+    otherwise takes the shared operator lock for a query, the exclusive lock
+    for a command or porcelain operation, and no lock for a tool. Any other
+    kind string takes the exclusive lock (fail-safe default, S13 candidate J17).
     """
 
     entry = REGISTRY[operation]
+    if entry.lock == "shared":
+        with _operator_lock(root, shared=True):
+            return _execute_cli(root, operation, entry, args)
+    if entry.lock == "exclusive":
+        with _operator_lock(root):
+            return _execute_cli(root, operation, entry, args)
     kind = getattr(args, "_operation_kind", entry.kind)
     if kind == "query":
         with _operator_lock(root, shared=True):

@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import Literal
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result
@@ -34,6 +35,13 @@ class Operation:
     # Invocation kind controls dispatch/locking, not effects. A new operation
     # is a write barrier until its owner explicitly declares a read.
     effects: OperationEffects = OperationEffects.UNKNOWN
+    # Optional override when an operation's lock requirement differs from its
+    # invocation kind (e.g. a derived-write tool that still loads repo state).
+    lock: Literal["shared", "exclusive"] | None = None
+
+    def __post_init__(self) -> None:
+        if self.lock not in (None, "shared", "exclusive"):
+            raise ValueError(f"invalid operation lock mode: {self.lock!r}")
 
 
 REGISTRY: dict[str, Operation] = {}
@@ -49,6 +57,7 @@ def register(
     memo_profile: str = "none",
     read_session_profile: str = "none",
     effects: OperationEffects = OperationEffects.UNKNOWN,
+    lock: Literal["shared", "exclusive"] | None = None,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
 
@@ -59,6 +68,7 @@ def register(
             parallel_safe=parallel_safe, memo_profile=memo_profile,
             read_session_profile=read_session_profile,
             effects=OperationEffects(effects),
+            lock=lock,
         )
         return fn
 

@@ -64,7 +64,7 @@ def pipe(mini_repo):
 
     _write_test_schema(mini_repo)
 
-    def make(kind="query", handler=None, human=None, render_check=None):
+    def make(kind="query", handler=None, human=None, render_check=None, lock=None):
         calls = []
 
         def default_handler(ctx, req):
@@ -72,7 +72,7 @@ def pipe(mini_repo):
             return Result({'echo': req.get('alpha'), 'n': req.get('beta')})
 
         register(TEST_OP, kind=kind, human=human,
-                 render_check=render_check)(handler or default_handler)
+                 render_check=render_check, lock=lock)(handler or default_handler)
         return calls
 
     yield make
@@ -142,6 +142,46 @@ def test_tool_takes_no_lock(pipe, lock_calls, mini_repo):
     assert outcome.exit_code == 0
     assert lock_calls == []
     assert len(calls) == 1
+
+
+def test_tool_with_lock_override_acquires_requested_operator_lock(pipe, lock_calls, mini_repo):
+    pipe("tool", lock="shared")
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert lock_calls == [True]
+
+    lock_calls.clear()
+    pipe("tool", lock="exclusive")
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert lock_calls == [False]
+
+
+def test_invalid_operation_lock_refuses():
+    from learning_os.app.registry import Operation
+
+    with pytest.raises(ValueError, match="invalid operation lock mode"):
+        Operation(name="bad.lock", kind="tool", handler=lambda c, r: Result({}), lock="invalid")  # type: ignore[arg-type]
+
+
+def test_material_card_settle_keeps_tool_kind_with_shared_lock(lock_calls, mini_repo):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    entry = REGISTRY["material.card.settle"]
+    assert entry.kind == "tool"
+    assert entry.lock == "shared"
+    args = argparse.Namespace(
+        root=str(mini_repo),
+        _operation="material.card.settle",
+        _operation_kind="tool",
+        json=False,
+        session="bbbbbbbb-2222-4222-8222-222222222222",
+        adopt="aaaaaaaa-1111-4111-8111-111111111111",
+    )
+    outcome = pipeline_module.run_cli(mini_repo, "material.card.settle", args)
+    assert outcome.exit_code == 2
+    assert lock_calls == [True]
 
 
 def test_unknown_kind_falls_back_to_exclusive_lock(pipe, lock_calls, mini_repo):

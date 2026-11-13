@@ -617,9 +617,10 @@ class ReadingStore:
     def _touch_op(self, name: str, now: dt.datetime, *, start: bool = False) -> dict[str, object]:
         record = self._session_record(name)
         record["last_call_at"] = _iso(now)
-        # A later call reactivates the session even within the same clock second.
-        record["ended_at"] = None
         if start:
+            # Only an explicit start/resume clears a recorded end within the same second;
+            # passive touches keep ended_at so late hook/shutdown races cannot resurrect it.
+            record["ended_at"] = None
             record["started_at"] = _iso(now)
         return self._write_op(f"sessions/{name}.json", record)
 

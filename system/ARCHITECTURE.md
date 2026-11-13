@@ -122,21 +122,22 @@ Implementation boundaries and their checks are mapped in
 
 ```text
 semestercontext/
-├── AGENTS.md         workspace-wide plan and review guidance for every agent
-├── tools/            engineering orchestration; not a LearningOS product surface
-├── LearningOS/       the umbrella for every LearningOS component (ADR-014)
-│   ├── repository/   the authored repository of record
-│   ├── obsidian-ui/  the independent interface repository
-│   ├── materials/    books, slides, videos, datasets — addressable as material://
-│   ├── projects/     active LearningOS-owned code repositories
-│   ├── workbench/    disposable audits, strategy and scratch tooling (ADR-014)
-│   ├── archive/      retired, recoverable, non-active artifacts
-│   ├── legacy/       the frozen pre-v3 tree and the preserved former Job source (ADR-014)
+├── AGENTS.md            workspace-wide plan and review guidance for every agent
+├── tools/               engineering orchestration; not a LearningOS product surface
+├── LearningOS/          the umbrella for every LearningOS component (ADR-014)
+│   ├── repository/      the authored repository of record
+│   ├── obsidian-ui/     the independent interface repository
+│   ├── materials/       books, slides, videos, datasets — addressable as material://
+│   ├── reading-memory/  private reading-memory store, created on demand (ADR-021)
+│   ├── projects/        active LearningOS-owned code repositories
+│   ├── workbench/       disposable audits, strategy and scratch tooling (ADR-014)
+│   ├── archive/         retired, recoverable, non-active artifacts
+│   ├── legacy/          the frozen pre-v3 tree and the preserved former Job source (ADR-014)
 │   ├── README.md
-│   ├── CLAUDE.md     the Claude adapter, reachable from the umbrella
+│   ├── CLAUDE.md        the Claude adapter, reachable from the umbrella
 │   └── Plans
-├── outputs/          design handoffs and implementation verification artifacts
-└── Stratum/          independent external Git repository; never traversed
+├── outputs/             design handoffs and implementation verification artifacts
+└── Stratum/             independent external Git repository; never traversed
 ```
 
 <!-- root-tree:end -->

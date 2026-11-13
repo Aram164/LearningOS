@@ -130,6 +130,20 @@ def test_a_declared_entry_that_is_absent_is_an_error(tmp_path):
     assert "MISSING" in _codes(pm.check(root))
 
 
+def test_an_optional_declared_entry_may_be_absent_or_present(tmp_path):
+    entries = _base_entries() + [
+        {"path": "LearningOS/reading-memory", "kind": "directory", "optional": True,
+         "owner": "learningos"}]
+    root = _wrapper(tmp_path, entries=entries)
+    assert pm.check(root) == []
+    memory_dir = tmp_path / "LearningOS" / "reading-memory"
+    memory_dir.mkdir()
+    assert pm.check(root) == []
+    memory_dir.rmdir()
+    memory_dir.write_text("not a directory", encoding="utf-8")
+    assert "KIND" in _codes(pm.check(root))
+
+
 def test_ephemera_are_not_undeclared(tmp_path):
     root = _wrapper(tmp_path, entries=_base_entries(),
                     tree=[".DS_Store", "LearningOS/.DS_Store"])

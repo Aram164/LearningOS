@@ -693,3 +693,76 @@ def test_backup_manifest_serializes_with_concurrent_reading_card_settle(world):
     rm_paths = {row["path"] for row in manifests[0]["entries"] if row["root"] == "reading-memory"}
     assert f"settled/{entry}.json" in rm_paths
     assert f"pending/{entry}.json" not in rm_paths
+
+
+def test_passive_touch_preserves_ended_at_while_explicit_start_reactivates(world):
+    entry = _entry(_ok(_read(world, A, "pdf p. 11")))
+    store = _store(world)
+    now = dt.datetime.fromisoformat(NOW)
+    store.session_end(A, now=now)
+    assert store.ended(A, now) is True
+
+    store.touch(A, start=False, now=now)
+    session = store.session(A)
+    assert session is not None and session["ended_at"] is not None
+    assert store.ended(A, now) is True
+    assert [row["entry"] for row in store.adoptable(B, now).get(A, [])] == [entry]
+
+    store.touch(A, start=True, now=now)
+    session = store.session(A)
+    assert session is not None and session["ended_at"] is None
+    assert store.ended(A, now) is False
+
+
+def test_study_context_and_search_lock_without_creating_absent_store_and_recover_journal(world, monkeypatch):
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.materials import _study_context_cards, _study_hit_cards
+    from learning_os.store.loading import load_repo
+
+    repo = load_repo(world)
+    ctx_search = OpContext(root=world, operation="material.search", channel="operator",
+                           invocation="query", gateway=None)
+    ctx_context = OpContext(root=world, operation="material.context", channel="operator",
+                            invocation="query", gateway=None)
+
+    assert _study_context_cards(ctx_context, repo, raw_terms=["Bayes"],
+                                concept_id=None, material=None)["items"] == []
+    absent_payload: dict = {"hits": [{"sha256": "sha256:" + "a" * 64, "span_pages": "pdf p. 1"}]}
+    _study_hit_cards(ctx_search, repo, B, absent_payload)
+    assert absent_payload["hits"][0]["cards"] == []
+    assert absent_payload["study"]["cards"] == 0
+    assert not store_root(world).exists(), "read paths never create an absent reading store"
+
+    store = _store(world)
+    book_bytes = (world.parent / "materials" / BOOK).read_bytes()
+    digest = hashlib.sha256(book_bytes).hexdigest()
+    read = Read(digest=digest, material=BOOK, start=1, end=1, text_sha256="b" * 64)
+    entry = store.admit(A, [read]).opened[0]["entry"]
+
+    def crash(self, operations):
+        raise RuntimeError("crash mid-commit")
+
+    monkeypatch.setattr(ReadingStore, "_apply", crash)
+    with pytest.raises(RuntimeError, match="crash mid-commit"):
+        store.save(A, entry, json.loads(_card(1, 1)))
+    monkeypatch.undo()
+    assert list((store.root / ".journal").glob("*.json"))
+
+    ctx_result = _study_context_cards(ctx_context, repo, raw_terms=["Restates"],
+                                      concept_id=None, material=None)
+    assert ctx_result["total"] == 1
+    assert not list((store.root / ".journal").glob("*.json"))
+
+    # Simulate a second mid-commit crash recovered by _study_hit_cards under store.locked(create=False).
+    entry2 = store.admit(A, [Read(digest=digest, material=BOOK, start=2, end=2, text_sha256="c" * 64)]).opened[0]["entry"]
+    monkeypatch.setattr(ReadingStore, "_apply", crash)
+    with pytest.raises(RuntimeError, match="crash mid-commit"):
+        store.save(A, entry2, json.loads(_card(2, 2)))
+    monkeypatch.undo()
+    assert list((store.root / ".journal").glob("*.json"))
+
+    hit_payload: dict = {"hits": [{"sha256": f"sha256:{digest}", "span_pages": "pdf pp. 1-2"}]}
+    _study_hit_cards(ctx_search, repo, B, hit_payload)
+    assert len(hit_payload["hits"][0]["cards"]) == 2
+    assert hit_payload["study"]["cards"] == 2
+    assert not list((store.root / ".journal").glob("*.json"))

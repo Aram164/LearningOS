@@ -73,6 +73,13 @@ class Perimeter:
     def declared_paths(self) -> set[str]:
         return {str(entry["path"]) for entry in self.entries}
 
+    def required_paths(self) -> set[str]:
+        return {
+            str(entry["path"])
+            for entry in self.entries
+            if not bool(entry.get("optional", False))
+        }
+
     def pending_paths(self) -> set[str]:
         return {str(entry["path"]) for entry in self.pending}
 
@@ -255,7 +262,7 @@ def check(root: Path) -> list[PerimeterIssue]:
             relative,
         ))
 
-    for relative in sorted(declared - observed_paths):
+    for relative in sorted(perimeter.required_paths() - observed_paths):
         # Name the directory that was looked in: when only LearningOS/ is
         # mounted (an agent VM, a partial checkout) the wrapper root is not
         # semestercontext/, and the bare relative path hides exactly that.
