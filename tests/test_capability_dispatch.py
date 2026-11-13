@@ -16,7 +16,6 @@ from pathlib import Path
 import pytest
 from gateway_helpers import approved_v2_envelope
 
-from learning_os.app.gateway import dispatch as _dispatch
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.capability_catalog import command_definitions
@@ -211,33 +210,6 @@ def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
             "result": {},
             "error": None,
         }, kind="request")
-
-
-@pytest.mark.parametrize("printed", ["plain success", "[]", ""])
-def test_non_object_handler_output_is_a_hard_gateway_failure(
-        mini_repo: Path, monkeypatch: pytest.MonkeyPatch, printed: str):
-    import learning_os.adapters.cli as cli_adapter
-    import los
-
-    def malformed_success(_args):
-        if printed:
-            print(printed)
-        return 0
-
-    # The generated parser resolves funcs from their source modules
-    # (SPEC 10.5), not via the los namespace, so patch the source.
-    # lineage.restamp is converted, so its parser entry binds the shared
-    # invoke adapter; patch that binding for the legacy-dispatch shape.
-    monkeypatch.setattr(cli_adapter, "invoke", malformed_success)
-    definition = command_definitions(mini_repo)["lineage.restamp"]
-    with pytest.raises(WriteRefused, match="reported success"):
-        _dispatch(
-            mini_repo,
-            definition,
-            {"request_id": "req-malformed-success", "capability": definition.name},
-            {},
-            parser_factory=los.build_parser,
-        )
 
 
 @pytest.mark.parametrize("name", sorted(

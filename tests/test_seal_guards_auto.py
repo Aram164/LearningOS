@@ -175,57 +175,36 @@ def test_envelope_without_schema_version_is_refused_before_dispatch(
             "(WORKFLOWS §25c)") in result.stderr
 
 
-def test_guard_derivation_intercepts_every_commit_path(mini_repo: Path,
-                                                       monkeypatch):
-    """A handler that commits through its own TransactionService import is
-    still stopped at the boundary.
+def test_every_public_capability_is_registered_for_guards_auto(
+        mini_repo: Path, tmp_path: Path, capsys):
+    """Every public capability registers so --guards auto never commits.
 
-    The AI delivery path constructs ``TransactionService`` from its own
-    import rather than through ``support._write_transaction``. Intercepting
-    one module's name would let such a handler reach the real ``commit``
-    with the dry run's placeholder approval; the class-level boundary must
-    capture it like any other.
+    Registered handlers return a ``Proposal`` rather than calling
+    ``TransactionService.commit``; an unregistered name refuses cleanly
+    without writing canonical state or receipts.
     """
     import seal_envelope
 
-    import los
-    from learning_os.store import transactions
+    from learning_os.app.registry import REGISTRY
+    from learning_os.store.contracts.capability_catalog import command_definitions
 
-    real_build_parser = los.build_parser
-    real_commit = transactions.TransactionService.commit
+    definitions = command_definitions(mini_repo)
+    assert set(definitions) <= set(REGISTRY)
 
-    def direct_commit_handler(args):
-        probe = Path(args.root) / "work/inbox/direct-commit-probe.md"
-        transactions.TransactionService(Path(args.root)).commit(
-            capability="stage.note.write",
-            writes={probe: "direct-commit probe\n"},
-            artifact_ids=["unit-demo-l01"])
-        return 0
-
-    def build_parser():
-        parser = real_build_parser()
-        from learning_os.store.contracts.payloads import subparsers
-        subparsers(parser)["stage-note"].set_defaults(func=direct_commit_handler)
-        return parser
-
-    monkeypatch.setattr(los, "build_parser", build_parser)
     before = canonical_fingerprint(mini_repo)
     receipts = sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
-
-    snapshot, derived = seal_envelope._derive_guards_auto(
-        mini_repo, capability="stage.note.write",
-        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
-                 "text": "direct-commit probe"},
-        key="guards-auto-direct-001", request_id="request-guards-auto-direct-001",
-        channel="operator", approval_kind="operator-approval", snapshot=None)
-
-    assert derived == {"unit-demo-l01": 0}
-    assert snapshot == f"sha256:{before}"
+    out = tmp_path / "unregistered.json"
+    code = seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "cli.capability",
+        "--payload", "{}", "--key", "guards-auto-unregistered-001",
+        "--guards", "auto", "--out", str(out),
+    ])
+    assert code == 2
+    assert "not a registered operation" in capsys.readouterr().err
+    assert not out.exists()
     assert canonical_fingerprint(mini_repo) == before
     assert sorted((mini_repo / "operations/transactions").glob(
         "transaction-*.yaml")) == receipts
-    assert not (mini_repo / "work/inbox/direct-commit-probe.md").exists()
-    assert transactions.TransactionService.commit is real_commit
 
 
 def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_path: Path):
@@ -353,14 +332,6 @@ def test_registered_guards_auto_pins_read_costs(
                 current, "__wrapped__", None) is original_load:
             monkeypatch.setattr(module, "load_repo", counted_load)
 
-    def legacy_must_not_run(*args, **kwargs):
-        raise AssertionError(
-            "public selector routed a registered operation "
-            "to legacy derivation")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
-                        legacy_must_not_run)
-
     out = tmp_path / "sealed.json"
     code = seal_envelope.main([
         "--root", str(mini_repo), "--capability", "stage.note.write",
@@ -386,26 +357,12 @@ def test_registered_guards_auto_pins_read_costs(
 
 
 def test_public_selector_routes_converted_stage_note_write(
-        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
-    """A converted seal succeeds through the public selector, never legacy.
-
-    stage.note.write is registered: ``seal_envelope.main --guards auto``
-    must derive through ``_derive_registered_guards`` and the sealed
-    envelope must commit on the first submission. Legacy derivation is
-    patched to fail, so any routing regression fails this test.
-    """
+        mini_repo: Path, tmp_path: Path, capsys):
+    """A converted seal succeeds through ``_derive_registered_guards``."""
     import seal_envelope
     from repo_builders import add_curriculum
 
     add_curriculum(mini_repo)
-
-    def legacy_must_not_run(*args, **kwargs):
-        raise AssertionError(
-            "public selector routed a registered operation "
-            "to legacy derivation")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
-                        legacy_must_not_run)
 
     out = tmp_path / "sealed.json"
     code = seal_envelope.main([
@@ -509,10 +466,6 @@ def test_public_module_plan_guards_auto_preserves_guard_derivation(
                 current, "__wrapped__", None) is original_load:
             monkeypatch.setattr(module, "load_repo", load_counter)
 
-    def legacy_must_not_run(*args, **kwargs):
-        raise AssertionError("converted module.plan.import reached legacy sealing")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto", legacy_must_not_run)
     out = tmp_path / "sealed.json"
     code = seal_envelope.main([
         "--root", str(mini_repo), "--capability", "module.plan.import",
@@ -558,7 +511,7 @@ def _inbox_drop_payload(mini_repo: Path, name: str = "note-drop.md"):
 
 
 def test_inbox_resolve_seal_derives_file_guards_and_first_submit_commits(
-        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+        mini_repo: Path, tmp_path: Path, capsys):
     """Registered inbox.resolve: exact file guards seal, first submit lands."""
     import seal_envelope
     import yaml
@@ -569,13 +522,6 @@ def test_inbox_resolve_seal_derives_file_guards_and_first_submit_commits(
     before = canonical_fingerprint(mini_repo)
     tree_before = {path for path in mini_repo.rglob("*")}
 
-    def legacy_must_not_run(*args, **kwargs):
-        raise AssertionError(
-            "public selector routed a registered operation "
-            "to legacy derivation")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
-                        legacy_must_not_run)
     out = tmp_path / "sealed.json"
     code = seal_envelope.main([
         "--root", str(mini_repo), "--capability", "inbox.resolve",

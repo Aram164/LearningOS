@@ -454,11 +454,9 @@ def _check_parser_factory():
     return los.build_parser
 
 
-def test_registered_seal_never_calls_legacy_derivation(
-        check_pipe, mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
-    """The registered guards-auto path does not touch the interception."""
-
-    import seal_envelope
+def test_registered_seal_runs_without_commit_interception(
+        check_pipe, mini_repo: Path, tmp_path: Path, capsys):
+    """The registered guards-auto path runs without legacy interception."""
 
     def handler(ctx, req):
         return Result({"echo": "x"},
@@ -466,10 +464,6 @@ def test_registered_seal_never_calls_legacy_derivation(
 
     check_pipe(handler)
 
-    def fail(*args, **kwargs):
-        raise AssertionError("legacy guard derivation must not run")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto", fail)
     out = tmp_path / "sealed.json"
     code = _seal_in_process(
         mini_repo, out, capability=TEST_OP, payload={},

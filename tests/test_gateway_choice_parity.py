@@ -22,7 +22,10 @@ from jsonschema import Draft202012Validator
 
 import los
 from learning_os.domain.failures import WriteRefused
-from learning_os.store.contracts.payloads import payload_to_namespace, subparsers
+from learning_os.store.contracts.payloads import (
+    payload_to_namespace_from_schema,
+    subparsers,
+)
 from learning_os.store.fingerprint import canonical_fingerprint
 
 SHA = "sha256:" + "0" * 64
@@ -193,14 +196,13 @@ def test_schema_enum_matches_the_cli_parser(repo_root: Path, case: dict):
 def test_cli_and_gateway_accept_the_same_valid_values(repo_root: Path,
                                                       case: dict):
     schema = _schema(repo_root, case["capability"])
-    parser = _command_parser(case["command"])
     for value in case["valid"]:
         assert _cli_accepts(case["command"], case["argv"](value)), value
         payload = case["payload"](value)
         assert _schema_errors(schema, payload) == [], value
-        namespace = payload_to_namespace(parser, payload, root=None,
-                                         expected_snapshot=None,
-                                         expected_revisions=None)
+        namespace = payload_to_namespace_from_schema(
+            repo_root, case["capability"], payload, root=None,
+            expected_snapshot=None, expected_revisions=None)
         assert getattr(namespace, case["field"]) == value
 
 
@@ -208,7 +210,6 @@ def test_cli_and_gateway_accept_the_same_valid_values(repo_root: Path,
 def test_cli_and_gateway_refuse_the_same_invalid_values(repo_root: Path,
                                                         case: dict):
     schema = _schema(repo_root, case["capability"])
-    parser = _command_parser(case["command"])
     for value in [v for v in INVALID if v not in case["valid"]]:
         assert not _cli_accepts(case["command"], case["argv"](value)), value
         payload = case["payload"](value)
@@ -216,9 +217,9 @@ def test_cli_and_gateway_refuse_the_same_invalid_values(repo_root: Path,
                         if list(error.path) == [case["field"]]]
         assert field_errors, f"{value!r} passed the {case['capability']} schema"
         with pytest.raises(WriteRefused, match="invalid payload"):
-            payload_to_namespace(parser, payload, root=None,
-                                 expected_snapshot=None,
-                                 expected_revisions=None)
+            payload_to_namespace_from_schema(
+                repo_root, case["capability"], payload, root=None,
+                expected_snapshot=None, expected_revisions=None)
 
 
 def test_progress_next_requires_progress_summary_in_the_schema(repo_root: Path):

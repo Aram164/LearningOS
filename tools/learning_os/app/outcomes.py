@@ -1,10 +1,9 @@
 """Outcome mapping: exception to public result per phase (SPEC §9.1).
 
-Transcribed from today's branches, in today's order; nothing here changes
-a result. ``gateway.refusal`` drives the replaced ``_refusal_from_failure``
-and ``_classify_failure``; ``cli`` drives ``tools/los.py`` main. The
-``gateway.replay`` and ``gateway.dispatch`` rows are used by S13's
-``run_gateway``; until then ``cmd_capability`` keeps its own clauses.
+Transcribed from the branches they consolidated. ``gateway.refusal`` drives
+``refusal_from_failure`` and ``_classify_failure``; ``gateway.replay`` and
+``gateway.dispatch`` drive ``run_gateway``; ``cli`` drives ``tools/los.py``
+main.
 """
 
 from __future__ import annotations

@@ -395,10 +395,6 @@ def test_route_patch_reviewed_journey_validates_exactly_twice(
     payload = {"unit_id": unit_id, "route_id": rid,
                "changes": {"angle": "A reviewed journey"}}
 
-    def legacy(*args, **kwargs):
-        raise AssertionError("legacy guard derivation must not run")
-
-    monkeypatch.setattr(seal_envelope, "_derive_guards_auto", legacy)
     runs = _count_validations(monkeypatch)
     record = tmp_path / "record.json"
 

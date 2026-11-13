@@ -350,48 +350,6 @@ def _check_choices(field: str, choices: object, value: object) -> None:
             )
 
 
-def _check_payload_choices(field: str, action: argparse.Action,
-                           value: object) -> None:
-    _check_choices(field, getattr(action, "choices", None), value)
-
-
-def payload_to_namespace(
-    command_parser: argparse.ArgumentParser,
-    payload: dict,
-    *,
-    root: str | None,
-    expected_snapshot: str | None,
-    expected_revisions: dict[str, int] | None,
-) -> argparse.Namespace:
-    """Build the args a handler expects from a validated payload.
-
-    Defaults come from the parser, so a payload that omits an optional field
-    behaves exactly as the named CLI command would with the flag absent.
-
-    Argparse `choices` are enforced here as well as in the generated schema:
-    the schema is the contract agents read, and this is the defence in depth
-    for any field whose schema was regenerated without them.
-    """
-    namespace = argparse.Namespace()
-    by_dest = {}
-    for action in command_parser._actions:
-        if isinstance(action, argparse._HelpAction):
-            continue
-        setattr(namespace, action.dest, action.default)
-        by_dest[action.dest] = action
-    for key, value in payload.items():
-        action = by_dest.get(key)
-        if action is not None:
-            _check_payload_choices(key, action, value)
-        setattr(namespace, key, value)
-    namespace.root = root
-    namespace.expected_snapshot = expected_snapshot
-    namespace.expected_revision = [
-        f"{artifact}={revision}" for artifact, revision in (expected_revisions or {}).items()
-    ]
-    return namespace
-
-
 def payload_to_namespace_from_schema(
     schema_root: Path,
     operation: str,
@@ -406,11 +364,10 @@ def payload_to_namespace_from_schema(
     Gateway admission must not construct a CLI parser to learn what a
     payload means: the effective request schema already declares every
     field's default and choices (``x-los-cli``), because it is generated
-    from that same parser in the adapters layer. Semantics match
-    ``payload_to_namespace`` exactly — an omitted field keeps its schema
-    default, an explicit null/false/empty value is carried as sent, and
-    declared choices are enforced — while CLI parsing itself stays with
-    the adapters that own it.
+    from that same parser in the adapters layer. An omitted field keeps
+    its schema default, an explicit null/false/empty value is carried as
+    sent, and declared choices are enforced — while CLI parsing itself
+    stays with the adapters that own it.
     """
     doc = request_schema(schema_root, operation)
     properties = doc.get("properties", {})

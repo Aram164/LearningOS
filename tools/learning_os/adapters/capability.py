@@ -7,16 +7,12 @@ gateway transport adapter.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
-from learning_os.app.gateway import dispatch as _dispatch
 from learning_os.app.gateway import read_structured_file as _read_structured_file
-from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.pipeline import close_attempt as _close_attempt
 from learning_os.app.pipeline import run_gateway
-from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.capability_catalog import command_definitions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.context import record_debug, trace_context_from_env
@@ -58,34 +54,6 @@ def cmd_capability(args: argparse.Namespace) -> int:
         root, envelope, requested=args.name, definitions=definitions,
         attempt=attempt, replay_only=args.replay_only,
         parser_factory=args._parser_factory)
-    if outcome is not None:
-        sys.stdout.write(outcome.stdout)
-        sys.stderr.write(outcome.stderr)
-        return outcome.exit_code
-    payload = envelope.get("payload", {})
-    request_id = envelope["request_id"]
-    try:
-        code, result = _dispatch(
-            root,
-            definitions[args.name],
-            envelope,
-            payload,
-            parser_factory=args._parser_factory,
-        )
-    except WriteRefused as exc:
-        code, result = 2, {"error": str(exc)}
-    # The handler folds its own receipt facts into `result`, so the response
-    # reads them from there rather than re-deriving them.
-    confirmation = result if code == 0 else {}
-    response = {
-        "request_id": request_id,
-        "capability": args.name,
-        "ok": code == 0,
-        "transaction_id": confirmation.get("transaction_id"),
-        "receipt_path": confirmation.get("receipt_path"),
-        "result": result if code == 0 else {},
-        "error": None if code == 0 else result.get("error", "capability failed"),
-    }
-    _validate_capability_envelope(root, response, kind="result")
-    print(json.dumps(response, indent=2, ensure_ascii=False))
-    return _close_attempt(attempt, code, "ok" if code == 0 else "error")
+    sys.stdout.write(outcome.stdout)
+    sys.stderr.write(outcome.stderr)
+    return outcome.exit_code

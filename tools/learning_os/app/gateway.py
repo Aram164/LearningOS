@@ -1,11 +1,10 @@
-"""GatewayEnvelopeV2 admission: envelope and payload validation, approval-bound file inputs, and dispatch of a capability through its command handler."""
+"""GatewayEnvelopeV2 admission: envelope and payload validation, and approval-bound file inputs."""
 
 from __future__ import annotations
 
 import contextlib
 import errno
 import hashlib
-import io
 import json
 import os
 import re
@@ -16,7 +15,6 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
-from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import (
@@ -24,8 +22,6 @@ from learning_os.store.contracts.gateway import (
     current_gateway_request,
     intent_sha256,
 )
-from learning_os.store.diagnostics import conventions as diag_conventions
-from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.materials.reading_cards import protected_reads
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 
@@ -669,22 +665,14 @@ def prepare_dispatch(
     *,
     parser_factory=None,
 ):
-    """Shared gateway admission for legacy and registered dispatch (SPEC 11.2 K1).
+    """Shared gateway admission (SPEC 11.2 K1).
 
     Refuses misplaced approval and content-bound file payloads, validates
-    the payload, and builds the namespace with the envelope guards.
-    Admission derives the namespace from the request schema — it never
-    constructs a CLI parser. Only legacy dispatch passes a
-    ``parser_factory`` (built by the adapters that own CLI parsing) to
-    resolve the named command's handler; its namespace then comes from
-    that same parser, exactly as before. Returns
-    (command_parser, namespace); the parser is None on the schema path.
+    the payload, and builds the schema-derived namespace with envelope guards.
+    ``parser_factory`` is accepted for caller compatibility and unused.
+    Returns ``(None, namespace)``.
     """
-    from learning_os.store.contracts.payloads import (
-        payload_to_namespace,
-        payload_to_namespace_from_schema,
-        subparsers,
-    )
+    from learning_os.store.contracts.payloads import payload_to_namespace_from_schema
 
     if envelope.get("schema_version") == 2 and "approve" in payload:
         raise WriteRefused(
@@ -698,96 +686,20 @@ def prepare_dispatch(
             "approval is bound to the exact content"
         )
     validate_payload(root, definition.name, payload)
-    if parser_factory is None:
-        namespace = payload_to_namespace_from_schema(
-            root, definition.name, payload,
-            root=str(root),
-            expected_snapshot=envelope.get("expected_snapshot"),
-            expected_revisions=envelope.get("expected_revisions", {}),
-        )
-        command_parser = None
-    else:
-        commands = subparsers(parser_factory())
-        command_parser = commands.get(definition.cli_command or "")
-        if command_parser is None:
-            raise WriteRefused(f"capability {definition.name} declares no CLI command to dispatch to")
-        handler = command_parser.get_default("func")
-        if handler is None:
-            raise WriteRefused(f"capability {definition.name} has no bound handler")
-
-        namespace = payload_to_namespace(
-            command_parser, payload,
-            root=str(root),
-            expected_snapshot=envelope.get("expected_snapshot"),
-            expected_revisions=envelope.get("expected_revisions", {}),
-        )
-    # A validated V2 envelope has already bound an approved user gesture to
-    # the exact intent hash.  Requiring an unrelated payload boolean would
-    # create two approval authorities that can disagree.  V1 keeps its legacy
-    # payload flag; direct CLI commands still use ``--approve`` themselves.
+    namespace = payload_to_namespace_from_schema(
+        root, definition.name, payload,
+        root=str(root),
+        expected_snapshot=envelope.get("expected_snapshot"),
+        expected_revisions=envelope.get("expected_revisions", {}),
+    )
+    # A validated V2 envelope binds an approved user gesture to the intent
+    # hash; handlers check ``namespace.approve`` identically to CLI ``--approve``.
     if envelope.get("schema_version") == 2 and hasattr(namespace, "approve"):
         namespace.approve = True
     # Handlers that can report either prose or JSON must report JSON here.
     if hasattr(namespace, "json"):
         namespace.json = True
-    return command_parser, namespace
-
-
-def dispatch(
-    root: Path,
-    definition,
-    envelope: dict,
-    payload: dict,
-    *,
-    parser_factory,
-) -> tuple[int, dict]:
-    """Run one capability through the same handler its named CLI command uses.
-
-    There is deliberately no second implementation here. The envelope is
-    translated into the arguments the command already accepts, so the two
-    interfaces cannot diverge in behaviour — only in how they are called.
-    """
-    command_parser, namespace = prepare_dispatch(
-        root, definition, envelope, payload, parser_factory=parser_factory)
-    handler = command_parser.get_default("func")
-    # A catching handler step records its typed refusal beside its non-zero
-    # return; take it here so the V2 error carries the type, not a guess
-    # from the prose. Cleared first so no earlier in-process failure leaks
-    # into this dispatch, and cleared on success so a refusal can never
-    # ride along with a later result.
-    _take_gateway_refusal()
-    captured, errors = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
-        code = handler(namespace)
-    diag_tracer.emit_event(
-        diag_conventions.EVENT_HANDLER_COMPLETED,
-        status="ok" if code == 0 else "error",
-        attrs={"capability": definition.name, "exit_code": code})
-
-    text, complaint = captured.getvalue().strip(), errors.getvalue().strip()
-    if code:
-        result = {"error": complaint or text or f"{definition.name} failed"}
-        refusal = _take_gateway_refusal()
-        if refusal is not None:
-            result["error_code"] = refusal.code
-            result["error_retryable"] = refusal.retryable
-        return code, result
-    _take_gateway_refusal()
-    if not text:
-        raise WriteRefused(
-            f"{definition.name} reported success without a JSON result"
-        )
-    try:
-        result = json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise WriteRefused(
-            f"{definition.name} reported success with non-JSON output"
-        ) from exc
-    if not isinstance(result, dict):
-        raise WriteRefused(
-            f"{definition.name} reported success with a non-object JSON result"
-        )
-    return 0, result
+    return None, namespace
 
 
 def validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:

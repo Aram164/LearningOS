@@ -70,15 +70,11 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
-    from learning_os.app.gateway import dispatch as _dispatch
+    from learning_os.app.gateway import prepare_dispatch
     from learning_os.store.contracts.capability_catalog import command_definitions
 
     definitions = command_definitions(mini_repo)
     definition = definitions["capture.create"]
-
-    def parser_factory():
-        import los
-        return los.build_parser()
 
     envelope = {
         "schema_version": 2,
@@ -92,9 +88,8 @@ def test_gateway_refuses_smuggled_approval(mini_repo: Path):
                      "subject_sha256": "sha256:" + "0" * 64},
     }
     with pytest.raises(Exception, match="(?i)approv"):
-        _dispatch(mini_repo, definition, envelope,
-                  {"text": "x", "approve": True},
-                  parser_factory=parser_factory)
+        prepare_dispatch(mini_repo, definition, envelope,
+                         {"text": "x", "approve": True})
 
 
 def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
@@ -1652,8 +1647,7 @@ def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path
 
 def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     """The CLI-only output flag is not part of the unit.plan.revise contract."""
-    import los
-    from learning_os.app.gateway import dispatch as _dispatch
+    from learning_os.app.gateway import prepare_dispatch
     from learning_os.store.contracts.capability_catalog import command_definitions
     from learning_os.store.contracts.payloads import payload_schema
 
@@ -1674,14 +1668,10 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
                      "subject_sha256": "sha256:" + "0" * 64},
     }
 
-    def parser_factory():
-        return los.build_parser()
-
     with pytest.raises(Exception, match="report_out"):
-        _dispatch(mini_repo, definitions["unit.plan.revise"], envelope,
-                  {"unit_id": "unit-demo-l01", "record": {},
-                   "report_out": "/tmp/check.json"},
-                  parser_factory=parser_factory)
+        prepare_dispatch(mini_repo, definitions["unit.plan.revise"], envelope,
+                         {"unit_id": "unit-demo-l01", "record": {},
+                          "report_out": "/tmp/check.json"})
 
 
 def test_overnight_legacy_route_update_remove_and_collision():

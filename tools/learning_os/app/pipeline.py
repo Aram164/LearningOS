@@ -22,7 +22,6 @@ from learning_os.app.commit import commit_proposal
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import json_layout as _json_layout
 from learning_os.app.gateway import context_from_v2 as _context_from_v2
-from learning_os.app.gateway import dispatch as _dispatch
 from learning_os.app.gateway import prepare_dispatch
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.lock import operator_lock as _operator_lock
@@ -45,7 +44,6 @@ from learning_os.app.session import (
     repair_replayed_session_ownership as _repair_replayed_session_ownership,
 )
 from learning_os.domain.codes import (
-    IDEMPOTENCY_CONFLICT,
     INTERNAL_FAILURE,
     INVALID_REQUEST,
     STALE_SNAPSHOT,
@@ -265,12 +263,9 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             from learning_os.store.contracts.capability_catalog import command_definitions
             envelope = result.payload.envelope
             attempt = diag_tracer.begin_attempt({"capability": envelope["capability"]})
-            outcome = run_gateway(root, envelope, requested=envelope["capability"],
+            return run_gateway(root, envelope, requested=envelope["capability"],
                 definitions=command_definitions(root), attempt=attempt,
                 replay_only=False, parser_factory=args._parser_factory)
-            if outcome is None:
-                raise WriteRefused("reviewed apply requires GatewayEnvelopeV2")
-            return outcome
         if checking and result.proposal is not None:
             record = check_proposal(ctx, result.proposal)
             payload = (call_renderer(operation, "render_check", entry.render_check,
@@ -446,37 +441,24 @@ def _v2_exit_code(handler_code: int, error: dict | None) -> int:
     return handler_code
 
 
-def _projection_error(exc: ProjectionFailure) -> dict:
-    """Typed projection outcome: subsystem proven, prose not consulted.
-
-    A complete rollback proves the write never committed; an incomplete
-    one leaves the outcome unknown however the message reads. A complete
-    rollback over a pre-state that itself does not publish is a
-    shadow-validation refusal (JF-11), reported like one.
-    """
+def _resolved_dispatch_error(exc: BaseException) -> dict:
+    """Resolve one typed ``gateway.dispatch`` failure to its error object."""
     row = classify(exc, "gateway.dispatch")
+    assert row is not None
     resolved = resolve(row, exc)
     return error_object(resolved["code"], str(exc),
-                          retryable=resolved["retryable"],
-                          details=resolved["details"])
+                        retryable=resolved["retryable"],
+                        details=resolved["details"])
+
+
+def _projection_error(exc: ProjectionFailure) -> dict:
+    """Typed projection outcome: subsystem proven, prose not consulted."""
+    return _resolved_dispatch_error(exc)
 
 
 def _post_commit_error(exc: PostCommitFailure) -> dict:
     """Committed yet failed: never a definitive refusal."""
-    row = classify(exc, "gateway.dispatch")
-    resolved = resolve(row, exc)
-    return error_object(resolved["code"], str(exc),
-                          retryable=resolved["retryable"],
-                          details=resolved["details"])
-
-
-def _publication_error(exc: TransactionPublicationUncertain) -> dict:
-    """Possibly committed: ambiguous, never a definitive refusal."""
-    row = classify(exc, "gateway.dispatch")
-    resolved = resolve(row, exc)
-    return error_object(resolved["code"], str(exc),
-                          retryable=resolved["retryable"],
-                          details=resolved["details"])
+    return _resolved_dispatch_error(exc)
 
 
 def _v2_response(
@@ -749,20 +731,16 @@ def _finish(attempt, code: int, status: str, attrs: dict | None, *,
 
 
 def _registered_compute(root: Path, operation: str, envelope: dict,
-                        payload: dict, *, context, parser_factory,
+                        payload: dict, *, context,
                         definitions) -> tuple[int, dict]:
-    """Run a registered handler with ``_dispatch``'s (code, result) shape.
+    """Run a registered handler, checking or committing its proposal once.
 
-    Shared admission first (``prepare_dispatch``, identical to legacy), then
-    the request filtered to the effective request-schema properties, then
-    the handler. A proposal commits once via ``commit_proposal`` (whose own
-    shared transaction owner). Success is a data projection plus receipt
-    facts; typed refusals propagate to dispatch classification. Post-commit
-    completion is an explicit proposal value, executed once under the lock.
-    The refusal
-    cellar clears at the same start/success/take boundaries as ``_dispatch``.
-    In check mode the proposal is checked, never committed, and rendered
-    with ``render_check``.
+    Shared schema-driven admission first (``prepare_dispatch``), then the
+    request filtered to the effective request-schema properties, then the
+    handler. A proposal commits once via ``commit_proposal``. Success is a
+    data projection plus receipt facts; typed refusals propagate to
+    dispatch classification. In check mode the proposal is checked, never
+    committed, and rendered with ``render_check``.
     """
     entry = REGISTRY[operation]
     # Registered admission is schema-derived: the CLI parser the adapter
@@ -829,15 +807,90 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     return 0, final
 
 
-def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
-                attempt, replay_only: bool, parser_factory) -> Outcome | None:
-    """Run one gateway envelope through admission, replay and dispatch.
+def _v2_error_outcome(
+    root: Path,
+    envelope: dict,
+    attempt,
+    *,
+    exit_code: int,
+    error: dict,
+    stage_attrs: dict | None,
+    stdout: list[str],
+    stderr: list[str],
+    transaction_id: str | None = None,
+    receipt_path: str | None = None,
+    snapshot_after: str | None = None,
+    commit: str | None = None,
+) -> Outcome:
+    """Validate, serialize, and close a V2 refusal outcome."""
+    response = _v2_response(
+        envelope,
+        ok=False,
+        transaction_id=transaction_id,
+        receipt_path=receipt_path,
+        snapshot_after=snapshot_after,
+        error=error,
+    )
+    _validate_capability_envelope(root, response, kind="result")
+    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
+    return _finish(
+        attempt, exit_code, "error", stage_attrs,
+        stdout=stdout, stderr=stderr, response=response, commit=commit,
+    )
 
-    Moved statement for statement from ``cmd_capability``'s V2 region (SPEC
-    §11.2 K8): prints become outcome lines, attempt closes become
-    ``_finish`` calls. Returns None only for the V1 fall-through, which
-    stays in ``cmd_capability``.
-    """
+
+def _outcome_from_table(
+    root: Path,
+    envelope: dict,
+    attempt,
+    exc: BaseException,
+    *,
+    context: str,
+    stdout: list[str],
+    stderr: list[str],
+    message: str | None = None,
+    transaction_id: str | None = None,
+    receipt_path: str | None = None,
+    snapshot_after: str | None = None,
+    commit: str | None = None,
+) -> Outcome:
+    """Translate ``exc`` via ``outcomes.TABLE[context]`` into a V2 Outcome."""
+    row = classify(exc, context)
+    assert row is not None
+    resolved = resolve(row, exc)
+    error = error_object(
+        resolved["code"],
+        str(exc) if message is None else message,
+        retryable=resolved["retryable"],
+        details=resolved["details"],
+    )
+    return _v2_error_outcome(
+        root, envelope, attempt,
+        exit_code=resolved["exit"],
+        error=error,
+        stage_attrs=resolved["close"],
+        stdout=stdout,
+        stderr=stderr,
+        transaction_id=transaction_id,
+        receipt_path=receipt_path,
+        snapshot_after=snapshot_after,
+        commit=commit,
+    )
+
+
+def _replay_failure_tag(exc: BaseException) -> str:
+    if isinstance(exc, TransactionIdempotencyConflict):
+        return "conflict"
+    if isinstance(exc, (ReplayEvidenceError, _ReplayRecoveryError)):
+        return "evidence-error"
+    if isinstance(exc, TransactionRecoveryConflict):
+        return "recovery-conflict"
+    return "lookup-failed"
+
+
+def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
+                attempt, replay_only: bool, parser_factory=None) -> Outcome:
+    """Run one V2 gateway envelope through admission, replay, and dispatch."""
     stdout: list[str] = []
     stderr: list[str] = []
     is_v2 = envelope.get("schema_version") == 2
@@ -848,420 +901,233 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             close_attempt(attempt, 2, "error", {"stage": "core.admission"})
             raise
         _audit_failure(envelope.get("capability"), exc)
-        response = _v2_response(
-            envelope,
-            ok=False,
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
             error=error_object(INVALID_REQUEST, str(exc), retryable=False),
+            stage_attrs={"stage": "core.admission"},
+            stdout=stdout, stderr=stderr,
         )
-        _validate_capability_envelope(root, response, kind="result")
-        stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-        return _finish(attempt, 2, "error", {"stage": "core.admission"},
-                       stdout=stdout, stderr=stderr, response=response)
     attempt.event(diag_conventions.EVENT_ENVELOPE_VALIDATED,
                   attrs={"request_id": envelope.get("request_id"),
                          "idempotency_key": envelope.get("idempotency_key")})
     if envelope.get("capability") != requested:
-        if is_v2:
-            _audit_direct_refused(envelope.get("capability"), 2)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    INVALID_REQUEST,
-                    "envelope capability does not match requested capability",
-                    retryable=False,
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(attempt, 2, "error", {"stage": "core.admission"},
-                           stdout=stdout, stderr=stderr, response=response)
         _audit_direct_refused(envelope.get("capability"), 2)
-        stderr.append(
-            "los: envelope capability does not match requested capability" + "\n")
-        return _finish(attempt, 2, "error", {"stage": "core.admission"},
-                       stdout=stdout, stderr=stderr)
-    # ``command_definitions`` is the public allowlist.  V2 always gets a typed
-    # response, including when the requested name has no declaration.
-    if requested not in definitions:
-        if is_v2:
-            _audit_direct_refused(envelope.get("capability"), 2)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    UNKNOWN_CAPABILITY,
-                    f"unknown or non-public capability: {requested}",
-                    retryable=False,
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(attempt, 2, "error", {"stage": "core.admission"},
-                           stdout=stdout, stderr=stderr, response=response)
-        _audit_direct_refused(envelope.get("capability"), 2)
-        stderr.append(
-            f"los: unknown or non-public capability: {requested}" + "\n")
-        return _finish(attempt, 2, "error", {"stage": "core.admission"},
-                       stdout=stdout, stderr=stderr)
-    payload = envelope.get("payload", {})
-    # Every capability takes the same path: declared payload schema, then the
-    # handler its named CLI command already uses. `project.create` and
-    # `project.update` were special-cased here until 2026-08-08 — the branch
-    # accepted a `{"project": {...}}` shape no schema declared, and skipped
-    # `_validate_payload` to do it, so an agent obeying the published contract
-    # was rejected while an agent sending the undeclared shape was accepted.
-    # A gateway is only worth having if its machine-readable contract is the
-    # trustworthy part.
-    if is_v2:
-        try:
-            context = _context_from_v2(envelope)
-        except WriteRefused as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(UNCONFIRMED, str(exc), retryable=False),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(attempt, 2, "error", {"stage": "core.approval"},
-                           stdout=stdout, stderr=stderr, response=response)
-        if context.approval_kind == "direct-user-gesture" \
-                and not gesture_allowed(context.capability, context.channel):
-            # The gesture kind means the user herself acted, so it is
-            # admitted only for the closed user-originated allowlist above.
-            # Anything else claiming it — notably any canonical-semantics
-            # capability — is the untrusted producer claiming to be the
-            # trusted one, and fails closed here before the snapshot check.
-            # The message names the route back to a permitted write, because
-            # the learner reading it in the UI did nothing wrong.
-            _audit_direct_refused(envelope.get("capability"), 2)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    UNCONFIRMED,
-                    gesture_refusal(context.capability, context.channel),
-                    retryable=False,
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(attempt, 2, "error", {"stage": "core.approval"},
-                           stdout=stdout, stderr=stderr, response=response)
-        attempt.event(diag_conventions.EVENT_APPROVAL_PASSED)
-        # Replay lookup, evidence validation, response construction, and
-        # session-ledger repair are one critical section under the repository
-        # operator lock — the same lock every ordinary write-handling command
-        # holds while it runs. Two concurrent exact replays for the same
-        # request must not race the session ledger's read-modify-write, and a
-        # replay must never be evaluated against a receipt an in-flight write
-        # is still committing. Exactly this function owns the lock: neither
-        # helper below acquires it again, so there is no re-entrant deadlock.
-        replay: TransactionResult | None = None
-        failure: BaseException | None = None
-        try:
-            with _operator_lock(root):
-                try:
-                    replay = replay_for_request(root, context)
-                    if replay is not None:
-                        response = _replay_response(root, envelope, replay)
-                        _validate_capability_envelope(root, response, kind="result")
-                        _repair_replayed_session_ownership(
-                            root, replay,
-                            session_id=envelope.get("session_id"))
-                except TransactionIdempotencyConflict as exc:
-                    _audit_failure(envelope.get("capability"), exc)
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(IDEMPOTENCY_CONFLICT, str(exc), retryable=False),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                                  status="error", attrs={"outcome": "conflict"})
-                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                                   stdout=stdout, stderr=stderr, response=response)
-                except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
-                    _audit_failure(envelope.get("capability"), exc)
-                    # Fail closed. Evidence is contradictory or the original write
-                    # already happened; rerunning the handler here would risk
-                    # duplicating it, and answering with a guessed path would be a lie
-                    # about canonical state. Never retryable: the fix is manual
-                    # reconciliation, not a client resend.
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(INTERNAL_FAILURE, str(exc), retryable=False),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                                  status="error", attrs={"outcome": "evidence-error"})
-                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                                   stdout=stdout, stderr=stderr, response=response)
-                except TransactionRecoveryConflict as exc:
-                    _audit_failure(envelope.get("capability"), exc)
-                    # A stale crash journal names paths the lookup cannot prove
-                    # transaction-owned. Nothing was modified and the journal was
-                    # preserved; the operator reconciles by hand. Never retryable
-                    # and never definitive: the fix is manual reconciliation, and
-                    # the request itself was never attempted.
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(
-                            INTERNAL_FAILURE, str(exc), retryable=False,
-                            details={
-                                "transaction_id": exc.transaction_id,
-                                "conflicting_paths": [
-                                    entry.get("path") for entry in exc.conflicts
-                                ],
-                                "reasons": sorted({
-                                    entry.get("reason") for entry in exc.conflicts
-                                    if entry.get("reason")
-                                }),
-                            },
-                        ),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                                  status="error", attrs={"outcome": "recovery-conflict"})
-                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                                   stdout=stdout, stderr=stderr, response=response)
-                except TransactionFailure as exc:
-                    _audit_failure(envelope.get("capability"), exc)
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(INTERNAL_FAILURE, str(exc), retryable=True),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                                  status="error", attrs={"outcome": "lookup-failed"})
-                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                                   stdout=stdout, stderr=stderr, response=response)
-                attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                              attrs={"outcome": "hit" if replay is not None else "miss"})
-                # The three D20 replay branches: an exact replay answers from the
-                # committed receipt; replay-only without one is unconfirmed; a miss
-                # falls through to fresh dispatch below.
-                if replay is not None:
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    return _finish(attempt, 0, "ok", {"replayed": True},
-                                   stdout=stdout, stderr=stderr, response=response)
-                if replay_only:
-                    _audit_direct_refused(envelope.get("capability"), 2)
-                    # A persisted UI confirmation is only untrusted settings JSON until
-                    # Core proves that this exact approved intent is present in the
-                    # idempotency ledger with a valid Receipt V2.  This probe must never
-                    # turn a forged or corrupt confirmation into a new canonical write.
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(
-                            UNCONFIRMED,
-                            "no committed receipt exists for this exact request",
-                            retryable=False,
-                        ),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                                   stdout=stdout, stderr=stderr, response=response)
-                actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
-                if envelope["expected_snapshot"] != actual_snapshot:
-                    _audit_direct_refused(envelope.get("capability"), 3)
-                    response = _v2_response(
-                        envelope,
-                        ok=False,
-                        error=error_object(
-                            STALE_SNAPSHOT,
-                            "canonical state changed since this request was approved",
-                            retryable=True,
-                            details={
-                                "expected": envelope["expected_snapshot"],
-                                "actual": actual_snapshot,
-                            },
-                        ),
-                    )
-                    _validate_capability_envelope(root, response, kind="result")
-                    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-                    return _finish(
-                        attempt, 3, "error", {"stage": "core.snapshot_guard"},
-                        stdout=stdout, stderr=stderr, response=response)
-                attempt.event(diag_conventions.EVENT_SNAPSHOT_GUARD_PASSED)
-                with gateway_request_context(context), verified_gateway_snapshot(
-                    root, actual_snapshot
-                ):
-                    if envelope["capability"] in REGISTRY:
-                        code, result = _registered_compute(
-                            root, envelope["capability"], envelope, payload,
-                            context=context, parser_factory=parser_factory,
-                            definitions=definitions)
-                    else:
-                        code, result = _dispatch(
-                            root,
-                            definitions[requested],
-                            envelope,
-                            payload,
-                            parser_factory=parser_factory,
-                        )
-        except WriteRefused as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            # The gateway.dispatch row's exit (amendment (ac)): an explicit
-            # exit_code preserves the originating return value.
-            code = exc.exit_code if exc.exit_code is not None else 2
-            result = {"error": str(exc)}
-            failure = exc
-        except TransactionSnapshotConflict as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    STALE_SNAPSHOT,
-                    "canonical state changed before the transaction write window",
-                    retryable=True,
-                    details={"expected": exc.expected, "actual": exc.actual},
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(
-                attempt, 3, "error", {"stage": "core.snapshot_guard"},
-                stdout=stdout, stderr=stderr, response=response)
-        except ProjectionFailure as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=_projection_error(exc),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(
-                attempt, 2, "error", {"stage": "core.projection"},
-                stdout=stdout, stderr=stderr, response=response)
-        except TransactionPublicationUncertain as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            # Ambiguous: the transaction id and receipt path name the
-            # recovery subject, but no snapshot_after is asserted — the
-            # receipt's durability is exactly what is unproven.
-            response = _v2_response(
-                envelope,
-                ok=False,
-                transaction_id=exc.transaction_id,
-                receipt_path=exc.receipt_path,
-                error=_publication_error(exc),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(
-                attempt, 2, "error", {"stage": "core.receipt"},
-                stdout=stdout, stderr=stderr, response=response,
-                commit="unknown")
-        except PostCommitFailure as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                transaction_id=exc.transaction_id,
-                receipt_path=exc.receipt_path,
-                snapshot_after=exc.snapshot_after,
-                error=_post_commit_error(exc),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(
-                attempt, 2, "error", {"stage": "core.commit"},
-                stdout=stdout, stderr=stderr, response=response)
-        except TransactionRecoveryConflict as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            # Defense in depth: the replay section's lock acquisition above
-            # normally reconciles (and catches this) first, since the lock
-            # is re-entrant. If that flow ever changes, a conflict reaching
-            # the dispatch section must still refuse ambiguously — never
-            # fall through to the definitive INVALID_REQUEST below.
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    INTERNAL_FAILURE, str(exc), retryable=False,
-                    details={
-                        "transaction_id": exc.transaction_id,
-                        "conflicting_paths": [
-                            entry.get("path") for entry in exc.conflicts
-                        ],
-                        "reasons": sorted({
-                            entry.get("reason") for entry in exc.conflicts
-                            if entry.get("reason")
-                        }),
-                    },
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            return _finish(attempt, 2, "error", {"code": INTERNAL_FAILURE},
-                           stdout=stdout, stderr=stderr, response=response)
-        except TransactionFailure as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            code, result = 2, {"error": str(exc)}
-            failure = exc
-        except ValueError as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            code, result = 2, {"error": str(exc)}
-            failure = exc
-        except Exception as exc:  # fail closed behind a typed V2 boundary
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    INTERNAL_FAILURE, str(exc) or type(exc).__name__, retryable=True,
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-            # The precise stage is already on record: the transaction span
-            # names the boundary that broke; this close carries the outcome.
-            return _finish(attempt, 2, "error", {"code": INTERNAL_FAILURE},
-                           stdout=stdout, stderr=stderr, response=response,
-                           commit="unknown")
-        confirmation = result if code == 0 else {}
-        complaint = str(result.get("error") or f"{requested} failed")
-        carried = result.get("error_code")
-        refusal = Refusal(carried, bool(result.get("error_retryable"))) \
-            if isinstance(carried, str) else None
-        error = None if code == 0 else _classify_failure(
-            code, complaint, failure=failure, refusal=refusal)
-        if error is not None:
-            error["details"].update(result.get("error_details", {}))
-        response = _v2_response(
-            envelope,
-            ok=code == 0,
-            replayed=bool(confirmation.get("replayed", False)),
-            transaction_id=confirmation.get("transaction_id"),
-            receipt_path=confirmation.get("receipt_path"),
-            snapshot_after=confirmation.get("snapshot_after"),
-            result=result if code == 0 else {},
-            error=error,
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
+            error=error_object(
+                INVALID_REQUEST,
+                "envelope capability does not match requested capability",
+                retryable=False,
+            ),
+            stage_attrs={"stage": "core.admission"},
+            stdout=stdout, stderr=stderr,
         )
-        _validate_capability_envelope(root, response, kind="result")
-        stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
-        # A carried (INTERNAL_FAILURE, True) pair is exactly the
-        # TransactionRollbackIncomplete refusal row: no WriteRefused carries
-        # it, and it is the row's only producer. The commit outcome is
-        # genuinely unknown there.
-        carried_unknown = refusal == Refusal(INTERNAL_FAILURE, True)
-        return _finish(
-            attempt, _v2_exit_code(code, error),
-            "ok" if code == 0 else "error",
-            {"replayed": bool(confirmation.get("replayed", False))} if code == 0 else {},
-            stdout=stdout, stderr=stderr, response=response,
-            commit="unknown" if carried_unknown else None)
-    return None
+    # ``command_definitions`` is the public allowlist; an unknown name receives a
+    # typed GatewayResultV2 error rather than a transport exit.
+    if requested not in definitions:
+        _audit_direct_refused(envelope.get("capability"), 2)
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
+            error=error_object(
+                UNKNOWN_CAPABILITY,
+                f"unknown or non-public capability: {requested}",
+                retryable=False,
+            ),
+            stage_attrs={"stage": "core.admission"},
+            stdout=stdout, stderr=stderr,
+        )
+    payload = envelope.get("payload", {})
+    try:
+        context = _context_from_v2(envelope)
+    except WriteRefused as exc:
+        _audit_failure(envelope.get("capability"), exc)
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
+            error=error_object(UNCONFIRMED, str(exc), retryable=False),
+            stage_attrs={"stage": "core.approval"},
+            stdout=stdout, stderr=stderr,
+        )
+    if context.approval_kind == "direct-user-gesture" \
+            and not gesture_allowed(context.capability, context.channel):
+        # Closed user-originated gesture allowlist; untrusted producers claiming
+        # a gesture outside it fail closed before the snapshot check.
+        _audit_direct_refused(envelope.get("capability"), 2)
+        return _v2_error_outcome(
+            root, envelope, attempt,
+            exit_code=2,
+            error=error_object(
+                UNCONFIRMED,
+                gesture_refusal(context.capability, context.channel),
+                retryable=False,
+            ),
+            stage_attrs={"stage": "core.approval"},
+            stdout=stdout, stderr=stderr,
+        )
+    attempt.event(diag_conventions.EVENT_APPROVAL_PASSED)
+    # Replay lookup, evidence validation, response construction, and
+    # session-ledger repair are one critical section under the exclusive
+    # operator lock so concurrent replays never race the session ledger or read
+    # an in-flight commit.
+    replay: TransactionResult | None = None
+    failure: BaseException | None = None
+    try:
+        with _operator_lock(root):
+            try:
+                replay = replay_for_request(root, context)
+                if replay is not None:
+                    response = _replay_response(root, envelope, replay)
+                    _validate_capability_envelope(root, response, kind="result")
+                    _repair_replayed_session_ownership(
+                        root, replay,
+                        session_id=envelope.get("session_id"))
+            except (
+                TransactionIdempotencyConflict,
+                ReplayEvidenceError,
+                _ReplayRecoveryError,
+                TransactionRecoveryConflict,
+                TransactionFailure,
+            ) as exc:
+                _audit_failure(envelope.get("capability"), exc)
+                attempt.event(
+                    diag_conventions.EVENT_REPLAY_CHECKED,
+                    status="error",
+                    attrs={"outcome": _replay_failure_tag(exc)},
+                )
+                return _outcome_from_table(
+                    root, envelope, attempt, exc,
+                    context="gateway.replay",
+                    stdout=stdout, stderr=stderr,
+                )
+            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                          attrs={"outcome": "hit" if replay is not None else "miss"})
+            if replay is not None:
+                stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
+                return _finish(attempt, 0, "ok", {"replayed": True},
+                               stdout=stdout, stderr=stderr, response=response)
+            if replay_only:
+                _audit_direct_refused(envelope.get("capability"), 2)
+                return _v2_error_outcome(
+                    root, envelope, attempt,
+                    exit_code=2,
+                    error=error_object(
+                        UNCONFIRMED,
+                        "no committed receipt exists for this exact request",
+                        retryable=False,
+                    ),
+                    stage_attrs={"stage": "core.replay"},
+                    stdout=stdout, stderr=stderr,
+                )
+            actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
+            if envelope["expected_snapshot"] != actual_snapshot:
+                _audit_direct_refused(envelope.get("capability"), 3)
+                return _v2_error_outcome(
+                    root, envelope, attempt,
+                    exit_code=3,
+                    error=error_object(
+                        STALE_SNAPSHOT,
+                        "canonical state changed since this request was approved",
+                        retryable=True,
+                        details={
+                            "expected": envelope["expected_snapshot"],
+                            "actual": actual_snapshot,
+                        },
+                    ),
+                    stage_attrs={"stage": "core.snapshot_guard"},
+                    stdout=stdout, stderr=stderr,
+                )
+            attempt.event(diag_conventions.EVENT_SNAPSHOT_GUARD_PASSED)
+            with gateway_request_context(context), verified_gateway_snapshot(
+                root, actual_snapshot
+            ):
+                if requested not in REGISTRY:
+                    raise WriteRefused(f"capability {requested} is not registered")
+                code, result = _registered_compute(
+                    root, requested, envelope, payload,
+                    context=context, definitions=definitions)
+    except WriteRefused as exc:
+        _audit_failure(envelope.get("capability"), exc)
+        # Preserve an explicit exit_code override (amendment (ac)).
+        code = exc.exit_code if exc.exit_code is not None else 2
+        result = {"error": str(exc)}
+        failure = exc
+    except TransactionSnapshotConflict as exc:
+        _audit_failure(envelope.get("capability"), exc)
+        return _outcome_from_table(
+            root, envelope, attempt, exc,
+            context="gateway.dispatch",
+            message="canonical state changed before the transaction write window",
+            stdout=stdout, stderr=stderr,
+        )
+    except (
+        ProjectionFailure,
+        TransactionPublicationUncertain,
+        PostCommitFailure,
+        TransactionRecoveryConflict,
+    ) as exc:
+        _audit_failure(envelope.get("capability"), exc)
+        kwargs: dict[str, object] = {}
+        if isinstance(exc, TransactionPublicationUncertain):
+            kwargs = {
+                "transaction_id": exc.transaction_id,
+                "receipt_path": exc.receipt_path,
+                "commit": "unknown",
+            }
+        elif isinstance(exc, PostCommitFailure):
+            kwargs = {
+                "transaction_id": exc.transaction_id,
+                "receipt_path": exc.receipt_path,
+                "snapshot_after": exc.snapshot_after,
+            }
+        return _outcome_from_table(
+            root, envelope, attempt, exc,
+            context="gateway.dispatch",
+            stdout=stdout, stderr=stderr,
+            **kwargs,  # type: ignore[arg-type]
+        )
+    except (TransactionFailure, ValueError) as exc:
+        _audit_failure(envelope.get("capability"), exc)
+        code, result = 2, {"error": str(exc)}
+        failure = exc
+    except Exception as exc:  # fail closed behind a typed V2 boundary
+        _audit_failure(envelope.get("capability"), exc)
+        return _outcome_from_table(
+            root, envelope, attempt, exc,
+            context="gateway.dispatch",
+            message=str(exc) or type(exc).__name__,
+            stdout=stdout, stderr=stderr,
+            commit="unknown",
+        )
+    confirmation = result if code == 0 else {}
+    complaint = str(result.get("error") or f"{requested} failed")
+    carried = result.get("error_code")
+    refusal = Refusal(carried, bool(result.get("error_retryable"))) \
+        if isinstance(carried, str) else None
+    error = None if code == 0 else _classify_failure(
+        code, complaint, failure=failure, refusal=refusal)
+    if error is not None:
+        error["details"].update(result.get("error_details", {}))
+    response = _v2_response(
+        envelope,
+        ok=code == 0,
+        replayed=bool(confirmation.get("replayed", False)),
+        transaction_id=confirmation.get("transaction_id"),
+        receipt_path=confirmation.get("receipt_path"),
+        snapshot_after=confirmation.get("snapshot_after"),
+        result=result if code == 0 else {},
+        error=error,
+    )
+    _validate_capability_envelope(root, response, kind="result")
+    stdout.append(json.dumps(response, ensure_ascii=False, **_json_layout()) + "\n")
+    # A carried (INTERNAL_FAILURE, True) pair is TransactionRollbackIncomplete,
+    # whose commit outcome is genuinely unknown.
+    carried_unknown = refusal == Refusal(INTERNAL_FAILURE, True)
+    return _finish(
+        attempt, _v2_exit_code(code, error),
+        "ok" if code == 0 else "error",
+        {"replayed": bool(confirmation.get("replayed", False))} if code == 0 else {},
+        stdout=stdout, stderr=stderr, response=response,
+        commit="unknown" if carried_unknown else None)
