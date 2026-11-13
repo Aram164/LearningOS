@@ -1252,7 +1252,7 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     session = _study_session(ctx, req, required=True)
     if not req.get("extract"):
         raise WriteRefused(
-            "material-study-span always reads text; pass --extract (the study hook "
+            "material-study-span always reads text; pass --extract (the study broker "
             "rewrites material-span ... --extract into this command)",
             site=f"{ctx.operation}.needs-extract", prefixed=True, exit_code=2)
     span_req = {

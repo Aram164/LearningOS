@@ -29,7 +29,7 @@ READING_MEMORY_DIRNAME = "reading-memory"
 
 
 def protected_reads(core: Path) -> list[Path]:
-    """Subtrees holding raw materials, reading memory, raw-text caches, or AI requests (PLAN-D D1)."""
+    """Subtrees holding raw materials, reading memory, raw-text caches, summaries, or AI requests."""
     resolved = Path(core).resolve()
     learningos = resolved.parent
     return [
@@ -39,6 +39,7 @@ def protected_reads(core: Path) -> list[Path]:
         resolved / "generated" / "material-search",
         resolved / "generated" / "material-outlines",
         resolved / "generated" / "derived-state",
+        resolved / "generated" / "summaries",
         resolved / "operations" / "ai-actions" / "requests",
     ]
 

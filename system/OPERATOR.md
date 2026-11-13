@@ -375,23 +375,32 @@ which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
 (`tools/learning_os/adapters/study_broker.py`). Seatbelt denies reads to
 `LearningOS/materials/`, `LearningOS/reading-memory/`,
 `generated/text-cache/`, `generated/material-search/`,
-`generated/material-outlines/`, `generated/derived-state/`, and non-`.gitkeep`
+`generated/material-outlines/`, `generated/derived-state/`,
+`generated/summaries/`, and non-`.gitkeep`
 entries under `operations/ai-actions/requests/`, and denies all writes to
 `LearningOS/`, while allocating `$LOS_SCRATCH_DIR` outside `LearningOS/` for
 temporary files and `--check-out` / `--out` artifacts.
 
 Boundary scope: Seatbelt isolates LearningOS data and reading-memory integrity
 with `(allow default)` for ordinary system/runtime files outside those closed
-trees rather than full-host confinement. `tools/study_launch.py` owns session
-creation, `--root` and host `LOS_OBSERVATIONS` pinning, and `session_end` on
-exit; `tools/study_hooks.py` supplies only optional UX
-lifecycle nudges (`session-start`, `stop`, `SubagentStop`, and opt-in
-`profile --out`).
+trees rather than full-host confinement — host runtime state outside
+`LearningOS/` (such as `~/.claude/projects/` tool-result caches or agent
+session logs) stays writable and persists after `$LOS_SCRATCH_DIR` cleanup.
+`tools/study_launch.py` owns session creation, `--root` and host
+`LOS_OBSERVATIONS` pinning, and `session_end` on exit; `tools/study_hooks.py`
+supplies only optional UX lifecycle nudges (`session-start`, `stop`,
+`SubagentStop`, and opt-in `profile --out`, loaded via `-- --settings
+../LearningOS/.claude/settings.json` when running `claude` from
+`LearningOS/repository/`). Study-mode v1 release certification covers
+Claude Code; `codex` and `gemini` launch modes remain non-certified outside
+macOS Seatbelt / host acceptance.
 
 Study workflow boundaries:
 
 - **Reuse existing reading memory first:** Run `material-search` or
-  `material-context` first (both return matching `study_cards` inline), target
+  `material-context` first (with study scope, `material-search` attaches
+  matching compact cards on `hits[].cards` alongside top-level `study`, and
+  `material-context` returns `study_cards`), target
   exact `span_reference` / uncovered pages rather than wide unsectioned PDF
   ranges, pass `--omit-covered-text` on `material-study-span` (or
   `material-span ... --extract`) when checking covered cards without repeating

@@ -1,5 +1,21 @@
 schema: 1
 approvals:
+  - key: request_schemas.material.study-span.schema.json
+    change: changed
+    plan_ref: "system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md (align request schema descriptions with study broker / Seatbelt isolation)"
+    pre_approved_by: "Aram 2026-11-13: take all decisions yourself and do all the steps you listed"
+  - key: request_schemas.material.card.settle.schema.json
+    change: changed
+    plan_ref: "system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md (align request schema descriptions with study broker / Seatbelt isolation)"
+    pre_approved_by: "Aram 2026-11-13: take all decisions yourself and do all the steps you listed"
+  - key: request_schemas.material.search.schema.json
+    change: changed
+    plan_ref: "system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md (align request schema descriptions with study broker / Seatbelt isolation)"
+    pre_approved_by: "Aram 2026-11-13: take all decisions yourself and do all the steps you listed"
+  - key: request_schemas.material.context.schema.json
+    change: changed
+    plan_ref: "system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md (align request schema descriptions with study broker / Seatbelt isolation)"
+    pre_approved_by: "Aram 2026-11-13: take all decisions yourself and do all the steps you listed"
   - key: cli.material-study-span
     change: changed
     plan_ref: "outputs/2026-11-13-trial-findings-evidence-and-fix-plan.md F1 (--omit-covered-text opt-in on material-study-span)"

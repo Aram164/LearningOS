@@ -67,6 +67,14 @@ the hooks, never left to a prompt) and "keep cards private".
    transient failure, and a failed SessionStart still fails capture closed at
    the gateway, because PreToolUse-injected study reads create their own
    session records.
+
+   *Amendment (2026-11-13, ADR-022):* Phase D replaced `PreToolUse` AST/path
+   blocking and `onFailure: "block"` with an OS-enforced boundary
+   (`tools/study_launch.py` + macOS Seatbelt + host `study_broker.py`).
+   `tools/study_hooks.py` now installs only optional UX lifecycle hooks
+   (`SessionStart`, `Stop`, `SubagentStop`, `SessionEnd`), and
+   `system/contracts/perimeter.yaml` declares `LearningOS/.claude` as
+   `optional: true`. See `system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md`.
 6. **Unreviewed, never evidence.** Served cards say `review: unreviewed` and
    `coverage_evidence: false`; concept ids are checked when a card is served and
    dangling ones are marked. A card never counts as source-coverage evidence.

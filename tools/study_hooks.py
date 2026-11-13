@@ -84,7 +84,9 @@ def session_start(event: dict[str, object]) -> str:
 
     session = event.get("session_id")
     lines = [
-        "LearningOS study profile (reading memory, ADR-021).",
+        "LearningOS study profile (reading memory, ADR-021 / ADR-022).",
+        "- Note: no study sandbox active (LOS_GATE_SOCK unset): file reads are unfenced "
+        "and material-span --extract does not rewrite automatically.",
         "- Start with:\n"
         "  .venv/bin/python tools/los.py bootstrap --brief\n"
         "- Search first to check existing reading cards before opening PDFs:\n"

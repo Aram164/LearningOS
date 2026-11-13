@@ -258,7 +258,7 @@
     },
     "session": {
       "type": "string",
-      "description": "study scope, injected by the study profile's PreToolUse hook: also return the compact private reading cards relevant to the answer (unreviewed, never coverage evidence)",
+      "description": "study scope, pinned by the study broker over LOS_GATE_SOCK (or passed directly off-sandbox): also return compact private reading cards under study_cards (unreviewed, never coverage evidence)",
       "x-los-cli": {
         "flags": [
           "--session"

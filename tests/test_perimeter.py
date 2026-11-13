@@ -288,6 +288,22 @@ def test_dotfiles_are_declared_but_not_drawn(tmp_path):
     assert ".env" not in pm.render(pm.load(root))
 
 
+def test_optional_claude_directory_allowed_when_present_or_absent(tmp_path):
+    """`LearningOS/.claude` is optional on disk and omitted from the root diagram."""
+    entries = _base_entries() + [
+        {"path": "LearningOS/.claude", "kind": "directory", "optional": True,
+         "owner": "agent-config", "purpose": "opt-in study UX hooks"}]
+    absent = _wrapper(tmp_path, entries=entries)
+    assert pm.check(absent) == []
+    present = _wrapper(
+        tmp_path / "with-claude",
+        entries=entries,
+        files={"LearningOS/.claude/settings.json": b"{}\n"},
+    )
+    assert pm.check(present) == []
+    assert ".claude" not in pm.render(pm.load(present))
+
+
 # ---- the live half ----------------------------------------------------------
 
 @pytest.mark.full_repo

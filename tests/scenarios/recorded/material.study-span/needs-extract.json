@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: material-study-span always reads text; pass --extract (the study hook rewrites material-span ... --extract into this command)\n",
+  "stderr": "los: material-study-span always reads text; pass --extract (the study broker rewrites material-span ... --extract into this command)\n",
   "stdout": "",
   "stdout_json": null
 }

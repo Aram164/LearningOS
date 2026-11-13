@@ -6,9 +6,13 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 (``tools/learning_os/adapters/study_broker.py``):
 
 - Read-denies ``LearningOS/materials/``, ``LearningOS/reading-memory/``,
-  ``generated/{text-cache,material-search,material-outlines,derived-state}/``,
+  ``generated/{text-cache,material-search,material-outlines,derived-state,summaries}/``,
   and non-``.gitkeep`` children of ``operations/ai-actions/requests/``.
 - Write-denies all of ``LearningOS/``.
+- Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
+  tokens (except inline code following ``-c``/``-e``/``-m``), rewrites
+  caller-relative existing path tokens under ``caller_cwd`` that lie outside
+  ``CORE`` to absolute paths while leaving non-existent path tokens relative.
 - Allocates ``$LOS_SCRATCH_DIR`` (``$TMPDIR``) outside ``LearningOS/`` and mints
   an authoritative study session UUID before launching ``claude``, ``codex``,
   ``gemini``, or ``--cmd``.

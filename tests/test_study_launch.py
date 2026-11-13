@@ -58,6 +58,7 @@ def _make_study_world(core: Path) -> Path:
         "generated/material-search",
         "generated/material-outlines",
         "generated/derived-state",
+        "generated/summaries/doc1/pages-1-2",
         "operations/ai-actions/requests/req-1",
         "knowledge/garden",
     ):
@@ -71,6 +72,9 @@ def _make_study_world(core: Path) -> Path:
     (core / "generated/derived-state/d.json").write_text(
         json.dumps({"_generated": "generated; do not edit", "canary": "CANARY_DERIVED"}),
         encoding="utf-8",
+    )
+    (core / "generated/summaries/doc1/pages-1-2/summary.md").write_text(
+        "<!-- GENERATED file - do not edit -->\n\nCANARY_SUMMARY\n", encoding="utf-8",
     )
     (core / "operations/ai-actions/requests/.gitkeep").write_text("", encoding="utf-8")
     (core / "operations/ai-actions/requests/req-1/slice.md").write_text(
@@ -315,6 +319,7 @@ closed_files = [
     core / "generated/material-search/idx.sqlite3",
     core / "generated/material-outlines/o.json",
     core / "generated/derived-state/d.json",
+    core / "generated/summaries/doc1/pages-1-2/summary.md",
     core / "operations/ai-actions/requests/req-1/slice.md",
 ]
 # Create future.md on host? Here test requests/.gitkeep vs non-gitkeep and existing tree.
