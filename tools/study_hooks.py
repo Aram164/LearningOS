@@ -45,6 +45,7 @@ from learning_os.store.materials.reading_cards import (  # noqa: E402
     treatment_kinds_hint,
     valid_session,
 )
+from learning_os.store.study_fence import STUDY_FENCE_CORE_ENV  # noqa: E402
 
 
 def _forward_broker_hook(
@@ -83,10 +84,16 @@ def session_start(event: dict[str, object]) -> str:
         )
 
     session = event.get("session_id")
+    sandboxed = bool(os.environ.get(STUDY_FENCE_CORE_ENV))
     lines = [
         "LearningOS study profile (reading memory, ADR-021 / ADR-022).",
-        "- Note: no study sandbox active (LOS_GATE_SOCK unset): file reads are unfenced "
-        "and material-span --extract does not rewrite automatically.",
+    ]
+    if not sandboxed:
+        lines.append(
+            "- Note: no study sandbox active (LOS_GATE_SOCK unset): file reads are unfenced "
+            "and material-span --extract does not rewrite automatically."
+        )
+    lines.extend([
         "- Start with:\n"
         "  .venv/bin/python tools/los.py bootstrap --brief\n"
         "- Search first to check existing reading cards before opening PDFs:\n"
@@ -107,7 +114,7 @@ def session_start(event: dict[str, object]) -> str:
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
         "(seal_envelope.py --submit validates on the host; run validate.py with --no-report "
         "inside study mode and commit outside study mode).",
-    ]
+    ])
     if not valid_session(session):
         return "\n".join([*lines, "- No session id arrived: study reads will refuse."])
     store = ReadingStore(CORE)

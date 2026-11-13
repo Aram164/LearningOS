@@ -24,6 +24,7 @@ from repo_builders import add_curriculum, write_minimal_pdf
 
 from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, StudyBroker
 from learning_os.store.materials.reading_cards import ReadingStore
+from learning_os.store.study_fence import STUDY_FENCE_CORE_ENV
 
 ROOT = Path(__file__).resolve().parents[1]
 S = "cccccccc-3333-4333-8333-333333333333"
@@ -72,6 +73,7 @@ def _hook(
 ) -> subprocess.CompletedProcess[str]:
     run_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     run_env.pop(GATE_SOCK_ENV, None)
+    run_env.pop(STUDY_FENCE_CORE_ENV, None)
     if env is not None:
         run_env.update(env)
     return subprocess.run(
@@ -215,6 +217,7 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
         started = _hook(world, "session-start", {"session_id": OTHER}, env=sock_env)
         assert started.returncode == 0, started.stderr
         assert ".venv/bin/python tools/los.py bootstrap --brief" in started.stdout
+        assert "LOS_GATE_SOCK unset" not in started.stdout
 
         stopped = _hook(world, "stop", {"session_id": OTHER, "stop_hook_active": False}, env=sock_env)
         assert stopped.returncode == 0, stopped.stderr
