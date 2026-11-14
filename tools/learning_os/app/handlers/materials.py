@@ -1364,18 +1364,13 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     })
 
 
-def _settle_result(ctx, session, settlement, store) -> Result:
-    known = (
-        set(ctx.repo().concepts)
-        if settlement.card is not None and settlement.card.get("concepts")
-        else set()
-    )
+def _settle_result(session, settlement, store, *, known_concepts: set[str]) -> Result:
     return Result({
         "schema_version": 1, "contract": "material-card-settle-v1",
         "session": session, "outcome": settlement.outcome,
         "replayed": settlement.replayed,
         "entries": [entry_view(row) for row in settlement.entries],
-        "card": (store.served_card(settlement.card, known)
+        "card": (store.served_card(settlement.card, known_concepts)
                  if settlement.card is not None else None),
         "remaining": [entry_view(row) for row in settlement.remaining],
     })
@@ -1398,10 +1393,16 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--observed-sha256 belongs to --source-changed only",
             site=f"{ctx.operation}.bad-form", prefixed=True, exit_code=2)
+    card_req = req.get("card")
+    known_concepts = (
+        set(ctx.repo().concepts)
+        if modes == ["card"] and isinstance(card_req, dict) and card_req.get("concepts")
+        else set()
+    )
     store = ReadingStore(ctx.root)
     try:
         if modes == ["card"]:
-            settlement = store.save(session, entry, req["card"])
+            settlement = store.save(session, entry, card_req)
         elif modes == ["dismiss"]:
             settlement = store.dismiss(session, entry, req["dismiss"], reason=req.get("reason"),
                                        covering_card=req.get("covering_card"))
@@ -1443,7 +1444,7 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
                                exit_code=2, remedy=exc.remedy) from exc
         raise WriteRefused(str(exc), site=f"{ctx.operation}.unknown-entry", prefixed=True,
                            exit_code=2, remedy=exc.remedy) from exc
-    return _settle_result(ctx, session, settlement, store)
+    return _settle_result(session, settlement, store, known_concepts=known_concepts)
 
 
 def _study_hit_cards(ctx, repo, session, payload) -> None:

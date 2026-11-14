@@ -1106,3 +1106,44 @@ def test_material_card_settle_skips_repo_load_without_concepts(world, monkeypatc
     })
     assert repo_calls == 1
     assert res.payload["card"]["dangling_concepts"] == ["concept-not-registered"]
+
+
+def test_material_card_settle_repo_load_failure_persists_no_card(world, monkeypatch):
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.materials import material_card_settle
+    from learning_os.store.materials.reading_cards import ReadingStore
+
+    entry = _entry(_ok(_read(world, A, "pdf p. 4")))
+    store = ReadingStore(world)
+    cards_before = store.all_cards()
+    real_repo = OpContext.repo
+
+    def failing_repo(self):
+        raise RuntimeError("simulated repo load failure")
+
+    monkeypatch.setattr(OpContext, "repo", failing_repo)
+
+    def make_ctx():
+        return OpContext(
+            root=world, operation="material.card.settle",
+            channel="operator", invocation="tool", gateway=None,
+        )
+
+    card_payload = json.loads(_card(4, 4))
+    with pytest.raises(RuntimeError, match="simulated repo load failure"):
+        material_card_settle(make_ctx(), {
+            "session": A, "entry": entry, "card": card_payload,
+        })
+
+    assert store.all_cards() == cards_before
+    row, settled = store.entry(entry)
+    assert row is not None
+    assert settled is False
+
+    monkeypatch.setattr(OpContext, "repo", real_repo)
+    res = material_card_settle(make_ctx(), {
+        "session": A, "entry": entry, "card": card_payload,
+    })
+    assert res.payload["outcome"] == "saved"
+    assert res.payload["replayed"] is False
+    assert res.payload["card"]["dangling_concepts"] == ["concept-not-registered"]
