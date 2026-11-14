@@ -410,11 +410,16 @@ Study workflow boundaries:
   `material-card-settle ENTRY --dismiss irrelevant --reason '...'`.
 - **Scratch, validation, and closing:** Point `--check-out`, `--out`, and
   `--report-out` under `$LOS_SCRATCH_DIR`. By default `$LOS_SCRATCH_DIR` is
-  ephemeral per launch (pass `--persist-scratch` or `--scratch-dir DIR` on
-  `tools/study_launch.py` to retain scratch across resumed launches, or on a
-  resumed confirmation turn run `seal_envelope.py ... --guards auto --submit`
-  directly if an earlier `--check-out` file is absent). Inside Seatbelt,
-  `materials/` is unmounted (`W MATERIALS-OFFLINE`) and `LearningOS/` is read-only: use
+  ephemeral and removed on exit. Opt-in `--persist-scratch` or
+  `--scratch-dir DIR` on `tools/study_launch.py` initializes a dedicated `0700`
+  directory outside `LearningOS/` stamped with `.learningos-scratch.json` and
+  bound to that LearningOS checkout and `--session` UUID (pre-existing
+  unrelated directories and cross-session reuse are refused); remove retained
+  scratch directories manually (`rm -rf`) once the resumed session is done, or
+  on a resumed confirmation turn run `seal_envelope.py ... --guards auto
+  --submit` directly if an earlier `--check-out` file is absent. Inside
+  Seatbelt, `materials/` is unmounted (`W MATERIALS-OFFLINE`) and `LearningOS/`
+  is read-only: use
   `.venv/bin/python tools/validate.py --compact --no-report` if running manual
   validation, rely on host validation printed by `tools/seal_envelope.py --submit`,
   and commit or run `session-end` outside study mode.

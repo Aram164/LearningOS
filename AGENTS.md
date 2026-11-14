@@ -40,7 +40,10 @@ When running inside a study launch (`tools/study_launch.py` / `LOS_GATE_SOCK` ac
   appear in `kinds` (matched sets), each `page` must lie in the entry's range,
   and each `label` is `1-160` chars.
 - **Scratch & writes:** Write scratch, `--check-out`, and `--out` files only
-  under `$LOS_SCRATCH_DIR`. Scratch resets across launches unless
-  `--persist-scratch` or `--scratch-dir` is used; on a resumed confirmation turn,
-  pass `--guards auto --submit` directly to `tools/seal_envelope.py` if an
-  earlier check file is gone.
+  under `$LOS_SCRATCH_DIR`. Scratch resets across launches by default unless
+  `--persist-scratch` or `--scratch-dir` initializes a dedicated,
+  `.learningos-scratch.json`-marked, single-session directory outside
+  `LearningOS/` (pre-existing unrelated or other-session directories are
+  refused; remove retained scratch manually when finished). On a resumed
+  confirmation turn without the prior check file, pass `--guards auto --submit`
+  directly to `tools/seal_envelope.py`.

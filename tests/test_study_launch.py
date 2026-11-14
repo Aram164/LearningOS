@@ -1266,9 +1266,10 @@ assert json.loads(p.stdout)["ok"] is True
     finally:
         shutil.rmtree(expected_dir, ignore_errors=True)
 
-    # 2. --scratch-dir outside LearningOS/ persists across different session UUIDs,
-    #    while --scratch-dir inside LearningOS/ or via symlink fails closed.
-    shared_scratch = tmp_path / "shared-scratch"
+    # 2. Dedicated --scratch-dir outside LearningOS/ initializes .learningos-scratch.json,
+    #    retains files for the same session UUID, write-denies the marker in Seatbelt,
+    #    and refuses other sessions, pre-existing unrelated dirs (without chmod), or symlinks.
+    shared_scratch = tmp_path / "dedicated-scratch"
     rc3 = study_launch.launch_study(
         core_root=core,
         command=[sys.executable, str(write_script)],
@@ -1277,13 +1278,27 @@ assert json.loads(p.stdout)["ok"] is True
     )
     assert rc3 == 0
     assert (shared_scratch / "check.json").is_file()
+    marker = shared_scratch / study_launch.SCRATCH_MARKER_NAME
+    marker_data = json.loads(marker.read_text(encoding="utf-8"))
+    assert marker_data["owner"] == "learningos-study-scratch"
+    assert marker_data["session_id"] == S1
+    assert marker_data["learningos"] == str(Path(os.path.realpath(core.parent)))
+    assert (shared_scratch.stat().st_mode & 0o777) == 0o700
+    assert (marker.stat().st_mode & 0o777) == 0o600
 
-    # Check missing --guards-from hint when pointed at an absent path in study mode.
-    missing_script = tmp_path / "missing_guards.py"
-    missing_script.write_text(
-        f"""import os, subprocess
+    # Same session can resume into the initialized directory, hits --guards auto hint on absent
+    # --guards-from file, and cannot overwrite .learningos-scratch.json inside Seatbelt.
+    resume_script = tmp_path / "resume_same_session.py"
+    resume_script.write_text(
+        f"""import errno, os, subprocess
 from pathlib import Path
-absent = Path(os.environ["LOS_SCRATCH_DIR"]) / "does-not-exist.json"
+scratch = Path(os.environ["LOS_SCRATCH_DIR"])
+try:
+    (scratch / {study_launch.SCRATCH_MARKER_NAME!r}).write_text("tamper", encoding="utf-8")
+    raise SystemExit(9)
+except PermissionError as exc:
+    assert exc.errno == errno.EPERM
+absent = scratch / "does-not-exist.json"
 p = subprocess.run([
     {py!r}, {seal_py!r},
     "--guards-from", str(absent),
@@ -1296,11 +1311,53 @@ assert "--guards auto --submit" in p.stderr, p.stderr
     )
     rc4 = study_launch.launch_study(
         core_root=core,
-        command=[sys.executable, str(missing_script)],
-        session_id=S2,
+        command=[sys.executable, str(resume_script)],
+        session_id=S1,
         scratch_dir_override=shared_scratch,
     )
     assert rc4 == 0
+
+    # Cross-session reuse of an initialized --scratch-dir or --persist-scratch dir fails closed.
+    assert study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S2,
+        scratch_dir_override=shared_scratch,
+    ) == 2
+
+    # Pre-existing unrelated user directory is refused BEFORE touching permissions or files.
+    unrelated_dir = tmp_path / "existing-user-dir"
+    unrelated_dir.mkdir(mode=0o755)
+    unrelated_dir.chmod(0o755)
+    (unrelated_dir / "keep.txt").write_text("do not expose\n", encoding="utf-8")
+    assert study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        scratch_dir_override=unrelated_dir,
+    ) == 2
+    assert (unrelated_dir.stat().st_mode & 0o777) == 0o755
+    assert not (unrelated_dir / study_launch.SCRATCH_MARKER_NAME).exists()
+
+    # Foreign-checkout marker is refused without touching directory or child.
+    foreign_scratch = tmp_path / "foreign-scratch"
+    foreign_scratch.mkdir(mode=0o700)
+    (foreign_scratch / study_launch.SCRATCH_MARKER_NAME).write_text(
+        json.dumps({
+            "schema": 1,
+            "owner": "learningos-study-scratch",
+            "learningos": str(tmp_path / "OtherLearningOS"),
+            "session_id": S1,
+        }),
+        encoding="utf-8",
+    )
+    (foreign_scratch / study_launch.SCRATCH_MARKER_NAME).chmod(0o600)
+    assert study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        scratch_dir_override=foreign_scratch,
+    ) == 2
 
     assert study_launch.launch_study(
         core_root=core,

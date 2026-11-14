@@ -27,8 +27,11 @@ release certification.
    - Temporary files, `--check-out`, `--out`, and `--report-out` live in
      `$LOS_SCRATCH_DIR` allocated outside `LearningOS/`, ephemeral per launch by
      default and removed after `tools/study_launch.py` records `session_end` in
-     `finally:` unless `--persist-scratch` or `--scratch-dir` is explicitly
-     passed to retain scratch across resumed launches.
+     `finally:`. Opt-in `--persist-scratch` or `--scratch-dir` initializes a
+     dedicated `0700` directory with `.learningos-scratch.json` bound to that
+     LearningOS checkout and `--session` UUID (refusing pre-existing unrelated
+     or other-session directories and write-denying the marker inside Seatbelt),
+     which remains on disk until manually removed.
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
      `material-study-span`, blocks file inputs touching `protected_reads(core)`
