@@ -45,6 +45,12 @@ from learning_os.store.materials.reading_cards import (  # noqa: E402
     treatment_kinds_hint,
     valid_session,
 )
+from learning_os.store.study_fence import STUDY_FENCE_CORE_ENV  # noqa: E402
+
+
+def _study_sandbox_active() -> bool:
+    """True when running inside StudyBroker's host study fence (`LOS_STUDY_FENCE_CORE`)."""
+    return bool(os.environ.get(STUDY_FENCE_CORE_ENV, "").strip())
 
 
 def _forward_broker_hook(
@@ -83,10 +89,16 @@ def session_start(event: dict[str, object]) -> str:
         )
 
     session = event.get("session_id")
+    sandbox_note = (
+        "- Note: study sandbox active: protected file reads and LearningOS writes are "
+        "fenced, and material-span --extract rewrites automatically."
+        if _study_sandbox_active()
+        else "- Note: no study sandbox active (LOS_GATE_SOCK unset): file reads are unfenced "
+        "and material-span --extract does not rewrite automatically."
+    )
     lines = [
         "LearningOS study profile (reading memory, ADR-021 / ADR-022).",
-        "- Note: no study sandbox active (LOS_GATE_SOCK unset): file reads are unfenced "
-        "and material-span --extract does not rewrite automatically.",
+        sandbox_note,
         "- Start with:\n"
         "  .venv/bin/python tools/los.py bootstrap --brief\n"
         "- Search first to check existing reading cards before opening PDFs:\n"
@@ -209,7 +221,7 @@ def stop(event: dict[str, object]) -> dict[str, object] | None:
 
 def session_end(event: dict[str, object]) -> str:
     """Session termination (C7): record the end when running outside study_launch."""
-    if os.environ.get(GATE_SOCK_ENV):
+    if os.environ.get(GATE_SOCK_ENV) or _study_sandbox_active():
         # Under study_launch.py the host launcher records session_end in finally:.
         return ""
     session = event.get("session_id")

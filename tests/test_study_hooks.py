@@ -24,6 +24,7 @@ from repo_builders import add_curriculum, write_minimal_pdf
 
 from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, StudyBroker
 from learning_os.store.materials.reading_cards import ReadingStore
+from learning_os.store.study_fence import STUDY_FENCE_CORE_ENV, STUDY_FENCE_SCRATCH_ENV
 
 ROOT = Path(__file__).resolve().parents[1]
 S = "cccccccc-3333-4333-8333-333333333333"
@@ -72,6 +73,8 @@ def _hook(
 ) -> subprocess.CompletedProcess[str]:
     run_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     run_env.pop(GATE_SOCK_ENV, None)
+    run_env.pop(STUDY_FENCE_CORE_ENV, None)
+    run_env.pop(STUDY_FENCE_SCRATCH_ENV, None)
     if env is not None:
         run_env.update(env)
     return subprocess.run(
@@ -121,12 +124,18 @@ def test_client_side_ast_and_file_fences_were_removed() -> None:
     assert subparsers and "pre-tool-use" not in subparsers[0]
 
 
-def test_session_start_touches_store_and_reports_clean_state(_in_process_store: Path) -> None:
+def test_session_start_touches_store_and_reports_clean_state(
+    _in_process_store: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(GATE_SOCK_ENV, raising=False)
+    monkeypatch.delenv(STUDY_FENCE_CORE_ENV, raising=False)
     beside = study_hooks.CORE.parent / "reading-memory"
     existed = beside.exists()
     out = study_hooks.session_start({"session_id": S, "source": "startup"})
     assert ".venv/bin/python tools/los.py bootstrap --brief" in out
-    assert "LOS_GATE_SOCK unset" in out
+    assert "no study sandbox active (LOS_GATE_SOCK unset)" in out
+    assert "Note: study sandbox active:" not in out
     assert "--omit-covered-text" in out
     assert "$LOS_SCRATCH_DIR" in out
     assert "No adoptable entries." in out
@@ -134,6 +143,13 @@ def test_session_start_touches_store_and_reports_clean_state(_in_process_store: 
     assert (_in_process_store / "sessions" / f"{S}.json").is_file()
     assert beside.exists() == existed
     assert not (beside / "sessions" / f"{S}.json").exists()
+
+    # Blank or whitespace-only STUDY_FENCE_CORE_ENV must still report standalone unfenced mode.
+    monkeypatch.setenv(STUDY_FENCE_CORE_ENV, "   ")
+    ws_out = study_hooks.session_start({"session_id": S, "source": "startup"})
+    assert "no study sandbox active (LOS_GATE_SOCK unset)" in ws_out
+    assert "Note: study sandbox active:" not in ws_out
+    monkeypatch.delenv(STUDY_FENCE_CORE_ENV, raising=False)
 
     no_sid = study_hooks.session_start({"source": "startup"})
     assert "No session id arrived" in no_sid
@@ -215,6 +231,11 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
         started = _hook(world, "session-start", {"session_id": OTHER}, env=sock_env)
         assert started.returncode == 0, started.stderr
         assert ".venv/bin/python tools/los.py bootstrap --brief" in started.stdout
+        assert "Note: study sandbox active:" in started.stdout
+        assert "no study sandbox active" not in started.stdout
+        assert "LOS_GATE_SOCK unset" not in started.stdout
+        assert str(sock_path) not in started.stdout
+        assert str(sock_dir) not in started.stdout
 
         stopped = _hook(world, "stop", {"session_id": OTHER, "stop_hook_active": False}, env=sock_env)
         assert stopped.returncode == 0, stopped.stderr
@@ -222,13 +243,33 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
         assert decision["decision"] == "block"
         assert "material-card-settle rd-" in decision["reason"]
 
-        # Inside Seatbelt, study_launch owns session_end on exit; hook SessionEnd no-ops safely.
+        # Inside Seatbelt or a broker fence, study_launch owns session_end on exit; SessionEnd no-ops safely.
         ended = _hook(world, "session-end", {"session_id": S}, env=sock_env)
         assert ended.returncode == 0
         assert ended.stdout == ""
+        fenced_ended = _hook(
+            world,
+            "session-end",
+            {"session_id": S},
+            env={STUDY_FENCE_CORE_ENV: str(world)},
+        )
+        assert fenced_ended.returncode == 0
+        assert fenced_ended.stdout == ""
         store = ReadingStore(world)
         session_row = json.loads((store.root / "sessions" / f"{S}.json").read_text(encoding="utf-8"))
         assert session_row.get("ended_at") is None
+
+        # Broker Stop escalates cleanly on second ask then marks overdue on third; SessionStart reports it.
+        stop2 = _hook(world, "stop", {"session_id": S, "stop_hook_active": True}, env=sock_env)
+        assert stop2.returncode == 0
+        assert json.loads(stop2.stdout)["decision"] == "block"
+        stop3 = _hook(world, "stop", {"session_id": S, "stop_hook_active": True}, env=sock_env)
+        assert stop3.returncode == 0
+        assert "now overdue" in json.loads(stop3.stdout)["systemMessage"]
+        resumed = _hook(world, "session-start", {"session_id": S, "source": "resume"}, env=sock_env)
+        assert resumed.returncode == 0
+        assert "Note: study sandbox active:" in resumed.stdout
+        assert "1 overdue entries" in resumed.stdout
     finally:
         server.close()
         shutil.rmtree(sock_dir, ignore_errors=True)
@@ -237,6 +278,7 @@ def test_hooks_forward_over_broker_socket_and_session_end_noops_in_sandbox(world
     dead_start = _hook(world, "session-start", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
     assert dead_start.returncode == 0
     assert ".venv/bin/python tools/los.py bootstrap --brief" in dead_start.stdout
+    assert "no study sandbox active" not in dead_start.stdout
     dead_stop = _hook(world, "stop", {"session_id": S}, env={GATE_SOCK_ENV: str(sock_path)})
     assert dead_stop.returncode == 0
     assert dead_stop.stdout == ""
