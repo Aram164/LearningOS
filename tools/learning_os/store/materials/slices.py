@@ -191,6 +191,9 @@ MANDATORY_SLICE_SCOPES = frozenset({"current", "prerequisite"})
 #: dropping routes. Continuation passes reuse this same ceiling.
 MAX_SLICE_PAGES = 20
 
+#: Maximum characters returned in one span excerpt across a slice request.
+MAX_EXCERPT = 6000
+
 #: Pass ceiling per route inside one comparison request: the initial slice
 #: is pass 1, so at most two targeted continuations can follow. The process
 #: stops earlier as soon as the evidence suffices; the cap only prevents

@@ -153,19 +153,29 @@ def _row_range(row: dict[str, object]) -> dict[str, int]:
 
 LOS_COMMAND = ".venv/bin/python tools/los.py"
 
+CARD_JSON_TEMPLATE = (
+    '{"paraphrase": "<what these pages do, in your words>", '
+    '"kinds": ["<kind>"], "pointers": [{"page": <page>, '
+    '"kind": "<kind>", "label": "<what is there>"}]}'
+)
+
 
 def treatment_kinds_hint() -> str:
-    """Allowed card treatment kinds as standalone prose, never inside shell commands."""
-    return "Allowed card kinds: " + ", ".join(TREATMENT_KINDS) + "."
+    """Allowed card treatment kinds and shape constraints as prose without shell operators."""
+    return (
+        "Allowed card kinds: " + ", ".join(TREATMENT_KINDS) + ". "
+        f"Card rules: paraphrase {PARAPHRASE_MIN}-{PARAPHRASE_MAX} chars, "
+        "every listed kind must appear in pointers[].kind and every pointer's kind "
+        "must appear in kinds (matched sets), page within range, and "
+        f"label 1-{LABEL_MAX} chars."
+    )
 
 
 def settle_command(entry: str) -> str:
     """The exact save and dismiss commands for one entry, separated without shell operators (C1.6)."""
     save = (
         f"{LOS_COMMAND} material-card-settle {entry} --card "
-        "'{\"paraphrase\": \"<what these pages do, in your words>\", "
-        "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
-        "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'"
+        f"'{CARD_JSON_TEMPLATE}'"
     )
     dismiss = (
         f"{LOS_COMMAND} material-card-settle {entry} --dismiss irrelevant "
@@ -1065,13 +1075,19 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, object]:
             raise bad(f"pointer {index} page {page!r} is outside the recorded range "
                       f"{pages_label(rng['start'], rng['end'])}")
         if kind not in kinds:
-            raise bad(f"pointer {index} kind {kind!r} is not one of the card's kinds")
+            raise bad(
+                f"pointer {index} kind {kind!r} is not one of the card's kinds {kinds!r} "
+                f"(add {kind!r} to kinds or use one of the listed kinds)"
+            )
         if not isinstance(label, str) or not 1 <= len(label.strip()) <= LABEL_MAX:
             raise bad(f"pointer {index} label must be 1-{LABEL_MAX} characters")
         kept.append({"page": page, "kind": kind, "label": label.strip()})
     unbacked = [kind for kind in kinds if not any(row["kind"] == kind for row in kept)]
     if unbacked:
-        raise bad(f"kinds {', '.join(unbacked)} have no page pointer inside the range")
+        raise bad(
+            f"kinds {', '.join(unbacked)} have no page pointer inside the range "
+            "(add a pointer matching each listed kind, or remove unbacked kinds from kinds)"
+        )
     concepts = value.get("concepts", [])
     if (not isinstance(concepts, list) or len(concepts) > MAX_CONCEPTS
             or any(not isinstance(name, str) or CONCEPT_RE.fullmatch(name) is None for name in concepts)

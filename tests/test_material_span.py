@@ -498,6 +498,7 @@ def test_cut_off_pdf_extract_points_at_material_search(mini_repo: Path):
     hint = data["next_action"]
     assert hint is not None
     assert "This excerpt is cut off" in hint
+    assert "6000 chars" in hint and "20 pages" in hint
     assert 'material-search --unit unit-demo-l01 "terms"' in hint
     assert f"material-span unit-demo-l01 {route_id}" in hint
     assert "UNIT_ID" not in hint

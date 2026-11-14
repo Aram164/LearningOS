@@ -15,7 +15,8 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   ``CORE`` to absolute paths while leaving non-existent path tokens relative.
 - Allocates ``$LOS_SCRATCH_DIR`` (``$TMPDIR``) outside ``LearningOS/`` and mints
   an authoritative study session UUID before launching ``claude``, ``codex``,
-  ``gemini``, or ``--cmd``.
+  ``gemini``, ``agy``, or ``--cmd`` (pass ``--persist-scratch`` or
+  ``--scratch-dir`` to retain scratch files across resumed turns).
 - Records ``ReadingStore.session_end`` and cleans up the socket in ``finally:``
   even on child crash or kill.
 """
@@ -23,6 +24,7 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import shutil
 import signal
@@ -44,7 +46,7 @@ from learning_os.store.study_fence import is_within, protected_reads
 
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")
 LEARNINGOS_STUDY_NAMESPACE = uuid.UUID("7f3b0c4a-5e2d-4c8a-9b1f-3e6d1a2c4b8e")
-RUNTIMES = ("claude", "codex", "gemini")
+RUNTIMES = ("claude", "codex", "gemini", "agy")
 
 
 def _sbpl_quote(value: str) -> str:
@@ -254,6 +256,34 @@ def _allocate_scratch_dir(real_learningos: Path) -> Path:
     return _allocate_outside_dir("los-study-scratch-", real_learningos)
 
 
+def _persistent_scratch_path(real_learningos: Path, session_id: str) -> Path:
+    base = Path(os.path.realpath(tempfile.gettempdir()))
+    if is_within(base, real_learningos):
+        base = Path(os.path.realpath("/tmp"))
+    token = hashlib.sha256(
+        f"{os.geteuid()}:{real_learningos}:{session_id}".encode()
+    ).hexdigest()[:16]
+    return base / f"los-study-scratch-{os.geteuid()}-{token}"
+
+
+def _prepare_persistent_scratch_dir(path: Path, real_learningos: Path) -> Path:
+    expanded = Path(os.path.abspath(path.expanduser()))
+    if expanded.is_symlink():
+        raise ValueError(f"scratch directory must not be a symlink: {expanded}")
+    candidate = Path(os.path.realpath(expanded))
+    if is_within(candidate, real_learningos):
+        raise ValueError(f"scratch directory must live outside LearningOS/: {candidate}")
+    if candidate.exists():
+        if not candidate.is_dir():
+            raise ValueError(f"scratch directory is not a directory: {candidate}")
+        if candidate.stat().st_uid != os.geteuid():
+            raise ValueError(f"scratch directory must be owned by current user: {candidate}")
+    else:
+        candidate.mkdir(mode=0o700, parents=True, exist_ok=True)
+    os.chmod(candidate, 0o700)
+    return candidate
+
+
 def _resolve_session_id(
     *,
     explicit_session: str | None,
@@ -303,6 +333,17 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="derive a deterministic UUIDv5 session from an external vendor handle",
     )
+    scratch = parser.add_mutually_exclusive_group()
+    scratch.add_argument(
+        "--persist-scratch",
+        action="store_true",
+        help="keep a deterministic per-session $LOS_SCRATCH_DIR across resumed launches",
+    )
+    scratch.add_argument(
+        "--scratch-dir",
+        default=None,
+        help="use and retain an explicit host scratch directory outside LearningOS/",
+    )
     parser.add_argument(
         "target_args",
         nargs=argparse.REMAINDER,
@@ -319,6 +360,8 @@ def launch_study(
     sandbox_exec: Path | None = None,
     platform: str = sys.platform,
     cwd: Path | None = None,
+    persist_scratch: bool = False,
+    scratch_dir_override: Path | None = None,
 ) -> int:
     """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state."""
     effective_sandbox = SANDBOX_EXEC if sandbox_exec is None else sandbox_exec
@@ -344,6 +387,7 @@ def launch_study(
 
     session_started = False
     scratch_dir: Path | None = None
+    keep_scratch = persist_scratch or (scratch_dir_override is not None)
     sock_dir: Path | None = None
     stage_dir: Path | None = None
     server: BrokerServer | None = None
@@ -359,6 +403,24 @@ def launch_study(
             proc.terminate()
 
     try:
+        if scratch_dir_override is not None:
+            try:
+                scratch_dir = _prepare_persistent_scratch_dir(
+                    scratch_dir_override, real_learningos
+                )
+            except (ValueError, OSError) as exc:
+                print(f"study_launch: {exc}", file=sys.stderr)
+                return 2
+        elif persist_scratch:
+            try:
+                scratch_dir = _prepare_persistent_scratch_dir(
+                    _persistent_scratch_path(real_learningos, session_id),
+                    real_learningos,
+                )
+            except (ValueError, OSError) as exc:
+                print(f"study_launch: {exc}", file=sys.stderr)
+                return 2
+
         try:
             store.touch(session_id, start=True)
             session_started = True
@@ -366,7 +428,8 @@ def launch_study(
             print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
             return 2
 
-        scratch_dir = _allocate_scratch_dir(real_learningos)
+        if scratch_dir is None:
+            scratch_dir = _allocate_scratch_dir(real_learningos)
         sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losg-", dir="/tmp")))
         stage_dir = _allocate_outside_dir("losb-", real_learningos)
         sock_path = sock_dir / "gate.sock"
@@ -434,7 +497,7 @@ def launch_study(
             shutil.rmtree(stage_dir, ignore_errors=True)
         if sock_dir is not None:
             shutil.rmtree(sock_dir, ignore_errors=True)
-        if scratch_dir is not None:
+        if scratch_dir is not None and not keep_scratch:
             shutil.rmtree(scratch_dir, ignore_errors=True)
 
 
@@ -448,6 +511,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     real_core = Path(os.path.realpath(core_root))
     runtime_tag = args.runtime or "cmd"
+    scratch_override: Path | None = None
+    if args.scratch_dir is not None:
+        raw_scratch = Path(args.scratch_dir).expanduser()
+        scratch_override = raw_scratch if raw_scratch.is_absolute() else caller_cwd / raw_scratch
     try:
         command = _resolve_runtime_command(
             runtime=args.runtime,
@@ -469,6 +536,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         command=command,
         session_id=session_id,
         cwd=real_core,
+        persist_scratch=bool(args.persist_scratch),
+        scratch_dir_override=scratch_override,
     )
 
 

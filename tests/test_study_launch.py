@@ -151,6 +151,10 @@ def test_session_uuid_codex_args_and_entrypoint_contract(
         "exec",
         "status",
     ]
+    agy_argv = study_launch._resolve_runtime_command(
+        runtime="agy", use_cmd=False, extra=["--output-format", "stream-json", "-p", "hi"],
+    )
+    assert agy_argv == [str(fake_bin), "--output-format", "stream-json", "-p", "hi"]
 
     with pytest.raises(ValueError, match="mutually exclusive"):
         study_launch._resolve_session_id(
@@ -1195,3 +1199,121 @@ exit 0
         timeout=60,
     )
     assert wrapper_proc.returncode == 0, wrapper_proc.stdout + wrapper_proc.stderr
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="macOS /usr/bin/sandbox-exec required")
+def test_persistent_scratch_and_missing_guards_from_hint(
+    mini_repo: Path, tmp_path: Path,
+) -> None:
+    core = _make_study_world(mini_repo)
+    py = str(core / ".venv/bin/python")
+    seal_py = str(core / "tools/seal_envelope.py")
+    payload = json.dumps({"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "persist"})
+
+    # 1. --persist-scratch keeps check.json across two launches with the same session UUID.
+    write_script = tmp_path / "t1.py"
+    write_script.write_text(
+        f"""import os, subprocess, sys
+from pathlib import Path
+rec = Path(os.environ["LOS_SCRATCH_DIR"]) / "check.json"
+p = subprocess.run([
+    {py!r}, {seal_py!r},
+    "--capability", "stage.note.write",
+    "--payload", {payload!r},
+    "--key", "persist-k1",
+    "--guards", "auto",
+    "--check-out", str(rec),
+], check=True)
+assert rec.is_file()
+""",
+        encoding="utf-8",
+    )
+    read_script = tmp_path / "t2.py"
+    read_script.write_text(
+        f"""import json, os, subprocess
+from pathlib import Path
+rec = Path(os.environ["LOS_SCRATCH_DIR"]) / "check.json"
+assert rec.is_file(), f"missing {{rec}}"
+p = subprocess.run([
+    {py!r}, {seal_py!r},
+    "--guards-from", str(rec),
+    "--submit",
+], capture_output=True, text=True, check=True)
+assert json.loads(p.stdout)["ok"] is True
+""",
+        encoding="utf-8",
+    )
+
+    rc1 = study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        persist_scratch=True,
+    )
+    assert rc1 == 0
+    expected_dir = study_launch._persistent_scratch_path(
+        Path(os.path.realpath(core.parent)), S1
+    )
+    assert (expected_dir / "check.json").is_file()
+    try:
+        rc2 = study_launch.launch_study(
+            core_root=core,
+            command=[sys.executable, str(read_script)],
+            session_id=S1,
+            persist_scratch=True,
+        )
+        assert rc2 == 0
+    finally:
+        shutil.rmtree(expected_dir, ignore_errors=True)
+
+    # 2. --scratch-dir outside LearningOS/ persists across different session UUIDs,
+    #    while --scratch-dir inside LearningOS/ or via symlink fails closed.
+    shared_scratch = tmp_path / "shared-scratch"
+    rc3 = study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        scratch_dir_override=shared_scratch,
+    )
+    assert rc3 == 0
+    assert (shared_scratch / "check.json").is_file()
+
+    # Check missing --guards-from hint when pointed at an absent path in study mode.
+    missing_script = tmp_path / "missing_guards.py"
+    missing_script.write_text(
+        f"""import os, subprocess
+from pathlib import Path
+absent = Path(os.environ["LOS_SCRATCH_DIR"]) / "does-not-exist.json"
+p = subprocess.run([
+    {py!r}, {seal_py!r},
+    "--guards-from", str(absent),
+    "--submit",
+], capture_output=True, text=True)
+assert p.returncode == 2
+assert "--guards auto --submit" in p.stderr, p.stderr
+""",
+        encoding="utf-8",
+    )
+    rc4 = study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(missing_script)],
+        session_id=S2,
+        scratch_dir_override=shared_scratch,
+    )
+    assert rc4 == 0
+
+    assert study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        scratch_dir_override=core / "illegal-inside-core",
+    ) == 2
+
+    sym_scratch = tmp_path / "sym-scratch"
+    sym_scratch.symlink_to(shared_scratch)
+    assert study_launch.launch_study(
+        core_root=core,
+        command=[sys.executable, str(write_script)],
+        session_id=S1,
+        scratch_dir_override=sym_scratch,
+    ) == 2

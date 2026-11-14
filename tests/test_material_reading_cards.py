@@ -1028,3 +1028,36 @@ def test_generated_commands_separate_alternatives_and_preserve_covered_source_ex
     assert "excerpt" not in omitted["span"]["spans"][0]
     assert omitted["study"]["memory"][0]["review"] == "unreviewed"
     assert omitted["study"]["memory"][0]["coverage_evidence"] is False
+
+
+def test_card_validation_hints_and_errors_clarify_matched_kind_sets(world):
+    from learning_os.store.materials.reading_cards import treatment_kinds_hint
+
+    hint = treatment_kinds_hint()
+    assert "20-800 chars" in hint
+    assert "1-160 chars" in hint
+    assert "matched sets" in hint
+    for sep in (" | ", " || ", "; ", " && "):
+        assert sep not in hint
+
+    entry = _entry(_ok(_read(world, A, "pdf pp. 2-3")))
+    unbacked = json.dumps({
+        "paraphrase": "Summary of probability weighting across pages two and three.",
+        "kinds": ["overview", "statement"],
+        "pointers": [{"page": 2, "kind": "statement", "label": "Expectation definition"}],
+    })
+    unbacked_err = _settle(world, A, entry, "--card", unbacked).stderr
+    assert "have no page pointer inside the range" in unbacked_err
+    assert "add a pointer matching each listed kind" in unbacked_err
+
+    extra_pointer = json.dumps({
+        "paraphrase": "Summary of probability weighting across pages two and three.",
+        "kinds": ["statement"],
+        "pointers": [
+            {"page": 2, "kind": "statement", "label": "Expectation definition"},
+            {"page": 3, "kind": "overview", "label": "High-level summary"},
+        ],
+    })
+    extra_err = _settle(world, A, entry, "--card", extra_pointer).stderr
+    assert "is not one of the card's kinds" in extra_err
+    assert "add 'overview' to kinds" in extra_err
