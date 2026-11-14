@@ -1025,7 +1025,7 @@ def test_study_launch_cwd_independence_from_core_parent_and_runtime_simulation(
     fake_claude = fakebin / "claude"
     fake_claude.write_text(
         f"""#!{sys.executable}
-import json, os, shlex, subprocess, sys
+import errno, json, os, shlex, subprocess, sys
 from pathlib import Path
 
 assert Path(os.path.realpath(os.getcwd())) == Path({str(real_core)!r}), os.getcwd()
@@ -1035,9 +1035,27 @@ assert settings_path.is_absolute() and settings_path.is_file(), settings_path
 settings = json.loads(settings_path.read_text(encoding="utf-8"))
 start_cmd = settings["hooks"]["SessionStart"][0]["hooks"][0]["command"]
 stop_cmd = settings["hooks"]["Stop"][0]["hooks"][0]["command"]
+end_cmd = settings["hooks"]["SessionEnd"][0]["hooks"][0]["command"]
 
 start_res = subprocess.run(["sh", "-c", start_cmd], input='{{}}', capture_output=True, text=True, check=True)
 assert ".venv/bin/python tools/los.py bootstrap --brief" in start_res.stdout
+assert "Note: study sandbox active:" in start_res.stdout
+assert "no study sandbox active" not in start_res.stdout
+assert "LOS_GATE_SOCK unset" not in start_res.stdout
+assert os.environ["LOS_GATE_SOCK"] not in start_res.stdout
+
+# Seatbelt read/write denials stay intact alongside active broker hooks.
+for bad_read in (Path("../materials/secret.txt"),):
+    try:
+        bad_read.read_text(encoding="utf-8")
+        raise AssertionError(f"Seatbelt failed to deny {{bad_read}}")
+    except PermissionError as exc:
+        assert exc.errno == errno.EPERM
+try:
+    Path("../blocked-during-hooks.txt").write_text("no", encoding="utf-8")
+    raise AssertionError("Seatbelt failed to deny LearningOS write")
+except PermissionError as exc:
+    assert exc.errno == errno.EPERM
 
 # Execute an unhooked/hooked study span and verify Stop gives standalone executable commands.
 span = subprocess.run([".venv/bin/python", "tools/los.py", "material-study-span",
@@ -1064,16 +1082,20 @@ subprocess.run(["sh", "-c", filled], check=True)
 stop2 = subprocess.run(["sh", "-c", stop_cmd], input='{{"stop_hook_active": false}}',
                        capture_output=True, text=True, check=True)
 assert stop2.stdout.strip() == ""
+end_res = subprocess.run(["sh", "-c", end_cmd], input='{{}}', capture_output=True, text=True, check=True)
+assert end_res.stdout == ""
 """,
         encoding="utf-8",
     )
     fake_claude.chmod(0o755)
 
     runtime_env = dict(base_env, PATH=f"{fakebin}{os.pathsep}{base_env.get('PATH', '')}")
+    rt_session = "cdcdcdcd-2222-4222-8222-222222222222"
     rt_proc = subprocess.run(
         [
             str(core / ".venv/bin/python"),
             "repository/tools/study_launch.py",
+            "--session", rt_session,
             "--runtime", "claude",
             "--", "--settings", rel_settings, "--setting-sources", "", "-p", "smoke",
         ],
@@ -1085,6 +1107,8 @@ assert stop2.stdout.strip() == ""
     )
     assert rt_proc.returncode == 0, rt_proc.stdout + rt_proc.stderr
     assert list((learningos / "reading-memory/pending").glob("rd-*.json")) == []
+    rt_srow = json.loads((learningos / f"reading-memory/sessions/{rt_session}.json").read_text("utf-8"))
+    assert rt_srow.get("ended_at") is not None
 
     # 4. Caller-relative `--cmd` executables (`repository/.venv/bin/python` from LearningOS/ and
     # `./caller-wrapper.sh` from outside/) still launch inside `real_core` so dynamically emitted

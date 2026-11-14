@@ -536,8 +536,11 @@ def test_gateway_read_content_bound_file_enforces_study_fence(
         seal_envelope._bind_file_digests(ROOT, "capture.create", {"file": str(outside)})
 
 
-def test_study_hook_rpc_only_allows_session_start_and_stop(tmp_path: Path) -> None:
+def test_study_hook_rpc_only_allows_session_start_and_stop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
     core, scratch = _make_broker_world(tmp_path)
+    monkeypatch.setenv("LOS_GATE_SOCK", "/tmp/should-be-stripped-by-broker-hook.sock")
     runner = RecordingRunner()
     broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
 
@@ -553,9 +556,13 @@ def test_study_hook_rpc_only_allows_session_start_and_stop(tmp_path: Path) -> No
             "stop_hook_active": True,
         })
         assert ok.exit_code == 0
-        cmd, _, _, stdin_data = runner.calls[-1]
+        cmd, _, child_env, stdin_data = runner.calls[-1]
         assert str(core / "tools" / "study_hooks.py") in cmd
         assert ok_event in cmd
+        assert "LOS_GATE_SOCK" not in child_env
+        assert child_env[STUDY_FENCE_CORE_ENV] == str(Path(os.path.realpath(core)))
+        assert child_env[STUDY_FENCE_SCRATCH_ENV] == str(Path(os.path.realpath(scratch)))
+        assert child_env["LOS_SESSION_ID"] == SESSION
         assert json.loads(stdin_data or "{}") == {
             "session_id": SESSION,
             "stop_hook_active": True,
