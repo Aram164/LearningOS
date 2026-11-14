@@ -12,14 +12,11 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import errno
-import functools
 import io
 import json
 import os
 import signal
 import socket
-import stat
 import subprocess
 import sys
 import tempfile
@@ -41,15 +38,13 @@ from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     STUDY_STAGED_MANIFEST_ENV,
-    call_dir_fd_op,
+    RequestInputStager,
     check_study_new_output_path,
     check_study_path,
-    find_real_ancestor,
     is_within,
-    open_dir_chain_nofollow,
     protected_reads,
-    read_optional_study_or_staged_file,
-    read_study_file,
+    read_study_json_file,
+    write_local_output_file,
 )
 
 GATE_SOCK_ENV = "LOS_GATE_SOCK"
@@ -133,16 +128,6 @@ ALLOWED_CAPABILITIES: frozenset[str] = frozenset({
     "concept.relations.change",
     "atlas.question.save",
     "garden.seed.create",
-})
-
-EXTERNAL_INPUT_PATH_KEYS: frozenset[str] = frozenset({
-    "file",
-    "body_file",
-    "content_file",
-    "attachment",
-    "items_file",
-    "drafts",
-    "review_report",
 })
 
 ALLOWED_HOOK_EVENTS: frozenset[str] = frozenset({"session-start", "stop"})
@@ -322,6 +307,25 @@ def _rewrite_value_option(
     return out
 
 
+def _top_level_option_action(
+    token: str, parser: argparse.ArgumentParser,
+) -> argparse.Action | None:
+    head = token.partition("=")[0]
+    action = parser._option_string_actions.get(head)
+    if action is not None:
+        return action
+    if head.startswith("--"):
+        matches = [
+            act
+            for opt, act in parser._option_string_actions.items()
+            if opt.startswith(head)
+        ]
+        unique = {id(act): act for act in matches}
+        if len(unique) == 1:
+            return next(iter(unique.values()))
+    return None
+
+
 def _find_subcommand(
     argv: list[str], parser: argparse.ArgumentParser,
 ) -> tuple[int | None, str | None]:
@@ -334,9 +338,8 @@ def _find_subcommand(
             if "=" in token:
                 idx += 1
                 continue
-            if _matches_option(token, "--root", parser) or _matches_option(
-                token, "--lock-timeout", parser
-            ):
+            action = _top_level_option_action(token, parser)
+            if action is not None and action.nargs != 0:
                 idx += 2
                 continue
             idx += 1
@@ -357,120 +360,6 @@ def _parse_quiet(
             raw_code = exc.code
             code = raw_code if isinstance(raw_code, int) else 2
             return None, code, cap_out.getvalue(), cap_err.getvalue()
-
-
-def _walk_payload_paths(
-    obj: object,
-    *,
-    on_path: Callable[[str, str], None],
-) -> None:
-    if isinstance(obj, dict):
-        for key, value in obj.items():
-            if key in EXTERNAL_INPUT_PATH_KEYS:
-                if isinstance(value, str):
-                    on_path(value, str(key))
-                elif isinstance(value, (list, tuple)):
-                    for item in value:
-                        if isinstance(item, str):
-                            on_path(item, str(key))
-                        elif item is not None:
-                            raise WriteRefused(f"study broker: {key} paths must be strings")
-                elif value is not None:
-                    raise WriteRefused(f"study broker: {key} path must be a string")
-            else:
-                _walk_payload_paths(value, on_path=on_path)
-    elif isinstance(obj, (list, tuple)):
-        for item in obj:
-            _walk_payload_paths(item, on_path=on_path)
-
-
-def _read_study_json_file(
-    raw_path: str,
-    *,
-    core_root: Path,
-    scratch_dir: Path | None,
-    cwd: Path,
-    label: str,
-) -> str:
-    anchored, content = read_study_file(
-        raw_path,
-        core_root=core_root,
-        scratch_dir=scratch_dir,
-        cwd=cwd,
-        label=label,
-        allow_core=True,
-    )
-    try:
-        return content.decode("utf-8")
-    except UnicodeDecodeError as exc:
-        raise WriteRefused(f"study broker: cannot decode {label} {anchored}: {exc}") from exc
-
-
-class _RequestInputStager:
-    """Copy validated study input files into a host-only immutable request dir."""
-
-    def __init__(
-        self,
-        *,
-        core_root: Path,
-        scratch_dir: Path | None,
-        cwd: Path,
-        stage_dir: Path,
-    ) -> None:
-        self.core_root = core_root
-        self.scratch_dir = scratch_dir
-        self.cwd = cwd
-        self.stage_dir = stage_dir
-        self.entries: dict[str, str] = {}
-
-    def stage_path(self, raw_path: str, *, label: str, allow_core: bool = True) -> Path:
-        anchored, data = read_optional_study_or_staged_file(
-            raw_path,
-            core_root=self.core_root,
-            scratch_dir=self.scratch_dir,
-            cwd=self.cwd,
-            label=label,
-            allow_core=allow_core,
-        )
-        if data is None:
-            return anchored
-        key = str(anchored)
-        if key in self.entries:
-            return anchored
-        idx = len(self.entries)
-        subdir = self.stage_dir / f"f{idx}"
-        subdir.mkdir(mode=0o700)
-        leaf_name = anchored.name or "input"
-        staged_file = subdir / leaf_name
-        fd = os.open(
-            staged_file,
-            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-            0o400,
-        )
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(data)
-        self.entries[key] = f"f{idx}/{leaf_name}"
-        return anchored
-
-    def stage_payload_paths(self, obj: object) -> None:
-        def _collect(raw_path: str, key: str) -> None:
-            self.stage_path(raw_path, label=key, allow_core=True)
-
-        _walk_payload_paths(obj, on_path=_collect)
-
-    def manifest_env(self) -> dict[str, str]:
-        if not self.entries:
-            return {}
-        manifest_path = self.stage_dir / "manifest.json"
-        fd = os.open(
-            manifest_path,
-            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-            0o400,
-        )
-        payload = json.dumps({"entries": self.entries}, ensure_ascii=False).encode("utf-8")
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(payload)
-        return {STUDY_STAGED_MANIFEST_ENV: str(manifest_path)}
 
 
 def _parse_json_dict(raw_json: str, *, label: str) -> dict[str, object]:
@@ -669,17 +558,31 @@ class StudyBroker:
                 )
             rewritten = list(argv)
             target_cmd = subcmd
-            if subcmd == "material-span" and any(
-                t == "--extract" or (t.startswith("--ext") and "--extract".startswith(t))
-                for t in argv[idx + 1:]
-            ):
-                rewritten[idx] = "material-study-span"
-                target_cmd = "material-study-span"
-            ns, code, out, err = _parse_quiet(self._los_parser, rewritten)
+            ns = None
+            code = None
+            out = ""
+            err = ""
+            probe_err = ""
+            if subcmd == "material-span":
+                probe = list(argv)
+                probe[idx] = "material-study-span"
+                probe_ns, probe_code, probe_out, probe_err = _parse_quiet(
+                    self._los_parser, probe
+                )
+                if probe_ns is not None and getattr(probe_ns, "extract", False) is True:
+                    rewritten = probe
+                    target_cmd = "material-study-span"
+                    ns, code, out, err = probe_ns, probe_code, probe_out, probe_err
+            if ns is None:
+                ns, code, out, err = _parse_quiet(self._los_parser, rewritten)
             if ns is None:
                 if code == 0:
                     return BrokerResult(exit_code=0, stdout=out, stderr=err)
                 return _refuse(err or f"study broker: invalid arguments for {target_cmd}")
+            if target_cmd == "material-span" and getattr(ns, "extract", False) is True:
+                return _refuse(
+                    probe_err or "study broker: invalid arguments for material-study-span"
+                )
             self._check_root_flag(getattr(ns, "root", None), cwd=cwd)
             if getattr(ns, "root", None) is None:
                 rewritten = ["--root", str(self.core_root), *rewritten]
@@ -717,7 +620,7 @@ class StudyBroker:
                         )
                         raw_env = stdin_text
                     else:
-                        raw_env = _read_study_json_file(
+                        raw_env = read_study_json_file(
                             pfile,
                             core_root=self.core_root,
                             scratch_dir=self.scratch_dir,
@@ -742,7 +645,7 @@ class StudyBroker:
                     prefix="los-req-", dir=self._stage_base(),
                 ) as stage_tmp:
                     stage_dir = Path(os.path.realpath(stage_tmp))
-                    stager = _RequestInputStager(
+                    stager = RequestInputStager(
                         core_root=self.core_root,
                         scratch_dir=self.scratch_dir,
                         cwd=cwd,
@@ -787,7 +690,7 @@ class StudyBroker:
                     prefix="los-req-", dir=self._stage_base(),
                 ) as stage_tmp:
                     stage_dir = Path(os.path.realpath(stage_tmp))
-                    stager = _RequestInputStager(
+                    stager = RequestInputStager(
                         core_root=self.core_root,
                         scratch_dir=self.scratch_dir,
                         cwd=cwd,
@@ -909,7 +812,7 @@ class StudyBroker:
                 prefix="seal-req-", dir=self._stage_base(),
             ) as stage_tmp:
                 stage_dir = Path(os.path.realpath(stage_tmp))
-                stager = _RequestInputStager(
+                stager = RequestInputStager(
                     core_root=self.core_root,
                     scratch_dir=self.scratch_dir,
                     cwd=cwd,
@@ -923,7 +826,7 @@ class StudyBroker:
                     raw_guards = (
                         guards_from_text
                         if guards_from_text is not None
-                        else _read_study_json_file(
+                        else read_study_json_file(
                             ns.guards_from,
                             core_root=self.core_root,
                             scratch_dir=self.scratch_dir,
@@ -960,7 +863,7 @@ class StudyBroker:
                         raw_payload = (
                             payload_at_text
                             if payload_at_text is not None
-                            else _read_study_json_file(
+                            else read_study_json_file(
                                 ns.payload[1:],
                                 core_root=self.core_root,
                                 scratch_dir=self.scratch_dir,
@@ -1254,106 +1157,6 @@ def send_broker_request(sock_path: str, payload: dict[str, object]) -> dict[str,
     if not isinstance(decoded, dict):
         raise ValueError("study broker returned a non-object response")
     return {str(k): v for k, v in decoded.items()}
-
-
-def _open_local_parent_dir_fd(
-    parent: Path,
-    *,
-    mkdir_parents: bool,
-    scratch_dir: Path | None,
-) -> int:
-    lex_parent = Path(os.path.abspath(parent))
-    if scratch_dir is not None:
-        real_scratch = Path(os.path.realpath(scratch_dir))
-        matched = find_real_ancestor(lex_parent, real_scratch)
-        if matched is None:
-            raise OSError(
-                errno.EACCES,
-                f"Refusing output outside study scratch ($LOS_SCRATCH_DIR={real_scratch})",
-                str(parent),
-            )
-        _anc, rel_parts = matched
-        if any(part in ("", ".", "..") for part in rel_parts):
-            raise OSError(errno.EINVAL, "Refusing invalid local output directory", str(parent))
-        base_path: Path = real_scratch
-        tail_parts: tuple[str, ...] = rel_parts
-    else:
-        probe = lex_parent
-        missing: list[str] = []
-        while True:
-            try:
-                os.lstat(probe)
-                break
-            except FileNotFoundError:
-                if probe.parent == probe:
-                    raise
-                missing.append(probe.name)
-                probe = probe.parent
-        for anc in (probe, *probe.parents):
-            if anc.parent == anc:
-                break
-            if len(anc.parts) == 2 and anc.parts[1] in ("var", "tmp", "etc"):
-                continue
-            if anc.is_symlink():
-                raise OSError(errno.ELOOP, "Refusing symlink parent target", str(anc))
-        base_path = probe
-        tail_parts = tuple(reversed(missing))
-
-    if tail_parts and not mkdir_parents:
-        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(parent))
-
-    return open_dir_chain_nofollow(base_path, tail_parts, create_missing=mkdir_parents)
-
-
-def write_local_output_file(
-    target_text: str,
-    content: str,
-    *,
-    mkdir_parents: bool = False,
-    exclusive: bool = False,
-    scratch_dir: Path | None = None,
-) -> None:
-    """Write mediated broker output locally without following symlinks or hardlinks."""
-    target = Path(target_text).expanduser()
-    if target.name in ("", ".", ".."):
-        raise OSError(errno.EINVAL, "Refusing invalid local output target", target_text)
-    if target.is_symlink():
-        raise OSError(errno.ELOOP, "Refusing symlink local output target", str(target))
-    effective_scratch = scratch_dir
-    if effective_scratch is None:
-        scratch_env = os.environ.get(STUDY_FENCE_SCRATCH_ENV, "").strip()
-        if scratch_env:
-            effective_scratch = Path(scratch_env)
-    parent_fd = _open_local_parent_dir_fd(
-        target.parent,
-        mkdir_parents=mkdir_parents,
-        scratch_dir=effective_scratch,
-    )
-    file_flags = os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW
-    if exclusive:
-        file_flags |= os.O_EXCL
-    if hasattr(os, "O_CLOEXEC"):
-        file_flags |= os.O_CLOEXEC
-    try:
-        fd = call_dir_fd_op(
-            functools.partial(os.open, target.name, file_flags, 0o644, dir_fd=parent_fd)
-        )
-    finally:
-        os.close(parent_fd)
-    try:
-        st = os.fstat(fd)
-        if not stat.S_ISREG(st.st_mode):
-            raise OSError(errno.EINVAL, "Refusing non-regular local output target", str(target))
-        if st.st_nlink > 1:
-            raise OSError(errno.EMLINK, "Refusing hardlinked local output target", str(target))
-        if not exclusive:
-            os.ftruncate(fd, 0)
-        handle = os.fdopen(fd, "w", encoding="utf-8")
-    except BaseException:
-        os.close(fd)
-        raise
-    with handle:
-        handle.write(content)
 
 
 def dispatch_los_via_socket(sock_path: str, argv: list[str]) -> int:

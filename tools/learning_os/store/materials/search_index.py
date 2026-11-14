@@ -22,6 +22,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import stat
 import unicodedata
 from bisect import bisect_right
 from collections.abc import Mapping, Sequence
@@ -708,43 +709,115 @@ def compute_text_cache_fingerprint(
     return hasher.hexdigest()
 
 
+def _has_no_symlink_parents(
+    file_path: Path,
+    materials_root: Path,
+    dir_cache: dict[Path, bool],
+) -> bool:
+    """Verify every directory between materials_root and file_path.parent is a real directory."""
+    cur = file_path.parent
+    chain: list[Path] = []
+    while cur != materials_root:
+        known = dir_cache.get(cur)
+        if known is not None:
+            if not known:
+                for p in chain:
+                    dir_cache[p] = False
+                return False
+            break
+        if cur.parent == cur:
+            return False
+        chain.append(cur)
+        cur = cur.parent
+    for d in reversed(chain):
+        try:
+            st = d.lstat()
+            ok = stat.S_ISDIR(st.st_mode)
+        except OSError:
+            ok = False
+        dir_cache[d] = ok
+        if not ok:
+            for rem in chain:
+                if rem not in dir_cache:
+                    dir_cache[rem] = False
+            return False
+    return True
+
+
 def resolve_file_sha256(
     file_path: Path,
     materials_root: Path,
     files: Mapping[str, FileStatSnapshot] | None,
     memo: dict[Path, str],
+    *,
+    dir_cache: dict[Path, bool] | None = None,
 ) -> str:
     """Resolve a material file's SHA-256: stat first against the index table, hash on mismatch (D7)."""
-    resolved = file_path.resolve()
-    cached = memo.get(resolved)
+    cached = memo.get(file_path)
     if cached is not None:
         return cached.removeprefix("sha256:")
 
+    resolved: Path | None = None
     if files:
         rel_key: str | None = None
+        local_dirs = dir_cache if dir_cache is not None else {}
         try:
-            rel_key = file_path.relative_to(materials_root).as_posix()
+            candidate_rel = file_path.relative_to(materials_root).as_posix()
         except ValueError:
+            candidate_rel = None
+        if candidate_rel is not None and _has_no_symlink_parents(
+            file_path, materials_root, local_dirs
+        ):
+            try:
+                st = file_path.lstat()
+            except OSError:
+                st = None
+            if st is not None and stat.S_ISREG(st.st_mode):
+                snap = files.get(candidate_rel)
+                if (
+                    snap is not None
+                    and st.st_size == snap.size
+                    and st.st_mtime_ns == snap.mtime_ns
+                    and st.st_ctime_ns == snap.ctime_ns
+                ):
+                    val = f"sha256:{snap.sha256}"
+                    memo[file_path] = val
+                    return snap.sha256
+        else:
+            resolved = file_path.resolve()
+            cached = memo.get(resolved)
+            if cached is not None:
+                memo[file_path] = cached
+                return cached.removeprefix("sha256:")
             try:
                 rel_key = resolved.relative_to(materials_root.resolve()).as_posix()
             except ValueError:
                 rel_key = None
-        if rel_key is not None:
-            snap = files.get(rel_key)
-            if snap is not None:
-                try:
-                    st = file_path.stat()
-                    if (
-                        st.st_size == snap.size
-                        and st.st_mtime_ns == snap.mtime_ns
-                        and st.st_ctime_ns == snap.ctime_ns
-                    ):
-                        memo[resolved] = f"sha256:{snap.sha256}"
-                        return snap.sha256
-                except OSError:
-                    pass
+            if rel_key is not None:
+                snap = files.get(rel_key)
+                if snap is not None:
+                    try:
+                        st = file_path.stat()
+                        if (
+                            st.st_size == snap.size
+                            and st.st_mtime_ns == snap.mtime_ns
+                            and st.st_ctime_ns == snap.ctime_ns
+                        ):
+                            val = f"sha256:{snap.sha256}"
+                            memo[file_path] = val
+                            memo[resolved] = val
+                            return snap.sha256
+                    except OSError:
+                        pass
 
+    if resolved is None:
+        resolved = file_path.resolve()
+        cached = memo.get(resolved)
+        if cached is not None:
+            memo[file_path] = cached
+            return cached.removeprefix("sha256:")
     digest = sha256_file(file_path, memo).removeprefix("sha256:")
+    memo[file_path] = f"sha256:{digest}"
     return digest
 
 
@@ -757,6 +830,8 @@ def material_bindings_with_paths(
     and its relative path under materials/ (D7, D8, Step 5.1).
     """
     hash_memo: dict[Path, str] = memo if memo is not None else {}
+    dir_cache: dict[Path, bool] = {}
+    location_cache: dict[str, object] = {}
     materials_root = repo.learningos_root / "materials"
     bindings_by_sha: dict[str, list[MaterialBinding]] = {}
     seen_per_sha: dict[str, set[MaterialBinding]] = {}
@@ -772,14 +847,18 @@ def material_bindings_with_paths(
             route_id = str(route.get("id") or "")
             if not route_id:
                 continue
-            resolved_files = resolve_route_material_files(repo, route)
+            resolved_files = resolve_route_material_files(
+                repo, route, location_cache=location_cache
+            )
             if not resolved_files:
                 continue
             single_file = len(resolved_files) == 1
             for rf in resolved_files:
                 fpath = Path(rf.path)
                 try:
-                    sha = resolve_file_sha256(fpath, materials_root, files, hash_memo)
+                    sha = resolve_file_sha256(
+                        fpath, materials_root, files, hash_memo, dir_cache=dir_cache
+                    )
                 except OSError:
                     continue
                 if sha not in sha_to_rel_path:
@@ -1316,6 +1395,37 @@ def _resolve_live_bindings_and_scope(
     """Compute live route bindings, dead SHAs, optional scope filter SHAs, and
     the physical materials path whose bytes this call verified for each SHA."""
     memo: dict[Path, str] = {}
+    dir_cache: dict[Path, bool] = {}
+    materials_root = repo_root.parent / "materials"
+    materials_mounted = materials_root.is_dir()
+    verified: dict[str, str] = {}
+    if materials_mounted and reader.files:
+        for rel_path, snap in sorted(reader.files.items()):
+            pdf_path = materials_root / rel_path
+            if not _has_no_symlink_parents(pdf_path, materials_root, dir_cache):
+                continue
+            try:
+                st = pdf_path.lstat()
+            except OSError:
+                continue
+            if not stat.S_ISREG(st.st_mode):
+                continue
+            if (
+                st.st_size == snap.size
+                and st.st_mtime_ns == snap.mtime_ns
+                and st.st_ctime_ns == snap.ctime_ns
+            ):
+                sha = snap.sha256
+                memo[pdf_path] = f"sha256:{sha}"
+            else:
+                try:
+                    sha = resolve_file_sha256(
+                        pdf_path, materials_root, reader.files, memo, dir_cache=dir_cache
+                    )
+                except OSError:
+                    continue
+            verified[rel_path] = sha
+
     bindings_by_sha: dict[str, list[MaterialBinding]] = {}
     route_sha_to_path: dict[str, str] = {}
     if loaded_repo is not None:
@@ -1323,20 +1433,9 @@ def _resolve_live_bindings_and_scope(
             loaded_repo, files=reader.files, memo=memo
         )
 
-    materials_root = repo_root.parent / "materials"
     dead_shas: set[str] = set()
-    verified: dict[str, str] = {}
-    if materials_root.is_dir() and (reader.files or bindings_by_sha):
-        live_shas: set[str] = set(bindings_by_sha.keys())
-        for rel_path in sorted(reader.files):
-            pdf_path = materials_root / rel_path
-            if pdf_path.is_file() and not pdf_path.is_symlink():
-                try:
-                    sha = resolve_file_sha256(pdf_path, materials_root, reader.files, memo)
-                except OSError:
-                    continue
-                live_shas.add(sha)
-                verified[rel_path] = sha
+    if materials_mounted and (reader.files or bindings_by_sha):
+        live_shas: set[str] = set(bindings_by_sha.keys()) | set(verified.values())
         dead_shas = set(reader.docs.keys()) - live_shas
     live_paths: dict[str, str] = {}
     for rel_path, sha in verified.items():

@@ -486,3 +486,23 @@ def test_agy_profile_and_protojson_hook_dialect(world: Path, tmp_path: Path) -> 
     )
     assert end_proc.returncode == 0, end_proc.stderr
     assert json.loads(end_proc.stdout) == {}
+
+    # Unfenced agy runs (without LOS_SESSION_ID) fall back to stdin conversationId.
+    unfenced_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    unfenced_env.pop("LOS_SESSION_ID", None)
+    unfenced_env.pop(GATE_SOCK_ENV, None)
+    unfenced_env.pop(STUDY_FENCE_CORE_ENV, None)
+    unfenced_start = subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), "session-start", "--format", "agy"],
+        cwd=str(world),
+        input=json.dumps({"conversationId": OTHER}),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=unfenced_env,
+    )
+    assert unfenced_start.returncode == 0, unfenced_start.stderr
+    unfenced_msg = json.loads(unfenced_start.stdout)["injectSteps"][0]["systemMessage"]["systemMessage"]
+    assert "No session id arrived" not in unfenced_msg
+    assert "- This session holds no overdue entries." in unfenced_msg
+    assert (ReadingStore(world).root / "sessions" / f"{OTHER}.json").is_file()

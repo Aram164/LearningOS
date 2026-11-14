@@ -387,8 +387,11 @@ def _normalize_event_for_format(raw: dict[str, object], *, fmt: str) -> dict[str
         sid = event.get("session_id")
         if not isinstance(sid, str) or not sid:
             env_sid = os.environ.get("LOS_SESSION_ID", "")
+            conv_sid = event.get("conversationId")
             if env_sid:
                 event["session_id"] = env_sid
+            elif isinstance(conv_sid, str) and conv_sid:
+                event["session_id"] = conv_sid
         if "stop_hook_active" not in event and "continuationActive" in event:
             event["stop_hook_active"] = bool(event.get("continuationActive"))
     return event

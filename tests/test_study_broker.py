@@ -304,19 +304,27 @@ def test_material_span_rewrite_session_pinning_and_adopt(tmp_path: Path) -> None
     assert "--omit-covered-text" in runner.calls[-1][0]
     assert "material-study-span" in runner.calls[-1][0]
 
-    # material-span without --extract stays material-span and does not inject --session.
-    res_meta = broker.handle_request({
-        "tool": "los",
-        "argv": ["material-span", "--material", BOOK, "--pages", "pdf p. 1"],
-        "cwd": str(core),
-    })
-    assert res_meta.exit_code == 0, res_meta.stderr
-    assert "material-span" in runner.calls[-1][0]
-    assert "--session" not in runner.calls[-1][0]
+    # material-span without --extract stays material-span and does not inject --session,
+    # even when a positional argument after `--` happens to be "--extract" or "--ext".
+    for non_extract_argv in (
+        ["material-span", "--material", BOOK, "--pages", "pdf p. 1"],
+        ["material-span", "unit-demo-l01", "--", "--extract"],
+        ["--lock-timeout", "5", "material-span", "unit-demo-l01", "--", "--ext"],
+    ):
+        res_meta = broker.handle_request({
+            "tool": "los",
+            "argv": non_extract_argv,
+            "cwd": str(core),
+        })
+        assert res_meta.exit_code == 0, res_meta.stderr
+        assert "material-span" in runner.calls[-1][0]
+        assert "material-study-span" not in runner.calls[-1][0]
+        assert "--session" not in runner.calls[-1][0]
 
-    # Spoofed --session / --s / --session=OTHER / --session-id OTHER fail closed.
+    # Spoofed --session / --s / --session=OTHER / --session-id OTHER or ambiguous --s with --extract fail closed.
     for bad_los in (
         ["material-study-span", "--material", BOOK, "--pages", "p. 1", "--extract", "--session", OTHER_SESSION],
+        ["material-span", "unit-demo-l01", "--s", "stage-1", "--resource-index", "0", "--extract"],
         ["material-search", "Bayes", "--s", OTHER_SESSION],
         ["material-context", "Bayes", f"--session={OTHER_SESSION}"],
     ):

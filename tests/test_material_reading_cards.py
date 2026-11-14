@@ -1061,3 +1061,48 @@ def test_card_validation_hints_and_errors_clarify_matched_kind_sets(world):
     extra_err = _settle(world, A, entry, "--card", extra_pointer).stderr
     assert "is not one of the card's kinds" in extra_err
     assert "add 'overview' to kinds" in extra_err
+
+
+def test_material_card_settle_skips_repo_load_without_concepts(world, monkeypatch):
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.materials import material_card_settle
+
+    e_dismiss = _entry(_ok(_read(world, A, "pdf p. 1")))
+    e_no_concepts = _entry(_ok(_read(world, A, "pdf p. 2")))
+    e_with_concepts = _entry(_ok(_read(world, A, "pdf p. 3")))
+
+    repo_calls = 0
+    real_repo = OpContext.repo
+
+    def counting_repo(self):
+        nonlocal repo_calls
+        repo_calls += 1
+        return real_repo(self)
+
+    monkeypatch.setattr(OpContext, "repo", counting_repo)
+
+    def make_ctx():
+        return OpContext(
+            root=world, operation="material.card.settle",
+            channel="operator", invocation="tool", gateway=None,
+        )
+
+    material_card_settle(make_ctx(), {
+        "session": A, "entry": e_dismiss,
+        "dismiss": "irrelevant", "reason": "table of contents",
+    })
+    assert repo_calls == 0
+
+    no_concept_card = json.loads(_card(2, 2))
+    no_concept_card["concepts"] = []
+    material_card_settle(make_ctx(), {
+        "session": A, "entry": e_no_concepts, "card": no_concept_card,
+    })
+    assert repo_calls == 0
+
+    with_concept_card = json.loads(_card(3, 3))
+    res = material_card_settle(make_ctx(), {
+        "session": A, "entry": e_with_concepts, "card": with_concept_card,
+    })
+    assert repo_calls == 1
+    assert res.payload["card"]["dangling_concepts"] == ["concept-not-registered"]

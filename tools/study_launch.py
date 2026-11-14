@@ -197,7 +197,7 @@ def _normalize_cmd_args(
     out: list[str] = []
     prev_token = ""
     for idx, token in enumerate(command):
-        if prev_token == "-c" and idx > 0:
+        if prev_token in ("-c", "-e", "-m") and idx > 0:
             out.append(token)
             prev_token = token
             continue

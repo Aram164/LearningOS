@@ -214,6 +214,10 @@ def test_resolve_runtime_and_cmd_paths_keep_core_cwd_and_symlinks(tmp_path: Path
             "repository/tools/los.py",
             "-c",
             "repository/.venv/bin/python",
+            "-e",
+            "repository/tools/los.py",
+            "-m",
+            "repository/tools/los.py",
             "status",
         ],
         caller_cwd=real_parent,
@@ -224,6 +228,10 @@ def test_resolve_runtime_and_cmd_paths_keep_core_cwd_and_symlinks(tmp_path: Path
         str(real_core / "tools/los.py"),
         "-c",
         "repository/.venv/bin/python",  # -c inline code string stays untouched
+        "-e",
+        "repository/tools/los.py",  # -e inline code string stays untouched
+        "-m",
+        "repository/tools/los.py",  # -m module spec stays untouched
         "status",
     ]
 

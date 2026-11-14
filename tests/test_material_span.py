@@ -753,3 +753,33 @@ def test_route_form_pin_refuses_a_route_without_exactly_one_local_file(mini_repo
     assert _site(mini_repo, {"unit_id": "unit-demo-l01", "route_id": route_id,
                              "extract": True,
                              "file_sha256": "sha256:" + "0" * 64}) == "material.span.bad-form"
+
+
+def test_material_form_binds_routes_reaching_file_via_in_tree_source_symlink(mini_repo):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    materials = mini_repo.parent / "materials"
+    shared_pdf = _material_pdf(mini_repo, "shared/deck.pdf", ["a", "Bayes via shared deck"])
+    demo_dir = materials / "demo"
+    demo_dir.mkdir(parents=True, exist_ok=True)
+    (demo_dir / "lecture-01.pdf").unlink(missing_ok=True)
+    (demo_dir / "linked-shared").symlink_to(materials / "shared", target_is_directory=True)
+
+    map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    route = source_map["sources"][0]["unit_routes"][0]
+    route["locator"] = "linked-shared/deck.pdf, PDF p. 2"
+    route.pop("vault_path", None)
+    write_yaml(map_path, source_map)
+
+    res = _material_span(mini_repo, "shared/deck.pdf")
+    assert res.returncode == 0, res.stderr
+    payload = json.loads(res.stdout)
+    assert payload["source_id"] == "source-demo-book"
+    assert payload["bindings_total"] == 1
+    assert payload["bindings"][0]["route"] == _route(mini_repo)
+    assert shared_pdf.is_file()
