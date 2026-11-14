@@ -153,19 +153,29 @@ def _row_range(row: dict[str, object]) -> dict[str, int]:
 
 LOS_COMMAND = ".venv/bin/python tools/los.py"
 
+CARD_JSON_TEMPLATE = (
+    '{"paraphrase": "<what these pages do, in your words>", '
+    '"kinds": ["<kind>"], "pointers": [{"page": <page>, '
+    '"kind": "<kind>", "label": "<what is there>"}]}'
+)
+
 
 def treatment_kinds_hint() -> str:
-    """Allowed card treatment kinds as standalone prose, never inside shell commands."""
-    return "Allowed card kinds: " + ", ".join(TREATMENT_KINDS) + "."
+    """Allowed card treatment kinds and shape constraints as prose without shell operators."""
+    return (
+        "Allowed card kinds: " + ", ".join(TREATMENT_KINDS) + ". "
+        f"Card rules: paraphrase {PARAPHRASE_MIN}-{PARAPHRASE_MAX} chars, "
+        "every listed kind must appear in pointers[].kind and every pointer's kind "
+        "must appear in kinds (matched sets), page within range, and "
+        f"label 1-{LABEL_MAX} chars."
+    )
 
 
 def settle_command(entry: str) -> str:
     """The exact save and dismiss commands for one entry, separated without shell operators (C1.6)."""
     save = (
         f"{LOS_COMMAND} material-card-settle {entry} --card "
-        "'{\"paraphrase\": \"<what these pages do, in your words>\", "
-        "\"kinds\": [\"<kind>\"], \"pointers\": [{\"page\": <page>, "
-        "\"kind\": \"<kind>\", \"label\": \"<what is there>\"}]}'"
+        f"'{CARD_JSON_TEMPLATE}'"
     )
     dismiss = (
         f"{LOS_COMMAND} material-card-settle {entry} --dismiss irrelevant "
@@ -539,7 +549,9 @@ class ReadingStore:
         return None
 
     def covering(self, digest: str, start: int, end: int, *,
-                 session: str) -> list[dict[str, object]]:
+                 session: str,
+                 cards: Iterable[dict[str, object]] | None = None,
+                 settled_entries: Iterable[dict[str, object]] | None = None) -> list[dict[str, object]]:
         """Current cards, plus this session's own settled dismissals, for the range (C4).
 
         A saved card is reusable coverage for every caller. A dismissal closes
@@ -547,12 +559,14 @@ class ReadingStore:
         4): another session's one-time judgement never suppresses this
         session's reading memory.
         """
+        card_source = self.cards(digest) if cards is None else cards
         rows: list[dict[str, object]] = [
-            card for card in self.cards(digest)
+            card for card in card_source
             if _contains(_row_range(card), start, end)]
         rows.sort(key=lambda card: (_row_range(card)["end"] - _row_range(card)["start"],
                                     cast(str, card["card"])))
-        for entry in self.entries(settled=True):
+        settled_source = self.entries(settled=True) if settled_entries is None else settled_entries
+        for entry in settled_source:
             settlement = cast("dict[str, object]", entry.get("settlement") or {})
             if (entry["recorded_source_digest"] == digest
                     and entry.get("session") == session
@@ -561,7 +575,8 @@ class ReadingStore:
                 rows.append(entry)
         return rows
 
-    def prior_dismissals(self, digest: str, start: int, end: int) -> list[dict[str, object]]:
+    def prior_dismissals(self, digest: str, start: int, end: int, *,
+                         settled_entries: Iterable[dict[str, object]] | None = None) -> list[dict[str, object]]:
         """Settled dismissals of this range from any session, for surfacing only.
 
         Informational, never coverage (ADR-021 decision 4): a study read of a
@@ -569,7 +584,8 @@ class ReadingStore:
         answer names the prior dismissal as ``prior-dismissal`` memory.
         """
         found: list[dict[str, object]] = []
-        for entry in self.entries(settled=True):
+        settled_source = self.entries(settled=True) if settled_entries is None else settled_entries
+        for entry in settled_source:
             settlement = cast("dict[str, object]", entry.get("settlement") or {})
             if (entry["recorded_source_digest"] == digest
                     and settlement.get("outcome") in ("dismissed-irrelevant", "dismissed-redundant")
@@ -586,9 +602,11 @@ class ReadingStore:
             "record": "session", "schema_version": 1, "session": name,
             "started_at": None, "last_call_at": None, "ended_at": None, "stop_blocks": 0}
 
-    def _last_activity(self, name: str, entries: Iterable[dict[str, object]]) -> dt.datetime | None:
-        record = self.session(name) or {}
-        moments = [_parse_time(record.get("last_call_at")), _parse_time(record.get("started_at"))]
+    def _last_activity(self, name: str, entries: Iterable[dict[str, object]], *,
+                       record: dict[str, object] | None = None) -> dt.datetime | None:
+        session_record = (self.session(name) or {}) if record is None else record
+        moments = [_parse_time(session_record.get("last_call_at")),
+                   _parse_time(session_record.get("started_at"))]
         moments += [_parse_time(row.get("opened_at")) for row in entries]
         present = [moment for moment in moments if moment is not None]
         return max(present) if present else None
@@ -600,13 +618,15 @@ class ReadingStore:
         last_call = _parse_time(record.get("last_call_at"))
         if ended_at is not None and (last_call is None or last_call <= ended_at):
             return True
-        last = self._last_activity(name, entries)
+        last = self._last_activity(name, entries, record=record)
         return last is None or now - last >= ADOPT_IDLE
 
-    def adoptable(self, caller: str | None, now: dt.datetime) -> dict[str, list[dict[str, object]]]:
+    def adoptable(self, caller: str | None, now: dt.datetime, *,
+                  pending_entries: Iterable[dict[str, object]] | None = None) -> dict[str, list[dict[str, object]]]:
         """Unsettled entries of ended or idle sessions other than the caller."""
         by_session: dict[str, list[dict[str, object]]] = {}
-        for row in self.entries():
+        pending_source = self.entries() if pending_entries is None else pending_entries
+        for row in pending_source:
             if row["session"] != caller:
                 by_session.setdefault(cast(str, row["session"]), []).append(row)
         return {name: rows for name, rows in sorted(by_session.items())
@@ -663,11 +683,20 @@ class ReadingStore:
         """Decide one study read and persist its new entries before any text returns."""
         moment = now or observations.now()
         with self.locked(create=True):
-            mine = self.entries(session=session)
+            all_pending = self.entries()
+            mine = [row for row in all_pending if row.get("session") == session]
+            cards_by_digest: dict[str, list[dict[str, object]]] = {
+                digest: self.cards(digest)
+                for digest in dict.fromkeys(read.digest for read in reads)
+            }
+            settled_entries: list[dict[str, object]] = self.entries(settled=True) if reads else []
             states: list[dict[str, object]] = []
             new: list[Read] = []
             for read in reads:
-                covering = self.covering(read.digest, read.start, read.end, session=session)
+                covering = self.covering(
+                    read.digest, read.start, read.end, session=session,
+                    cards=cards_by_digest[read.digest], settled_entries=settled_entries,
+                )
                 if covering:
                     states.append({"read": read, "state": "covered", "covering": covering})
                     continue
@@ -679,7 +708,8 @@ class ReadingStore:
                     continue
                 states.append({"read": read, "state": "opened",
                                "prior_dismissals": self.prior_dismissals(
-                                   read.digest, read.start, read.end)})
+                                   read.digest, read.start, read.end,
+                                   settled_entries=settled_entries)})
                 new.append(read)
             admission = Admission(refusal=None, states=states)
             open_rows = [row for row in mine if row["state"] == "open"]
@@ -687,7 +717,7 @@ class ReadingStore:
             operations = [self._touch_op(session, moment)]
             if new:
                 overdue = [row for row in mine if row["state"] == "overdue"]
-                adoptable = self.adoptable(session, moment)
+                adoptable = self.adoptable(session, moment, pending_entries=all_pending)
                 if overdue:
                     admission.refusal, admission.blocking = "overdue", overdue
                 elif adoptable:
@@ -718,10 +748,7 @@ class ReadingStore:
                                                                              "end": read.end})
                 admission.open_entries = list(mine) + admission.opened
             self._commit(operations)
-            admission.overlapping_cards = {
-                digest: self.cards(digest)
-                for digest in dict.fromkeys(read.digest for read in reads)
-            }
+            admission.overlapping_cards = cards_by_digest
             return admission
 
     # ------------------------------------------------------------ settlement
@@ -1065,13 +1092,19 @@ def admit_card(value: object, rng: dict[str, int]) -> dict[str, object]:
             raise bad(f"pointer {index} page {page!r} is outside the recorded range "
                       f"{pages_label(rng['start'], rng['end'])}")
         if kind not in kinds:
-            raise bad(f"pointer {index} kind {kind!r} is not one of the card's kinds")
+            raise bad(
+                f"pointer {index} kind {kind!r} is not one of the card's kinds {kinds!r} "
+                f"(add {kind!r} to kinds or use one of the listed kinds)"
+            )
         if not isinstance(label, str) or not 1 <= len(label.strip()) <= LABEL_MAX:
             raise bad(f"pointer {index} label must be 1-{LABEL_MAX} characters")
         kept.append({"page": page, "kind": kind, "label": label.strip()})
     unbacked = [kind for kind in kinds if not any(row["kind"] == kind for row in kept)]
     if unbacked:
-        raise bad(f"kinds {', '.join(unbacked)} have no page pointer inside the range")
+        raise bad(
+            f"kinds {', '.join(unbacked)} have no page pointer inside the range "
+            "(add a pointer matching each listed kind, or remove unbacked kinds from kinds)"
+        )
     concepts = value.get("concepts", [])
     if (not isinstance(concepts, list) or len(concepts) > MAX_CONCEPTS
             or any(not isinstance(name, str) or CONCEPT_RE.fullmatch(name) is None for name in concepts)

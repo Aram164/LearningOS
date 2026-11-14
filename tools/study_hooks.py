@@ -15,7 +15,8 @@ UX nudges and a disposable ``--settings`` generator:
   ``tools/study_launch.py`` (inside a sandboxed launch, the host launcher owns
   ``session-end`` on exit).
 - ``profile --out DIR``: writes a disposable ``DIR/.claude/settings.json``
-  wiring those UX hooks without overwriting an existing file.
+  (or ``DIR/.gemini/config/hooks.json`` with ``--runtime agy``) wiring those UX
+  hooks without overwriting an existing file.
 """
 
 from __future__ import annotations
@@ -36,6 +37,7 @@ from learning_os.adapters.study_broker import (  # noqa: E402
     send_broker_request,
 )
 from learning_os.store.materials.reading_cards import (  # noqa: E402
+    CARD_JSON_TEMPLATE,
     MAX_OPEN_ENTRIES,
     ReadingStore,
     ReadingStoreError,
@@ -45,7 +47,13 @@ from learning_os.store.materials.reading_cards import (  # noqa: E402
     treatment_kinds_hint,
     valid_session,
 )
+from learning_os.store.materials.slices import (  # noqa: E402
+    MAX_EXCERPT,
+    MAX_SLICE_PAGES,
+)
 from learning_os.store.study_fence import STUDY_FENCE_CORE_ENV  # noqa: E402
+
+HOOK_RUNTIMES = ("claude", "agy")
 
 
 def _study_sandbox_active() -> bool:
@@ -104,21 +112,24 @@ def session_start(event: dict[str, object]) -> str:
         "- Search first to check existing reading cards before opening PDFs:\n"
         "  .venv/bin/python tools/los.py material-search \"QUERY\"\n"
         "  .venv/bin/python tools/los.py material-context \"QUERY\"",
-        "- Read narrow pages first (`span_reference` / targeted `pdf p. N`, avoiding wide "
-        "bundles over unsectioned PDFs):\n"
+        f"- Read narrow pages first (`span_reference` / targeted `pdf p. N`, max "
+        f"{MAX_EXCERPT} chars across up to {MAX_SLICE_PAGES} pages — ~2-4 dense PDF "
+        "pages per extract):\n"
         "  .venv/bin/python tools/los.py material-span --material PATH --pages \"pdf p. N\" --extract\n"
         "  .venv/bin/python tools/los.py material-span UNIT ROUTE --extract\n"
         "  Add --omit-covered-text when checking an already-covered span; dismiss isolated "
         "irrelevant pages with --dismiss irrelevant.",
         f"- Reading pages that no card covers opens a reading entry. Hold at most "
         f"{MAX_OPEN_ENTRIES} open entries, and settle each before your turn ends:\n"
-        "  .venv/bin/python tools/los.py material-card-settle ENTRY --card '{...}'\n"
+        f"  .venv/bin/python tools/los.py material-card-settle ENTRY --card '{CARD_JSON_TEMPLATE}'\n"
         "  .venv/bin/python tools/los.py material-card-settle ENTRY --dismiss irrelevant --reason '...'\n"
         f"  {treatment_kinds_hint()} Cards are private and unreviewed; "
         "reads show them beside the text unless --omit-covered-text is passed.",
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
-        "(seal_envelope.py --submit validates on the host; run validate.py with --no-report "
-        "inside study mode and commit outside study mode).",
+        "(ephemeral per launch unless --persist-scratch or --scratch-dir is passed, "
+        "so on a resumed turn without the prior file, pass --guards auto --submit directly "
+        "to seal_envelope.py. seal_envelope.py --submit validates on the host. "
+        "Run validate.py with --no-report inside study mode and commit outside study mode).",
     ]
     if not valid_session(session):
         return "\n".join([*lines, "- No session id arrived: study reads will refuse."])
@@ -242,37 +253,57 @@ def session_end(event: dict[str, object]) -> str:
     )
 
 
-def profile_settings(core: Path = CORE) -> dict[str, object]:
-    """Opt-in Claude Code UX hooks for one checkout (enforcement lives in study_launch.py)."""
+def _hook_command(event: str, *, runtime: str = "claude", core: Path = CORE) -> str:
     python = shlex.quote(str(core / ".venv" / "bin" / "python"))
     hooks = shlex.quote(str(core / "tools" / "study_hooks.py"))
+    suffix = f" --format {runtime}" if runtime != "claude" else ""
+    return f"{python} {hooks} {event}{suffix}"
+
+
+def profile_settings(core: Path = CORE, *, runtime: str = "claude") -> dict[str, object]:
+    """Opt-in runtime UX hooks for one checkout (enforcement lives in study_launch.py)."""
+    if runtime == "agy":
+        return {
+            "learningos-study-hooks": {
+                "SessionStart": [{
+                    "type": "command",
+                    "command": _hook_command("session-start", runtime="agy", core=core),
+                    "timeout": 60,
+                }],
+                "Stop": [{
+                    "type": "command",
+                    "command": _hook_command("stop", runtime="agy", core=core),
+                    "timeout": 60,
+                }],
+            },
+        }
     return {
         "hooks": {
             "SessionStart": [{
                 "hooks": [{
                     "type": "command",
-                    "command": f"{python} {hooks} session-start",
+                    "command": _hook_command("session-start", core=core),
                     "timeout": 60,
                 }],
             }],
             "Stop": [{
                 "hooks": [{
                     "type": "command",
-                    "command": f"{python} {hooks} stop",
+                    "command": _hook_command("stop", core=core),
                     "timeout": 60,
                 }],
             }],
             "SubagentStop": [{
                 "hooks": [{
                     "type": "command",
-                    "command": f"{python} {hooks} stop",
+                    "command": _hook_command("stop", core=core),
                     "timeout": 60,
                 }],
             }],
             "SessionEnd": [{
                 "hooks": [{
                     "type": "command",
-                    "command": f"{python} {hooks} session-end",
+                    "command": _hook_command("session-end", core=core),
                     "timeout": 60,
                 }],
             }],
@@ -280,14 +311,33 @@ def profile_settings(core: Path = CORE) -> dict[str, object]:
     }
 
 
-def write_profile(out: Path) -> Path:
-    """Write a disposable ``DIR/.claude/settings.json`` without overwriting an existing one."""
-    target = out / ".claude" / "settings.json"
+def profile_path(out: Path, *, runtime: str = "claude") -> Path:
+    """Target profile path for ``runtime`` under ``out``."""
+    if runtime == "agy":
+        return out / ".gemini" / "config" / "hooks.json"
+    return out / ".claude" / "settings.json"
+
+
+def write_profile(out: Path, *, runtime: str = "claude", core: Path = CORE) -> Path:
+    """Write a disposable study hook profile without overwriting an existing one."""
+    target = profile_path(out, runtime=runtime)
     if target.exists():
         raise FileExistsError(f"{target} exists; a profile is never overwritten here")
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(profile_settings(), indent=2) + "\n", encoding="utf-8")
+    target.write_text(
+        json.dumps(profile_settings(core=core, runtime=runtime), indent=2) + "\n",
+        encoding="utf-8",
+    )
     return target
+
+
+def _add_format_flag(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--format",
+        choices=HOOK_RUNTIMES,
+        default="claude",
+        help="host runtime hook stdin/stdout JSON dialect (default: claude)",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -298,15 +348,27 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = parser.add_subparsers(dest="event", required=True)
-    sub.add_parser("session-start", help="SessionStart hook: hook JSON on stdin")
-    sub.add_parser("stop", help="Stop hook: hook JSON on stdin")
-    sub.add_parser("session-end", help="SessionEnd hook: hook JSON on stdin")
-    profile = sub.add_parser("profile", help="write a disposable study profile into DIR/.claude")
+    for name, help_text in (
+        ("session-start", "SessionStart hook: hook JSON on stdin"),
+        ("stop", "Stop hook: hook JSON on stdin"),
+        ("session-end", "SessionEnd hook: hook JSON on stdin"),
+    ):
+        _add_format_flag(sub.add_parser(name, help=help_text))
+    profile = sub.add_parser(
+        "profile",
+        help="write a disposable study profile into DIR/.claude or DIR/.gemini/config",
+    )
     profile.add_argument(
         "--out",
         required=True,
         type=Path,
-        help="the LearningOS-shaped folder that receives .claude/settings.json",
+        help="the folder that receives .claude/settings.json or .gemini/config/hooks.json",
+    )
+    profile.add_argument(
+        "--runtime",
+        choices=HOOK_RUNTIMES,
+        default="claude",
+        help="target runtime hook config format (default: claude)",
     )
     return parser
 
@@ -319,22 +381,72 @@ def _read_event() -> dict[str, object]:
     return value if isinstance(value, dict) else {}
 
 
+def _normalize_event_for_format(raw: dict[str, object], *, fmt: str) -> dict[str, object]:
+    event = dict(raw)
+    if fmt == "agy":
+        sid = event.get("session_id")
+        if not isinstance(sid, str) or not sid:
+            env_sid = os.environ.get("LOS_SESSION_ID", "")
+            conv_sid = event.get("conversationId")
+            if env_sid:
+                event["session_id"] = env_sid
+            elif isinstance(conv_sid, str) and conv_sid:
+                event["session_id"] = conv_sid
+        if "stop_hook_active" not in event and "continuationActive" in event:
+            event["stop_hook_active"] = bool(event.get("continuationActive"))
+    return event
+
+
+def _should_skip_stop_for_format(raw: dict[str, object], *, fmt: str) -> bool:
+    if fmt != "agy":
+        return False
+    term_reason = raw.get("terminationReason")
+    return isinstance(term_reason, str) and bool(term_reason) and term_reason != "NO_TOOL_CALL"
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run one study UX hook event or generate an opt-in settings profile."""
     args = build_parser().parse_args(argv)
     if args.event == "profile":
-        print(write_profile(args.out))
+        print(write_profile(args.out, runtime=args.runtime))
         return 0
-    event = _read_event()
+    fmt = str(args.format)
+    raw_event = _read_event()
+    event = _normalize_event_for_format(raw_event, fmt=fmt)
     if args.event == "session-start":
-        print(session_start(event))
+        text = session_start(event)
+        if fmt == "agy":
+            stripped = text.strip()
+            agy_start: dict[str, object] = (
+                {"injectSteps": [{"systemMessage": {"systemMessage": stripped}}]}
+                if stripped
+                else {}
+            )
+            print(json.dumps(agy_start))
+        else:
+            print(text)
         return 0
     if args.event == "session-end":
         message = session_end(event)
-        if message:
+        if fmt == "agy":
+            print("{}")
+        elif message:
             print(message)
         return 0
+    if _should_skip_stop_for_format(raw_event, fmt=fmt):
+        print("{}")
+        return 0
     result = stop(event)
+    if fmt == "agy":
+        if isinstance(result, dict) and result.get("decision") == "block":
+            agy_stop: dict[str, object] = {"decision": "continue"}
+            reason = result.get("reason")
+            if reason:
+                agy_stop["reason"] = str(reason)
+            print(json.dumps(agy_stop))
+        else:
+            print("{}")
+        return 0
     if result is not None:
         print(json.dumps(result))
     return 0

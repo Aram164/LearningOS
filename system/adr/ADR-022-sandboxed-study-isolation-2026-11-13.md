@@ -24,9 +24,14 @@ release certification.
    - `generated/summaries/` is read-denied alongside the text/search caches
      because promoted chapter summaries (`tools/material_summarize.py`) can
      condense up to 80% (`MAX_SOURCE_FRACTION = 0.8`) of primary PDF page text.
-   - Temporary files, `--check-out`, `--out`, and `--report-out` live in an
-     ephemeral `$LOS_SCRATCH_DIR` allocated outside `LearningOS/` and removed
-     after `tools/study_launch.py` records `session_end` in `finally:`.
+   - Temporary files, `--check-out`, `--out`, and `--report-out` live in
+     `$LOS_SCRATCH_DIR` allocated outside `LearningOS/`, ephemeral per launch by
+     default and removed after `tools/study_launch.py` records `session_end` in
+     `finally:`. Opt-in `--persist-scratch` or `--scratch-dir` initializes a
+     dedicated `0700` directory with `.learningos-scratch.json` bound to that
+     LearningOS checkout and `--session` UUID (refusing pre-existing unrelated
+     or other-session directories and write-denying the marker inside Seatbelt),
+     which remains on disk until manually removed.
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
      `material-study-span`, blocks file inputs touching `protected_reads(core)`
@@ -57,8 +62,9 @@ release certification.
 4. **V1 runtime certification, Darwin verification, and deferred items.**
    - **Supported study runtime (v1):** Release certification covers Claude Code
      (tested end-to-end with Seatbelt, the broker, and optional `.claude`
-     hooks). Multi-vendor launch paths (`codex`, `gemini`) exist in
-     `tools/study_launch.py` as non-certified experimental paths in v1.
+     hooks). Multi-vendor launch paths (`codex`, `gemini`, `agy`) exist in
+     `tools/study_launch.py` (with `--format agy` / `--runtime agy` hook support
+     in `tools/study_hooks.py`) as non-certified experimental paths in v1.
    - **macOS Darwin verification:** `tests/test_study_launch.py` skips live
      `/usr/bin/sandbox-exec` probes on Linux CI (`DARWIN_SEATBELT`); running
      that suite on macOS is part of release and live-install verification.

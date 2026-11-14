@@ -19,7 +19,6 @@ import hashlib
 import json
 import os
 import re
-import unicodedata
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any, NamedTuple
 
@@ -81,8 +80,11 @@ class MaterialRef(NamedTuple):
     selector: str
 
 
-def _has_control(text: str) -> bool:
-    return any(unicodedata.category(char) == "Cc" for char in text)
+_CONTROL_CHAR_RE = re.compile(r"[\x00-\x1f\x7f-\x9f]")
+
+
+def _has_control(value: str) -> bool:
+    return _CONTROL_CHAR_RE.search(value) is not None
 
 
 def parse_material_uri(ref) -> MaterialRef | None:
@@ -298,7 +300,12 @@ def resolve_material_target(
     return resolved
 
 
-def material_location(repo: Repo, ref) -> dict:
+def material_location(
+    repo: Repo,
+    ref,
+    *,
+    location_cache: dict[str, Any] | None = None,
+) -> dict:
     """Resolve a ``material://`` URI to a path relative to the LearningOS root
     (the vault's parent) plus an existence flag. Interfaces get a path they can
     hand to the OS file opener; the resolution rule stays here. A selector
@@ -306,18 +313,50 @@ def material_location(repo: Repo, ref) -> dict:
     parsed = parse_material_uri(ref)
     if parsed is None:
         return {"material_path": None, "material_exists": False}
-    target = repo.materials_root / parsed.path
+    locations: dict[str, dict[str, Any]] | None = None
+    if location_cache is not None:
+        locations = location_cache.setdefault("_locations", {})
+        if parsed.path in locations:
+            return dict(locations[parsed.path])
+        materials_root = location_cache.get("_materials_root")
+        if materials_root is None:
+            materials_root = repo.materials_root
+            location_cache["_materials_root"] = materials_root
+        learningos_resolved = location_cache.get("_learningos_resolved")
+        if learningos_resolved is None:
+            learningos_resolved = repo.learningos_root.resolve()
+            location_cache["_learningos_resolved"] = learningos_resolved
+    else:
+        materials_root = repo.materials_root
+        learningos_resolved = None
+    target = materials_root / parsed.path
     try:
         resolved = resolve_symlinks_inside(
             repo.learningos_root / "materials", target, strict=False
         )
-        rel = resolved.relative_to(repo.learningos_root.resolve())
+        base_resolved = (
+            learningos_resolved
+            if learningos_resolved is not None
+            else repo.learningos_root.resolve()
+        )
+        rel = resolved.relative_to(base_resolved)
     except (PathBoundaryError, ValueError, OSError):
-        return {"material_path": None, "material_exists": False}
-    return {"material_path": str(rel), "material_exists": resolved.exists()}
+        result = {"material_path": None, "material_exists": False}
+        if locations is not None:
+            locations[parsed.path] = result
+        return dict(result)
+    result = {"material_path": str(rel), "material_exists": resolved.exists()}
+    if locations is not None:
+        locations[parsed.path] = result
+    return dict(result)
 
 
-def project_material_resource(repo: Repo, resource: dict) -> dict:
+def project_material_resource(
+    repo: Repo,
+    resource: dict,
+    *,
+    location_cache: dict[str, Any] | None = None,
+) -> dict:
     """Add one core-resolved local target to a stage resource."""
     projected = dict(resource)
     # The review is canonical operator evidence. Interfaces consume the
@@ -359,7 +398,7 @@ def project_material_resource(repo: Repo, resource: dict) -> dict:
     if not material_uri:
         return projected
 
-    location = material_location(repo, material_uri)
+    location = material_location(repo, material_uri, location_cache=location_cache)
 
     # An authored `vault_path` is an assertion: if it names nothing, that is a
     # defect and the interface must say so. A locator-derived target is a
@@ -376,8 +415,28 @@ def project_material_resource(repo: Repo, resource: dict) -> dict:
     return projected
 
 
+def _resolve_regular_path(
+    repo: Repo,
+    relative: str,
+    location_cache: dict[str, Any] | None,
+) -> Path | None:
+    if location_cache is not None:
+        reg_cache: dict[str, Path | None] = location_cache.setdefault("_regular_files", {})
+        if relative in reg_cache:
+            return reg_cache[relative]
+        path = repo.learningos_root / relative
+        res = path if (path.is_file() and not path.is_symlink()) else None
+        reg_cache[relative] = res
+        return res
+    path = repo.learningos_root / relative
+    return path if (path.is_file() and not path.is_symlink()) else None
+
+
 def resolve_route_material_files(
-    repo: Repo, route: dict[str, Any],
+    repo: Repo,
+    route: dict[str, Any],
+    *,
+    location_cache: dict[str, Any] | None = None,
 ) -> list[ResolvedMaterialFile]:
     """Resolve every exact local file named by one route, or none.
 
@@ -393,13 +452,13 @@ def resolve_route_material_files(
         "source_id": route.get("source_id"),
         "locator": route.get("locator"),
         "vault_path": route.get("vault_path"),
-    })
+    }, location_cache=location_cache)
     material_uri = projected.get("material_uri")
     relative = projected.get("material_path")
     if isinstance(material_uri, str) and isinstance(relative, str) \
             and projected.get("material_exists"):
-        path = repo.learningos_root / relative
-        if path.is_file() and not path.is_symlink():
+        path = _resolve_regular_path(repo, relative, location_cache)
+        if path is not None:
             return [ResolvedMaterialFile(material_uri, path)]
 
     locator = route.get("locator")
@@ -416,12 +475,12 @@ def resolve_route_material_files(
     files: list[ResolvedMaterialFile] = []
     for candidate in candidates:
         uri = f"material://{authority}/{candidate}"
-        location = material_location(repo, uri)
+        location = material_location(repo, uri, location_cache=location_cache)
         relative = location.get("material_path")
         if not isinstance(relative, str) or not location.get("material_exists"):
             return []
-        path = repo.learningos_root / relative
-        if not path.is_file() or path.is_symlink():
+        path = _resolve_regular_path(repo, relative, location_cache)
+        if path is None:
             return []
         files.append(ResolvedMaterialFile(uri, path))
     return files

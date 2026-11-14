@@ -15,7 +15,10 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   ``CORE`` to absolute paths while leaving non-existent path tokens relative.
 - Allocates ``$LOS_SCRATCH_DIR`` (``$TMPDIR``) outside ``LearningOS/`` and mints
   an authoritative study session UUID before launching ``claude``, ``codex``,
-  ``gemini``, or ``--cmd``.
+  ``gemini``, ``agy``, or ``--cmd`` (ephemeral by default; pass
+  ``--persist-scratch`` or ``--scratch-dir`` to retain a dedicated,
+  ``.learningos-scratch.json``-owned, session-bound scratch directory across
+  resumed launches until manually removed).
 - Records ``ReadingStore.session_end`` and cleans up the socket in ``finally:``
   even on child crash or kill.
 """
@@ -23,9 +26,12 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -44,7 +50,10 @@ from learning_os.store.study_fence import is_within, protected_reads
 
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")
 LEARNINGOS_STUDY_NAMESPACE = uuid.UUID("7f3b0c4a-5e2d-4c8a-9b1f-3e6d1a2c4b8e")
-RUNTIMES = ("claude", "codex", "gemini")
+RUNTIMES = ("claude", "codex", "gemini", "agy")
+SCRATCH_MARKER_NAME = ".learningos-scratch.json"
+_SCRATCH_MARKER_SCHEMA = 1
+_SCRATCH_MARKER_OWNER = "learningos-study-scratch"
 
 
 def _sbpl_quote(value: str) -> str:
@@ -60,6 +69,7 @@ def build_seatbelt_profile(
     core_root: Path,
     *,
     deny_extra_subpaths: Sequence[Path] = (),
+    deny_extra_literals: Sequence[Path] = (),
 ) -> str:
     """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout."""
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
@@ -86,6 +96,9 @@ def build_seatbelt_profile(
         quoted = _sbpl_quote(str(real_extra))
         lines.append(f'(deny file-read* (subpath "{quoted}"))')
         lines.append(f'(deny file-write* (subpath "{quoted}"))')
+    for extra_literal in deny_extra_literals:
+        real_lit = Path(os.path.realpath(extra_literal))
+        lines.append(f'(deny file-write* (literal "{_sbpl_quote(str(real_lit))}"))')
     return "\n".join(lines) + "\n"
 
 
@@ -184,7 +197,7 @@ def _normalize_cmd_args(
     out: list[str] = []
     prev_token = ""
     for idx, token in enumerate(command):
-        if prev_token == "-c" and idx > 0:
+        if prev_token in ("-c", "-e", "-m") and idx > 0:
             out.append(token)
             prev_token = token
             continue
@@ -254,6 +267,138 @@ def _allocate_scratch_dir(real_learningos: Path) -> Path:
     return _allocate_outside_dir("los-study-scratch-", real_learningos)
 
 
+def _persistent_scratch_path(real_learningos: Path, session_id: str) -> Path:
+    base = Path(os.path.realpath(tempfile.gettempdir()))
+    if is_within(base, real_learningos):
+        base = Path(os.path.realpath("/tmp"))
+    token = hashlib.sha256(
+        f"{os.geteuid()}:{real_learningos}:{session_id}".encode()
+    ).hexdigest()[:16]
+    return base / f"los-study-scratch-{os.geteuid()}-{token}"
+
+
+def _validate_scratch_marker(
+    marker: Path,
+    *,
+    real_learningos: Path,
+    session_id: str,
+) -> None:
+    try:
+        lstat = os.lstat(marker)
+    except FileNotFoundError as exc:
+        raise ValueError(
+            f"refusing existing directory without LearningOS scratch marker "
+            f"({SCRATCH_MARKER_NAME}): {marker.parent}; pass a fresh path so "
+            "LearningOS can initialize a dedicated scratch directory"
+        ) from exc
+    if stat.S_ISLNK(lstat.st_mode) or not stat.S_ISREG(lstat.st_mode):
+        raise ValueError(f"scratch ownership marker must be a regular file: {marker}")
+    if lstat.st_uid != os.geteuid():
+        raise ValueError(f"scratch ownership marker must be owned by current user: {marker}")
+    if (lstat.st_mode & 0o077) != 0:
+        raise ValueError(
+            f"scratch ownership marker has unsafe permissions "
+            f"({oct(stat.S_IMODE(lstat.st_mode))}): {marker}"
+        )
+    try:
+        fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
+        with os.fdopen(fd, "r", encoding="utf-8") as handle:
+            raw: object = json.loads(handle.read())
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        raise ValueError(f"unreadable scratch ownership marker {marker}: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ValueError(f"invalid scratch ownership marker {marker}: expected JSON object")
+    if raw.get("schema") != _SCRATCH_MARKER_SCHEMA or raw.get("owner") != _SCRATCH_MARKER_OWNER:
+        raise ValueError(
+            f"scratch directory is not initialized for LearningOS study scratch: {marker.parent}"
+        )
+    recorded_learningos = raw.get("learningos")
+    if recorded_learningos != str(real_learningos):
+        raise ValueError(
+            f"scratch directory belongs to LearningOS root {recorded_learningos!r}, "
+            f"refusing reuse for {real_learningos}"
+        )
+    recorded_session = raw.get("session_id")
+    if recorded_session != session_id:
+        raise ValueError(
+            f"scratch directory belongs to study session {recorded_session!r}, "
+            f"refusing reuse by session {session_id!r}"
+        )
+
+
+def _write_scratch_marker(
+    marker: Path,
+    *,
+    real_learningos: Path,
+    session_id: str,
+    mode: str,
+) -> None:
+    payload = {
+        "schema": _SCRATCH_MARKER_SCHEMA,
+        "owner": _SCRATCH_MARKER_OWNER,
+        "learningos": str(real_learningos),
+        "session_id": session_id,
+        "mode": mode,
+    }
+    fd = os.open(marker, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, indent=2) + "\n")
+
+
+def _prepare_persistent_scratch_dir(
+    path: Path,
+    real_learningos: Path,
+    *,
+    session_id: str,
+    mode: str,
+) -> Path:
+    expanded = Path(os.path.abspath(path.expanduser()))
+    if expanded.is_symlink():
+        raise ValueError(f"scratch directory must not be a symlink: {expanded}")
+    candidate = Path(os.path.realpath(expanded))
+    if is_within(candidate, real_learningos):
+        raise ValueError(f"scratch directory must live outside LearningOS/: {candidate}")
+    forbidden = {
+        Path(os.path.realpath("/")),
+        Path(os.path.realpath("/tmp")),
+        Path(os.path.realpath(tempfile.gettempdir())),
+        Path(os.path.realpath(Path.home())),
+    }
+    if candidate in forbidden:
+        raise ValueError(f"scratch directory must be a dedicated subdirectory: {candidate}")
+
+    marker = candidate / SCRATCH_MARKER_NAME
+    try:
+        st = os.lstat(candidate)
+    except FileNotFoundError:
+        candidate.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        try:
+            os.mkdir(candidate, 0o700)
+        except FileExistsError as exc:
+            raise ValueError(f"scratch directory already exists unexpectedly: {candidate}") from exc
+        try:
+            os.chmod(candidate, 0o700)
+            _write_scratch_marker(
+                marker, real_learningos=real_learningos, session_id=session_id, mode=mode
+            )
+        except Exception:
+            shutil.rmtree(candidate, ignore_errors=True)
+            raise
+        return Path(os.path.realpath(candidate))
+
+    if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
+        raise ValueError(f"scratch directory must be a real directory: {candidate}")
+    if st.st_uid != os.geteuid():
+        raise ValueError(f"scratch directory must be owned by current user: {candidate}")
+    _validate_scratch_marker(marker, real_learningos=real_learningos, session_id=session_id)
+    if (st.st_mode & 0o077) != 0:
+        raise ValueError(
+            f"scratch directory has unsafe permissions "
+            f"({oct(stat.S_IMODE(st.st_mode))}): {candidate}"
+        )
+    return candidate
+
+
 def _resolve_session_id(
     *,
     explicit_session: str | None,
@@ -303,6 +448,23 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="derive a deterministic UUIDv5 session from an external vendor handle",
     )
+    scratch = parser.add_mutually_exclusive_group()
+    scratch.add_argument(
+        "--persist-scratch",
+        action="store_true",
+        help=(
+            "initialize and retain a dedicated per-session $LOS_SCRATCH_DIR "
+            "(.learningos-scratch.json-marked) across resumed launches; remove it manually when done"
+        ),
+    )
+    scratch.add_argument(
+        "--scratch-dir",
+        default=None,
+        help=(
+            "initialize and retain a dedicated host scratch path outside LearningOS/ for this "
+            "session only (refuses existing unrelated or other-session dirs; remove manually when done)"
+        ),
+    )
     parser.add_argument(
         "target_args",
         nargs=argparse.REMAINDER,
@@ -319,6 +481,8 @@ def launch_study(
     sandbox_exec: Path | None = None,
     platform: str = sys.platform,
     cwd: Path | None = None,
+    persist_scratch: bool = False,
+    scratch_dir_override: Path | None = None,
 ) -> int:
     """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state."""
     effective_sandbox = SANDBOX_EXEC if sandbox_exec is None else sandbox_exec
@@ -344,6 +508,7 @@ def launch_study(
 
     session_started = False
     scratch_dir: Path | None = None
+    keep_scratch = persist_scratch or (scratch_dir_override is not None)
     sock_dir: Path | None = None
     stage_dir: Path | None = None
     server: BrokerServer | None = None
@@ -359,6 +524,29 @@ def launch_study(
             proc.terminate()
 
     try:
+        if scratch_dir_override is not None:
+            try:
+                scratch_dir = _prepare_persistent_scratch_dir(
+                    scratch_dir_override,
+                    real_learningos,
+                    session_id=session_id,
+                    mode="explicit-scratch-dir",
+                )
+            except (ValueError, OSError) as exc:
+                print(f"study_launch: {exc}", file=sys.stderr)
+                return 2
+        elif persist_scratch:
+            try:
+                scratch_dir = _prepare_persistent_scratch_dir(
+                    _persistent_scratch_path(real_learningos, session_id),
+                    real_learningos,
+                    session_id=session_id,
+                    mode="persist-scratch",
+                )
+            except (ValueError, OSError) as exc:
+                print(f"study_launch: {exc}", file=sys.stderr)
+                return 2
+
         try:
             store.touch(session_id, start=True)
             session_started = True
@@ -366,13 +554,19 @@ def launch_study(
             print(f"study_launch: reading store unavailable: {exc}", file=sys.stderr)
             return 2
 
-        scratch_dir = _allocate_scratch_dir(real_learningos)
+        if scratch_dir is None:
+            scratch_dir = _allocate_scratch_dir(real_learningos)
         sock_dir = Path(os.path.realpath(tempfile.mkdtemp(prefix="losg-", dir="/tmp")))
         stage_dir = _allocate_outside_dir("losb-", real_learningos)
         sock_path = sock_dir / "gate.sock"
         sb_path = sock_dir / "study.sb"
+        deny_literals = (scratch_dir / SCRATCH_MARKER_NAME,) if keep_scratch else ()
         sb_path.write_text(
-            build_seatbelt_profile(real_core, deny_extra_subpaths=(stage_dir,)),
+            build_seatbelt_profile(
+                real_core,
+                deny_extra_subpaths=(stage_dir,),
+                deny_extra_literals=deny_literals,
+            ),
             encoding="utf-8",
         )
 
@@ -434,7 +628,7 @@ def launch_study(
             shutil.rmtree(stage_dir, ignore_errors=True)
         if sock_dir is not None:
             shutil.rmtree(sock_dir, ignore_errors=True)
-        if scratch_dir is not None:
+        if scratch_dir is not None and not keep_scratch:
             shutil.rmtree(scratch_dir, ignore_errors=True)
 
 
@@ -448,6 +642,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     real_core = Path(os.path.realpath(core_root))
     runtime_tag = args.runtime or "cmd"
+    scratch_override: Path | None = None
+    if args.scratch_dir is not None:
+        raw_scratch = Path(args.scratch_dir).expanduser()
+        scratch_override = raw_scratch if raw_scratch.is_absolute() else caller_cwd / raw_scratch
     try:
         command = _resolve_runtime_command(
             runtime=args.runtime,
@@ -469,6 +667,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         command=command,
         session_id=session_id,
         cwd=real_core,
+        persist_scratch=bool(args.persist_scratch),
+        scratch_dir_override=scratch_override,
     )
 
 

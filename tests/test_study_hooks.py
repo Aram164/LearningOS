@@ -369,3 +369,140 @@ def test_hooks_separate_commands_without_shell_operators_and_work_from_parent_di
             assert " or --dismiss" not in stripped
     assert f".venv/bin/python tools/los.py material-card-settle --adopt {S}" in start_proc.stdout
     assert f".venv/bin/python tools/los.py material-card-settle --adopt {OTHER}" in start_proc.stdout
+
+
+def test_session_start_includes_inline_card_template_excerpt_cap_and_resume_hint(
+    _in_process_store: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(GATE_SOCK_ENV, raising=False)
+    monkeypatch.delenv(STUDY_FENCE_CORE_ENV, raising=False)
+    out = study_hooks.session_start({"session_id": S, "source": "startup"})
+    assert '"paraphrase"' in out
+    assert '"pointers"' in out
+    assert "matched sets" in out
+    assert "6000 chars" in out
+    assert "20 pages" in out
+    assert "--guards auto --submit" in out
+
+
+def test_agy_profile_and_protojson_hook_dialect(world: Path, tmp_path: Path) -> None:
+    profile_target = tmp_path / "agy-home"
+    res = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/study_hooks.py"),
+            "profile",
+            "--out",
+            str(profile_target),
+            "--runtime",
+            "agy",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert res.returncode == 0, res.stderr
+    hooks_file = profile_target / ".gemini" / "config" / "hooks.json"
+    assert hooks_file.is_file()
+    cfg = json.loads(hooks_file.read_text(encoding="utf-8"))
+    group = cfg["learningos-study-hooks"]
+    assert set(group) == {"SessionStart", "Stop"}
+    assert group["SessionStart"][0]["command"].endswith(" session-start --format agy")
+    assert group["Stop"][0]["command"].endswith(" stop --format agy")
+
+    again = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/study_hooks.py"),
+            "profile",
+            "--out",
+            str(profile_target),
+            "--runtime",
+            "agy",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert again.returncode != 0
+
+    _open_study_span(world, 3)
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", LOS_SESSION_ID=S)
+
+    start_proc = subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), "session-start", "--format", "agy"],
+        cwd=str(world),
+        input="{}",
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=env,
+    )
+    assert start_proc.returncode == 0, start_proc.stderr
+    start_json = json.loads(start_proc.stdout)
+    injected = start_json["injectSteps"][0]["systemMessage"]["systemMessage"]
+    assert "LearningOS study profile" in injected
+
+    # Non-NO_TOOL_CALL termination (e.g. ERROR/CANCELED) skips stop debt prompts cleanly.
+    canceled_proc = subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), "stop", "--format", "agy"],
+        cwd=str(world),
+        input=json.dumps({"continuationActive": False, "terminationReason": "ERROR"}),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=env,
+    )
+    assert canceled_proc.returncode == 0, canceled_proc.stderr
+    assert json.loads(canceled_proc.stdout) == {}
+
+    # Normal turn completion maps block -> continue for 2 asks, then {} when overdue.
+    stop_replies = []
+    for active in (False, True, True):
+        stop_proc = subprocess.run(
+            [sys.executable, str(world / "tools/study_hooks.py"), "stop", "--format", "agy"],
+            cwd=str(world),
+            input=json.dumps({"continuationActive": active, "terminationReason": "NO_TOOL_CALL"}),
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env=env,
+        )
+        assert stop_proc.returncode == 0, stop_proc.stderr
+        stop_replies.append(json.loads(stop_proc.stdout))
+    assert [reply.get("decision") for reply in stop_replies] == ["continue", "continue", None]
+    assert "material-card-settle rd-" in stop_replies[0]["reason"]
+    assert stop_replies[2] == {}
+
+    end_proc = subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), "session-end", "--format", "agy"],
+        cwd=str(world),
+        input="{}",
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=env,
+    )
+    assert end_proc.returncode == 0, end_proc.stderr
+    assert json.loads(end_proc.stdout) == {}
+
+    # Unfenced agy runs (without LOS_SESSION_ID) fall back to stdin conversationId.
+    unfenced_env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    unfenced_env.pop("LOS_SESSION_ID", None)
+    unfenced_env.pop(GATE_SOCK_ENV, None)
+    unfenced_env.pop(STUDY_FENCE_CORE_ENV, None)
+    unfenced_start = subprocess.run(
+        [sys.executable, str(world / "tools/study_hooks.py"), "session-start", "--format", "agy"],
+        cwd=str(world),
+        input=json.dumps({"conversationId": OTHER}),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=unfenced_env,
+    )
+    assert unfenced_start.returncode == 0, unfenced_start.stderr
+    unfenced_msg = json.loads(unfenced_start.stdout)["injectSteps"][0]["systemMessage"]["systemMessage"]
+    assert "No session id arrived" not in unfenced_msg
+    assert "- This session holds no overdue entries." in unfenced_msg
+    assert (ReadingStore(world).root / "sessions" / f"{OTHER}.json").is_file()

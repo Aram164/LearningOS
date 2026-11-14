@@ -990,6 +990,23 @@ def test_no_material_reference_without_observed_bytes(world: Path) -> None:
     assert res.hits and all(h["material_reference"] is None for h in res.hits)
 
 
+@needs_pdftotext
+def test_symlinked_parent_directory_under_materials_is_not_verified(world: Path) -> None:
+    unrouted_dir = world.parent / "materials" / "_unsorted" / "review"
+    unrouted = unrouted_dir / "loose.pdf"
+    write_minimal_pdf(unrouted, ["intro", "Chebyshev bound in an unrouted review"])
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+
+    moved_dir = world.parent / "materials" / "_unsorted" / "review-real"
+    unrouted_dir.rename(moved_dir)
+    unrouted_dir.symlink_to(moved_dir, target_is_directory=True)
+
+    res = execute_search(world, "Chebyshev", limit=10)
+    _validate_response(res.to_dict())
+    assert all(h["material"] != "_unsorted/review/loose.pdf" for h in res.hits)
+
+
 @pytest.mark.live_install
 def test_live_install_smoke() -> None:
     """Optional live-install smoke test (skipped under -m 'not live_install' in CI)."""

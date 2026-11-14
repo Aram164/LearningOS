@@ -22,3 +22,28 @@ at `system/DEVELOPER.md` and inspect code as that route requires.
 No agent has a standing role here: Aram assigns planning, reviewing and
 implementing per task. Workspace-wide guidance for plans and reviews is in
 `AGENTS.md` at the `semestercontext/` root.
+
+## Sandboxed study mode
+
+When running inside a study launch (`tools/study_launch.py` / `LOS_GATE_SOCK` active):
+
+- **Search reading memory before opening PDFs:** Run `material-search` or
+  `material-context` first. When calling `material-span ... --extract`, ask for
+  narrow targeted pages (`--pages "pdf p. N"`): extracts fail or truncate above
+  `6000` characters (`~2-4` dense PDF pages, max `20` pages). Pass
+  `--omit-covered-text` when re-checking an already-covered span.
+- **Settle open reading entries (max `4`):** Every uncovered span opens a
+  `rd-...` debt that must be settled before your turn ends via
+  `material-card-settle ENTRY --card '...'` or `--dismiss irrelevant --reason '...'`.
+  In `--card` JSON, `paraphrase` is `20-800` chars, every kind in `kinds` must
+  have at least one matching `pointers[].kind` and every pointer's `kind` must
+  appear in `kinds` (matched sets), each `page` must lie in the entry's range,
+  and each `label` is `1-160` chars.
+- **Scratch & writes:** Write scratch, `--check-out`, and `--out` files only
+  under `$LOS_SCRATCH_DIR`. Scratch resets across launches by default unless
+  `--persist-scratch` or `--scratch-dir` initializes a dedicated,
+  `.learningos-scratch.json`-marked, single-session directory outside
+  `LearningOS/` (pre-existing unrelated or other-session directories are
+  refused; remove retained scratch manually when finished). On a resumed
+  confirmation turn without the prior check file, pass `--guards auto --submit`
+  directly to `tools/seal_envelope.py`.

@@ -568,7 +568,13 @@ def _dispatch_via_socket(
         try:
             guards_from_raw = Path(args.guards_from).expanduser().read_text(encoding="utf-8")
         except OSError as exc:
-            print(f"seal_envelope: cannot read --guards-from {args.guards_from}: {exc}",
+            hint = (
+                " ($LOS_SCRATCH_DIR resets across non-persistent launches; re-check "
+                "or pass --guards auto --submit directly)"
+                if isinstance(exc, FileNotFoundError)
+                else ""
+            )
+            print(f"seal_envelope: cannot read --guards-from {args.guards_from}: {exc}{hint}",
                   file=sys.stderr)
             return 2
     payload_at_raw: str | None = None

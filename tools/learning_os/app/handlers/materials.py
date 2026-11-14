@@ -59,6 +59,8 @@ from learning_os.store.materials.resolution import (
     sha256_file,
 )
 from learning_os.store.materials.slices import (
+    MAX_EXCERPT,
+    MAX_SLICE_PAGES,
     SliceResolutionError,
     parse_explicit_page_ranges,
     parse_locator_page_ranges,
@@ -115,9 +117,6 @@ def _freshness_label(root, binding, observations=None):
 #: Batch reads serve at most this many routes: one snapshot, one load,
 #: and a payload an operator can still review. Mirrors inspect's batch cap.
 MAX_BATCH_ROUTES = 20
-
-#: The span excerpt stays well under the old 8 KiB operator print.
-MAX_EXCERPT = 6000
 
 
 def _unit(ctx, repo, unit_id):
@@ -832,6 +831,8 @@ def _read_material_pdf(ctx, materials_root: Path, relative) -> tuple[Path, bytes
 def _material_route_bindings(repo, physical: Path) -> list[dict]:
     """Every (module, unit, route) whose resolved files include this exact file."""
     found, seen = [], set()
+    location_cache: dict[str, object] = {}
+    resolved_paths: dict[Path, Path | None] = {}
     for unit_id in sorted(repo.units):
         unit = repo.units[unit_id]
         source_map = repo.module_source_maps.get(unit.module_id)
@@ -841,12 +842,15 @@ def _material_route_bindings(repo, physical: Path) -> list[dict]:
             route_id = route.get("id")
             if not route_id or (unit.id, route_id) in seen:
                 continue
-            for resolved in resolve_route_material_files(repo, route):
-                try:
-                    same = Path(resolved.path).resolve() == physical
-                except OSError:
-                    same = False
-                if same:
+            for resolved in resolve_route_material_files(
+                repo, route, location_cache=location_cache
+            ):
+                if resolved.path not in resolved_paths:
+                    try:
+                        resolved_paths[resolved.path] = Path(resolved.path).resolve()
+                    except OSError:
+                        resolved_paths[resolved.path] = None
+                if resolved_paths[resolved.path] == physical:
                     seen.add((unit.id, route_id))
                     found.append({"module": unit.module_id, "unit": unit.id,
                                   "route": route_id, "source_id": route.get("source_id")})
@@ -918,8 +922,12 @@ def _material_form_span(ctx, req) -> Result:
         entry.update({"extraction": "unreadable", "reason": exc.reason})
     next_action = None
     if entry.get("excerpt_truncated") or entry.get("extraction") == "range-truncated":
-        next_action = ("This excerpt is cut off. Rerun material-span --material "
-                       f"{relative!r} with fewer --pages, e.g. one page at a time.")
+        next_action = (
+            f"This excerpt is cut off (max {MAX_EXCERPT} chars across up to "
+            f"{MAX_SLICE_PAGES} pages, typically ~2-4 dense PDF pages). "
+            f"Rerun material-span --material {relative!r} with fewer --pages, "
+            "e.g. one page at a time."
+        )
     payload = {
         "contract": "material-span-v1", "unit_id": None, "module_id": None,
         "route_id": None, "source_id": source_id, "material": relative,
@@ -1091,7 +1099,9 @@ def material_span(ctx: OpContext, req: dict) -> Result:
             # A cut-off extract is exactly where the unit-scoped page search
             # helps; route the operator there from the output itself.
             next_action = (
-                'This excerpt is cut off. Locate the page first: '
+                f"This excerpt is cut off (max {MAX_EXCERPT} chars across up to "
+                f"{MAX_SLICE_PAGES} pages, typically ~2-4 dense PDF pages). "
+                "Locate the page first: "
                 f'material-search --unit {unit.id} "terms", '
                 f"then rerun material-span {unit.id} {route['id']}{placement_flags} "
                 '--extract --pages "<the hit\'s span_reference pages>".'
@@ -1188,8 +1198,9 @@ def _study_reads(ctx, payload) -> tuple[list[Read], list[dict], list[dict]]:
             first = pages[0] if pages else 1
             raise WriteRefused(
                 f"{material} {pages_label(min(pages), max(pages)) if pages else ''} does not fit "
-                "one excerpt, so a study read returns no text and opens no entry; read fewer "
-                f'pages, e.g. --pages "pdf p. {first}"',
+                f"one excerpt (max {MAX_EXCERPT} chars across up to {MAX_SLICE_PAGES} pages, "
+                "typically ~2-4 dense PDF pages), so a study read returns no text and opens no entry; "
+                f'read fewer pages, e.g. --pages "pdf p. {first}"',
                 site=f"{ctx.operation}.clipped", prefixed=True, exit_code=2)
         runs = _span_runs(pages)
         if len(runs) > 1:
@@ -1353,14 +1364,13 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
     })
 
 
-def _settle_result(ctx, repo, session, settlement, store) -> Result:
-    known = set(repo.concepts)
+def _settle_result(session, settlement, store, *, known_concepts: set[str]) -> Result:
     return Result({
         "schema_version": 1, "contract": "material-card-settle-v1",
         "session": session, "outcome": settlement.outcome,
         "replayed": settlement.replayed,
         "entries": [entry_view(row) for row in settlement.entries],
-        "card": (store.served_card(settlement.card, known)
+        "card": (store.served_card(settlement.card, known_concepts)
                  if settlement.card is not None else None),
         "remaining": [entry_view(row) for row in settlement.remaining],
     })
@@ -1383,11 +1393,16 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--observed-sha256 belongs to --source-changed only",
             site=f"{ctx.operation}.bad-form", prefixed=True, exit_code=2)
+    card_req = req.get("card")
+    known_concepts = (
+        set(ctx.repo().concepts)
+        if modes == ["card"] and isinstance(card_req, dict) and card_req.get("concepts")
+        else set()
+    )
     store = ReadingStore(ctx.root)
-    repo = ctx.repo()
     try:
         if modes == ["card"]:
-            settlement = store.save(session, entry, req["card"])
+            settlement = store.save(session, entry, card_req)
         elif modes == ["dismiss"]:
             settlement = store.dismiss(session, entry, req["dismiss"], reason=req.get("reason"),
                                        covering_card=req.get("covering_card"))
@@ -1397,7 +1412,7 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
             settlement = store.close_source(
                 session, entry, gone=modes == ["source_gone"],
                 observed=req.get("observed_sha256"),
-                materials_root=repo.learningos_root / "materials")
+                materials_root=ctx.root.parent / "materials")
     except ReadingStoreError as exc:
         raise WriteRefused(
             f"the reading store cannot be updated; the entry stays as it was: {exc}",
@@ -1429,7 +1444,7 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
                                exit_code=2, remedy=exc.remedy) from exc
         raise WriteRefused(str(exc), site=f"{ctx.operation}.unknown-entry", prefixed=True,
                            exit_code=2, remedy=exc.remedy) from exc
-    return _settle_result(ctx, repo, session, settlement, store)
+    return _settle_result(session, settlement, store, known_concepts=known_concepts)
 
 
 def _study_hit_cards(ctx, repo, session, payload) -> None:
@@ -1441,6 +1456,7 @@ def _study_hit_cards(ctx, repo, session, payload) -> None:
                    "review": "unreviewed private cards; never coverage evidence"}
     try:
         with store.locked(create=False):
+            cards_by_digest: dict[str, list[dict[str, object]]] = {}
             for hit in payload.get("hits", []):
                 digest = str(hit.get("sha256") or "").removeprefix("sha256:")
                 ranges = parse_locator_page_ranges(str(hit.get("span_pages") or ""))
@@ -1448,8 +1464,10 @@ def _study_hit_cards(ctx, repo, session, payload) -> None:
                     hit["cards"] = []
                     continue
                 start, end = ranges[0][0], ranges[-1][1]
+                if digest not in cards_by_digest:
+                    cards_by_digest[digest] = store.cards(digest)
                 cards = [store.served_card(card, known, compact=True)
-                         for card in store.cards(digest)
+                         for card in cards_by_digest[digest]
                          if card["inspected_range"]["start"] <= end
                          and start <= card["inspected_range"]["end"]]
                 hit["cards"] = cards[:3]

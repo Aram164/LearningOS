@@ -1304,14 +1304,13 @@ def test_text_default_writes_stay_in_default_cache_and_repo(
     spec = {"deck-a.pdf": _tiny_pdf("Scoped text")}
     fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
     before = {path for path in base.rglob("*")}
+    real_before = _text_nodes(REPO_ROOT)
     code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
     assert code == 0
     assert {path for path in base.rglob("*")} == before
     digest = _digest_of(spec["deck-a.pdf"])
     assert (mt.CACHE_DIR / digest / "index.json").is_file()
     assert _text_nodes(fake) != {}
-    # The real repository is untouched: no text node beside this root.
-    from learning_os.store.derived.store import read_state as real_read_state
-
-    assert [name for name in real_read_state(REPO_ROOT)
-            if name.startswith("cache.text:")] == []
+    # The real repository is untouched: no text node written beside fake.
+    assert _text_nodes(REPO_ROOT) == real_before
+    assert f"cache.text:{digest}" not in _text_nodes(REPO_ROOT)
