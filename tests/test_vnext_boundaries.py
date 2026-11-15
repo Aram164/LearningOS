@@ -1336,6 +1336,7 @@ def _installer_fixture(ui: Path) -> None:
         "from pathlib import Path\n"
         "p = argparse.ArgumentParser()\n"
         "p.add_argument('--vault', required=True)\n"
+        "p.add_argument('--local-build', action='store_true', required=True)\n"
         "p.add_argument('--dry-run', action='store_true', required=True)\n"
         "p.add_argument('--skip-tests', action='store_true', required=True)\n"
         "args = p.parse_args()\n"
@@ -1804,6 +1805,32 @@ def test_restore_uses_the_restored_installers_new_requirements(mini_repo, tmp_pa
     assert "new installer prerequisite" in checks["ui-install-preflight"]["detail"]["stderr"]
     assert not (restore / "core/.obsidian").exists()
     assert not (restore / "core/bases").exists()
+
+
+def test_restore_preflight_supports_legacy_installer_without_local_build_flag(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    legacy_lines = [
+        line for line in (ui / "install.py").read_text(encoding="utf-8").splitlines(keepends=True)
+        if "--local-build" not in line
+    ]
+    (ui / "install.py").write_text("".join(legacy_lines), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["ui-install-preflight"]["ok"], checks["ui-install-preflight"]
+    assert assured["ok"], checks
 
 
 @pytest.mark.full_repo

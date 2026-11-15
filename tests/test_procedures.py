@@ -378,6 +378,20 @@ def test_procedure_child_audit_passes_pure_renderer(mini_repo, tmp_path):
     assert render_violations(records) == []
 
 
+def test_complete_and_archive_workspace_transcript_uses_gateway(repo_root: Path):
+    """F-2.3-03: workspace completion must flow through workspace.complete and name unit.plan.revise."""
+    text = (
+        repo_root / "system/procedures/complete-and-archive-a-workspace.md"
+    ).read_text(encoding="utf-8")
+    assert "$H/los-seal --capability workspace.complete" in text
+    assert "los capability workspace.complete" in text
+    assert "$H/los-assert-receipt --last --capability workspace.complete" in text
+    assert "unit.plan.revise" in text
+    assert ".write(" not in text
+    assert ".write_text(" not in text
+    assert 'open(p, "w")' not in text
+
+
 def _popen_record(argv: list, token: str) -> dict:
     return {"event": "subprocess.Popen", "argv": argv, "token": token,
             "expect_crash": False}
@@ -402,6 +416,17 @@ def test_program_position_dash_i_still_needs_a_witness():
 
 
 ANCHORED_COPY = ROOT / "tests" / "procedure_helpers" / "los-anchored-copy"
+
+
+def test_close_module_transcript_uses_gateway():
+    """Module closure settles status via module.status.update and workspace via workspace.complete."""
+    text = (PROCEDURES / "close-a-module.md").read_text(encoding="utf-8")
+    assert "$H/los-seal --capability module.status.update" in text
+    assert "los capability module.status.update" in text
+    assert "$H/los-assert-receipt --last --capability module.status.update" in text
+    assert "$H/los-seal --capability workspace.complete" in text
+    assert "los capability workspace.complete" in text
+    assert "$H/los-assert-receipt --last --capability workspace.complete" in text
 
 
 def _run_anchored_copy(stem: str, dest: Path, tmpdir: Path) -> subprocess.CompletedProcess:

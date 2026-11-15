@@ -4,22 +4,13 @@
 > operator policy reference; it may add mechanics but never weaken
 > the shared operator contract.
 
-> ## ⛔ HARD RULES — the twelve invariants
+> ## Hard boundaries
 >
-> If context is tight and you read nothing else in this repository, obey these:
->
-> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`.venv/bin/python tools/generate.py`).
-> 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
-> 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
-> 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
-> 5. **Captures go to their routed destination — the identified stage's note, `work/inbox/`, `knowledge/garden/`, or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions. The full destination contract is OPERATOR.md's capture-routing section.
-> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from `bootstrap --brief`, then the named workspace plus `inspect` (`inspect coordination` when priorities matter)** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
-> 7. **Never declare mastery** — show evidence trails or their documented absence.
-> 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
-> 9. **Run `.venv/bin/python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `.venv/bin/python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced. After a `seal_envelope.py --submit` write, its `validation:` line is this check for that write: the commit already ran it.
-> 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
-> 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
-> 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages the files recorded in this session's ledger — the ledger itself lives in the git dir and is never staged — and never the protected Canvas files. A bare `session-end` review never closes; `--close` ends the ownership window without committing.
+> All 18 hard boundaries live in [system/OPERATOR.md](OPERATOR.md#hard-boundaries)
+> rather than a duplicated summary here. Every batch of edits must end with
+> `.venv/bin/python tools/validate.py --compact` (0 errors) and
+> `.venv/bin/python tools/warning_baseline.py --check` (no new or grown warning
+> signature).
 
 ## 1. Purpose
 
@@ -43,7 +34,7 @@ Claude may perform the following without separate approval:
 - add or correct clearly mechanical metadata;
 - sort registry records deterministically;
 - rebuild all generated files, including coordination and module views;
-- record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document, through `module.attempt.record` (CLI `module-attempt`);
+- record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document, through `module.attempt.record` (CLI `module-attempt`), and update module status through `module.status.update` (CLI `module-status-update`);
 - update `COORDINATION.md` facts exactly as stated by the user;
 - append a numbered point to `system/CRITIQUE-POINTS.md` carrying the user's complaint verbatim, and add measured evidence under an existing open point — but never act on a point in the same breath as recording it, and never soften or rewrite the user's statement of it (that file's own rules govern);
 - draft a plan revision with `tools/assemble_lecture_study_maps.py --out …` and apply it through `module-plan-import` or `unit-map-import` (WORKFLOWS §25a) once OPERATOR boundary 2 is met — but **never write a `study-map.yaml` or a `source-map.yaml` directly**: a hand edit validates clean and passes the hook, so nothing objects, while skipping the snapshot guard, the revision check and the receipt. Measured 2026-08-24: only 26% of plan-changing commits carry a receipt, and the largest offender was the operator (CRITIQUE-POINTS §1);

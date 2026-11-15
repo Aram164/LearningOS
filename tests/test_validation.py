@@ -324,6 +324,20 @@ def test_unreadable_idempotency_ledger_is_error_but_missing_is_fine(mini_repo):
     assert "TRANSACTION-IDEMPOTENCY" not in codes(run(mini_repo), "E")
 
 
+def test_retired_migration_provenance_is_rejected(mini_repo):
+    """D-24: unreceipted or new type: migration-provenance YAML files fail validation."""
+    mig_dir = mini_repo / "operations" / "migrations"
+    mig_dir.mkdir(parents=True, exist_ok=True)
+    bad = mig_dir / "ad-hoc-rename-v99.yaml"
+    bad.write_text(
+        "schema: 1\nid: ad-hoc-rename-v99\ntype: migration-provenance\n",
+        encoding="utf-8",
+    )
+    assert "MIGRATION-PROVENANCE-RETIRED" in codes(run(mini_repo), "E")
+    bad.unlink()
+    assert "MIGRATION-PROVENANCE-RETIRED" not in codes(run(mini_repo), "E")
+
+
 def _relations(mini_repo, rows):
     """Replace the relation registry with exactly ``rows``."""
     f = mini_repo / "knowledge" / "concept-relations.yaml"

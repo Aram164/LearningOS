@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://learningos.local/contracts/manifest-v18.schema.json",
-  "title": "LearningOS atomic manifest v18",
+  "$id": "https://learningos.local/contracts/manifest-v19.schema.json",
+  "title": "LearningOS atomic manifest v19",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -1642,6 +1642,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "closure_sha256",
         "contract_version",
         "generated_at",
         "generator",
@@ -1653,8 +1654,12 @@
         "warning"
       ],
       "properties": {
+        "closure_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
         "contract_version": {
-          "const": 18
+          "const": 19
         },
         "generated_at": {
           "type": "string"

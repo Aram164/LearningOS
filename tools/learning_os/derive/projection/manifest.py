@@ -49,6 +49,7 @@ from learning_os.derive.projection.review import build_review_items
 from learning_os.domain.failures import TransactionFailure, unreadable_refusal
 from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts.manifest_contract import (
+    declared_closure_sha256,
     declared_schema_sha256,
     declared_version,
     enforce,
@@ -250,6 +251,7 @@ def publish_manifest_metadata(
     generated_meta.update({
         # Read from system/contracts/manifest-contract.yaml, never hardcoded:
         # the version announced and the shape declared must have one source.
+        "closure_sha256": declared_closure_sha256(repo.root),
         "contract_version": declared_version(repo.root),
         "schema_sha256": declared_schema_sha256(repo.root),
         "snapshot_id": f"sha256:{fingerprint}",

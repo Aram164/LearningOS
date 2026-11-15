@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from gateway_helpers import approved_v2_envelope, run_v2_capability
+from gateway_helpers import approved_v2_envelope, file_sha256, run_v2_capability
 from repo_builders import run_los, seed_live_goal_ids
 
 from learning_os.domain.failures import WriteRefused
@@ -954,23 +954,58 @@ def test_session_end_commits_when_within_session_file_was_moved_and_replays_clea
         if "drop-before-move" in p.name
     ]
     rel_drop = drop.relative_to(mini_repo).as_posix()
-    drop_bytes = drop.read_bytes()
-    # Simulate a second transaction in the same session that moves/deletes the untracked drop
-    archived = mini_repo / "work" / "notes.md"
-    archived.write_bytes(drop_bytes)
-    drop.unlink()
-    session_store.record_touched(
-        mini_repo, [drop, archived], session_id="fixture-move-session"
+    resolve_sealed_path = mini_repo.parent / "sealed-resolve.json"
+    resolve_sealed = subprocess.run(
+        [
+            sys.executable,
+            str(LOS.parent / "seal_envelope.py"),
+            "--root",
+            str(mini_repo),
+            "--capability",
+            "inbox.resolve",
+            "--session-id",
+            "fixture-move-session",
+            "--key",
+            "move-cap-002",
+            "--guards",
+            "auto",
+            "--payload",
+            json.dumps(
+                {
+                    "name": drop.name,
+                    "drop_sha256": file_sha256(drop),
+                    "routed_to": ["note-demo"],
+                }
+            ),
+            "--out",
+            str(resolve_sealed_path),
+        ],
+        capture_output=True,
+        text=True,
     )
+    assert resolve_sealed.returncode == 0, resolve_sealed.stderr
+    resolved = subprocess.run(
+        [
+            sys.executable,
+            str(LOS),
+            "--root",
+            str(mini_repo),
+            "capability",
+            "inbox.resolve",
+            "--payload-file",
+            str(resolve_sealed_path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert resolved.returncode == 0, resolved.stdout + resolved.stderr
+    assert not drop.exists()
     review = _session_end(mini_repo)
     assert review.returncode == 0, review.stderr
+    assert rel_drop in json.loads(review.stdout)["touched"]
     committed = _session_end(mini_repo, "--commit-message", "close after move")
     assert committed.returncode == 0, committed.stderr
     assert json.loads(committed.stdout)["committed"] is True
-    # Restore drop to match the first transaction's receipt and commit so post-close replay sees committed receipt + matching authored bytes
-    drop.write_bytes(drop_bytes)
-    subprocess.run(["git", "add", "--", rel_drop], cwd=mini_repo, check=True)
-    subprocess.run(["git", "commit", "-m", "restore drop"], cwd=mini_repo, check=True)
     replayed = subprocess.run(
         [
             sys.executable,

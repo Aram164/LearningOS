@@ -120,21 +120,6 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
             "domain",
         ],
     },
-    "A1 transaction writer access (PLAN A2, D4)": {
-        "type": "forbidden",
-        "source_modules": [
-            "learning_os.derive.validation",
-            "learning_os.derive.projection",
-            "learning_os.derive.semantics",
-            "learning_os.derive.search",
-            "learning_os.derive.health",
-            "learning_os.derive.abilities",
-            "learning_os.derive.learning_runtime",
-            "learning_os.derive.routes",
-            "learning_os.domain",
-        ],
-        "forbidden_modules": ["learning_os.store.transactions"],
-    },
     "A1 transaction service protected (PLAN A1, D14)": {
         "type": "protected",
         "protected_modules": ["learning_os.store.transactions"],
@@ -142,6 +127,11 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
         "unmatched_ignore_imports_alerting": "error",
     },
 }
+
+# Contracts retired after the layer + protected contracts made them redundant.
+RETIRED_CONTRACTS: frozenset[str] = frozenset({
+    "A1 transaction writer access (PLAN A2, D4)",
+})
 
 
 def _parse_contracts(pyproject_text: str) -> dict[str, dict]:
@@ -161,15 +151,15 @@ def _contract_set_failures(
     """SPEC §2.3 rule 3 (contract set and structure) as a pure check.
 
     Takes TOML text so fixture tests need no git. One message per
-    violation: a deleted contract, a renamed or otherwise unknown
-    contract, a missing §1.2 contract, or a field that differs from
-    the §1.2 literal (``ignore_imports`` excluded).
+    violation: a deleted contract (unless intentionally retired), a renamed
+    or otherwise unknown contract, a missing §1.2 contract, or a field
+    that differs from the §1.2 literal (``ignore_imports`` excluded).
     """
     base = _parse_contracts(base_text) if base_text is not None else {}
     current = _parse_contracts(current_text)
     expected_names = set(EXPECTED_CONTRACTS)
     failures: list[str] = []
-    for name in sorted(set(base) - set(current)):
+    for name in sorted(set(base) - set(current) - RETIRED_CONTRACTS):
         failures.append(f"contract {name!r} present at the base is missing")
     for name in sorted(set(current) - expected_names):
         failures.append(f"contract {name!r} is not a SPEC §1.2 contract")
@@ -186,22 +176,24 @@ def _contract_set_failures(
     return failures
 
 
+def _resolve_base_ref(base: str, *, is_ci: bool, root: Path = ROOT) -> str:
+    """Resolve the ratchet comparison base and reject vacuous CI comparisons."""
+    chosen, problem = arch_surface.resolve_ratchet_base(
+        root, base, is_ci=is_ci)
+    if problem is not None:
+        print(problem)
+        if is_ci:
+            pytest.fail(f"CI requires a valid ratchet base: {problem}")
+        pytest.skip(problem)
+    return chosen
+
+
 @pytest.fixture(scope="module")
 def base_ref() -> str:
-    base = os.environ.get(BASE_ENV, DEFAULT_BASE)
-    proc = subprocess.run(
-        ["git", "-C", str(ROOT), "rev-parse", "--verify", "--quiet",
-         f"{base}^{{commit}}"],
-        capture_output=True, text=True)
-    if proc.returncode != 0:
-        reason = (f"ratchet base {base!r} does not resolve; "
-                  f"set {BASE_ENV} to compare")
-        print(reason)
-        if os.environ.get("CI"):
-            pytest.fail(f"CI requires a resolvable ratchet base: {reason}")
-        pytest.skip(reason)
-    assert proc.returncode == 0
-    return base
+    return _resolve_base_ref(
+        os.environ.get(BASE_ENV, DEFAULT_BASE),
+        is_ci=bool(os.environ.get("CI")),
+    )
 
 
 # ---- file validity (needs no base) ------------------------------------------
@@ -558,41 +550,6 @@ def test_contract_set_and_structure_match_spec(base_ref):
 
 # ---- rule 3 contract set against fixture TOML (no git) -----------------------
 
-_TOML_THREE_CONTRACTS = """
-[tool.importlinter]
-root_package = "learning_os"
-
-[[tool.importlinter.contracts]]
-name = "A1 layers (PLAN D17)"
-type = "layers"
-containers = ["learning_os"]
-exhaustive = true
-unmatched_ignore_imports_alerting = "error"
-layers = [
-  "adapters",
-  "app",
-  "derive",
-  "store",
-  "domain",
-]
-ignore_imports = []
-
-[[tool.importlinter.contracts]]
-name = "A1 transaction writer access (PLAN A2, D4)"
-type = "forbidden"
-source_modules = ["learning_os.derive.validation", "learning_os.derive.projection", "learning_os.derive.semantics", "learning_os.derive.search", "learning_os.derive.health", "learning_os.derive.abilities", "learning_os.derive.learning_runtime", "learning_os.derive.routes", "learning_os.domain"]
-forbidden_modules = ["learning_os.store.transactions"]
-ignore_imports = []
-
-[[tool.importlinter.contracts]]
-name = "A1 transaction service protected (PLAN A1, D14)"
-type = "protected"
-protected_modules = ["learning_os.store.transactions"]
-allowed_importers = ["learning_os.app"]
-unmatched_ignore_imports_alerting = "error"
-ignore_imports = []
-"""
-
 _TOML_TWO_CONTRACTS = """
 [tool.importlinter]
 root_package = "learning_os"
@@ -613,62 +570,100 @@ layers = [
 ignore_imports = []
 
 [[tool.importlinter.contracts]]
+name = "A1 transaction service protected (PLAN A1, D14)"
+type = "protected"
+protected_modules = ["learning_os.store.transactions"]
+allowed_importers = ["learning_os.app"]
+unmatched_ignore_imports_alerting = "error"
+ignore_imports = []
+"""
+
+_TOML_ONE_CONTRACT = """
+[tool.importlinter]
+root_package = "learning_os"
+
+[[tool.importlinter.contracts]]
+name = "A1 layers (PLAN D17)"
+type = "layers"
+containers = ["learning_os"]
+exhaustive = true
+unmatched_ignore_imports_alerting = "error"
+layers = [
+  "adapters",
+  "app",
+  "derive",
+  "store",
+  "domain",
+]
+ignore_imports = []
+"""
+
+_TOML_WITH_RETIRED_CONTRACT = (
+    _TOML_TWO_CONTRACTS
+    + """
+[[tool.importlinter.contracts]]
 name = "A1 transaction writer access (PLAN A2, D4)"
 type = "forbidden"
-source_modules = ["learning_os.derive.validation", "learning_os.derive.projection", "learning_os.derive.semantics", "learning_os.derive.search", "learning_os.derive.health", "learning_os.derive.abilities", "learning_os.derive.learning_runtime", "learning_os.derive.routes", "learning_os.domain"]
+source_modules = ["learning_os.derive.validation", "learning_os.domain"]
 forbidden_modules = ["learning_os.store.transactions"]
 ignore_imports = []
 """
+)
 
 
 def test_contract_deletion_fails():
     failures = _contract_set_failures(
-        _TOML_THREE_CONTRACTS, _TOML_TWO_CONTRACTS)
+        _TOML_TWO_CONTRACTS, _TOML_ONE_CONTRACT)
     assert failures, "deleting a contract must fail"
     assert any("A1 transaction service protected" in f for f in failures)
 
 
+def test_retiring_writer_access_contract_passes():
+    assert _contract_set_failures(
+        _TOML_WITH_RETIRED_CONTRACT, _TOML_TWO_CONTRACTS) == []
+
+
 def test_contract_rename_with_ignores_under_new_name_fails():
-    renamed = _TOML_THREE_CONTRACTS.replace(
+    renamed = _TOML_TWO_CONTRACTS.replace(
         'name = "A1 layers (PLAN D17)"',
         'name = "A1 layers renamed"', 1)
     renamed = renamed.replace(
         "ignore_imports = []",
         'ignore_imports = ["learning_os.a -> learning_os.b"]', 1)
-    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, renamed)
+    failures = _contract_set_failures(_TOML_TWO_CONTRACTS, renamed)
     assert failures, "renaming a contract must fail"
     assert any("not a SPEC" in f for f in failures)
 
 
 def test_contract_weakened_exhaustive_fails():
-    weakened = _TOML_THREE_CONTRACTS.replace(
+    weakened = _TOML_TWO_CONTRACTS.replace(
         "exhaustive = true", "exhaustive = false", 1)
-    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    failures = _contract_set_failures(_TOML_TWO_CONTRACTS, weakened)
     assert failures, "exhaustive = false must fail"
     assert any("differs from SPEC" in f for f in failures)
 
 
 def test_contract_weakened_layer_removed_fails():
-    weakened = _TOML_THREE_CONTRACTS.replace(
+    weakened = _TOML_TWO_CONTRACTS.replace(
         '\n  "domain",',
         "", 1)
-    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    failures = _contract_set_failures(_TOML_TWO_CONTRACTS, weakened)
     assert failures, "a removed layer must fail"
     assert any("differs from SPEC" in f for f in failures)
 
 
 def test_contract_weakened_allowed_importers_fails():
-    weakened = _TOML_THREE_CONTRACTS.replace(
+    weakened = _TOML_TWO_CONTRACTS.replace(
         'allowed_importers = ["learning_os.app"]',
         'allowed_importers = ["learning_os.app", "learning_os.commands"]', 1)
-    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    failures = _contract_set_failures(_TOML_TWO_CONTRACTS, weakened)
     assert failures, "widened allowed_importers must fail"
     assert any("differs from SPEC" in f for f in failures)
 
 
 def test_introducing_protected_contract_passes():
     assert _contract_set_failures(
-        _TOML_TWO_CONTRACTS, _TOML_THREE_CONTRACTS) == []
+        _TOML_ONE_CONTRACT, _TOML_TWO_CONTRACTS) == []
 
 
 def _unapproved_surface_diffs(base_flat: dict[str, object],
@@ -1359,3 +1354,32 @@ def test_phase6_description_allowance_preserves_all_other_schema_guards(index, m
     else:
         new_node["maxLength" if mutation == "constraint" else "x-los-id-owner"] = 100 if mutation == "constraint" else "different-owner"
         assert _restore_phase6_descriptions(operation, before, after) != before
+
+
+def test_resolve_base_ref_rejects_head_and_missing_in_ci(tmp_path: Path):
+    def git(*args: str) -> str:
+        proc = subprocess.run(
+            ["git", "-C", str(tmp_path), *args],
+            check=True, capture_output=True, text=True)
+        return proc.stdout.strip()
+
+    git("init")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    (tmp_path / "f.txt").write_text("one\n", encoding="utf-8")
+    git("add", "f.txt")
+    git("commit", "-m", "first")
+    first = git("rev-parse", "HEAD")
+    (tmp_path / "f.txt").write_text("two\n", encoding="utf-8")
+    git("add", "f.txt")
+    git("commit", "-m", "second")
+
+    with pytest.raises(pytest.fail.Exception, match="distinct from HEAD"):
+        _resolve_base_ref("HEAD", is_ci=True, root=tmp_path)
+    with pytest.raises(pytest.fail.Exception, match="does not resolve"):
+        _resolve_base_ref("refs/heads/nonexistent", is_ci=True, root=tmp_path)
+    assert _resolve_base_ref(first, is_ci=True, root=tmp_path) == first
+
+    assert _resolve_base_ref("HEAD", is_ci=False, root=tmp_path) == "HEAD"
+    with pytest.raises(pytest.skip.Exception, match="does not resolve"):
+        _resolve_base_ref("refs/heads/nonexistent", is_ci=False, root=tmp_path)

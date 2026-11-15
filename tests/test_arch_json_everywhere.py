@@ -105,7 +105,14 @@ def _git_show_optional(base: str, relpath: str) -> str | None:
 
 
 def _base() -> str:
-    return os.environ.get(BASE_ENV, DEFAULT_BASE)
+    is_ci = bool(os.environ.get("CI"))
+    chosen, problem = arch_surface.resolve_ratchet_base(
+        ROOT, os.environ.get(BASE_ENV, DEFAULT_BASE), is_ci=is_ci)
+    if problem is not None:
+        if is_ci:
+            pytest.fail(f"CI requires a valid ratchet base: {problem}")
+        pytest.skip(problem)
+    return chosen
 
 
 def _d16_approvals() -> tuple[dict[str, str], dict[str, str]]:

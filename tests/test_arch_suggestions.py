@@ -749,6 +749,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         return ordered, set(ordered)
     if kind == "module" and operation in ("module.attempt.record",
                                           "module.sitting.update",
+                                          "module.status.update",
                                           "module.plan.import"):
         # SPEC (bv) item 1: the ordered list the converted handler
         # passes to its NotFound: repo.modules (admin.py).
@@ -1152,6 +1153,10 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("module.attempt.record.unknown-module", "unknown-module"),
     ("module.sitting.update", "/properties/module_id"):
         ("module.sitting.update.unknown-module", "unknown-module"),
+    ("module.status.update", "/properties/module_id"):
+        ("module.status.update.unknown-module", "unknown-module"),
+    ("workspace.complete", "/properties/workspace_id"):
+        ("workspace.complete.unknown-workspace", "unknown-workspace"),
     ("workspace.next-action.update", "/properties/workspace_id"):
         ("workspace.next-action.update.unknown-workspace",
          "unknown-workspace"),
@@ -1302,6 +1307,9 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("prefixed", "module"),
     ("module.sitting.update", "/properties/module_id"):
         ("prefixed", "module"),
+    ("module.status.update", "/properties/module_id"):
+        ("prefixed", "module"),
+    ("workspace.complete", "/properties/workspace_id"): ("prefixed", "workspace"),
     ("workspace.next-action.update", "/properties/workspace_id"):
         ("legacy-verbatim", "los: workspace not found: {miss}"),
     ("review.prepare", "/properties/unit_id"): ("prefixed", "unit"),

@@ -43,176 +43,21 @@ then decide whether a class becomes a warning-level rule.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import re
 import sys
 from pathlib import Path
-
-import yaml
 
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
 
-from plan_write_audit import PLAN_PATHS  # noqa: E402
+from learning_os.store.receipt_chain import RECEIPT_DIR as _RECEIPT_DIR  # noqa: E402
+from learning_os.store.receipt_chain import report_findings  # noqa: E402
 
-RECEIPT_GLOB = "transaction-*.yaml"
-RECEIPT_DIR = "operations/transactions"
-
-#: Plan globs plus the module records boundary 16 names alongside plans.
-#: module.create writes a receipt, so a legitimate module record is tracked.
-RECORD_GLOBS = (*PLAN_PATHS, "curriculum/modules/*/module.yaml")
-
-#: The receipt schema (system/schema/transaction-receipt.schema.json) pins
-#: the id to zero-padded timestamps and every write path/hash to exact
-#: shapes. Enforcing that slice here is what makes "sort by id" mean
-#: "order by commit time", and makes last-write-wins well-defined.
-_ID_PATTERN = re.compile(r"^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$")
-_HASH_PATTERN = re.compile(r"^[a-f0-9]{64}$")
-
-
-def _receipt_shape_ok(receipt: dict) -> bool:
-    """The authority-relevant slice of the receipt schema, re-checked.
-
-    The drift verdict trusts exactly three things about a receipt: its id
-    (ordering authority), its write rows (path and sha256_after), and one
-    write per path. Anything else the schema constrains does not change the
-    verdict and is left to the schema validator.
-    """
-    receipt_id = receipt.get("id")
-    if not isinstance(receipt_id, str) or not _ID_PATTERN.match(receipt_id):
-        return False
-    writes = receipt.get("writes")
-    if not isinstance(writes, list):
-        return False
-    seen: set[str] = set()
-    for row in writes:
-        if not isinstance(row, dict):
-            return False
-        path = row.get("path")
-        if not isinstance(path, str) or not path:
-            return False
-        sha_after = row.get("sha256_after")
-        if sha_after is not None and (not isinstance(sha_after, str)
-                                      or not _HASH_PATTERN.match(sha_after)):
-            return False
-        if path in seen:
-            return False
-        seen.add(path)
-    return True
-
-
-def _sha256(path: Path) -> str | None:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
-def load_receipts(root: Path) -> tuple[list[dict], list[str]]:
-    """Parse every receipt in id order; collect unusable ones by name.
-
-    Unusable = unparseable, not a transaction receipt, or failing
-    :func:`_receipt_shape_ok`. The sort is lexicographic on the id, which is
-    chronological only because the schema pins the id shape — the shape gate
-    is what makes the sort safe.
-    """
-    receipts: list[dict] = []
-    malformed: list[str] = []
-    directory = root / RECEIPT_DIR
-    if not directory.is_dir():
-        return receipts, malformed
-    for path in sorted(directory.glob(RECEIPT_GLOB)):
-        try:
-            raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-        except (OSError, yaml.YAMLError):
-            malformed.append(path.name)
-            continue
-        if (isinstance(raw, dict) and raw.get("type") == "transaction-receipt"
-                and _receipt_shape_ok(raw)):
-            receipts.append(raw)
-        else:
-            malformed.append(path.name)
-    receipts.sort(key=lambda receipt: str(receipt.get("id", "")))
-    return receipts, malformed
-
-
-def last_writes(receipts: list[dict]) -> tuple[dict[str, tuple[str | None, str]], int]:
-    """path -> (sha256_after, receipt id), last committed receipt winning.
-
-    Only ``status: committed`` receipts count as the last-write authority; a
-    non-committed ledger row is not yet a guarantee, and its hashes must not
-    shadow the committed ones. Returns the skipped count separately. Rows
-    arrive shape-validated from load_receipts, so ``row.get`` cannot raise
-    here and a counted receipt always carries well-formed rows.
-    """
-    last: dict[str, tuple[str | None, str]] = {}
-    skipped = 0
-    for receipt in receipts:
-        if receipt.get("status") != "committed":
-            skipped += 1
-            continue
-        for row in receipt.get("writes") or []:
-            path = row.get("path")
-            if path:
-                last[path] = (row.get("sha256_after"), str(receipt.get("id", "")))
-    return last, skipped
-
-
-def record_files(root: Path) -> list[str]:
-    files: set[str] = set()
-    for pattern in RECORD_GLOBS:
-        for path in sorted(root.glob(pattern)):
-            if path.is_file():
-                files.add(path.relative_to(root).as_posix())
-    return sorted(files)
+RECEIPT_DIR = _RECEIPT_DIR.as_posix()
 
 
 def report(root: Path) -> dict:
-    receipts, malformed = load_receipts(root)
-    last, non_committed = last_writes(receipts)
-    records = record_files(root)
-
-    drift: list[dict] = []
-    for path in sorted(last):
-        expected, receipt_id = last[path]
-        actual_path = root / path
-        if not actual_path.is_file():
-            if expected:
-                drift.append({"path": path, "receipt": receipt_id,
-                              "expected": expected, "actual": None,
-                              "note": "file deleted after the receipt recorded it"})
-            continue
-        actual = _sha256(actual_path)
-        if actual_path.is_symlink():
-            drift.append({"path": path, "receipt": receipt_id,
-                          "expected": expected, "actual": actual,
-                          "note": "canonical record is a symlink; the ledger "
-                                  "cannot vouch for where its bytes live"})
-            continue
-        if expected is None:
-            drift.append({"path": path, "receipt": receipt_id,
-                          "expected": None, "actual": actual,
-                          "note": "file exists but the last receipt recorded its deletion"})
-            continue
-        if actual != expected:
-            drift.append({"path": path, "receipt": receipt_id,
-                          "expected": expected, "actual": actual,
-                          "note": "bytes differ from the last receipt"})
-
-    tracked = set(last)
-    untracked = [path for path in records if path not in tracked]
-
-    return {
-        "receipts": len(receipts),
-        "non_committed_skipped": non_committed,
-        "tracked_paths": len(last),
-        "records_checked": len(records),
-        "drift": drift,
-        "untracked": untracked,
-        "malformed_receipts": malformed,
-    }
+    return report_findings(root)
 
 
 def _print(findings: dict) -> None:
@@ -225,11 +70,24 @@ def _print(findings: dict) -> None:
               f"(receipt {row['receipt']})")
     for path in findings["untracked"]:
         print(f"UNTRACKED {path} — in no receipt row")
+    for brk in findings.get("chain_breaks", []):
+        print(f"CHAIN-BREAK {brk['path']} — sha256_before "
+              f"{brk['actual_sha256_before']} != {brk['previous_receipt']} "
+              f"sha256_after {brk['expected_sha256_before']} "
+              f"(receipt {brk['receipt']})")
     for name in findings["malformed_receipts"]:
         print(f"MALFORMED {name} — not a readable, schema-shaped transaction receipt")
+    for err in findings.get("baseline_errors", []):
+        print(f"BASELINE-ERROR {err}")
     total = (len(findings["drift"]) + len(findings["untracked"])
-             + len(findings["malformed_receipts"]))
-    print(f"report-only: {total} finding(s); this tool gates nothing")
+             + len(findings["malformed_receipts"])
+             + len(findings.get("chain_breaks", []))
+             + len(findings.get("baseline_errors", [])))
+    baselined = findings.get("baselined_chain_breaks", 0)
+    migrated = findings.get("migration_exempt_breaks", 0)
+    print(f"report-only: {total} finding(s) "
+          f"(baselined breaks: {baselined}, migration-exempt: {migrated}); "
+          f"use --check to gate")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -238,6 +96,9 @@ def build_parser() -> argparse.ArgumentParser:
                         default=Path(__file__).resolve().parents[1])
     parser.add_argument("--json", action="store_true",
                         help="print the findings as JSON")
+    parser.add_argument("--check", action="store_true",
+                        help="exit 1 if un-baselined chain breaks, drift, "
+                             "untracked records, or malformed receipts exist")
     return parser
 
 
@@ -248,6 +109,15 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(findings, indent=2, sort_keys=True))
     else:
         _print(findings)
+    if args.check:
+        has_findings = any([
+            findings["drift"],
+            findings["untracked"],
+            findings["malformed_receipts"],
+            findings.get("chain_breaks"),
+            findings.get("baseline_errors"),
+        ])
+        return 1 if has_findings else 0
     return 0
 
 

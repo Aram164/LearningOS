@@ -290,11 +290,16 @@ def test_health_cli_uses_one_selected_source_for_plugin_and_contract_lock(mini_r
     selected_ui = mini_repo.parent / "selected-ui"
     shutil.copytree(older_ui, selected_ui)
     version = health.declared_version(mini_repo)
-    for ui, digest in ((older_ui, "obsolete"),
-                       (selected_ui, health.declared_schema_sha256(mini_repo))):
+    closure = health.declared_closure_sha256(mini_repo)
+    for ui, digest, closure_digest in (
+        (older_ui, "obsolete", "obsolete"),
+        (selected_ui, health.declared_schema_sha256(mini_repo), closure),
+    ):
         (ui / "contracts").mkdir()
         (ui / "contracts" / f"manifest-v{version}.lock.json").write_text(json.dumps({
-            "contract_version": version, "schema_sha256": digest,
+            "contract_version": version,
+            "schema_sha256": digest,
+            "closure_sha256": closure_digest,
         }))
     (older_ui / "plugin" / "main.js").write_text("older-source")
 

@@ -1162,7 +1162,13 @@ def normalize(recording: dict, root: str | Path, *, fixture_snapshot: str | None
         # Stage 6 adds one approved read verb. Old usage recordings retain
         # their bytes; normalize exactly that extra root choice, no behavior.
         if "usage: los" in step["stderr"] or "choose from" in step["stderr"]:
-            step["stderr"] = step["stderr"].replace(",study-sequence", "").replace(", 'study-sequence'", "").replace(", study-sequence", "")
+            for added in ("study-sequence", "workspace-complete", "module-status-update"):
+                step["stderr"] = (
+                    step["stderr"]
+                    .replace(f",{added}", "")
+                    .replace(f", '{added}'", "")
+                    .replace(f", {added}", "")
+                )
     return recording
 
 

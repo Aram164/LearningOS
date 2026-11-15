@@ -5,7 +5,8 @@
         --core-root . --ui-root ../obsidian-ui \\
         --core-sha <40 lowercase hex> --ui-sha <40 lowercase hex> \\
         --workflow-run-id <id> --workflow-run-attempt <n> \\
-        --live-install-scope not-run-live-install-deselected|full \\
+        --live-install-scope full \\
+        --seatbelt-scope not-run|full \\
         --system-check-passed --out pair-receipt.json
 
     python tools/release_pair_receipt.py verify \\
@@ -42,7 +43,8 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = ROOT / "system" / "contracts" / "release-pair-receipt.schema.json"
 SHIPPED_ASSETS = ("main.js", "styles.css", "manifest.json", "build-info.json")
-LIVE_INSTALL_SCOPES = ("not-run-live-install-deselected", "full")
+LIVE_INSTALL_SCOPES = ("ci-fixtures-only", "full")
+SEATBELT_SCOPES = ("not-run", "full")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learning_os.store.contracts.manifest_contract import (  # noqa: E402
@@ -187,14 +189,14 @@ def generate(
     workflow_run_id: str,
     workflow_run_attempt: str,
     live_install_scope: str,
+    seatbelt_scope: str,
     system_check_passed: bool = False,
 ) -> dict:
     """Build one schema-validated receipt from the current, already-built pair.
 
     Refuses rather than guesses at every step: a dirty worktree, a HEAD that
-    does not equal the requested SHA, an undeclared live-install scope, or a
-    build-info.json that disagrees with either SHA all raise before a receipt
-    is produced.
+    does not equal the requested SHA, an undeclared scope, or a build-info.json
+    that disagrees with either SHA all raise before a receipt is produced.
     """
     if system_check_passed is not True:
         raise ReleasePairReceiptError("caller must explicitly assert that its system check passed")
@@ -204,6 +206,11 @@ def generate(
         raise ReleasePairReceiptError(
             f"live_install_scope must be one of {', '.join(LIVE_INSTALL_SCOPES)}: "
             f"{live_install_scope!r}"
+        )
+    if seatbelt_scope not in SEATBELT_SCOPES:
+        raise ReleasePairReceiptError(
+            f"seatbelt_scope must be one of {', '.join(SEATBELT_SCOPES)}: "
+            f"{seatbelt_scope!r}"
         )
 
     _require_clean_head(core_root, core_sha, "Core")
@@ -279,6 +286,7 @@ def generate(
         "system_check_passed": system_check_passed,
         "stress_scope": "not-run-materials-unprovisioned",
         "live_install_scope": live_install_scope,
+        "seatbelt_scope": seatbelt_scope,
         "workflow_run_id": str(workflow_run_id),
         "workflow_run_attempt": str(workflow_run_attempt),
     }
@@ -361,6 +369,7 @@ def _cli_generate(args: argparse.Namespace) -> int:
             workflow_run_id=args.workflow_run_id,
             workflow_run_attempt=args.workflow_run_attempt,
             live_install_scope=args.live_install_scope,
+            seatbelt_scope=args.seatbelt_scope,
             system_check_passed=args.system_check_passed,
         )
     except ReleasePairReceiptError as exc:
@@ -407,8 +416,10 @@ def build_parser() -> argparse.ArgumentParser:
     generate_parser.add_argument("--workflow-run-attempt", required=True)
     generate_parser.add_argument(
         "--live-install-scope", required=True,
-        help="whether the paired gate ran the live_install tests or deselected them: "
-             "not-run-live-install-deselected (CI) or full (the live installation)")
+        help="suite coverage scope for former live_install tests (full)")
+    generate_parser.add_argument(
+        "--seatbelt-scope", required=True,
+        help="whether the macOS Seatbelt suite ran without skips: not-run or full")
     generate_parser.add_argument(
         "--system-check-passed", action="store_true",
         help="record the caller assertion; verify the named hosted run separately")

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Prototype: bundle a manifest JSON Schema with its transitive closure.
+"""Bundle a manifest JSON Schema with its transitive closure.
 
-    python tools/contract_bundle.py build --schema system/contracts/manifest-v15.schema.json --out /tmp/cb
-    python tools/contract_bundle.py check --schema system/contracts/manifest-v15.schema.json --dir /tmp/cb
+    python tools/contract_bundle.py build --schema system/contracts/manifest-v19.schema.json --out /tmp/cb
+    python tools/contract_bundle.py check --schema system/contracts/manifest-v19.schema.json --dir /tmp/cb
 
 ``build`` writes ``<stem>.bundle.json`` (canonical bytes) plus ``<stem>.meta.json``
 (version, root hash, closure digest, resource inventory, generator identity).
 ``check`` rebuilds into a temporary directory and byte-compares, exiting 1 on
-any difference. Nothing here touches canonical data, stamped fields, or gates.
+any difference. Nothing here touches canonical data or workspace state.
 """
 
 from __future__ import annotations

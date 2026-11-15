@@ -1008,11 +1008,21 @@ class AIActionService:
             return {request_path: _dump_yaml(completed)}
 
         validated_repo = None
+        observed_before: dict | None = None
+
+        def _safe_observe() -> dict | None:
+            from learning_os.store.manifest_identity import observe_inputs
+
+            try:
+                return observe_inputs(self.root)
+            except Exception:
+                return None
 
         def validation_errors() -> list:
-            nonlocal validated_repo
+            nonlocal validated_repo, observed_before
             from learning_os.derive.validation import validate
 
+            observed_before = _safe_observe()
             validated_repo = load_repo(self.root)
             return [
                 issue for issue in validate(validated_repo, online=False)
@@ -1020,23 +1030,29 @@ class AIActionService:
             ]
 
         def publish(snapshot_after_id: str | None = None) -> str:
-            nonlocal validated_repo
+            nonlocal validated_repo, observed_before
             from learning_os.derive.projection import generate_all, write_outputs
             from learning_os.store.fingerprint import seed_source_fingerprint
 
-            repo = validated_repo or load_repo(self.root)
+            if validated_repo is None:
+                observed_before = _safe_observe()
+                repo = load_repo(self.root)
+            else:
+                repo = validated_repo
             if snapshot_after_id is not None:
                 seed_source_fingerprint(repo, snapshot_after_id)
-            write_outputs(repo, generate_all(repo))
+            write_outputs(repo, generate_all(repo, inputs_before=observed_before))
             projected_snapshot = f"sha256:{source_fingerprint(repo)}"
             validated_repo = None
+            observed_before = None
             return projected_snapshot
 
         def rollback_publish() -> None:
             from learning_os.derive.projection import generate_all, write_outputs
 
+            inputs_before = _safe_observe()
             repo = load_repo(self.root)
-            write_outputs(repo, generate_all(repo))
+            write_outputs(repo, generate_all(repo, inputs_before=inputs_before))
 
         metadata = {
             "request_id": request["id"],

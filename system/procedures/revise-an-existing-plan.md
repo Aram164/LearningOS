@@ -65,7 +65,7 @@ True True 0
 ## Seal the patch with derived guards
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Probe revision angle."}}' --key s25a-patch --request-id request-s25a-patch --guards auto --out "$TMPDIR/s25a-patch.json"
+$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Probe revision angle."}}' --key s25a-patch --guards auto --check-out "$TMPDIR/s25a-patch-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
 ```
@@ -73,7 +73,7 @@ seal_envelope: guards auto: module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
 ## Apply the patch through the gateway
 
 ```scrut {interpolated: true}
-$ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
+$ $H/los-seal --guards-from "$TMPDIR/s25a-patch-check.json" --request-id request-s25a-patch --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s25a-patch","idempotency_key":"s25a-patch","capability":"route.patch","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"schema_version":1,"unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":{"before":"Derives the weighted sum and works a discrete example.","after":"Probe revision angle."}},"claim_anchors":[],"claims":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","before":"stale","after":"will-be-stale","warning":"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check","next":"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check","claim_evidence_scaffold":{"claim_evidence":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","evidence":[{"kind":"quote","ref":"material://source-demo-book/lecture-01.pdf","text":"","page":null}],"reads":{}}],"material_scope":[{"ref":"material://source-demo-book/lecture-01.pdf","locator":"lecture-01.pdf","page_ranges":[]}],"instruction":"Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence."}}],"plan_sha256":"sha256:b34bbc807f64b2d5be4e9dc9c2d26cefa9254f1ff41b8e0521c0499ed567f963","affected_files":["curriculum/modules/module-demo/source-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"ok":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
@@ -117,13 +117,13 @@ sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability module.materials.compact --payload "{\"module_id\": \"module-demo\", \"plan_sha256\": \"$COMPACT_PLAN\"}" --key s25a-compact --request-id request-s25a-compact --guards auto --out "$TMPDIR/s25a-compact.json"
+$ $H/los-seal --capability module.materials.compact --payload "{\"module_id\": \"module-demo\", \"plan_sha256\": \"$COMPACT_PLAN\"}" --key s25a-compact --guards auto --check-out "$TMPDIR/s25a-compact-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=1, study-map-demo-l01=1, unit-demo-l01=4
 ```
 
 ```scrut {interpolated: true}
-$ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.json"
+$ $H/los-seal --guards-from "$TMPDIR/s25a-compact-check.json" --request-id request-s25a-compact --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s25a-compact","idempotency_key":"s25a-compact","capability":"module.materials.compact","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"schema_version":1,"module_id":"module-demo","map_bytes_saved":2,"referenced_routes":1,"plan_sha256":"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93","affected_files":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"ok":true,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"module-demo":2,"study-map-demo-l01":2,"unit-demo-l01":5},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
@@ -282,13 +282,13 @@ sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
 ## Seal the module import with derived guards
 
 ```scrut {output_stream: stderr}
-$ PKG_SHA=$(sha256sum "$TMPDIR/package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s25a-imp --request-id request-s25a-imp --guards auto --out "$TMPDIR/s25a-imp.json"
+$ PKG_SHA=$(sha256sum "$TMPDIR/package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s25a-imp --guards auto --check-out "$TMPDIR/s25a-imp-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=2
 ```
 
 ```scrut {interpolated: true}
-$ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
+$ $H/los-seal --guards-from "$TMPDIR/s25a-imp-check.json" --request-id request-s25a-imp --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s25a-imp","idempotency_key":"s25a-imp","capability":"module.plan.import","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"mode":"apply","module_id":"module-demo","units_written":[],"files_written":1,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"module-demo":3},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
@@ -318,13 +318,13 @@ True check
 ## Seal the unit revision with derived guards
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability unit.plan.revise --payload '{"unit_id": "unit-demo-l01", "record": {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed probe angle."}}]}}}' --key s25a-rev --request-id request-s25a-rev --guards auto --out "$TMPDIR/s25a-rev.json"
+$ $H/los-seal --capability unit.plan.revise --payload '{"unit_id": "unit-demo-l01", "record": {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed probe angle."}}]}}}' --key s25a-rev --guards auto --check-out "$TMPDIR/s25a-rev-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=3
 ```
 
 ```scrut {interpolated: true}
-$ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
+$ $H/los-seal --guards-from "$TMPDIR/s25a-rev-check.json" --request-id request-s25a-rev --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s25a-rev","idempotency_key":"s25a-rev","capability":"unit.plan.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"mode":"apply","module_id":"module-demo","units_written":["unit-demo-l01"],"files_written":1,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","artifact_revisions":{"module-demo":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","replayed":false},"error":null}
 ```
@@ -388,13 +388,13 @@ sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4
 ## Seal the unit map import with derived guards
 
 ```scrut {output_stream: stderr}
-$ MAP_SHA=$(sha256sum "$TMPDIR/map-l02.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l02\", \"file\": \"$TMPDIR/map-l02.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\"}" --key s25a-map --request-id request-s25a-map --guards auto --out "$TMPDIR/s25a-map.json"
+$ MAP_SHA=$(sha256sum "$TMPDIR/map-l02.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l02\", \"file\": \"$TMPDIR/map-l02.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\"}" --key s25a-map --guards auto --check-out "$TMPDIR/s25a-map-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l02=0, unit-demo-l02=0
 ```
 
 ```scrut {interpolated: true}
-$ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
+$ $H/los-seal --guards-from "$TMPDIR/s25a-map-check.json" --request-id request-s25a-map --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s25a-map","idempotency_key":"s25a-map","capability":"unit.map.import","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"mode":"apply","unit_id":"unit-demo-l02","study_map_id":"study-map-demo-l02","diff":{"replacement":false,"unit_status":"ready","stages_after":["stage-variance"],"content_changes":[{"stage_id":"stage-variance","field":"concepts","before":null,"after":[]},{"stage_id":"stage-variance","field":"done_when","before":null,"after":["Explain and apply Variance without notes."]},{"stage_id":"stage-variance","field":"exam_critical","before":null,"after":false},{"stage_id":"stage-variance","field":"number","before":null,"after":1},{"stage_id":"stage-variance","field":"objective","before":null,"after":"Build working fluency in Variance."},{"stage_id":"stage-variance","field":"resources","before":null,"after":[]},{"stage_id":"stage-variance","field":"scope_triage","before":null,"after":"required-now"},{"stage_id":"stage-variance","field":"title","before":null,"after":"Variance"}],"map_changes":[{"field":"plan_template_version","before":null,"after":1},{"field":"source_plan","before":null,"after":{"path":"work/active/workspace-demo/CONTEXT.md","provenance":"operator"}},{"field":"type","before":null,"after":"study-map"},{"field":"unit_id","before":null,"after":"unit-demo-l02"}]},"transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","artifact_revisions":{"study-map-demo-l02":1,"unit-demo-l02":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```

@@ -457,3 +457,23 @@ Status unchanged: open. Closing it is Aram's.
 - Caveat: 11/11 covers only history since 1d32c91 (2026-10-19); the
   2026-09-30 figure 41/58 covered earlier history, so the two shares are not
   comparable.
+
+### Re-measurement — 2026-11-15 (master-review remediation Step 2; point 1 only)
+
+Status unchanged: open. Closing it is Aram's.
+
+- `tools/receipt_drift.py` (now sharing `learning_os.store.receipt_chain` with
+  `validate.py` and the causal resolver) re-run against live bytes: 14 live-disk
+  findings across 453 receipts, 852 tracked paths, and 124 plan/module records —
+  5 `DRIFT`, 9 `UNTRACKED`, 0 `MALFORMED`.
+- Per-path SHA-256 receipt chain (`sha256_before == prev.sha256_after`) across
+  all 453 committed receipts: 52 historical breaks total — 1 migration-exempt
+  (`migration.projects-to-modules-v62`) and 51 pre-gate historical breaks
+  (40 on gated plan/module/program/source-map paths, 11 on other canonical
+  paths) recorded in `operations/receipt-chain-baseline.yaml`, leaving 0
+  un-baselined chain breaks. Un-baselined breaks on plan/module/program/source-map
+  records now gate `validate.py` (`TRANSACTION-CHAIN-BREAK`).
+- `tools/plan_write_audit.py` re-run: 19 commits have changed a plan record
+  since 1d32c91, 19 of them also add a receipt document (100%), 0 without;
+  453 receipt documents in the working tree. Commit co-occurrence remains
+  evidence rather than proof of per-write mediation.

@@ -1,0 +1,165 @@
+{
+  "canonical_changed": {
+    "work/active/workspace-demo/CONTEXT.md": "cb02ffae4381b033f3152b9bb671df94fdead696ff892cdd0b5cf2b89b98b188"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "workspace.complete",
+          "channel": "operator",
+          "intent_sha256": "INTENT1",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "workspace-demo": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "workspace-demo": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "workspace.complete",
+            "declared_writes": [
+              "work/active/**"
+            ]
+          }
+        ]
+      },
+      "capability": "workspace.complete",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "workspace-demo": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:5faf63521263166d55cd753931626ff9c3a183dbbc8d65eaebd25df08da06bd2",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "INTENT1"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "INTENT1",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "<FIXTURE_SNAPSHOT>",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "work/active/workspace-demo/CONTEXT.md",
+          "sha256_after": "cb02ffae4381b033f3152b9bb671df94fdead696ff892cdd0b5cf2b89b98b188",
+          "sha256_before": "f7f0a5ad8934e7a2f86c1c91f304954bf07c58899aa0c98d98394076097a3422"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "unit-demo-l01": 3,
+        "workspace-demo": 1
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "LEDGER1",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "LEDGER2",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "LEDGER3",
+          "state": "file"
+        },
+        "work/active/workspace-demo/CONTEXT.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "cb02ffae4381b033f3152b9bb671df94fdead696ff892cdd0b5cf2b89b98b188",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"workspace.complete\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"workspace_id\":\"workspace-demo\",\"status\":\"complete\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"workspace-demo\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
+  "stdout_json": {
+    "capability": "workspace.complete",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "workspace-demo": 1
+      },
+      "ok": true,
+      "path": "work/active/workspace-demo/CONTEXT.md",
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "status": "complete",
+      "transaction_id": "TX1",
+      "workspace_id": "workspace-demo"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

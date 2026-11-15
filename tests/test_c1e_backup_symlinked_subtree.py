@@ -86,15 +86,15 @@ def test_overnight_alias_restore_rejects_escapes_before_touching_files(tmp_path)
     assert not result["ok"] and list(outside.iterdir()) == []
 
 
-# ---- generated/summaries is backed up; its generated siblings are not ----------
-# Plan A step 4. The summary cache holds reviewed judgments nothing can rebuild;
-# every other tree under generated/ is a disposable cache.
+# ---- knowledge/summaries is backed up; generated/ siblings stay out ----------
+# D-09 moved promoted summaries out of generated/ into canonical storage;
+# every tree under generated/ is a disposable rebuildable cache.
 
 SUMMARY_SHA = "b" * 64
 
 
 def _summary_world(root):
-    summary_dir = root / "generated" / "summaries" / SUMMARY_SHA / "pages-1-2"
+    summary_dir = root / "knowledge" / "summaries" / SUMMARY_SHA / "pages-1-2"
     summary_dir.mkdir(parents=True)
     (summary_dir / "summary.md").write_text(
         "<!-- GENERATED file - do not edit; promoted by tools/material_summarize.py --promote -->\n"
@@ -114,7 +114,9 @@ def _summary_world(root):
 
 def _core_generated(manifest):
     return {(row["path"], row["sha256"]) for row in manifest["entries"]
-            if row["root"] == "core" and row["path"].startswith("generated/")}
+            if row["root"] == "core"
+            and (row["path"].startswith("knowledge/summaries/")
+                 or row["path"].startswith("generated/"))}
 
 
 def test_summary_tree_is_inventoried_exactly_and_restores_byte_for_byte(mini_repo, tmp_path):
@@ -132,7 +134,7 @@ def test_summary_tree_is_inventoried_exactly_and_restores_byte_for_byte(mini_rep
         manifest = manifest["result"]
     inventoried = _core_generated(manifest)
     expected = {
-        (f"generated/summaries/{SUMMARY_SHA}/pages-1-2/{name}",
+        (f"knowledge/summaries/{SUMMARY_SHA}/pages-1-2/{name}",
          "sha256:" + hashlib.sha256((summary_dir / name).read_bytes()).hexdigest())
         for name in ("summary.md", "meta.json")}
     # Exactly the two summary files: no text-cache sibling, no top-level
@@ -157,7 +159,7 @@ def test_summary_tree_is_inventoried_exactly_and_restores_byte_for_byte(mini_rep
     assert after == inventoried
 
     # A summary lost in the restore is reported missing; one changed, a mismatch.
-    lost = restored / "core" / "generated" / "summaries" / SUMMARY_SHA / "pages-1-2" / "meta.json"
+    lost = restored / "core" / "knowledge" / "summaries" / SUMMARY_SHA / "pages-1-2" / "meta.json"
     lost.unlink()
     (lost.parent / "summary.md").write_text("tampered", encoding="utf-8")
     broken = json.loads(run_los(mini_repo, *args).stdout)

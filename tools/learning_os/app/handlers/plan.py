@@ -149,12 +149,15 @@ def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None,
              "inventory_view": _inventory_view(block)}, [])
 
 def _verify_observed_material(root: Path, contract: dict,
-                              review_report: str | None) -> str | None:
+                              review_report: str | None,
+                              *, strict: bool = False) -> str | None:
     """Refuse a reviewed apply whose material moved since --check, else None.
 
     Legacy reports without an observed-material binding skip this check;
     old packages stay applicable. A present binding is recomputed live and
     must match exactly, or the operator re-runs --check on current bytes.
+    When ``strict=True``, an unreadable or malformed ``review_report`` refuses
+    immediately instead of deferring to ``apply_reviewed_envelope``.
     """
     if not review_report:
         return None
@@ -163,7 +166,9 @@ def _verify_observed_material(root: Path, contract: dict,
         report = json.loads(raw_bytes.decode("utf-8"))
     except StudyFenceRefused:
         raise
-    except (WriteRefused, OSError, ValueError):
+    except (WriteRefused, OSError, ValueError) as exc:
+        if strict:
+            return f"review_report is invalid or unreadable ({exc}); re-run --check"
         return None
     binding = report.get("observed_material") if isinstance(report, dict) else None
     if not isinstance(binding, dict) or not binding.get("sha256"):
@@ -177,6 +182,46 @@ def _verify_observed_material(root: Path, contract: dict,
         return ("relevant material changed since --check; re-run --check, "
                 "review the new report, then apply that report")
     return None
+
+
+def observed_material_for_payload(
+    root: Path, capability: str, payload: dict,
+) -> tuple[dict | None, list[str]]:
+    """Return ``(fragment, problems)`` for a plan import/revise sealing payload."""
+    contract: dict = {}
+    if capability == "unit.plan.revise":
+        if isinstance(payload.get("record"), dict):
+            candidate = payload["record"].get("plan_contract")
+            if isinstance(candidate, dict):
+                contract = candidate
+        elif payload.get("file"):
+            try:
+                _, raw = _read_content_bound_file(
+                    payload.get("file"), payload.get("file_sha256"),
+                    label="unit revision file")
+                loaded = yaml.safe_load(raw.decode("utf-8"))
+            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
+                return None, [str(exc)]
+            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
+                contract = loaded["plan_contract"]
+    elif capability == "module.plan.import":
+        if isinstance(payload.get("promotion"), dict):
+            candidate = payload["promotion"].get("plan_contract")
+            if isinstance(candidate, dict):
+                contract = candidate
+        elif payload.get("file"):
+            try:
+                _, raw = _read_content_bound_file(
+                    payload.get("file"), payload.get("file_sha256"),
+                    label="module plan file")
+                loaded = yaml.safe_load(raw.decode("utf-8"))
+            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
+                return None, [str(exc)]
+            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
+                contract = loaded["plan_contract"]
+    if not contract:
+        return None, []
+    return _observed_material_binding(root, contract)
 
 
 def _drop_unchanged_writes(writes: dict[Path, str]) -> dict[Path, str]:
@@ -498,7 +543,6 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
             _master_promotion_check_result(root, req["module_id"], plan),
 
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -568,7 +612,12 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
     acknowledgments = package.get("acknowledgments", []) or []
     if not isinstance(acknowledgments, list):
         acknowledgments = []
-    ctx.require_snapshot(req.get("expected_snapshot"))
+    if not req.get("check") and req.get("review_report"):
+        stale_material = _verify_observed_material(
+            root, package.get("plan_contract") or {},
+            req.get("review_report"), strict=True)
+        if stale_material:
+            _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
     repo = ctx.repo()
     module = repo.modules.get(module_id)
     if module is None:
@@ -970,6 +1019,12 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
             apply_reviewed_envelope(ctx, capability_name='module.plan.import', payload={'module_id': req['module_id'], 'file': str(source), 'file_sha256': apply_sha}, reviewed_content=revision_bytes, reviewed_sha256=apply_sha, review_report=req.get('review_report')),
 
         )
+    if not req.get("check") and req.get("review_report"):
+        stale_material = _verify_observed_material(
+            root, revision.get("plan_contract") or {},
+            req.get("review_report"), strict=True)
+        if stale_material:
+            _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
     repo = ctx.repo()
     package, problems = _assemble_compact_module_revision(
         repo, req["module_id"], revision)
@@ -1076,6 +1131,12 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
             "then copy snapshot.snapshot_id from bootstrap",
             "needs-snapshot",
         )
+    if not req.get("check") and req.get("review_report"):
+        stale_material = _verify_observed_material(
+            root, package.get("plan_contract") or {},
+            req.get("review_report"), strict=True)
+        if stale_material:
+            _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
     return _execute_plan_import(
         ctx, req,
         module_id=req["module_id"],
@@ -1241,7 +1302,6 @@ def module_create(ctx: OpContext, req: dict) -> Result:
             ),
         )
 
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -1357,6 +1417,12 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
             "then copy the expected_snapshot from the check report",
             "needs-snapshot",
         )
+    if not req.get("check") and req.get("review_report"):
+        stale_material = _verify_observed_material(
+            root, revision.get("plan_contract") or {},
+            req.get("review_report"), strict=True)
+        if stale_material:
+            _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
     repo = ctx.repo()
     unit = repo.units.get(req["unit_id"])
     if unit is None:

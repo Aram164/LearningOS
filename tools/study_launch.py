@@ -5,10 +5,20 @@ Replaces client-side hook AST/path parsing with an OS-enforced macOS Seatbelt
 boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 (``tools/learning_os/adapters/study_broker.py``):
 
-- Read-denies ``LearningOS/materials/``, ``LearningOS/reading-memory/``,
-  ``generated/{text-cache,material-search,material-outlines,derived-state,summaries}/``,
+- Read-denies ``LearningOS/.env``, ``LearningOS/materials/``,
+  ``LearningOS/reading-memory/``,
+  ``generated/{text-cache,material-search,material-outlines,derived-state}/``,
+  ``knowledge/summaries/``,
   and non-``.gitkeep`` children of ``operations/ai-actions/requests/``.
-- Write-denies all of ``LearningOS/``.
+- Write-denies all of ``LearningOS/``, instruction/config paths in the
+  wrapper (``AGENTS.md``, ``.claude/``, ``.opencode/``, ``.codex/``,
+  ``.gemini/``), and user home instruction/config paths (``~/.claude/``
+  outside runtime cache subdirectories,
+  ``~/.codex/{AGENTS*.md,config.toml,rules,skills}``,
+  ``~/.gemini/{GEMINI.md,settings.json,skills}``, ``~/.agents/``, and
+  ``~/.config/opencode/``).
+- Filters inherited host environment variables through an explicit allowlist
+  (dropping unrelated secrets and host ``LOS_OBSERVATIONS``) before launch.
 - Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
   tokens (except inline code following ``-c``/``-e``/``-m``), rewrites
   caller-relative existing path tokens under ``caller_cwd`` that lie outside
@@ -29,6 +39,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import signal
 import stat
@@ -36,7 +47,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from types import FrameType
 
@@ -46,7 +57,12 @@ from learning_os.store.materials.reading_cards import (
     ReadingStoreError,
     valid_session,
 )
-from learning_os.store.study_fence import is_within, protected_reads
+from learning_os.store.study_fence import (
+    is_within,
+    protected_read_literals,
+    protected_read_targets,
+    protected_reads,
+)
 
 SANDBOX_EXEC = Path("/usr/bin/sandbox-exec")
 LEARNINGOS_STUDY_NAMESPACE = uuid.UUID("7f3b0c4a-5e2d-4c8a-9b1f-3e6d1a2c4b8e")
@@ -54,6 +70,80 @@ RUNTIMES = ("claude", "codex", "gemini", "agy")
 SCRATCH_MARKER_NAME = ".learningos-scratch.json"
 _SCRATCH_MARKER_SCHEMA = 1
 _SCRATCH_MARKER_OWNER = "learningos-study-scratch"
+
+_CHILD_ENV_ALLOW_EXACT = frozenset({
+    "PATH",
+    "HOME",
+    "USER",
+    "LOGNAME",
+    "SHELL",
+    "TERM",
+    "COLORTERM",
+    "FORCE_COLOR",
+    "NO_COLOR",
+    "TERM_PROGRAM",
+    "TERM_PROGRAM_VERSION",
+    "LANG",
+    "TZ",
+    "PWD",
+    "SHLVL",
+    "TMPDIR",
+    "VIRTUAL_ENV",
+    "SSH_AUTH_SOCK",
+    "SSL_CERT_FILE",
+    "SSL_CERT_DIR",
+    "REQUESTS_CA_BUNDLE",
+    "CURL_CA_BUNDLE",
+    "NODE_EXTRA_CA_CERTS",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "ALL_PROXY",
+    "NO_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "all_proxy",
+    "no_proxy",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUTF8",
+    "PYTHONIOENCODING",
+    "MallocNanoZone",
+})
+
+_CHILD_ENV_ALLOW_PREFIXES = (
+    "LC_",
+    "XDG_",
+    "__CF_",
+    "ANTHROPIC_",
+    "CLAUDE_",
+    "OPENAI_",
+    "CODEX_",
+    "GEMINI_",
+    "GOOGLE_",
+    "AGY_",
+)
+
+
+def _build_child_env(
+    host_env: Mapping[str, str],
+    *,
+    sock_path: Path,
+    session_id: str,
+    scratch_dir: Path,
+    child_cwd: Path,
+) -> dict[str, str]:
+    """Filter inherited host env down to an explicit runtime/provider allowlist."""
+    child_env = {
+        k: v
+        for k, v in host_env.items()
+        if k in _CHILD_ENV_ALLOW_EXACT or k.startswith(_CHILD_ENV_ALLOW_PREFIXES)
+    }
+    child_env[GATE_SOCK_ENV] = str(sock_path)
+    child_env["LOS_SESSION_ID"] = session_id
+    child_env["LOS_SCRATCH_DIR"] = str(scratch_dir)
+    child_env["TMPDIR"] = str(scratch_dir)
+    child_env["PWD"] = str(child_cwd)
+    child_env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
+    return child_env
 
 
 def _sbpl_quote(value: str) -> str:
@@ -65,15 +155,57 @@ def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
     return str(uuid.uuid5(LEARNINGOS_STUDY_NAMESPACE, f"{runtime}:{external_id}"))
 
 
+_CLAUDE_WRITABLE_CACHE_SUBDIRS = (
+    "projects",
+    "debug",
+    "todos",
+    "tasks",
+    "shell-snapshots",
+    "file-history",
+    "statsig",
+    "session-env",
+    "telemetry",
+)
+
+
+_CLAUDE_PROJECT_SLUG_UNSAFE = re.compile(r"[^A-Za-z0-9-]")
+
+
+def _claude_project_slug(path: Path) -> str:
+    return _CLAUDE_PROJECT_SLUG_UNSAFE.sub("-", str(path))
+
+
+def _add_write_deny_target(
+    lines: list[str],
+    seen: set[Path],
+    target: Path,
+    *,
+    real_learningos: Path,
+) -> None:
+    resolved = Path(os.path.realpath(target))
+    for candidate in dict.fromkeys((target, resolved)):
+        if (
+            candidate == Path("/")
+            or is_within(candidate, real_learningos)
+            or is_within(real_learningos, candidate)
+            or candidate in seen
+        ):
+            continue
+        seen.add(candidate)
+        lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(candidate))}"))')
+
+
 def build_seatbelt_profile(
     core_root: Path,
     *,
     deny_extra_subpaths: Sequence[Path] = (),
     deny_extra_literals: Sequence[Path] = (),
+    home_dir: Path | None = None,
 ) -> str:
     """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout."""
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
+    real_wrapper = real_learningos.parent
     requests_dir = real_core / "operations" / "ai-actions" / "requests"
     real_req = Path(os.path.realpath(requests_dir))
     real_gitkeep = real_req / ".gitkeep"
@@ -90,7 +222,81 @@ def build_seatbelt_profile(
         f'(literal "{_sbpl_quote(str(real_req))}") '
         f'(literal "{_sbpl_quote(str(real_gitkeep))}"))'
     )
+    for lit in protected_read_literals(real_core):
+        lex_lit = real_learningos / lit.name if lit.parent == real_core.parent else Path(lit)
+        real_lit = Path(os.path.realpath(lit))
+        for candidate in dict.fromkeys((lex_lit, real_lit)):
+            lines.append(f'(deny file-read* (literal "{_sbpl_quote(str(candidate))}"))')
+
     lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(real_learningos))}"))')
+
+    deny_seen: set[Path] = set()
+    real_home = Path(os.path.realpath(home_dir if home_dir is not None else Path.home()))
+    if (
+        real_home != Path("/")
+        and real_home != real_learningos
+        and not is_within(real_home, real_learningos)
+    ):
+        claude_dir = real_home / ".claude"
+        lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(claude_dir))}"))')
+        if real_home != real_wrapper:
+            allow_parts = " ".join(
+                f'(subpath "{_sbpl_quote(str(claude_dir / sub))}")'
+                for sub in _CLAUDE_WRITABLE_CACHE_SUBDIRS
+            )
+            lines.append(f"(allow file-write* {allow_parts})")
+            claude_projects = claude_dir / "projects"
+            memory_targets: list[Path] = []
+            if claude_projects.is_dir():
+                for entry in sorted(claude_projects.iterdir(), key=lambda p: p.name):
+                    if entry.is_dir():
+                        memory_targets.append(entry / "memory")
+            for workspace_root in (real_wrapper, real_learningos, real_core):
+                memory_targets.append(
+                    claude_projects / _claude_project_slug(workspace_root) / "memory"
+                )
+            for memory_dir in memory_targets:
+                _add_write_deny_target(
+                    lines, deny_seen, memory_dir, real_learningos=real_learningos
+                )
+        for user_instr in (
+            real_home / ".claude.json",
+            real_home / ".claude.json.backup",
+            real_home / ".zshrc",
+            real_home / ".zshenv",
+            real_home / ".zprofile",
+            real_home / ".zlogin",
+            real_home / ".zlogout",
+            real_home / ".bashrc",
+            real_home / ".bash_profile",
+            real_home / ".bash_login",
+            real_home / ".profile",
+            real_home / ".codex" / "AGENTS.md",
+            real_home / ".codex" / "AGENTS.override.md",
+            real_home / ".codex" / "config.toml",
+            real_home / ".codex" / "rules",
+            real_home / ".codex" / "skills",
+            real_home / ".gemini" / "GEMINI.md",
+            real_home / ".gemini" / "settings.json",
+            real_home / ".gemini" / "skills",
+            real_home / ".agents",
+            real_home / ".config" / "opencode",
+        ):
+            _add_write_deny_target(
+                lines, deny_seen, user_instr, real_learningos=real_learningos
+            )
+
+    for wrapper_instr in (
+        real_wrapper / "AGENTS.md",
+        real_wrapper / ".claude",
+        real_wrapper / ".opencode",
+        real_wrapper / ".codex",
+        real_wrapper / ".gemini",
+    ):
+        _add_write_deny_target(
+            lines, deny_seen, wrapper_instr, real_learningos=real_learningos
+        )
+
     for extra in deny_extra_subpaths:
         real_extra = Path(os.path.realpath(extra))
         quoted = _sbpl_quote(str(real_extra))
@@ -154,7 +360,7 @@ def _normalize_caller_args(
 ) -> list[str]:
     if caller_cwd == real_core:
         return list(extra)
-    protected = tuple(Path(os.path.realpath(p)) for p in protected_reads(real_core))
+    protected = tuple(Path(os.path.realpath(p)) for p in protected_read_targets(real_core))
     out: list[str] = []
     expect_path = False
     for token in extra:
@@ -193,7 +399,7 @@ def _normalize_cmd_args(
 ) -> list[str]:
     if caller_cwd == real_core:
         return list(command)
-    protected = tuple(Path(os.path.realpath(p)) for p in protected_reads(real_core))
+    protected = tuple(Path(os.path.realpath(p)) for p in protected_read_targets(real_core))
     out: list[str] = []
     prev_token = ""
     for idx, token in enumerate(command):
@@ -561,11 +767,13 @@ def launch_study(
         sock_path = sock_dir / "gate.sock"
         sb_path = sock_dir / "study.sb"
         deny_literals = (scratch_dir / SCRATCH_MARKER_NAME,) if keep_scratch else ()
+        home_override = Path(os.environ["HOME"]) if os.environ.get("HOME") else None
         sb_path.write_text(
             build_seatbelt_profile(
                 real_core,
                 deny_extra_subpaths=(stage_dir,),
                 deny_extra_literals=deny_literals,
+                home_dir=home_override,
             ),
             encoding="utf-8",
         )
@@ -580,13 +788,13 @@ def launch_study(
         server = BrokerServer(broker, sock_path)
         server.start()
 
-        child_env = dict(os.environ)
-        child_env[GATE_SOCK_ENV] = str(sock_path)
-        child_env["LOS_SESSION_ID"] = session_id
-        child_env["LOS_SCRATCH_DIR"] = str(scratch_dir)
-        child_env["TMPDIR"] = str(scratch_dir)
-        child_env["PWD"] = str(child_cwd)
-        child_env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
+        child_env = _build_child_env(
+            os.environ,
+            sock_path=sock_path,
+            session_id=session_id,
+            scratch_dir=scratch_dir,
+            child_cwd=child_cwd,
+        )
 
         signal.signal(signal.SIGTERM, _on_sigterm)
         sigterm_installed = True

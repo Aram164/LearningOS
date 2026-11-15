@@ -49,9 +49,23 @@ def protected_reads(core: Path) -> list[Path]:
         resolved / "generated" / "material-search",
         resolved / "generated" / "material-outlines",
         resolved / "generated" / "derived-state",
-        resolved / "generated" / "summaries",
+        resolved / "knowledge" / "summaries",
         resolved / "operations" / "ai-actions" / "requests",
     ]
+
+
+def protected_read_literals(core: Path) -> list[Path]:
+    """Individual sensitive files never readable by sandboxed study agents."""
+    resolved = Path(core).resolve()
+    learningos = resolved.parent
+    return [
+        learningos / ".env",
+    ]
+
+
+def protected_read_targets(core: Path) -> list[Path]:
+    """Combined closed subtrees and sensitive literal files."""
+    return [*protected_reads(core), *protected_read_literals(core)]
 
 
 def real_path(raw_path: Path | str, *, cwd: Path | None = None) -> Path:
@@ -201,7 +215,10 @@ def _match_study_anchor(
     """Anchor a caller path onto scratch_dir or core_root without resolving sub-tree symlinks."""
     lex = _lexical_study_path(raw_path, cwd=cwd, label=label)
     real_core = Path(os.path.realpath(core_root))
-    protected = tuple(Path(os.path.realpath(closed)) for closed in protected_reads(real_core))
+    targets = protected_read_targets(real_core)
+    protected = tuple(
+        dict.fromkeys([*targets, *(Path(os.path.realpath(closed)) for closed in targets)])
+    )
 
     candidates: list[Path] = []
     if scratch_dir is not None:

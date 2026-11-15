@@ -20,7 +20,7 @@ Persist disposable projections and caches under their dependency pins.
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `domain`, `loading`, `materials`, `package-root`, `session-ledger`, `transactions`.
 
-Used by: `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `search`, `semantics`, `transactions`, `validation`.
+Used by: `operation-handlers`, `operation-pipeline`, `plan-gate`, `search`, `semantics`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

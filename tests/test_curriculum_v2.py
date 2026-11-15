@@ -393,6 +393,16 @@ def test_withdrawal_deadline_row_appears_and_disappears(mini_repo):
         "label": "2. Termin withdrawal deadline",
         "registration_state": "unregistered"}]
 
+    # A passed deadline never projects, even with no attempt recorded.
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2000-01-01"
+    write_yaml(_demo_module_path(mini_repo), module)
+    assert [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"] == []
+
+    # Restore future deadline before recording gateway attempts.
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2099-01-05"
+    write_yaml(_demo_module_path(mini_repo), module)
+
     registered = approved_v2_cli(
         mini_repo, "module-attempt", "module-demo",
         "--termin", "2", "--date", "2099-02-01", "--result", "registered",
@@ -413,14 +423,6 @@ def test_withdrawal_deadline_row_appears_and_disappears(mini_repo):
     exams = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
     assert next(row for row in exams if row["termin"] == 2)[
         "registration_state"] == "withdrawn"
-
-    # A passed deadline never projects, even with no attempt recorded.
-    module = _read_demo_module(mini_repo)
-    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
-    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2000-01-01"
-    write_yaml(_demo_module_path(mini_repo), module)
-    assert [row for row in _deadline_rows(mini_repo)
-            if row.get("kind") == "withdrawal-deadline"] == []
 
 
 @pytest.mark.parametrize("status", ["archived", "dropped"])
@@ -1115,9 +1117,24 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
         "resources": [], "working_note": review_note, "attachments": [],
         "source_feedback": [],
     })
-    write_yaml(map_path, current_map)
-    (mini_repo / review_note).parent.mkdir(parents=True, exist_ok=True)
-    (mini_repo / review_note).write_text("", encoding="utf-8")
+    expanded_data = copy.deepcopy(package_data)
+    expanded_data["units"][0]["study_map"] = copy.deepcopy(current_map)
+    expanded_package = tmp_path / "expanded-module-plan.yaml"
+    write_yaml(expanded_package, expanded_data)
+    expanded_env = approved_v2_envelope(
+        mini_repo,
+        capability="module.plan.import",
+        payload={
+            "module_id": "module-demo",
+            "file": str(expanded_package),
+            "file_sha256": file_sha256(expanded_package),
+        },
+        artifact_ids=["module-demo", "unit-demo-l02", "study-map-demo-l02"],
+        idempotency_key="curriculum-module-plan-expand",
+    )
+    expanded_proc = run_v2_capability(mini_repo, expanded_env)
+    assert expanded_proc.returncode == 0, expanded_proc.stderr
+    assert (mini_repo / review_note).is_file()
 
     reordered_units = copy.deepcopy(package_data)
     reordered_units["module_patch"]["unit_order"].reverse()
@@ -1297,10 +1314,20 @@ def test_empty_note_text_is_refused_instead_of_truncating(mini_repo):
 
 def test_empty_snapshot_token_is_refused_not_read_as_unguarded(mini_repo):
     add_curriculum(mini_repo)
+    # Direct CLI refuses regardless of --expected-snapshot (GatewayEnvelopeV2 only).
     probe = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
                     "--text", "probe", "--expected-snapshot", "")
-    assert probe.returncode == 3
-    assert "expected-snapshot" in probe.stderr
+    assert probe.returncode == 2
+    assert "GatewayEnvelopeV2" in probe.stderr
+    # Empty expected_snapshot on the V2 envelope is also refused.
+    empty_env = approved_v2_envelope(
+        mini_repo, capability="stage.note.write",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "probe"},
+        artifact_ids=["study-map-demo-l01"], idempotency_key="empty-snap-probe",
+        expected_snapshot="",
+    )
+    empty_v2 = run_v2_capability(mini_repo, empty_env)
+    assert empty_v2.returncode != 0
     # Omitting the flag cannot bypass the V2 envelope authority.
     unguarded = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
                         "--text", "probe")
@@ -1532,10 +1559,19 @@ def test_unit_note_rejects_foreign_stage_and_preserves_state(mini_repo):
 
 def test_unit_note_snapshot_guard_keeps_note_unchanged(mini_repo):
     add_curriculum(mini_repo)
-    refused = run_los(
+    direct = run_los(
         mini_repo, "unit-note", "unit-demo-l01", "--text", "stale",
         "--expected-snapshot", "sha256:stale",
     )
+    assert direct.returncode == 2
+    assert "GatewayEnvelopeV2" in direct.stderr
+    envelope = approved_v2_envelope(
+        mini_repo, capability="unit.note.append",
+        payload={"unit_id": "unit-demo-l01", "text": "stale"},
+        artifact_ids=["unit-note:unit-demo-l01"], idempotency_key="unit-note-stale",
+        expected_snapshot="sha256:" + "0" * 64,
+    )
+    refused = run_v2_capability(mini_repo, envelope)
     assert refused.returncode == 3
     assert not (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/notes.md").exists()
 

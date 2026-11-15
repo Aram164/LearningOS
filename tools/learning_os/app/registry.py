@@ -36,11 +36,13 @@ class Operation:
     # is a write barrier until its owner explicitly declares a read.
     effects: OperationEffects = OperationEffects.UNKNOWN
     # Optional override when an operation's lock requirement differs from its
-    # invocation kind (e.g. a derived-write tool that still loads repo state).
-    lock: Literal["shared", "exclusive"] | None = None
+    # invocation kind (e.g. a derived-write tool that still loads repo state, or
+    # `session.end`, which takes its own lock around local phases only so
+    # network `git push` never holds the operator lock).
+    lock: Literal["shared", "exclusive", "none"] | None = None
 
     def __post_init__(self) -> None:
-        if self.lock not in (None, "shared", "exclusive"):
+        if self.lock not in (None, "shared", "exclusive", "none"):
             raise ValueError(f"invalid operation lock mode: {self.lock!r}")
 
 
@@ -57,7 +59,7 @@ def register(
     memo_profile: str = "none",
     read_session_profile: str = "none",
     effects: OperationEffects = OperationEffects.UNKNOWN,
-    lock: Literal["shared", "exclusive"] | None = None,
+    lock: Literal["shared", "exclusive", "none"] | None = None,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
 

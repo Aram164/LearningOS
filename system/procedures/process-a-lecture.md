@@ -159,13 +159,13 @@ sha256:38ab6dbd717878b6a05dba32f41a55c7b360e69dfc48dcb0dc0602d0ef203581
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-demo-lecture\", \"material\": \"material://source-demo-lecture/lecture-03.pdf\", \"material_sha256\": \"$MAT_SHA\"}, \"expected_diff_sha256\": \"$ATTACH_DIFF\"}" --key s23-attach --request-id request-s23-attach --guards auto --out "$TMPDIR/s23-attach.json"
+$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-demo-lecture\", \"material\": \"material://source-demo-lecture/lecture-03.pdf\", \"material_sha256\": \"$MAT_SHA\"}, \"expected_diff_sha256\": \"$ATTACH_DIFF\"}" --key s23-attach --guards auto --check-out "$TMPDIR/s23-attach-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-demo-lecture=1
 ```
 
 ```scrut {interpolated: true}
-$ los capability source.record.revise --payload-file "$TMPDIR/s23-attach.json"
+$ $H/los-seal --guards-from "$TMPDIR/s23-attach-check.json" --request-id request-s23-attach --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s23-attach","idempotency_key":"s23-attach","capability":"source.record.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"source-demo-lecture":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
 ```
@@ -382,13 +382,13 @@ sha256:96249d311994f07dd1d8e5fcf1cea19877634b99c1584e22f127c719a231f360
 ## Apply the package through the gateway
 
 ```scrut {output_stream: stderr}
-$ PKG_SHA=$(sha256sum "$TMPDIR/lecture-03-package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/lecture-03-package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s23-import --request-id request-s23-import --guards auto --out "$TMPDIR/s23-import.json"
+$ PKG_SHA=$(sha256sum "$TMPDIR/lecture-03-package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/lecture-03-package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s23-import --guards auto --check-out "$TMPDIR/s23-import-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-demo=0, unit-demo-l03=0
 ```
 
 ```scrut {interpolated: true}
-$ los capability module.plan.import --payload-file "$TMPDIR/s23-import.json"
+$ $H/los-seal --guards-from "$TMPDIR/s23-import-check.json" --request-id request-s23-import --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"schema_version":2,"request_id":"request-s23-import","idempotency_key":"s23-import","capability":"module.plan.import","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"mode":"apply","module_id":"module-demo","units_written":["unit-demo-l03"],"files_written":5,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"file:operations/transactions/lineage.yaml":1,"module-demo":1,"unit-demo-l03":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```

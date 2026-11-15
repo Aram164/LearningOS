@@ -15,6 +15,8 @@ from learning_os.app.gateway import read_content_bound_file as _read_content_bou
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
+from learning_os.derive.semesters import LISTING_RULE as _LISTING_RULE
+from learning_os.derive.semesters import is_listed as _is_listed
 from learning_os.derive.semesters import semester_plan as _semester_plan
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.render import parse_sections
@@ -27,6 +29,16 @@ from learning_os.store.revisions import artifact_revision, load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
 ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
+MODULE_STATUSES = (
+    "planned",
+    "enrolled",
+    "active",
+    "paused",
+    "awaiting-grade",
+    "completed",
+    "dropped",
+    "archived",
+)
 
 #: A semester's canonical identity, as the program record declares it.
 _SEMESTER_ID = re.compile(r"^semester-[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -96,7 +108,6 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     module = repo.modules.get(req["module_id"])
     if module is None:
@@ -170,7 +181,6 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         ) from exc
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     module = repo.modules.get(req["module_id"])
     if module is None:
@@ -221,12 +231,62 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
     )
 
 
+@register("module.status.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
+def module_status_update(ctx: OpContext, req: dict) -> Result:
+    """Update a module's lifecycle status through GatewayEnvelopeV2."""
+    root = ctx.root
+    status = req.get("status")
+    if status not in MODULE_STATUSES:
+        raise WriteRefused(
+            f"status must be one of: {', '.join(MODULE_STATUSES)}",
+            site="module.status.update.bad-status",
+            prefixed=True,
+            exit_code=2,
+        )
+    repo = ctx.repo()
+    module_id = req["module_id"]
+    if module_id not in repo.modules:
+        message = not_found("module", module_id, repo.modules)
+        raise NotFound(
+            "module", module_id, repo.modules,
+            site="module.status.update.unknown-module",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="module.status.update.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    module_path = repo.module_origins[module_id]
+    data = yaml.safe_load(read_bytes_inside(root, module_path).decode("utf-8"))
+    data["status"] = status
+    return Result(
+        {
+            "ok": True,
+            "module_id": module_id,
+            "status": status,
+            "path": module_path.relative_to(root).as_posix(),
+        },
+        proposal=TransactionProposal(
+            capability="module.status.update",
+            writes={module_path: _dump_yaml(data)},
+            artifact_ids=[module_id],
+            expected_revisions=expected_revisions,
+        ),
+    )
+
+
 @register("coordination.section.revise", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one reviewed coordination section, never a curriculum record."""
     root = ctx.root
     path = root / "work/COORDINATION.md"
-    ctx.require_snapshot(req.get("expected_snapshot"))
     if req["section"] not in {"Commitments", "Priorities", "Dependencies",
                               "Deferrals"}:
         raise WriteRefused(
@@ -359,7 +419,6 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     workspace = repo.workspaces.get(req["workspace_id"])
     if workspace is None:
@@ -426,6 +485,83 @@ def _semester_problems(semester) -> list[str]:
     if isinstance(order, bool) or not isinstance(order, int) or order < 0:
         problems.append("the semester needs a non-negative integer order")
     return problems
+
+
+def _coordination_references_workspace(coord, workspace_id: str) -> bool:
+    """True when work/COORDINATION.md names ``workspace_id`` as a distinct token."""
+    if coord is None:
+        return False
+    pattern = rf"(?<![A-Za-z0-9_-]){re.escape(workspace_id)}(?![A-Za-z0-9_-])"
+    haystack = f"{_dump_yaml(coord.meta)}\n{coord.body}"
+    return bool(re.search(pattern, haystack))
+
+
+@register("workspace.complete", kind="command", effects=OperationEffects.CANONICAL_WRITE)
+def workspace_complete(ctx: OpContext, req: dict) -> Result:
+    """Mark one active non-standing workspace complete in place."""
+    workspace_id = req["workspace_id"]
+    repo = ctx.repo()
+    workspace = repo.workspaces.get(workspace_id)
+    if workspace is None:
+        message = not_found("workspace", workspace_id, repo.workspaces)
+        raise NotFound(
+            "workspace", workspace_id, repo.workspaces,
+            message=message,
+            site="workspace.complete.unknown-workspace",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    if workspace.archived or workspace.status != "active":
+        state = "archived" if workspace.archived else (workspace.status or "unknown")
+        message = (f"workspace '{workspace_id}' is {state}; only an active "
+                   "workspace can be completed")
+        raise WriteRefused(
+            message,
+            site="workspace.complete.workspace-not-active",
+            prefixed=True,
+            exit_code=2,
+        )
+    if workspace.standing:
+        message = (f"workspace '{workspace_id}' is standing (continuous effort) "
+                   "and exempt from completion")
+        raise WriteRefused(
+            message,
+            site="workspace.complete.standing-workspace",
+            prefixed=True,
+            exit_code=2,
+        )
+    if _coordination_references_workspace(repo.coordination, workspace_id):
+        message = (f"workspace '{workspace_id}' is still referenced in "
+                   "work/COORDINATION.md; clear coordination references before completing")
+        raise WriteRefused(
+            message,
+            site="workspace.complete.coordination-reference",
+            prefixed=True,
+            exit_code=2,
+        )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="workspace.complete.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+    meta = dict(workspace.meta)
+    meta["status"] = "complete"
+    rendered = _render_frontmatter(meta, workspace.body)
+    rel_path = workspace.path.relative_to(ctx.root).as_posix()
+    return Result(
+        {"ok": True, "workspace_id": workspace_id, "status": "complete", "path": rel_path},
+        proposal=TransactionProposal(
+            capability="workspace.complete",
+            writes={workspace.path: rendered},
+            artifact_ids=[workspace_id],
+            expected_revisions=expected_revisions,
+        ),
+    )
 
 
 def _semester_fact(row: dict | None) -> dict | None:
@@ -541,10 +677,7 @@ def program_semester_update(ctx: OpContext, req: dict) -> Result:
     package_sha = "sha256:" + hashlib.sha256(package_bytes).hexdigest()
     listed = sorted(
         module_id for module_id, module in repo.modules.items()
-        if module.get("area_id") == program_id
-        and module.get("kind") == "academic"
-        and str(module.get("status") or "") not in
-        ("completed", "archived", "dropped")
+        if module.get("area_id") == program_id and _is_listed(module)
     )
     report = {
         "program_id": program_id,
@@ -552,7 +685,7 @@ def program_semester_update(ctx: OpContext, req: dict) -> Result:
         "current_semester_after": _semester_fact(plan["current_after"]),
         "semester_added": plan["added"],
         "module_listing": {
-            "rule": "open academic modules; the term does not gate the list",
+            "rule": _LISTING_RULE,
             "listed_module_ids": listed,
             "changed": False,
         },
@@ -585,7 +718,6 @@ def program_semester_update(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:

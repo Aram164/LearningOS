@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 66
-schema_fingerprint: sha256:3c6511aac6fc14d6b6466a87cf6e56c362488410dc856df887c26e5edf5da67f
-record_schemas: 37
+contract_version: 67
+schema_fingerprint: sha256:f4a214dc1576afe08b0ae207101c2b7a49b3b7c9357ce24d700b9087bb59e44d
+record_schemas: 38
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -476,5 +476,10 @@ history:
     reading store beside the repository (LearningOS/reading-memory/, ADR-021): card
     versions, reading entries, session records and settlement log lines. Core writes
     them outside the repository; no existing record changes shape, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v66/
+- version: 67
+  adopted: '2026-11-15'
+  note: Add receipt-chain-baseline schema and receipt chain gate (D-03)
   migration: null
   fixture: tests/fixtures/formats/v66/

@@ -1,13 +1,9 @@
-"""The ref-aware pre-push gate and its verified-pair memo (#106, #113).
+"""The ref-aware pre-push gate (#106, #113).
 
 A scripted Core/UI fixture pair (real git, real hook, stubbed `make`/`npm`)
 proves: deletions skip the gate, non-main refs run the lighter local gate,
-main keeps the full `system-check`, an exact stamped pair skips with the
-stamp named, and any new commit or dirty tree re-runs the gate. Since #113
-the gate also refuses pushed SHAs that are not the checkout, diffs review
-pushes against the last stamped pair, deselects live_install outside the
-live root, and runs only the UI check plus the paired-contract tests when
-Core is unchanged.
+main keeps the full `system-check`, the gate refuses pushed SHAs that are
+not the checkout, and concurrent main pushes serialize under the lock.
 """
 
 from __future__ import annotations
@@ -21,7 +17,6 @@ import sys
 from pathlib import Path
 
 import pytest
-import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ZERO_SHA = "0" * 40
@@ -49,19 +44,11 @@ def pair(tmp_path: Path, monkeypatch):
     # writes them mid-run, and a serialized second push must not see dirt.
     for repo in (core, ui):
         (repo / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
-    # The canonical gate, memo, and live-root detector under test, verbatim.
+    # The canonical gate under test, verbatim.
     (core / "tools" / "hooks").mkdir(parents=True)
     shutil.copy(REPO_ROOT / "tools" / "hooks" / "pre-push",
                 core / "tools" / "hooks" / "pre-push")
-    shutil.copy(REPO_ROOT / "tools" / "verified_pairs.py",
-                core / "tools" / "verified_pairs.py")
-    (core / "tools" / "learning_os" / "store" / "contracts").mkdir(parents=True)
-    shutil.copy(REPO_ROOT / "tools" / "learning_os" / "store" / "contracts" / "perimeter.py",
-                core / "tools" / "learning_os" / "store" / "contracts" / "perimeter.py")
-    (core / "system" / "contracts").mkdir(parents=True)
-    shutil.copy(REPO_ROOT / "system" / "contracts" / "perimeter.yaml",
-                core / "system" / "contracts" / "perimeter.yaml")
-    # Deterministic interpreter for the hook's memo lookup.
+    # Deterministic interpreter for hook checks.
     venv_bin = core / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
     venv_bin.joinpath("python").symlink_to(Path(sys.executable))
@@ -90,13 +77,7 @@ def pair(tmp_path: Path, monkeypatch):
     monkeypatch.setenv("GATE_LOG", str(log))
     monkeypatch.setenv("GATE_ENV_LOG", str(env_log))
     monkeypatch.setenv("PATH", str(stub_bin) + os.pathsep + os.environ["PATH"])
-    # The hook inherits this from the runner; the deselection tests set it
-    # explicitly, and every other test needs the unset deterministic path.
     monkeypatch.delenv("PYTEST_ADDOPTS", raising=False)
-    # The fixture python is a symlink, which does not activate the venv, so
-    # the hook's live-root detector needs the actual PyYAML dependency path;
-    # an isolated runner may share it from a different interpreter prefix.
-    monkeypatch.setenv("PYTHONPATH", str(Path(yaml.__file__).resolve().parent.parent))
     return {"root": root, "core": core, "ui": ui, "log": log, "env_log": env_log}
 
 
@@ -121,27 +102,6 @@ def _commit(repo: Path, name: str, message: str) -> str:
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
     subprocess.run(["git", "commit", "-qm", message], cwd=repo, check=True)
     return _head(repo)
-
-
-def _stamp(core: Path):
-    # The hook resolves its interpreter to the Core venv; the stamp must be
-    # taken under that same interpreter, exactly as `make system-check` does
-    # with $(PY) in a real checkout. (A symlinked python does not activate a
-    # venv, so stamping here with the test runner's own binary would record a
-    # different toolchain than the hook's lookup computes.)
-    return subprocess.run(
-        [str(core / ".venv" / "bin" / "python"),
-         str(core / "tools" / "verified_pairs.py"), "stamp"],
-        cwd=core, capture_output=True, text=True, timeout=120,
-    )
-
-
-def _base(core: Path):
-    return subprocess.run(
-        [str(core / ".venv" / "bin" / "python"),
-         str(core / "tools" / "verified_pairs.py"), "base"],
-        cwd=core, capture_output=True, text=True, timeout=120,
-    )
 
 
 def test_branch_deletion_skips_the_gate(pair):
@@ -209,57 +169,6 @@ def test_mixed_deletion_and_update_still_runs_the_gate(pair):
     )
     assert result.returncode == 0, result.stderr
     assert _invocations(pair["log"]) != []
-
-
-def test_stamped_pair_skips_the_full_gate_and_names_the_stamp(pair):
-    stamped = _stamp(pair["core"])
-    assert stamped.returncode == 0, stamped.stderr
-    stamp_file = pair["core"] / ".git" / "learningos-verified-pairs.jsonl"
-    assert stamp_file.is_file()
-    row = json.loads(stamp_file.read_text(encoding="utf-8").strip().splitlines()[-1])
-    assert row["core_sha"] and row["ui_sha"] and row["toolchain"]["digest"]
-
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "stamped pair" in result.stdout
-    assert _invocations(pair["log"]) == []
-
-
-def test_new_commit_after_stamp_re_runs_the_gate(pair):
-    assert _stamp(pair["core"]).returncode == 0
-    head = _commit(pair["core"], "after-stamp.txt", "after stamp")
-
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [f"make -C {pair['core']} system-check"]
-
-
-def test_dirty_tree_blocks_despite_the_stamp(pair):
-    assert _stamp(pair["core"]).returncode == 0
-    (pair["core"] / "uncommitted.txt").write_text("dirty\n", encoding="utf-8")
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
-    )
-    assert result.returncode == 1
-    assert "clean" in result.stderr
-    assert _invocations(pair["log"]) == []
-
-
-def test_stamp_refuses_dirty_trees(pair):
-    (pair["ui"] / "uncommitted.txt").write_text("dirty\n", encoding="utf-8")
-    stamped = _stamp(pair["core"])
-    assert stamped.returncode == 0
-    assert "not stamping" in stamped.stderr
-    assert not (pair["core"] / ".git" / "learningos-verified-pairs.jsonl").exists()
 
 
 def test_stale_installed_hook_still_fails(pair):
@@ -331,20 +240,6 @@ def test_a_push_from_a_linked_worktree_passes_the_clean_pair_gate(pair, tmp_path
     ]
 
 
-def test_a_stamp_under_an_inherited_git_dir_records_the_ui_head(pair):
-    core, ui = pair["core"], pair["ui"]
-    ui_head = _commit(ui, "ui-2.txt", "ui moves on")
-    stamped = subprocess.run(
-        [str(core / ".venv" / "bin" / "python"),
-         str(core / "tools" / "verified_pairs.py"), "stamp"],
-        cwd=core, env={**os.environ, "GIT_DIR": str(core / ".git")},
-        capture_output=True, text=True, timeout=120)
-    assert stamped.returncode == 0, stamped.stderr
-    rows = [json.loads(line) for line in (core / ".git" / "learningos-verified-pairs.jsonl")
-            .read_text(encoding="utf-8").splitlines()]
-    assert [(row["core_sha"], row["ui_sha"]) for row in rows] == [(_head(core), ui_head)]
-
-
 # ---- #113: the gate verifies the pushed SHAs, not the checkout -------------
 
 
@@ -375,9 +270,8 @@ def test_one_non_head_line_among_matching_lines_still_refuses(pair):
 
 
 def test_a_non_head_push_to_main_is_refused_not_verified(pair):
-    """`git push origin other-branch:main` from a clean stamped checkout must
-    not silently verify the checkout (or skip on its stamp)."""
-    assert _stamp(pair["core"]).returncode == 0
+    """`git push origin other-branch:main` from a clean checkout must
+    not silently verify the checkout."""
     head = _head(pair["core"])
     result = _run_hook(
         pair["core"],
@@ -387,93 +281,6 @@ def test_a_non_head_push_to_main_is_refused_not_verified(pair):
     assert HEAD_SHA in result.stderr
     assert head in result.stderr
     assert _invocations(pair["log"]) == []
-
-
-# ---- #113: review pushes diff against the last stamped pair -----------------
-
-
-def test_base_reports_the_last_stamped_core_sha(pair):
-    core = pair["core"]
-    assert _base(core).returncode == 1
-    first = _head(core)
-    assert _stamp(core).returncode == 0
-    assert _base(core).stdout.strip() == first
-    second = _commit(core, "second.txt", "second")
-    assert second != first
-    assert _stamp(core).returncode == 0
-    assert _base(core).stdout.strip() == second
-
-
-def test_review_push_diffs_against_the_last_stamped_pair(pair):
-    old = _head(pair["core"])
-    assert _stamp(pair["core"]).returncode == 0
-    head = _commit(pair["core"], "review-change.txt", "review change")
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert old in result.stdout
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} check",
-        f"make -C {pair['core']} test-affected BASE={old}",
-        f"npm --prefix {pair['ui']} run check",
-    ]
-
-
-def test_ui_only_change_runs_only_paired_tests_and_ui_check(pair):
-    assert _stamp(pair["core"]).returncode == 0
-    ui_head = _commit(pair["ui"], "fix.txt", "one-line UI fix")
-    result = _run_hook(
-        pair["ui"],
-        f"refs/heads/feature {ui_head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "paired-contract" in result.stdout
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} test-paired",
-        f"npm --prefix {pair['ui']} run check",
-    ]
-
-
-def test_changed_toolchain_cannot_reuse_the_core_baseline(pair):
-    assert _stamp(pair["core"]).returncode == 0
-    path = pair["core"] / ".git" / "learningos-verified-pairs.jsonl"
-    row = json.loads(path.read_text())
-    row["toolchain"]["digest"] = "0" * 64
-    path.write_text(json.dumps(row) + "\n")
-    ui_head = _commit(pair["ui"], "fix.txt", "UI fix after toolchain change")
-    result = _run_hook(
-        pair["ui"],
-        f"refs/heads/feature {ui_head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} system-check",
-    ]
-
-
-def test_unrelated_stamped_commit_cannot_supply_a_diff_baseline(pair):
-    assert _stamp(pair["core"]).returncode == 0
-    empty_tree = subprocess.run(
-        ["git", "mktree"], cwd=pair["core"], input="", capture_output=True,
-        text=True, check=True).stdout.strip()
-    unrelated = subprocess.run(
-        ["git", "commit-tree", empty_tree, "-m", "unrelated stamped history"],
-        cwd=pair["core"], capture_output=True, text=True, check=True).stdout.strip()
-    path = pair["core"] / ".git" / "learningos-verified-pairs.jsonl"
-    row = json.loads(path.read_text())
-    row["core_sha"] = unrelated
-    path.write_text(json.dumps(row) + "\n")
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} system-check",
-    ]
 
 
 def test_affected_test_discovery_failure_blocks_the_gate(tmp_path):
@@ -487,51 +294,6 @@ def test_affected_test_discovery_failure_blocks_the_gate(tmp_path):
     )
     assert result.returncode != 0
     assert "no changes detected" not in result.stdout
-
-
-# ---- #113: live_install deselection outside the live root -------------------
-
-
-def test_hook_deselects_live_install_outside_the_live_root(pair):
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "deselecting live_install" in result.stdout
-    env_lines = _invocations(pair["env_log"])
-    assert len(env_lines) == 3
-    assert all("not live_install" in line for line in env_lines)
-
-
-def test_hook_keeps_existing_pytest_addopts_when_it_names_live_install(
-        pair, monkeypatch):
-    monkeypatch.setenv("PYTEST_ADDOPTS", '-m "not live_install"')
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "keeping the existing PYTEST_ADDOPTS" in result.stdout
-    env_lines = _invocations(pair["env_log"])
-    assert env_lines and all('not live_install' in line for line in env_lines)
-
-
-def test_hook_keeps_full_selection_in_the_live_root(pair):
-    wrapper = pair["core"].resolve().parent.parent
-    for anchor in ("LearningOS/obsidian-ui", "LearningOS/workbench",
-                   "LearningOS/archive"):
-        (wrapper / anchor).mkdir(parents=True, exist_ok=True)
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "live_install" not in result.stdout
-    assert _invocations(pair["env_log"]) == ["PYTEST_ADDOPTS=<unset>"] * 3
 
 
 # ---- #113: the paired marker covers the Core/UI boundary --------------------
@@ -638,7 +400,7 @@ def test_ci_bootstrap_accepts_clean_non_main_head(pair, monkeypatch):
     assert result.returncode == 0
     assert f"CI-bootstrap branch=feat sha={head}" in result.stderr
     assert "UNVERIFIED" in result.stderr
-    assert _invocations(pair["log"]) == []  # no local gate, no stamp
+    assert _invocations(pair["log"]) == []  # no local gate
 
 
 def test_ci_bootstrap_refuses_main(pair, monkeypatch):
@@ -702,8 +464,8 @@ def test_make_hooks_still_copies_to_a_distinct_hooks_directory(tmp_path):
         assert os.access(installed, os.X_OK)
 
 
-def test_concurrent_main_pushes_run_system_check_once_and_reuse_stamp(pair):
-    """Two pushes at once: one full gate, and the waiter skips on its stamp."""
+def test_concurrent_main_pushes_serialize_under_lock(pair):
+    """Two pushes at once serialize under the mkdir lock instead of racing."""
     import threading
 
     core, ui = pair["core"], pair["ui"]
@@ -711,10 +473,9 @@ def test_concurrent_main_pushes_run_system_check_once_and_reuse_stamp(pair):
     make_stub = stub_bin / "make"
     make_stub.write_text(
         '#!/bin/sh\n'
-        'echo "make $*" >> "$GATE_LOG"\n'
-        'case "$*" in *system-check*) sleep 1; '
-        f'"{core}/.venv/bin/python" "{core}/tools/verified_pairs.py" stamp '
-        '>/dev/null 2>&1 || true;; esac\n',
+        'echo "start $*" >> "$GATE_LOG"\n'
+        'sleep 0.5\n'
+        'echo "done $*" >> "$GATE_LOG"\n',
         encoding="utf-8")
     make_stub.chmod(0o755)
     head_core, head_ui = _head(core), _head(ui)
@@ -732,8 +493,14 @@ def test_concurrent_main_pushes_run_system_check_once_and_reuse_stamp(pair):
         thread.join()
     assert results["core"].returncode == 0, results["core"].stderr
     assert results["ui"].returncode == 0, results["ui"].stderr
-    assert _invocations(pair["log"]) == [f"make -C {core} system-check"]
-    assert any("stamped pair" in (r.stdout or "") for r in results.values())
+    assert _invocations(pair["log"]) == [
+        f"start -C {core} system-check",
+        f"done -C {core} system-check",
+        f"start -C {core} system-check",
+        f"done -C {core} system-check",
+    ]
+    assert any("waiting for concurrent pair gate" in (r.stderr or "") for r in results.values())
+    assert not (core / ".git" / "learningos-pre-push.lock").exists()
 
 
 def test_stale_lock_from_dead_pid_is_reclaimed(pair):

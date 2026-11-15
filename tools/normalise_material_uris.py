@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Rewrite physical-path ``material://`` URIs into the id-based canonical form.
+"""Report physical-path ``material://`` URIs not yet using the id-based canonical form.
 
     python tools/normalise_material_uris.py           # report what would change
-    python tools/normalise_material_uris.py --apply
+    # --apply is retired (exits 2); update canonical URIs through the gateway
 
 WHY
 ---
@@ -94,13 +94,21 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--apply", action="store_true",
-                        help="write the rewritten files (default: report only)")
+                        help="retired: direct canonical writes bypass the gateway (fails closed with exit 2)")
     return parser
 
 
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
+
+    if args.apply:
+        print(
+            "normalise_material_uris.py --apply is retired: direct canonical "
+            "writes bypass the LearningOS gateway; apply URI updates via the gateway",
+            file=sys.stderr,
+        )
+        return 2
 
     prefixes = source_prefixes()
     if not prefixes:
@@ -125,14 +133,11 @@ def main() -> int:
                 continue
             total += len(changes)
             touched.append((path, len(changes)))
-            if args.apply:
-                path.write_text(new_text, encoding="utf-8")
 
     for path, count in touched:
-        print(f"{'rewrote' if args.apply else 'would rewrite'} {count:4d}  "
+        print(f"would rewrite {count:4d}  "
               f"{path.relative_to(ROOT)}")
-    print(f"\n{total} reference(s) in {len(touched)} file(s)"
-          f"{'' if args.apply else ' — rerun with --apply'}")
+    print(f"\n{total} reference(s) in {len(touched)} file(s)")
 
     if unmapped_all:
         print(f"\n{len(unmapped_all)} reference(s) point outside every registered "

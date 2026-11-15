@@ -193,6 +193,80 @@ def test_main_deep_and_fast_refused(monkeypatch, capsys):
     assert "--fast" in err
 
 
+def test_main_build_serializes_under_operator_lock_and_writes_atomically(
+    tmp_path, monkeypatch, capsys
+):
+    """D-07: --build serializes under operator_lock and replaces atomically."""
+    import contextlib
+
+    import learning_os.app.lock as lock_mod
+
+    repo_tmp = tmp_path / "repo"
+    base = make_tree(tmp_path / "materials", {"Books/a.pdf": "alpha"})
+    manifest_path = repo_tmp / "records" / "materials-manifest.yaml"
+    entered: list[object] = []
+
+    @contextlib.contextmanager
+    def spy_lock(root, *, shared=False):
+        entered.append((root, shared))
+        yield
+
+    monkeypatch.setattr(lock_mod, "operator_lock", spy_lock)
+    monkeypatch.setattr(mm, "MANIFEST", manifest_path)
+    monkeypatch.setattr(mm, "materials_root", lambda: base)
+    monkeypatch.setattr(sys, "argv", ["materials_manifest.py", "--build"])
+
+    rc = mm.main()
+    assert rc == 0
+    assert entered == [(repo_tmp, False)]
+    assert manifest_path.is_file()
+    leftovers = [p for p in manifest_path.parent.iterdir() if ".tmp" in p.name]
+    assert leftovers == []
+    loaded = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    assert loaded["files"]["Books/a.pdf"]["size"] == 5
+    out, _ = capsys.readouterr()
+    assert "wrote " in out
+
+
+def test_atomic_write_cleans_temp_file_on_replace_failure(tmp_path, monkeypatch):
+    """Crash safety: failed replace leaves prior manifest intact and removes .tmp."""
+    manifest_path = tmp_path / "records" / "materials-manifest.yaml"
+    manifest_path.parent.mkdir(parents=True)
+    manifest_path.write_text("prior: true\n", encoding="utf-8")
+
+    def boom(src, dst):
+        raise OSError("simulated crash before rename")
+
+    monkeypatch.setattr("os.replace", boom)
+    with pytest.raises(OSError, match="simulated crash"):
+        mm._write_manifest_atomic(manifest_path, "prior: false\n")
+
+    assert manifest_path.read_text(encoding="utf-8") == "prior: true\n"
+    assert list(manifest_path.parent.iterdir()) == [manifest_path]
+
+
+def test_normalise_material_uris_apply_is_retired_fails_closed(
+    tmp_path, monkeypatch, capsys
+):
+    """D-07: --apply is retired and fails closed with exit 2 without touching files."""
+    import normalise_material_uris as nmu
+
+    repo_tmp = tmp_path / "repo"
+    note = repo_tmp / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.parent.mkdir(parents=True)
+    original = "See `material://Math/Topic/book.pdf`.\n"
+    note.write_text(original, encoding="utf-8")
+
+    monkeypatch.setattr(nmu, "ROOT", repo_tmp)
+    monkeypatch.setattr(sys, "argv", ["normalise_material_uris.py", "--apply"])
+
+    rc = nmu.main()
+    assert rc == 2
+    assert note.read_text(encoding="utf-8") == original
+    _, err = capsys.readouterr()
+    assert "retired" in err
+
+
 def test_verify_missing_checksum_is_unverifiable(tmp_path):
     """5. A missing recorded checksum is unverifiable, not corrupt."""
     base = make_tree(tmp_path / "materials", {"a.pdf": "alpha", "b.pdf": "beta"})

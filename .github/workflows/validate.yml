@@ -10,9 +10,10 @@
 # (.github/shard-manifest.json) — except files under `node_shards`, which
 # a stable node-id hash splits over exactly the listed legs, each test
 # still running exactly once. tests/test_workflows.py pins the manifest
-# against the tree; every leg deselects exactly `live_install`; and the
-# gate job proves that the summed shard results equal a fresh full
-# collection before running the static gates. When the balance drifts,
+# against the tree; every shard leg runs the full collected suite (with a
+# dedicated macos-15 Seatbelt job running tests/test_study_launch.py without
+# skips); and the gate job proves that the summed shard results equal a fresh
+# full collection before running the static gates. When the balance drifts,
 # regenerate the manifest from a CI-measured durations artifact.
 #
 # The witness population (SPEC §3.3 A9, §3.6 A19) crosses the process
@@ -177,15 +178,42 @@ jobs:
             echo "SHARD_FILES_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # Same selection the unsharded gate pinned: deselect exactly the
-      # `live_install` marker, nothing broader. The file list comes only
-      # from the manifest; a leg never adds its own -k or -m filters.
+      # Run the full shard selection with no marker deselection.
       # --basetemp pins the session witness file and audit dir under
       # pytesttmp/ so this leg can upload them for the zz merge below.
+      - name: Resolve ratchet comparison base
+        id: ratchet
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          set -eu
+          head="$(git rev-parse HEAD)"
+          base=""
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$PR_BASE_SHA" ]; then
+            base="$PR_BASE_SHA"
+          elif [ "$EVENT_NAME" = "push" ] && [ -n "$EVENT_BEFORE" ] \
+            && ! printf '%s' "$EVENT_BEFORE" | grep -Eq '^0+$' \
+            && git rev-parse --verify --quiet "${EVENT_BEFORE}^{commit}" >/dev/null 2>&1; then
+            if [ "$(git rev-parse "${EVENT_BEFORE}^{commit}")" != "$head" ]; then
+              base="$EVENT_BEFORE"
+            fi
+          fi
+          if [ -z "$base" ] && git rev-parse --verify --quiet "origin/main^{commit}" >/dev/null 2>&1; then
+            mb="$(git merge-base origin/main HEAD)"
+            if [ "$mb" != "$head" ]; then
+              base="$mb"
+            fi
+          fi
+          if [ -z "$base" ]; then
+            base="$(git rev-parse "${head}^")"
+          fi
+          printf 'base=%s\n' "$base" >> "$GITHUB_OUTPUT"
+
       - name: Run this shard of the suite
         env:
-          PYTEST_ADDOPTS: '-m "not live_install"'
-          LOS_RATCHET_BASE: origin/main
+          LOS_RATCHET_BASE: ${{ steps.ratchet.outputs.base }}
           SHARD: ${{ matrix.shard }}
           PICKED: ${{ steps.pick.outputs.files }}
         run: |
@@ -435,10 +463,39 @@ jobs:
             echo "SHARD_FILES_EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Resolve ratchet comparison base
+        id: ratchet
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          set -eu
+          head="$(git rev-parse HEAD)"
+          base=""
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$PR_BASE_SHA" ]; then
+            base="$PR_BASE_SHA"
+          elif [ "$EVENT_NAME" = "push" ] && [ -n "$EVENT_BEFORE" ] \
+            && ! printf '%s' "$EVENT_BEFORE" | grep -Eq '^0+$' \
+            && git rev-parse --verify --quiet "${EVENT_BEFORE}^{commit}" >/dev/null 2>&1; then
+            if [ "$(git rev-parse "${EVENT_BEFORE}^{commit}")" != "$head" ]; then
+              base="$EVENT_BEFORE"
+            fi
+          fi
+          if [ -z "$base" ] && git rev-parse --verify --quiet "origin/main^{commit}" >/dev/null 2>&1; then
+            mb="$(git merge-base origin/main HEAD)"
+            if [ "$mb" != "$head" ]; then
+              base="$mb"
+            fi
+          fi
+          if [ -z "$base" ]; then
+            base="$(git rev-parse "${head}^")"
+          fi
+          printf 'base=%s\n' "$base" >> "$GITHUB_OUTPUT"
+
       - name: Run this zz shard of the suite
         env:
-          PYTEST_ADDOPTS: '-m "not live_install"'
-          LOS_RATCHET_BASE: origin/main
+          LOS_RATCHET_BASE: ${{ steps.ratchet.outputs.base }}
           SHARD: ${{ matrix.shard }}
           PICKED: ${{ steps.pick.outputs.files }}
         run: |
@@ -510,10 +567,50 @@ jobs:
         working-directory: obsidian-ui
         run: npm run check
 
+  # macOS Seatbelt enforcement: tests/test_study_launch.py exercises
+  # /usr/bin/sandbox-exec (macOS-only); Linux shards skip the live sandbox
+  # tests, so run the file natively on Darwin with skips forbidden.
+  seatbelt-macos:
+    runs-on: macos-15
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: repository
+    steps:
+      - name: Check out Core
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - name: Install Core development dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Run Seatbelt sandbox suite with zero skips
+        run: |
+          set -eu
+          mkdir -p ../seatbelt-out
+          .venv/bin/python -m pytest -q tests/test_study_launch.py \
+            --junitxml=../seatbelt-out/seatbelt.xml
+          .venv/bin/python tools/check_shard_completeness.py \
+            --zero-skip-junit ../seatbelt-out/seatbelt.xml
+      - name: Upload Seatbelt JUnit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seatbelt-junit
+          path: seatbelt-out/seatbelt.xml
+          if-no-files-found: error
+
   # The join point: nothing is green until the shards are proven to be
   # exactly the whole suite, the static gates pass, and every leg passed.
   gate:
-    needs: [pytest-shards, zz-shards, ui-check]
+    needs: [pytest-shards, zz-shards, seatbelt-macos, ui-check]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -542,15 +639,21 @@ jobs:
           merge-multiple: true
           path: junit-in
 
+      - name: Download Seatbelt macOS JUnit results
+        uses: actions/download-artifact@v4
+        with:
+          name: seatbelt-junit
+          path: seatbelt-in
+
       # The completeness proof, run on every trigger: collect the whole
       # suite fresh, map every JUnit testcase to its collected node ID,
       # and require set equality — no test lost, none duplicated, none
-      # invented. Then the static gates the local paired gate runs before
-      # pytest: lint, typecheck, validate, warning baseline.
+      # invented. Then verify macOS Seatbelt ran with zero skips, then the
+      # static gates the local paired gate runs before pytest.
       - name: Prove the shards are exactly the suite, then run static gates
         run: |
           set -eu
-          .venv/bin/python tools/check_shard_completeness.py --junit-dir ../junit-in
+          .venv/bin/python tools/check_shard_completeness.py --junit-dir ../junit-in --zero-skip-junit ../seatbelt-in/seatbelt.xml
           .venv/bin/python -m ruff check tools tests
           .venv/bin/python tools/code_reachability.py
           .venv/bin/python -m mypy

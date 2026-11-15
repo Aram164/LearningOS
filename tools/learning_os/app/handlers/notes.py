@@ -79,7 +79,6 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
             ),
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     note = repo.notes.get(req["note_id"])
     if note is None:
@@ -165,7 +164,6 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         ) from exc
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     note = repo.notes.get(req["note_id"])
     if note is None:
@@ -518,7 +516,6 @@ def note_create(ctx: OpContext, req: dict) -> Result:
         exc.site = "note.create.bad-body-file"
         raise
     note = _precheck_note(req["note"], body)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     note_id, path, content, deprecations = _resolve_note_create(
         root, repo, note, body)

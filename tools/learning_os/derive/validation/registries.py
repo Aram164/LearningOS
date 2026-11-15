@@ -7,12 +7,14 @@ import re
 from learning_os.domain.validation import (
     ARCHIVED_DATE_RE,
     COORDINATION_SECTIONS,
-    GENERATED_DIRECTORIES,
     ISO_DATE_RE,
     JUDGMENT_HEADERS,
 )
 from learning_os.domain.validation import in_evidence as _in_evidence
 from learning_os.domain.vocabulary import PREREQUISITE_RELATIONS, RELATION_TYPES
+from learning_os.store.contracts.tree_contract import generated_directories
+
+GENERATED_DIRECTORIES = generated_directories()
 
 #: A path *under* the generated tree: ``generated/<name>``. The bare directory
 #: name (``generated/``) names no artifact — it says where derived output

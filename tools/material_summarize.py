@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Promote a reviewed chapter summary into the digest-keyed summary cache.
+"""Promote a reviewed chapter summary into the digest-keyed summary store.
 
 Summaries are judgments: the agent writes the draft, this tool only checks
 structure. A draft is admitted when its digest exists in the page-text
@@ -8,8 +8,8 @@ is a genuine compression (at least 200 characters, at most 80% of a
 non-empty source range), and no summary for that range exists yet.
 An empty source range refuses: with nothing to compress against, the
 fraction is unprovable. Admission writes
-the draft after a fixed generated-file marker plus a provenance meta file
-into ``generated/summaries/<sha256>/pages-<start>-<end>/``; anything else
+the draft after a fixed banner plus a provenance meta file
+into ``knowledge/summaries/<sha256>/pages-<start>-<end>/``; anything else
 refuses with a reason and writes nothing.
 
 Usage:
@@ -53,7 +53,7 @@ from materials_manifest import materials_root, sha256  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 TEXT_CACHE = REPO / "generated" / "text-cache"
-SUMMARY_CACHE = REPO / "generated" / "summaries"
+SUMMARY_CACHE = REPO / "knowledge" / "summaries"
 
 MIN_DRAFT_CHARS = 200
 MAX_SOURCE_FRACTION = 0.8

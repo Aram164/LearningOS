@@ -15,7 +15,7 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
-from learning_os.app.check import real_perimeter_errors
+from learning_os.app.check import filter_staged_drift_issues, real_perimeter_errors
 from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.app.claim_admission import claim_evidence_scaffolds
 from learning_os.derive.material_synthesis import (
@@ -545,8 +545,10 @@ def module_plan_validation_errors(
     perimeter_errors = real_perimeter_errors(root)
     with _staged_shadow(root, writes) if shadow is None else nullcontext(shadow) as shadow:
         staged_repo = load_repo(shadow) if staged_repo is None else staged_repo
-        signatures, errors = signatures_from_issues(
-            validate(staged_repo, online=False))
+        issues = filter_staged_drift_issues(
+            root, writes.keys(), validate(staged_repo, online=False)
+        )
+        signatures, errors = signatures_from_issues(issues)
         synthesis_errors: list[str] = []
         ack_errors: list[str] = []
         if module_id is not None and syntheses is not None:

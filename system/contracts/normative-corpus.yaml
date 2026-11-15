@@ -1315,7 +1315,7 @@ documents:
     summary: >-
       Establishes the OS-enforced study boundary (macOS Seatbelt plus
       host-side default-deny broker over LOS_GATE_SOCK), extends read denial
-      to generated/summaries/, declares optional LearningOS/.claude UX hooks,
+      to knowledge/summaries/, declares optional LearningOS/.claude UX hooks,
       scopes host runtime caches and Claude-only v1 certification, and records
       Option B fidelity for covered spans.
     amends:

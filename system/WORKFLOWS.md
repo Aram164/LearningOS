@@ -326,14 +326,19 @@ On registration, withdrawal (Rücktritt), sitting, or grade:
 
 Procedure: [transcript](procedures/record-module-event.md).
 
-Never record these facts anywhere else.
+Updates to `module.yaml` status run through `module.status.update` (`module-status-update`). Never record these facts anywhere else.
 
 ## 11. Complete and archive a workspace
 
 Procedure: [transcript](procedures/complete-and-archive-a-workspace.md).
 
-No gateway capability currently archives a workspace. Archival requires a
-separately reviewed migration; completion in place preserves its evidence.
+Completion in place (`status: complete`) runs through the `workspace.complete`
+gateway capability (`workspace-complete`), after clearing references to the
+workspace from `work/COORDINATION.md`; body sections and sibling workspace files
+stay intact. No gateway capability currently moves a workspace into
+`archive/workspaces/<year>/<workspace-id>/`: archival remains a separately
+reviewed migration whose `source_plan.path` link updates go through
+`unit.plan.revise`.
 
 Standing workspaces (`standing: true`) are exempt from this workflow.
 

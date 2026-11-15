@@ -53,7 +53,8 @@ unchanged
    facts in that same module; attempts still record what Aram actually chose;
    set a known withdrawal deadline on an existing sitting through
    `module.sitting.update` (CLI `module-sitting`, envelope recipe §25c);
-3. update module `status` when warranted;
+3. update module `status` when warranted through `module.status.update`
+   (CLI `module-status-update`, envelope recipe §25c);
 4. rebuild module and coordination views.
 
 ```scrut {output_stream: stderr}

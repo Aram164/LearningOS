@@ -24,6 +24,7 @@ from learning_os.store.contracts.manifest_contract import (
     check as check_manifest_contract,
 )
 from learning_os.store.contracts.manifest_contract import (
+    declared_closure_sha256,
     declared_schema_sha256,
     declared_version,
 )
@@ -141,9 +142,15 @@ def _core_ui_lock_check(root: Path, *, ui_root: Path | None = None) -> dict[str,
     try:
         lock = json.loads(ui_lock.read_text(encoding="utf-8"))
         expected_hash = declared_schema_sha256(root)
+        expected_closure = declared_closure_sha256(root)
         actual_version = lock.get("contract_version") if isinstance(lock, dict) else None
         actual_hash = lock.get("schema_sha256") if isinstance(lock, dict) else None
-        matched = actual_version == expected_version and actual_hash == expected_hash
+        actual_closure = lock.get("closure_sha256") if isinstance(lock, dict) else None
+        matched = (
+            actual_version == expected_version
+            and actual_hash == expected_hash
+            and actual_closure == expected_closure
+        )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return _check(
             "schema-core-ui-lock", "error", f"Cannot verify the UI contract lock: {exc}",
@@ -151,13 +158,15 @@ def _core_ui_lock_check(root: Path, *, ui_root: Path | None = None) -> dict[str,
         )
     return _check(
         "schema-core-ui-lock", "ok" if matched else "error",
-        "Core and UI require the same Manifest version and exact schema hash."
+        "Core and UI require the same Manifest version, schema hash, and closure digest."
         if matched else "Core and UI Manifest locks disagree.",
         "core-ui", "Ship the producer schema and UI lock as one coordinated change.",
         core_version=expected_version,
         ui_version=actual_version,
         core_schema_sha256=expected_hash,
         ui_schema_sha256=actual_hash,
+        core_closure_sha256=expected_closure,
+        ui_closure_sha256=actual_closure,
     )
 
 

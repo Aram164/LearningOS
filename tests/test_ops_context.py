@@ -39,9 +39,10 @@ def _gateway(expected):
     )
 
 
-def _run_expected_ok(root, expected):
+def _run_expected_ok(root, expected, *, gateway=None):
     """Boolean form of require_snapshot (the dissolved _expected_ok twin)."""
-    return _run_require_snapshot(_ctx(root), expected) is None, None
+    ctx = _ctx(root, gateway=gateway)
+    return _run_require_snapshot(ctx, expected) is None, None
 
 
 def _run_require_snapshot(ctx, expected):
@@ -57,8 +58,8 @@ def _run_require_snapshot(ctx, expected):
 
 
 def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
-                    exc_type, code):
-    """require_snapshot refuses: text, code and exit 3, never printed."""
+                    exc_type, code, expected_exit: int = 3):
+    """require_snapshot refuses: text, code and expected exit, never printed."""
     ctx = _ctx(root, gateway=gateway)
     managers = []
     if gateway is not None:
@@ -68,7 +69,7 @@ def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
     with contextlib.ExitStack() as stack:
         for manager in managers:
             stack.enter_context(manager)
-        ok, recorded = _run_expected_ok(root, expected)
+        ok, recorded = _run_expected_ok(root, expected, gateway=gateway)
         out, err = capsys.readouterr()
         exc = _run_require_snapshot(ctx, expected)
         out2, err2 = capsys.readouterr()
@@ -79,8 +80,8 @@ def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
     assert lines and lines[0].startswith("los: ")
     assert str(exc) == lines[0][len("los: "):] + (
         "" if len(lines) == 1 else "\n" + "\n".join(lines[1:]))
-    assert exit_for(exc, "cli") == 3
-    assert exit_for(exc, "gateway.dispatch") == 3
+    assert exit_for(exc, "cli") == expected_exit
+    assert exit_for(exc, "gateway.dispatch") == expected_exit
     assert (exc.gateway_code, exc.gateway_retryable) == code
     return recorded
 
@@ -119,26 +120,27 @@ def test_repo_and_snapshot_id_load_once_per_context(mini_repo, monkeypatch):
     assert calls == {"load": 2, "walk": 2}
 
 
-def test_none_is_unconditionally_ok(mini_repo, capsys):
-    ok, recorded = _run_expected_ok(mini_repo, None)
-    out, err = capsys.readouterr()
-    assert (ok, recorded, out, err) == (True, None, "", "")
-    assert _run_require_snapshot(_ctx(mini_repo), None) is None
-    assert capsys.readouterr() == ("", "")
+def test_without_gateway_always_refuses_even_with_matching_or_none_snapshot(mini_repo, capsys):
+    live = f"sha256:{canonical_fingerprint(mini_repo)}"
+    for candidate in (None, "", "   ", live, STALE):
+        recorded = _assert_refusal(
+            mini_repo, capsys, expected=candidate,
+            exc_type=WriteRefused, code=(INVALID_REQUEST, False),
+            expected_exit=2,
+        )
+        assert recorded is None
+        exc = _run_require_snapshot(_ctx(mini_repo), candidate)
+        assert isinstance(exc, WriteRefused)
+        assert exc.exit_code == 2
+        assert "GatewayEnvelopeV2" in exc.gateway_message
 
 
-def test_empty_token_is_write_refused_with_exit_3(mini_repo, capsys):
-    recorded = _assert_refusal(
-        mini_repo, capsys, expected="",
-        exc_type=WriteRefused, code=(INVALID_REQUEST, False))
-    assert recorded is None
-
-
-def test_whitespace_token_is_write_refused_with_exit_3(mini_repo, capsys):
-    recorded = _assert_refusal(
-        mini_repo, capsys, expected="   ",
-        exc_type=WriteRefused, code=(INVALID_REQUEST, False))
-    assert recorded is None
+def test_none_or_empty_token_in_gateway_is_write_refused_with_exit_3(mini_repo, capsys):
+    for candidate in (None, "", "   "):
+        recorded = _assert_refusal(
+            mini_repo, capsys, expected=candidate, gateway=_gateway(str(candidate or "")),
+            exc_type=WriteRefused, code=(INVALID_REQUEST, False))
+        assert recorded is None
 
 
 def test_empty_token_with_unverified_context_still_refuses(mini_repo, capsys):
@@ -148,8 +150,10 @@ def test_empty_token_with_unverified_context_still_refuses(mini_repo, capsys):
     assert recorded is None
 
 
-def test_empty_token_carries_an_explicit_exit_3(mini_repo):
-    exc = _run_require_snapshot(_ctx(mini_repo), "")
+def test_empty_token_in_gateway_carries_an_explicit_exit_3(mini_repo):
+    gateway = _gateway("")
+    with gateway_request_context(gateway):
+        exc = _run_require_snapshot(_ctx(mini_repo, gateway=gateway), "")
     assert isinstance(exc, WriteRefused) and not isinstance(exc, StaleSnapshot)
     assert exc.exit_code == 3
 
@@ -164,42 +168,24 @@ def test_verified_gateway_shortcut_never_walks(mini_repo, capsys, monkeypatch):
     gateway = _gateway(live)
     monkeypatch.setattr(context_module, "canonical_fingerprint", no_walk)
     with gateway_request_context(gateway), verified_gateway_snapshot(mini_repo, live):
-        ok, recorded = _run_expected_ok(mini_repo, live)
+        ok, recorded = _run_expected_ok(mini_repo, live, gateway=gateway)
         out, err = capsys.readouterr()
         exc = _run_require_snapshot(_ctx(mini_repo, gateway=gateway), live)
         out2, err2 = capsys.readouterr()
     assert (ok, recorded, out, err, exc, out2, err2) == (
         True, None, "", "", None, "", "")
-
-
-def test_match_is_ok_without_a_gateway(mini_repo, capsys):
-    live = f"sha256:{canonical_fingerprint(mini_repo)}"
-    ok, recorded = _run_expected_ok(mini_repo, live)
-    out, err = capsys.readouterr()
-    assert (ok, recorded, out, err) == (True, None, "", "")
-    assert _run_require_snapshot(_ctx(mini_repo), live) is None
-    assert capsys.readouterr() == ("", "")
 
 
 def test_match_with_unverified_context_is_ok(mini_repo, capsys):
     live = f"sha256:{canonical_fingerprint(mini_repo)}"
     gateway = _gateway(live)
     with gateway_request_context(gateway):
-        ok, recorded = _run_expected_ok(mini_repo, live)
+        ok, recorded = _run_expected_ok(mini_repo, live, gateway=gateway)
         out, err = capsys.readouterr()
         exc = _run_require_snapshot(_ctx(mini_repo, gateway=gateway), live)
         out2, err2 = capsys.readouterr()
     assert (ok, recorded, out, err, exc, out2, err2) == (
         True, None, "", "", None, "", "")
-
-
-def test_stale_without_gateway_is_a_stale_snapshot(mini_repo, capsys):
-    live = f"sha256:{canonical_fingerprint(mini_repo)}"
-    assert live != STALE
-    recorded = _assert_refusal(
-        mini_repo, capsys, expected=STALE,
-        exc_type=StaleSnapshot, code=(STALE_SNAPSHOT, True))
-    assert recorded is None
 
 
 def test_stale_with_gateway_is_a_stale_snapshot(mini_repo, capsys):
@@ -222,13 +208,10 @@ def test_handler_token_mismatch_is_a_stale_snapshot(mini_repo, capsys):
 
 def test_stale_branches_resolve_exit_3_by_default(mini_repo):
     live = f"sha256:{canonical_fingerprint(mini_repo)}"
-    for expected, gateway in ((STALE, None), (STALE, _gateway(STALE)),
+    for expected, gateway in ((STALE, _gateway(STALE)),
                               (STALE, _gateway(live))):
-        if gateway is None:
-            exc = _run_require_snapshot(_ctx(mini_repo), expected)
-        else:
-            with gateway_request_context(gateway):
-                exc = _run_require_snapshot(_ctx(mini_repo, gateway=gateway), expected)
+        with gateway_request_context(gateway):
+            exc = _run_require_snapshot(_ctx(mini_repo, gateway=gateway), expected)
         assert type(exc) is StaleSnapshot
         assert exc.exit_code is None
         assert exit_for(exc, "cli") == 3

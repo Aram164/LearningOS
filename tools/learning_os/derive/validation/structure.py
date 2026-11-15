@@ -154,11 +154,14 @@ class ChecksStructure:
                               self._rel(d))
         # Binary files under knowledge/ outside attachments/
         knowledge = r.root / "knowledge"
+        summaries_root = knowledge / "summaries"
         if knowledge.is_dir():
             for f in sorted(knowledge.rglob("*")):
                 if not f.is_file():
                     continue
                 if attach_root in f.parents:
+                    continue
+                if summaries_root in f.parents and f.name == "meta.json":
                     continue
                 if f.suffix.lower() not in KNOWLEDGE_TEXT_SUFFIXES:
                     self.warn("BINARY-IN-KNOWLEDGE",

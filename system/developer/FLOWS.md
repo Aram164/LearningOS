@@ -137,3 +137,31 @@ The UI boundary was traced in sibling `src/infrastructure/los-runtime.ts` at
 UI `f7dbc1f`. This Core-only checker does not validate TypeScript symbols.
 The read shown is an example; it does not claim every UI read is bootstrap.
 A stale read publishes through the generation path above, so the next read reuses.
+
+## Sandboxed study session
+
+<!-- system-map:participant L tools/study_launch.py::launch_study -->
+<!-- system-map:participant B tools/learning_os/adapters/study_broker.py::BrokerServer -->
+<!-- system-map:participant S tools/learning_os/adapters/study_broker.py::StudyBroker.handle_request -->
+<!-- system-map:participant C tools/los.py::main -->
+
+<!-- system-map:symbol tools/study_launch.py::launch_study -->
+<!-- system-map:symbol tools/learning_os/adapters/study_broker.py::BrokerServer -->
+<!-- system-map:symbol tools/learning_os/adapters/study_broker.py::StudyBroker -->
+<!-- system-map:symbol tools/learning_os/adapters/study_broker.py::StudyBroker.handle_request -->
+<!-- system-map:symbol tools/los.py::main -->
+
+```mermaid
+sequenceDiagram
+  participant L as study_launch.launch_study
+  participant B as study_broker.BrokerServer
+  participant S as study_broker.StudyBroker.handle_request
+  participant C as los.main
+  L->>B: mint session UUID, bind AF_UNIX socket, run agent under Seatbelt
+  L-->>B: sandboxed child sends los or seal request via LOS_GATE_SOCK
+  B->>S: forward single JSON request to host broker
+  S->>C: inject --session and execute allowlisted command or seal
+  C-->>S: JSON result, exit code, and reading-memory state
+  S-->>B: bounded stdout/stderr reply over socket
+  L->>L: record session_end in finally and unlink socket
+```

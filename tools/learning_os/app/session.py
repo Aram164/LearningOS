@@ -16,6 +16,7 @@ import re
 import subprocess
 from pathlib import Path
 
+from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.app.projection import publish as _publish
 from learning_os.app.validation import validation_run
 from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
@@ -225,9 +226,10 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     and exit. Business refusals raise the machine's `WriteRefused`
     subclasses; the handler gives them sites.
 
-    Runs under the pipeline's exclusive operator lock; the review
-    witness it persists is what bridges the interval between the
-    review and the later commit invocations.
+    Takes the exclusive operator lock around local ledger, validation,
+    publication, witness, commit, and `committed_unpushed` transitions, and
+    releases it before running network `git push` so concurrent readers and
+    UI writes do not stall behind the remote (D-17).
     """
     if close and commit_message:
         raise SessionUsageError(
@@ -237,150 +239,153 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         raise SessionChannelError(
             f"unknown session channel {channel!r} "
             f"(one of: {', '.join(sorted(GATEWAY_CHANNELS))})")
-    own_session = _current_session_id(channel=channel, explicit=session_id)
-    try:
-        envelope = _load_session_ledger(root, own_session)
-    except WriteRefused as exc:
-        raise SessionLedgerError(str(exc)) from exc
-    unpushed = envelope is not None and envelope["state"] == "committed_unpushed"
-    if unpushed and not close and not (push and not commit_message):
-        raise SessionCommittedError(
-            f"already committed as {envelope['commit_sha']}; use --push or --close")
-    retry = bool(unpushed and push and not commit_message and not close)
-    if retry:
-        head = _current_head(root)
-        if head != envelope["commit_sha"]:
-            raise SessionHeadMovedError(
-                f"session commit {envelope['commit_sha']} is no longer HEAD "
-                f"({head or 'unknown'}); push it by hand or close the session")
-    others = _load_other_session_ledgers(root, own_session)
-    recorded = envelope["paths"] if envelope is not None else {}
-    include_stale = bool(include_stale)
-    fresh = sorted(
-        path for path, row in recorded.items()
-        if Path(path).suffix.lower() != ".canvas" and not _row_is_stale(row)
-    )
-    stale_paths = sorted(
-        path for path, row in recorded.items()
-        if Path(path).suffix.lower() != ".canvas" and _row_is_stale(row)
-    )
-    # Only this session's own rows are ever claimed; foreign rows are
-    # reported under `other_sessions` and never staged, and stale own rows
-    # need the explicit opt-in.
-    touched = sorted(fresh + stale_paths) if include_stale else fresh
-    ownership_conflicts = _ownership_conflicts(root, touched, recorded)
-    # Validate the repository this session touched, in process. A failed
-    # close prints its issues; a clean one names where the baselined
-    # warnings are listed, as `validate.py --compact` does.
-    validation = validation_run(root)
-    if validation["errors"]:
-        raise ToolFailure("", "\n".join(validation["issues"]), 1)
-    validation_line = (f"0 error(s), {validation['warnings']} warning(s) — OK"
-                       "; warning list: generated/reports/validation-report.md")
-    _publish(root)
-    all_changed = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
-        cwd=root, capture_output=True, text=True, timeout=30,
-        env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"}).stdout.splitlines()
-    owned = [line for line in all_changed if line[3:] in touched]
-    unrelated = [line for line in all_changed if line[3:] not in touched]
-    payload = {"ok": True, "touched": touched, "owned_changes": owned,
-               "unrelated_changes": unrelated, "committed": bool(unpushed), "pushed": False,
-               "validation": validation_line,
-               "ownership_conflicts": ownership_conflicts,
-               "session_id": own_session,
-               # The calling client when it marks itself (`obsidian-ui/<build>`
-               # on every UI-spawned child); None for terminal agents, which
-               # stay valid unmarked. Informational: never a refusal input.
-               "client": os.environ.get(CLIENT_ENV),
-               "stale_paths": stale_paths,
-               "stale_hours": SESSION_LEDGER_STALE_HOURS,
-               "other_sessions": {
-                   identity: _other_session_summary(rows)
-                   for identity, rows in sorted(others.items())
-               }}
-    if retry:
-        pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
-                                text=True, timeout=180)
-        if pushed.returncode != 0:
-            raise ToolFailure(
-                stdout=pushed.stdout, stderr=pushed.stderr,
-                exit_code=pushed.returncode)
-        payload["pushed"] = True
-        _delete_session_ledger(root, own_session)
-        payload["session_closed"] = True
-        return payload
-    if not commit_message:
-        # A review never closes: it validates, publishes, and lists owned
-        # and unrelated changes while the ledger survives, so the documented
-        # review-then-commit sequence can stage exactly the reviewed list.
-        # Only the explicit --close ends this session's ownership window,
-        # deleting just its own ledger; foreign ledgers are left untouched
-        # either way, so closing here never wipes another session's (or the
-        # UI's) unclaimed rows. Running a review twice shows the same list.
-        if close:
-            _close_session_ledger(root, own_session)
-            payload["session_closed"] = True
-        else:
-            if not unpushed:
-                _persist_review(root, own_session, envelope, touched)
-            payload["session_closed"] = False
-        return payload
-    if not touched:
-        raise SessionEmptyError(
-            "no files were touched through this learning session")
-    ownership_conflicts = _ownership_conflicts(root, touched, recorded)
-    payload["ownership_conflicts"] = ownership_conflicts
-    if ownership_conflicts:
-        raise SessionConflictError(
-            "refusing to stage files changed after their recorded LearningOS "
-            "transaction: " + ", ".join(ownership_conflicts))
-    _verify_witness(root, envelope, touched)
-    changed_paths = {line[3:] for line in all_changed}
-    stage_paths = [
-        path for path in touched
-        if (root / path).exists() or path in changed_paths
-    ]
-    if stage_paths:
-        added = subprocess.run(
-            ["git", "add", "--", *stage_paths],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            timeout=30,
+    with _operator_lock(root):
+        own_session = _current_session_id(channel=channel, explicit=session_id)
+        try:
+            envelope = _load_session_ledger(root, own_session)
+        except WriteRefused as exc:
+            raise SessionLedgerError(str(exc)) from exc
+        unpushed = envelope is not None and envelope["state"] == "committed_unpushed"
+        if unpushed and not close and not (push and not commit_message):
+            raise SessionCommittedError(
+                f"already committed as {envelope['commit_sha']}; use --push or --close")
+        retry = bool(unpushed and push and not commit_message and not close)
+        if retry:
+            head = _current_head(root)
+            if head != envelope["commit_sha"]:
+                raise SessionHeadMovedError(
+                    f"session commit {envelope['commit_sha']} is no longer HEAD "
+                    f"({head or 'unknown'}); push it by hand or close the session")
+        others = _load_other_session_ledgers(root, own_session)
+        recorded = envelope["paths"] if envelope is not None else {}
+        include_stale = bool(include_stale)
+        fresh = sorted(
+            path for path, row in recorded.items()
+            if Path(path).suffix.lower() != ".canvas" and not _row_is_stale(row)
         )
-        if added.returncode != 0:
-            raise ToolFailure(
-                stdout=added.stdout,
-                stderr=added.stderr,
-                exit_code=added.returncode,
-            )
-    commit = subprocess.run(["git", "commit", "-m", commit_message], cwd=root,
-                            capture_output=True, text=True, timeout=180)
-    if commit.returncode != 0:
-        raise ToolFailure(
-            stdout=commit.stdout, stderr=commit.stderr,
-            exit_code=commit.returncode)
-    payload["committed"] = True
-    if push:
-        pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
-                                text=True, timeout=180)
-        if pushed.returncode != 0:
+        stale_paths = sorted(
+            path for path, row in recorded.items()
+            if Path(path).suffix.lower() != ".canvas" and _row_is_stale(row)
+        )
+        # Only this session's own rows are ever claimed; foreign rows are
+        # reported under `other_sessions` and never staged, and stale own rows
+        # need the explicit opt-in.
+        touched = sorted(fresh + stale_paths) if include_stale else fresh
+        ownership_conflicts = _ownership_conflicts(root, touched, recorded)
+        if not retry and commit_message and ownership_conflicts:
+            raise SessionConflictError(
+                "refusing to stage files changed after their recorded LearningOS "
+                "transaction: " + ", ".join(ownership_conflicts))
+        # Validate the repository this session touched, in process. A failed
+        # close prints its issues; a clean one names where the baselined
+        # warnings are listed, as `validate.py --compact` does.
+        validation = validation_run(root)
+        if validation["errors"]:
+            raise ToolFailure("", "\n".join(validation["issues"]), 1)
+        validation_line = (f"0 error(s), {validation['warnings']} warning(s) — OK"
+                           "; warning list: generated/reports/validation-report.md")
+        _publish(root)
+        all_changed = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
+            cwd=root, capture_output=True, text=True, timeout=30,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"}).stdout.splitlines()
+        owned = [line for line in all_changed if line[3:] in touched]
+        unrelated = [line for line in all_changed if line[3:] not in touched]
+        payload = {"ok": True, "touched": touched, "owned_changes": owned,
+                   "unrelated_changes": unrelated, "committed": bool(unpushed), "pushed": False,
+                   "validation": validation_line,
+                   "ownership_conflicts": ownership_conflicts,
+                   "session_id": own_session,
+                   # The calling client when it marks itself (`obsidian-ui/<build>`
+                   # on every UI-spawned child); None for terminal agents, which
+                   # stay valid unmarked. Informational: never a refusal input.
+                   "client": os.environ.get(CLIENT_ENV),
+                   "stale_paths": stale_paths,
+                   "stale_hours": SESSION_LEDGER_STALE_HOURS,
+                   "other_sessions": {
+                       identity: _other_session_summary(rows)
+                       for identity, rows in sorted(others.items())
+                   }}
+        if not retry:
+            if not commit_message:
+                # A review never closes: it validates, publishes, and lists owned
+                # and unrelated changes while the ledger survives, so the documented
+                # review-then-commit sequence can stage exactly the reviewed list.
+                # Only the explicit --close ends this session's ownership window,
+                # deleting just its own ledger; foreign ledgers are left untouched
+                # either way, so closing here never wipes another session's (or the
+                # UI's) unclaimed rows. Running a review twice shows the same list.
+                if close:
+                    _close_session_ledger(root, own_session)
+                    payload["session_closed"] = True
+                else:
+                    if not unpushed:
+                        _persist_review(root, own_session, envelope, touched)
+                    payload["session_closed"] = False
+                return payload
+            if not touched:
+                raise SessionEmptyError(
+                    "no files were touched through this learning session")
+            ownership_conflicts = _ownership_conflicts(root, touched, recorded)
+            payload["ownership_conflicts"] = ownership_conflicts
+            if ownership_conflicts:
+                raise SessionConflictError(
+                    "refusing to stage files changed after their recorded LearningOS "
+                    "transaction: " + ", ".join(ownership_conflicts))
+            _verify_witness(root, envelope, touched)
+            changed_paths = {line[3:] for line in all_changed}
+            stage_paths = [
+                path for path in touched
+                if (root / path).exists() or path in changed_paths
+            ]
+            if stage_paths:
+                added = subprocess.run(
+                    ["git", "add", "--", *stage_paths],
+                    cwd=root,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                )
+                if added.returncode != 0:
+                    raise ToolFailure(
+                        stdout=added.stdout,
+                        stderr=added.stderr,
+                        exit_code=added.returncode,
+                    )
+            commit = subprocess.run(["git", "commit", "-m", commit_message], cwd=root,
+                                    capture_output=True, text=True, timeout=180)
+            if commit.returncode != 0:
+                raise ToolFailure(
+                    stdout=commit.stdout, stderr=commit.stderr,
+                    exit_code=commit.returncode)
+            payload["committed"] = True
+            if not push:
+                _delete_session_ledger(root, own_session)
+                payload["session_closed"] = True
+                return payload
             sha = _current_head(root)
             if sha is None:  # pragma: no cover - the commit just succeeded
                 raise SessionLedgerError(
                     "cannot record the unpushed commit: HEAD is unresolvable")
+            # Persist committed_unpushed under the lock BEFORE dropping it for
+            # network push, so same-session writes refuse cleanly while concurrent
+            # readers/writers in other sessions do not block behind git push.
             _write_session_ledger(
                 root, recorded, own_session,
                 version=envelope["version"] if envelope is not None else 0,
                 state="committed_unpushed",
                 review=envelope["review"] if envelope is not None else None,
                 commit_sha=sha)
-            raise ToolFailure(
-                stdout=pushed.stdout, stderr=pushed.stderr,
-                exit_code=pushed.returncode)
-        payload["pushed"] = True
-    _delete_session_ledger(root, own_session)
+
+    pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
+                            text=True, timeout=180)
+    if pushed.returncode != 0:
+        raise ToolFailure(
+            stdout=pushed.stdout, stderr=pushed.stderr,
+            exit_code=pushed.returncode)
+    payload["pushed"] = True
+    with _operator_lock(root):
+        _delete_session_ledger(root, own_session)
     payload["session_closed"] = True
     return payload
 

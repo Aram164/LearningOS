@@ -107,7 +107,6 @@ def _observe_offer(unit_id: str, stage: dict) -> dict:
 @register("stage.progress.update", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def stage_progress(ctx: OpContext, req: dict) -> Result:
     """Move one stage's status and record progress against it."""
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     unit_data = copy.deepcopy(unit.data)
@@ -190,7 +189,6 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
 def stage_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a stage's working note."""
     root = ctx.root
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     stage = require_stage(ctx, study_map.data, req["stage_id"])
     target = root / str(stage.get("working_note", ""))
@@ -287,7 +285,6 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         ) from exc
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     stage = require_stage(ctx, data, req["stage_id"])
@@ -325,7 +322,6 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
 @register("detour.create", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def detour_create(ctx: OpContext, req: dict) -> Result:
     """Open a scoped detour off one stage."""
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     stage = require_stage(ctx, data, req["stage_id"])
@@ -386,7 +382,6 @@ def _stage(data: dict, stage_id: str):
 @register("detour.resolve", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def detour_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve a detour and reactivate its return stage."""
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     detour = next((row for row in data.get("detours", []) or []
@@ -438,7 +433,6 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
 @register("source.feedback.record", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def source_feedback(ctx: OpContext, req: dict) -> Result:
     """Record source feedback against an exact unit/stage/source."""
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     if req["source_id"] not in repo.sources:
         message = not_found("source", req["source_id"], repo.sources)
@@ -555,7 +549,6 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         ) from exc
 
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     stage_ids = list(dict.fromkeys(req.get("stage_id") or []))
     allowed = {row.get("id") for row in study_map.data.get("stages", []) or []}
@@ -682,7 +675,6 @@ def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
 @register("unit.source-selection.set", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def unit_source_selection(ctx: OpContext, req: dict) -> Result:
     """Persist one learner choice without changing the complete material menu."""
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     unit = repo.units.get(req["unit_id"])
     if unit is None:

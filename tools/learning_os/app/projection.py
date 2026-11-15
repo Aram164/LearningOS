@@ -30,12 +30,22 @@ from learning_os.store.manifest_identity import (
 )
 
 
+def publish_with_paths(root: Path) -> list[str]:
+    """Rebuild and publish generated/ atomically under the exclusive operator lock."""
+    with _operator_lock(root):
+        inputs_before = observe_inputs(root)
+        repo = load_repo(root)
+        outputs = generate_all(repo, inputs_before=inputs_before)
+        write_outputs(repo, outputs)
+        return sorted(outputs)
+
+
 def publish(root: Path) -> None:
-    publish_repo(load_repo(root))
+    publish_with_paths(root)
 
 
-def publish_repo(repo) -> None:
-    write_outputs(repo, generate_all(repo))
+def publish_repo(repo, *, inputs_before: dict | None = None) -> None:
+    write_outputs(repo, generate_all(repo, inputs_before=inputs_before))
 
 
 class _LazyRepo:
@@ -207,8 +217,14 @@ def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
     if (manifest.get("_generated") or {}).get("snapshot_id") != live:
         return None
     try:
-        outputs = generate_all(repo, generated_at, backlinks=backlinks, manifest=manifest)
-        identity = json.loads(outputs[IDENTITY_FILENAME])
+        outputs = generate_all(
+            repo, generated_at, backlinks=backlinks, manifest=manifest,
+            inputs_before=inputs_before,
+        )
+        raw_identity = outputs.get(IDENTITY_FILENAME)
+        if raw_identity is None:
+            return None
+        identity = json.loads(raw_identity)
         if any(identity.get(key) != value for key, value in inputs_before.items()):
             return None
         write_outputs(repo, outputs)

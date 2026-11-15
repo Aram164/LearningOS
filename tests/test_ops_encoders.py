@@ -183,6 +183,7 @@ EXPECTED_JSON_FORMATS = {
     "module.materials.compact": ('compact',),
     "module.plan.import": ('indented', 'indented_sorted', 'unescaped'),
     "module.sitting.update": ('unescaped',),
+    "module.status.update": ('unescaped',),
     "note.analysis.save": ('unescaped',),
     "note.analysis.save_batch": ('unescaped',),
     "note.content": ('compact',),
@@ -213,6 +214,7 @@ EXPECTED_JSON_FORMATS = {
     "unit.note.append": ('unescaped',),
     "unit.plan.revise": ('indented_sorted', 'unescaped'),
     "unit.source-selection.set": ('unescaped',),
+    "workspace.complete": ('unescaped',),
     "workspace.next-action.update": ('unescaped',),
 }
 

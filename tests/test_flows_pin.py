@@ -26,7 +26,7 @@ FLOWS = CORE_ROOT / "system" / "developer" / "FLOWS.md"
 
 #: Repository routing Git exports to hooks. Each call below names its
 #: repository with ``-C``; an inherited GIT_DIR would override that and read
-#: Core's index and HEAD for the UI (verified_pairs.GIT_ROUTING, #24).
+#: Core's index and HEAD for the UI (#24).
 GIT_ROUTING = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR",
                "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
                "GIT_NAMESPACE", "GIT_PREFIX")

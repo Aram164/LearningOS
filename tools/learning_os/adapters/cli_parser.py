@@ -101,6 +101,7 @@ _SUBCOMMAND_ORDER = (
     "module-plan-import",
     "module-attempt",
     "module-sitting",
+    "module-status-update",
     "unit-plan-revise",
     "lineage-restamp",
     "note-create",
@@ -132,6 +133,7 @@ _SUBCOMMAND_ORDER = (
     "session-end",
     "coordination-section-revise",
     "workspace-next-action",
+    "workspace-complete",
     "operations",
 )
 
@@ -160,7 +162,7 @@ def _first_subcommand(choices) -> str | None:
 
 
 class _LosArgumentParser(argparse.ArgumentParser):
-    """Root parser that blames the subcommand, not the 93-command list.
+    """Root parser that blames the subcommand, not the 95-command list.
 
     Argparse reports unrecognized arguments at the parser owning the
     subparsers action — the root — so ``los inspect X --bogus`` dumped the

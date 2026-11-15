@@ -36,14 +36,17 @@ contract hold unchanged:
    read whole into memory. An inverted index over 71,120 textbook pages (~243 MB)
    requires paged random B-tree lookups (`mode=ro`) rather than whole-blob JSON
    deserialization.
-4. **Precedent in projection publication.** The projection publisher
-   (`learning_os.derive.projection.outputs`, `outputs.py:102-108`) already exempts
-   sibling tool-maintained caches under `generated/` (`text-cache`,
-   `material-slices`, `material-summaries`, and `reports`) via `_KEEP_TOP_DIRS`.
-   `SEARCH_TOP_DIR = "material-search"` is declared in
-   `learning_os.domain.validation.GENERATED_DIRECTORIES` and imported into
-   `_KEEP_TOP_DIRS` so `write_outputs` preserves `generated/material-search/`
-   across view rebuilds.
+4. **Precedent in projection publication.** Sibling tool-maintained caches
+   under `generated/` are declared once in `system/contracts/tree-contract.yaml`
+   (`rebuildable: false` children: `text-cache`, `dossiers`, `derived-state`,
+   `material-search`, `material-outlines`), loaded into projection publisher
+   `_KEEP_TOP_DIRS` via
+   `learning_os.store.contracts.tree_contract.generated_keep_directories()`
+   (`tools/learning_os/derive/projection/outputs.py:122`) and into
+   `GENERATED_DIRECTORIES` via `generated_directories()`
+   (`tools/learning_os/derive/validation/registries.py:17`) so `write_outputs`
+   preserves `generated/material-search/` across view rebuilds (while
+   rebuildable `reports` and `collections` are regenerated cleanly).
 
 ## Empirical evaluation (Phase 3)
 

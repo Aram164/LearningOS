@@ -79,7 +79,8 @@ def test_ordinary_ci_runs_every_gate_stage():
     # tests exercise identity equality, including duplicate-plus-omission.
     checker = (ROOT / "tools/check_shard_completeness.py").read_text(encoding="utf-8")
     assert '"--collect-only"' in checker
-    assert '"not live_install"' in checker
+    assert "--zero-skip-junit" in checker
+    assert "not live_install" not in checker
 
 
 def test_ordinary_ci_cannot_silently_omit_the_recovery_harness():
@@ -126,35 +127,56 @@ def test_ordinary_ci_does_not_run_full_stress():
 
 
 def _pytest_leg_steps(doc: dict) -> list[dict]:
-    """Steps that run one suite shard: pytest writing JUnit results."""
-    return [step for job in doc.get("jobs", {}).values()
+    """Steps that run one suite shard: pytest writing shard JUnit results."""
+    return [step for job_id, job in doc.get("jobs", {}).items()
+            if job_id != "seatbelt-macos"
             for step in job.get("steps", [])
             if "-m pytest" in step.get("run", "")
             and "--junitxml" in step.get("run", "")]
 
 
-def test_ci_deselects_only_live_installation_tests():
-    """Every suite shard drops exactly the `live_install` marker.
+def test_ci_runs_full_collected_suite_and_dynamic_ratchet_base():
+    """Every shard leg runs the full collected suite with a dynamic base.
 
-    Those tests need state no checkout carries. Anything broader — `not
-    full_repo`, a `-k` filter, a second marker — would quietly shrink what
-    a green run proves, so the selection is pinned exactly per shard; the
-    gate job's completeness proof re-derives the expected total from a
-    fresh full collection carrying the same deselection, so a shard that
-    selected less would fail that proof, not pass silently.
+    No marker deselections (like the retired `live_install`) shrink coverage,
+    and `LOS_RATCHET_BASE` is resolved dynamically rather than hardcoded to
+    `origin/main` (which compares HEAD against HEAD on push/dispatch to main).
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
-        legs = _pytest_leg_steps(_load(workflow))
+        doc = _load(workflow)
+        legs = _pytest_leg_steps(doc)
         assert legs, workflow.name
         for step in legs:
             env = step.get("env", {})
-            assert env.get("PYTEST_ADDOPTS") == '-m "not live_install"', (
+            assert "PYTEST_ADDOPTS" not in env, (workflow.name, step.get("name"))
+            assert env.get("LOS_RATCHET_BASE") == "${{ steps.ratchet.outputs.base }}", (
                 workflow.name, step.get("name"))
-            assert set(env) <= {"PYTEST_ADDOPTS", "LOS_RATCHET_BASE",
-                                "SHARD", "PICKED"}, (workflow.name, sorted(env))
+            assert set(env) == {"LOS_RATCHET_BASE", "SHARD", "PICKED"}, (
+                workflow.name, sorted(env))
             assert "-k " not in step["run"], (
                 workflow.name, step.get("name"),
                 "a shard leg must not select tests itself")
+        text = workflow.read_text(encoding="utf-8")
+        assert "not live_install" not in text, workflow.name
+        assert "LOS_RATCHET_BASE: origin/main" not in text, workflow.name
+
+
+def test_hosted_gates_run_macos_seatbelt_without_skips():
+    """Both workflows verify Seatbelt sandboxing natively on Darwin with zero skips."""
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        doc = _load(workflow)
+        jobs = doc.get("jobs", {})
+        assert "seatbelt-macos" in jobs, workflow.name
+        sb = jobs["seatbelt-macos"]
+        assert sb.get("runs-on") == "macos-15", workflow.name
+        runs = "\n".join(s.get("run", "") for s in sb.get("steps", []))
+        assert "tests/test_study_launch.py" in runs, workflow.name
+        assert "--junitxml=../seatbelt-out/seatbelt.xml" in runs, workflow.name
+        assert "--zero-skip-junit ../seatbelt-out/seatbelt.xml" in runs, workflow.name
+        gate = jobs["gate"]
+        assert "seatbelt-macos" in gate.get("needs", []), workflow.name
+        gate_runs = "\n".join(s.get("run", "") for s in gate.get("steps", []))
+        assert "--zero-skip-junit ../seatbelt-in/seatbelt.xml" in gate_runs, workflow.name
 
 
 def test_workflow_run_scripts_never_interpolate_github_expressions():
@@ -170,8 +192,19 @@ def test_workflow_run_scripts_never_interpolate_github_expressions():
 
 def test_release_pair_workflow_declares_exact_sha_inputs():
     inputs = _triggers(_load(RELEASE_PAIR))["workflow_dispatch"]["inputs"]
-    assert set(inputs) == {"core_sha", "ui_sha"}
-    assert all(spec.get("required") for spec in inputs.values())
+    assert {"core_sha", "ui_sha"}.issubset(inputs)
+    assert set(inputs) <= {"core_sha", "ui_sha", "core_ratchet_base"}
+    assert inputs["core_sha"].get("required") is True
+    assert inputs["ui_sha"].get("required") is True
+    if "core_ratchet_base" in inputs:
+        assert inputs["core_ratchet_base"].get("required") is False
+    text = RELEASE_PAIR.read_text(encoding="utf-8")
+    assert (
+        text.count(
+            "CORE_RATCHET_BASE_INPUT: ${{ github.event.inputs.core_ratchet_base }}"
+        )
+        == 2
+    )
 
 
 def test_release_pair_workflow_validates_and_uses_full_sha_format():

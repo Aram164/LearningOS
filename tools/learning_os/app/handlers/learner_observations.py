@@ -47,7 +47,6 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     workspace = repo.workspaces.get(req["workspace"])
     if workspace is None or workspace.archived or workspace.status != "active":
@@ -246,7 +245,6 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
         raise WriteRefused(str(exc)) from exc
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     workspace = repo.workspaces.get(req["workspace"])
     if workspace is None or workspace.archived or workspace.status != "active":
@@ -494,7 +492,6 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     workspace = repo.workspaces.get(req["workspace"])
     if workspace is None or workspace.archived or workspace.status != "active":

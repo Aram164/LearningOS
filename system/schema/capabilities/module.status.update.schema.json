@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.status.update.schema.json",
+  "title": "payload for capability module.status.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id",
+    "status"
+  ],
+  "properties": {
+    "module_id": {
+      "type": "string",
+      "description": "module identifier (from `los module-list --json`)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "enrolled",
+        "active",
+        "paused",
+        "awaiting-grade",
+        "completed",
+        "dropped",
+        "archived"
+      ],
+      "description": "new module status (planned, enrolled, active, paused, awaiting-grade, completed, dropped, or archived)"
+    }
+  }
+}

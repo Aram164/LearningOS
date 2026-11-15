@@ -481,7 +481,18 @@ def test_snapshot_check_does_not_parse_the_repository(
 
     monkeypatch.setattr(context_module, "load_repo", unexpected_load)
 
-    assert _snapshot_ok(mini_repo, expected) is True
+    gateway = GatewayRequestContext(
+        request_id="request-probe",
+        idempotency_key="idempotency-probe",
+        capability="test.probe",
+        channel="operator",
+        intent_sha256="sha256:" + "a" * 64,
+        approval_kind="operator-approval",
+        approval_subject_sha256="sha256:" + "a" * 64,
+        expected_snapshot=expected,
+    )
+    with gateway_request_context(gateway):
+        assert _snapshot_ok(mini_repo, expected) is True
 
 
 def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Path, capsys):
@@ -498,7 +509,7 @@ def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Pa
     ctx = OpContext(
         root=mini_repo, operation="test.probe", channel="operator",
         invocation="command", gateway=None)
-    with pytest.raises(StaleSnapshot) as caught:
+    with pytest.raises(WriteRefused) as caught:
         ctx.require_snapshot("sha256:" + "0" * 64)
     err = caught.value.gateway_message
     assert "direct CLI application is disabled" in err

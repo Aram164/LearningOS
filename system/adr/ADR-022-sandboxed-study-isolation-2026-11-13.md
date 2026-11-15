@@ -15,13 +15,20 @@ release certification.
    exposes only an unsandboxed host AF_UNIX gateway broker
    (`tools/learning_os/adapters/study_broker.py`) over `LOS_GATE_SOCK`:
    - Seatbelt uses `(allow default)` with explicit literal/subpath rules from
-     `tools/learning_os/store/study_fence.py::protected_reads` denying reads to
+     `tools/learning_os/store/study_fence.py` (`protected_reads` and
+     `protected_read_literals`) denying reads to `LearningOS/.env`,
      `LearningOS/materials/`, `LearningOS/reading-memory/`,
      `generated/text-cache/`, `generated/material-search/`,
      `generated/material-outlines/`, `generated/derived-state/`,
-     `generated/summaries/`, and all children of `operations/ai-actions/requests/`
-     except `.gitkeep`, while denying all writes anywhere under `LearningOS/`.
-   - `generated/summaries/` is read-denied alongside the text/search caches
+     `knowledge/summaries/`, and all children of `operations/ai-actions/requests/`
+     except `.gitkeep`, while denying all writes anywhere under `LearningOS/`
+     as well as instruction/config paths in the workspace wrapper
+     (`AGENTS.md`, `.claude/`, `.opencode/`, `.codex/`, `.gemini/`) and user
+     runtime home configs (`~/.claude/` outside runtime cache subdirectories,
+     `~/.codex/{AGENTS*.md,config.toml,rules,skills}`,
+     `~/.gemini/{GEMINI.md,settings.json,skills}`, `~/.agents/`, and
+     `~/.config/opencode/`).
+   - `knowledge/summaries/` is read-denied alongside the text/search caches
      because promoted chapter summaries (`tools/material_summarize.py`) can
      condense up to 80% (`MAX_SOURCE_FRACTION = 0.8`) of primary PDF page text.
    - Temporary files, `--check-out`, `--out`, and `--report-out` live in
@@ -32,12 +39,20 @@ release certification.
      LearningOS checkout and `--session` UUID (refusing pre-existing unrelated
      or other-session directories and write-denying the marker inside Seatbelt),
      which remains on disk until manually removed.
+   - `tools/study_launch.py` filters inherited host environment variables down
+     to an explicit POSIX/runtime/provider allowlist (dropping arbitrary host
+     secrets and `LOS_OBSERVATIONS`) before spawning the sandboxed child.
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
-     `material-study-span`, blocks file inputs touching `protected_reads(core)`
+     `material-study-span`, blocks file inputs touching `protected_read_targets(core)`
      or writes under `LearningOS/`, executes allowed read/study-write
-     subcommands in isolated `python -I` children, and keeps canonical commits
-     and host validation behind explicit host approval (`tools/seal_envelope.py`).
+     subcommands in isolated `python -I` children, restricts canonical writes to
+     an allowlisted study subset behind operator-approved, intent-bound envelopes
+     (`tools/seal_envelope.py`, excluding durable note creation/revision, unit
+     plan revision, concept-relation edits, review, and program mutations;
+     `unit-plan-revise --check` remains read-only preflight only), and refuses
+     UI or non-operator approval envelopes across both `seal_envelope` and
+     `los capability`.
 
 2. **Optional UX hooks and declared perimeter.**
    `tools/study_hooks.py` provides only optional lifecycle UX hooks
@@ -52,12 +67,17 @@ release certification.
    within-turn `overdue` escalation (`STOP_ASKS = 2`) depends on the `Stop` UX
    hook.
 
-3. **Boundary scope and runtime caches.**
-   Seatbelt `(allow default)` protects LearningOS canonical data, raw materials,
-   and `LearningOS/reading-memory/` integrity rather than full-host confinement.
-   Host agent runtime state outside `LearningOS/` (such as `~/.claude/projects/`
-   tool-result caches or agent session logs) stays writable and persists on
-   the host after `$LOS_SCRATCH_DIR` is removed.
+3. **Boundary scope, runtime caches, environment filtering, and egress.**
+   Seatbelt `(allow default)` protects LearningOS canonical data, `.env`,
+   raw materials, `LearningOS/reading-memory/`, and wrapper/user agent
+   instruction/configuration files rather than full-host confinement. Safe
+   runtime cache subdirectories outside `LearningOS/` (such as
+   `~/.claude/projects/` tool-result caches or agent session logs) stay writable
+   and persist on the host after `$LOS_SCRATCH_DIR` is removed.
+   `tools/study_launch.py` filters inherited host environment variables through
+   an explicit POSIX/runtime/provider allowlist (dropping unrelated host
+   secrets and `LOS_OBSERVATIONS`), while outbound HTTPS network access remains
+   permitted so supported AI runtimes can reach dynamic API/CDN endpoints.
 
 4. **V1 runtime certification, Darwin verification, and deferred items.**
    - **Supported study runtime (v1):** Release certification covers Claude Code

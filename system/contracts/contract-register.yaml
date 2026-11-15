@@ -15,7 +15,7 @@
 # anywhere that this was the arrangement. The gap was never a decision; it was
 # the absence of one.
 #
-# Deny by default: a `.yaml` under `system/contracts/` that is neither listed
+# Deny by default: a `.yaml` or `.json` under `system/contracts/` that is neither listed
 # below nor exempt fails `tests/test_contract_register.py`.
 #
 # HOW A ROW IS PROVED
@@ -46,7 +46,7 @@ contracts:
 
   - declaration: system/contracts/data-contract.yaml
     governs: >-
-      The fingerprint of the 31 stored record schemas under system/schema/
+      The fingerprint of the 38 stored record schemas under system/schema/
       (determined by filtering out schemas declaring x-governs: artifact). A
       schema edit that does not bump the contract fails closed.
     enforced_by: validator
@@ -221,13 +221,32 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v15.schema.json
+  - path: system/contracts/manifest-v19.schema.json
     reason: >-
-      The current projection schema. Named by manifest-contract.yaml and
-      enforced through it at build time, so it is not separately registered.
+      The current projection schema (system/contracts/manifest-v19.schema.json
+      per manifest-contract.yaml schema_path). Enforced through
+      manifest-contract.yaml at build time, so it is not separately registered.
       Superseded versioned schemas are not retained; their history lives in
-      Git and in manifest-contract.yaml, and every consumer mirrors only the
-      current version.
+      Git and in manifest-contract.yaml, and the UI mirrors only the current
+      version.
+
+  - path: system/contracts/agent-plan-input.schema.json
+    reason: >-
+      The shape of transient agent-plan input JSON files accepted by
+      tools/agent_run.py (validated by learning_os.store.contracts.agent_plans),
+      rather than a standing repository contract.
+
+  - path: system/contracts/agent-plan-report.schema.json
+    reason: >-
+      The shape of transient agent-plan execution reports emitted by
+      learning_os.app.agent_reporting (checked by tests/test_agent_run.py),
+      rather than a standing repository contract.
+
+  - path: system/contracts/review-consolidation.schema.json
+    reason: >-
+      The shape of a listed declaration
+      (system/contracts/review-consolidation.yaml), tested alongside it by
+      tests/test_review_consolidation.py.
 
   - path: system/contracts/contract-register.yaml
     reason: >-

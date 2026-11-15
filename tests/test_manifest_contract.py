@@ -22,11 +22,13 @@ import yaml
 
 from learning_os.derive.projection import generate_all
 from learning_os.derive.projection.manifest import build_manifest
+from learning_os.store.contracts.bundle import build_bundle, digest_of
 from learning_os.store.contracts.manifest_contract import (
     ManifestContractError,
     bump,
     check,
     contract_path,
+    declared_closure_sha256,
     declared_version,
     enforce,
     shape_of,
@@ -209,6 +211,9 @@ def test_bump_selects_and_hashes_the_new_versions_schema(mini_repo):
     assert updated["schema_sha256"] == (
         f"sha256:{hashlib.sha256(successor_schema.read_bytes()).hexdigest()}"
     )
+    assert updated["closure_sha256"] == digest_of(
+        build_bundle(successor_schema, mini_repo / "system" / "schema")
+    )
 
 
 def test_bump_refuses_to_activate_a_version_without_its_schema(mini_repo):
@@ -307,3 +312,30 @@ def test_unit_without_scope_sources_stays_projectable(mini_repo):
     assert ok, message
     [unit] = [r for r in manifest["units"] if r["id"] == "unit-demo-l01"]
     assert unit["scope_sources"] == []
+
+
+@pytest.mark.full_repo
+def test_live_manifest_contract_declares_schema_closure_digest(repo_root):
+    schema = repo_root / "system" / "contracts" / "manifest-v19.schema.json"
+    expected = digest_of(build_bundle(schema, repo_root / "system" / "schema"))
+    assert declared_closure_sha256(repo_root) == expected
+
+
+def test_mismatched_generated_closure_digest_fails_manifest_contract(mini_repo):
+    manifest = _manifest(mini_repo)
+    manifest["_generated"]["closure_sha256"] = "sha256:" + "0" * 64
+    ok, message = check(manifest, mini_repo)
+    assert not ok
+    assert "_generated.closure_sha256" in message
+
+
+def test_changing_referenced_record_schema_fails_manifest_contract(mini_repo):
+    note_schema_path = mini_repo / "system" / "schema" / "note.schema.json"
+    note_schema = json.loads(note_schema_path.read_text(encoding="utf-8"))
+    note_schema["properties"]["extra_closure_probe"] = {"type": "string"}
+    note_schema_path.write_text(json.dumps(note_schema, indent=2), encoding="utf-8")
+
+    ok, message = check(_manifest(mini_repo, enforce_contract=False), mini_repo)
+    assert not ok
+    assert "schema closure" in message
+    assert "manifest_contract.py --bump" in message

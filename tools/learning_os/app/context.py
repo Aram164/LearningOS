@@ -52,55 +52,41 @@ class OpContext:
             return self._snapshot
 
     def require_snapshot(self, expected: str | None) -> None:
-        """Raise unless ``expected`` matches live state.
+        """Raise unless ``expected`` matches the active gateway request and live state.
 
-        The branches of ``commands/support.py:_expected_ok`` as typed
-        refusals (SPEC §11.1, amendment (ac)): identical text, and exit 3
-        on every false branch. The empty-token branch is not evidence of
-        a mismatched live snapshot, so it raises ``WriteRefused`` with an
-        explicit exit 3 instead of ``StaleSnapshot``.
+        Canonical writes require an active ``GatewayRequestContext``; there is no
+        unguarded or direct-CLI snapshot bypass.
         """
-        if expected is None:
-            return
         request = current_gateway_request()
-        if request is not None:
-            if request.expected_snapshot != expected:
-                raise StaleSnapshot(
-                    "handler snapshot does not match the approved gateway intent",
-                    prefixed=True,
-                )
-            # cmd_capability marks this only while it holds the same operator
-            # lock through the complete handler dispatch.
-            if gateway_snapshot_is_verified(self.root, expected):
-                return
-        if not expected.strip():
-            # An empty token is almost always a scripting slip, not a
-            # deliberate unguarded write. Omitting the flag remains the way
-            # to write unguarded.
+        if request is None:
+            raise WriteRefused(
+                "canonical writes must use GatewayEnvelopeV2; direct CLI "
+                "application is disabled — reloading will not change this. "
+                "Submit the write with `los capability NAME --payload-file ENVELOPE.json` "
+                "(envelope: WORKFLOWS §25c).",
+                prefixed=True,
+                exit_code=2,
+            )
+        if expected is None or not expected.strip():
             raise WriteRefused(
                 "--expected-snapshot was empty; refusing to write without "
                 "a concurrency token",
                 prefixed=True,
                 exit_code=3,
             )
+        if request.expected_snapshot != expected:
+            raise StaleSnapshot(
+                "handler snapshot does not match the approved gateway intent",
+                prefixed=True,
+            )
+        # cmd_capability marks this only while it holds the same operator
+        # lock through the complete handler dispatch.
+        if gateway_snapshot_is_verified(self.root, expected):
+            return
         actual = self.snapshot_id()
         if actual == expected:
             return
         detail = json.dumps({"expected": expected, "actual": actual})
-        if current_gateway_request() is None:
-            # Both facts are true; the one that decides the outcome goes
-            # first: direct CLI application cannot succeed on any snapshot.
-            line = (
-                "canonical writes must use GatewayEnvelopeV2; direct CLI "
-                "application is disabled — reloading will not change this. "
-                "The supplied snapshot is also out of date. Submit the write "
-                "with `los capability NAME --payload-file ENVELOPE.json` "
-                "(envelope: WORKFLOWS §25c)."
-            )
-            raise StaleSnapshot(
-                f"{line}\n{detail}",
-                prefixed=True,
-            )
         line = (
             "projection conflict — authored files changed since the app "
             "loaded; reload before writing"

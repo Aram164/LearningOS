@@ -92,7 +92,6 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     # window. The earlier validation gives fast feedback; this one is the
     # authority for the commit.
     _validate_publication_synthesis(root, req["unit_id"], value)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     destination = synthesis_destination(root, req["unit_id"])
     content = _dump_yaml(value)
     request = current_gateway_request()
@@ -223,7 +222,6 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
             apply_reviewed_envelope(ctx, capability_name='lineage.restamp', payload={'claim_ids': sorted(claim_ids), 'claims_sha256': claims_sha256}, reviewed_content=_canonical_list_bytes(claim_ids), reviewed_sha256=claims_sha256, review_report=review_report),
 
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         analysis = analyze(root)
     except (LineageError, githistory.GitHistoryError, OSError,

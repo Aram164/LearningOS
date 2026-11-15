@@ -287,3 +287,42 @@ def test_the_block_names_contracts_instead_of_listing_their_files():
         assert document not in block, (
             f"{document} is enumerated in the tree block; the corpus indexes it"
         )
+
+
+def test_generated_directories_and_keep_dirs_derive_from_rebuildable(tmp_path):
+    root = _repo(
+        tmp_path,
+        directories=[
+            *_simple(),
+            {
+                "path": "generated",
+                "owner": "generate.py",
+                "purpose": "derived outputs",
+                "children": [
+                    {"path": "generated/reports", "purpose": "views", "rebuildable": True},
+                    {"path": "generated/dossiers", "purpose": "dossiers", "rebuildable": False},
+                ],
+            },
+        ],
+    )
+    assert tc.generated_directories(root) == frozenset({"reports", "dossiers"})
+    assert tc.generated_keep_directories(root) == frozenset({"dossiers"})
+
+
+def test_generated_child_requires_boolean_rebuildable(tmp_path):
+    root = _repo(
+        tmp_path,
+        directories=[
+            *_simple(),
+            {
+                "path": "generated",
+                "owner": "generate.py",
+                "purpose": "derived outputs",
+                "children": [
+                    {"path": "generated/reports", "purpose": "views"},
+                ],
+            },
+        ],
+    )
+    with pytest.raises(tc.TreeContractError, match="rebuildable"):
+        tc.generated_directories(root)

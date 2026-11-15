@@ -823,7 +823,6 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
         )
     _require_gateway_v2()
     validate_contract(root, "legacy-archive-lock.schema.json", value)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -862,7 +861,6 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
     _require_gateway_v2()
     value = masters_catalog.validate_master_catalog(root, value)
     masters_planning.validate_catalog_revision(root, value)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -904,7 +902,6 @@ def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
         )
     _require_gateway_v2()
     value = masters_planning.validate_candidate_comparison(root, value)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:

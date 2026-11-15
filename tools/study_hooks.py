@@ -126,9 +126,12 @@ def session_start(event: dict[str, object]) -> str:
         f"  {treatment_kinds_hint()} Cards are private and unreviewed; "
         "reads show them beside the text unless --omit-covered-text is passed.",
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
-        "(ephemeral per launch unless --persist-scratch or --scratch-dir is passed, "
-        "so on a resumed turn without the prior file, pass --guards auto --submit directly "
-        "to seal_envelope.py. seal_envelope.py --submit validates on the host. "
+        "(ephemeral per launch unless --persist-scratch or --scratch-dir is passed; "
+        "on a resumed confirmation turn without the prior check record, re-run "
+        "--check-out / --check to inspect a fresh record before --guards-from REC --submit — "
+        "replacement/import/revise writes refuse bare --submit without --guards-from; "
+        "only additive/capture writes accept --guards auto --submit directly. "
+        "seal_envelope.py --submit validates on the host. "
         "Run validate.py with --no-report inside study mode and commit outside study mode).",
     ]
     if not valid_session(session):

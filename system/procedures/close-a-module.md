@@ -27,10 +27,11 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 1. **Settle the record** in the owning partitioned academic `module.yaml` only
    (workflow 10). Record the final sitting or submission on the attempt
    (`result: passed`/`failed`). When the grade posts, record it and set
-   `status: completed` (or `dropped` if abandoned); while a grade is pending,
+   `status: completed` (or `dropped` if abandoned) through `module.status.update`
+   (`module-status-update`, envelope recipe §25c); while a grade is pending,
    preserve that administrative state explicitly.
 2. **Confirm durable knowledge landed — before archiving.** For each of the module's workspaces, verify the understanding worth keeping is already a note under `knowledge/`; extend or create as needed (workflow 3; workflow 17 for handwritten pages). An archived workspace is frozen, so promotion happens first, never after.
-3. **Complete each workspace** (workflow 11 for every workspace the module owns): durable links confirmed and `status: complete`. Completed workspaces stay in place; a workspace enters the separately reviewed archive migration only after its explicit path links are checked. Completion waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
+3. **Complete each workspace** (workflow 11 for every workspace the module owns): durable links confirmed and `status: complete` through `workspace.complete` (`workspace-complete`, envelope recipe §25c). Completed workspaces stay in place; a workspace enters the separately reviewed archive migration only after its explicit path links are checked. Completion waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
 4. **Clear operational state.** Remove the module's now-dead entries from `COORDINATION.md` — resolved dependencies, satisfied deferrals, stale priorities and commitments (workflow 9). Coordination should not mention a closed module.
 5. **Carry-over check.** If anything outlives the module — a second attempt not yet sat, thesis groundwork, an unfinished thread — route it through workflow 20 instead of archiving it away.
 6. **Rebuild and validate.**
@@ -75,9 +76,20 @@ $ $H/los-assert-receipt --last --capability module.attempt.record
 
 ## Set the module status to completed
 
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability module.status.update --payload '{"module_id": "module-demo", "status": "completed"}' --key s19-status --request-id request-s19-status --guards auto --out "$TMPDIR/s19-status.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: module-demo=2
+```
+
+```scrut {interpolated: true}
+$ los capability module.status.update --payload-file "$TMPDIR/s19-status.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":2,"request_id":"request-s19-status","idempotency_key":"s19-status","capability":"module.status.update","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","result":{"ok":true,"module_id":"module-demo","status":"completed","path":"curriculum/modules/module-demo/module.yaml","transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"module-demo":3},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_4","replayed":false},"error":null}
+```
+
 ```scrut
-$ $LOS_REPO/.venv/bin/python -c 'import yaml; p = "curriculum/modules/module-demo/module.yaml"; d = yaml.safe_load(open(p)); d["status"] = "completed"; open(p, "w").write(yaml.safe_dump(d, sort_keys=False)); print("status", d["status"])'
-status completed
+$ $H/los-assert-receipt --last --capability module.status.update
 ```
 
 ```scrut
@@ -99,9 +111,20 @@ $ $LOS_REPO/.venv/bin/python -c 'import yaml; d = yaml.safe_load(open("work/acti
 
 ## Complete the module's workspace
 
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability workspace.complete --payload '{"workspace_id": "workspace-demo"}' --key s19-complete-ws --request-id request-s19-complete-ws --guards auto --out "$TMPDIR/s19-complete-ws.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: workspace-demo=0
+```
+
+```scrut {interpolated: true}
+$ los capability workspace.complete --payload-file "$TMPDIR/s19-complete-ws.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":2,"request_id":"request-s19-complete-ws","idempotency_key":"s19-complete-ws","capability":"workspace.complete","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"workspace_id":"workspace-demo","status":"complete","path":"work/active/workspace-demo/CONTEXT.md","transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","replayed":false},"error":null}
+```
+
 ```scrut
-$ $LOS_REPO/.venv/bin/python -c 'import yaml; p = "work/active/workspace-demo/CONTEXT.md"; t = open(p).read(); head, rest = t.split("---\n")[1:3]; d = yaml.safe_load(head); d["status"] = "complete"; open(p, "w").write("---\n" + yaml.safe_dump(d, sort_keys=False) + "---\n" + rest); print("completed", d["id"])'
-completed workspace-demo
+$ $H/los-assert-receipt --last --capability workspace.complete
 ```
 
 ## Clear the dead deferral from coordination
@@ -125,7 +148,7 @@ seal_envelope: guards auto: coordination=0
 ```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{"schema_version":2,"request_id":"request-s19-defer","idempotency_key":"s19-defer","capability":"coordination.section.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"section":"Deferrals","transaction_id":"transaction-20261001-090000-003","receipt_path":"operations/transactions/transaction-20261001-090000-003.yaml","artifact_revisions":{"coordination":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
+{"schema_version":2,"request_id":"request-s19-defer","idempotency_key":"s19-defer","capability":"coordination.section.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","result":{"ok":true,"section":"Deferrals","transaction_id":"transaction-20261001-090000-005","receipt_path":"operations/transactions/transaction-20261001-090000-005.yaml","artifact_revisions":{"coordination":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_6","replayed":false},"error":null}
 ```
 
 ## The newest receipt names the capability

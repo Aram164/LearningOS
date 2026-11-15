@@ -281,17 +281,21 @@ def test_own_materials_tool_only_change_compare_exits_zero(
 
 
 def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_path: Path):
+    from learning_os.store.contracts.manifest_contract import declared_version
+
     clone = _scratch_clone(tmp_path / "clone")
     baseline = _git(clone, "rev-parse", "HEAD").stdout.strip()
     assert not (REPO_ROOT / "tests" / "architecture"
                 / "contract-transitions.yaml").exists()
-    old_schema = clone / "system" / "contracts" / "manifest-v18.schema.json"
+    current = declared_version(clone)
+    nxt = current + 1
+    old_schema = clone / "system" / "contracts" / f"manifest-v{current}.schema.json"
     text = old_schema.read_text(encoding="utf-8")
-    text = text.replace("manifest-v18.schema.json", "manifest-v19.schema.json")
-    text = text.replace("atomic manifest v18", "atomic manifest v19")
-    text, count = re.subn(r'("contract_version": \{\s*"const": )18', r"\g<1>19", text)
+    text = text.replace(f"manifest-v{current}.schema.json", f"manifest-v{nxt}.schema.json")
+    text = text.replace(f"atomic manifest v{current}", f"atomic manifest v{nxt}")
+    text, count = re.subn(rf'("contract_version": \{{\s*"const": ){current}', rf"\g<1>{nxt}", text)
     assert count == 1
-    (clone / "system" / "contracts" / "manifest-v19.schema.json").write_text(
+    (clone / "system" / "contracts" / f"manifest-v{nxt}.schema.json").write_text(
         text, encoding="utf-8")
     bumped = subprocess.run(
         [sys.executable, str(clone / "tools" / "manifest_contract.py"),
@@ -300,7 +304,7 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     )
     assert bumped.returncode == 0, bumped.stderr[-2000:]
     _git(clone, "add", "-A")
-    _git(clone, "commit", "-qm", "S07 test: bump the manifest contract to v19")
+    _git(clone, "commit", "-qm", f"S07 test: bump the manifest contract to v{nxt}")
     candidate = _git(clone, "rev-parse", "HEAD").stdout.strip()
     proc = _compare(clone, world["dir"], baseline, candidate,
                     _materials_copy(world, tmp_path), tmp_path / "runs")
@@ -308,10 +312,10 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     report = json.loads(proc.stdout)
     assert report["identical"] is False
     assert "contract:contract_version" in report["differences"]
-    assert report["contract"]["baseline_version"] == 18
+    assert report["contract"]["baseline_version"] == current
     # The candidate's own contract bytes survived tree construction: its
     # stamped version is the bumped one, and its metadata is self-consistent.
-    assert report["candidate"]["contract_version"] == 19
+    assert report["candidate"]["contract_version"] == nxt
     assert report["candidate"]["checks"] == {
         "contract_version": True, "schema_sha256": True, "snapshot_id": True}
     assert report["semantic"]["equal"] is True

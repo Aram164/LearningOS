@@ -251,3 +251,28 @@ def test_a_verdict_without_claims_is_never_served():
     assert not rc._valid_verdict(verdict)
     assert rc._valid_verdict(dict(verdict, revisions={"capture:x": 1}))
     assert not rc._valid_verdict(dict(verdict, revisions={"capture:x": True}))
+
+
+def test_orphan_entity_ledger_key_warns_without_failing(mini_repo: Path):
+    """D-22: an entity key in revisions.yaml without a live record warns as orphan."""
+    ledger_path = mini_repo / LEDGERS[0]
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    ledger_path.write_text(dump_revisions({
+        "concept-renamed-away": 2,
+        "source-removed-book": 1,
+        "source-map-retired-mod": 1,
+        "stage-old-stage": 1,
+        "capture:work/inbox/dropped.md": 1,
+    }), encoding="utf-8")
+    issues = validate(load_repo(mini_repo), online=False)
+    orphans = [i for i in issues if i.code == "TRANSACTION-REVISION-ORPHAN"]
+    assert [(i.severity, i.path) for i in orphans] == [
+        ("W", LEDGERS[0]),
+        ("W", LEDGERS[0]),
+    ]
+    orphan_messages = "\n".join(i.message for i in orphans)
+    assert "concept-renamed-away" in orphan_messages
+    assert "source-removed-book" in orphan_messages
+    assert "source-map-retired-mod" not in orphan_messages
+    assert "stage-old-stage" not in orphan_messages
+    assert "capture:work/inbox/dropped.md" not in orphan_messages

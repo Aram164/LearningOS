@@ -46,7 +46,10 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 18
+# Historical adoption log. `mirrored_in_ui` records the lock name paired with each
+# version at adoption; only the active lock (`contracts/manifest-v19.lock.json`) is
+# retained on disk in LearningOS/obsidian-ui.
+contract_version: 19
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -75,6 +78,7 @@ top_level_keys:
 - unit_material_syntheses
 - units
 generated_keys:
+- closure_sha256
 - contract_version
 - generated_at
 - generator
@@ -98,8 +102,9 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v18.schema.json
-schema_sha256: sha256:5d442f3670da4e66266e1eb03ad920ba6b64f2e9d487621303b76736accc8c8f
+schema_path: system/contracts/manifest-v19.schema.json
+schema_sha256: sha256:c1960c667a40f38e32c91723791fef2f6eeb235c90f72c9eea259a687f47222b
+closure_sha256: sha256:82d0fd3886fd69dcc1cee51fb53f7b90640c6fce7795cb91166ba8a1610e6b18
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -208,4 +213,8 @@ history:
     that overrides a locator still names its route; no shape change. Paired with the
     material-only material-span reader and route-free search references (Plan A steps
     2-3).'
-  mirrored_in_ui: contracts/manifest-v18.lock.json
+  mirrored_in_ui: contracts/manifest-v19.lock.json
+- version: 19
+  adopted: '2026-11-15'
+  note: Stamp schema closure_sha256 into _generated and enforce at UI boundary (D-20)
+  mirrored_in_ui: contracts/manifest-v19.lock.json

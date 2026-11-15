@@ -1,0 +1,448 @@
+schema_version: 1
+type: receipt-chain-baseline
+entries:
+- transaction: transaction-20260822-033330-001
+  path: work/active/workspace-aml-exam-prep/CONTEXT.md
+  previous_transaction: transaction-20260822-031453-001
+  expected_sha256_before: e4c2804ad7b17771977a89c626b08f01aeda312eccad6686c8a6baf05bc96714
+  actual_sha256_before: e3174317c44f51b6395f53007f23c5d4db35ad8c7be643eb88357bebf61bf98d
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260822-160338-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l10/study-map.yaml
+  previous_transaction: transaction-20260822-151520-001
+  expected_sha256_before: da1f83c5a88dee6c02434c9f72fe70ab415fc11c15d8245658a83a7f2373fa56
+  actual_sha256_before: 028d72bd14007f17528e6c893f9ea5bf0aedc25a0d4427c3becd9171cf42e0d0
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  previous_transaction: transaction-20260821-225000-001
+  expected_sha256_before: 0eed9094341ce3e3c9e272a93646fb584bcaffaae7bf7a2da6d3dedb6ca509a2
+  actual_sha256_before: 3d999313b7afd31e8b4caba3f6bebdbddf766712b1125fedff3895203756acb0
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/study-map.yaml
+  previous_transaction: transaction-20260822-160412-001
+  expected_sha256_before: 3d6ee9bd1251cd56e65442bd016f2a5ec5643cb26db991e55366f16a204c30da
+  actual_sha256_before: a36d635a32f6899bdd76c68fb41ee8fd96aecc42f441fb19e89b2aa633672261
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml
+  previous_transaction: transaction-20260822-160424-001
+  expected_sha256_before: 5d1d26eba291a258912f6e834925d8d215ec91af5efb20a7df268e70ad5ae08b
+  actual_sha256_before: d0107c03219d6025314a410547e2500191966f46a13ad4ed49839e7826d20f96
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml
+  previous_transaction: transaction-20260822-160436-001
+  expected_sha256_before: 158956cf28e27034b6846166a9f52a51067092eeb89215a34ee0ccab3b93519b
+  actual_sha256_before: 149709f9886d6380410aac0d62d40922c2af73835528111b25e058032e580295
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  previous_transaction: transaction-20260822-160448-001
+  expected_sha256_before: d8d8cde69ed156e6d42db2146af976bd554b4180284c16e487b4c97a2b240649
+  actual_sha256_before: d7f2c80f74508bd7c077c09426544228b4d61e83eb2615fed30eb77475044eec
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml
+  previous_transaction: transaction-20260822-160500-001
+  expected_sha256_before: 06a64a081861aed8851dc78a2b8eeacf784ed2ede44ef87df32dad2e363abd8d
+  actual_sha256_before: 40ad1d070ef0e78ef4d4146d9dd20fdc607afa390dbe03959050bfa4dbad9b90
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+  previous_transaction: transaction-20260822-160511-001
+  expected_sha256_before: b6b176330f8fc55e2bbb0d166d66bbea5b5f049de7da5a72de7d5e37bd5c0061
+  actual_sha256_before: cb03779b696505fa556bd8cf00817df0ab92a546e385b07f0b5163c287400eba
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml
+  previous_transaction: transaction-20260822-160538-001
+  expected_sha256_before: c5710e96117517af666a7e93e7a140616e7bccc28165e418b02bb48048d0cffb
+  actual_sha256_before: d3f96cfeb1743b767556bf03c3aebda626d362fcebe27f98509cf6efb3339472
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml
+  previous_transaction: transaction-20260822-160550-001
+  expected_sha256_before: b4245e96d4c473cb27b2884416b60bf26925f0e99f6c4ad16e874e037972f77c
+  actual_sha256_before: 5f5886f05765fa7d6ee7a68ded547e28f1cd3c00ef7afd944764dd6d8120712c
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/study-map.yaml
+  previous_transaction: transaction-20260822-160602-001
+  expected_sha256_before: cc3693f774c7873736325610644c373af89b91e4fb208f2e0b3f6bae5a9f0375
+  actual_sha256_before: d5b5a9e4cc8a902878bfa2c61d51f5f9c2a4a01dcbf8867b68eb1e75927c32c1
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/study-map.yaml
+  previous_transaction: transaction-20260822-160614-001
+  expected_sha256_before: c8906cc7cbdea60e4bc2fda2f0d511f4b87b92941f82aabe946a38f4fe3976c5
+  actual_sha256_before: cabc2e20b3ae2f30f784d2e2f81712d46fc7018ebd08d408ded01f3008063304
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/study-map.yaml
+  previous_transaction: transaction-20260822-160625-001
+  expected_sha256_before: 4e31642f022f90ae59ad8b1a97f516ea9ebf433398a6b42e4b5c83f153570c82
+  actual_sha256_before: dcfdda2a4f6079881aa89bb56f4fa4e9abf6db82e9568f4011b2f53f2e46e1bb
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/study-map.yaml
+  previous_transaction: transaction-20260822-160637-001
+  expected_sha256_before: 7bf7061f1beec58e3cdce9c361b767fa55556ab9623b2ee978c86517294a5df8
+  actual_sha256_before: b88c961596052ead0417a5e2f9c33e276d8904160263322c882407cd46a62180
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/study-map.yaml
+  previous_transaction: transaction-20260822-160649-001
+  expected_sha256_before: d0c82715f94bb6383135a36f82c030fea04ff07531484e90004c5b22cfc5b007
+  actual_sha256_before: a5e6d0318ac29e5c944aa1384e33c0d50b2d0e7c901be75c8d4824b3ef5769cd
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/study-map.yaml
+  previous_transaction: transaction-20260822-160701-001
+  expected_sha256_before: c7306275194f948ebb2751190eae5ef63a22d3ec3325214d453ceff9eb1c82c7
+  actual_sha256_before: 7f9e3ef5545e3eb91c4daa80aae1d6dc1c7aed18cadedfa5c60aecf53cda8746
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260827-014624-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/study-map.yaml
+  previous_transaction: transaction-20260822-160713-001
+  expected_sha256_before: 044a280ebd8866269a18350f554f2e97c2bc04d6e03f71bf0c9967f1088f3854
+  actual_sha256_before: a37de71605669e8899647f17d46f0768a4b2e2f1d8621b3fe783d07ce784851a
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260829-221518-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/study-map.yaml
+  previous_transaction: transaction-20260819-033322-001
+  expected_sha256_before: 349322038ab65b30d67a3f7ddf138bd345ee5f2c36f7c2aa6eacf73ce936a189
+  actual_sha256_before: 006f909afc1fdd395cfd658f1320f07b5d08bbbfa7561913570bfa21d42225a7
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260829-221518-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml
+  previous_transaction: transaction-20260819-033322-001
+  expected_sha256_before: 5d5b86ab3d33f4aa3dcba4e32dc1d386d7b67211e11ffaee4294c3eea989a086
+  actual_sha256_before: fed35fd1fff4459c0502a0eb7123f493773cf8869249a76a57d9706b69efa482
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260829-223415-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/study-map.yaml
+  previous_transaction: transaction-20260822-160400-001
+  expected_sha256_before: 2799279bfd215b01ba9a8c2a86240824083a288282fab2ff70ac3add25964594
+  actual_sha256_before: 341d58a13fd83eadc46f04c9126868f659083bfdc06c7432437fe27e2a11408c
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260829-223415-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml
+  previous_transaction: transaction-20260821-225047-001
+  expected_sha256_before: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  actual_sha256_before: dfde48278053f5e3c2edf909ebf1ed38bf75cc286def79e02678a60ec303c12d
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260830-132122-001
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  previous_transaction: transaction-20260822-033330-001
+  expected_sha256_before: 109c4ea6b19cb5b377b7c51fc4470aa00628cc557d399f8185dc457a06461602
+  actual_sha256_before: 8af2318b4615951af9e6de17a0c043e3d2f8ed07ff59b088b35eb351fe63def5
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260830-132122-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml
+  previous_transaction: transaction-20260822-033330-001
+  expected_sha256_before: 862910d72d3d52e40c2a020fd504992796600be91599691f8921d1496399b315
+  actual_sha256_before: 3a0469f9ed36be345041a6ee84a7da4272ed27fbd67484ab825867c68a699c8b
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260830-180925-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l10/study-map.yaml
+  previous_transaction: transaction-20260822-160338-001
+  expected_sha256_before: 028d72bd14007f17528e6c893f9ea5bf0aedc25a0d4427c3becd9171cf42e0d0
+  actual_sha256_before: 7dc734575181629639bf5520c5b61a1b58121e0b4d2fe49d5335d7eae530a426
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260831-203645-001
+  path: curriculum/modules/module-hu-algo2/module.yaml
+  previous_transaction: transaction-20260816-081727-001
+  expected_sha256_before: d61399337fa5074eea950794e250be40a4aeb792f8ae227c33e45da28d812e59
+  actual_sha256_before: 4270df25cb128d45a3a716cf38e10193cb41359d28ecad92d9218c4505230c67
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260831-204111-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l07/study-map.yaml
+  previous_transaction: transaction-20260822-160040-001
+  expected_sha256_before: 5f76b11f7506380ee5ec9cd7f1827cbfb662ba560471367ee08ee011a85cf632
+  actual_sha256_before: efef669101b4b953891a8f24990cb37cf6df0ef83c489e3577655411b91437c7
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  previous_transaction: transaction-20260822-033330-001
+  expected_sha256_before: 03943b7859b75a6ef88a81e9cf7d97355f30d514057285ff953287c70d943824
+  actual_sha256_before: 39f6b2e7f3962935bc80671f91405329cd2ef48524392edf48e823de740cf78a
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+  previous_transaction: transaction-20260822-155930-001
+  expected_sha256_before: 430e0d10b4e3476280022b155e516d4162d428f01af6dc19b4cda9a693688130
+  actual_sha256_before: a76db816108f01bbd48b18e8cf6f57b7ac09409fb372decb9cfaecf9e8fbc1b2
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml
+  previous_transaction: transaction-20260822-155942-001
+  expected_sha256_before: f21f58df20fa9dd51396cd91184b01e94c19d1dc6c9f8361c0fa3c79b2af84ae
+  actual_sha256_before: dbf29bf9a255878e14d017e03ba007b0b23e1c4cbafc64359228016885c801dc
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml
+  previous_transaction: transaction-20260822-155953-001
+  expected_sha256_before: ff1b1f89a343433e42d710033d940ddd09d8d4028c1ebc533e1a0ef872c325df
+  actual_sha256_before: 088928263923ed610c68632724b565c51601a000de6b0c558a12eee88894a021
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l04/study-map.yaml
+  previous_transaction: transaction-20260822-160005-001
+  expected_sha256_before: 5ac4ea5ec9da5544a532535b6899334c62865e92e461b54edbf0f998b415f091
+  actual_sha256_before: 437947c1faa3c3985edc3c89b170b10395e93f9feba3b65103fc20cf8f137071
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l05/study-map.yaml
+  previous_transaction: transaction-20260822-160017-001
+  expected_sha256_before: d68f9b050ca866b4fe547b28eedc797a343495e0fa0959e85a412ce03c634a59
+  actual_sha256_before: 2cbee6feefb947f56769c680632fb31b4ee7eb85c02d6187b73e7577cfd8e5ba
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l06/study-map.yaml
+  previous_transaction: transaction-20260822-160028-001
+  expected_sha256_before: 5f4f51b14f444e88122c83345abeb7158f735a191780ef1afece07683ea2d6a5
+  actual_sha256_before: c0a8c6689ad778aadfafe5f71c585a693385acd7c7820dd6625f1874e4cd3113
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l08/study-map.yaml
+  previous_transaction: transaction-20260822-160052-001
+  expected_sha256_before: 794a3f125f2b7f2da84cb23773b9fac2c251518ed595725209216361fd3abb50
+  actual_sha256_before: 498168351f2854b8dbd8fb10ca4875ea3c6d5e0934715f0232e565fe1cccee2e
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml
+  previous_transaction: transaction-20260822-160103-001
+  expected_sha256_before: 9079796e906261bfcf403eabe41bdd9cde844137dfcc682bade256ba4bb63e94
+  actual_sha256_before: b1ddcc91d60a3c9771788c361fccede0646470745dcf4ae8d9bffcd1bc379532
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260901-113802-001
+  path: curriculum/modules/module-hu-aml/units/unit-aml-l11/study-map.yaml
+  previous_transaction: transaction-20260822-160349-001
+  expected_sha256_before: 764dc9c41f804612a739488fe0ae626b686a26ac85cf4656146c0a5476733fb4
+  actual_sha256_before: 9508f8c4b958ab0e24839ab5d065bc0d61e4500c5a41122ed815d971d2d2bad9
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260907-045422-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  previous_transaction: transaction-20260819-033322-001
+  expected_sha256_before: 7cc528901d0da20662036c2303ee6b19c22992abd34f713368c22805ef5ae552
+  actual_sha256_before: 2fc90e3a626c0257c18501b68ca3d5e15d38a431791485b7245d1c9c5e0a8a6f
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260907-045422-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  previous_transaction: transaction-20260821-225047-001
+  expected_sha256_before: 70cdae49792cd0e680276f73c6775df38437e615be93dcba313c2b8bbfb5a8d6
+  actual_sha256_before: 562ad63833b1328449dcaa0a711859613e06c4c47444ffbfa35de3da4ff37fbc
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260920-034526-001
+  path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
+  previous_transaction: transaction-20260816-081727-001
+  expected_sha256_before: 8d32686ac13df65dcb9143ad48fe2fda58034133b6fc7e77cfd5b61d8954b29e
+  actual_sha256_before: 2ddce3bfe06fde943fd488615b8ad91f9cc3faf7bda731f23eaedffc39056448
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260920-034526-001
+  path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/unit.yaml
+  previous_transaction: transaction-20260816-081727-001
+  expected_sha256_before: 02687650ed7415927000bbdeb53baef99518cbba783be72ea7f089c9332d2d95
+  actual_sha256_before: 6d719290903adb0d63372d2316f512dd9827d5fbadcb85c39a70bdca9e13e0a0
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260929-062735-001
+  path: sources/registry/mathematics.yaml
+  previous_transaction: transaction-20260929-043750-001
+  expected_sha256_before: 0a920f942e5716a2879750dcaf0f49737371497ec5f0ae156221bc52ab4ac50a
+  actual_sha256_before: d0fe63c81db0f84e5e9aef4ca3e4caac85a69231de3df0ae719cdea112f09b87
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260930-012131-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: f77d279f83a1dc31e3894e1c8ab6545faed04ce45a3899c5fc62e79ac20f2f10
+  actual_sha256_before: b7e44d76d2d9409e888f3e935db11dc28199862c0bf98199249dadddab8da5b9
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260930-012138-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: fe0692a7bdce0e24450e21ddd7500aeefa63288490f2ce250c47884269a75180
+  actual_sha256_before: 4618fe0d72b87e29fa94592a9ae40f95328fc2aaf49ee3f3a20fee24f67dda20
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260930-012138-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/unit.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: 1de02966e68099f9efe4868f0394a6539f2a21039e416da99fb7a8d83628f3e4
+  actual_sha256_before: 7608966f01dfda65e568c253aceb8602e2ae59483b0f299a1a537b0e270f154b
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20260930-012146-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: 46c35a9ef1d5d661daa7b76d2ddadb07b63482d86e3e95f1b4b698695da4a24c
+  actual_sha256_before: 23125195a0ed767d5adc0fa86164e9f79eeff3a9d0b369a96627b561daaaf290
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20261002-213827-001
+  path: operations/transactions/lineage.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: 07249a747fb1a72c7b190a57c50ba23d83e11479ce25f7b707e6e15faf762556
+  actual_sha256_before: ead458400f383c64f64e240fd8e176817a47f0a079456fdd8baa1ac9aa0fc65c
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20261023-015647-001
+  path: projects/registry/project-bachelor-thesis.yaml
+  previous_transaction: transaction-20260806-060502-001
+  expected_sha256_before: 303722f0bdce941ae16493709c02a01d78267197f7cc8bf16ff404d6d6e2a358
+  actual_sha256_before: 0570a2ecee09d3499a94fc1b685747c71b4d1b688458d40f6833e10a0db204dd
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20261023-015705-001
+  path: work/active/workspace-thesis-mle-medical/CONTEXT.md
+  previous_transaction: transaction-20260806-060502-001
+  expected_sha256_before: 7ae05ea8e52f3475ca7a8e97095e08b01cd24895dc088c8d5416d1eb9c2123fe
+  actual_sha256_before: 8cd3cabaaddf28c2238aa583c5c914f7ae5f96dd7aaea598bc8ac76be1029285
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20261025-152439-001
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  previous_transaction: transaction-20260928-192027-001
+  expected_sha256_before: 232b942cea82708d224eb34f68924129637b885b4f40258153608f67713695c8
+  actual_sha256_before: ad818c0bd1ea8d3d316dc6e6bcf610698bfefea7d8d59d262ccedb88d11b7528
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption.
+  decided_by: Aram (master-review remediation D-03)
+  decided_on: '2026-11-15'
+- transaction: transaction-20261110-232125-001
+  path: sources/registry/software.yaml
+  previous_transaction: transaction-20261110-165414-001
+  expected_sha256_before: 5d796f5e18e66e785573a88dd4994004c27f5948d8ba219386dd26f8852b16da
+  actual_sha256_before: b7898af7b98f1c0c525123aa8bf2041369cc53716a5fb9ffc636f1d1b1a84804
+  reason: Pre-gate historical receipt chain discontinuity preserved at D-03 gate adoption (includes prior source-python-module-of-week-3 -> source-pymotw-python-module-of-the-week rename).
+  decided_by: Aram (master-review remediation D-03/D-24)
+  decided_on: '2026-11-15'
+historical_drift:
+- path: curriculum/modules/module-hu-algo2/source-map.yaml
+  receipt: transaction-20260816-081727-001
+  expected_sha256: ec900d807f58074503bdf85edb67e2560ca2b55e045ae59f04fab6c5edbe5c0a
+  observed_sha256: 3b7b529e2018c2a58e8a4093ee35bf429ffc290d23ba4123877a9a94dcabf16f
+  reason: Pre-gate historical on-disk drift recorded before D-03/D-16 gate adoption.
+  decided_by: Aram (master-review remediation D-16)
+  decided_on: '2026-11-15'
+- path: projects/relations/project-relations.yaml
+  receipt: transaction-20261029-041530-001
+  expected_sha256: c03b8bc4aa3ad13877bb34b5aee4bfaeeaeb664b2718c6ddefe017fee7de98ba
+  observed_sha256: null
+  reason: Pre-gate historical on-disk drift recorded before D-03/D-16 gate adoption.
+  decided_by: Aram (master-review remediation D-16)
+  decided_on: '2026-11-15'
+- path: records/materials-manifest.yaml
+  receipt: transaction-20260826-232920-001
+  expected_sha256: 44632a9dec73662c7387b79b0cc9e145386065aaaee78184602247540ebf9804
+  observed_sha256: 847adebcfa4cf64f5dbf4b2c613048b8040c4cb6517cc4d3ffb5d599d4e1be08
+  reason: Derived manifest rebuilt by tools/materials_manifest.py --build outside gateway receipts.
+  decided_by: Aram (master-review remediation D-16)
+  decided_on: '2026-11-15'
+  derived_rebuild: true
+- path: work/active/workspace-algo2-exam-prep/CONTEXT.md
+  receipt: transaction-20260816-081727-001
+  expected_sha256: f1b5edda864d1f52c6410c9a76c79aff536defb076038fac9977c5c86f095606
+  observed_sha256: null
+  reason: Pre-gate historical on-disk drift recorded before D-03/D-16 gate adoption.
+  decided_by: Aram (master-review remediation D-16)
+  decided_on: '2026-11-15'
+- path: work/inbox/20260807-053214-stage-3-smoke.md
+  receipt: transaction-20260807-053232-001
+  expected_sha256: bcfd503b70cc4d081b5ef7e961e498afdc8c689cd352775a0bc9caf947af858e
+  observed_sha256: null
+  reason: Pre-gate historical on-disk drift recorded before D-03/D-16 gate adoption.
+  decided_by: Aram (master-review remediation D-16)
+  decided_on: '2026-11-15'

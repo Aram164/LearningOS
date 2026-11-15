@@ -3,8 +3,9 @@
 Two questions an operator asks after creating a module or turning a term:
 
 * **Is this module listed?** The rule is Core-owned, because the facts it
-  reads are Core-owned: a module is listed when it is academic and still
-  open — its status is not completed, archived or dropped. The sibling
+  reads are Core-owned: a module is listed when its kind is academic or
+  project, it is not ``compatibility_only``, and its status is still open —
+  not completed, archived or dropped. The sibling
   interface applies the same rule when it renders the module list
   (``src/manifest-store.ts`` — ``openAcademicModules``). The semester is
   context there, not a gate: a module created for a later term is not

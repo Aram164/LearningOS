@@ -22,11 +22,11 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-11-10'
-note: Bind existing Polars routes while preserving all study actions and authored
-  practice
-total: 142
-distinct_signatures: 17
+recorded: '2026-11-15'
+note: Adopt two pre-existing TRANSACTION-REVISION-ORPHAN entries surfaced by D-22
+  ledger check
+total: 144
+distinct_signatures: 18
 signatures:
 - code: RESOURCE-SCOPE-NO-ROUTE
   path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
@@ -79,3 +79,6 @@ signatures:
 - code: RESOURCE-SCOPE-NO-SOURCE
   path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
   count: 1
+- code: TRANSACTION-REVISION-ORPHAN
+  path: operations/transactions/revisions.yaml
+  count: 2

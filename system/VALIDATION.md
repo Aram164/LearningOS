@@ -79,7 +79,6 @@ rule as current, which is indistinguishable from the rule being wrong.
   program, module, component, unit, study map, stage, detour).
 - **E** Every ID matches its entity-family prefix and lowercase kebab-case
   contract; component, unit, map, stage and detour references resolve.
-- **E** An ID never changes when its file moves or is renamed.
 - **W** Numeric suffix present without a collision counterpart (gratuitous suffix).
 
 ## References
@@ -321,7 +320,7 @@ outside LearningOS's canonical roots and are never traversed by validation.
 
 ## Generated outputs
 
-- **E** `generated/` contains only the defined deterministic outputs; agent-computed artifacts (plans, source menus, summaries, recommendations) live in workspaces, never in `generated/`.
+- **E** `generated/` contains only the defined deterministic outputs and rebuildable tool caches; agent-computed artifacts (plans, source menus, draft summaries, recommendations) live in workspaces, and promoted chapter summaries live in `knowledge/summaries/`, never in `generated/`.
 - **E** Regeneration after deleting `generated/` reproduces byte-identical outputs except timestamp fields.
 - **E** Every generated file carries a generated-file warning header.
 - **E** Manifest covers every canonical record; index entries resolve; backlinks equal the inverse of canonical forward references.
@@ -346,8 +345,34 @@ receipt.
   idempotency key — ledger loss followed by key reuse commits twice, and
   replay can prove at most one of the pair.
 - **E** `TRANSACTION-IDEMPOTENCY`: `operations/transactions/idempotency.yaml`
-  parses when present (a missing file is fine: no gateway writes yet); an
-  unreadable ledger fails closed at commit time and is an error here.
+  parses when present (a missing file is fine: no gateway writes yet), and
+  every row resolves via the shared `learning_os.store.evidence` checklist
+  against its committed receipt (`schema`, `id`, `request`, `snapshot_*`,
+  `artifact_revisions`, live revision floor, `writes`, and authority grants,
+  omitting only live capability catalog scope comparison for historical rows);
+  a missing/tampered receipt or contradicted ledger fails closed naming the
+  idempotency key.
+- **E** `TRANSACTION-CHAIN-BREAK`: committed `writes` entries for gated
+  plan/module/program/source-map records (`curriculum/modules/*/units/*/study-map.yaml`,
+  `curriculum/modules/*/source-map.yaml`, `curriculum/modules/*/module.yaml`,
+  `curriculum/programs/*.yaml`) must chain `sha256_before == previous.sha256_after`
+  across chronologically ordered committed receipts, sharing the implementation
+  in `learning_os.store.receipt_chain` with `tools/receipt_drift.py`. Explicit
+  migration receipts (`capability: migration.*` or `metadata.migration`) are
+  exempt, and historical pre-gate breaks may be recorded in
+  `operations/receipt-chain-baseline.yaml`.
+- **E** `TRANSACTION-DRIFT`: any receipt-tracked record whose live on-disk
+  SHA-256 digest differs from (or was deleted after) its latest committed
+  receipt `sha256_after`, and is not covered by a valid `historical_drift`
+  entry in `operations/receipt-chain-baseline.yaml`, fails validation.
+- **E** `TRANSACTION-CHAIN-BASELINE`: `operations/receipt-chain-baseline.yaml`
+  (schema `receipt-chain-baseline`) parses, matches its schema, and pins only
+  genuine historical breaks/drifts by exact transaction id, path, and SHA-256
+  digests; a malformed file exempts nothing.
+- **E** `MIGRATION-PROVENANCE-RETIRED`: `type: migration-provenance` is
+  retired (D-24); any `operations/migrations/*.yaml` file carrying
+  `type: migration-provenance` is rejected except the unmodified historical
+  receipt artifact `operations/migrations/job-quarantine-collapse-v1.yaml`.
 
 ### Committed history against the revision ledger
 
@@ -374,6 +399,12 @@ resubmitted, and a rollback removes that row with the ledger.
   names only real claims: each entry's `transaction` is one committed receipt
   and each of its `artifacts` is a revision that receipt recorded, retired
   once. A malformed record retires nothing.
+- **W** `TRANSACTION-REVISION-ORPHAN`: a canonical entity key in
+  `operations/transactions/revisions.yaml` (`note-*`, `concept-*`,
+  `ability-*`, `source-*` other than `source-map-*`, `workspace-*`,
+  `program-*`, `module-*`, `unit-*`, or `study-map-*`) has no live
+  canonical record — typically a hand rename or deletion outside the
+  gateway.
 
 A retirement entry is how a rollback that cannot be undone is recorded
 instead of hidden. It removes the named claims of one receipt from both

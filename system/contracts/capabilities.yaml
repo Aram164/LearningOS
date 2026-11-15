@@ -443,6 +443,16 @@ commands:
     - one module; sets the examination sitting's withdrawal_deadline for one termin, nothing else
     - the termin must already have a sitting; notes, attempts and every other sitting field are untouched
     - snapshot and module revision guarded, with one V2 receipt
+  module.status.update:
+    handler: module_status_update
+    cli_command: module-status-update
+    kind: command
+    writes:
+    - curriculum/modules/*/module.yaml
+    invariants:
+    - one module; sets status to a valid module.schema.json status value, nothing else
+    - examination sittings, attempts, unit_order, and every other module field are untouched
+    - snapshot and module revision guarded, with one V2 receipt
   module.create:
     handler: module_create
     cli_command: module-create
@@ -1050,6 +1060,16 @@ commands:
     - one active workspace; archived or non-active workspaces refuse
     - only the Next Action section content changes; section editing is fence-aware and frontmatter is preserved
     - GatewayEnvelopeV2 carries the action text inline and never reads it from stdin
+  workspace.complete:
+    handler: workspace_complete
+    cli_command: workspace-complete
+    kind: command
+    writes:
+    - work/active/**
+    invariants:
+    - only an active non-standing workspace may complete; archived, standing, or already-non-active workspaces refuse
+    - work/COORDINATION.md must not still reference the completing workspace
+    - only frontmatter status changes to complete; body sections and sibling files remain untouched
 internal_commands:
   goal.decision.record:
     handler: goal

@@ -13,16 +13,40 @@ from referencing import Registry, Resource
 
 
 @functools.lru_cache(maxsize=64)
-def _compiled_validator(
+def _compiled_validator_for_dir(
     schema_text: str,
+    registry_fingerprint: tuple[tuple[str, str], ...],
     *,
     use_format: bool,
 ) -> Draft202012Validator:
     schema = json.loads(schema_text)
+    registry = Registry()
+    for name, text in registry_fingerprint:
+        ref_schema = json.loads(text)
+        resource = Resource.from_contents(ref_schema)
+        schema_id = ref_schema.get("$id")
+        if isinstance(schema_id, str) and schema_id:
+            registry = registry.with_resource(schema_id, resource)
+        alias = f"https://learningos.local/schema/{name}"
+        if alias != schema_id:
+            registry = registry.with_resource(alias, resource)
     return Draft202012Validator(
         schema,
+        registry=registry,
         format_checker=FormatChecker() if use_format else None,
     )
+
+
+def _registry_snapshot(schema_dir: Path) -> tuple[tuple[str, str], ...]:
+    items: list[tuple[str, str]] = []
+    if not schema_dir.is_dir():
+        return ()
+    for candidate in sorted(schema_dir.glob("*.schema.json")):
+        try:
+            items.append((candidate.name, candidate.read_text(encoding="utf-8")))
+        except OSError:
+            continue
+    return tuple(items)
 
 
 def load_standalone_validator(
@@ -31,8 +55,9 @@ def load_standalone_validator(
     format_checker: bool = False,
 ) -> Draft202012Validator:
     """Compile and cache a standalone validator keyed by live schema text."""
-    return _compiled_validator(
+    return _compiled_validator_for_dir(
         schema_path.read_text(encoding="utf-8"),
+        _registry_snapshot(schema_path.parent),
         use_format=format_checker,
     )
 

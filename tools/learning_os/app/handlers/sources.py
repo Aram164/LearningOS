@@ -292,7 +292,6 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -422,7 +421,6 @@ def collection_create(ctx: OpContext, req: dict) -> Result:
             ),
         )
 
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -892,7 +890,6 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
@@ -1519,7 +1516,6 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:

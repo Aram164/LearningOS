@@ -312,28 +312,22 @@ def test_the_live_perimeter_has_no_errors():
     assert errors == [], "\n".join(str(i) for i in errors)
 
 
-@pytest.mark.full_repo
-# Reads the wrapper root above repository/, which exists only in the live
-# installation; a CI checkout has no semestercontext/ around it.
-@pytest.mark.live_install
-def test_every_pending_disposition_entry_is_still_on_disk():
+def test_stale_pending_disposition_entry_is_an_error(tmp_path):
     """The list is shrink-only.
 
-    A path that has been disposed of must be removed from the contract, or this
-    fails. Without it, `pending_disposition` becomes an attic of paths that no
-    longer exist and the contract stops describing the tree.
+    A path that has been disposed of must be removed from the contract, or
+    check() flags STALE-PENDING. Without it, `pending_disposition` becomes an
+    attic of paths that no longer exist and the contract stops describing the
+    tree.
     """
-    perimeter = pm.load(ROOT)
-    wrapper = pm.wrapper_root(ROOT)
-    stale = [
-        str(entry["path"])
-        for entry in perimeter.pending
-        if not (wrapper / str(entry["path"])).exists()
-    ]
-    assert not stale, (
-        "disposed of, but still listed in pending_disposition: "
-        + ", ".join(sorted(stale))
+    root = _wrapper(
+        tmp_path, entries=_base_entries(),
+        pending=[{"path": "LearningOS/disposed.pdf", "disposition": "ingest"}],
     )
+    stale = [i for i in pm.check(root) if i.code == "STALE-PENDING"]
+    assert len(stale) == 1
+    assert stale[0].severity == "E"
+    assert "LearningOS/disposed.pdf" in stale[0].message
 
 
 @pytest.mark.full_repo

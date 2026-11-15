@@ -1,0 +1,35 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"workspace.complete\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"los: workspace not found: workspace-nope (did you mean: workspace-demo, workspace-second?)\",\"retryable\":false,\"details\":{\"reason\":\"NOT_FOUND\",\"suggestions\":[\"workspace-demo\",\"workspace-second\"]}}}\n",
+  "stdout_json": {
+    "capability": "workspace.complete",
+    "error": {
+      "code": "INVALID_REQUEST",
+      "details": {
+        "reason": "NOT_FOUND",
+        "suggestions": [
+          "workspace-demo",
+          "workspace-second"
+        ]
+      },
+      "message": "los: workspace not found: workspace-nope (did you mean: workspace-demo, workspace-second?)",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

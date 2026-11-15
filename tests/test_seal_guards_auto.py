@@ -1176,3 +1176,81 @@ def test_validation_line_names_every_outcome(proved, expected):
     import seal_envelope
 
     assert expected in seal_envelope._validation_line(proved)
+
+
+@pytest.mark.parametrize("capability,payload", [
+    ("note.revise", {"note_id": "note-demo", "file": "/tmp/nonexistent.md"}),
+    ("unit.plan.revise", {"unit_id": "unit-demo-l01", "record": {"unit_id": "unit-demo-l01"}}),
+    ("source.record.revise", {"record": {"id": "source-demo-book"}}),
+    ("route.patch", {"unit_id": "unit-demo-l01", "route_id": "r1", "changes": {"angle": "x"}}),
+    ("unit.map.import", {"unit_id": "unit-demo-l01", "file": "/tmp/map.yaml"}),
+    ("module.plan.import", {"module_id": "module-demo", "file": "/tmp/plan.yaml"}),
+    ("module.materials.compact", {"module_id": "module-demo", "plan_sha256": "sha256:" + "0" * 64}),
+])
+def test_one_call_submit_refuses_replacement_capabilities_without_guards_from(
+        mini_repo: Path, capability: str, payload: dict):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    refused = _one_call(mini_repo, capability=capability, payload=payload,
+                        key=f"refuse-submit-{capability}")
+    assert refused.returncode == 2
+    assert "refuses one-call --submit without --guards-from" in refused.stderr
+    assert _receipts(mini_repo) == []
+
+
+def test_guards_from_submit_verifies_observed_material_and_plan_handler_strict_report(
+        mini_repo: Path, tmp_path: Path):
+    import hashlib
+
+    from repo_builders import _compact_revision, _compact_setup, run_los
+
+    _compact_setup(mini_repo)
+    revision = _compact_revision(mini_repo, route_changes={
+        "update": [{"route_id": "route-demo-book", "fields": {"angle": "Fresh angle."}}]})
+    mat_dir = mini_repo.parent / "materials" / "inventory-demo"
+    mat_dir.mkdir(parents=True, exist_ok=True)
+    deck = mat_dir / "deck.pdf"
+    deck.write_bytes(b"%PDF v1\n")
+    digest = hashlib.sha256(b"%PDF v1\n").hexdigest()
+    audit_path = mini_repo / "work/active/workspace-demo/outputs/demo-coverage-audit.md"
+    audit_path.write_text(
+        "# Complete demo coverage audit\n\n## Local inventory\n\nDone.\n\n"
+        "## Linked inventory\n\nDone.\n\n## Completeness sign-off\n\nDone.\n\n"
+        '```inventory-v1\nroots: ["inventory-demo"]\nrows:\n'
+        f'  - {{path: "inventory-demo/deck.pdf", sha256: "{digest}", disposition: routed}}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    payload = {"unit_id": "unit-demo-l01", "record": revision}
+    record_file = tmp_path / "plan-check.json"
+    checked = _seal(mini_repo, tmp_path / "unused.json",
+                    capability="unit.plan.revise", payload=payload,
+                    key="plan-observed-001", extra=["--check-out", str(record_file)])
+    assert checked.returncode == 0, checked.stderr
+    rec_data = json.loads(record_file.read_text(encoding="utf-8"))
+    assert "observed_material" in rec_data
+
+    # Mutate material alone: --guards-from must refuse on observed_material mismatch.
+    deck.write_bytes(b"%PDF v2\n")
+    stale = subprocess.run(
+        [sys.executable, str(SEAL), "--root", str(mini_repo),
+         "--guards-from", str(record_file), "--submit"],
+        capture_output=True, text=True, timeout=120)
+    assert stale.returncode == 2
+    assert "material" in stale.stderr.lower()
+    assert _receipts(mini_repo) == []
+
+    # Supplying an unreadable review_report to the plan handler fails closed.
+    deck.write_bytes(b"%PDF v1\n")
+    bad_report = tmp_path / "bad-report.json"
+    bad_report.write_text("{not-json", encoding="utf-8")
+    applied = run_los(
+        mini_repo, "unit-plan-revise", "unit-demo-l01",
+        "--record", json.dumps(revision),
+        "--expected-snapshot", rec_data["expected_snapshot"],
+        "--review-report", str(bad_report),
+    )
+    assert applied.returncode != 0
+    assert "review_report is invalid or unreadable" in applied.stdout + applied.stderr
+    assert _receipts(mini_repo) == []

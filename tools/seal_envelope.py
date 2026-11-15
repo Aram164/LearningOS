@@ -56,6 +56,26 @@ from learning_os.store.study_fence import (
 # capability-envelope.schema.json bounds request_id at 128 characters.
 REQUEST_ID_MAX = 128
 
+# Replacement, import, and revision capabilities must pass a reviewed preflight
+# record (`--check-out REC` or `--check --report-out REC`) via `--guards-from`
+# rather than one-call `--submit` (D-13).
+REVIEW_REQUIRED_CAPABILITIES: frozenset[str] = frozenset({
+    "module.plan.import",
+    "unit.plan.revise",
+    "unit.map.import",
+    "route.patch",
+    "module.materials.compact",
+    "note.revise",
+    "source.record.revise",
+    "collection.entry.revise",
+    "coordination.section.revise",
+    "program.semester.update",
+    "lineage.restamp",
+    "concept.relations.change",
+    "review.apply",
+    "garden.update",
+})
+
 
 def _fresh_request_id(key: str) -> str:
     """Mint a new request id for this sealing run (WORKFLOWS §25c step 4).
@@ -176,6 +196,7 @@ _normalize_check_record = normalize_check_record
 
 def _guards_from_record(
     record: object, capability: str, payload: dict,
+    *, root: Path | None = None,
 ) -> tuple[str, dict[str, int]]:
     # S13 candidate J9-J12: record validation, in SPEC order.
     if not isinstance(record, dict) or record.get("schema") != 1:
@@ -189,17 +210,35 @@ def _guards_from_record(
     if (json.dumps(sealing, sort_keys=True)
             != json.dumps(record.get("payload"), sort_keys=True)):
         raise ValueError("--guards-from record payload differs from the sealing payload")
+    binding = record.get("observed_material")
+    if isinstance(binding, dict) and binding.get("sha256") and root is not None:
+        from learning_os.app.handlers.plan import observed_material_for_payload
+
+        fragment, problems = observed_material_for_payload(root, capability, sealing)
+        if problems or fragment is None:
+            detail = f": {problems[0]}" if problems else ""
+            raise ValueError(
+                "material inventory changed since check record; re-run "
+                f"--check / --check-out and review the fresh record{detail}"
+            )
+        if fragment["observed_material"]["sha256"] != binding["sha256"]:
+            raise ValueError(
+                "relevant material changed since check record; re-run "
+                "--check / --check-out and review the fresh record"
+            )
     return record["expected_snapshot"], dict(record["expected_revisions"])
 
 
-def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
+def _record_guards(
+    path: str, capability: str, payload: dict, *, root: Path | None = None,
+) -> tuple[str, dict[str, int]]:
     """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
 
     Refuses a record that is unreadable, of another schema, failed, for
     another capability, or for another payload than the one being sealed.
     """
     record = _normalize_check_record(json.loads(Path(path).read_text(encoding="utf-8")))
-    return _guards_from_record(record, capability, payload)
+    return _guards_from_record(record, capability, payload, root=root)
 
 
 def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
@@ -333,11 +372,18 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     if check_out is not None:
         sealing = {name: value for name, value in payload.items()
                    if name != "check"}
+        record_out = {**record, "payload": sealing, "idempotency_key": key}
+        if capability in ("module.plan.import", "unit.plan.revise") and record["ok"] is True:
+            from learning_os.app.handlers.plan import observed_material_for_payload
+
+            fragment, problems = observed_material_for_payload(root, capability, sealing)
+            if problems:
+                raise ValueError("; ".join(problems))
+            if isinstance(fragment, dict) and isinstance(fragment.get("observed_material"), dict):
+                record_out["observed_material"] = fragment["observed_material"]
         Path(check_out).parent.mkdir(parents=True, exist_ok=True)
         Path(check_out).write_text(
-            json.dumps({**record, "payload": sealing,
-                        "idempotency_key": key}, indent=2,
-                       sort_keys=True, ensure_ascii=False) + "\n",
+            json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
             encoding="utf-8")
     if record["ok"] is not True:
         errors = record.get("errors") or ["the check failed"]
@@ -500,10 +546,16 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
 
     try:
         if guards_record is not None:
-            guards = _guards_from_record(guards_record, args.capability, payload)
+            guards = _guards_from_record(
+                guards_record, args.capability, payload, root=root)
         elif args.guards_from:
-            guards = _record_guards(args.guards_from, args.capability, payload)
+            guards = _record_guards(
+                args.guards_from, args.capability, payload, root=root)
         else:
+            if args.capability in REVIEW_REQUIRED_CAPABILITIES:
+                raise ValueError(
+                    f"{args.capability!r} requires --guards-from REC with --submit"
+                )
             guards = None
         sealed, fresh = _seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
@@ -569,8 +621,8 @@ def _dispatch_via_socket(
             guards_from_raw = Path(args.guards_from).expanduser().read_text(encoding="utf-8")
         except OSError as exc:
             hint = (
-                " ($LOS_SCRATCH_DIR resets across non-persistent launches; re-check "
-                "or pass --guards auto --submit directly)"
+                " ($LOS_SCRATCH_DIR resets across non-persistent launches; re-run "
+                "--check-out / --check to inspect a fresh record before --guards-from)"
                 if isinstance(exc, FileNotFoundError)
                 else ""
             )
@@ -658,6 +710,15 @@ def main(argv: list[str] | None = None) -> int:
         if clashing:
             print(f"seal_envelope: --submit derives its own guards and keeps "
                   f"its own envelope; drop {', '.join(clashing)}", file=sys.stderr)
+            return 2
+        if not args.guards_from and args.capability in REVIEW_REQUIRED_CAPABILITIES:
+            print(
+                f"seal_envelope: {args.capability!r} replaces or revises existing "
+                "records and refuses one-call --submit without --guards-from; run "
+                "--guards auto --check-out REC (or los ... --check --report-out REC), "
+                "inspect REC, then submit with --guards-from REC --submit",
+                file=sys.stderr,
+            )
             return 2
 
     if args.channel not in GATEWAY_CHANNELS:
@@ -796,7 +857,8 @@ def main(argv: list[str] | None = None) -> int:
     request_id = args.request_id or _fresh_request_id(args.key)
     if args.guards_from:
         try:
-            snapshot, revisions = _guards_from_record(record, args.capability, payload)
+            snapshot, revisions = _guards_from_record(
+                record, args.capability, payload, root=root)
         except (ValueError, OSError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2
