@@ -42,6 +42,7 @@ release certification.
    - `tools/study_launch.py` filters inherited host environment variables down
      to an explicit POSIX/runtime/provider allowlist (dropping arbitrary host
      secrets and `LOS_OBSERVATIONS`) before spawning the sandboxed child.
+   <!-- los:reference {"kind": "command", "text": "los capability"} -->
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
      `material-study-span`, blocks file inputs touching `protected_read_targets(core)`
