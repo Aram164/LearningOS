@@ -15,7 +15,6 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import Any
 
 import yaml
 
@@ -42,14 +41,29 @@ CHAIN_GATED_GLOBS = (
     *RECORD_GLOBS,
     "curriculum/programs/*.yaml",
 )
+# Gitignored AI-action handoff bundles exist only on the active operator disk
+# (`.gitignore` excludes `requests/*`, `deliveries/*`, and `incoming/*`).
+OPERATIONAL_HANDOFF_PREFIXES = (
+    "operations/ai-actions/requests/",
+    "operations/ai-actions/deliveries/",
+    "operations/ai-actions/incoming/",
+)
+
+
+def is_operational_handoff_path(relative: str) -> bool:
+    """Return True when *relative* is gitignored AI-action operational handoff state."""
+    normalized = relative.strip("/")
+    if normalized.endswith("/.gitkeep"):
+        return False
+    return any(normalized.startswith(prefix) for prefix in OPERATIONAL_HANDOFF_PREFIXES)
 
 
 @dataclass(frozen=True)
 class BaselineData:
     """Validated receipt-chain baseline entries (fail-closed when invalid)."""
 
-    chain_keys: dict[tuple[str, str], dict[str, Any]]
-    drift_by_path: dict[str, dict[str, Any]]
+    chain_keys: dict[tuple[str, str], dict[str, object]]
+    drift_by_path: dict[str, dict[str, object]]
     errors: tuple[str, ...] = ()
     valid: bool = True
 
@@ -83,7 +97,7 @@ def receipt_shape_ok(receipt: object) -> bool:
     return True
 
 
-def is_migration_receipt(receipt: dict[str, Any]) -> bool:
+def is_migration_receipt(receipt: dict[str, object]) -> bool:
     """Return True when the receipt records an explicit migration operation."""
     capability = receipt.get("capability")
     if isinstance(capability, str) and capability.startswith("migration."):
@@ -123,9 +137,9 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def load_receipts(root: Path) -> tuple[list[dict[str, Any]], list[str]]:
+def load_receipts(root: Path) -> tuple[list[dict[str, object]], list[str]]:
     """Parse every receipt in chronological id order; surface unusable filenames."""
-    receipts: list[dict[str, Any]] = []
+    receipts: list[dict[str, object]] = []
     malformed: list[str] = []
     directory = root / RECEIPT_DIR
     if not directory.is_dir():
@@ -135,21 +149,21 @@ def load_receipts(root: Path) -> tuple[list[dict[str, Any]], list[str]]:
             malformed.append(path.name)
             continue
         try:
-            raw = yaml.load(read_text_inside(root, path), Loader=UniqueKeySafeLoader)
+            raw: object = yaml.load(read_text_inside(root, path), Loader=UniqueKeySafeLoader)
         except (OSError, PathBoundaryError, yaml.YAMLError, UnicodeDecodeError):
             malformed.append(path.name)
             continue
         if isinstance(raw, dict) and raw.get("type") == "transaction-receipt" and receipt_shape_ok(raw):
-            receipts.append(raw)
+            receipts.append({str(k): v for k, v in raw.items()})
         else:
             malformed.append(path.name)
     receipts.sort(key=lambda receipt: str(receipt.get("id", "")))
     return receipts, malformed
 
 
-def committed_receipts(receipts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+def committed_receipts(receipts: list[dict[str, object]]) -> tuple[list[dict[str, object]], int]:
     """Filter shape-valid receipts to ``status == committed``, preserving id sort."""
-    committed: list[dict[str, Any]] = []
+    committed: list[dict[str, object]] = []
     skipped = 0
     for receipt in receipts:
         if not receipt_shape_ok(receipt):
@@ -162,16 +176,22 @@ def committed_receipts(receipts: list[dict[str, Any]]) -> tuple[list[dict[str, A
     return committed, skipped
 
 
-def last_writes(receipts: list[dict[str, Any]]) -> tuple[dict[str, tuple[str | None, str]], int]:
+def last_writes(receipts: list[dict[str, object]]) -> tuple[dict[str, tuple[str | None, str]], int]:
     """Map path -> (sha256_after, receipt_id) using the last committed write."""
     last: dict[str, tuple[str | None, str]] = {}
     committed, skipped = committed_receipts(receipts)
     for receipt in committed:
         rid = str(receipt.get("id", ""))
-        for row in receipt.get("writes") or []:
+        writes = receipt.get("writes")
+        if not isinstance(writes, list):
+            continue
+        for row in writes:
+            if not isinstance(row, dict):
+                continue
             path = row.get("path")
-            if path:
-                last[path] = (row.get("sha256_after"), rid)
+            if isinstance(path, str) and path:
+                sha_after = row.get("sha256_after")
+                last[path] = (sha_after if isinstance(sha_after, str) else None, rid)
     return last, skipped
 
 
@@ -206,12 +226,15 @@ def _inflight_transitions(root: Path) -> dict[str, tuple[str | None, str | None]
         if not intent_path.is_file():
             continue
         try:
-            intent = json.loads(read_text_inside(root, intent_path))
+            intent: object = json.loads(read_text_inside(root, intent_path))
         except (OSError, PathBoundaryError, ValueError, UnicodeDecodeError):
             continue
-        if not isinstance(intent, dict) or not isinstance(intent.get("paths"), list):
+        if not isinstance(intent, dict):
             continue
-        for row in intent["paths"]:
+        paths = intent.get("paths")
+        if not isinstance(paths, list):
+            continue
+        for row in paths:
             if not isinstance(row, dict):
                 continue
             rel = row.get("path")
@@ -238,9 +261,9 @@ def _inflight_transitions(root: Path) -> dict[str, tuple[str | None, str | None]
 def compute_drift(
     root: Path,
     last: dict[str, tuple[str | None, str]],
-) -> list[dict[str, Any]]:
+) -> list[dict[str, object]]:
     """Compare on-disk bytes of tracked paths against their last committed receipt."""
-    drift: list[dict[str, Any]] = []
+    drift: list[dict[str, object]] = []
     inflight = _inflight_transitions(root)
     for path in sorted(last):
         expected, receipt_id = last[path]
@@ -279,7 +302,7 @@ def compute_drift(
         else:
             actual = disk_actual
         if actual is None:
-            if expected:
+            if expected and not is_operational_handoff_path(path):
                 drift.append({
                     "path": path,
                     "receipt": receipt_id,
@@ -308,20 +331,27 @@ def compute_drift(
     return drift
 
 
-def find_chain_breaks(receipts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def find_chain_breaks(receipts: list[dict[str, object]]) -> list[dict[str, object]]:
     """Detect per-path sha256 discontinuities across committed receipts."""
     committed, _ = committed_receipts(receipts)
     last_after: dict[str, tuple[str | None, str]] = {}
-    breaks: list[dict[str, Any]] = []
+    breaks: list[dict[str, object]] = []
     for receipt in committed:
         rid = str(receipt.get("id", ""))
         migration_exempt = is_migration_receipt(receipt)
-        for row in receipt.get("writes") or []:
-            path = row.get("path")
-            if not path:
+        writes = receipt.get("writes")
+        if not isinstance(writes, list):
+            continue
+        for row in writes:
+            if not isinstance(row, dict):
                 continue
-            after = row.get("sha256_after")
-            before = row.get("sha256_before")
+            path = row.get("path")
+            if not isinstance(path, str) or not path:
+                continue
+            raw_after = row.get("sha256_after")
+            raw_before = row.get("sha256_before")
+            after = raw_after if isinstance(raw_after, str) else None
+            before = raw_before if isinstance(raw_before, str) else None
             prev = last_after.get(path)
             if prev is not None:
                 prev_after, prev_receipt = prev
@@ -341,10 +371,10 @@ def find_chain_breaks(receipts: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def load_chain_baseline(
     root: Path,
-    committed_list: list[dict[str, Any]],
-    raw_breaks: list[dict[str, Any]],
+    committed_list: list[dict[str, object]],
+    raw_breaks: list[dict[str, object]],
     *,
-    schema_check: Callable[[dict[str, Any]], bool] | None = None,
+    schema_check: Callable[[dict[str, object]], bool] | None = None,
 ) -> BaselineData:
     """Load and validate ``operations/receipt-chain-baseline.yaml`` (fail closed)."""
     path = root / CHAIN_BASELINE_RELATIVE
@@ -358,7 +388,7 @@ def load_chain_baseline(
             valid=False,
         )
     try:
-        data = yaml.load(read_text_inside(root, path), Loader=UniqueKeySafeLoader)
+        raw_data: object = yaml.load(read_text_inside(root, path), Loader=UniqueKeySafeLoader)
     except (OSError, PathBoundaryError, yaml.YAMLError, UnicodeDecodeError) as exc:
         return BaselineData(
             chain_keys={},
@@ -366,7 +396,15 @@ def load_chain_baseline(
             errors=(f"cannot read receipt chain baseline: {exc}",),
             valid=False,
         )
-    if not isinstance(data, dict) or data.get("schema_version") != 1 or data.get("type") != CHAIN_BASELINE_SCHEMA:
+    if not isinstance(raw_data, dict):
+        return BaselineData(
+            chain_keys={},
+            drift_by_path={},
+            errors=("receipt chain baseline does not match contract header",),
+            valid=False,
+        )
+    data: dict[str, object] = {str(k): v for k, v in raw_data.items()}
+    if data.get("schema_version") != 1 or data.get("type") != CHAIN_BASELINE_SCHEMA:
         return BaselineData(
             chain_keys={},
             drift_by_path={},
@@ -385,13 +423,16 @@ def load_chain_baseline(
         )
 
     receipt_by_id = {str(r.get("id")): r for r in committed_list}
-    break_lookup = {(row["receipt"], row["path"]): row for row in raw_breaks}
+    break_lookup: dict[tuple[str, str], dict[str, object]] = {
+        (str(row["receipt"]), str(row["path"])): row for row in raw_breaks
+    }
     errors: list[str] = []
-    chain_keys: dict[tuple[str, str], dict[str, Any]] = {}
-    for index, entry in enumerate(entries):
-        if not isinstance(entry, dict):
+    chain_keys: dict[tuple[str, str], dict[str, object]] = {}
+    for index, raw_entry in enumerate(entries):
+        if not isinstance(raw_entry, dict):
             errors.append(f"baseline entry {index} must be a mapping")
             continue
+        entry: dict[str, object] = {str(k): v for k, v in raw_entry.items()}
         tx_id = entry.get("transaction")
         rel_path = entry.get("path")
         where = f"baseline entry {index} ({tx_id}, {rel_path})"
@@ -410,25 +451,26 @@ def load_chain_baseline(
             errors.append(f"{where}: no chain break matches this transaction and path")
             continue
         if (
-            entry.get("previous_transaction") != brk["previous_receipt"]
-            or entry.get("expected_sha256_before") != brk["expected_sha256_before"]
-            or entry.get("actual_sha256_before") != brk["actual_sha256_before"]
+            entry.get("previous_transaction") != brk.get("previous_receipt")
+            or entry.get("expected_sha256_before") != brk.get("expected_sha256_before")
+            or entry.get("actual_sha256_before") != brk.get("actual_sha256_before")
         ):
             errors.append(f"{where}: baseline hash/previous claim contradicts receipt history")
             continue
         chain_keys[key] = entry
 
     drift_entries = data.get("historical_drift") or []
-    drift_by_path: dict[str, dict[str, Any]] = {}
+    drift_by_path: dict[str, dict[str, object]] = {}
     if not isinstance(drift_entries, list):
         errors.append("historical_drift must be a list")
     else:
-        for index, entry in enumerate(drift_entries):
-            if not isinstance(entry, dict):
+        for index, raw_drift_entry in enumerate(drift_entries):
+            if not isinstance(raw_drift_entry, dict):
                 errors.append(f"historical_drift entry {index} must be a mapping")
                 continue
-            rel_path = entry.get("path")
-            tx_id = entry.get("receipt")
+            drift_entry: dict[str, object] = {str(k): v for k, v in raw_drift_entry.items()}
+            rel_path = drift_entry.get("path")
+            tx_id = drift_entry.get("receipt")
             if not isinstance(rel_path, str) or not rel_path or not isinstance(tx_id, str):
                 errors.append(f"historical_drift entry {index}: invalid path or receipt")
                 continue
@@ -441,7 +483,7 @@ def load_chain_baseline(
             if rel_path in drift_by_path:
                 errors.append(f"historical_drift entry {index}: duplicate path {rel_path}")
                 continue
-            drift_by_path[rel_path] = entry
+            drift_by_path[rel_path] = drift_entry
 
     if errors:
         return BaselineData(
@@ -458,17 +500,20 @@ def load_chain_baseline(
     )
 
 
-def _drift_row_is_baselined(row: dict[str, Any], baseline: BaselineData) -> bool:
+def _drift_row_is_baselined(row: dict[str, object], baseline: BaselineData) -> bool:
     if not baseline.valid:
         return False
-    entry = baseline.drift_by_path.get(row["path"])
+    path = row.get("path")
+    if not isinstance(path, str):
+        return False
+    entry = baseline.drift_by_path.get(path)
     if entry is None:
         return False
-    if entry.get("receipt") != row["receipt"] or entry.get("expected_sha256") != row["expected"]:
+    if entry.get("receipt") != row.get("receipt") or entry.get("expected_sha256") != row.get("expected"):
         return False
     if entry.get("derived_rebuild"):
         return True
-    return entry.get("observed_sha256") == row["actual"]
+    return entry.get("observed_sha256") == row.get("actual")
 
 
 @dataclass(frozen=True)
@@ -480,23 +525,23 @@ class ReceiptChainAnalysis:
     malformed_receipts: list[str]
     tracked_paths: int
     records_checked: int
-    drift: list[dict[str, Any]]
+    drift: list[dict[str, object]]
     untracked: list[str]
-    all_chain_breaks: list[dict[str, Any]]
-    active_chain_breaks: list[dict[str, Any]]
-    baselined_chain_breaks: list[dict[str, Any]]
-    migration_exempt_breaks: list[dict[str, Any]]
-    unbaselined_drift: list[dict[str, Any]]
+    all_chain_breaks: list[dict[str, object]]
+    active_chain_breaks: list[dict[str, object]]
+    baselined_chain_breaks: list[dict[str, object]]
+    migration_exempt_breaks: list[dict[str, object]]
+    unbaselined_drift: list[dict[str, object]]
     baseline: BaselineData
 
 
 def analyze_receipt_chain(
     root: Path,
     *,
-    receipts: list[dict[str, Any]] | None = None,
+    receipts: list[dict[str, object]] | None = None,
     malformed: list[str] | None = None,
     record_globs: tuple[str, ...] = RECORD_GLOBS,
-    schema_check: Callable[[dict[str, Any]], bool] | None = None,
+    schema_check: Callable[[dict[str, object]], bool] | None = None,
 ) -> ReceiptChainAnalysis:
     """Analyze committed receipt chain breaks, live drift, and untracked records."""
     if receipts is None:
@@ -514,13 +559,13 @@ def analyze_receipt_chain(
     raw_breaks = find_chain_breaks(committed)
     baseline = load_chain_baseline(root, committed, raw_breaks, schema_check=schema_check)
 
-    active_breaks: list[dict[str, Any]] = []
-    baselined_breaks: list[dict[str, Any]] = []
-    migration_breaks: list[dict[str, Any]] = []
+    active_breaks: list[dict[str, object]] = []
+    baselined_breaks: list[dict[str, object]] = []
+    migration_breaks: list[dict[str, object]] = []
     for brk in raw_breaks:
-        if brk["migration_exempt"]:
+        if brk.get("migration_exempt"):
             migration_breaks.append(brk)
-        elif baseline.valid and (brk["receipt"], brk["path"]) in baseline.chain_keys:
+        elif baseline.valid and (str(brk.get("receipt", "")), str(brk.get("path", ""))) in baseline.chain_keys:
             baselined_breaks.append(brk)
         else:
             active_breaks.append(brk)
@@ -544,7 +589,7 @@ def analyze_receipt_chain(
     )
 
 
-def report_findings(root: Path) -> dict[str, Any]:
+def report_findings(root: Path) -> dict[str, object]:
     """Build the diagnostic payload used by ``tools/receipt_drift.py``."""
     analysis = analyze_receipt_chain(root)
     return {
@@ -562,7 +607,7 @@ def report_findings(root: Path) -> dict[str, Any]:
     }
 
 
-def has_unreceipted_history_or_drift(root: Path, receipts: list[dict[str, Any]]) -> bool:
+def has_unreceipted_history_or_drift(root: Path, receipts: list[dict[str, object]]) -> bool:
     """True if committed receipts show un-baselined chain breaks or live byte drift.
 
     Synthetic unit-test receipts without ``status: committed`` and ``writes``

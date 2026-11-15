@@ -504,3 +504,237 @@ def test_validate_reports_unbaselined_on_disk_drift_and_clears_when_baselined(
         if i.code in {"TRANSACTION-DRIFT", "TRANSACTION-CHAIN-BASELINE"}
     ]
     assert cleared == []
+
+
+def _seed_ai_action_clean_clone_state(
+    root: Path,
+    *,
+    request_id: str = "ai-request-clean-clone",
+    delivery_id: str = "ai-delivery-clean-clone",
+    action_id: str = "unit.compare-materials",
+    delegated_capability: str = "unit.material-synthesis.publish",
+    declared_writes: list[str] | None = None,
+    metadata_request_id: str | None = None,
+) -> tuple[str, Path, object]:
+    """Seed one committed ai-action.delivery.apply receipt + ledgers with absent handoffs."""
+    import copy
+
+    import yaml as _yaml
+
+    from learning_os.store.contracts.gateway import GatewayRequestContext
+    from learning_os.store.evidence import (
+        dump_idempotency_entries,
+        idempotency_ledger_path,
+        load_idempotency_entries,
+    )
+    from learning_os.store.revisions import (
+        dump_revisions,
+        load_revisions,
+        revision_ledger_path,
+    )
+
+    tx_id = "transaction-20261115-000001-001"
+    idem_key = "ai-delivery-clean-clone-apply-001"
+    intent_sha = "sha256:" + "1" * 64
+    snap_before = "sha256:" + "0" * 64
+    snap_after = "sha256:" + "2" * 64
+    req_rel = f"operations/ai-actions/requests/{request_id}/request.yaml"
+    receipt_rel = f"operations/transactions/{tx_id}.yaml"
+
+    revisions = dict(load_revisions(root))
+    revisions["unit-m2-sad-l03"] = revisions.get("unit-m2-sad-l03", 0) + 1
+    revision_ledger_path(root).parent.mkdir(parents=True, exist_ok=True)
+    revision_ledger_path(root).write_text(dump_revisions(revisions), encoding="utf-8")
+
+    entries = {k: copy.deepcopy(v) for k, v in load_idempotency_entries(root).items()}
+    entries[idem_key] = {
+        "request_id": "request-ai-delivery-apply-clean-clone",
+        "capability": "ai-action.delivery.apply",
+        "channel": "operator",
+        "intent_sha256": intent_sha,
+        "transaction_id": tx_id,
+        "receipt_path": receipt_rel,
+        "revisions": {"unit-m2-sad-l03": revisions["unit-m2-sad-l03"]},
+        "snapshot_before": snap_before,
+        "snapshot_after": snap_after,
+    }
+    idempotency_ledger_path(root).write_text(
+        dump_idempotency_entries(entries), encoding="utf-8"
+    )
+
+    receipt_path = root / receipt_rel
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(_yaml.safe_dump({
+        "schema_version": 2,
+        "id": tx_id,
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "ai-action.delivery.apply",
+        "committed_at": "2026-11-15T12:00:00+01:00",
+        "snapshot_before": snap_before,
+        "snapshot_after": snap_after,
+        "expected_revisions": {"unit-m2-sad-l03": revisions["unit-m2-sad-l03"] - 1},
+        "artifact_revisions": {
+            "unit-m2-sad-l03": {
+                "before": revisions["unit-m2-sad-l03"] - 1,
+                "after": revisions["unit-m2-sad-l03"],
+            },
+        },
+        "writes": [{
+            "path": req_rel,
+            "sha256_before": None,
+            "sha256_after": "3" * 64,
+            "created": True,
+        }],
+        "metadata": {
+            "request_id": metadata_request_id or request_id,
+            "delivery_id": delivery_id,
+            "action_id": action_id,
+            "approved_delivery": {
+                "delivery_sha256": "sha256:" + "4" * 64,
+                "artifact_sha256": {
+                    "material-synthesis.json": "sha256:" + "5" * 64,
+                },
+            },
+            "created_ids": [],
+            "updated_ids": ["unit-m2-sad-l03"],
+            "deleted_ids": [],
+            "superseded_ids": [],
+            "validation": {
+                "schemas": "passed",
+                "references": "passed",
+                "boundaries": "passed",
+                "projection": "passed",
+            },
+        },
+        "authority": {
+            "capability_contract_version": 2,
+            "enforced": True,
+            "grants": [
+                {
+                    "capability": "ai-action.delivery.apply",
+                    "declared_writes": ["operations/ai-actions/requests/**"],
+                },
+                {
+                    "capability": delegated_capability,
+                    "declared_writes": declared_writes or [
+                        "curriculum/modules/**/units/**/material-synthesis.yaml",
+                    ],
+                },
+            ],
+        },
+        "request": {
+            "channel": "operator",
+            "request_id": "request-ai-delivery-apply-clean-clone",
+            "idempotency_key": idem_key,
+            "intent_sha256": intent_sha,
+            "approval": {
+                "kind": "approved-delivery",
+                "subject_sha256": intent_sha,
+            },
+        },
+    }, sort_keys=False), encoding="utf-8")
+
+    ctx = GatewayRequestContext(
+        request_id="request-ai-delivery-apply-clean-clone",
+        idempotency_key=idem_key,
+        capability="ai-action.delivery.apply",
+        channel="operator",
+        intent_sha256=intent_sha,
+        approval_kind="operator-approval",
+        approval_subject_sha256=intent_sha,
+    )
+    return req_rel, receipt_path, ctx
+
+
+def test_clean_clone_ai_action_handoffs_validate_while_tamper_and_replay_fail_closed(
+    mini_repo: Path,
+):
+    """Absent gitignored AI-action bundles pass validate(), while tampering/replay fail closed."""
+    import shutil
+
+    import pytest
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.evidence import ReplayEvidenceError, verify_committed_evidence
+    from learning_os.store.loader import load_repo
+
+    req_rel, _receipt_path, ctx = _seed_ai_action_clean_clone_state(mini_repo)
+
+    # Clean clone state: both gitignored handoff directories are absent.
+    issues = validate(load_repo(mini_repo), online=False)
+    tx_issues = [
+        i for i in issues if i.code in {"TRANSACTION-DRIFT", "TRANSACTION-IDEMPOTENCY"}
+    ]
+    assert tx_issues == [], tx_issues
+    assert _run(mini_repo)["drift"] == []
+
+    # Live replay / Diagnostics still fail closed when the delivery bundle is missing.
+    with pytest.raises(ReplayEvidenceError):
+        verify_committed_evidence(mini_repo, ctx)
+
+    # If a gitignored request file IS present on disk with drifted bytes, validate fails.
+    req_file = mini_repo / req_rel
+    req_file.parent.mkdir(parents=True, exist_ok=True)
+    req_file.write_text("tampered: true\n", encoding="utf-8")
+    drift_issues = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-DRIFT"
+    ]
+    assert len(drift_issues) == 1
+    shutil.rmtree(req_file.parent)
+
+    # If the delivery directory IS present on disk without valid delivery bytes, validate fails.
+    delivery_dir = mini_repo / "operations/ai-actions/deliveries/ai-delivery-clean-clone"
+    delivery_dir.mkdir(parents=True, exist_ok=True)
+    idem_present = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-IDEMPOTENCY"
+    ]
+    assert len(idem_present) == 1
+    shutil.rmtree(delivery_dir)
+
+
+def test_clean_clone_absent_delivery_rejects_forged_delegation_request_or_digest(
+    mini_repo: Path,
+):
+    """Absent-delivery idempotency checks still reject forged grants, requests, or action ids."""
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    # Disallowed delegated capability for unit.compare-materials must fail closed.
+    _seed_ai_action_clean_clone_state(
+        mini_repo,
+        delegated_capability="garden.update",
+        declared_writes=["operations/ai-actions/garden-state/**"],
+    )
+    forged_cap = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-IDEMPOTENCY"
+    ]
+    assert len(forged_cap) == 1
+    assert "does not prove" in forged_cap[0].message
+
+    # Request ID mismatch against receipt writes must fail closed.
+    _seed_ai_action_clean_clone_state(
+        mini_repo,
+        metadata_request_id="ai-request-other",
+    )
+    forged_req = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-IDEMPOTENCY"
+    ]
+    assert len(forged_req) == 1
+    assert "belongs to a different request" in forged_req[0].message
+
+    # Unknown action_id must fail closed against ActionRegistry.
+    _seed_ai_action_clean_clone_state(
+        mini_repo,
+        action_id="unknown.action",
+    )
+    bad_action = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-IDEMPOTENCY"
+    ]
+    assert len(bad_action) == 1
+    assert "unknown AI action" in bad_action[0].message

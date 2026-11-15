@@ -264,7 +264,7 @@ def test_reordered_resources_cannot_inherit_from_previous_position(mini_repo):
     assert expand_map(saved, repo.module_source_maps[sm.module_id], sm.module_id, sm.unit_id) == edited
 
 
-def test_explicit_override_equal_to_owner_is_not_updated_and_patch_replays(mini_repo):
+def test_explicit_override_equal_to_owner_is_not_updated_and_patch_replays(mini_repo, tmp_path):
     _, rid, smid = material_fixture(mini_repo)
     compact_via_gateway(mini_repo)
     repo = load_repo(mini_repo)
@@ -274,7 +274,16 @@ def test_explicit_override_equal_to_owner_is_not_updated_and_patch_replays(mini_
     old_detail = sm.data["stages"][0]["resources"][1]["angle_detail"]
     res["material_ref"]["inherit"].remove("angle_detail")
     res["angle_detail"] = old_detail
-    write_yaml(sm.path, raw)
+    # Apply the pre-patch override setup through the gateway so committed
+    # receipts do not see unbaselined post-compaction drift on study-map.yaml.
+    draft = tmp_path / "override-map.yaml"
+    write_yaml(draft, raw)
+    imported = approved_v2_cli(
+        mini_repo, "unit-map-import", sm.unit_id, "--file", str(draft),
+        "--file-sha256", file_sha256(draft), "--replace",
+        artifact_ids=[sm.unit_id, smid], idempotency_key="setup-override",
+    )
+    assert imported.returncode == 0, imported.stdout + imported.stderr
     repo = load_repo(mini_repo)
     context = run_los(mini_repo, "plan-edit-context", sm.unit_id, "--route-id", rid)
     assert context.returncode == 0, context.stderr

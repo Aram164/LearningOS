@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import contextlib
 import datetime as dt
 import hashlib
@@ -36,6 +37,21 @@ def _sha256_file(path: Path) -> str:
     except OSError as exc:
         raise BackupManifestError(f"backup path is unreadable: {path}") from exc
     return "sha256:" + hashlib.sha256(data).hexdigest()
+
+
+def _installer_declares_option(installer: Path, flag: str) -> bool:
+    """Return True if the installer script declares ``flag`` in its CLI parser."""
+    try:
+        tree = ast.parse(installer.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, SyntaxError):
+        return False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            func = node.func
+            if isinstance(func, ast.Attribute) and func.attr == "add_argument":
+                if any(isinstance(arg, ast.Constant) and arg.value == flag for arg in node.args):
+                    return True
+    return False
 
 
 def _refuse_unreadable(exc: OSError) -> None:
@@ -867,21 +883,18 @@ def verify_restored_system(
     else:
         detail["installer_sha256"] = installer_row["sha256"]
         try:
+            resolved_installer = installer.resolve()
+            # Pre-D-29 backed-up installers did not accept --local-build; detect via AST option
+            # declaration rather than matching argparse stderr prose (PLAN D3).
+            args = (["--local-build"] if _installer_declares_option(resolved_installer, "--local-build") else []) + [
+                "--dry-run", "--skip-tests", "--vault",
+            ]
             with tempfile.TemporaryDirectory(prefix="learningos-install-preflight-") as vault:
-                cmd = [sys.executable, "-I", "-B", str(installer.resolve())]
                 result = subprocess.run(
-                    [*cmd, "--local-build", "--dry-run", "--skip-tests", "--vault", vault],
+                    [sys.executable, "-I", "-B", str(resolved_installer), *args, vault],
                     cwd=restored_ui, capture_output=True, text=True, timeout=30, check=False,
                 )
                 untouched = not any(Path(vault).iterdir())
-                # Pre-D-29 backed-up installers did not accept --local-build; retry without it
-                # only when argparse rejects --local-build and the dry-run vault is still empty.
-                if untouched and result.returncode == 2 and "unrecognized arguments: --local-build" in result.stderr:
-                    result = subprocess.run(
-                        [*cmd, "--dry-run", "--skip-tests", "--vault", vault],
-                        cwd=restored_ui, capture_output=True, text=True, timeout=30, check=False,
-                    )
-                    untouched = not any(Path(vault).iterdir())
                 preflight_ok = result.returncode == 0 and untouched
                 detail.update(returncode=result.returncode, stdout=result.stdout.strip()[-4000:],
                               stderr=result.stderr.strip()[-4000:], vault_unchanged=untouched)

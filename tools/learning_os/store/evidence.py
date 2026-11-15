@@ -100,16 +100,43 @@ def default_authority_root(root: Path) -> Path | None:
     return root if implicit_catalogue.is_file() else None
 
 
-def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
+def _verify_bound_request_write(receipt: Mapping, request_id: object) -> None:
+    """Verify the receipt wrote the request record named by its delivery."""
+    if not isinstance(request_id, str) or not request_id:
+        raise ReplayEvidenceError("bound delivery for this receipt names no request")
+    written_paths = {
+        row.get("path") for row in receipt.get("writes") or () if isinstance(row, dict)
+    }
+    if f"operations/ai-actions/requests/{request_id}/request.yaml" not in written_paths:
+        raise ReplayEvidenceError(
+            "the delivery this receipt names belongs to a different request than "
+            "the one this transaction wrote"
+        )
+
+
+def _proven_delivery_delegation(
+    root: Path,
+    receipt: Mapping,
+    *,
+    authority_root: Path | None = None,
+    require_local_delivery: bool = True,
+) -> set[str]:
     """Return the domain capabilities this receipt's bound delivery actually proves.
 
     An ``ai-action.delivery.apply`` receipt may claim delegated grants, but a
-    claim in the receipt under review is not evidence of itself. This
-    re-reads and hash-verifies the exact approved delivery the receipt names
-    (the same binding ``apply_delivery`` performed at commit time) and treats
-    only the capability names its own operations record as proven. It never
-    trusts ``receipt["authority"]`` for this — that is precisely the field
-    being checked.
+    claim in the receipt under review is not evidence of itself. When the
+    approved delivery exists on disk (or ``require_local_delivery=True``, the
+    default for live replay and Diagnostics), this re-reads and hash-verifies the
+    exact approved delivery the receipt names (the same binding
+    ``apply_delivery`` performed at commit time) and treats only the capability
+    names its own operations record as proven. It never trusts
+    ``receipt["authority"]`` for this — that is precisely the field being
+    checked.
+
+    Whole-ledger validation (``require_local_delivery=False``) still verifies
+    on-disk deliveries in full whenever present, and on clean clones where the
+    gitignored delivery bundle is absent it validates the digest formats,
+    request write binding, and ``ActionRegistry`` capability ceiling.
     """
     metadata = receipt.get("metadata")
     delivery_id = metadata.get("delivery_id") if isinstance(metadata, dict) else None
@@ -125,7 +152,8 @@ def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
         )
 
     from learning_os.domain.ai_errors import AIActionError
-    from learning_os.store.ai_actions.binding import read_bound_delivery
+    from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
+    from learning_os.store.ai_actions.registry import ActionRegistry
     from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 
     # Resolving the id is inside the guard too: the exchange-identifier rule is
@@ -135,51 +163,79 @@ def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
     # the gateway with an unhandled traceback instead of a typed refusal.
     try:
         directory = FilesystemAIActionRepository(root).delivery_dir(delivery_id)
-        delivery, _artifacts = read_bound_delivery(
-            directory, delivery_sha256=delivery_sha256, artifact_sha256=artifact_sha256,
-        )
     except AIActionError as exc:
         raise ReplayEvidenceError(
             f"cannot re-verify the delivery this receipt claims: {exc}"
         ) from exc
 
-    # The delivery must be the one whose request this transaction actually
-    # wrote. `metadata.delivery_id` is part of the evidence under review, so on
-    # its own it only proves that *some* real delivery has those bytes: a
-    # tampered receipt could point at an unrelated delivery that happens to
-    # carry the capability it wants proven. Every `ai-action.delivery.apply`
-    # transaction writes its request record, and a delivery names that same
-    # request, so requiring the two to agree ties the delivery back to a write
-    # row this receipt cannot invent.
-    request_id = delivery.get("request_id")
-    if not isinstance(request_id, str) or not request_id:
-        raise ReplayEvidenceError("bound delivery for this receipt names no request")
-    written_paths = {
-        row.get("path") for row in receipt.get("writes") or () if isinstance(row, dict)
-    }
-    if f"operations/ai-actions/requests/{request_id}/request.yaml" not in written_paths:
-        raise ReplayEvidenceError(
-            "the delivery this receipt names belongs to a different request than "
-            "the one this transaction wrote"
-        )
+    if require_local_delivery or directory.exists() or directory.is_symlink():
+        try:
+            delivery, _artifacts = read_bound_delivery(
+                directory, delivery_sha256=delivery_sha256, artifact_sha256=artifact_sha256,
+            )
+        except AIActionError as exc:
+            raise ReplayEvidenceError(
+                f"cannot re-verify the delivery this receipt claims: {exc}"
+            ) from exc
 
-    operations = delivery.get("operations")
-    if not isinstance(operations, list):
-        raise ReplayEvidenceError("bound delivery for this receipt has no operations")
-    proven: set[str] = set()
-    for operation in operations:
-        if not isinstance(operation, dict) or not isinstance(operation.get("capability"), str):
-            raise ReplayEvidenceError("bound delivery for this receipt has a malformed operation")
-        proven.add(operation["capability"])
-    # `garden.update` bookkeeping (the AI-side state file) is written on every
-    # pilot delivery except a whole-unit material-synthesis delivery, whether
-    # or not an explicit `garden.update` operation is present — see
-    # `AIActionService.apply_delivery`. The `action_id` that decides it is read
-    # from the hash-verified delivery, never from the receipt's own metadata:
-    # metadata is part of the evidence under review, so letting it name the
-    # action would let a tampered receipt grant itself this scope by writing a
-    # different action id.
-    if delivery.get("action_id") != "unit.compare-materials":
+        # The delivery must be the one whose request this transaction actually
+        # wrote. `metadata.delivery_id` is part of the evidence under review, so on
+        # its own it only proves that *some* real delivery has those bytes: a
+        # tampered receipt could point at an unrelated delivery that happens to
+        # carry the capability it wants proven. Every `ai-action.delivery.apply`
+        # transaction writes its request record, and a delivery names that same
+        # request, so requiring the two to agree ties the delivery back to a write
+        # row this receipt cannot invent.
+        _verify_bound_request_write(receipt, delivery.get("request_id"))
+
+        operations = delivery.get("operations")
+        if not isinstance(operations, list):
+            raise ReplayEvidenceError("bound delivery for this receipt has no operations")
+        proven: set[str] = set()
+        for operation in operations:
+            if not isinstance(operation, dict) or not isinstance(operation.get("capability"), str):
+                raise ReplayEvidenceError("bound delivery for this receipt has a malformed operation")
+            proven.add(operation["capability"])
+        # `garden.update` bookkeeping (the AI-side state file) is written on every
+        # pilot delivery except a whole-unit material-synthesis delivery, whether
+        # or not an explicit `garden.update` operation is present — see
+        # `AIActionService.apply_delivery`. The `action_id` that decides it is read
+        # from the hash-verified delivery, never from the receipt's own metadata:
+        # metadata is part of the evidence under review, so letting it name the
+        # action would let a tampered receipt grant itself this scope by writing a
+        # different action id.
+        action_id = delivery.get("action_id")
+    else:
+        assert isinstance(metadata, dict)
+        try:
+            validated_sha256(delivery_sha256, label="delivery_sha256")
+            if not artifact_sha256:
+                raise ReplayEvidenceError(
+                    "idempotent receipt for ai-action.delivery.apply carries empty artifact digests"
+                )
+            for artifact_name, digest in artifact_sha256.items():
+                if not isinstance(artifact_name, str) or not artifact_name:
+                    raise ReplayEvidenceError(
+                        "idempotent receipt for ai-action.delivery.apply names an invalid artifact"
+                    )
+                validated_sha256(digest, label=f"artifact_sha256[{artifact_name}]")
+            _verify_bound_request_write(receipt, metadata.get("request_id"))
+            action_id = metadata.get("action_id")
+            if not isinstance(action_id, str) or not action_id:
+                raise ReplayEvidenceError(
+                    "idempotent receipt for ai-action.delivery.apply names no action_id"
+                )
+            contracts_root = authority_root or default_authority_root(root) or root
+            action = ActionRegistry(
+                contracts_root / "system" / "contracts" / "ai-actions"
+            ).get(action_id)
+        except AIActionError as exc:
+            raise ReplayEvidenceError(
+                f"cannot re-verify the delivery this receipt claims: {exc}"
+            ) from exc
+        proven = set(action.allowed_capabilities)
+
+    if action_id != "unit.compare-materials":
         proven.add("garden.update")
     return proven
 
@@ -193,6 +249,7 @@ def _verify_evidence_row(
     authority_root: Path | None = None,
     check_catalog_scopes: bool = True,
     scopes_by_capability: Mapping[str, tuple[str, ...]] | None = None,
+    require_local_delivery: bool = True,
 ) -> tuple[dict, dict, Path]:
     if row["capability"] != request.capability \
             or row["intent_sha256"] != request.intent_sha256:
@@ -363,7 +420,12 @@ def _verify_evidence_row(
                 {c for c in granted_capabilities if c != "ai-action.delivery.apply"}
             )
             if delegated:
-                proven = _proven_delivery_delegation(root, receipt)
+                proven = _proven_delivery_delegation(
+                    root,
+                    receipt,
+                    authority_root=resolved_authority_root,
+                    require_local_delivery=require_local_delivery,
+                )
                 unproven = [c for c in delegated if c not in proven]
                 if unproven:
                     raise ReplayEvidenceError(
@@ -409,6 +471,7 @@ def verify_committed_evidence(
     *,
     authority_root: Path | None = None,
     check_catalog_scopes: bool = True,
+    require_local_delivery: bool = True,
 ) -> tuple[dict, dict, Path] | None:
     """Verify the committed evidence for one idempotency key, strictly.
 
@@ -432,6 +495,7 @@ def verify_committed_evidence(
         live_revisions=live_revisions,
         authority_root=authority_root,
         check_catalog_scopes=check_catalog_scopes,
+        require_local_delivery=require_local_delivery,
     )
 
 
@@ -448,6 +512,9 @@ def verify_idempotency_ledger_rows(
     ``check_catalog_scopes=False`` so retired or tightened capability write
     globs do not fail historical committed rows, while still verifying receipt
     presence, schema, hashes, request bindings, revision floors, and writes.
+    Gitignored AI-action delivery bundles are hash-verified when present on
+    disk and validated against their digests, request write, and action
+    contract when absent on a clean checkout.
     """
     entries = load_idempotency_entries(root)
     if not entries:
@@ -490,6 +557,7 @@ def verify_idempotency_ledger_rows(
                 authority_root=authority_root,
                 check_catalog_scopes=check_catalog_scopes,
                 scopes_by_capability=scopes_by_capability,
+                require_local_delivery=False,
             )
         except (ReplayEvidenceError, KeyError, TypeError, ValueError) as exc:
             failures.append((key, str(exc)))

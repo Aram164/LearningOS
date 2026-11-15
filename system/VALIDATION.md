@@ -349,9 +349,13 @@ receipt.
   every row resolves via the shared `learning_os.store.evidence` checklist
   against its committed receipt (`schema`, `id`, `request`, `snapshot_*`,
   `artifact_revisions`, live revision floor, `writes`, and authority grants,
-  omitting only live capability catalog scope comparison for historical rows);
-  a missing/tampered receipt or contradicted ledger fails closed naming the
-  idempotency key.
+  omitting only live capability catalog scope comparison for historical rows;
+  when a gitignored AI-action delivery bundle under
+  `operations/ai-actions/deliveries/` is absent on a clean checkout,
+  delegated grants are bounded by the recorded delivery digests, request
+  write, and action contract, while any present bundle is still
+  hash-verified); a missing/tampered receipt or contradicted ledger fails
+  closed naming the idempotency key.
 - **E** `TRANSACTION-CHAIN-BREAK`: committed `writes` entries for gated
   plan/module/program/source-map records (`curriculum/modules/*/units/*/study-map.yaml`,
   `curriculum/modules/*/source-map.yaml`, `curriculum/modules/*/module.yaml`,
@@ -364,7 +368,11 @@ receipt.
 - **E** `TRANSACTION-DRIFT`: any receipt-tracked record whose live on-disk
   SHA-256 digest differs from (or was deleted after) its latest committed
   receipt `sha256_after`, and is not covered by a valid `historical_drift`
-  entry in `operations/receipt-chain-baseline.yaml`, fails validation.
+  entry in `operations/receipt-chain-baseline.yaml`, fails validation (absent
+  gitignored AI-action handoff files under
+  `operations/ai-actions/{requests,deliveries,incoming}/` are skipped on clean
+  checkouts, while any present file whose digest differs or is a symlink still
+  fails).
 - **E** `TRANSACTION-CHAIN-BASELINE`: `operations/receipt-chain-baseline.yaml`
   (schema `receipt-chain-baseline`) parses, matches its schema, and pins only
   genuine historical breaks/drifts by exact transaction id, path, and SHA-256
