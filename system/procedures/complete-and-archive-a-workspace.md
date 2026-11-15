@@ -27,11 +27,12 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 3. add warranted source evaluations and concept relations;
 4. ensure the workspace links to final durable notes;
 5. clear dependencies referencing this workspace from `COORDINATION.md`;
-6. set `status: complete`;
+6. set `status: complete` through `workspace.complete` (`workspace-complete`);
 7. rebuild and validate generated files;
 8. a workspace moves whole to `archive/workspaces/<year>/<workspace-id>/`
    only after its explicit path links are checked. Rewrite any
-   `source_plan.path` values that point into the folder being moved.
+   `source_plan.path` values that point into the folder being moved through
+   `unit.plan.revise`.
 
 ```scrut
 $ los inspect note-demo | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["id"], d["title"])'
@@ -55,14 +56,26 @@ no workspace reference to clear
 
 ```scrut
 $ los capabilities | grep -o "workspace[a-z.-]*" | sort -u
+workspace.complete
 workspace.next-action.update
 ```
 
-## Set status complete
+## Seal and submit `workspace.complete`
+
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability workspace.complete --payload '{"workspace_id": "workspace-demo"}' --key workspace-complete-demo --request-id request-workspace-complete-demo --guards auto --out "$TMPDIR/workspace-complete.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: workspace-demo=0
+```
+
+```scrut {interpolated: true}
+$ los capability workspace.complete --payload-file "$TMPDIR/workspace-complete.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":2,"request_id":"request-workspace-complete-demo","idempotency_key":"workspace-complete-demo","capability":"workspace.complete","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"ok":true,"workspace_id":"workspace-demo","status":"complete","path":"work/active/workspace-demo/CONTEXT.md","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
+```
 
 ```scrut
-$ $LOS_REPO/.venv/bin/python -c 'import yaml; p = "work/active/workspace-demo/CONTEXT.md"; t = open(p).read(); head, rest = t.split("---\n")[1:3]; d = yaml.safe_load(head); d["status"] = "complete"; open(p, "w").write("---\n" + yaml.safe_dump(d, sort_keys=False) + "---\n" + rest); print("completed", d["id"])'
-completed workspace-demo
+$ $H/los-assert-receipt --last --capability workspace.complete
 ```
 
 ```scrut

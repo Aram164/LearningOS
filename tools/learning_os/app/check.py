@@ -20,6 +20,7 @@ from pathlib import Path
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import TransactionProposal
 from learning_os.derive.validation import validate
+from learning_os.domain.validation import Issue
 from learning_os.store.fs import atomic_text as _atomic_text
 from learning_os.store.loader import load_repo
 from learning_os.store.revisions import load_revisions
@@ -152,6 +153,47 @@ def real_tree_errors(root: Path) -> list[str]:
     return out
 
 
+def filter_staged_drift_issues(
+    root: Path, staged_paths: Iterable[Path] | Iterable[str], issues: list[Issue]
+) -> list[Issue]:
+    """Ignore shadow ``TRANSACTION-DRIFT`` caused solely by the pending staged paths.
+
+    ``staged_shadow`` applies planned writes/deletes onto a copy of ``repository/``
+    without minting a receipt yet, so any pre-existing receipt-tracked file that
+    a proposal modifies naturally differs from its last committed receipt inside
+    the shadow copy. If the *real* repository already had unbaselined drift on
+    that path, keep the error so tampered working trees still fail preflight.
+    """
+    resolved_root = root.resolve()
+    staged_rels: set[str] = set()
+    for raw in staged_paths:
+        if isinstance(raw, str):
+            staged_rels.add(raw)
+            continue
+        candidate = raw if raw.is_absolute() else (resolved_root / raw)
+        try:
+            staged_rels.add(candidate.resolve().relative_to(resolved_root).as_posix())
+        except ValueError:
+            continue
+    if not staged_rels or not any(
+        i.code == "TRANSACTION-DRIFT" and i.path in staged_rels for i in issues
+    ):
+        return issues
+    from learning_os.store.receipt_chain import analyze_receipt_chain
+
+    live_drifted = {
+        str(row["path"])
+        for row in analyze_receipt_chain(root).unbaselined_drift
+    }
+    exempt = staged_rels - live_drifted
+    if not exempt:
+        return issues
+    return [
+        i for i in issues
+        if not (i.code == "TRANSACTION-DRIFT" and i.path in exempt)
+    ]
+
+
 def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
     """Stage the proposal on a shadow copy, validate once, return the record.
 
@@ -180,7 +222,9 @@ def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
         delete_rels.append(rel)
     with staged_shadow(root, proposal.writes, proposal.deletes or ()) as shadow:
         staged_repo = load_repo(shadow)
-        issues = validate(staged_repo, online=False)
+        issues = filter_staged_drift_issues(
+            root, [*write_rels, *delete_rels], validate(staged_repo, online=False)
+        )
         if proposal.validate_extra is not None:
             errors = [str(error)
                       for error in proposal.validate_extra(staged_repo, issues)]

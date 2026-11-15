@@ -182,9 +182,9 @@ def _admit_file(authority: Path, path: Path, excluded: set[str],
     """A regular, non-linked file inside ``authority``, outside excluded names.
 
     ``scope`` is the declared tree being walked: excluded names prune what
-    lies below a declaration, never the declared path itself, so an exactly
-    declared ``generated/summaries`` is admitted while every undeclared tree
-    under ``generated/`` stays out.
+    lies below a declaration, never the declared path itself, so an explicitly
+    declared tree is admitted even when its own path includes an excluded name
+    while every undeclared sibling stays out.
     """
     try:
         path.relative_to(authority)
@@ -309,8 +309,8 @@ def _admitted_paths(authority: Path, declared: dict[str, Any],
             found.add(path.relative_to(authority).as_posix())
     for relative in declared["trees"]:
         # A declaration admits its own path even where a component is an
-        # excluded name (`generated/summaries`); the walk below still prunes
-        # excluded names, and `_inside` still refuses a linked component.
+        # excluded name; the walk below still prunes excluded names, and
+        # `_inside` still refuses a linked component.
         tree = _inside(authority, relative)
         tree_stat = _inspect_path(tree)
         if tree_stat is None or not stat.S_ISDIR(tree_stat.st_mode):
@@ -849,15 +849,16 @@ def verify_restored_system(
 
     # The restored install.py owns preflight_plugin_directory and all other
     # install inputs, including bases/*.base. Ask that exact installer, rather
-    # than maintaining a second prerequisite list in Core. --skip-tests avoids
-    # rebuilding a recovered bundle (and needing npm/network); the existing
-    # bundle/contract checks below and above remain independent. A disposable
-    # fresh vault proves source readiness, not compatibility with a live vault.
+    # than maintaining a second prerequisite list in Core. --local-build names
+    # a restored local UI checkout (not a hosted --accepted-artifact bundle), and
+    # --skip-tests avoids rebuilding a recovered bundle (and needing npm/network);
+    # the existing bundle/contract checks below and above remain independent. A
+    # disposable fresh vault proves source readiness, not compatibility with a live vault.
     installer = restored_ui / "install.py"
     installer_row = next((row for row in manifest["entries"]
                           if (row["root"], row["path"]) == ("ui", "install.py")), None)
     detail: dict[str, Any] = {
-        "requirement": "restored install.py --dry-run --skip-tests",
+        "requirement": "restored install.py --local-build --dry-run --skip-tests",
         "scope": "installation inputs for a fresh vault; excludes UI runtime tests and live-vault checks",
     }
     if installer_row is None or not installer.is_file() or installer.is_symlink():
@@ -867,12 +868,20 @@ def verify_restored_system(
         detail["installer_sha256"] = installer_row["sha256"]
         try:
             with tempfile.TemporaryDirectory(prefix="learningos-install-preflight-") as vault:
+                cmd = [sys.executable, "-I", "-B", str(installer.resolve())]
                 result = subprocess.run(
-                    [sys.executable, "-I", "-B", str(installer.resolve()),
-                     "--dry-run", "--skip-tests", "--vault", vault],
+                    [*cmd, "--local-build", "--dry-run", "--skip-tests", "--vault", vault],
                     cwd=restored_ui, capture_output=True, text=True, timeout=30, check=False,
                 )
                 untouched = not any(Path(vault).iterdir())
+                # Pre-D-29 backed-up installers did not accept --local-build; retry without it
+                # only when argparse rejects --local-build and the dry-run vault is still empty.
+                if untouched and result.returncode == 2 and "unrecognized arguments: --local-build" in result.stderr:
+                    result = subprocess.run(
+                        [*cmd, "--dry-run", "--skip-tests", "--vault", vault],
+                        cwd=restored_ui, capture_output=True, text=True, timeout=30, check=False,
+                    )
+                    untouched = not any(Path(vault).iterdir())
                 preflight_ok = result.returncode == 0 and untouched
                 detail.update(returncode=result.returncode, stdout=result.stdout.strip()[-4000:],
                               stderr=result.stderr.strip()[-4000:], vault_unchanged=untouched)

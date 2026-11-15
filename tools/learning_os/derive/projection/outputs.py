@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 from pathlib import Path, PurePosixPath
 
 from learning_os.derive.projection.atlas import build_domain_atlas
@@ -33,14 +34,19 @@ from learning_os.derive.projection.sources import build_collection_view, build_s
 from learning_os.derive.projection.study_plan import build_study_plan_view
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.snapshot import Repo
-from learning_os.store.derived.store import DERIVED_TOP_DIR
-from learning_os.store.manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
-from learning_os.store.materials.search_index import OUTLINE_TOP_DIR, SEARCH_TOP_DIR
+from learning_os.store.contracts.tree_contract import generated_keep_directories
+from learning_os.store.manifest_identity import (
+    IDENTITY_FILENAME,
+    build_identity,
+    manifest_text,
+    observe_inputs,
+)
 
 
 def generate_all(repo: Repo, generated_at: str | None = None, *,
                  backlinks: dict | None = None,
-                 manifest: dict | None = None) -> dict[str, str]:
+                 manifest: dict | None = None,
+                 inputs_before: dict | None = None) -> dict[str, str]:
     """Build all outputs; returns {relative path: content}.
 
     The default timestamp is the last-commit time (stable_generated_at), so
@@ -50,27 +56,28 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
     ``manifest`` it built from this same ``repo`` and ``generated_at``, so
     publishing them does not build them twice. Both or neither: they are one
     build, and a pair stamped with another timestamp is refused.
+
+    Non-canonical manifest inputs (materials, operations sidecars, code, clock)
+    are observed before building when the caller did not already observe them
+    before ``load_repo``; the identity sidecar is emitted only when before and
+    after observations still match, so an input moving mid-build forces a
+    fresh rebuild instead of stamping a stale build as current (D-19).
     """
     generated_at = generated_at or stable_generated_at(repo.root)
     if (backlinks is None) != (manifest is None):
         raise ValueError("generate_all takes a prebuilt backlinks and manifest together")
+    observed_before = inputs_before if inputs_before is not None else observe_inputs(repo.root)
     if manifest is None:
         backlinks = build_backlinks(repo, generated_at)
         manifest = build_manifest(repo, generated_at, backlinks)
     elif (backlinks.get("_generated", {}).get("generated_at") != generated_at
           or manifest.get("_generated", {}).get("generated_at") != generated_at):
         raise ValueError("prebuilt projection was stamped with another generated_at")
+    identity = build_identity(repo.root, manifest)
     outputs = {
         # These are machine projections. Keep their complete data and stable
         # key order without paying for indentation on every read/publication.
         "manifest.json": manifest_text(manifest),
-        # The reuse sidecar: pins every input the manifest bytes depend on
-        # so reads can serve the stored file when it is provably current
-        # (#83). It pins the manifest's exact bytes, so whichever of the two
-        # files a crash or a concurrent reader catches mid-publication, a
-        # mismatched pair rebuilds rather than serving a false hit.
-        IDENTITY_FILENAME: json.dumps(build_identity(repo.root, manifest), separators=(",", ":"),
-                                       sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
         "learning-requirements.json": build_learning_requirements_json(repo, generated_at) + "\n",
         "learning-requirements.md": build_learning_requirements_md(repo),
@@ -92,6 +99,12 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
             build_concept_canvas(repo, generated_at),
             separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
     }
+    if all(identity.get(key) == value for key, value in observed_before.items()):
+        # Emit the reuse sidecar only when pre-load/pre-build inputs still
+        # match post-build state (#83 / D-19).
+        outputs[IDENTITY_FILENAME] = json.dumps(
+            identity, separators=(",", ":"), sort_keys=True, ensure_ascii=False,
+        ) + "\n"
     for name in sorted(repo.collections):
         outputs[f"collections/{name}.md"] = build_collection_view(
             repo, name, repo.collections[name], generated_at) + "\n"
@@ -101,12 +114,12 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
 _KEEP_NAMES = {".gitkeep", ".DS_Store"}
 
 #: Sibling producers the publisher must not garbage-collect. The page-text
-#: cache, the summary cache, the dossier cache, the derived-state cache, the
-#: search index and the outline-section cache live under generated/
-#: (gitignored, disposable) but are owned by their own tools with their own
-#: invalidation; a rebuild of the projection must leave them alone.
-_KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
-                            DERIVED_TOP_DIR, SEARCH_TOP_DIR, OUTLINE_TOP_DIR})
+#: cache, the dossier cache, the derived-state cache, the search index and the
+#: outline-section cache live under generated/ (gitignored, disposable) with
+#: ``rebuildable: false`` in system/contracts/tree-contract.yaml, owned by
+#: their own tools with their own invalidation; a rebuild of the projection
+#: must leave them alone.
+_KEEP_TOP_DIRS = generated_keep_directories()
 
 
 _KEEP_REPORT_PREFIX = "validation-report"
@@ -140,11 +153,10 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
         content = outputs[rel].encode("utf-8")
         relative = PurePosixPath(rel)
         target = _checked_output_path(gen, relative, create_parent=True)
-        # Never expose a half-written projection to Obsidian. os.replace is an
-        # atomic publication step on the same filesystem; manifest.json is
-        # published last because it is the versioned interface contract.
-        tmp = target.with_name(f".{target.name}.tmp")
-        _refuse_link(tmp, gen)
+        # Never expose a half-written projection to Obsidian. Unique sibling
+        # staging files avoid inode collisions, and os.replace is atomic on the
+        # same filesystem; manifest.json is published last because it is the
+        # versioned interface contract.
         try:
             if target.read_bytes() == content:
                 continue
@@ -152,8 +164,17 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
             pass
         except IsADirectoryError:
             _recover_output_dir(gen, relative)
-        tmp.write_bytes(content)
-        os.replace(tmp, target)
+        fd, tmp_name = tempfile.mkstemp(
+            dir=target.parent, prefix=f".{target.name}.", suffix=".tmp",
+        )
+        tmp = Path(tmp_name)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(content)
+            os.replace(tmp, target)
+        except BaseException:
+            tmp.unlink(missing_ok=True)
+            raise
     _remove_stale(gen, outputs)
 
 
@@ -248,6 +269,19 @@ def _checked_output_path(
     return target
 
 
+def _is_declared_output_temp(rel: PurePosixPath, expected: set[PurePosixPath]) -> bool:
+    """Whether ``rel`` is a sibling temp file of a declared output path."""
+    name = rel.name
+    if not name.startswith(".") or not name.endswith(".tmp"):
+        return False
+    for exp in expected:
+        if exp.parent != rel.parent:
+            continue
+        if name == f".{exp.name}.tmp" or name.startswith(f".{exp.name}."):
+            return True
+    return False
+
+
 def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
     expected = {PurePosixPath(rel) for rel in outputs}
     stale_dirs: list[Path] = []
@@ -263,6 +297,8 @@ def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
         if f.name in _KEEP_NAMES:
             continue
         rel = PurePosixPath(f.relative_to(gen).as_posix())
+        if _is_declared_output_temp(rel, expected):
+            continue
         if rel.parts and rel.parts[0] == "reports" \
                 and f.name.startswith(_KEEP_REPORT_PREFIX) \
                 and f.name not in _OBSOLETE_REPORT_CACHES:

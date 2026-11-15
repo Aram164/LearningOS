@@ -38,7 +38,7 @@ help:
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
 	@echo "make test-group G=<area> - run one area group (see tests/GROUPS.md)"
 	@echo "make test-affected [BASE=main] - run the groups touched by this branch"
-	@echo "make test-paired - run the Core/UI boundary tests (the pre-push gate's UI-only path)"
+	@echo "make test-paired - run the Core/UI boundary tests"
 	@echo "make test-parallel - run the suite in parallel for fast feedback (WORKERS=4 workers max, zz population files stay serial; never the gate)"
 	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
@@ -114,8 +114,6 @@ test-group:
 
 # The groups touched by this branch (commits against BASE plus uncommitted
 # changes). A change to shared machinery reruns everything — see tests/GROUPS.md.
-# The pre-push gate passes the last stamped Core SHA as BASE when one exists,
-# so a review branch reruns only what changed since its last verification.
 BASE ?= main
 test-affected:
 	files=`$(PY) tools/affected_tests.py --base "$(BASE)"` || exit $$?; \
@@ -124,10 +122,6 @@ test-affected:
 
 # The Core/UI boundary tests only: every Core test that reads the live sibling
 # checkout (marker `paired`, boundary pinned by tests/test_pre_push_hook.py).
-# The pre-push gate runs this instead of test-affected when Core is unchanged
-# against the last stamped pair. A command-line -m wins over PYTEST_ADDOPTS,
-# so the hook's live_install deselection never widens this selection — and no
-# paired test carries the live_install mark.
 test-paired:
 	$(PY) -m pytest -q -m "paired"
 
@@ -136,7 +130,7 @@ test-paired:
 # process, so they only mean anything serially and stay in `make test` /
 # `make system-check`. This target is feedback, never the acceptance gate.
 test-parallel:
-	$(PY) -m pytest -q -n $(WORKERS) --dist loadscope -m "not live_install" --ignore=tests/test_scenarios_zz_refusal_sites.py --ignore=tests/test_scenarios_zz_operational_owners.py
+	$(PY) -m pytest -q -n $(WORKERS) --dist loadscope --ignore=tests/test_scenarios_zz_refusal_sites.py --ignore=tests/test_scenarios_zz_operational_owners.py
 
 # Discoverability only: the read-only benchmark scripts are noisy by nature,
 # so they are runnable but never a gate and never part of check/CI.
@@ -185,7 +179,6 @@ system-check:
 	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
 	$(PY) -m pytest -q
 	npm --prefix ../obsidian-ui run check
-	$(PY) tools/verified_pairs.py stamp
 
 # Deliberate deep audit. Routine work stays on `make check`; release work uses
 # `make system-check`; this one command standardizes the rarer, costlier stress

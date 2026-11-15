@@ -642,6 +642,23 @@ def _seal_one(root: Path, *, capability: str, payload: dict, key: str):
     seal = Path(__file__).resolve().parents[1] / "tools" / "seal_envelope.py"
     import subprocess
     import sys
+    import tempfile
+
+    import seal_envelope
+    if capability in seal_envelope.REVIEW_REQUIRED_CAPABILITIES:
+        with tempfile.TemporaryDirectory() as tmp:
+            check_rec = Path(tmp) / "check.json"
+            checked = subprocess.run(
+                [sys.executable, str(seal), "--root", str(root),
+                 "--capability", capability, "--payload", json.dumps(payload),
+                 "--key", key, "--guards", "auto", "--check-out", str(check_rec)],
+                text=True, capture_output=True, timeout=120)
+            if checked.returncode != 0:
+                return checked
+            return subprocess.run(
+                [sys.executable, str(seal), "--root", str(root),
+                 "--guards-from", str(check_rec), "--submit"],
+                text=True, capture_output=True, timeout=120)
     return subprocess.run(
         [sys.executable, str(seal), "--root", str(root),
          "--capability", capability, "--payload", json.dumps(payload),
@@ -766,13 +783,20 @@ def test_verify_envelope_mode_refuses_an_envelope_that_never_committed(
     import subprocess
     import sys
     edited = _map_with_one_more_resource(mini_repo)
+    check_record = tmp_path / "check-record.json"
     envelope = tmp_path / "never-submitted.json"
-    sealed = subprocess.run(
+    checked = subprocess.run(
         [sys.executable, str(seal), "--root", str(mini_repo),
          "--capability", "unit.map.import",
          "--payload", json.dumps({"unit_id": "unit-demo-l01",
                                   "file": str(edited), "replace": True}),
          "--key", "verify-envelope-never-001", "--guards", "auto",
+         "--check-out", str(check_record)],
+        text=True, capture_output=True, timeout=120)
+    assert checked.returncode == 0, checked.stderr
+    sealed = subprocess.run(
+        [sys.executable, str(seal), "--root", str(mini_repo),
+         "--guards-from", str(check_record),
          "--out", str(envelope)],
         text=True, capture_output=True, timeout=120)
     assert sealed.returncode == 0, sealed.stderr

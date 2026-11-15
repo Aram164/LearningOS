@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/receipt-chain-baseline.schema.json",
+  "title": "Receipt Chain Baseline",
+  "description": "Explicit one-time record of historical pre-gate per-path SHA-256 chain breaks and historical pre-gate live drift anomalies.",
+  "x-governs": "record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "type": { "const": "receipt-chain-baseline" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transaction",
+          "path",
+          "previous_transaction",
+          "expected_sha256_before",
+          "actual_sha256_before",
+          "reason",
+          "decided_by",
+          "decided_on"
+        ],
+        "properties": {
+          "transaction": {
+            "type": "string",
+            "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previous_transaction": {
+            "type": ["string", "null"]
+          },
+          "expected_sha256_before": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              { "type": "null" }
+            ]
+          },
+          "actual_sha256_before": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              { "type": "null" }
+            ]
+          },
+          "reason": { "type": "string", "minLength": 1 },
+          "decided_by": { "type": "string", "minLength": 1 },
+          "decided_on": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          }
+        }
+      }
+    },
+    "historical_drift": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "receipt",
+          "expected_sha256",
+          "observed_sha256",
+          "reason",
+          "decided_by",
+          "decided_on"
+        ],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "receipt": {
+            "type": "string",
+            "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"
+          },
+          "expected_sha256": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              { "type": "null" }
+            ]
+          },
+          "observed_sha256": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              { "type": "null" }
+            ]
+          },
+          "derived_rebuild": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 1 },
+          "decided_by": { "type": "string", "minLength": 1 },
+          "decided_on": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          }
+        }
+      }
+    }
+  }
+}

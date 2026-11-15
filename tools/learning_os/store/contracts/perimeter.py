@@ -271,6 +271,14 @@ def check(root: Path) -> list[PerimeterIssue]:
             f"declared but not on disk: '{relative}' (wrapper root: {wrapper})",
             PERIMETER_RELATIVE))
 
+    for relative in sorted(pending):
+        if not (wrapper / relative).exists():
+            issues.append(PerimeterIssue(
+                "STALE-PENDING",
+                f"disposed of, but still listed in pending_disposition: "
+                f"'{relative}' (wrapper root: {wrapper})",
+                PERIMETER_RELATIVE))
+
     # Material and duplication rules apply to every file at these levels,
     # declared or pending — a declared stray is still a stray.
     managed_sizes: dict[int, list[Path]] | None = None

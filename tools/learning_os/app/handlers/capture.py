@@ -179,7 +179,6 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
 
     title = str(req.get("title") or "").strip() or None
 
-    ctx.require_snapshot(req.get("expected_snapshot"))
 
     garden = root / "knowledge" / "garden"
     slug = _seed_slug(text, title)
@@ -402,11 +401,28 @@ def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> li
     return lines
 
 
+def _require_unique_proposal_ids(ctx: OpContext, items: list) -> None:
+    """Refuse shelving packets with duplicate proposal item IDs."""
+    seen: set[str] = set()
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        item_id = item.get("id")
+        if isinstance(item_id, str):
+            if item_id in seen:
+                raise WriteRefused(
+                    f"duplicate shelving proposal id {item_id!r}; every proposal item must carry a unique id",
+                    site=f"{ctx.operation}.duplicate-item-id",
+                    prefixed=True,
+                    exit_code=2,
+                )
+            seen.add(item_id)
+
+
 @register("review.prepare", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def shelving_prepare(ctx: OpContext, req: dict) -> Result:
     """Prepare a review packet; never applies canonical changes."""
     root = ctx.root
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     items = []
@@ -433,6 +449,7 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             )
+        _require_unique_proposal_ids(ctx, items)
     proposal_path = study_map.path.parent / "shelving-proposal.md"
     stage_titles = {
         str(stage.get("id")): str(stage.get("title") or stage.get("id"))
@@ -525,11 +542,11 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
         )
     root = ctx.root
     selected = set(req["selected"])
-    ctx.require_snapshot(req.get("expected_snapshot"))
     _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     shelving = data.get("shelving") or {}
     packet_items = shelving.get("items", []) or []
+    _require_unique_proposal_ids(ctx, packet_items)
     items = [item for item in packet_items if item.get("id") in selected]
     if not items or {item.get("id") for item in items} != selected:
         raise WriteRefused(
@@ -679,7 +696,6 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    ctx.require_snapshot(req.get("expected_snapshot"))
     try:
         inbox = root / "work" / "inbox"
         try:

@@ -202,6 +202,14 @@
      "curriculum/modules/*/module.yaml"
     ]
    },
+   "module.status.update": {
+    "admission": null,
+    "cli_command": "module-status-update",
+    "handler": "module_status_update",
+    "writes": [
+     "curriculum/modules/*/module.yaml"
+    ]
+   },
    "note.analysis.save": {
     "admission": null,
     "cli_command": "note-analysis-save",
@@ -375,6 +383,14 @@
     "handler": "unit_source_selection",
     "writes": [
      "curriculum/modules/**/units/**/unit.yaml"
+    ]
+   },
+   "workspace.complete": {
+    "admission": null,
+    "cli_command": "workspace-complete",
+    "handler": "workspace_complete",
+    "writes": [
+     "work/active/**"
     ]
    },
    "workspace.next-action.update": {
@@ -5328,6 +5344,94 @@
     "type": null
    }
   ],
+  "module-status-update": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "active",
+     "archived",
+     "awaiting-grade",
+     "completed",
+     "dropped",
+     "enrolled",
+     "paused",
+     "planned"
+    ],
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--status"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
   "note-analysis-prepare": [
    {
     "action": "store",
@@ -9383,6 +9487,72 @@
     "type": null
    }
   ],
+  "workspace-complete": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "workspace-next-action": [
    {
     "action": "store",
@@ -9527,6 +9697,7 @@
   "module.materials.compact.schema.json": "1bdd0efeb2eed2eae79448ddd0e2f2ae5d763dd7469b08980b16ad5527dd61be",
   "module.plan.import.schema.json": "16e476519ed079b87acdf8f62584725e6a7514c6f1bd78f7ef38b58428a1bfe9",
   "module.sitting.update.schema.json": "853ee3c8cb75a6c3de8a83f65ee306495f105b242ac2d3118e6ca56428e05076",
+  "module.status.update.schema.json": "c296d34a5ab05e391395e8fa2c3b809b53991c17d2e804d4655cea7e6aadcc47",
   "note.analysis.prepare.schema.json": "c0bba25db6730422ce1c9bf7fc5e30ae272b397dbc1c3dff0e231166437feb4e",
   "note.analysis.save.schema.json": "4a4242ac01aaa407dcba358910b72f80dae8bd9aa76f2bc0e649f99a4cc96f81",
   "note.analysis.save_batch.schema.json": "4332e7bfe2be823efd5c0b757f13304e1ef46524da1c8cd2f8bd611d8264f2e1",
@@ -9566,6 +9737,7 @@
   "unit.note.append.schema.json": "2af772166fcb0b33744c84b4e24cbb5890115dcfa89a7f0c10f868d54034fc52",
   "unit.plan.revise.schema.json": "06f46ccf33939298865a5917b7d7f6c612bfce4d84e02a3d1537f0cd13a1f2ad",
   "unit.source-selection.set.schema.json": "8f7b570768812eccb25f689ae94affeb15bfbd3eda738da19fba4a14841fefff",
+  "workspace.complete.schema.json": "0ec862c6b9c468711a14a0d453225ea6cfba0178b6a5becac7ab057d7f36540d",
   "workspace.next-action.update.schema.json": "ddc71f623d2b720cd66c6b7bb9d0279c65a1f9c6af27591dcf40b0c4e662dbde"
  },
  "tools": {

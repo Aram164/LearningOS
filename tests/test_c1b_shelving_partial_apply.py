@@ -110,3 +110,51 @@ def test_partial_shelving_apply_keeps_remainder_visible(mini_repo):
         f"({remaining}) is still in the packet and appliable, but the "
         "manifest's review_items no longer lists the shelving packet"
     )
+
+
+def test_shelving_refuses_duplicate_proposal_ids(mini_repo):
+    """D-23: duplicate proposal IDs are refused on both review.prepare and review.apply."""
+    root = mini_repo
+    add_curriculum(root)
+    signatures, errors = collect(root)
+    assert not errors, errors
+    write_baseline(root, signatures, "D-23 duplicate id fixture")
+
+    items = _proposal_items()
+    dup_items = [items[0], {**items[1], "id": items[0]["id"]}]
+    dup_path = root / "work/dup-items.json"
+    dup_path.parent.mkdir(parents=True, exist_ok=True)
+    dup_path.write_text(json.dumps({"items": dup_items}), encoding="utf-8")
+
+    prepared = approved_v2_call(
+        root,
+        capability="review.prepare",
+        payload={
+            "unit_id": "unit-demo-l01",
+            "items_file": str(dup_path),
+            "items_file_sha256": file_sha256(dup_path),
+        },
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="d23-prepare-dup",
+    )
+    assert prepared.returncode != 0
+    assert "duplicate shelving proposal id" in prepared.stdout + prepared.stderr
+
+    # Defense in depth: even if a study map packet on disk already contains duplicate IDs,
+    # review.apply refuses before applying multiple items sharing the selected ID.
+    sm_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    sm_data = yaml.safe_load(sm_path.read_text(encoding="utf-8"))
+    sm_data["shelving"] = {"state": "proposed", "summary": "dup packet", "items": dup_items}
+    sm_path.write_text(yaml.safe_dump(sm_data, sort_keys=False), encoding="utf-8")
+
+    applied = approved_v2_call(
+        root,
+        capability="review.apply",
+        payload={"unit_id": "unit-demo-l01", "selected": ["proposal-alpha"]},
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01", "proposal-alpha"],
+        idempotency_key="d23-apply-dup",
+    )
+    assert applied.returncode != 0
+    assert "duplicate shelving proposal id" in applied.stdout + applied.stderr
+    assert not (root / "knowledge/notes/mathematics/note-probe-a.md").exists()
+    assert not (root / "knowledge/notes/mathematics/note-probe-b.md").exists()

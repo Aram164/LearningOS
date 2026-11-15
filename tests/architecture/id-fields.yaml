@@ -340,6 +340,10 @@ fields:
   pointer: /properties/module_id
   kind: module
   lookup: true
+- operation: module.status.update
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
 - operation: note.analysis.save
   pointer: /properties/body_file_sha256
   kind: digest
@@ -481,6 +485,10 @@ fields:
 - operation: unit.source-selection.set
   pointer: /properties/unit_id
   kind: unit
+  lookup: true
+- operation: workspace.complete
+  pointer: /properties/workspace_id
+  kind: workspace
   lookup: true
 - operation: workspace.next-action.update
   pointer: /properties/workspace_id

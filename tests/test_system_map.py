@@ -56,7 +56,7 @@ Own {identifier}.
 
 def test_real_map_owns_every_module_and_matches_source():
     assert sm.check(ROOT) == []
-    assert (ROOT / "system/developer/FLOWS.md").read_text().count("sequenceDiagram") == 4
+    assert (ROOT / "system/developer/FLOWS.md").read_text().count("sequenceDiagram") == 5
 
 
 def test_generation_is_idempotent_and_check_does_not_write(mapped_repo):

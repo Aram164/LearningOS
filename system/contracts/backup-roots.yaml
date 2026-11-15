@@ -45,13 +45,6 @@ roots:
       - archive/inbox
       - curriculum/quarantine/masters-planning/comparisons
       - curriculum/quarantine/masters-planning/promotions
-      # Chapter summaries are judgments an agent wrote and a reviewer admitted
-      # (tools/material_summarize.py --promote); nothing rebuilds them from the
-      # material bytes, unlike every other cache under generated/. This is the
-      # one declared tree whose own path holds an excluded name: declaring it
-      # admits exactly this tree, while excluded names still prune everything
-      # found below it and every undeclared sibling under generated/.
-      - generated/summaries
     files:
       # Handler-owned decisions and frozen audit samples are recovery evidence;
       # the domain loader does not read them, so read observation cannot cover it.
@@ -61,6 +54,9 @@ roots:
       # their retirements a restored tree fails TRANSACTION-REVISION-* and
       # blocks every canonical write.
       - operations/revision-retirements.yaml
+      # Read by the validator alongside revision-retirements.yaml to preserve
+      # pre-gate historical receipt chain baseline decisions.
+      - operations/receipt-chain-baseline.yaml
       - curriculum/resume.yaml
       # Explicit canonical metadata that interfaces may never infer from titles,
       # paths or identifiers — so nothing in a restore can reconstruct it. It was

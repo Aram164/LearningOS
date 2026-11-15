@@ -39,6 +39,7 @@ import yaml
 
 TREE_RELATIVE = "system/contracts/tree-contract.yaml"
 ARCHITECTURE_RELATIVE = "system/ARCHITECTURE.md"
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 
 BEGIN = "<!-- tree:begin"
 END = "<!-- tree:end -->"
@@ -72,6 +73,7 @@ class Entry:
     purpose: str
     label: str
     glob: str | None = None
+    rebuildable: bool | None = None
     children: list[Entry] = field(default_factory=list)
 
 
@@ -92,12 +94,54 @@ def _entry(raw: dict) -> Entry:
     path = raw.get("path")
     glob = raw.get("glob")
     label = raw.get("label") or (Path(str(path)).name + "/" if path else str(glob))
+    rebuildable = raw.get("rebuildable")
+    if "rebuildable" in raw and not isinstance(rebuildable, bool):
+        raise TreeContractError(
+            f"{TREE_RELATIVE}: 'rebuildable' on {path or label!r} must be boolean"
+        )
     return Entry(
         path=str(path) if path else None,
         purpose=str(raw.get("purpose", "")).strip(),
         label=str(label),
         glob=str(glob) if glob else None,
+        rebuildable=rebuildable,
         children=[_entry(child) for child in raw.get("children") or ()],
+    )
+
+
+def _generated_children(contract: TreeContract) -> list[Entry]:
+    gen = next((entry for entry in contract.directories if entry.path == "generated"), None)
+    if gen is None or not gen.children:
+        raise TreeContractError(
+            f"{TREE_RELATIVE}: 'generated' must declare child subdirectories"
+        )
+    out: list[Entry] = []
+    for child in gen.children:
+        if not child.path:
+            raise TreeContractError(
+                f"{TREE_RELATIVE}: generated child must declare 'path'"
+            )
+        if not isinstance(child.rebuildable, bool):
+            raise TreeContractError(
+                f"{TREE_RELATIVE}: generated child '{child.path}' must declare boolean 'rebuildable'"
+            )
+        out.append(child)
+    return out
+
+
+def generated_directories(root: Path | None = None) -> frozenset[str]:
+    """All top-level subdirectories permitted under ``generated/``."""
+    children = _generated_children(load(root or _REPO_ROOT))
+    return frozenset(Path(child.path).name for child in children if child.path)
+
+
+def generated_keep_directories(root: Path | None = None) -> frozenset[str]:
+    """Top-level subdirectories under ``generated/`` preserved by projection rebuilds."""
+    children = _generated_children(load(root or _REPO_ROOT))
+    return frozenset(
+        Path(child.path).name
+        for child in children
+        if child.path and not child.rebuildable
     )
 
 

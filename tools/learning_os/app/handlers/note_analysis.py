@@ -55,7 +55,6 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
         req["body_file"], req.get("body_file_sha256"),
         label="analysis body file")
     binding = _precheck_analysis(req["analysis"], body)
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     note_id, path, content = _resolve_note(
         root, repo, req["analysis"], binding, body)
@@ -137,7 +136,6 @@ def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
     """Preserve up to 20 source analyses atomically under one receipt."""
     root = ctx.root
     prepared = _read_batch_items(req["bundle"])
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     writes: dict[Path, bytes] = {}
     created: list[str] = []

@@ -17,7 +17,7 @@ Publish deterministic views and the producer-owned manifest from loaded state.
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `contracts`, `derived-store`, `domain`, `learner-derivations`, `loading`, `materials`, `package-root`, `semantics`, `session-ledger`, `transactions`.
+Depends on: `contracts`, `domain`, `learner-derivations`, `loading`, `materials`, `package-root`, `semantics`, `session-ledger`, `transactions`.
 
 Used by: `ai-delivery`, `backup`, `learner-derivations`, `operation-handlers`, `operation-pipeline`, `validation`.
 <!-- system-map:end -->

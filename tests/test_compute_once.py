@@ -416,14 +416,21 @@ def test_generated_reference_predicate(text: str, expected: bool):
 
 
 def test_generated_directories_are_the_ones_the_tree_holds(mini_repo: Path):
-    """The directory names the predicate trusts are the projection's own."""
+    """The directory names the predicate trusts come from the single tree-contract owner."""
     from learning_os.derive.projection import generate_all
     from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS
-    from learning_os.domain.validation import GENERATED_DIRECTORIES
+    from learning_os.derive.validation.registries import GENERATED_DIRECTORIES
+    from learning_os.store.contracts.tree_contract import (
+        generated_directories,
+        generated_keep_directories,
+    )
     from learning_os.store.loader import load_repo
 
     written = {Path(rel).parts[0] for rel in generate_all(load_repo(mini_repo))
                if len(Path(rel).parts) > 1}
+    assert GENERATED_DIRECTORIES == generated_directories()
+    assert _KEEP_TOP_DIRS == generated_keep_directories()
+    assert "summaries" not in GENERATED_DIRECTORIES
     assert written and written <= GENERATED_DIRECTORIES
     assert _KEEP_TOP_DIRS <= GENERATED_DIRECTORIES
 

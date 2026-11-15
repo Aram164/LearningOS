@@ -1528,16 +1528,120 @@ def _prove_workspace_no_next_action(mini_repo: Path, tmp_path: Path,
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "gateway.dispatch") == 2
 
+
+def _prove_workspace_complete_not_active(mini_repo: Path, tmp_path: Path,
+                                         monkeypatch) -> None:
+    """A paused workspace fires workspace.complete.workspace-not-active."""
+    from learning_os.app.outcomes import exit_for
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = _a9_world("workspace.complete", "complete-workspace", tmp_path)
+    root = ctx.root
+    ws = root / "work" / "active" / "workspace-demo" / "CONTEXT.md"
+    raw = ws.read_text(encoding="utf-8")
+    assert "status: active" in raw
+    ws.write_text(raw.replace("status: active", "status: paused", 1), encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "workspace.complete",
+        {"workspace_id": "workspace-demo"},
+        ["workspace-demo"], "a9-proof-workspace-complete-not-active",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "workspace.complete",
+                      "kind": "failure",
+                      "site": "workspace.complete.workspace-not-active",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_workspace_complete_standing(mini_repo: Path, tmp_path: Path,
+                                       monkeypatch) -> None:
+    """A standing workspace fires workspace.complete.standing-workspace."""
+    from learning_os.app.outcomes import exit_for
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = _a9_world("workspace.complete", "complete-workspace", tmp_path)
+    root = ctx.root
+    ws = root / "work" / "active" / "workspace-demo" / "CONTEXT.md"
+    raw = ws.read_text(encoding="utf-8")
+    assert "status: active" in raw
+    ws.write_text(
+        raw.replace("status: active\n", "status: active\nstanding: true\n", 1),
+        encoding="utf-8",
+    )
+    outcome, lines = _a9_run_gateway(
+        root, "workspace.complete",
+        {"workspace_id": "workspace-demo"},
+        ["workspace-demo"], "a9-proof-workspace-complete-standing",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "workspace.complete",
+                      "kind": "failure",
+                      "site": "workspace.complete.standing-workspace",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_workspace_complete_coordination_reference(
+    mini_repo: Path, tmp_path: Path, monkeypatch
+) -> None:
+    """A COORDINATION.md token reference fires coordination-reference."""
+    from learning_os.app.outcomes import exit_for
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = _a9_world("workspace.complete", "complete-workspace", tmp_path)
+    root = ctx.root
+    coord = root / "work" / "COORDINATION.md"
+    coord.write_text(
+        coord.read_text(encoding="utf-8") + "\n- Depends on workspace-demo.\n",
+        encoding="utf-8",
+    )
+    outcome, lines = _a9_run_gateway(
+        root, "workspace.complete",
+        {"workspace_id": "workspace-demo"},
+        ["workspace-demo"], "a9-proof-workspace-complete-coord",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "workspace.complete",
+                      "kind": "failure",
+                      "site": "workspace.complete.coordination-reference",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_module_status_bad_status_guarded(mini_repo: Path, tmp_path: Path,
+                                            monkeypatch) -> None:
+    """The status choices guard refuses ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="module.status.update.bad-status",
+        operation="module.status.update",
+        cli_argv=["module-status-update", "module-demo", "--status", "bogus"],
+        field="status",
+        valid={"module_id": "module-demo", "status": "completed"},
+        key="a9-proof-module-status-bad-status")
+
+
 _PROOF_FNS.update({
     'module.attempt.record.bad-termin': _prove_attempt_bad_termin_guarded,
     'module.attempt.record.bad-result': _prove_attempt_bad_result_guarded,
     'module.attempt.record.bad-grade': _prove_attempt_bad_grade_guarded,
     'module.sitting.update.bad-termin': _prove_sitting_bad_termin_guarded,
+    'module.status.update.bad-status': _prove_module_status_bad_status_guarded,
     'coordination.section.revise.unknown-section': _prove_coordination_unknown_section_guarded,
     'coordination.section.revise.no-coordination-file': _prove_coordination_no_file,
     'coordination.section.revise.read-failed': _prove_coordination_read_failed,
     'workspace.next-action.update.workspace-not-active': _prove_workspace_not_active,
     'workspace.next-action.update.no-next-action': _prove_workspace_no_next_action,
+    'workspace.complete.workspace-not-active': _prove_workspace_complete_not_active,
+    'workspace.complete.standing-workspace': _prove_workspace_complete_standing,
+    'workspace.complete.coordination-reference': _prove_workspace_complete_coordination_reference,
 })
 
 

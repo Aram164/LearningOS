@@ -245,3 +245,64 @@ def test_the_check_reports_the_term_change_and_the_listing(repo: Path):
         "curriculum/programs/program-bachelors.yaml"]
     # Nothing was written.
     assert _semesters(repo)[0]["status"] == "current"
+
+
+def test_the_check_uses_canonical_is_listed_rule(repo: Path):
+    """D-25: project-kind modules appear and compatibility_only modules stay excluded."""
+    from learning_os.derive.semesters import is_listed
+    from learning_os.store.loader import load_repo
+
+    proj_dir = repo / "curriculum/modules/module-project-thesis"
+    proj_dir.mkdir(parents=True)
+    (proj_dir / "module.yaml").write_text(yaml.safe_dump({
+        "id": "module-project-thesis",
+        "type": "module",
+        "title": "Bachelor Thesis",
+        "kind": "project",
+        "area_id": "program-bachelors",
+        "status": "active",
+        "unit_order": [],
+        "source_map": "source-map.yaml",
+    }, sort_keys=False), encoding="utf-8")
+    (proj_dir / "source-map.yaml").write_text(yaml.safe_dump({
+        "type": "module-source-map",
+        "module_id": "module-project-thesis",
+        "sources": [],
+    }, sort_keys=False), encoding="utf-8")
+
+    compat_dir = repo / "curriculum/modules/module-compat-academic"
+    compat_dir.mkdir(parents=True)
+    (compat_dir / "module.yaml").write_text(yaml.safe_dump({
+        "id": "module-compat-academic",
+        "type": "module",
+        "title": "Compat Module",
+        "kind": "academic",
+        "compatibility_only": True,
+        "area_id": "program-bachelors",
+        "institution": "HU Berlin",
+        "semester": "sose-2026",
+        "status": "active",
+        "unit_order": [],
+        "source_map": "source-map.yaml",
+    }, sort_keys=False), encoding="utf-8")
+    (compat_dir / "source-map.yaml").write_text(yaml.safe_dump({
+        "type": "module-source-map",
+        "module_id": "module-compat-academic",
+        "sources": [],
+    }, sort_keys=False), encoding="utf-8")
+
+    package = _write(repo, "semester.yaml", _package())
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root", str(repo),
+         "program-semester-update", "--file", str(package), "--check"],
+        capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    payload = json.loads(proc.stdout)
+    loaded = load_repo(repo)
+    expected = sorted(
+        mid for mid, mod in loaded.modules.items()
+        if mod.get("area_id") == "program-bachelors" and is_listed(mod)
+    )
+    assert "module-project-thesis" in expected
+    assert "module-compat-academic" not in expected
+    assert payload["module_listing"]["listed_module_ids"] == expected

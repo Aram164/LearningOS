@@ -1007,9 +1007,19 @@ def test_symlinked_parent_directory_under_materials_is_not_verified(world: Path)
     assert all(h["material"] != "_unsorted/review/loose.pdf" for h in res.hits)
 
 
-@pytest.mark.live_install
-def test_live_install_smoke() -> None:
-    """Optional live-install smoke test (skipped under -m 'not live_install' in CI)."""
-    res = execute_search(REPO_ROOT, "Mittelwertsatz", limit=3)
-    assert res.status in ("ok", "unavailable")
+@needs_pdftotext
+def test_indexed_material_search_returns_schema_valid_ok_hits(world: Path) -> None:
+    """Deterministic indexed search over a fixture PDF returns schema-valid ok hits."""
+    notes_dir = world.parent / "materials" / "_unsorted" / "notes"
+    notes_dir.mkdir(parents=True, exist_ok=True)
+    write_minimal_pdf(
+        notes_dir / "mittelwertsatz.pdf",
+        ["Mittelwertsatz der Differentialrechnung", "Folgerung und Beweis"],
+    )
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+
+    res = execute_search(world, "Mittelwertsatz", limit=3)
     _validate_response(res.to_dict())
+    assert res.status == "ok"
+    assert any(h["material"] == "_unsorted/notes/mittelwertsatz.pdf" for h in res.hits)

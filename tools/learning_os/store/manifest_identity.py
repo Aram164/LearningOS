@@ -38,7 +38,11 @@ from pathlib import Path
 
 from learning_os import __version__
 from learning_os.store import observations
-from learning_os.store.contracts.manifest_contract import declared_schema_sha256, declared_version
+from learning_os.store.contracts.manifest_contract import (
+    declared_closure_sha256,
+    declared_schema_sha256,
+    declared_version,
+)
 from learning_os.store.derived.identity import (
     digest_code_identity,
     digest_matching_files,
@@ -173,6 +177,7 @@ def observe_inputs(root: Path) -> dict:
     return {
         "contract_version": declared_version(root),
         "schema_sha256": declared_schema_sha256(root),
+        "closure_sha256": declared_closure_sha256(root),
         "generator": f"learning_os v{__version__}",
         "code_identity": digest_code_identity(root),
         "runtime_digest": runtime_digest(),
@@ -234,6 +239,10 @@ def check_identity(
     if generated.get("schema_sha256") != schema_sha256 \
             or identity.get("schema_sha256") != schema_sha256:
         return False, "manifest schema moved since the stored build"
+    closure_sha256 = declared_closure_sha256(root)
+    if generated.get("closure_sha256") != closure_sha256 \
+            or identity.get("closure_sha256") != closure_sha256:
+        return False, "manifest schema closure moved since the stored build"
     generator = f"learning_os v{__version__}"
     if generated.get("generator") != generator \
             or identity.get("generator") != generator:

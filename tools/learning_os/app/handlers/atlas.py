@@ -203,7 +203,6 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    ctx.require_snapshot(req["expected_snapshot"])
     repo = ctx.repo()
     if (req["from_ability"] not in repo.abilities
             or req["to_ability"] not in repo.abilities
@@ -305,7 +304,6 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
             "question target must be an object",
             site="atlas.question.save.target-not-object",
         )
-    ctx.require_snapshot(req["expected_snapshot"])
     repo = ctx.repo()
     note_id = question["id"]
     existing = repo.notes.get(note_id)
@@ -415,7 +413,6 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             "supply between 1 and 50 explicit operations",
             site="concept.relations.change.empty-operations",
         )
-    ctx.require_snapshot(req["expected_snapshot"])
     registries = _registries(root)
     changed = set()
     for operation in operations:
@@ -486,8 +483,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
 def atlas_context(ctx: OpContext, req: dict) -> Result:
     """Read connection editor guards and personal questions for one concept."""
     root = ctx.root
-    snapshot = ctx.snapshot_id()
-    ctx.require_snapshot(req.get("expected_snapshot"))
+    snapshot = _snapshot(root, req.get("expected_snapshot"))
     repo = ctx.repo()
     if req["concept_id"] not in repo.concepts:
         complaint = with_suggestions(

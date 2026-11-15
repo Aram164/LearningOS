@@ -355,7 +355,6 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         exc.exit_code = 2
         raise
     check_only = req.get("check") is True
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     unit = repo.units.get(req["unit_id"])
     if unit is None:

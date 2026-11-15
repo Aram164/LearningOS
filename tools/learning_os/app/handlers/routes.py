@@ -311,7 +311,6 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
     as ``_execute`` did (SPEC (bd)).
     """
     root = ctx.root
-    ctx.require_snapshot(req.get("expected_snapshot"))
     repo = ctx.repo()
     if repo.parse_failures:
         raise WriteRefused("material operation refuses unreadable canonical records")

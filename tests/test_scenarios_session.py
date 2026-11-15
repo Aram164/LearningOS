@@ -896,3 +896,54 @@ def test_gateway_write_with_null_sha_unpushed_refuses_before_any_mutation(
         "los: INVALID_REQUEST: "
         "already committed as None; use --push or --close\n")
     assert ledger.read_bytes() == before_ledger
+
+
+def test_push_releases_operator_lock_before_network_push(mini_repo, monkeypatch, tmp_path):
+    """D-17: committed_unpushed persists under lock, then lock releases before git push."""
+    import shutil
+
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    remote = tmp_path / "lock-probe-remote.git"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)],
+                   cwd=mini_repo, check=True)
+    subprocess.run(["git", "push", "-q", "--set-upstream", "origin", "main"],
+                   cwd=mini_repo, check=True)
+    _capture(mini_repo, key="lock-release-001", text="concurrent lock release")
+
+    real_git = shutil.which("git")
+    assert real_git is not None
+    probe_log = tmp_path / "push-lock-probe.json"
+    fake_bin = tmp_path / "git-wrapper"
+    fake_bin.mkdir()
+    git_wrapper = fake_bin / "git"
+    tools_dir = Path(__file__).resolve().parent.parent / "tools"
+    git_wrapper.write_text(
+        f"#!/bin/sh\n"
+        f'if [ "$1" = "push" ]; then\n'
+        f'  LOS_LOCK_TIMEOUT=0 "{sys.executable}" -c \'\n'
+        f'import json, sys\n'
+        f'from pathlib import Path\n'
+        f'sys.path.insert(0, sys.argv[3])\n'
+        f'root = Path(sys.argv[1])\n'
+        f'probe = Path(sys.argv[2])\n'
+        f'from learning_os.app.lock import operator_lock\n'
+        f'from learning_os.store.session_ledger import load_session_ledger\n'
+        f'acquired = False\n'
+        f'with operator_lock(root):\n'
+        f'    acquired = True\n'
+        f'    ledger = load_session_ledger(root, "channel:operator")\n'
+        f'probe.write_text(json.dumps({{"acquired": acquired, "state": ledger["state"] if ledger else None}}), encoding="utf-8")\n'
+        f'\' "{mini_repo}" "{probe_log}" "{tools_dir}" || exit 99\n'
+        f'fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    git_wrapper.chmod(0o755)
+    env = {"PATH": f"{fake_bin}{os.pathsep}{os.environ.get('PATH', '')}"}
+    proc = _session_end(mini_repo, "--commit-message", "release lock on push", "--push", env=env)
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    recorded_probe = json.loads(probe_log.read_text(encoding="utf-8"))
+    assert recorded_probe == {"acquired": True, "state": "committed_unpushed"}
+    assert not session_store.session_ledger(mini_repo, "channel:operator").exists()

@@ -660,3 +660,61 @@ def test_pre_exclusion_newest_receipt_with_data_change_keeps_verify_observation(
     diagnosis = resolve([], authority)
     assert diagnosis.canonical_outcome == "COMMITTED"
     assert diagnosis.recovery_requirement == "verify-observation"
+
+
+def test_unreceipted_prior_drift_or_chain_break_blocks_contract_only_drift(mini_repo: Path):
+    """D-16: newest_receipt data_roots_sha256 must not mask earlier unreceipted drift."""
+    import hashlib
+
+    import yaml
+
+    _, first = _commit_capture_v2(mini_repo, "prior-write", "request-prior-write")
+    tracked = mini_repo / "work/inbox/prior-write.md"
+    tracked.write_text("hand-edited after prior-write\n", encoding="utf-8")
+    _, second = _commit_capture_v2(mini_repo, "unrelated-newest", "request-unrelated-newest")
+
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# contract-only drift probe\n",
+        encoding="utf-8",
+    )
+    authority = collect_authority(
+        mini_repo,
+        request_id="request-unrelated-newest",
+        idempotency_key="unrelated-newest",
+        capability="capture.create",
+        response={"snapshot_after": second.snapshot_after},
+        manifest_snapshot=_live_snapshot(mini_repo),
+    )
+    assert authority.contract_only_drift is False
+    assert resolve([], authority).recovery_requirement == "verify-observation"
+
+    # Also test historical chain break (A -> hand edit -> B) followed by unrelated newest commit.
+    h_hand = hashlib.sha256(tracked.read_bytes()).hexdigest()
+    tracked.write_text("rewritten via third\n", encoding="utf-8")
+    tx_dir = mini_repo / "operations/transactions"
+    (tx_dir / "transaction-20990101-000001-001.yaml").write_text(yaml.safe_dump({
+        "schema_version": 1,
+        "id": "transaction-20990101-000001-001",
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "capture.create",
+        "snapshot_before": first.snapshot_after,
+        "snapshot_after": "sha256:" + "9" * 64,
+        "writes": [{
+            "path": "work/inbox/prior-write.md",
+            "sha256_before": h_hand,
+            "sha256_after": hashlib.sha256(tracked.read_bytes()).hexdigest(),
+            "created": False,
+        }],
+        "metadata": {"data_roots_sha256": yaml.safe_load((mini_repo / second.receipt_path).read_text())["metadata"]["data_roots_sha256"]},
+    }, sort_keys=False), encoding="utf-8")
+    authority_broken = collect_authority(
+        mini_repo,
+        request_id="request-unrelated-newest",
+        idempotency_key="unrelated-newest",
+        capability="capture.create",
+        response={"snapshot_after": second.snapshot_after},
+        manifest_snapshot=_live_snapshot(mini_repo),
+    )
+    assert authority_broken.contract_only_drift is False

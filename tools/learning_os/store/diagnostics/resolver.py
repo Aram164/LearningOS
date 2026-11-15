@@ -43,6 +43,7 @@ from learning_os.store.diagnostics import conventions
 from learning_os.store.evidence import verify_committed_evidence
 from learning_os.store.fingerprint import FINGERPRINT_DEFINITION_VERSION, data_roots_fingerprint
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
+from learning_os.store.receipt_chain import has_unreceipted_history_or_drift
 
 #: UI-side received outcomes that name a stage. Only transport losses map
 #: today: an unreadable response means the child never answered, whatever
@@ -183,6 +184,8 @@ def contract_only_drift_receipt(
         return None
     if f"sha256:{data_roots_fingerprint(root)}" != recorded:
         return None
+    if has_unreceipted_history_or_drift(root, receipts):
+        return None
     return newest
 
 
@@ -226,6 +229,8 @@ def fingerprint_definition_transition_receipt(
     except ValueError:
         return None
     if current != recorded:
+        return None
+    if has_unreceipted_history_or_drift(root, receipts):
         return None
     return newest
 

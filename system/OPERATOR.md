@@ -373,19 +373,23 @@ which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
 `/usr/bin/sandbox-exec` Seatbelt and forwards gateway calls over
 `LOS_GATE_SOCK` through the host-side default-deny broker
 (`tools/learning_os/adapters/study_broker.py`). Seatbelt denies reads to
+`LearningOS/.env`,
 `LearningOS/materials/`, `LearningOS/reading-memory/`,
 `generated/text-cache/`, `generated/material-search/`,
 `generated/material-outlines/`, `generated/derived-state/`,
-`generated/summaries/`, and non-`.gitkeep`
-entries under `operations/ai-actions/requests/`, and denies all writes to
-`LearningOS/`, while allocating `$LOS_SCRATCH_DIR` outside `LearningOS/` for
-temporary files and `--check-out` / `--out` artifacts.
+`knowledge/summaries/`, and non-`.gitkeep`
+entries under `operations/ai-actions/requests/`, and denies writes to
+`LearningOS/` and agent instruction/config paths in the wrapper or home
+directories, while filtering inherited environment variables and allocating
+`$LOS_SCRATCH_DIR` outside `LearningOS/` for temporary files and
+`--check-out` / `--out` artifacts.
 
 Boundary scope: Seatbelt isolates LearningOS data and reading-memory integrity
-with `(allow default)` for ordinary system/runtime files outside those closed
-trees rather than full-host confinement — host runtime state outside
-`LearningOS/` (such as `~/.claude/projects/` tool-result caches or agent
-session logs) stays writable and persists after `$LOS_SCRATCH_DIR` cleanup.
+with `(allow default)` for ordinary system/runtime files and outbound HTTPS API
+connectivity outside those closed trees rather than full-host confinement —
+safe runtime cache subdirectories outside `LearningOS/` (such as
+`~/.claude/projects/` tool-result caches or agent session logs) stay writable
+and persist after `$LOS_SCRATCH_DIR` cleanup.
 `tools/study_launch.py` owns session creation, `--root` and host
 `LOS_OBSERVATIONS` pinning, and `session_end` on exit; `tools/study_hooks.py`
 supplies only optional UX lifecycle nudges (`session-start`, `stop`,
@@ -415,9 +419,11 @@ Study workflow boundaries:
   directory outside `LearningOS/` stamped with `.learningos-scratch.json` and
   bound to that LearningOS checkout and `--session` UUID (pre-existing
   unrelated directories and cross-session reuse are refused); remove retained
-  scratch directories manually (`rm -rf`) once the resumed session is done, or
-  on a resumed confirmation turn run `seal_envelope.py ... --guards auto
-  --submit` directly if an earlier `--check-out` file is absent. Inside
+  scratch directories manually (`rm -rf`) once the resumed session is done; if
+  an earlier `--check-out` file is absent on a resumed turn, re-run
+  `--check-out` / `--check` and inspect the fresh record rather than bypassing
+  review (`--submit` without `--guards-from` is refused for replacement, import,
+  and revision capabilities). Inside
   Seatbelt, `materials/` is unmounted (`W MATERIALS-OFFLINE`) and `LearningOS/`
   is read-only: use
   `.venv/bin/python tools/validate.py --compact --no-report` if running manual

@@ -15,15 +15,9 @@ if [ -f "$INSTALLED_HOOK" ] && ! cmp -s "$INSTALLED_HOOK" tools/hooks/post-commi
     echo "post-commit: installed hook is stale — run 'make hooks' before the next commit." >&2
 fi
 
-# Prefer the project venv (created by `make setup`); fall back to system Python.
-if [ -x ".venv/bin/python" ]; then
-    PY=".venv/bin/python"
-else
-    PY="$(command -v python3 || command -v python)"
-fi
-[ -z "$PY" ] && exit 0
-
-if ! "$PY" tools/generate.py >/dev/null 2>&1; then
-    echo "post-commit: view rebuild failed — run 'python tools/generate.py' to see why." >&2
-fi
+# Canonical writes (via GatewayEnvelopeV2) and `los session-end` already
+# publish generated/ under the operator lock; running an extra rebuild inside
+# post-commit races manual `make views` / `tools/generate.py` or deadlocks
+# `session-end` when `git commit` runs under its lock (D-08 / D-17).
+# Run `.venv/bin/python tools/generate.py` explicitly after manual hand edits.
 exit 0

@@ -383,7 +383,8 @@ def test_session_start_includes_inline_card_template_excerpt_cap_and_resume_hint
     assert "matched sets" in out
     assert "6000 chars" in out
     assert "20 pages" in out
-    assert "--guards auto --submit" in out
+    assert "re-run --check-out / --check" in out
+    assert "refuse bare --submit without --guards-from" in out
 
 
 def test_agy_profile_and_protojson_hook_dialect(world: Path, tmp_path: Path) -> None:

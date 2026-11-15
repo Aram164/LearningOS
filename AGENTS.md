@@ -33,7 +33,10 @@ When running inside a study launch (`tools/study_launch.py` / `LOS_GATE_SOCK` ac
   `6000` characters (`~2-4` dense PDF pages, max `20` pages). Pass
   `--omit-covered-text` when re-checking an already-covered span.
 - **Settle open reading entries (max `4`):** Every uncovered span opens a
-  `rd-...` debt that must be settled before your turn ends via
+  `rd-...` debt. Interactive Claude `Stop` hooks prompt up to twice
+  (`STOP_ASKS = 2`) before marking open entries overdue without blocking turns
+  indefinitely; the gateway enforces settlement at the next uncovered study read
+  whenever open debt reaches `4` or an overdue/adoptable entry exists, via
   `material-card-settle ENTRY --card '...'` or `--dismiss irrelevant --reason '...'`.
   In `--card` JSON, `paraphrase` is `20-800` chars, every kind in `kinds` must
   have at least one matching `pointers[].kind` and every pointer's `kind` must
@@ -45,5 +48,7 @@ When running inside a study launch (`tools/study_launch.py` / `LOS_GATE_SOCK` ac
   `.learningos-scratch.json`-marked, single-session directory outside
   `LearningOS/` (pre-existing unrelated or other-session directories are
   refused; remove retained scratch manually when finished). On a resumed
-  confirmation turn without the prior check file, pass `--guards auto --submit`
-  directly to `tools/seal_envelope.py`.
+  confirmation turn without the prior check file, re-run `--check-out` /
+  `--check` into `$LOS_SCRATCH_DIR` and inspect the new record before
+  submitting with `--guards-from`; replacement/import/revise capabilities
+  refuse `--submit` without `--guards-from`.

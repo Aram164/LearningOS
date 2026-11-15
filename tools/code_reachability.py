@@ -67,7 +67,6 @@ ENTRYPOINTS = (
     "tree_contract.py",
     "system_map.py",
     "validate.py",
-    "verified_pairs.py",
     "verify_plan_receipt.py",
     "warning_baseline.py",
 )

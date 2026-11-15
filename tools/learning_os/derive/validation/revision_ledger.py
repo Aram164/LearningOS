@@ -48,6 +48,53 @@ if TYPE_CHECKING:
 RETIREMENTS_RELATIVE = "operations/revision-retirements.yaml"
 RETIREMENTS_SCHEMA = "artifact-revision-retirements"
 LEDGER_RELATIVE = "operations/transactions/revisions.yaml"
+_ENTITY_REVISION_PREFIXES = (
+    "note-",
+    "concept-",
+    "ability-",
+    "source-",
+    "workspace-",
+    "program-",
+    "module-",
+    "unit-",
+    "study-map-",
+)
+
+
+def _live_entity_ids(validator: ReceiptValidator) -> set[str]:
+    repo = validator.repo
+    return (
+        set(repo.notes)
+        | set(repo.concepts)
+        | set(repo.abilities)
+        | set(repo.sources)
+        | set(repo.workspaces)
+        | set(repo.programs)
+        | set(repo.modules)
+        | set(repo.units)
+        | set(repo.study_maps)
+    )
+
+
+def _orphan_ledger_warnings(
+    validator: ReceiptValidator,
+    live: dict[str, int],
+) -> None:
+    """Warn when a canonical entity key in the revision ledger has no live record."""
+    known = _live_entity_ids(validator)
+    for artifact in sorted(live):
+        if artifact.startswith("source-map-"):
+            continue
+        if not artifact.startswith(_ENTITY_REVISION_PREFIXES):
+            continue
+        if artifact in known:
+            continue
+        validator.warn(
+            "TRANSACTION-REVISION-ORPHAN",
+            f"'{artifact}' has a revision ledger entry (revision {live[artifact]}) "
+            "but no matching canonical record exists",
+            LEDGER_RELATIVE,
+        )
 
 
 def _retired_claims(validator: ReceiptValidator,
@@ -157,3 +204,4 @@ def revision_ledger_issues(validator: ReceiptValidator,
             "the rolled-back ledger and writes if they still exist, or record the loss "
             "in " + RETIREMENTS_RELATIVE,
             rel)
+    _orphan_ledger_warnings(validator, live)

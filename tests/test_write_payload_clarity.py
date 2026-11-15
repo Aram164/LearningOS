@@ -376,13 +376,15 @@ def test_seal_with_a_bad_stage_id_says_fix_the_payload(mini_repo, tmp_path):
 
 def test_seal_without_a_transaction_keeps_the_explicit_revision_advice(
         mini_repo, tmp_path):
-    repo, rid, smid = material_fixture(mini_repo)
-    unit_id = repo.study_maps[smid].unit_id
+    add_curriculum(mini_repo)
+    collection_file = tmp_path / "checked-collection.yaml"
+    write_yaml(collection_file, {
+        "title": "Checked collection",
+        "entries": [{"source": "source-demo-book"}],
+    })
     sealed = _seal(mini_repo, tmp_path / "sealed.json",
-                   capability="route.patch",
-                   payload={"unit_id": unit_id, "route_id": rid,
-                            "changes": {"angle": "A checked change"},
-                            "check": True},
+                   capability="collection.create",
+                   payload={"file": str(collection_file), "check": True},
                    key="clarity-seal-check-001")
     assert sealed.returncode == 2, sealed.stdout + sealed.stderr
     assert "explicit --revision" in sealed.stderr
@@ -556,7 +558,7 @@ def test_generated_payloads_carry_no_transport_annotations(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 45  # 48 minus the three retired path.* capabilities (rev3 Group 11)
+    assert len(schemas) == 47  # 46 prior + module.status.update
     for name, schema in schemas.items():
         assert list(_transport_keys(schema)) == [], name
     assert "x-los-id-kind" not in schemas["unit.note.append"][

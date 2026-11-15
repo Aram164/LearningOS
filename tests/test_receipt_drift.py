@@ -247,3 +247,260 @@ def test_non_committed_receipt_is_skipped_and_surfaced(tmp_path):
     assert findings["tracked_paths"] == 0
     assert findings["untracked"] == [
         "curriculum/modules/module-demo/units/unit-demo/study-map.yaml"]
+
+
+def test_chain_break_between_committed_receipts_is_reported_and_gates_check(tmp_path):
+    """D-03/D-14: A -> hand edit -> B produces sha256_before != prev.sha256_after."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    h1 = _sha(plan)
+    rel = "curriculum/modules/module-demo/units/unit-demo/study-map.yaml"
+    _receipt(tmp_path, "transaction-20261106-000001-010",
+             "b" * 64, "c" * 64,
+             [{"path": rel, "sha256_before": None, "sha256_after": h1, "created": True}])
+    plan.write_text("stages: [hand-edited]\n", encoding="utf-8")
+    h_hand = _sha(plan)
+    plan.write_text("stages: [b-write]\n", encoding="utf-8")
+    h2 = _sha(plan)
+    _receipt(tmp_path, "transaction-20261106-000001-011",
+             "c" * 64, "d" * 64,
+             [{"path": rel, "sha256_before": h_hand, "sha256_after": h2, "created": False}])
+    findings = _run(tmp_path)
+    assert len(findings["chain_breaks"]) == 1
+    brk = findings["chain_breaks"][0]
+    assert brk["path"] == rel
+    assert brk["receipt"] == "transaction-20261106-000001-011"
+    assert brk["previous_receipt"] == "transaction-20261106-000001-010"
+    assert brk["expected_sha256_before"] == h1
+    assert brk["actual_sha256_before"] == h_hand
+    proc = subprocess.run(
+        [sys.executable, str(TOOL), "--root", str(tmp_path), "--check"],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 1
+    assert "CHAIN-BREAK" in proc.stdout
+
+
+def test_migration_receipt_is_exempt_from_chain_break(tmp_path):
+    """Explicit migration receipts repair chain continuity from their sha256_after."""
+    plan = _plan_file(tmp_path, "study-map.yaml", "stages: []\n")
+    h1 = _sha(plan)
+    rel = "curriculum/modules/module-demo/units/unit-demo/study-map.yaml"
+    _receipt(tmp_path, "transaction-20261106-000001-012",
+             "b" * 64, "c" * 64,
+             [{"path": rel, "sha256_before": None, "sha256_after": h1, "created": True}])
+    plan.write_text("stages: [migrated]\n", encoding="utf-8")
+    h2 = _sha(plan)
+    _write_receipt_file(tmp_path, "transaction-20261106-000001-013.yaml", {
+        "schema_version": 1,
+        "id": "transaction-20261106-000001-013",
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "migration.test-format-bump",
+        "snapshot_before": "sha256:" + "c" * 64,
+        "snapshot_after": "sha256:" + "d" * 64,
+        "writes": [{"path": rel, "sha256_before": "f" * 64, "sha256_after": h2, "created": False}],
+        "metadata": {"migration": "test-format-bump"},
+    })
+    findings = _run(tmp_path)
+    assert findings["chain_breaks"] == []
+    assert findings["migration_exempt_breaks"] == 1
+
+
+def test_validate_gates_chain_break_and_idempotency_rows(mini_repo: Path):
+    """D-03/D-18: validator reports TRANSACTION-CHAIN-BREAK and TRANSACTION-IDEMPOTENCY."""
+    import hashlib
+
+    import yaml as _yaml
+    from repo_builders import add_curriculum
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.contracts.gateway import GatewayRequestContext
+    from learning_os.store.loader import load_repo
+    from learning_os.store.revisions import load_revisions
+    from learning_os.store.transactions import TransactionService
+
+    add_curriculum(mini_repo)
+    target = mini_repo / "curriculum/programs/program-bachelors.yaml"
+    rel = "curriculum/programs/program-bachelors.yaml"
+    before_bytes = target.read_bytes()
+    h0 = hashlib.sha256(before_bytes).hexdigest()
+
+    # Commit via gateway or receipt directly to test chain break & baseline on program file.
+    tx_dir = mini_repo / "operations/transactions"
+    tx_dir.mkdir(parents=True, exist_ok=True)
+    h1 = hashlib.sha256(b"title: v1\n").hexdigest()
+    (tx_dir / "transaction-20261106-000002-001.yaml").write_text(_yaml.safe_dump({
+        "schema_version": 1, "id": "transaction-20261106-000002-001",
+        "type": "transaction-receipt", "status": "committed",
+        "capability": "program.update",
+        "snapshot_before": "sha256:" + "0" * 64, "snapshot_after": "sha256:" + "1" * 64,
+        "expected_revisions": {}, "artifact_revisions": {},
+        "writes": [{"path": rel, "sha256_before": h0, "sha256_after": h1, "created": False}],
+    }, sort_keys=False), encoding="utf-8")
+    h_hand = hashlib.sha256(b"hand edit\n").hexdigest()
+    (tx_dir / "transaction-20261106-000002-002.yaml").write_text(_yaml.safe_dump({
+        "schema_version": 1, "id": "transaction-20261106-000002-002",
+        "type": "transaction-receipt", "status": "committed",
+        "capability": "program.update",
+        "snapshot_before": "sha256:" + "1" * 64, "snapshot_after": "sha256:" + "2" * 64,
+        "expected_revisions": {}, "artifact_revisions": {},
+        "writes": [{"path": rel, "sha256_before": h_hand, "sha256_after": h0, "created": False}],
+    }, sort_keys=False), encoding="utf-8")
+
+    chain_issues = [i for i in validate(load_repo(mini_repo), online=False)
+                    if i.code == "TRANSACTION-CHAIN-BREAK"]
+    assert len(chain_issues) == 1
+    assert chain_issues[0].severity == "E"
+    assert rel in chain_issues[0].message
+
+    # Baselining clears the error; wrong hashes fail closed.
+    baseline_path = mini_repo / "operations/receipt-chain-baseline.yaml"
+    baseline_path.write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "type": "receipt-chain-baseline",
+        "entries": [{
+            "transaction": "transaction-20261106-000002-002",
+            "path": rel,
+            "previous_transaction": "transaction-20261106-000002-001",
+            "expected_sha256_before": "e" * 64,
+            "actual_sha256_before": h_hand,
+            "reason": "Mismatch hash must fail closed.",
+            "decided_by": "test",
+            "decided_on": "2026-11-15",
+        }],
+    }, sort_keys=False), encoding="utf-8")
+    bad_issues = [i for i in validate(load_repo(mini_repo), online=False)
+                  if i.code in {"TRANSACTION-CHAIN-BREAK", "TRANSACTION-CHAIN-BASELINE"}]
+    assert any(i.code == "TRANSACTION-CHAIN-BASELINE" for i in bad_issues)
+    assert any(i.code == "TRANSACTION-CHAIN-BREAK" for i in bad_issues)
+
+    baseline_path.write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "type": "receipt-chain-baseline",
+        "entries": [{
+            "transaction": "transaction-20261106-000002-002",
+            "path": rel,
+            "previous_transaction": "transaction-20261106-000002-001",
+            "expected_sha256_before": h1,
+            "actual_sha256_before": h_hand,
+            "reason": "Pre-gate test break.",
+            "decided_by": "test",
+            "decided_on": "2026-11-15",
+        }],
+    }, sort_keys=False), encoding="utf-8")
+    cleared = [i for i in validate(load_repo(mini_repo), online=False)
+               if i.code in {"TRANSACTION-CHAIN-BREAK", "TRANSACTION-CHAIN-BASELINE"}]
+    assert cleared == []
+
+    # D-18: deleted receipt referenced by idempotency.yaml fails validation naming key.
+    inbox_note = mini_repo / "work/inbox/idem-bind.md"
+    ctx = GatewayRequestContext(
+        request_id="request-idem-bind",
+        idempotency_key="idem-bind-key",
+        capability="capture.create",
+        channel="codex",
+        intent_sha256="sha256:" + "1" * 64,
+        approval_kind="operator-approval",
+        approval_subject_sha256="sha256:" + "1" * 64,
+    )
+    res = TransactionService(mini_repo).commit(
+        capability="capture.create",
+        writes={inbox_note: "captured\n"},
+        artifact_ids=["capture:idem-bind"],
+        expected_revisions={"capture:idem-bind": load_revisions(mini_repo).get("capture:idem-bind", 0)},
+        gateway_request=ctx,
+    )
+    (mini_repo / res.receipt_path).unlink()
+    idem_issues = [i for i in validate(load_repo(mini_repo), online=False)
+                   if i.code == "TRANSACTION-IDEMPOTENCY"]
+    assert any("idem-bind-key" in i.message for i in idem_issues), idem_issues
+
+
+def test_validate_reports_unbaselined_on_disk_drift_and_clears_when_baselined(
+    mini_repo: Path,
+):
+    """D-03/D-14: validate() fails with TRANSACTION-DRIFT on post-receipt hand edits."""
+    import hashlib
+
+    import yaml as _yaml
+    from repo_builders import add_curriculum
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    add_curriculum(mini_repo)
+    target = mini_repo / "curriculum/programs/program-bachelors.yaml"
+    rel = "curriculum/programs/program-bachelors.yaml"
+    h0 = hashlib.sha256(target.read_bytes()).hexdigest()
+
+    tx_dir = mini_repo / "operations/transactions"
+    tx_dir.mkdir(parents=True, exist_ok=True)
+    tx_id = "transaction-20261106-000003-001"
+    (tx_dir / f"{tx_id}.yaml").write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "id": tx_id,
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "program.update",
+        "snapshot_before": "sha256:" + "0" * 64,
+        "snapshot_after": "sha256:" + "1" * 64,
+        "expected_revisions": {},
+        "artifact_revisions": {},
+        "writes": [{"path": rel, "sha256_before": "0" * 64, "sha256_after": h0, "created": False}],
+    }, sort_keys=False), encoding="utf-8")
+
+    # Hand-edit the tracked file outside the gateway without updating receipts.
+    hand_bytes = target.read_bytes() + b"\n# hand edit outside gateway\n"
+    target.write_bytes(hand_bytes)
+    h_hand = hashlib.sha256(hand_bytes).hexdigest()
+
+    drift_issues = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-DRIFT"
+    ]
+    assert len(drift_issues) == 1
+    assert drift_issues[0].severity == "E"
+    assert rel in drift_issues[0].message
+    assert tx_id in drift_issues[0].message
+
+    # Recording an accurate historical_drift baseline clears the error; wrong digest fails.
+    baseline_path = mini_repo / "operations/receipt-chain-baseline.yaml"
+    baseline_path.write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "type": "receipt-chain-baseline",
+        "entries": [],
+        "historical_drift": [{
+            "path": rel,
+            "receipt": tx_id,
+            "expected_sha256": h0,
+            "observed_sha256": "f" * 64,
+            "reason": "Mismatch hash must fail closed.",
+            "decided_by": "test",
+            "decided_on": "2026-11-15",
+        }],
+    }, sort_keys=False), encoding="utf-8")
+    mismatch = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code == "TRANSACTION-DRIFT"
+    ]
+    assert len(mismatch) == 1
+
+    baseline_path.write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "type": "receipt-chain-baseline",
+        "entries": [],
+        "historical_drift": [{
+            "path": rel,
+            "receipt": tx_id,
+            "expected_sha256": h0,
+            "observed_sha256": h_hand,
+            "reason": "Baselined historical drift.",
+            "decided_by": "test",
+            "decided_on": "2026-11-15",
+        }],
+    }, sort_keys=False), encoding="utf-8")
+    cleared = [
+        i for i in validate(load_repo(mini_repo), online=False)
+        if i.code in {"TRANSACTION-DRIFT", "TRANSACTION-CHAIN-BASELINE"}
+    ]
+    assert cleared == []

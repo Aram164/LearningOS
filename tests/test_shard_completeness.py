@@ -81,10 +81,47 @@ def test_audit_filename_collision_preserves_the_first_log(tmp_path):
     assert (merged / "same.jsonl").read_text() == "first evidence\n"
 
 
+@pytest.mark.parametrize("status,reason", [
+    (None, None),
+    ("skipped", "skipped testcase"),
+    ("failure", "failing testcase"),
+    ("error", "failing testcase"),
+])
+def test_zero_skip_junit_accepts_only_clean_nonempty_runs(tmp_path, status, reason):
+    import check_shard_completeness as checker
+
+    xml_path = tmp_path / "seatbelt.xml"
+    root = ET.Element("testsuite")
+    row = ET.SubElement(root, "testcase", classname="tests.test_study_launch", name="test_one")
+    if status:
+        ET.SubElement(row, status)
+    ET.ElementTree(root).write(xml_path)
+    if reason is None:
+        assert "1 testcases passed, 0 skipped" in checker.check_zero_skip_junit(xml_path)
+    else:
+        with pytest.raises(SystemExit, match=reason):
+            checker.check_zero_skip_junit(xml_path)
+
+
+def test_zero_skip_junit_refuses_missing_or_empty_xml(tmp_path):
+    import check_shard_completeness as checker
+
+    with pytest.raises(SystemExit, match="missing zero-skip JUnit XML"):
+        checker.check_zero_skip_junit(tmp_path / "absent.xml")
+    empty = tmp_path / "empty.xml"
+    ET.ElementTree(ET.Element("testsuite")).write(empty)
+    with pytest.raises(SystemExit, match="zero testcases"):
+        checker.check_zero_skip_junit(empty)
+
+
 @pytest.mark.parametrize("name", ["validate.yml", "release-pair.yml"])
 def test_both_workflows_use_the_shared_identity_and_collision_checks(name):
     root = Path(__file__).resolve().parents[1]
     workflow = yaml.safe_load((root / ".github/workflows" / name).read_text())
     runs = [step.get("run", "") for job in workflow["jobs"].values() for step in job["steps"]]
-    assert any("tools/check_shard_completeness.py --junit-dir ../junit-in" in run for run in runs)
+    assert any(
+        "tools/check_shard_completeness.py --junit-dir ../junit-in "
+        "--zero-skip-junit ../seatbelt-in/seatbelt.xml" in run
+        for run in runs
+    )
     assert any("copy_audit_logs(parts[leg][2], audit)" in run for run in runs)

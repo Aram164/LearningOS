@@ -95,6 +95,7 @@
    "tests/test_domain_stages.py",
    "tests/test_garden_projection.py",
    "tests/test_gateway_typed_refusals.py",
+   "tests/test_generate_lock.py",
    "tests/test_generation.py",
    "tests/test_goal_lifecycle_properties.py",
    "tests/test_goal_select.py",
@@ -191,6 +192,7 @@
    "tests/test_module_concept_atlas.py",
    "tests/test_module_lifecycle.py",
    "tests/test_module_plan_warning_gate.py",
+   "tests/test_module_status_update.py",
    "tests/test_move_map.py",
    "tests/test_note_create.py",
    "tests/test_observation_gesture.py",
@@ -218,6 +220,7 @@
    "tests/test_validation_cache.py",
    "tests/test_verbatim.py",
    "tests/test_vnext_boundaries.py",
+   "tests/test_workspace_complete.py",
    "tests/test_workspace_next_action.py",
    "tests/test_write_payload_clarity.py"
   ],

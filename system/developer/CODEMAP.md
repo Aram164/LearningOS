@@ -49,8 +49,8 @@ searched. The learner's own notes are searched over their full bodies with
 
 ## Boundaries that must survive a change
 
-`pyproject.toml` declares `A1 layers (PLAN D17)`, `A1 transaction writer access
-(PLAN A2, D4)` and `A1 transaction service protected (PLAN A1, D14)`.
+`pyproject.toml` declares `A1 layers (PLAN D17)` and
+`A1 transaction service protected (PLAN A1, D14)`.
 Import-linter enforces those contracts; map arrows explain static dependencies.
 Derivations must never become canonical writers. Only the application may call
 the transaction service. A handler builds a bounded proposal; it must never

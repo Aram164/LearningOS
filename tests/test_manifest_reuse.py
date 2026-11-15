@@ -487,3 +487,48 @@ def test_generate_all_accepts_one_prebuilt_build_only(mini_repo):
         generate_all(repo, "T2", backlinks=backlinks, manifest=manifest)
     with pytest.raises(ValueError, match="together"):
         generate_all(repo, "T1", manifest=manifest)
+
+
+def test_generate_all_omits_identity_when_materials_move_mid_build(
+        mini_repo, monkeypatch):
+    """D-19: a direct generate_all + write_outputs omits identity if inputs move."""
+    from learning_os.derive.projection import outputs as outputs_mod
+
+    _generate(mini_repo)
+    identity_file = mini_repo / "generated" / IDENTITY_FILENAME
+    assert identity_file.is_file()
+
+    real = outputs_mod.build_manifest
+
+    def moving(repo, generated_at, backlinks):
+        built = real(repo, generated_at, backlinks)
+        (mini_repo.parent / "materials" / "moved-during-build.pdf").write_bytes(b"%PDF\n")
+        return built
+
+    monkeypatch.setattr(outputs_mod, "build_manifest", moving)
+    repo = load_repo(mini_repo)
+    built_outputs = outputs_mod.generate_all(repo)
+    assert IDENTITY_FILENAME not in built_outputs
+    outputs_mod.write_outputs(repo, built_outputs)
+    assert not identity_file.exists()
+    assert plumbing._try_reuse_manifest(
+        mini_repo, _live_snapshot(mini_repo), restamp=False) is None
+
+
+def test_publish_observes_inputs_before_load_repo(mini_repo, monkeypatch):
+    """D-19: publish() observes non-canonical inputs BEFORE loading repo."""
+    _generate(mini_repo)
+    identity_file = mini_repo / "generated" / IDENTITY_FILENAME
+    assert identity_file.is_file()
+
+    real_load = plumbing.load_repo
+
+    def mutate_during_load(root):
+        (mini_repo.parent / "materials" / "moved-during-load.pdf").write_bytes(b"%PDF\n")
+        return real_load(root)
+
+    monkeypatch.setattr(plumbing, "load_repo", mutate_during_load)
+    plumbing.publish(mini_repo)
+    assert not identity_file.exists()
+    assert plumbing._try_reuse_manifest(
+        mini_repo, _live_snapshot(mini_repo), restamp=False) is None

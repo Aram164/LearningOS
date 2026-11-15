@@ -58,7 +58,7 @@ def _make_study_world(core: Path) -> Path:
         "generated/material-search",
         "generated/material-outlines",
         "generated/derived-state",
-        "generated/summaries/doc1/pages-1-2",
+        "knowledge/summaries/doc1/pages-1-2",
         "operations/ai-actions/requests/req-1",
         "knowledge/garden",
     ):
@@ -73,7 +73,7 @@ def _make_study_world(core: Path) -> Path:
         json.dumps({"_generated": "generated; do not edit", "canary": "CANARY_DERIVED"}),
         encoding="utf-8",
     )
-    (core / "generated/summaries/doc1/pages-1-2/summary.md").write_text(
+    (core / "knowledge/summaries/doc1/pages-1-2/summary.md").write_text(
         "<!-- GENERATED file - do not edit -->\n\nCANARY_SUMMARY\n", encoding="utf-8",
     )
     (core / "operations/ai-actions/requests/.gitkeep").write_text("", encoding="utf-8")
@@ -98,17 +98,30 @@ def _make_study_world(core: Path) -> Path:
 def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path: Path) -> None:
     core = tmp_path / 'LearningOS "quoted"' / "repository"
     core.mkdir(parents=True)
-    sb_first = study_launch.build_seatbelt_profile(core)
-    sb_second = study_launch.build_seatbelt_profile(core)
+    fake_home = tmp_path / "fake-home"
+    fake_home.mkdir()
+    sb_first = study_launch.build_seatbelt_profile(core, home_dir=fake_home)
+    sb_second = study_launch.build_seatbelt_profile(core, home_dir=fake_home)
     assert sb_first == sb_second
     assert "(version 1)" in sb_first
     assert "(allow default)" in sb_first
     assert "regex" not in sb_first
 
     real_core = Path(os.path.realpath(core))
-    for closed in protected_reads(real_core):
-        real_closed = Path(os.path.realpath(closed))
-        expected = f'(deny file-read* (subpath "{study_launch._sbpl_quote(str(real_closed))}"))'
+    real_learningos = Path(os.path.realpath(real_core.parent))
+    expected_closed = [
+        real_learningos / "materials",
+        real_learningos / "reading-memory",
+        real_core / "generated" / "text-cache",
+        real_core / "generated" / "material-search",
+        real_core / "generated" / "material-outlines",
+        real_core / "generated" / "derived-state",
+        real_core / "knowledge" / "summaries",
+        real_core / "operations" / "ai-actions" / "requests",
+    ]
+    assert [Path(os.path.realpath(p)) for p in protected_reads(real_core)] == expected_closed
+    for closed in expected_closed:
+        expected = f'(deny file-read* (subpath "{study_launch._sbpl_quote(str(closed))}"))'
         assert expected in sb_first, expected
 
     req_dir = Path(os.path.realpath(real_core / "operations/ai-actions/requests"))
@@ -120,9 +133,39 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
     deny_req = f'(deny file-read* (subpath "{study_launch._sbpl_quote(str(req_dir))}"))'
     assert sb_first.index(deny_req) < sb_first.index(allow_gitkeep)
 
-    real_learningos = Path(os.path.realpath(real_core.parent))
+    deny_env = f'(deny file-read* (literal "{study_launch._sbpl_quote(str(real_learningos / ".env"))}"))'
+    assert deny_env in sb_first
+
     deny_write = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_learningos))}"))'
     assert deny_write in sb_first
+
+    real_wrapper = real_learningos.parent
+    for rel_instr in ("AGENTS.md", ".claude", ".opencode", ".codex", ".gemini"):
+        assert f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_wrapper / rel_instr))}"))' in sb_first
+
+    real_home = Path(os.path.realpath(fake_home))
+    deny_home_claude = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_home / ".claude"))}"))'
+    allow_home_projects = f'(subpath "{study_launch._sbpl_quote(str(real_home / ".claude/projects"))}")'
+    assert deny_home_claude in sb_first
+    assert allow_home_projects in sb_first
+    assert sb_first.index(deny_home_claude) < sb_first.index(allow_home_projects)
+    for home_instr in (
+        ".claude.json",
+        ".claude.json.backup",
+        ".zshrc",
+        ".zshenv",
+        ".bashrc",
+        ".profile",
+        ".codex/AGENTS.md",
+        ".codex/config.toml",
+        ".gemini/GEMINI.md",
+        ".gemini/settings.json",
+    ):
+        assert f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_home / home_instr))}"))' in sb_first
+    core_mem = real_home / ".claude" / "projects" / study_launch._claude_project_slug(real_core) / "memory"
+    deny_core_mem = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(core_mem))}"))'
+    assert deny_core_mem in sb_first
+    assert sb_first.index(allow_home_projects) < sb_first.index(deny_core_mem)
 
 
 def test_session_uuid_codex_args_and_entrypoint_contract(
@@ -331,7 +374,7 @@ closed_files = [
     core / "generated/material-search/idx.sqlite3",
     core / "generated/material-outlines/o.json",
     core / "generated/derived-state/d.json",
-    core / "generated/summaries/doc1/pages-1-2/summary.md",
+    core / "knowledge/summaries/doc1/pages-1-2/summary.md",
     core / "operations/ai-actions/requests/req-1/slice.md",
 ]
 # Create future.md on host? Here test requests/.gitkeep vs non-gitkeep and existing tree.
@@ -1313,7 +1356,7 @@ p = subprocess.run([
     "--submit",
 ], capture_output=True, text=True)
 assert p.returncode == 2
-assert "--guards auto --submit" in p.stderr, p.stderr
+assert "re-run --check-out / --check" in p.stderr, p.stderr
 """,
         encoding="utf-8",
     )
@@ -1382,3 +1425,152 @@ assert "--guards auto --submit" in p.stderr, p.stderr
         session_id=S1,
         scratch_dir_override=sym_scratch,
     ) == 2
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="Darwin /usr/bin/sandbox-exec required")
+def test_seatbelt_blocks_env_instruction_writes_and_filters_child_env(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """F-3.2-01 / D-02 / D-04: real Seatbelt blocks .env reads, wrapper/home configs, and secret env vars."""
+    core = _make_study_world(mini_repo)
+    learningos = core.parent
+    wrapper = learningos.parent
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+
+    env_file = learningos / ".env"
+    env_file.write_text("TOP_SECRET_API_KEY=canary\n", encoding="utf-8")
+
+    wrapper_agents = wrapper / "AGENTS.md"
+    wrapper_agents.write_text("# Original wrapper instructions\n", encoding="utf-8")
+    (wrapper / ".claude").mkdir(exist_ok=True)
+    wrapper_claude_cfg = wrapper / ".claude" / "settings.json"
+    wrapper_claude_cfg.write_text('{"safe": true}\n', encoding="utf-8")
+
+    fake_home = tmp_path / "home"
+    (fake_home / ".claude" / "projects" / "existing-proj" / "memory").mkdir(parents=True)
+    (fake_home / ".claude" / "projects" / "existing-proj" / "memory" / "MEMORY.md").write_text("# Original\n", encoding="utf-8")
+    (fake_home / ".claude" / "settings.json").write_text('{"safe": true}\n', encoding="utf-8")
+    (fake_home / ".claude" / "CLAUDE.md").write_text("# Original\n", encoding="utf-8")
+    (fake_home / ".claude.json").write_text('{"mcpServers": {}}\n', encoding="utf-8")
+    (fake_home / ".zshrc").write_text("# clean\n", encoding="utf-8")
+    (fake_home / ".codex").mkdir(parents=True)
+    (fake_home / ".codex" / "AGENTS.md").write_text("# Original\n", encoding="utf-8")
+    (fake_home / ".codex" / "config.toml").write_text("model = 'x'\n", encoding="utf-8")
+    (fake_home / ".gemini").mkdir(parents=True)
+    (fake_home / ".gemini" / "GEMINI.md").write_text("# Original\n", encoding="utf-8")
+    (fake_home / ".gemini" / "settings.json").write_text("{}\n", encoding="utf-8")
+
+    obs_file = tmp_path / "host-obs.yaml"
+    obs_file.write_text('{"now": "2026-11-15T10:00:00+01:00"}\n', encoding="utf-8")
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("FOO_PROBE", "secret_probe_value")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "secret_aws_value")
+    monkeypatch.setenv("LOS_OBSERVATIONS", str(obs_file))
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "keep-provider-key")
+
+    core_slug = study_launch._claude_project_slug(Path(os.path.realpath(core)))
+    result_out = tmp_path / "probe-result.json"
+    probe = f"""
+import json, os
+from pathlib import Path
+
+env_p = Path({str(env_file)!r})
+results = {{}}
+
+try:
+    env_p.read_text()
+    results["env_read"] = "ALLOWED"
+except PermissionError:
+    results["env_read"] = "DENIED"
+
+sym_env = Path(os.environ["LOS_SCRATCH_DIR"]) / "env-link"
+sym_env.symlink_to(env_p)
+try:
+    sym_env.read_text()
+    results["env_sym_read"] = "ALLOWED"
+except PermissionError:
+    results["env_sym_read"] = "DENIED"
+
+for label, target in [
+    ("wrapper_agents", {str(wrapper_agents)!r}),
+    ("wrapper_claude_cfg", {str(wrapper_claude_cfg)!r}),
+    ("wrapper_opencode", {str(wrapper / ".opencode" / "opencode.json")!r}),
+    ("home_claude_settings", {str(fake_home / ".claude" / "settings.json")!r}),
+    ("home_claude_md", {str(fake_home / ".claude" / "CLAUDE.md")!r}),
+    ("home_claude_commands", {str(fake_home / ".claude" / "commands" / "x.md")!r}),
+    ("home_claude_json", {str(fake_home / ".claude.json")!r}),
+    ("home_claude_json_backup", {str(fake_home / ".claude.json.backup")!r}),
+    ("home_zshrc", {str(fake_home / ".zshrc")!r}),
+    ("home_zshenv", {str(fake_home / ".zshenv")!r}),
+    ("home_bashrc", {str(fake_home / ".bashrc")!r}),
+    ("home_profile", {str(fake_home / ".profile")!r}),
+    ("home_existing_proj_memory", {str(fake_home / ".claude" / "projects" / "existing-proj" / "memory" / "MEMORY.md")!r}),
+    ("home_core_proj_memory", {str(fake_home / ".claude" / "projects" / core_slug / "memory" / "MEMORY.md")!r}),
+    ("home_codex_agents", {str(fake_home / ".codex" / "AGENTS.md")!r}),
+    ("home_codex_config", {str(fake_home / ".codex" / "config.toml")!r}),
+    ("home_gemini_md", {str(fake_home / ".gemini" / "GEMINI.md")!r}),
+    ("home_gemini_settings", {str(fake_home / ".gemini" / "settings.json")!r}),
+]:
+    p = Path(target)
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("POISONED")
+        results[label] = "ALLOWED"
+    except PermissionError:
+        results[label] = "DENIED"
+
+cache_file = Path({str(fake_home / ".claude" / "projects" / "session.jsonl")!r})
+cache_file.write_text("ok\\n")
+results["home_claude_cache"] = cache_file.read_text().strip()
+proj_cache = Path({str(fake_home / ".claude" / "projects" / core_slug / "session.jsonl")!r})
+proj_cache.parent.mkdir(parents=True, exist_ok=True)
+proj_cache.write_text("ok\\n")
+results["home_proj_cache"] = proj_cache.read_text().strip()
+
+results["foo_probe"] = "FOO_PROBE" in os.environ
+results["aws_secret"] = "AWS_SECRET_ACCESS_KEY" in os.environ
+results["los_obs_leaked"] = "LOS_OBSERVATIONS" in os.environ
+results["anthropic_key"] = os.environ.get("ANTHROPIC_API_KEY")
+results["gate_sock"] = bool(os.environ.get("LOS_GATE_SOCK"))
+
+Path({str(result_out)!r}).write_text(json.dumps(results))
+"""
+    rc = study_launch.launch_study(
+        core_root=core,
+        command=[str(core / ".venv/bin/python"), "-c", probe],
+        session_id=S1,
+    )
+    assert rc == 0
+    data = json.loads(result_out.read_text(encoding="utf-8"))
+    assert data["env_read"] == "DENIED"
+    assert data["env_sym_read"] == "DENIED"
+    for key in (
+        "wrapper_agents",
+        "wrapper_claude_cfg",
+        "wrapper_opencode",
+        "home_claude_settings",
+        "home_claude_md",
+        "home_claude_commands",
+        "home_claude_json",
+        "home_claude_json_backup",
+        "home_zshrc",
+        "home_zshenv",
+        "home_bashrc",
+        "home_profile",
+        "home_existing_proj_memory",
+        "home_core_proj_memory",
+        "home_codex_agents",
+        "home_codex_config",
+        "home_gemini_md",
+        "home_gemini_settings",
+    ):
+        assert data[key] == "DENIED", (key, data)
+    assert data["home_claude_cache"] == "ok"
+    assert data["home_proj_cache"] == "ok"
+    assert data["foo_probe"] is False
+    assert data["aws_secret"] is False
+    assert data["los_obs_leaked"] is False
+    assert data["anthropic_key"] == "keep-provider-key"
+    assert data["gate_sock"] is True
+    assert wrapper_agents.read_text(encoding="utf-8") == "# Original wrapper instructions\n"

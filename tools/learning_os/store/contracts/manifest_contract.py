@@ -29,6 +29,7 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.store import observations
+from learning_os.store.contracts.bundle import BundleError, build_bundle, digest_of
 from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
 
 CONTRACT_RELATIVE = "system/contracts/manifest-contract.yaml"
@@ -100,6 +101,16 @@ def _schema_sha256(path: Path) -> str:
     return f"sha256:{hashlib.sha256(content).hexdigest()}"
 
 
+def _closure_sha256(path: Path, root: Path) -> str:
+    """Compute the digest over the schema and its transitive ``system/schema/`` closure."""
+    try:
+        return digest_of(build_bundle(path, root / "system" / "schema"))
+    except (BundleError, OSError, ValueError) as exc:
+        raise ManifestContractError(
+            f"cannot compute manifest schema closure for {path}: {exc}"
+        ) from exc
+
+
 def declared_schema_sha256(root: Path) -> str:
     """The exact schema hash stamped into every v6 manifest."""
 
@@ -108,6 +119,18 @@ def declared_schema_sha256(root: Path) -> str:
     if not isinstance(value, str):
         raise ManifestContractError(
             f"{CONTRACT_RELATIVE} must declare schema_sha256"
+        )
+    return value
+
+
+def declared_closure_sha256(root: Path) -> str:
+    """The declared closure digest over the manifest schema and its ``$ref`` targets."""
+
+    contract = load_contract(root)
+    value = contract.get("closure_sha256")
+    if not isinstance(value, str):
+        raise ManifestContractError(
+            f"{CONTRACT_RELATIVE} must declare closure_sha256"
         )
     return value
 
@@ -134,11 +157,29 @@ def _schema_problems(manifest: dict, root: Path, contract: dict) -> list[str]:
             f"  schema hash: declared {declared_hash!r}, exact file is {actual_hash}"
         )
         return problems
+    declared_closure = contract.get("closure_sha256")
+    try:
+        actual_closure = _closure_sha256(path, root)
+    except ManifestContractError as exc:
+        problems.append(f"  schema closure: {exc}")
+        return problems
+    if declared_closure != actual_closure:
+        problems.append(
+            f"  schema closure: declared {declared_closure!r}, "
+            f"exact closure is {actual_closure}"
+        )
+        return problems
     stamped_hash = (manifest.get("_generated") or {}).get("schema_sha256")
     if stamped_hash != declared_hash:
         problems.append(
             f"  _generated.schema_sha256 is {stamped_hash!r} but "
             f"{CONTRACT_RELATIVE} declares {declared_hash!r}"
+        )
+    stamped_closure = (manifest.get("_generated") or {}).get("closure_sha256")
+    if stamped_closure != declared_closure:
+        problems.append(
+            f"  _generated.closure_sha256 is {stamped_closure!r} but "
+            f"{CONTRACT_RELATIVE} declares {declared_closure!r}"
         )
     try:
         schema = json.loads(path.read_text(encoding="utf-8"))
@@ -259,6 +300,7 @@ def bump(manifest: dict, root: Path, note: str) -> dict:
         # confusing UI lock failure rather than here.
         "schema_path": schema_relative,
         "schema_sha256": _schema_sha256(root / schema_relative),
+        "closure_sha256": _closure_sha256(root / schema_relative, root),
         "forbidden_top_level_keys": list(current.get("forbidden_top_level_keys") or []),
         "history": list(current.get("history") or []) + [{
             "version": version,

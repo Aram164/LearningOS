@@ -28,10 +28,9 @@ runtime coverage; the exact roots and historical allowlist live in
 | `tree_contract.py` | supported contract tool | Checks both generated architecture trees by default and regenerates them with `--write`. |
 | `doc_blocks.py` | supported contract tool | Checks or regenerates documentation counts, command names and procedure links from their metadata owners; validation blocks stale or malformed projections. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |
-| `contract_bundle.py` | prototype contract tool | Side-by-side manifest contract bundler (Point-3 prototype); build/check only, never a canonical writer. |
+| `contract_bundle.py` | supported contract tool | Manifest contract bundler over the transitive `$ref` schema closure; build/check only, never a canonical writer. |
 | `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change (`--check` compares instead of writing). |
 | `release_pair_receipt.py` | supported release tool | Produces or verifies exact Core/UI release evidence. |
-| `verified_pairs.py` | supported release tool | Advisory memo of pairs `make system-check` verified; the pre-push hook skips the full gate for an exact stamped pair. |
 | `stress_check.py` | supported deep gate | Explicit, expensive local stress checks; not a routine edit gate. |
 | `codex_obsidian.py` | compatibility/security adapter | Fail-closed wrapper retained for the existing Agentic Copilot boundary. |
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
@@ -53,7 +52,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `evaluate_operator_questions.py` | read-only evaluation tool | Offline question-to-procedure evaluation over the held-out operator questions in `tests/fixtures/verified_operator_questions/`: `prepare` emits the public task package without the answer key, `score` grades submitted answers against it. Writes only the `--out` file it is given. |
 | `plan_write_audit.py` | read-only diagnostic | Reports commit co-occurrence of plan changes and newly added receipt documents across available Git refs; it does not prove per-write gateway provenance. |
 | `receipt_drift.py` | read-only diagnostic (`make receipt-drift`) | Reports canonical plan/module files whose bytes no longer match the last gateway receipt, records under no receipt, and snapshot-chain gaps — the boundary 16 hand-edit detector; report-only, gates nothing. |
-| `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
+| `normalise_material_uris.py` | read-only diagnostic | Read-only check reporting former physical-path material URIs that are not yet ID-based (`--apply` is retired and fails closed with exit 2). |
 | `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 | `affected_tests.py` | supported test tool | Maps changed files to test groups for `make test-affected`; a rerun minimizer, never a gate. |
 | `seal_envelope.py` | bounded authoring tool | Seals one GatewayEnvelopeV2 from caller intent (WORKFLOWS §25c); reads the repo, writes nothing canonical. |

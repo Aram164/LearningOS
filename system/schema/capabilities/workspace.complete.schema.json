@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/workspace.complete.schema.json",
+  "title": "payload for capability workspace.complete",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workspace_id"
+  ],
+  "properties": {
+    "workspace_id": {
+      "type": "string",
+      "description": "active non-standing workspace to mark complete in place"
+    }
+  }
+}

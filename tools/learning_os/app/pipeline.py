@@ -231,6 +231,8 @@ def run_cli(root: Path, operation: str, args) -> Outcome:
     """
 
     entry = REGISTRY[operation]
+    if entry.lock == "none":
+        return _execute_cli(root, operation, entry, args)
     if entry.lock == "shared":
         with _operator_lock(root, shared=True):
             return _execute_cli(root, operation, entry, args)

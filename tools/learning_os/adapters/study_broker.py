@@ -42,7 +42,7 @@ from learning_os.store.study_fence import (
     check_study_new_output_path,
     check_study_path,
     is_within,
-    protected_reads,
+    protected_read_targets,
     read_study_json_file,
     write_local_output_file,
 )
@@ -89,6 +89,7 @@ ALLOWED_STUDY_COMMANDS: frozenset[str] = frozenset({
     "material-card-settle",
 })
 
+# Read-only `--check` preflights permitted without granting write capabilities.
 ALLOWED_PREFLIGHT_COMMANDS: dict[str, str] = {
     "source-intake": "source.intake.record",
     "unit-plan-revise": "unit.plan.revise",
@@ -107,6 +108,9 @@ SESSION_COMMANDS: frozenset[str] = frozenset({
     "material-context",
 })
 
+# Capabilities permitted to write in sandboxed study mode (host-mediated).
+# Deliberately excludes durable note writes/revisions, unit plan revisions,
+# concept graph edits, review/program/delivery mutations, and legacy locks.
 ALLOWED_CAPABILITIES: frozenset[str] = frozenset({
     "capture.create",
     "inbox.resolve",
@@ -114,21 +118,35 @@ ALLOWED_CAPABILITIES: frozenset[str] = frozenset({
     "stage.progress.update",
     "stage.attachment.add",
     "unit.note.append",
-    "unit.plan.revise",
     "unit.source-selection.set",
     "detour.create",
     "detour.resolve",
-    "note.create",
-    "note.revise",
     "note.evidence.add",
     "note.analysis.save",
     "note.analysis.save_batch",
     "source.feedback.record",
     "source.intake.record",
-    "concept.relations.change",
     "atlas.question.save",
     "garden.seed.create",
 })
+
+
+def _validate_study_envelope_origin(
+    *,
+    channel: object,
+    approval_kind: object,
+    label: str,
+) -> BrokerResult | None:
+    """Reject UI or non-operator-approved envelopes across both broker write paths."""
+    if not isinstance(channel, str) or not channel.strip():
+        return _refuse(f"study broker: {label} requires a non-empty channel")
+    if channel == "ui":
+        return _refuse(f"study broker: 'ui' channel is refused ({label})")
+    if approval_kind != "operator-approval":
+        return _refuse(
+            f"study broker: {label} requires approval.kind == 'operator-approval', got {approval_kind!r}"
+        )
+    return None
 
 ALLOWED_HOOK_EVENTS: frozenset[str] = frozenset({"session-start", "stop"})
 
@@ -459,7 +477,7 @@ class StudyBroker:
             raise WriteRefused(f"study broker: cannot resolve cwd {raw_cwd!r}: {exc}") from exc
         if not resolved.is_dir():
             raise WriteRefused(f"study broker: client cwd does not exist: {resolved}")
-        for closed in protected_reads(self.core_root):
+        for closed in protected_read_targets(self.core_root):
             if is_within(resolved, closed):
                 raise WriteRefused(
                     f"study broker: client cwd inside protected tree: {resolved}"
@@ -609,24 +627,13 @@ class StudyBroker:
                         return _refuse("study broker: --payload-file - requires envelope input")
                     raw_env = stdin_text
                 else:
-                    if stdin_text is not None:
-                        check_study_path(
-                            pfile,
-                            core_root=self.core_root,
-                            scratch_dir=self.scratch_dir,
-                            cwd=cwd,
-                            label="--payload-file",
-                            allow_core=True,
-                        )
-                        raw_env = stdin_text
-                    else:
-                        raw_env = read_study_json_file(
-                            pfile,
-                            core_root=self.core_root,
-                            scratch_dir=self.scratch_dir,
-                            cwd=cwd,
-                            label="--payload-file",
-                        )
+                    raw_env = read_study_json_file(
+                        pfile,
+                        core_root=self.core_root,
+                        scratch_dir=self.scratch_dir,
+                        cwd=cwd,
+                        label="--payload-file",
+                    )
                     rewritten = _rewrite_value_option(
                         rewritten, "--payload-file", self._los_parser, "-"
                     )
@@ -641,6 +648,16 @@ class StudyBroker:
                     return _refuse(
                         "study broker: envelope session_id cannot differ from active study session"
                     )
+                approval_obj = env_dict.get("approval")
+                origin_refusal = _validate_study_envelope_origin(
+                    channel=env_dict.get("channel"),
+                    approval_kind=(
+                        approval_obj.get("kind") if isinstance(approval_obj, dict) else None
+                    ),
+                    label="capability envelope",
+                )
+                if origin_refusal is not None:
+                    return origin_refusal
                 with tempfile.TemporaryDirectory(
                     prefix="los-req-", dir=self._stage_base(),
                 ) as stage_tmp:
@@ -661,9 +678,9 @@ class StudyBroker:
                         extra_env=manifest_env or None,
                     )
             elif target_cmd in ALLOWED_PREFLIGHT_COMMANDS:
-                mapped_cap = ALLOWED_PREFLIGHT_COMMANDS[target_cmd]
-                if mapped_cap not in ALLOWED_CAPABILITIES:
-                    return _refuse(f"study broker: preflight {target_cmd!r} not allowlisted")
+                # Preflights are strictly read-only diagnostics (`--check`), so they stay
+                # decoupled from `ALLOWED_CAPABILITIES` (e.g. `unit-plan-revise --check`
+                # supports `--report-out` mediation even though canonical plan writes refuse).
                 if getattr(ns, "check", False) is not True:
                     return _refuse(
                         f"study broker: {target_cmd!r} is only permitted with --check preflight"
@@ -779,8 +796,13 @@ class StudyBroker:
                     return _refuse(
                         f"study broker: --session-id cannot differ from active session {self.session_id}"
                     )
-            if ns.channel == "ui":
-                return _refuse("study broker: 'ui' channel is refused")
+            origin_refusal = _validate_study_envelope_origin(
+                channel=getattr(ns, "channel", None),
+                approval_kind=getattr(ns, "approval_kind", None),
+                label="seal_envelope",
+            )
+            if origin_refusal is not None:
+                return origin_refusal
 
             rewritten = list(argv)
             if ns.root is None:
@@ -1169,15 +1191,8 @@ def dispatch_los_via_socket(sock_path: str, argv: list[str]) -> int:
         getattr(ns, "report_out", None) if ns is not None else None
     )
     if subcmd == "capability" and ns is not None:
-        pfile = getattr(ns, "payload_file", None)
-        if pfile == "-":
+        if getattr(ns, "payload_file", None) == "-":
             stdin_text = sys.stdin.read()
-        elif isinstance(pfile, str) and pfile:
-            try:
-                stdin_text = Path(pfile).expanduser().read_text(encoding="utf-8")
-            except OSError as exc:
-                print(f"los: cannot read --payload-file {pfile}: {exc}", file=sys.stderr)
-                return 2
     try:
         resp = send_broker_request(
             sock_path,

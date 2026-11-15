@@ -24,7 +24,7 @@ Used by: none.
 ## Invariants
 
 - Keep parsing separate from canonical writes. Pinning: `tests/test_cli.py`.
-- Keep the study broker (`StudyBroker`) strictly default-deny on `ALLOWED_LOS_COMMANDS` and `ALLOWED_CAPABILITIES`, pinning `--root`, `LOS_OBSERVATIONS`, and authoritative study sessions. Pinning: `tests/test_study_broker.py`.
+- Keep the study broker (`StudyBroker`) strictly default-deny on `ALLOWED_LOS_COMMANDS` and `ALLOWED_CAPABILITIES`, pinning `--root`, `LOS_OBSERVATIONS`, and authoritative study sessions and refusing UI or non-`operator-approval` envelopes across both `los capability` and `seal_envelope`. Pinning: `tests/test_study_broker.py`.
 
 ## Pinning tests
 

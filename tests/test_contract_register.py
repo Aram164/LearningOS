@@ -36,13 +36,26 @@ REGISTER = _register()
 ROWS = REGISTER["contracts"]
 
 
-def _declared_yaml_on_disk() -> set[str]:
-    """Every YAML declaration under system/contracts/, at any depth."""
+def _declared_on_disk() -> set[str]:
+    """Every YAML or JSON declaration under system/contracts/, at any depth."""
     return {
         path.relative_to(ROOT).as_posix()
-        for path in CONTRACTS.rglob("*.yaml")
+        for pattern in ("*.yaml", "*.json")
+        for path in CONTRACTS.rglob(pattern)
         if path.is_file()
     }
+
+
+def _stale_current_exemptions(
+        exempt_rows: list[dict], live_schema_path: str) -> list[str]:
+    """Exemptions claiming to be 'current' must name ``live_schema_path``."""
+    stale: list[str] = []
+    for row in exempt_rows:
+        reason = row.get("reason", "")
+        if re.search(r"\bcurrent\b", reason, re.IGNORECASE):
+            if row["path"] != live_schema_path or live_schema_path not in reason:
+                stale.append(row["path"])
+    return stale
 
 
 # ---- completeness ----------------------------------------------------------
@@ -55,7 +68,7 @@ def test_the_register_accounts_for_every_declaration_on_disk():
     """
     exempt = {row["path"] for row in REGISTER.get("exempt", ())}
     registered = {row["declaration"] for row in ROWS}
-    on_disk = _declared_yaml_on_disk()
+    on_disk = _declared_on_disk()
 
     unregistered = on_disk - registered - exempt
     assert not unregistered, (
@@ -75,6 +88,22 @@ def test_every_exemption_states_a_reason_and_exists():
     for row in REGISTER.get("exempt", ()):
         assert row.get("reason", "").strip(), f"{row['path']} is exempt with no reason"
         assert (ROOT / row["path"]).is_file(), f"exempt path is not on disk: {row['path']}"
+
+
+def test_current_exemption_names_live_manifest_schema_path():
+    """D-12: an exemption describing 'current' must match manifest-contract.yaml."""
+    manifest = yaml.safe_load(
+        (CONTRACTS / "manifest-contract.yaml").read_text(encoding="utf-8")
+    )
+    live_path = manifest["schema_path"]
+    assert (ROOT / live_path).is_file(), live_path
+    assert _stale_current_exemptions(REGISTER.get("exempt", ()), live_path) == []
+    # Negative control: stale v15 claim against v18 schema_path is caught.
+    assert _stale_current_exemptions(
+        [{"path": "system/contracts/manifest-v15.schema.json",
+          "reason": "The current projection schema."}],
+        live_path,
+    ) == ["system/contracts/manifest-v15.schema.json"]
 
 
 def test_no_declaration_is_both_registered_and_exempt():

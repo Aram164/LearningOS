@@ -1,0 +1,15 @@
+{
+  "_generated": {
+    "generator": "tools/material_summarize.py",
+    "warning": "GENERATED file - do not edit; rebuilt by python tools/material_summarize.py --promote"
+  },
+  "built": "2026-09-20",
+  "material": "mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf",
+  "model": "muse-spark 2026-09",
+  "page_range": [
+    39,
+    46
+  ],
+  "scope": "chapter",
+  "sha256": "b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302"
+}

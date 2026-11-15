@@ -242,6 +242,16 @@ def test_binary_under_knowledge_warns(mini_repo):
     assert "BINARY-IN-KNOWLEDGE" in codes(run(mini_repo), "W")
 
 
+def test_knowledge_summaries_meta_json_allowed_and_binaries_warn(mini_repo):
+    summary_dir = mini_repo / "knowledge" / "summaries" / ("a" * 64) / "pages-1-2"
+    summary_dir.mkdir(parents=True)
+    (summary_dir / "summary.md").write_text("# Summary\n", encoding="utf-8")
+    (summary_dir / "meta.json").write_text('{"schema_version": 1}\n', encoding="utf-8")
+    assert "BINARY-IN-KNOWLEDGE" not in codes(run(mini_repo), "W")
+    (mini_repo / "knowledge" / "summaries" / "doc.pdf").write_bytes(b"%PDF-1.4\n")
+    assert "BINARY-IN-KNOWLEDGE" in codes(run(mini_repo), "W")
+
+
 def test_stale_inbox_item_warns(mini_repo):
     item = mini_repo / "work" / "inbox" / "old-capture.md"
     item.write_text("unrouted capture\n")

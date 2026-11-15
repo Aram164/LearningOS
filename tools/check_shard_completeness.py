@@ -37,8 +37,7 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
             f"extra={sorted(set(covered) - set(disk))}")
 
     out = subprocess.run(
-        [sys.executable, "-m", "pytest", "--collect-only", "-q",
-         "-m", "not live_install"],
+        [sys.executable, "-m", "pytest", "--collect-only", "-q"],
         capture_output=True, text=True, check=True)
     collected_ids = [line.strip() for line in out.stdout.splitlines()
                      if "::" in line and not line.startswith(" ")]
@@ -83,6 +82,26 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
             "never blocking)")
 
 
+def check_zero_skip_junit(junit_path: Path) -> str:
+    """Prove a dedicated platform suite ran >= 1 testcase with 0 skips/failures."""
+    if not junit_path.is_file():
+        raise _fail(f"missing zero-skip JUnit XML: {junit_path}")
+    try:
+        root = ET.parse(junit_path).getroot()
+    except ET.ParseError as exc:
+        raise _fail(f"{junit_path.name}: malformed JUnit XML: {exc}") from exc
+    cases = list(root.iter("testcase"))
+    if not cases:
+        raise _fail(f"{junit_path.name}: executed zero testcases")
+    for case in cases:
+        ident = f"{case.get('classname')}::{case.get('name')}"
+        if case.find("skipped") is not None:
+            raise _fail(f"{junit_path.name}: skipped testcase {ident}")
+        if case.find("failure") is not None or case.find("error") is not None:
+            raise _fail(f"{junit_path.name}: failing testcase {ident}")
+    return f"zero-skip: {junit_path.name}: {len(cases)} testcases passed, 0 skipped"
+
+
 def copy_audit_logs(source: Path, destination: Path) -> None:
     """Never overwrite evidence from another suite leg, even if bytes match."""
     for path in sorted(source.glob("*.jsonl")):
@@ -94,15 +113,25 @@ def copy_audit_logs(source: Path, destination: Path) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--junit-dir", required=True, type=Path)
+    parser.add_argument("--junit-dir", type=Path, default=None)
     parser.add_argument("--manifest", type=Path,
                         default=Path(".github/shard-manifest.json"))
+    parser.add_argument(
+        "--zero-skip-junit", action="append", type=Path, default=[],
+        help="JUnit XML file that must contain >= 1 testcase and 0 skips/failures",
+    )
     return parser
 
 
 def main() -> int:
-    args = build_parser().parse_args()
-    print(check(args.junit_dir, args.manifest))
+    parser = build_parser()
+    args = parser.parse_args()
+    if args.junit_dir is None and not args.zero_skip_junit:
+        parser.error("at least one of --junit-dir or --zero-skip-junit is required")
+    if args.junit_dir is not None:
+        print(check(args.junit_dir, args.manifest))
+    for path in args.zero_skip_junit:
+        print(check_zero_skip_junit(path))
     return 0
 
 

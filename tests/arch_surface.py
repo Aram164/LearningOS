@@ -14,6 +14,8 @@ import dataclasses
 import hashlib
 import inspect
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -225,6 +227,53 @@ def locate_line(text: str, key: str) -> int:
             if needle in line:
                 return lineno
     return 1
+
+
+RATCHET_BASE_ENV = "LOS_RATCHET_BASE"
+RATCHET_DEFAULT_BASE = "main"
+
+
+def resolve_ratchet_base(
+    root: Path,
+    base: str | None = None,
+    *,
+    is_ci: bool | None = None,
+) -> tuple[str, str | None]:
+    """Validate a ratchet comparison base against HEAD.
+
+    Returns ``(chosen_base, error_reason)``. When ``is_ci`` is true, both an
+    unresolvable ref and a ref pointing to the same commit as ``HEAD`` return
+    a non-None ``error_reason`` so CI ratchets cannot silently compare HEAD
+    with HEAD.
+    """
+    chosen = (
+        base if base is not None
+        else os.environ.get(RATCHET_BASE_ENV, RATCHET_DEFAULT_BASE)
+    )
+    ci = bool(os.environ.get("CI")) if is_ci is None else is_ci
+    proc = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", "--quiet",
+         f"{chosen}^{{commit}}"],
+        capture_output=True, text=True)
+    if proc.returncode != 0:
+        return chosen, (
+            f"ratchet base {chosen!r} does not resolve; "
+            f"set {RATCHET_BASE_ENV} to compare"
+        )
+    if ci:
+        head_proc = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--verify", "--quiet",
+             "HEAD^{commit}"],
+            capture_output=True, text=True)
+        head_sha = head_proc.stdout.strip()
+        base_sha = proc.stdout.strip()
+        if head_proc.returncode == 0 and base_sha == head_sha:
+            return chosen, (
+                f"CI requires a ratchet base distinct from HEAD: "
+                f"{chosen!r} resolves to {head_sha[:12]}; set "
+                f"{RATCHET_BASE_ENV} to the prior commit or PR base SHA"
+            )
+    return chosen, None
 
 
 def main() -> int:

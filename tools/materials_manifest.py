@@ -35,9 +35,13 @@ is reproducible and would drift the manifest on every ``make materials``.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import datetime as _dt
+import errno
 import hashlib
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -194,6 +198,85 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@contextlib.contextmanager
+def _build_lock(lock_root: Path):
+    """Serialize manifest builds under operator_lock when available.
+
+    The isolated 5-file ``los-anchored-copy`` fixture omits ``learning_os``;
+    when that import is absent, fall back to a dedicated advisory lock in
+    the temp directory so canonical directories never gain scratch files.
+    """
+    try:
+        from learning_os.app.lock import operator_lock
+    except ModuleNotFoundError:
+        import fcntl
+
+        digest = hashlib.sha256(str(lock_root.resolve()).encode("utf-8")).hexdigest()[:12]
+        lock_path = Path(tempfile.gettempdir()) / f"learningos-manifest-{digest}.lock"
+        with open(lock_path, "a+", encoding="utf-8") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        return
+
+    with operator_lock(lock_root):
+        yield
+
+
+def _sync_fd(fd: int) -> None:
+    try:
+        import fcntl
+    except ImportError:  # pragma: no cover - POSIX hosts provide fcntl
+        fcntl = None
+
+    if fcntl is not None and hasattr(fcntl, "F_FULLFSYNC"):
+        try:
+            fcntl.fcntl(fd, fcntl.F_FULLFSYNC)
+            return
+        except OSError as exc:
+            if exc.errno not in {errno.ENOTTY, errno.EINVAL, errno.ENOTSUP}:
+                raise
+    os.fsync(fd)
+
+
+def _sync_directory(directory: Path) -> None:
+    try:
+        fd = os.open(directory, os.O_RDONLY)
+    except OSError:
+        return
+    try:
+        os.fsync(fd)
+    except OSError as exc:
+        if exc.errno not in {errno.ENOTTY, errno.EINVAL, errno.ENOTSUP, errno.EBADF}:
+            raise
+    finally:
+        os.close(fd)
+
+
+def _write_manifest_atomic(path: Path, content: str) -> None:
+    """Write ``content`` to a sibling temp file, fsync, and atomically replace."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    tmp_path = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(content)
+            handle.flush()
+            _sync_fd(handle.fileno())
+        os.chmod(tmp_path, 0o644)
+        os.replace(tmp_path, path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        raise
+    _sync_directory(path.parent)
+
+
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
@@ -215,9 +298,14 @@ def main() -> int:
         if not base.is_dir():
             print(f"materials tree not found: {base}", file=sys.stderr)
             return 2
-        manifest = build(base)
-        MANIFEST.parent.mkdir(parents=True, exist_ok=True)
-        MANIFEST.write_text(render_manifest(manifest), encoding="utf-8")
+        lock_root = (
+            MANIFEST.parents[1]
+            if len(MANIFEST.parents) >= 2 and MANIFEST.parent.name == "records"
+            else MANIFEST.parent
+        )
+        with _build_lock(lock_root):
+            manifest = build(base)
+            _write_manifest_atomic(MANIFEST, render_manifest(manifest))
         gb = manifest["totals"]["bytes"] / 1024**3
         print(f"wrote {_manifest_label()}: "
               f"{manifest['totals']['files']} files, {gb:.2f} GB")

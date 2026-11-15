@@ -212,6 +212,10 @@ def test_preflight_commands_require_check_and_reject_apply(tmp_path: Path) -> No
     "module.create",
     "module.plan.import",
     "unit.map.import",
+    "unit.plan.revise",
+    "note.create",
+    "note.revise",
+    "concept.relations.change",
     "lineage.restamp",
     "goal.decision.record",
     "review.apply",
@@ -264,13 +268,92 @@ def test_unlisted_and_future_capabilities_fail_closed(tmp_path: Path, capability
 def test_allowlist_counts_and_sets_match_plan_d() -> None:
     assert len(ALLOWED_LOS_READ_COMMANDS) == 23
     assert len(ALLOWED_STUDY_COMMANDS) == 5
-    assert set(ALLOWED_PREFLIGHT_COMMANDS.values()) <= ALLOWED_CAPABILITIES
+    # `unit-plan-revise --check` is preflight-only (for `--report-out`);
+    # canonical `unit.plan.revise` writes stay outside `ALLOWED_CAPABILITIES`.
+    assert "unit-plan-revise" in ALLOWED_PREFLIGHT_COMMANDS
+    assert "unit.plan.revise" not in ALLOWED_CAPABILITIES
     assert ALLOWED_LOS_COMMANDS == (
         ALLOWED_LOS_READ_COMMANDS
         | ALLOWED_STUDY_COMMANDS
         | frozenset({"capability", *ALLOWED_PREFLIGHT_COMMANDS})
     )
-    assert len(ALLOWED_CAPABILITIES) == 20
+    assert len(ALLOWED_CAPABILITIES) == 16
+
+
+def test_study_broker_refuses_ui_and_non_operator_approval_across_both_paths(
+    tmp_path: Path,
+) -> None:
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+
+    bad_envelopes: list[dict[str, object]] = [
+        {"capability": "stage.note.write", "channel": "ui", "approval": {"kind": "operator-approval"}, "payload": {}},
+        {"capability": "stage.note.write", "approval": {"kind": "operator-approval"}, "payload": {}},
+        {"capability": "stage.note.write", "channel": "", "approval": {"kind": "operator-approval"}, "payload": {}},
+        {"capability": "stage.note.write", "channel": "operator", "approval": {"kind": "direct-user-gesture"}, "payload": {}},
+        {"capability": "stage.note.write", "channel": "operator", "approval": {"kind": "approved-delivery"}, "payload": {}},
+        {"capability": "stage.note.write", "channel": "operator", "payload": {}},
+    ]
+    for idx, env_obj in enumerate(bad_envelopes):
+        env_path = scratch / f"bad-origin-{idx}.json"
+        env_path.write_text(json.dumps(env_obj), encoding="utf-8")
+        res = broker.handle_request({
+            "tool": "los",
+            "argv": ["capability", "stage.note.write", "--payload-file", str(env_path)],
+            "cwd": str(core),
+        })
+        assert res.exit_code == 2, env_obj
+
+    for seal_flags in (
+        ["--channel", "ui"],
+        ["--channel", " "],
+        ["--approval-kind", "direct-user-gesture"],
+        ["--approval-kind", "approved-delivery"],
+    ):
+        res = broker.handle_request({
+            "tool": "seal_envelope",
+            "argv": [
+                "--capability", "stage.note.write",
+                "--payload", json.dumps({"unit_id": "u", "stage_id": "s", "text": "x"}),
+                "--key", "k1",
+                *seal_flags,
+            ],
+            "cwd": str(core),
+        })
+        assert res.exit_code == 2, seal_flags
+    assert runner.calls == []
+
+    # `--payload-file` to an outside file refuses even if `stdin_text` was supplied.
+    outside_env = tmp_path / "outside-env.json"
+    outside_env.write_text(
+        json.dumps({
+            "capability": "stage.note.write",
+            "channel": "operator",
+            "approval": {"kind": "operator-approval"},
+            "payload": {},
+        }),
+        encoding="utf-8",
+    )
+    res_outside_pf = broker.handle_request({
+        "tool": "los",
+        "argv": ["capability", "stage.note.write", "--payload-file", str(outside_env)],
+        "stdin_text": outside_env.read_text(encoding="utf-8"),
+        "cwd": str(core),
+    })
+    assert res_outside_pf.exit_code == 2
+    assert runner.calls == []
+
+    # Read-only `unit-plan-revise --check` stays permitted while `unit.plan.revise` writes stay blocked.
+    plan_file = scratch / "plan.yaml"
+    plan_file.write_text("unit_id: unit-demo-l01\n", encoding="utf-8")
+    res_preflight = broker.handle_request({
+        "tool": "los",
+        "argv": ["unit-plan-revise", "unit-demo-l01", "--file", str(plan_file), "--check"],
+        "cwd": str(core),
+    })
+    assert res_preflight.exit_code == 0, res_preflight.stderr
+    assert len(runner.calls) == 1
 
 
 def test_material_span_rewrite_session_pinning_and_adopt(tmp_path: Path) -> None:
@@ -428,6 +511,10 @@ def test_host_path_firewall_blocks_protected_external_and_symlink_paths(
     symlink_in_scratch.symlink_to(outside)
     symlink_to_mat = scratch / "link-mat.pdf"
     symlink_to_mat.symlink_to(core.parent / "materials/book.pdf")
+    env_secret = core.parent / ".env"
+    env_secret.write_text("SECRET_TOKEN=1\n", encoding="utf-8")
+    symlink_to_env = scratch / "link-env"
+    symlink_to_env.symlink_to(env_secret)
 
     monkeypatch.setenv("HOME", str(tmp_path / "fake-home"))
     (tmp_path / "fake-home").mkdir()
@@ -440,9 +527,11 @@ def test_host_path_firewall_blocks_protected_external_and_symlink_paths(
         *[str(p / "child.txt") for p in protected_reads(core)],
         str(core / "operations/ai-actions/requests/req-1/slice.md"),
         str(core.parent / "materials/book.pdf"),
+        str(env_secret),
         str(outside),
         str(symlink_in_scratch),
         str(symlink_to_mat),
+        str(symlink_to_env),
         "~/secret.txt",
     ]
     for bad in protected_targets:

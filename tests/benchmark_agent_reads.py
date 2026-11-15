@@ -32,7 +32,7 @@ def triage_sample() -> dict:
     reports the text-cache totals a full-read triage must ingest.
     """
     rows = []
-    for meta in sorted((ROOT / "generated").glob("summaries/*/pages-*/meta.json")):
+    for meta in sorted((ROOT / "knowledge").glob("summaries/*/pages-*/meta.json")):
         try:
             record = json.loads(meta.read_text(encoding="utf-8"))
         except (OSError, ValueError):

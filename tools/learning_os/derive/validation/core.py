@@ -244,6 +244,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             self.check_lifecycle_coherence,
             self.check_projects,
             self.check_transaction_receipts,
+            self.check_retired_migration_provenance,
             self.check_ai_action_requests,
             self.check_files,
             self.check_workspaces,
@@ -275,6 +276,50 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
                     f"({type(exc).__name__}: {exc}); fix the SCHEMA errors in "
                     f"{', '.join(invalid)} and validate again")
         return self.issues
+
+    def check_retired_migration_provenance(self) -> None:
+        """D-24: reject unreceipted or new ``type: migration-provenance`` files.
+
+        ``operations/migrations/job-quarantine-collapse-v1.yaml`` was written by
+        committed receipt ``transaction-20260826-232920-001.yaml`` and remains
+        preserved at its exact historical SHA-256 digest; any other file with
+        ``type: migration-provenance`` fails validation.
+        """
+        import hashlib
+
+        import yaml
+
+        frozen_rel = "operations/migrations/job-quarantine-collapse-v1.yaml"
+        frozen_sha256 = (
+            "f4b6a8b8dbcef9e4ddebd335ae0e60139c0aa24d9ef40f715e972612ba717a5e"
+        )
+        mig_dir = self.repo.root / "operations" / "migrations"
+        if not mig_dir.is_dir():
+            return
+        for path in sorted(mig_dir.rglob("*")):
+            if not path.is_file() or path.suffix.lower() not in {".yaml", ".yml"}:
+                continue
+            raw_bytes = path.read_bytes()
+            if b"migration-provenance" not in raw_bytes:
+                continue
+            try:
+                data = yaml.safe_load(raw_bytes.decode("utf-8"))
+            except (UnicodeDecodeError, yaml.YAMLError):
+                continue
+            if not isinstance(data, dict) or data.get("type") != "migration-provenance":
+                continue
+            rel = path.relative_to(self.repo.root).as_posix()
+            if (
+                rel == frozen_rel
+                and hashlib.sha256(raw_bytes).hexdigest() == frozen_sha256
+            ):
+                continue
+            self.err(
+                "MIGRATION-PROVENANCE-RETIRED",
+                "type: migration-provenance is retired; commit real migration writes "
+                "through the LearningOS gateway instead of prose provenance files",
+                rel,
+            )
 
     def check_learning_runtime(self) -> None:
         for sidecar in sorted(self.repo.root.glob("curriculum/modules/*/units/*/stages/*/requirements.yaml")):

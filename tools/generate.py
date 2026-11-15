@@ -16,9 +16,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from learning_os.app.projection import publish_with_paths  # noqa: E402
 from learning_os.derive.learning_runtime import RuntimeInputError  # noqa: E402
-from learning_os.derive.projection import generate_all, write_outputs  # noqa: E402
-from learning_os.store.loader import load_repo  # noqa: E402
+from learning_os.domain.failures import WriteRefused  # noqa: E402
 from learning_os.store.transactions import TransactionFailure  # noqa: E402
 
 
@@ -35,10 +35,9 @@ def main() -> int:
     args = parser.parse_args()
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
-    repo = load_repo(root)
     try:
-        outputs = generate_all(repo)
-    except TransactionFailure as exc:
+        written = publish_with_paths(root)
+    except (TransactionFailure, WriteRefused) as exc:
         print(f"generation refused: {exc}")
         return 2
     except RuntimeInputError as exc:
@@ -48,8 +47,7 @@ def main() -> int:
         # printed forty and left the projection unwritten.
         print(f"generation refused: {exc}")
         return 1
-    write_outputs(repo, outputs)
-    for rel in sorted(outputs):
+    for rel in written:
         print(f"wrote generated/{rel}")
     return 0
 

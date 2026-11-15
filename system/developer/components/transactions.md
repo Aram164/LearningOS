@@ -8,6 +8,7 @@ Own atomic canonical commits, artifact revisions, before-images and receipts.
 
 - `tools/learning_os/store/transactions.py`
 - `tools/learning_os/store/revisions.py`
+- `tools/learning_os/store/receipt_chain.py`
 - `tools/learning_os/store/fingerprint.py`
 - `tools/learning_os/store/digests.py`
 - `tools/learning_os/store/manifest_identity.py`

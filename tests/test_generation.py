@@ -75,17 +75,17 @@ def test_generated_reset_rebuilds_everything(mini_repo):
 
 
 def test_projection_rebuild_keeps_sibling_caches(mini_repo):
-    """Sibling producers survive `make views`: text-cache, summaries, and
-    dossiers are owned by their own tools, so stale-sweeping must leave
+    """Sibling producers survive `make views`: text-cache, material-search,
+    and dossiers are owned by their own tools, so stale-sweeping must leave
     them alone while still removing genuinely stale views."""
     repo = load_repo(mini_repo)
     gen = mini_repo / "generated"
     kept = gen / "text-cache" / ("ab" * 32) / "pp-0001.txt"
     kept.parent.mkdir(parents=True, exist_ok=True)
     kept.write_text("cached page", encoding="utf-8")
-    summary = gen / "summaries" / ("cd" * 32) / "pages-1-2" / "summary.md"
-    summary.parent.mkdir(parents=True, exist_ok=True)
-    summary.write_text("GENERATED\ncached summary", encoding="utf-8")
+    search = gen / "material-search" / "index.json"
+    search.parent.mkdir(parents=True, exist_ok=True)
+    search.write_text('{"_generated": {}}', encoding="utf-8")
     dossier = gen / "dossiers" / "unit-demo-l01-0123456789abcdef.json"
     dossier.parent.mkdir(parents=True, exist_ok=True)
     dossier.write_text('{"key": "context://unit-demo-l01/semantic-dossier@0123"}',
@@ -94,9 +94,10 @@ def test_projection_rebuild_keeps_sibling_caches(mini_repo):
     stale.write_text("stale", encoding="utf-8")
     write_outputs(repo, generate_all(repo, generated_at="T1"))
     assert kept.read_text(encoding="utf-8") == "cached page"
-    assert summary.exists()
+    assert search.exists()
     assert dossier.exists()
     assert not stale.exists()
+    assert "summaries" not in _KEEP_TOP_DIRS
 
 
 def test_projection_rebuild_keeps_every_owned_cache_directory(mini_repo):

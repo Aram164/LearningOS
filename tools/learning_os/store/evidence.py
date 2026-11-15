@@ -184,32 +184,16 @@ def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
     return proven
 
 
-def verify_committed_evidence(
+def _verify_evidence_row(
     root: Path,
     request: GatewayRequestContext,
+    row: dict,
     *,
+    live_revisions: Mapping[str, int],
     authority_root: Path | None = None,
-) -> tuple[dict, dict, Path] | None:
-    """Verify the committed evidence for one idempotency key, strictly.
-
-    The single checklist behind both ``replay_for_request`` (which turns a
-    hit into a ``TransactionResult``) and the Diagnostics resolver (which
-    turns it into a COMMITTED verdict). Every cross-binding below runs
-    before anything is returned, and a mismatch or malformed value always
-    raises rather than silently choosing a lenient reading. ``None`` means
-    only one thing: no ledger row exists for this idempotency key at all —
-    every other outcome is either verified ``(receipt, row, receipt_path)``
-    or an exception. Nothing here invokes a capability handler.
-
-    The resolver passes the ledger row's own channel/intent as the trusted
-    request facts (plus the trace's request/key/capability identity), with
-    the approval subject bound by the admission invariant
-    (approval == intent). Tampering with either side of the row/receipt
-    pair therefore fails here exactly as it fails a live replay.
-    """
-    row = load_idempotency_entries(root).get(request.idempotency_key)
-    if row is None:
-        return None
+    check_catalog_scopes: bool = True,
+    scopes_by_capability: Mapping[str, tuple[str, ...]] | None = None,
+) -> tuple[dict, dict, Path]:
     if row["capability"] != request.capability \
             or row["intent_sha256"] != request.intent_sha256:
         raise TransactionIdempotencyConflict(
@@ -304,16 +288,6 @@ def verify_committed_evidence(
             )
 
     # The live revision ledger must not contradict this receipt.
-    #
-    # Everything above cross-binds the ledger *row* against the receipt; until
-    # this check, nothing compared either against `revisions.yaml` itself, so a
-    # rolled-back or hand-edited revision ledger replayed cleanly. Revisions
-    # only ever increase, so an artifact standing below the value this
-    # transaction recorded is provable mutation — the one thing about these
-    # shared, multi-entry ledgers a single receipt *can* prove. (The
-    # idempotency ledger needs no equivalent: its row for this key is already
-    # cross-bound field by field above.)
-    live_revisions = load_revisions(root)
     for artifact, after in row["revisions"].items():
         current = live_revisions.get(artifact, 0)
         if current < after:
@@ -326,61 +300,58 @@ def verify_committed_evidence(
     if not isinstance(writes, list) or not writes:
         raise ReplayEvidenceError("idempotent receipt records no writes")
 
-    # A transaction's writes are not always all authorized by its own top-level
-    # capability: `ai-action.delivery.apply`, for example, writes its own
-    # service-owned bookkeeping directly but delegates the canonical write to
-    # whatever domain capability originally owns that destination (recorded in
-    # `write_authorities` at commit time). But the receipt's own
-    # `authority.grants` is a claim made by the same untrusted evidence under
-    # review here — it can never be trusted merely because every named
-    # capability is a real, known catalogue entry. An ordinary gateway receipt
-    # may claim exactly the one grant its own top-level capability produced;
-    # an `ai-action.delivery.apply` receipt may additionally claim delegated
-    # domain grants, but only ones proven by re-reading and hash-verifying the
-    # exact approved delivery this receipt names, never merely asserted.
     authority = receipt.get("authority")
     grants = authority.get("grants") if isinstance(authority, dict) else None
     if not isinstance(grants, list) or not grants:
         raise ReplayEvidenceError("idempotent receipt has no authority grants")
 
+    granted_capabilities: list[str] = []
+    for grant in grants:
+        if not isinstance(grant, dict):
+            raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
+        granted_capability = grant.get("capability")
+        declared = grant.get("declared_writes")
+        if not isinstance(granted_capability, str) or not isinstance(declared, list):
+            raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
+        granted_capabilities.append(granted_capability)
+
     resolved_authority_root = authority_root or default_authority_root(root)
     allowed_scopes: list[str] = []
     if resolved_authority_root is not None:
-        from learning_os.store.contracts.capability_catalog import (
-            command_definitions,
-            domain_capability_definitions,
-        )
-
-        scopes_by_capability = {
-            name: definition.writes
-            for name, definition in {
-                **command_definitions(resolved_authority_root, include_internal=True),
-                **domain_capability_definitions(resolved_authority_root),
-            }.items()
-        }
-
-        def catalog_scopes_for(name: str) -> tuple[str, ...]:
-            scopes = scopes_by_capability.get(name)
-            if scopes is None:
-                raise ReplayEvidenceError(
-                    f"idempotent receipt names an unknown write authority: {name}"
+        if check_catalog_scopes:
+            if scopes_by_capability is None:
+                from learning_os.store.contracts.capability_catalog import (
+                    command_definitions,
+                    domain_capability_definitions,
                 )
-            return scopes
 
-        granted_capabilities: list[str] = []
-        for grant in grants:
-            if not isinstance(grant, dict):
-                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
-            granted_capability = grant.get("capability")
-            declared = grant.get("declared_writes")
-            if not isinstance(granted_capability, str) or not isinstance(declared, list):
-                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
-            if tuple(declared) != tuple(catalog_scopes_for(granted_capability)):
-                raise ReplayEvidenceError(
-                    "idempotent receipt authority grant does not match the declared "
-                    f"capability scope: {granted_capability}"
-                )
-            granted_capabilities.append(granted_capability)
+                scopes_by_capability = {
+                    name: definition.writes
+                    for name, definition in {
+                        **command_definitions(resolved_authority_root, include_internal=True),
+                        **domain_capability_definitions(resolved_authority_root),
+                    }.items()
+                }
+
+            def catalog_scopes_for(name: str) -> tuple[str, ...]:
+                scopes = scopes_by_capability.get(name)
+                if scopes is None:
+                    raise ReplayEvidenceError(
+                        f"idempotent receipt names an unknown write authority: {name}"
+                    )
+                return scopes
+
+            for grant in grants:
+                granted_capability = grant["capability"]
+                declared = grant["declared_writes"]
+                if tuple(declared) != tuple(catalog_scopes_for(granted_capability)):
+                    raise ReplayEvidenceError(
+                        "idempotent receipt authority grant does not match the declared "
+                        f"capability scope: {granted_capability}"
+                    )
+
+            for granted_capability in granted_capabilities:
+                allowed_scopes.extend(catalog_scopes_for(granted_capability))
 
         if request.capability == "ai-action.delivery.apply":
             if "ai-action.delivery.apply" not in granted_capabilities:
@@ -405,9 +376,6 @@ def verify_committed_evidence(
                 "request capability"
             )
 
-        for granted_capability in granted_capabilities:
-            allowed_scopes.extend(catalog_scopes_for(granted_capability))
-
     for entry in writes:
         if not isinstance(entry, dict):
             raise ReplayEvidenceError("idempotent receipt write row is malformed")
@@ -424,7 +392,7 @@ def verify_committed_evidence(
             raise ReplayEvidenceError(
                 f"idempotent receipt write path is not canonical: {relative}"
             )
-        if resolved_authority_root is not None and not any(
+        if resolved_authority_root is not None and check_catalog_scopes and not any(
             scope_matches(relative, pattern) for pattern in allowed_scopes
         ):
             raise ReplayEvidenceError(
@@ -433,6 +401,99 @@ def verify_committed_evidence(
             )
 
     return receipt, row, receipt_path
+
+
+def verify_committed_evidence(
+    root: Path,
+    request: GatewayRequestContext,
+    *,
+    authority_root: Path | None = None,
+    check_catalog_scopes: bool = True,
+) -> tuple[dict, dict, Path] | None:
+    """Verify the committed evidence for one idempotency key, strictly.
+
+    The single checklist behind both ``replay_for_request`` (which turns a
+    hit into a ``TransactionResult``) and the Diagnostics resolver (which
+    turns it into a COMMITTED verdict). Every cross-binding below runs
+    before anything is returned, and a mismatch or malformed value always
+    raises rather than silently choosing a lenient reading. ``None`` means
+    only one thing: no ledger row exists for this idempotency key at all —
+    every other outcome is either verified ``(receipt, row, receipt_path)``
+    or an exception. Nothing here invokes a capability handler.
+    """
+    row = load_idempotency_entries(root).get(request.idempotency_key)
+    if row is None:
+        return None
+    live_revisions = load_revisions(root)
+    return _verify_evidence_row(
+        root,
+        request,
+        row,
+        live_revisions=live_revisions,
+        authority_root=authority_root,
+        check_catalog_scopes=check_catalog_scopes,
+    )
+
+
+def verify_idempotency_ledger_rows(
+    root: Path,
+    *,
+    authority_root: Path | None = None,
+    check_catalog_scopes: bool = False,
+) -> list[tuple[str, str]]:
+    """Cross-check every idempotency ledger row against its committed receipt.
+
+    Reuses :func:`_verify_evidence_row` across the whole ledger while loading
+    the shared ledgers once. Whole-ledger validation defaults
+    ``check_catalog_scopes=False`` so retired or tightened capability write
+    globs do not fail historical committed rows, while still verifying receipt
+    presence, schema, hashes, request bindings, revision floors, and writes.
+    """
+    entries = load_idempotency_entries(root)
+    if not entries:
+        return []
+    live_revisions = load_revisions(root)
+    scopes_by_capability: dict[str, tuple[str, ...]] | None = None
+    resolved_authority_root = authority_root or default_authority_root(root)
+    if resolved_authority_root is not None and check_catalog_scopes:
+        from learning_os.store.contracts.capability_catalog import (
+            command_definitions,
+            domain_capability_definitions,
+        )
+
+        scopes_by_capability = {
+            name: definition.writes
+            for name, definition in {
+                **command_definitions(resolved_authority_root, include_internal=True),
+                **domain_capability_definitions(resolved_authority_root),
+            }.items()
+        }
+
+    failures: list[tuple[str, str]] = []
+    for key in sorted(entries):
+        row = entries[key]
+        try:
+            ctx = GatewayRequestContext(
+                request_id=str(row["request_id"]),
+                idempotency_key=key,
+                capability=str(row["capability"]),
+                channel=str(row["channel"]),
+                intent_sha256=str(row["intent_sha256"]),
+                approval_kind="operator-approval",
+                approval_subject_sha256=str(row["intent_sha256"]),
+            )
+            _verify_evidence_row(
+                root,
+                ctx,
+                row,
+                live_revisions=live_revisions,
+                authority_root=authority_root,
+                check_catalog_scopes=check_catalog_scopes,
+                scopes_by_capability=scopes_by_capability,
+            )
+        except (ReplayEvidenceError, KeyError, TypeError, ValueError) as exc:
+            failures.append((key, str(exc)))
+    return failures
 
 
 def replay_for_request(

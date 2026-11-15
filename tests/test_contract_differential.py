@@ -1,8 +1,8 @@
-"""Prototype: Python jsonschema vs Ajv standalone differential agreement.
+"""Python jsonschema vs Ajv standalone differential agreement.
 
 Paired-gate test: needs the sibling UI checkout (which carries the checked-in
-Ajv validator), node, and the v18 bundle. Skips with an explicit reason when
-the UI sibling or node is absent, so Core stays usable alone; a missing
+Ajv validator), node, and the v18 schema closure. Skips with an explicit reason
+when the UI sibling or node is absent, so Core stays usable alone; a missing
 checked-in validator is a failure, never a skip. Verdict booleans are
 compared, not error sets (Ajv reports short; Python reports all).
 """
@@ -24,8 +24,8 @@ from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 
-V16_REL = "system/contracts/manifest-v18.schema.json"
-VALIDATOR_REL = "contract-prototype/generated/manifest.validator.cjs"
+V16_REL = "system/contracts/manifest-v19.schema.json"
+VALIDATOR_REL = "src/contracts/generated/manifest.validator.cjs"
 VERDICT_REL = "scripts/ajv-verdict.mjs"
 FIXTURE_REL = "fixture-vault/generated/manifest.json"
 
@@ -92,7 +92,7 @@ def _s_drop_required_top(manifest: dict) -> None:
 
 
 def _s_unknown_top(manifest: dict) -> None:
-    manifest["__prototype_probe__"] = 1
+    manifest["__unknown_top_probe__"] = 1
 
 
 def _s_mistype_version(manifest: dict) -> None:
@@ -306,7 +306,7 @@ def test_format_vocabulary_agreement(repo_root: Path, tmp_path: Path) -> None:
             assert list(python.iter_errors(bad)), "date: Python accepts the invalid value"
             assert verdicts["date-bad.json"]["valid"] is False, "date: Ajv accepts invalid"
             continue
-        # PINNED DIVERGENCE (prototype finding, 2026-09-20): Core's
+        # PINNED DIVERGENCE (contract parity note, 2026-09-20): Core's
         # FormatChecker() ships without date-time/uri checkers, so the
         # producer silently ignores those formats today, while Ajv with
         # ajv-formats enforces them. A production cutover must extend Core's
@@ -319,21 +319,21 @@ def test_format_vocabulary_agreement(repo_root: Path, tmp_path: Path) -> None:
             f"{name}: Ajv accepts invalid — ajv-formats behavior changed")
 
 
-def test_prototype_lock_matches_production_lock(repo_root: Path) -> None:
+def test_generated_lock_matches_hand_mirrored_lock(repo_root: Path) -> None:
     """Every scalar the generator emits must equal the hand-mirrored lock."""
 
     ui = _paired_ui(repo_root)
-    production = json.loads((ui / "contracts" / "manifest-v18.lock.json").read_text(
+    production = json.loads((ui / "contracts" / "manifest-v19.lock.json").read_text(
         encoding="utf-8"))
-    prototype = json.loads((ui / "contract-prototype" / "generated"
-                            / "manifest.prototype.lock.json").read_text(encoding="utf-8"))
+    generated = json.loads((ui / "src" / "contracts" / "generated"
+                            / "manifest.contract.lock.json").read_text(encoding="utf-8"))
     for key in ("contract_version", "mirrors", "schema_path", "schema_sha256",
-                "top_level_keys", "generated_keys", "index_keys",
-                "forbidden_top_level_keys"):
-        assert prototype[key] == production[key], f"prototype lock drifts on {key}"
+                "closure_sha256", "top_level_keys", "generated_keys",
+                "index_keys", "forbidden_top_level_keys"):
+        assert generated[key] == production[key], f"generated lock drifts on {key}"
     closure = digest_of(build_bundle(repo_root / V16_REL, repo_root / "system" / "schema"))
-    assert prototype["closure_sha256"] == closure, (
-        "prototype schema closure is stale; regenerate the Core bundle and UI validator")
+    assert generated["closure_sha256"] == closure, (
+        "generated schema closure is stale; regenerate the Core bundle and UI validator")
     header = (ui / VALIDATOR_REL).read_text(encoding="utf-8").splitlines()[:10]
     assert f"// Closure: {closure}" in header, (
         "Ajv validator and current producer schema closure disagree")

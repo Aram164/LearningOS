@@ -171,53 +171,61 @@ authored repository and interface as independent Git repositories.
 
 ```text
 repository/
-├── system/                normative prose, contracts, schemas, skills and templates
-│   ├── *.md               18 documents — indexed in system/contracts/normative-corpus.yaml
-│   ├── adr/               decision records — indexed in the same file
-│   ├── developer/         developer routing, architecture map and component pages
-│   ├── contracts/         machine-checked declarations — see contract-register.yaml
-│   ├── procedures/        executable procedure transcripts (PLAN D11)
-│   ├── schema/            stored-record schemas — fingerprinted by data-contract.yaml
-│   ├── skills/            agent procedures, one SKILL.md per skill
-│   └── templates/         authoring forms — deliberately outside the normative corpus
-├── knowledge/             canonical notes and the concept registries
-│   ├── notes/             one folder per domain; buckets grow with authoring
-│   ├── attachments/       handwritten originals and images, one folder per note
-│   └── garden/            the exploratory layer (ADR-002); no schema, never canonical
-├── curriculum/            programs, modules, units, study maps and stages
-│   ├── programs/          active areas and quarantine boundaries
-│   ├── modules/           module.yaml, source-map.yaml and units/<unit-id>/ beneath each
-│   └── quarantine/        excluded content, boundary index only
-├── records/               the materials manifest
-├── sources/               the source registry and its collections
-│   ├── registry/          partitioned source records
-│   └── collections/       shelves and topic packs
-├── projects/              direct owner aliases for retired project identities
-├── operations/            the transaction ledger and everything the gateway writes
-│   ├── transactions/      one receipt per applied transaction
-│   ├── gateway-requests/  request envelopes
-│   ├── ai-actions/        AI action state; requests and deliveries are gitignored
-│   ├── migrations/        applied-migration provenance
-│   ├── diagnostics/       disposable diagnostic trace store (gitignored, deletable, never authoritative)
-│   └── legacy/            published Legacy archive lock (allowlist-only evidence)
-├── migration/             migration state, preserved originals and reports
-│   ├── backups/           pre-migration copies, retained
-│   ├── reports/           what each migration did
-│   ├── adr-007/           originals preserved through the ADR-007 library retaxonomy
-│   └── curriculum-v2/     the module-first conversion — map, report and originals
-├── work/                  the coordination layer and its queues
-│   ├── inbox/             the drop-anything home; the operator routes what lands here
-│   ├── complaints/        tracked agent friction notes; the inbox stays for learner captures
-│   ├── active/            workspace folders, each with a CONTEXT.md, plus output bundles and files that canonical records cite by path; only a folder with a CONTEXT.md is loaded as a workspace
-│   └── proposals/         approved proposals and their phase records; nothing here authorizes itself
-├── archive/               completed workspaces and resolved inbox drops, retained and never deleted
-│   ├── workspaces/        one folder per year
-│   └── inbox/             resolved inbox drops, one folder per year
-├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml
-├── bases/                 installed Obsidian Bases shelves (ADR-006); gitignored
-├── tools/                 the operator CLI and the learning_os package; see tools/README.md
-├── tests/                 the test suite and its frozen format fixtures
-└── workbench/             published migration review documents and execution evidence; not learner data
+├── system/                 normative prose, contracts, schemas, skills and templates
+│   ├── *.md                18 documents — indexed in system/contracts/normative-corpus.yaml
+│   ├── adr/                decision records — indexed in the same file
+│   ├── developer/          developer routing, architecture map and component pages
+│   ├── contracts/          machine-checked declarations — see contract-register.yaml
+│   ├── procedures/         executable procedure transcripts (PLAN D11)
+│   ├── schema/             stored-record schemas — fingerprinted by data-contract.yaml
+│   ├── skills/             agent procedures, one SKILL.md per skill
+│   └── templates/          authoring forms — deliberately outside the normative corpus
+├── knowledge/              canonical notes and the concept registries
+│   ├── notes/              one folder per domain; buckets grow with authoring
+│   ├── attachments/        handwritten originals and images, one folder per note
+│   ├── summaries/          promoted source-bound chapter summaries (tools/material_summarize.py --promote)
+│   └── garden/             the exploratory layer (ADR-002); no schema, never canonical
+├── curriculum/             programs, modules, units, study maps and stages
+│   ├── programs/           active areas and quarantine boundaries
+│   ├── modules/            module.yaml, source-map.yaml and units/<unit-id>/ beneath each
+│   └── quarantine/         excluded content, boundary index only
+├── records/                the materials manifest
+├── sources/                the source registry and its collections
+│   ├── registry/           partitioned source records
+│   └── collections/        shelves and topic packs
+├── projects/               direct owner aliases for retired project identities
+├── operations/             the transaction ledger and everything the gateway writes
+│   ├── transactions/       one receipt per applied transaction
+│   ├── gateway-requests/   request envelopes
+│   ├── ai-actions/         AI action state; requests and deliveries are gitignored
+│   ├── migrations/         applied-migration provenance
+│   ├── diagnostics/        disposable diagnostic trace store (gitignored, deletable, never authoritative)
+│   └── legacy/             published Legacy archive lock (allowlist-only evidence)
+├── migration/              migration state, preserved originals and reports
+│   ├── backups/            pre-migration copies, retained
+│   ├── reports/            what each migration did
+│   ├── adr-007/            originals preserved through the ADR-007 library retaxonomy
+│   └── curriculum-v2/      the module-first conversion — map, report and originals
+├── work/                   the coordination layer and its queues
+│   ├── inbox/              the drop-anything home; the operator routes what lands here
+│   ├── complaints/         tracked agent friction notes; the inbox stays for learner captures
+│   ├── active/             workspace folders, each with a CONTEXT.md, plus output bundles and files that canonical records cite by path; only a folder with a CONTEXT.md is loaded as a workspace
+│   └── proposals/          approved proposals and their phase records; nothing here authorizes itself
+├── archive/                completed workspaces and resolved inbox drops, retained and never deleted
+│   ├── workspaces/         one folder per year
+│   └── inbox/              resolved inbox drops, one folder per year
+├── generated/              gitignored, rebuildable; shape declared by manifest-contract.yaml
+│   ├── reports/            validation and health reports
+│   ├── collections/        collection-level derived views written by projection
+│   ├── text-cache/         page-text caches owned by tools/material_text.py
+│   ├── dossiers/           semantic dossiers owned by los dossier
+│   ├── derived-state/      derived state caches owned by learning_os.store.derived
+│   ├── material-search/    SQLite FTS5 index owned by tools/material_search.py
+│   └── material-outlines/  PDF outline sections owned by tools/material_outline.py
+├── bases/                  installed Obsidian Bases shelves (ADR-006); gitignored
+├── tools/                  the operator CLI and the learning_os package; see tools/README.md
+├── tests/                  the test suite and its frozen format fixtures
+└── workbench/              published migration review documents and execution evidence; not learner data
 ```
 
 <!-- tree:end -->
@@ -781,9 +789,12 @@ denies reads across the closed material, text-cache, search-index, outline,
 derived-state, summary, request-slice, and private `LearningOS/reading-memory/`
 trees defined in `tools/learning_os/store/study_fence.py` while denying all
 writes to `LearningOS/`. Gateway reads and study-store writes traverse
-`LOS_GATE_SOCK` with launcher-pinned session identity; canonical writes remain
-separated on the host behind signed approval envelopes
-(`tools/seal_envelope.py`). Optional UX lifecycle hooks live in
+`LOS_GATE_SOCK` with launcher-pinned session identity; canonical writes inside
+the study capability allowlist remain separated on the host behind
+intent-bound, operator-approved envelopes (`tools/seal_envelope.py`), while
+durable note creation/revision, unit plan revision, concept-relation edits,
+review, and program mutations remain outside the study allowlist. Optional UX
+lifecycle hooks live in
 `LearningOS/.claude` (`optional: true` in `system/contracts/perimeter.yaml`).
 Decisions and scope boundaries:
 [ADR-022](adr/ADR-022-sandboxed-study-isolation-2026-11-13.md).

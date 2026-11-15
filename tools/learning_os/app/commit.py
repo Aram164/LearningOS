@@ -11,6 +11,7 @@ before the standard legacy catches.
 
 from __future__ import annotations
 
+import inspect
 from contextvars import ContextVar
 from pathlib import Path
 
@@ -35,6 +36,7 @@ from learning_os.domain.failures import (
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.store.loader import load_repo
+from learning_os.store.manifest_identity import observe_inputs as _observe_inputs
 from learning_os.store.session_ledger import load_session_ledger as _load_session_ledger
 from learning_os.store.session_ledger import record_touched as _record_touched
 from learning_os.store.transactions import (
@@ -161,10 +163,18 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
             return CommitOutcome(
                 2, [f"cannot change {path}: target is not a regular file"], {})
     validated_repo = None
+    observed_before: dict | None = None
     validation_summary: dict = {}
 
+    def _safe_observe() -> dict | None:
+        try:
+            return _observe_inputs(root)
+        except Exception:
+            return None
+
     def validation_errors():
-        nonlocal validated_repo
+        nonlocal validated_repo, observed_before
+        observed_before = _safe_observe()
         validated_repo = load_repo(root)
         issues = validate(validated_repo, online=False)
         validation_summary.clear()
@@ -174,13 +184,21 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
         return [issue for issue in issues if issue.severity == "E"]
 
     def publish_validated_state(snapshot_after_id: str | None = None) -> str:
-        nonlocal validated_repo
-        repo = validated_repo or load_repo(root)
+        nonlocal validated_repo, observed_before
+        if validated_repo is None:
+            observed_before = _safe_observe()
+            repo = load_repo(root)
+        else:
+            repo = validated_repo
         if snapshot_after_id is not None:
             seed_source_fingerprint(repo, snapshot_after_id)
-        _publish_repo(repo)
+        if observed_before is not None and "inputs_before" in inspect.signature(_publish_repo).parameters:
+            _publish_repo(repo, inputs_before=observed_before)
+        else:
+            _publish_repo(repo)
         projected_snapshot = f"sha256:{source_fingerprint(repo)}"
         validated_repo = None
+        observed_before = None
         return projected_snapshot
 
     if proposal.validate_state == "STANDARD":

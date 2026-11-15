@@ -78,6 +78,8 @@ directories:
         purpose: one folder per domain; buckets grow with authoring
       - path: knowledge/attachments
         purpose: handwritten originals and images, one folder per note
+      - path: knowledge/summaries
+        purpose: promoted source-bound chapter summaries (tools/material_summarize.py --promote)
       - path: knowledge/garden
         purpose: the exploratory layer (ADR-002); no schema, never canonical
 
@@ -164,6 +166,31 @@ directories:
   - path: generated
     owner: generated
     purpose: gitignored, rebuildable; shape declared by manifest-contract.yaml
+    # Single owner of generated/ subdirectories (rebuildable: true -> rebuilt and
+    # swept by tools/generate.py projection; false -> sibling-producer cache kept
+    # across projection rebuilds).
+    children:
+      - path: generated/reports
+        rebuildable: true
+        purpose: validation and health reports
+      - path: generated/collections
+        rebuildable: true
+        purpose: collection-level derived views written by projection
+      - path: generated/text-cache
+        rebuildable: false
+        purpose: page-text caches owned by tools/material_text.py
+      - path: generated/dossiers
+        rebuildable: false
+        purpose: semantic dossiers owned by los dossier
+      - path: generated/derived-state
+        rebuildable: false
+        purpose: derived state caches owned by learning_os.store.derived
+      - path: generated/material-search
+        rebuildable: false
+        purpose: SQLite FTS5 index owned by tools/material_search.py
+      - path: generated/material-outlines
+        rebuildable: false
+        purpose: PDF outline sections owned by tools/material_outline.py
 
   - path: bases
     owner: interface

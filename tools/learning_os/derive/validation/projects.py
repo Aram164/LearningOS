@@ -100,6 +100,60 @@ class ChecksProjects:
         # nothing (system/VALIDATION.md, TRANSACTION-REVISION-*).
         revision_ledger_issues(self, receipt_file_issues(self))
 
+        # Per-path SHA-256 chain continuity across plan/module/program/source-map
+        # records, sharing core analysis with tools/receipt_drift.py.
+        from learning_os.store.receipt_chain import (
+            CHAIN_BASELINE_RELATIVE,
+            CHAIN_BASELINE_SCHEMA,
+            analyze_receipt_chain,
+        )
+
+        def _check_baseline_schema(data: dict) -> bool:
+            before = len(self.issues)
+            self._schema_check(CHAIN_BASELINE_SCHEMA, data, CHAIN_BASELINE_RELATIVE)
+            return len(self.issues) == before
+
+        chain_analysis = analyze_receipt_chain(
+            self.repo.root, schema_check=_check_baseline_schema
+        )
+        for error in chain_analysis.baseline.errors:
+            self.err("TRANSACTION-CHAIN-BASELINE", error, CHAIN_BASELINE_RELATIVE)
+        for brk in chain_analysis.active_chain_breaks:
+            if not brk.get("gated"):
+                continue
+            self.err(
+                "TRANSACTION-CHAIN-BREAK",
+                f"receipt chain break on '{brk['path']}': sha256_before "
+                f"{brk['actual_sha256_before']} does not match prior receipt "
+                f"{brk['previous_receipt']} sha256_after {brk['expected_sha256_before']}",
+                f"operations/transactions/{brk['receipt']}.yaml",
+            )
+        for drift in chain_analysis.unbaselined_drift:
+            note = drift.get("note") or "bytes differ from the last receipt"
+            self.err(
+                "TRANSACTION-DRIFT",
+                f"unbaselined on-disk drift on '{drift['path']}' since receipt "
+                f"{drift['receipt']} ({note}: expected {drift['expected']}, "
+                f"actual {drift['actual']})",
+                str(drift["path"]),
+            )
+
+        # Cross-check every idempotency ledger entry against its receipt.
+        from learning_os.store.evidence import verify_idempotency_ledger_rows
+
+        try:
+            idempotency_errors = verify_idempotency_ledger_rows(
+                self.repo.root, check_catalog_scopes=False
+            )
+        except TransactionFailure:
+            idempotency_errors = []
+        for key, message in idempotency_errors:
+            self.err(
+                "TRANSACTION-IDEMPOTENCY",
+                f"idempotency row '{key}': {message}",
+                "operations/transactions/idempotency.yaml",
+            )
+
     def check_ai_action_requests(self):
         from learning_os.store.ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE
         directory = self.repo.root / "operations" / "ai-actions" / "requests"
