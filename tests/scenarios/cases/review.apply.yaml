@@ -20,6 +20,13 @@ cases:
     request: {unit_id: unit-demo-l01, selected: [proposal-nope]}
     artifact_ids: []
     expect: {site: review.apply.unknown-selected}
+  - id: duplicate-item-id
+    fixture: rich_world_duplicate_shelving
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, selected: [proposal-duplicate]}
+    artifact_ids: []
+    expect: {site: review.apply.duplicate-item-id}
   - id: unknown-unit
     kind: refusal
     transport: gateway

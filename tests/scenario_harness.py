@@ -151,7 +151,10 @@ def _template_root() -> Path:
 
 
 def _build_fixture(name: str, container: Path) -> Path:
-    if name not in {"rich_world", "rich_world_warning_debt", "rich_world_structural"}:
+    if name not in {
+        "rich_world", "rich_world_warning_debt", "rich_world_structural",
+        "rich_world_duplicate_shelving",
+    }:
         raise ValueError(f"unknown scenario fixture: {name}")
     # The world spans the repository root and its sibling materials tree
     # (the fixture book lives there), so the copy unit is LearningOS/.
@@ -167,6 +170,14 @@ def _build_fixture(name: str, container: Path) -> Path:
         # rich world stays byte-identical for all existing characterizations.
         target = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
         target.write_bytes((TESTS_DIR / "scenarios/files/unit.map.import/check-replace/map.yaml").read_bytes())
+    if name == "rich_world_duplicate_shelving":
+        # A historical packet can predate prepare's duplicate-ID check.
+        target = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+        study_map = yaml.safe_load(target.read_text(encoding="utf-8"))
+        source = CASEDATA_DIR / "review.prepare" / "duplicate-item-id" / "items.json"
+        items = json.loads(source.read_text(encoding="utf-8"))["items"]
+        study_map["shelving"] = {"state": "proposed", "items": items}
+        target.write_text(yaml.safe_dump(study_map, sort_keys=False), encoding="utf-8")
     return root
 
 

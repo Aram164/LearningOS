@@ -194,6 +194,8 @@ ENVIRONMENTAL_WARNINGS = frozenset({
     # change, only the mount did — like MATERIALS-OFFLINE, it must stay
     # visible in every run without ever becoming a baseline regression.
     "ANGLE-REVIEW-UNVERIFIED",
+    # Git checkouts omit local-only AI delivery bundles.
+    "TRANSACTION-DELIVERY-UNVERIFIED",
 })
 
 # Warnings that depend on wall-clock age rather than on any authored file's

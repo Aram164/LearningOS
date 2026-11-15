@@ -114,14 +114,15 @@ def _verify_bound_request_write(receipt: Mapping, request_id: object) -> None:
         )
 
 
-def _proven_delivery_delegation(
+def _check_delivery_delegation(
     root: Path,
     receipt: Mapping,
+    delegated: set[str],
     *,
     authority_root: Path | None = None,
     require_local_delivery: bool = True,
-) -> set[str]:
-    """Return the domain capabilities this receipt's bound delivery actually proves.
+) -> bool:
+    """Check the claimed grants and return whether the local delivery proved them.
 
     An ``ai-action.delivery.apply`` receipt may claim delegated grants, but a
     claim in the receipt under review is not evidence of itself. When the
@@ -136,7 +137,8 @@ def _proven_delivery_delegation(
     Whole-ledger validation (``require_local_delivery=False``) still verifies
     on-disk deliveries in full whenever present, and on clean clones where the
     gitignored delivery bundle is absent it validates the digest formats,
-    request write binding, and ``ActionRegistry`` capability ceiling.
+    request write binding, and the policy ceiling for the claimed action.
+    The absent bundle leaves the delegation unverified.
     """
     metadata = receipt.get("metadata")
     delivery_id = metadata.get("delivery_id") if isinstance(metadata, dict) else None
@@ -168,7 +170,17 @@ def _proven_delivery_delegation(
             f"cannot re-verify the delivery this receipt claims: {exc}"
         ) from exc
 
-    if require_local_delivery or directory.exists() or directory.is_symlink():
+    try:
+        directory.lstat()
+        delivery_present = True
+    except FileNotFoundError:
+        delivery_present = False
+    except OSError as exc:
+        raise ReplayEvidenceError(
+            f"cannot inspect the delivery this receipt claims: {exc}"
+        ) from exc
+
+    if require_local_delivery or delivery_present:
         try:
             delivery, _artifacts = read_bound_delivery(
                 directory, delivery_sha256=delivery_sha256, artifact_sha256=artifact_sha256,
@@ -191,11 +203,11 @@ def _proven_delivery_delegation(
         operations = delivery.get("operations")
         if not isinstance(operations, list):
             raise ReplayEvidenceError("bound delivery for this receipt has no operations")
-        proven: set[str] = set()
+        allowed: set[str] = set()
         for operation in operations:
             if not isinstance(operation, dict) or not isinstance(operation.get("capability"), str):
                 raise ReplayEvidenceError("bound delivery for this receipt has a malformed operation")
-            proven.add(operation["capability"])
+            allowed.add(operation["capability"])
         # `garden.update` bookkeeping (the AI-side state file) is written on every
         # pilot delivery except a whole-unit material-synthesis delivery, whether
         # or not an explicit `garden.update` operation is present — see
@@ -233,11 +245,21 @@ def _proven_delivery_delegation(
             raise ReplayEvidenceError(
                 f"cannot re-verify the delivery this receipt claims: {exc}"
             ) from exc
-        proven = set(action.allowed_capabilities)
+        allowed = set(action.allowed_capabilities)
 
     if action_id != "unit.compare-materials":
-        proven.add("garden.update")
-    return proven
+        allowed.add("garden.update")
+    unsupported = sorted(delegated - allowed)
+    if unsupported:
+        reason = (
+            "its bound delivery does not prove"
+            if delivery_present else "outside the claimed action's capability policy"
+        )
+        raise ReplayEvidenceError(
+            f"idempotent receipt claims AI-action delegated authority {reason}: "
+            f"{', '.join(unsupported)}"
+        )
+    return delivery_present
 
 
 def _verify_evidence_row(
@@ -250,7 +272,7 @@ def _verify_evidence_row(
     check_catalog_scopes: bool = True,
     scopes_by_capability: Mapping[str, tuple[str, ...]] | None = None,
     require_local_delivery: bool = True,
-) -> tuple[dict, dict, Path]:
+) -> tuple[dict, dict, Path, bool]:
     if row["capability"] != request.capability \
             or row["intent_sha256"] != request.intent_sha256:
         raise TransactionIdempotencyConflict(
@@ -374,6 +396,7 @@ def _verify_evidence_row(
 
     resolved_authority_root = authority_root or default_authority_root(root)
     allowed_scopes: list[str] = []
+    delegation_verified = True
     if resolved_authority_root is not None:
         if check_catalog_scopes:
             if scopes_by_capability is None:
@@ -416,22 +439,15 @@ def _verify_evidence_row(
                     "idempotent receipt for ai-action.delivery.apply carries no grant "
                     "for its own top-level capability"
                 )
-            delegated = sorted(
-                {c for c in granted_capabilities if c != "ai-action.delivery.apply"}
-            )
+            delegated = set(granted_capabilities) - {"ai-action.delivery.apply"}
             if delegated:
-                proven = _proven_delivery_delegation(
+                delegation_verified = _check_delivery_delegation(
                     root,
                     receipt,
+                    delegated,
                     authority_root=resolved_authority_root,
                     require_local_delivery=require_local_delivery,
                 )
-                unproven = [c for c in delegated if c not in proven]
-                if unproven:
-                    raise ReplayEvidenceError(
-                        "idempotent receipt claims AI-action delegated authority its "
-                        f"bound delivery does not prove: {', '.join(unproven)}"
-                    )
         elif granted_capabilities != [request.capability]:
             raise ReplayEvidenceError(
                 "idempotent receipt authority grants must carry exactly the top-level "
@@ -462,7 +478,7 @@ def _verify_evidence_row(
                 f"declared scope: {relative}"
             )
 
-    return receipt, row, receipt_path
+    return receipt, row, receipt_path, delegation_verified
 
 
 def verify_committed_evidence(
@@ -471,7 +487,6 @@ def verify_committed_evidence(
     *,
     authority_root: Path | None = None,
     check_catalog_scopes: bool = True,
-    require_local_delivery: bool = True,
 ) -> tuple[dict, dict, Path] | None:
     """Verify the committed evidence for one idempotency key, strictly.
 
@@ -488,15 +503,15 @@ def verify_committed_evidence(
     if row is None:
         return None
     live_revisions = load_revisions(root)
-    return _verify_evidence_row(
+    receipt, row, receipt_path, _ = _verify_evidence_row(
         root,
         request,
         row,
         live_revisions=live_revisions,
         authority_root=authority_root,
         check_catalog_scopes=check_catalog_scopes,
-        require_local_delivery=require_local_delivery,
     )
+    return receipt, row, receipt_path
 
 
 def verify_idempotency_ledger_rows(
@@ -504,7 +519,7 @@ def verify_idempotency_ledger_rows(
     *,
     authority_root: Path | None = None,
     check_catalog_scopes: bool = False,
-) -> list[tuple[str, str]]:
+) -> tuple[list[tuple[str, str]], list[str]]:
     """Cross-check every idempotency ledger row against its committed receipt.
 
     Reuses :func:`_verify_evidence_row` across the whole ledger while loading
@@ -512,13 +527,14 @@ def verify_idempotency_ledger_rows(
     ``check_catalog_scopes=False`` so retired or tightened capability write
     globs do not fail historical committed rows, while still verifying receipt
     presence, schema, hashes, request bindings, revision floors, and writes.
-    Gitignored AI-action delivery bundles are hash-verified when present on
-    disk and validated against their digests, request write, and action
-    contract when absent on a clean checkout.
+    Return errors and the keys whose delegated authority remains unverified.
+    Bundles present on disk are hash-verified. When a bundle is absent,
+    the digest formats, request write and claimed action policy are still
+    checked for consistency.
     """
     entries = load_idempotency_entries(root)
     if not entries:
-        return []
+        return [], []
     live_revisions = load_revisions(root)
     scopes_by_capability: dict[str, tuple[str, ...]] | None = None
     resolved_authority_root = authority_root or default_authority_root(root)
@@ -537,6 +553,7 @@ def verify_idempotency_ledger_rows(
         }
 
     failures: list[tuple[str, str]] = []
+    unverified: list[str] = []
     for key in sorted(entries):
         row = entries[key]
         try:
@@ -549,7 +566,7 @@ def verify_idempotency_ledger_rows(
                 approval_kind="operator-approval",
                 approval_subject_sha256=str(row["intent_sha256"]),
             )
-            _verify_evidence_row(
+            _, _, _, delegation_verified = _verify_evidence_row(
                 root,
                 ctx,
                 row,
@@ -559,9 +576,11 @@ def verify_idempotency_ledger_rows(
                 scopes_by_capability=scopes_by_capability,
                 require_local_delivery=False,
             )
+            if not delegation_verified:
+                unverified.append(key)
         except (ReplayEvidenceError, KeyError, TypeError, ValueError) as exc:
             failures.append((key, str(exc)))
-    return failures
+    return failures, unverified
 
 
 def replay_for_request(

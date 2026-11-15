@@ -45,6 +45,15 @@ cases:
     request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:15efe024033a9f8bcca390b59b7024a5555d769cedd162c4e87558c2457738b0"}
     artifact_ids: []
     expect: {site: review.prepare.items-not-list}
+  - id: duplicate-item-id
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l01
+      items_file: "<CASEDATA>/items.json"
+      items_file_sha256: "<CASEDATA_SHA256:items.json>"
+    artifact_ids: []
+    expect: {site: review.prepare.duplicate-item-id}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
