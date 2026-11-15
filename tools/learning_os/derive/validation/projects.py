@@ -142,15 +142,22 @@ class ChecksProjects:
         from learning_os.store.evidence import verify_idempotency_ledger_rows
 
         try:
-            idempotency_errors = verify_idempotency_ledger_rows(
+            idempotency_errors, unverified_delegations = verify_idempotency_ledger_rows(
                 self.repo.root, check_catalog_scopes=False
             )
         except TransactionFailure:
-            idempotency_errors = []
+            idempotency_errors, unverified_delegations = [], []
         for key, message in idempotency_errors:
             self.err(
                 "TRANSACTION-IDEMPOTENCY",
                 f"idempotency row '{key}': {message}",
+                "operations/transactions/idempotency.yaml",
+            )
+        for key in unverified_delegations:
+            self.warn(
+                "TRANSACTION-DELIVERY-UNVERIFIED",
+                f"idempotency row '{key}': delegated authority is unverified "
+                "because the approved delivery bundle is absent",
                 "operations/transactions/idempotency.yaml",
             )
 

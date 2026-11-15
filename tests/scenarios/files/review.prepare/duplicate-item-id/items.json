@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "id": "proposal-duplicate",
+      "kind": "garden",
+      "title": "First idea",
+      "destination": "knowledge/garden/first-idea.md",
+      "rationale": "First candidate.",
+      "content": "# First idea"
+    },
+    {
+      "id": "proposal-duplicate",
+      "kind": "garden",
+      "title": "Second idea",
+      "destination": "knowledge/garden/second-idea.md",
+      "rationale": "Second candidate.",
+      "content": "# Second idea"
+    }
+  ]
+}

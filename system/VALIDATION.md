@@ -350,12 +350,14 @@ receipt.
   against its committed receipt (`schema`, `id`, `request`, `snapshot_*`,
   `artifact_revisions`, live revision floor, `writes`, and authority grants,
   omitting only live capability catalog scope comparison for historical rows;
-  when a gitignored AI-action delivery bundle under
-  `operations/ai-actions/deliveries/` is absent on a clean checkout,
-  delegated grants are bounded by the recorded delivery digests, request
-  write, and action contract, while any present bundle is still
-  hash-verified); a missing/tampered receipt or contradicted ledger fails
-  closed naming the idempotency key.
+  a present AI-action delivery bundle is hash-verified); a missing or
+  tampered receipt or contradicted ledger fails closed naming the idempotency key.
+- **W** `TRANSACTION-DELIVERY-UNVERIFIED`: when the approved AI-action delivery
+  bundle is absent, whole-ledger validation checks digest formats, the request
+  write, and the policy of the claimed action. It reports that the delivery's
+  delegated grants could not be verified. This environmental warning is
+  baseline-exempt because Git checkouts omit the bundles. Gateway replay and
+  Diagnostics require the original bundle to verify those grants.
 - **E** `TRANSACTION-CHAIN-BREAK`: committed `writes` entries for gated
   plan/module/program/source-map records (`curriculum/modules/*/units/*/study-map.yaml`,
   `curriculum/modules/*/source-map.yaml`, `curriculum/modules/*/module.yaml`,

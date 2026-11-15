@@ -667,6 +667,9 @@ def test_clean_clone_ai_action_handoffs_validate_while_tamper_and_replay_fail_cl
         i for i in issues if i.code in {"TRANSACTION-DRIFT", "TRANSACTION-IDEMPOTENCY"}
     ]
     assert tx_issues == [], tx_issues
+    unverified = [i for i in issues if i.code == "TRANSACTION-DELIVERY-UNVERIFIED"]
+    assert len(unverified) == 1
+    assert ctx.idempotency_key in unverified[0].message
     assert _run(mini_repo)["drift"] == []
 
     # Live replay / Diagnostics still fail closed when the delivery bundle is missing.
@@ -687,11 +690,9 @@ def test_clean_clone_ai_action_handoffs_validate_while_tamper_and_replay_fail_cl
     # If the delivery directory IS present on disk without valid delivery bytes, validate fails.
     delivery_dir = mini_repo / "operations/ai-actions/deliveries/ai-delivery-clean-clone"
     delivery_dir.mkdir(parents=True, exist_ok=True)
-    idem_present = [
-        i for i in validate(load_repo(mini_repo), online=False)
-        if i.code == "TRANSACTION-IDEMPOTENCY"
-    ]
-    assert len(idem_present) == 1
+    present_issues = validate(load_repo(mini_repo), online=False)
+    assert sum(i.code == "TRANSACTION-IDEMPOTENCY" for i in present_issues) == 1
+    assert all(i.code != "TRANSACTION-DELIVERY-UNVERIFIED" for i in present_issues)
     shutil.rmtree(delivery_dir)
 
 
@@ -713,7 +714,7 @@ def test_clean_clone_absent_delivery_rejects_forged_delegation_request_or_digest
         if i.code == "TRANSACTION-IDEMPOTENCY"
     ]
     assert len(forged_cap) == 1
-    assert "does not prove" in forged_cap[0].message
+    assert "outside the claimed action's capability policy" in forged_cap[0].message
 
     # Request ID mismatch against receipt writes must fail closed.
     _seed_ai_action_clean_clone_state(
@@ -738,3 +739,15 @@ def test_clean_clone_absent_delivery_rejects_forged_delegation_request_or_digest
     ]
     assert len(bad_action) == 1
     assert "unknown AI action" in bad_action[0].message
+
+    # The same digest strings can accompany a different, valid action claim.
+    # Passing its capability ceiling still leaves the delegation unverified.
+    _seed_ai_action_clean_clone_state(
+        mini_repo,
+        action_id="garden.shelve",
+        delegated_capability="garden.update",
+        declared_writes=["operations/ai-actions/garden-state/**"],
+    )
+    issues = validate(load_repo(mini_repo), online=False)
+    assert all(i.code != "TRANSACTION-IDEMPOTENCY" for i in issues)
+    assert sum(i.code == "TRANSACTION-DELIVERY-UNVERIFIED" for i in issues) == 1
