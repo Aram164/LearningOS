@@ -120,6 +120,39 @@ def save_sealed_request(path: Path, text: str) -> None:
     _atomic_text(path, text)
 
 
+def _review_checks_path(root: Path) -> Path:
+    name = hashlib.sha256(str(root.resolve()).encode()).hexdigest()[:40]
+    return process_state_dir(root) / f"review-checks-{name}.json"
+
+
+def _review_checks(path: Path, snapshot: str) -> set[str]:
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return set()
+    except (OSError, ValueError) as exc:
+        raise WriteRefused(f"cannot read local review-check state: {exc}") from exc
+    checks = record.get("checks") if isinstance(record, dict) else None
+    if (not isinstance(checks, list) or not isinstance(record.get("snapshot"), str)
+            or any(not isinstance(digest, str) for digest in checks)):
+        raise WriteRefused("invalid local review-check state")
+    return set(checks) if record["snapshot"] == snapshot else set()
+
+
+def remember_review_check(root: Path, snapshot: str, digest: str) -> None:
+    """Record a successful preflight under the exclusive operator lock."""
+    path = _review_checks_path(root)
+    checks = _review_checks(path, snapshot)
+    if digest not in checks:
+        checks.add(digest)
+        _atomic_text(path, json.dumps({"snapshot": snapshot, "checks": sorted(checks)}))
+
+
+def has_review_check(root: Path, snapshot: str, digest: str) -> bool:
+    """Check Core's local evidence independently of the caller's report."""
+    return digest in _review_checks(_review_checks_path(root), snapshot)
+
+
 def _attempt_stem(root: Path, key: str, request_id: str) -> str:
     rid = hashlib.sha256(request_id.encode()).hexdigest()[:16]
     return f"{sealed_request_path(root, key).stem}.attempt-{rid}"

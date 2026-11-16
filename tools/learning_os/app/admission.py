@@ -140,6 +140,30 @@ GESTURE_REFUSAL_RECOVERY: dict[str, str] = {
 }
 
 
+#: Capabilities whose writes replace or revise existing records and so
+#: require a reviewed check record before a fresh gateway apply. The
+#: gateway enforces this in ``review_evidence_error``; the sealer mints
+#: the evidence only from a record. Declared here, with the other
+#: admission policies; ``adapters/study_policies`` re-exports it for the
+#: study boundary's own declaration.
+REVIEWED_SEALING_CAPABILITIES: frozenset[str] = frozenset({
+    "module.plan.import",
+    "unit.plan.revise",
+    "unit.map.import",
+    "route.patch",
+    "module.materials.compact",
+    "note.revise",
+    "source.record.revise",
+    "collection.entry.revise",
+    "coordination.section.revise",
+    "program.semester.update",
+    "lineage.restamp",
+    "concept.relations.change",
+    "review.apply",
+    "garden.update",
+})
+
+
 def gesture_allowed(capability: str, channel: str | None = None) -> bool:
     """Whether a capability admits ``direct-user-gesture`` from this channel.
 

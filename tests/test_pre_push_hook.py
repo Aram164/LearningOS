@@ -1,9 +1,8 @@
 """The ref-aware pre-push gate (#106, #113).
 
 A scripted Core/UI fixture pair (real git, real hook, stubbed `make`/`npm`)
-proves: deletions skip the gate, non-main refs run the lighter local gate,
-main keeps the full `system-check`, the gate refuses pushed SHAs that are
-not the checkout, and concurrent main pushes serialize under the lock.
+proves that eligible updates delegate verification upstream and never invoke
+make or npm. The hook still checks the refs and both checkouts.
 """
 
 from __future__ import annotations
@@ -135,32 +134,29 @@ def test_branch_deletion_skips_the_gate_with_unborn_head(pair):
     assert _invocations(pair["log"]) == []
 
 
-def test_non_main_push_runs_the_lighter_local_gate(pair):
+def test_non_main_push_defers_to_upstream(pair):
     head = _head(pair["core"])
     result = _run_hook(
         pair["core"],
         f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
     )
     assert result.returncode == 0, result.stderr
-    assert "lighter local gate" in result.stdout
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} check",
-        f"make -C {pair['core']} test-affected",
-        f"npm --prefix {pair['ui']} run check",
-    ]
+    assert "release verification runs upstream" in result.stdout
+    assert _invocations(pair["log"]) == []
 
 
-def test_main_push_runs_the_full_gate(pair):
+def test_main_push_defers_to_upstream(pair):
     head = _head(pair["core"])
     result = _run_hook(
         pair["core"],
         f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
     )
     assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [f"make -C {pair['core']} system-check"]
+    assert "release verification runs upstream" in result.stdout
+    assert _invocations(pair["log"]) == []
 
 
-def test_mixed_deletion_and_update_still_runs_the_gate(pair):
+def test_mixed_deletion_and_update_defers_to_upstream(pair):
     head = _head(pair["core"])
     result = _run_hook(
         pair["core"],
@@ -168,7 +164,8 @@ def test_mixed_deletion_and_update_still_runs_the_gate(pair):
         f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
     )
     assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) != []
+    assert "release verification runs upstream" in result.stdout
+    assert _invocations(pair["log"]) == []
 
 
 def test_stale_installed_hook_still_fails(pair):
@@ -192,11 +189,7 @@ def test_hook_also_runs_from_the_ui_checkout(pair):
         f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
     )
     assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [
-        f"make -C {pair['core']} check",
-        f"make -C {pair['core']} test-affected",
-        f"npm --prefix {pair['ui']} run check",
-    ]
+    assert _invocations(pair["log"]) == []
 
 
 # ---- #24: a hook inherits Git's routing for the pushing repository --------
@@ -215,7 +208,7 @@ def test_inherited_git_dir_does_not_route_the_ui_check_to_core(pair):
         capture_output=True, text=True, timeout=120)
     assert result.returncode == 0, result.stderr
     assert "requires clean Core and UI" not in result.stderr
-    assert "lighter local gate" in result.stdout
+    assert "release verification runs upstream" in result.stdout
 
 
 def test_a_push_from_a_linked_worktree_passes_the_clean_pair_gate(pair, tmp_path):
@@ -233,11 +226,7 @@ def test_a_push_from_a_linked_worktree_passes_the_clean_pair_gate(pair, tmp_path
         ["git", "-C", str(linked / "repository"), "push", "-q", str(remote),
          "feature"], capture_output=True, text=True, timeout=120)
     assert pushed.returncode == 0, pushed.stderr
-    assert _invocations(pair["log"]) == [
-        f"make -C {linked / 'repository'} check",
-        f"make -C {linked / 'repository'} test-affected",
-        f"npm --prefix {linked / 'obsidian-ui'} run check",
-    ]
+    assert _invocations(pair["log"]) == []
 
 
 # ---- #113: the gate verifies the pushed SHAs, not the checkout -------------
@@ -462,56 +451,3 @@ def test_make_hooks_still_copies_to_a_distinct_hooks_directory(tmp_path):
         installed = checkout / ".git" / "hooks" / hook
         assert installed.read_bytes() == (checkout / "tools" / "hooks" / hook).read_bytes()
         assert os.access(installed, os.X_OK)
-
-
-def test_concurrent_main_pushes_serialize_under_lock(pair):
-    """Two pushes at once serialize under the mkdir lock instead of racing."""
-    import threading
-
-    core, ui = pair["core"], pair["ui"]
-    stub_bin = pair["root"].parent / "stub-bin"
-    make_stub = stub_bin / "make"
-    make_stub.write_text(
-        '#!/bin/sh\n'
-        'echo "start $*" >> "$GATE_LOG"\n'
-        'sleep 0.5\n'
-        'echo "done $*" >> "$GATE_LOG"\n',
-        encoding="utf-8")
-    make_stub.chmod(0o755)
-    head_core, head_ui = _head(core), _head(ui)
-    results: dict[str, object] = {}
-
-    def run(name, repo, head):
-        results[name] = _run_hook(
-            repo, f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n")
-
-    threads = [threading.Thread(target=run, args=("core", core, head_core)),
-               threading.Thread(target=run, args=("ui", ui, head_ui))]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join()
-    assert results["core"].returncode == 0, results["core"].stderr
-    assert results["ui"].returncode == 0, results["ui"].stderr
-    assert _invocations(pair["log"]) == [
-        f"start -C {core} system-check",
-        f"done -C {core} system-check",
-        f"start -C {core} system-check",
-        f"done -C {core} system-check",
-    ]
-    assert any("waiting for concurrent pair gate" in (r.stderr or "") for r in results.values())
-    assert not (core / ".git" / "learningos-pre-push.lock").exists()
-
-
-def test_stale_lock_from_dead_pid_is_reclaimed(pair):
-    lockdir = pair["core"] / ".git" / "learningos-pre-push.lock"
-    lockdir.mkdir()
-    (lockdir / "pid").write_text("999999\n", encoding="utf-8")
-    head = _head(pair["core"])
-    result = _run_hook(
-        pair["core"],
-        f"refs/heads/main {head} refs/heads/main {ZERO_SHA}\n",
-    )
-    assert result.returncode == 0, result.stderr
-    assert _invocations(pair["log"]) == [f"make -C {pair['core']} system-check"]
-    assert not lockdir.exists()

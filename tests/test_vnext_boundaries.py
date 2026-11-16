@@ -1061,6 +1061,7 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     (ui / "contracts" / lock_name).write_text(json.dumps({
         "contract_version": contract["contract_version"],
         "schema_sha256": contract["schema_sha256"],
+        "closure_sha256": contract["closure_sha256"],
     }), encoding="utf-8")
     (ui / "plugin").mkdir()
     (ui / "plugin/main.js").write_text("void 0;\n", encoding="utf-8")
@@ -1177,6 +1178,7 @@ def _backup_cli_fixture(mini_repo: Path, tmp_path: Path) -> dict[str, Path]:
     (ui / "contracts" / lock_name).write_text(json.dumps({
         "contract_version": contract["contract_version"],
         "schema_sha256": contract["schema_sha256"],
+        "closure_sha256": contract["closure_sha256"],
     }), encoding="utf-8")
     (ui / "plugin").mkdir()
     for name in ("main.js", "styles.css", "manifest.json", "build-info.json"):
@@ -1371,6 +1373,7 @@ def _ui_fixture(ui: Path, core: Path) -> None:
     (ui / "contracts" / lock_name).write_text(json.dumps({
         "contract_version": contract["contract_version"],
         "schema_sha256": contract["schema_sha256"],
+        "closure_sha256": contract["closure_sha256"],
     }), encoding="utf-8")
 
 
@@ -1424,6 +1427,38 @@ def _assured_for(mini_repo, tmp_path, dropped: str | None):
         restored_ui=restore / "ui",
         restored_materials=restore / "materials",
     )
+
+
+def test_verify_restored_system_refuses_a_wrong_ui_closure(mini_repo, tmp_path):
+    """Checksum-valid, version- and root-matching, wrong closure: refused."""
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    contract = yaml.safe_load(
+        (mini_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8")
+    )
+    lock_path = ui / "contracts" / f"manifest-v{contract['contract_version']}.lock.json"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    lock["closure_sha256"] = "sha256:" + "e" * 64
+    lock_path.write_text(json.dumps(lock), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    result = verify_restored_system(
+        mini_repo, manifest,
+        restored_core=restore / "core",
+        restored_ui=restore / "ui",
+        restored_materials=restore / "materials",
+    )
+    assert not result["ok"], result
+    check = next(row for row in result["checks"] if row["id"] == "ui-contract-lock")
+    assert not check["ok"]
+    assert check["detail"]["core_closure_sha256"] == contract["closure_sha256"]
 
 
 def test_backup_manifest_refuses_an_unreadable_directory_inside_an_admitted_tree(

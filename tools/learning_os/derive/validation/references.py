@@ -7,6 +7,7 @@ from pathlib import Path, PurePosixPath
 from typing import Literal
 
 from learning_os.derive.routes import iter_route_references
+from learning_os.domain.curriculum.stages import resolve_resume_target
 from learning_os.domain.validation import (
     WORKSPACE_TOKEN_RE,
     id_list_items,
@@ -529,18 +530,36 @@ class ChecksReferences:
                     sid = feedback.get("source_id") if isinstance(feedback, dict) else None
                     if sid and sid not in r.sources:
                         self.err("REF-SOURCE", f"study map '{smid}' records feedback for unknown source '{sid}'", where)
-        if r.resume_pointer:
+        if isinstance(r.resume_pointer, dict) and r.resume_pointer:
             pointer = r.resume_pointer
             where = self._rel(r.resume_pointer_path) if r.resume_pointer_path else "curriculum/resume.yaml"
-            if pointer.get("module_id") not in r.modules:
-                self.err("REF-MODULE", "resume pointer references an unknown module", where)
-            if pointer.get("unit_id") not in r.units:
-                self.err("REF-UNIT", "resume pointer references an unknown unit", where)
-            sm = r.study_maps.get(pointer.get("study_map_id"))
-            if sm is None:
-                self.err("REF-STUDY-MAP", "resume pointer references an unknown study map", where)
-            elif pointer.get("stage_id") not in {s.get("id") for s in sm.data.get("stages", []) or []}:
-                self.err("REF-STAGE", "resume pointer references an unknown stage", where)
+            # Malformed (non-string) IDs are the schema check's error;
+            # they must not reach a dict lookup here.
+            if all(isinstance(pointer.get(key), str) for key in
+                   ("module_id", "unit_id", "study_map_id", "stage_id")):
+                missing = False
+                if pointer.get("module_id") not in r.modules:
+                    self.err("REF-MODULE", "resume pointer references an unknown module", where)
+                    missing = True
+                if pointer.get("unit_id") not in r.units:
+                    self.err("REF-UNIT", "resume pointer references an unknown unit", where)
+                    missing = True
+                sm = r.study_maps.get(pointer.get("study_map_id"))
+                if sm is None:
+                    self.err("REF-STUDY-MAP", "resume pointer references an unknown study map", where)
+                    missing = True
+                elif pointer.get("stage_id") not in {s.get("id") for s in sm.data.get("stages", []) or []}:
+                    self.err("REF-STAGE", "resume pointer references an unknown stage", where)
+                    missing = True
+                if not missing and resolve_resume_target(r) is None:
+                    self.err(
+                        "REF-RESUME-OWNER",
+                        "resume pointer's module, unit, current study map and stage "
+                        "do not resolve together; make an explicit stage action "
+                        "(which rewrites the pointer) or correct "
+                        "curriculum/resume.yaml",
+                        where,
+                    )
         for concept in r.concepts.values():
             rb = concept.get("replaced_by")
             if rb and rb not in r.concepts:

@@ -67,6 +67,34 @@ def intent_subject(envelope: Mapping) -> dict:
     return subject
 
 
+def review_record_sha256(*, capability: str, payload: object,
+                         expected_snapshot: object,
+                         expected_revisions: object,
+                         observed_material: object = None) -> str:
+    """The verifiable binding of one reviewed check record.
+
+    A digest over the record's checked payload, snapshot and revisions —
+    plus the observed-material fragment where the review binds material
+    identity — so a gateway can recompute it from the applying envelope
+    (and, for material, the current tree) and refuse an apply that does
+    not carry the review it claims. Core separately verifies that it
+    registered this digest after a successful preflight.
+    """
+    subject: dict[str, object] = {
+        "schema": 1,
+        "capability": capability,
+        "payload": payload,
+        "expected_snapshot": expected_snapshot,
+        "expected_revisions": expected_revisions,
+    }
+    if observed_material is not None:
+        subject["observed_material"] = observed_material
+    encoded = json.dumps(
+        subject, sort_keys=True, separators=(",", ":"),
+        ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
 def intent_sha256(envelope: Mapping) -> str:
     encoded = json.dumps(
         intent_subject(envelope),

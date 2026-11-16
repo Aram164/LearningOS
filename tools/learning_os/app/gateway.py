@@ -18,8 +18,13 @@ from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
     intent_sha256,
+    review_record_sha256,
 )
-from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
+from learning_os.store.session_ledger import (
+    DEFAULT_SESSION_CHANNEL,
+    has_review_check,
+    remember_review_check,
+)
 from learning_os.store.study_fence import (
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
@@ -123,7 +128,9 @@ def read_structured_file(
 
 
 def prepare_review_envelope(capability_name: str, payload: dict,
-                            snapshot: str, revisions: dict) -> dict:
+                            snapshot: str, revisions: dict,
+                            *, checked_root: Path | None = None,
+                            observed_material: dict | None = None) -> dict:
     """Prepare a recoverable request during preflight, while its lock is held.
 
     The envelope names the channel whose session ledger the reviewed write
@@ -131,6 +138,11 @@ def prepare_review_envelope(capability_name: str, payload: dict,
     a bare `session-end` resolves. A fixed agent channel split one
     operator's writes across two ledgers, so `session-end --commit-message`
     committed the shared ledgers without the receipt and note they name.
+
+    For a capability that requires a review, the prepared envelope also
+    carries that review's binding, computed here — at check time, from
+    the exact guards the check produced — so the later apply presents
+    the review it came from.
     """
     request = current_gateway_request()
     channel = request.channel if request is not None else DEFAULT_SESSION_CHANNEL
@@ -145,6 +157,9 @@ def prepare_review_envelope(capability_name: str, payload: dict,
         "payload": payload,
         "approval": {"kind": "operator-approval", "subject_sha256": ""},
     }
+    if checked_root is not None:
+        envelope["review"] = issue_review_evidence(
+            checked_root, capability_name, payload, snapshot, revisions, observed_material)
     from learning_os.store.session_ledger import resolve_session_identity
     session_id, source = resolve_session_identity(channel=channel)
     if source != "channel":
@@ -259,6 +274,68 @@ def validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> No
     )
     if errors:
         raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
+
+
+#: Capabilities whose check record binds observed material identity.
+_MATERIAL_BOUND_REVIEW = frozenset({"module.plan.import", "unit.plan.revise"})
+
+
+def issue_review_evidence(root: Path, capability: str, payload: dict,
+                          snapshot: str, revisions: dict,
+                          observed_material: dict | None = None) -> dict:
+    """Bind a passing preflight to the checkout that actually ran it."""
+    digest = review_record_sha256(
+        capability=capability, payload=payload,
+        expected_snapshot=snapshot, expected_revisions=revisions,
+        observed_material=observed_material)
+    remember_review_check(root, snapshot, digest)
+    return {"record_sha256": digest}
+
+
+def review_evidence_error(root: Path, envelope: dict) -> str | None:
+    """The refusal for a reviewed capability applying without its review.
+
+    ``None`` when a prior Core preflight registered the digest, and it
+    still binds the checked payload, snapshot, revisions and observed material.
+    A direct user gesture admitted for the capability is its own
+    authorization and needs no record.
+    """
+    from learning_os.app.admission import REVIEWED_SEALING_CAPABILITIES, gesture_allowed
+
+    capability = envelope.get("capability")
+    if capability not in REVIEWED_SEALING_CAPABILITIES:
+        return None
+    approval = envelope.get("approval") or {}
+    if approval.get("kind") == "direct-user-gesture" \
+            and gesture_allowed(capability, envelope.get("channel")):
+        return None
+    payload = envelope.get("payload") or {}
+    if payload.get("check") is True:
+        return None  # a preflight commits nothing; it *is* the review step
+    observed = None
+    if capability in _MATERIAL_BOUND_REVIEW:
+        from learning_os.app.handlers.plan import observed_material_for_payload
+
+        fragment, problems = observed_material_for_payload(
+            root, capability, payload)
+        if problems:
+            return (f"{capability} review evidence cannot be verified: "
+                    "the material it binds no longer resolves; re-run "
+                    "--check and review the fresh record")
+        observed = fragment.get("observed_material") if fragment else None
+    expected = review_record_sha256(
+        capability=capability, payload=payload,
+        expected_snapshot=envelope.get("expected_snapshot"),
+        expected_revisions=envelope.get("expected_revisions"),
+        observed_material=observed)
+    review = envelope.get("review")
+    if (not isinstance(review, dict) or review.get("record_sha256") != expected
+            or not has_review_check(root, envelope["expected_snapshot"], expected)):
+        return (f"{capability} requires a reviewed check record: apply with "
+                "the checked payload, snapshot and revisions of that review "
+                "(seal with --guards-from REC), not with freshly derived "
+                "guards")
+    return None
 
 
 def context_from_v2(envelope: dict) -> GatewayRequestContext:

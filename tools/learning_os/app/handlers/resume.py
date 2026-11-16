@@ -34,6 +34,7 @@ from learning_os.derive.semantics.dossiers import (
 )
 from learning_os.derive.semantics.goals import stale_observations
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION as SEMANTIC_CONTRACT_VERSION
+from learning_os.domain.curriculum.stages import resolve_resume_target
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.material_refs import unit_routes
 from learning_os.domain.suggest import not_found, with_suggestions
@@ -295,17 +296,9 @@ def _resolve_stage(repo):
     # only the first left the second reading like an answer.
     stale = True
     if pointer:
-        unit = repo.units.get(str(pointer.get("unit_id") or ""))
-        study_map = repo.study_maps.get(str(pointer.get("study_map_id") or ""))
-        stages = study_map.data.get("stages", []) \
-            if study_map is not None else []
-        stage = next((s for s in stages
-                      if isinstance(s, dict) and s.get("id") == pointer.get("stage_id")),
-                     None)
-        if unit is not None and study_map is not None and stage is not None \
-                and unit.module_id == pointer.get("module_id") \
-                and study_map.unit_id == unit.id \
-                and study_map.module_id == unit.module_id:
+        resolved_target = resolve_resume_target(repo)
+        if resolved_target is not None:
+            unit, study_map, stage = resolved_target
             return ("resume pointer", unit.module_id, unit.id,
                     study_map.id, str(stage["id"]))
     try:

@@ -834,12 +834,15 @@ def verify_restored_system(
         contract_ok = (
             lock.get("contract_version") == generated.get("contract_version")
             and lock.get("schema_sha256") == generated.get("schema_sha256")
+            and lock.get("closure_sha256") == generated.get("closure_sha256")
         )
         checks.append({"id": "ui-contract-lock", "ok": contract_ok, "detail": {
             "ui_version": lock.get("contract_version"),
             "core_version": generated.get("contract_version"),
             "ui_schema_sha256": lock.get("schema_sha256"),
             "core_schema_sha256": generated.get("schema_sha256"),
+            "ui_closure_sha256": lock.get("closure_sha256"),
+            "core_closure_sha256": generated.get("closure_sha256"),
         }})
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         checks.append({"id": "ui-contract-lock", "ok": False,

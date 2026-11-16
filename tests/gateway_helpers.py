@@ -67,6 +67,26 @@ def approved_v2_envelope(
         "payload": payload,
     }
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    # The test-side operator asserts its review exactly as the sealer
+    # carries a check record's: a digest over the checked payload,
+    # snapshot and revisions (plus current material, where bound).
+    from learning_os.adapters.study_policies import REVIEWED_SEALING_CAPABILITIES
+    from learning_os.app.gateway import issue_review_evidence
+
+    if capability in REVIEWED_SEALING_CAPABILITIES:
+        observed = None
+        if capability in ("module.plan.import", "unit.plan.revise"):
+            from learning_os.app.handlers.plan import (
+                observed_material_for_payload,
+            )
+
+            fragment, problems = observed_material_for_payload(
+                root, capability, payload)
+            if not problems and fragment is not None:
+                observed = fragment.get("observed_material")
+        envelope["review"] = issue_review_evidence(
+            root, capability, payload, envelope["expected_snapshot"],
+            envelope["expected_revisions"], observed)
     return envelope
 
 

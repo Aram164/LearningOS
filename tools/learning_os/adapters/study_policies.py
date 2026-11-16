@@ -92,20 +92,19 @@ STUDY_WRITE_CAPABILITIES: frozenset[str] = frozenset({
 })
 
 # Capabilities whose sealing replaces/revises existing records and therefore
-# require a reviewed check record before a one-call submit.
-REVIEWED_SEALING_CAPABILITIES: frozenset[str] = frozenset({
-    "module.plan.import",
-    "unit.plan.revise",
-    "unit.map.import",
-    "route.patch",
-    "module.materials.compact",
-    "note.revise",
-    "source.record.revise",
-    "collection.entry.revise",
-    "coordination.section.revise",
-    "program.semester.update",
-    "lineage.restamp",
-    "concept.relations.change",
-    "review.apply",
-    "garden.update",
-})
+# require a reviewed check record before a one-call submit. The set is
+# declared with the admission policies (app/admission.py), which the
+# gateway enforces; re-exported here for the study boundary.
+from learning_os.app.admission import (  # noqa: E402
+    REVIEWED_SEALING_CAPABILITIES,
+)
+
+__all__ = [
+    "REVIEWED_SEALING_CAPABILITIES",
+    "SESSION_COMMANDS",
+    "STUDY_ALLOWED_COMMANDS",
+    "STUDY_COMMANDS",
+    "STUDY_PREFLIGHT_COMMANDS",
+    "STUDY_READ_COMMANDS",
+    "STUDY_WRITE_CAPABILITIES",
+]

@@ -847,7 +847,7 @@ def _is_tx_key(name) -> bool:
 
 
 _INTENT_KEY_NAMES = frozenset(
-    {"intent_sha256", "subject_sha256", "approval_subject_sha256"})
+    {"intent_sha256", "subject_sha256", "approval_subject_sha256", "record_sha256"})
 _BARE_SHA256_RE = re.compile(r"[0-9a-f]{64}")
 
 
@@ -864,10 +864,9 @@ def _discover_identities(steps: list) -> tuple[set, set, set, set, set]:
     is discovered by regex over free text, and no string is classified by
     pattern alone.
 
-    Two derived-digest families follow the same rule: a value under a key
-    named ``intent_sha256``, ``subject_sha256`` or
-    ``approval_subject_sha256`` (a hash of an already-tokenized snapshot
-    and request, so its literal bytes only cascade fixture changes), and
+    Two derived-digest families follow the same rule: approval and review
+    digests hash already-tokenized snapshots and requests, so their literal
+    bytes only cascade fixture changes. The other family is
     the ``sha256`` of a session-ledger ``paths`` row whose path lies under
     ``operations/`` (that file's content is recorded field-by-field in the
     receipts and ledgers, so its hash only repeats it). Canonical hashes

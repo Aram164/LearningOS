@@ -307,7 +307,10 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
             invocation="check",
             gateway=context,
         )
-        live_snapshot = snapshot or ctx.snapshot_id()
+        actual_snapshot = ctx.snapshot_id() if check_out is not None else None
+        if actual_snapshot is not None and snapshot is not None and snapshot != actual_snapshot:
+            raise ValueError("--snapshot does not match the state being checked")
+        live_snapshot = actual_snapshot or snapshot or ctx.snapshot_id()
         envelope_stub["expected_snapshot"] = live_snapshot
         context = GatewayRequestContext(
             request_id=context.request_id,
@@ -364,18 +367,26 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
                     for artifact in artifacts
                 }
             record = check_proposal(ctx, res.proposal)
-    if check_out is not None:
-        sealing = {name: value for name, value in payload.items()
-                   if name != "check"}
-        record_out = {**record, "payload": sealing, "idempotency_key": key}
-        if capability in ("module.plan.import", "unit.plan.revise") and record["ok"] is True:
-            from learning_os.app.handlers.plan import observed_material_for_payload
+        if check_out is not None:
+            from learning_os.app.gateway import issue_review_evidence
 
-            fragment, problems = observed_material_for_payload(root, capability, sealing)
-            if problems:
-                raise ValueError("; ".join(problems))
-            if isinstance(fragment, dict) and isinstance(fragment.get("observed_material"), dict):
-                record_out["observed_material"] = fragment["observed_material"]
+            sealing = {name: value for name, value in payload.items() if name != "check"}
+            record_out = {**record, "payload": sealing, "idempotency_key": key}
+            if record["ok"] is True and capability in REVIEW_REQUIRED_CAPABILITIES:
+                observed = None
+                if capability in ("module.plan.import", "unit.plan.revise"):
+                    from learning_os.app.handlers.plan import observed_material_for_payload
+
+                    fragment, problems = observed_material_for_payload(root, capability, sealing)
+                    if problems:
+                        raise ValueError("; ".join(problems))
+                    if fragment is not None:
+                        observed = fragment.get("observed_material")
+                        record_out["observed_material"] = observed
+                record_out["review"] = issue_review_evidence(
+                    root, capability, sealing, record["expected_snapshot"],
+                    record["expected_revisions"], observed)
+    if check_out is not None:
         Path(check_out).parent.mkdir(parents=True, exist_ok=True)
         _record_text = json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
         _fd = os.open(check_out, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
@@ -465,7 +476,8 @@ def _same_authored_intent(kept: dict, *, capability: str, channel: str,
 def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                    channel: str, approval_kind: str, session_id: str | None,
                    request_id: str | None,
-                   guards: tuple[str, dict[str, int]] | None = None) -> tuple[Path, bool]:
+                   guards: tuple[str, dict[str, int]] | None = None,
+                   review: dict | None = None) -> tuple[Path, bool]:
     """Seal one operator write under ``key``; return the file to submit and
     whether it is a new attempt.
 
@@ -514,6 +526,8 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
         "expected_revisions": revisions,
         "payload": payload,
     }
+    if review is not None:
+        envelope["review"] = review
     envelope["approval"] = {"kind": approval_kind,
                             "subject_sha256": intent_sha256(envelope)}
     attempt = sealed_attempt_path(root, key, request_id)
@@ -553,10 +567,19 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
                     f"{args.capability!r} requires --guards-from REC with --submit"
                 )
             guards = None
+        review = None
+        if guards is not None:
+            review_record = guards_record
+            if review_record is None and args.guards_from:
+                review_record = _normalize_check_record(json.loads(
+                    Path(args.guards_from).read_text(encoding="utf-8")))
+            if review_record is not None:
+                review = review_record.get("review")
         sealed, fresh = _seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
             channel=args.channel, approval_kind=args.approval_kind,
-            session_id=session_id, request_id=args.request_id, guards=guards)
+            session_id=session_id, request_id=args.request_id, guards=guards,
+            review=review)
     except (OSError, ValueError, WriteRefused, TransactionFailure) as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
@@ -892,6 +915,8 @@ def main(argv: list[str] | None = None) -> int:
         "expected_revisions": revisions,
         "payload": payload,
     }
+    if args.guards_from and isinstance(record.get("review"), dict):
+        envelope["review"] = record["review"]
     envelope["approval"] = {
         "kind": args.approval_kind,
         "subject_sha256": intent_sha256(envelope),
