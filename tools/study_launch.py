@@ -51,6 +51,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from types import FrameType
 
+from learning_os.adapters.process_group import terminate_process_group
 from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, StudyBroker
 from learning_os.store.materials.reading_cards import (
     ReadingStore,
@@ -724,22 +725,17 @@ def launch_study(
     prev_sigterm = signal.getsignal(signal.SIGTERM)
 
     def _terminate_group(active: subprocess.Popen[bytes], *, force: bool = False) -> None:
-        """Terminate the launcher child's whole process group (descendants included)."""
-        import contextlib as _ctx
-        if active.poll() is not None:
-            return
-        sig = signal.SIGKILL if force else signal.SIGTERM
-        with _ctx.suppress(OSError, ProcessLookupError):
-            os.killpg(os.getpgid(active.pid), sig)
+        """Terminate the launcher child's whole process group (shared impl)."""
         if force:
-            return
-        try:
-            active.wait(timeout=5)
-        except subprocess.TimeoutExpired:
+            import contextlib as _ctx
+            if active.poll() is not None:
+                return
             with _ctx.suppress(OSError, ProcessLookupError):
                 os.killpg(os.getpgid(active.pid), signal.SIGKILL)
             with _ctx.suppress(subprocess.TimeoutExpired):
                 active.wait(timeout=5)
+            return
+        terminate_process_group(active, grace_s=5.0)
 
     def _on_sigterm(_signum: int, _frame: FrameType | None) -> None:
         nonlocal terminated_by_signal

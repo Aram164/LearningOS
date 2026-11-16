@@ -1718,6 +1718,53 @@ def test_read_study_json_file_refuses_oversized_input(
         )
 
 
+def test_process_group_cleanup_kills_grandchild_after_leader_exits(
+    tmp_path: Path,
+) -> None:
+    """A SIGTERM-ignoring grandchild must not survive leader exit (Defect 1)."""
+    from learning_os.adapters.process_group import terminate_process_group
+
+    pid_file = tmp_path / "grandchild.pid"
+    grandchild_code = (
+        "import signal, time\n"
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+        "time.sleep(60)\n"
+    )
+    leader_code = (
+        "import subprocess, sys, time\n"
+        f"gc = subprocess.Popen([sys.executable, '-c', {grandchild_code!r}])\n"
+        f"open({str(pid_file)!r}, 'w').write(str(gc.pid))\n"
+        "time.sleep(60)\n"
+    )
+    leader = subprocess.Popen(
+        [sys.executable, "-c", leader_code],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 10
+        while not pid_file.exists():
+            assert time.monotonic() < deadline, "grandchild never started"
+            time.sleep(0.05)
+        grandchild_pid = int(pid_file.read_text().strip())
+        terminate_process_group(leader, grace_s=0.5, kill_wait_s=2.0)
+        assert leader.poll() is not None
+        deadline = time.monotonic() + 5
+        while True:
+            try:
+                os.kill(grandchild_pid, 0)
+            except ProcessLookupError:
+                break
+            assert time.monotonic() < deadline, (
+                "grandchild survived process-group cleanup after leader exit"
+            )
+            time.sleep(0.05)
+    finally:
+        if leader.poll() is None:
+            leader.kill()
+            leader.wait(timeout=5)
+
+
 def test_write_local_output_file_exclusive_refuses_overwrite(tmp_path: Path) -> None:
     target = tmp_path / "check-rec.json"
     write_local_output_file(

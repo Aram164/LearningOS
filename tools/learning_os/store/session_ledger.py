@@ -368,18 +368,23 @@ def load_session_ledger(root: Path, session_id: str | None = None) -> dict | Non
     if data.get("schema_version") == 2:
         return {"schema_version": 3, "session_id": identity, "version": 0,
                 "state": "recording", "paths": paths, "review": None,
-                "commit_sha": None}
+                "commit_sha": None, "push_remote": None, "push_branch": None}
     version = data.get("version")
     state = data.get("state")
     commit_sha = data.get("commit_sha")
+    push_remote = data.get("push_remote")
+    push_branch = data.get("push_branch")
     if not isinstance(version, int) or isinstance(version, bool) \
             or not _is_member(state, _SESSION_STATES) \
-            or (commit_sha is not None and not isinstance(commit_sha, str)):
+            or (commit_sha is not None and not isinstance(commit_sha, str)) \
+            or (push_remote is not None and not isinstance(push_remote, str)) \
+            or (push_branch is not None and not isinstance(push_branch, str)):
         raise WriteRefused("session ownership ledger has an unsupported contract")
     return {"schema_version": 3, "session_id": identity, "version": version,
             "state": state, "paths": paths,
             "review": _validate_session_review(data.get("review")),
-            "commit_sha": commit_sha}
+            "commit_sha": commit_sha,
+            "push_remote": push_remote, "push_branch": push_branch}
 
 
 def load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
@@ -420,14 +425,16 @@ def _atomic_text(path: Path, content: str) -> None:
 def write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
                           session_id: str | None = None, *,
                           version: int, state: str,
-                          review: dict | None, commit_sha: str | None) -> None:
+                          review: dict | None, commit_sha: str | None,
+                          push_remote: str | None = None,
+                          push_branch: str | None = None) -> None:
     """Write the own ledger as one v3 envelope (SPEC §13, M-06).
 
     The whole envelope is explicit: no caller may silently reset the
     version, the state, the witness or the recorded SHA.
     """
     identity = current_session_id(explicit=session_id)
-    _atomic_text(session_ledger(root, identity), json.dumps({
+    envelope_out: dict[str, object] = {
         "schema_version": SESSION_LEDGER_SCHEMA_VERSION,
         "session_id": identity,
         "version": version,
@@ -435,7 +442,15 @@ def write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
         "paths": dict(sorted(paths.items())),
         "review": review,
         "commit_sha": commit_sha,
-    }, indent=2, sort_keys=True) + "\n")
+    }
+    # Push destination is recorded only for committed_unpushed envelopes;
+    # omitting it elsewhere keeps the v3 bytes stable for all other states.
+    if push_remote is not None:
+        envelope_out["push_remote"] = push_remote
+    if push_branch is not None:
+        envelope_out["push_branch"] = push_branch
+    _atomic_text(session_ledger(root, identity), json.dumps(
+        envelope_out, indent=2, sort_keys=True) + "\n")
 
 
 def delete_session_ledger(root: Path, session_id: str | None = None) -> None:
@@ -547,7 +562,9 @@ def record_touched(root: Path, paths, channel: str | None = None, *,
         version=(envelope["version"] if envelope is not None else 0) + 1,
         state=envelope["state"] if envelope is not None else "recording",
         review=envelope["review"] if envelope is not None else None,
-        commit_sha=envelope["commit_sha"] if envelope is not None else None)
+        commit_sha=envelope["commit_sha"] if envelope is not None else None,
+        push_remote=envelope.get("push_remote") if envelope is not None else None,
+        push_branch=envelope.get("push_branch") if envelope is not None else None)
 
 
 #: A ledger row older than this is reported as stale and is no longer staged
