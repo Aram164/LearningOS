@@ -377,8 +377,9 @@ def test_failed_push_records_sha_and_keeps_the_window(mini_repo, monkeypatch,
     assert lines == [{"operation": "session.end",
                       "kind": "command-failure", "site": None, "code": 128}]
 
+    sha = _own_envelope(mini_repo)["commit_sha"]
     direct = subprocess.run(
-        ["git", "push"], cwd=mini_repo,
+        ["git", "push", "origin", f"{sha}:refs/heads/main"], cwd=mini_repo,
         capture_output=True, text=True, timeout=120)
     assert (proc.returncode, proc.stdout, proc.stderr) == (
         direct.returncode, direct.stdout, f"los: {direct.stderr.strip()}\n")
@@ -419,6 +420,55 @@ def test_push_retry_succeeds_on_the_exact_sha(mini_repo, monkeypatch,
         ["git", "--git-dir", str(remote), "rev-parse", "refs/heads/main"],
         capture_output=True, text=True, check=True).stdout.strip()
     assert landed == sha
+
+
+def test_push_retry_pushes_recorded_sha_after_branch_switch(
+        mini_repo, monkeypatch, tmp_path):
+    """Switching branches after the lock is released cannot redirect the push.
+
+    The retry must push the recorded commit to its recorded destination and
+    close only this session's ledger — never the checked-out branch.
+    """
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    remote = tmp_path / "switch-remote.git"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)],
+                   cwd=mini_repo, check=True)
+    subprocess.run(["git", "push", "-q", "--set-upstream", "origin", "main"],
+                   cwd=mini_repo, check=True)
+    _capture(mini_repo, key="switch-001", text="switch me")
+    subprocess.run(["git", "remote", "set-url", "origin",
+                    str(tmp_path / "no-such-remote-yet")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "switch me", "--push")
+    assert failed.returncode == 128, failed.stderr
+    envelope = _own_envelope(mini_repo)
+    sha = envelope["commit_sha"]
+    assert envelope["push_remote"] == "origin"
+    assert envelope["push_branch"] == "main"
+    subprocess.run(["git", "remote", "set-url", "origin", str(remote)],
+                   cwd=mini_repo, check=True)
+
+    # Interleaving: another branch (at the same commit) is checked out
+    # before the retry runs, so HEAD still equals the recorded SHA.
+    subprocess.run(["git", "checkout", "-q", "-b", "other"], cwd=mini_repo,
+                   check=True)
+    assert _head(mini_repo) == sha
+
+    retried = _session_end(mini_repo, "--push")
+    assert retried.returncode == 0, retried.stderr
+    payload = json.loads(retried.stdout)
+    assert payload["pushed"] is True and payload["session_closed"] is True
+    landed_main = subprocess.run(
+        ["git", "--git-dir", str(remote), "rev-parse", "refs/heads/main"],
+        capture_output=True, text=True, check=True).stdout.strip()
+    assert landed_main == sha
+    other_remote = subprocess.run(
+        ["git", "--git-dir", str(remote), "rev-parse", "--verify",
+         "refs/heads/other"],
+        capture_output=True, text=True)
+    assert other_remote.returncode != 0, "retry pushed the checked-out branch"
 
 
 def test_push_retry_repeats_while_the_remote_is_dead(mini_repo, monkeypatch,

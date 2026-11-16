@@ -216,6 +216,33 @@ def _current_head(root: Path) -> str | None:
     return proc.stdout.strip() or None
 
 
+def _push_destination(root: Path) -> tuple[str, str]:
+    """The (remote, branch) HEAD pushes to, resolved under the operator lock.
+
+    Recorded alongside the commit SHA so the network push after the lock is
+    released names an explicit ``<sha>:refs/heads/<branch>`` refspec and can
+    never silently push whatever branch is checked out by then.
+    """
+    branch_proc = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=root, capture_output=True, text=True, timeout=30)
+    branch = branch_proc.stdout.strip() if branch_proc.returncode == 0 else ""
+    if not branch:
+        raise SessionLedgerError(
+            "cannot record a push destination: HEAD is detached; "
+            "check out the session branch or push the commit by hand")
+    upstream_proc = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "--symbolic-full-name",
+         f"{branch}@{{upstream}}"],
+        cwd=root, capture_output=True, text=True, timeout=30)
+    upstream = upstream_proc.stdout.strip() if upstream_proc.returncode == 0 else ""
+    if "/" in upstream:
+        remote, _, remote_branch = upstream.partition("/")
+        if remote and remote_branch:
+            return remote, remote_branch
+    return "origin", branch
+
+
 def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 include_stale: bool, close: bool,
                 commit_message: str | None, push: bool) -> dict:
@@ -239,6 +266,8 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         raise SessionChannelError(
             f"unknown session channel {channel!r} "
             f"(one of: {', '.join(sorted(GATEWAY_CHANNELS))})")
+    push_sha: str | None = None
+    push_target: tuple[str, str] | None = None
     with _operator_lock(root):
         own_session = _current_session_id(channel=channel, explicit=session_id)
         try:
@@ -256,6 +285,14 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 raise SessionHeadMovedError(
                     f"session commit {envelope['commit_sha']} is no longer HEAD "
                     f"({head or 'unknown'}); push it by hand or close the session")
+            push_sha = envelope["commit_sha"]
+            recorded_remote = envelope.get("push_remote")
+            recorded_branch = envelope.get("push_branch")
+            push_target = (
+                (recorded_remote, recorded_branch)
+                if recorded_remote and recorded_branch
+                else _push_destination(root)
+            )
         others = _load_other_session_ledgers(root, own_session)
         recorded = envelope["paths"] if envelope is not None else {}
         include_stale = bool(include_stale)
@@ -370,15 +407,22 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
             # Persist committed_unpushed under the lock BEFORE dropping it for
             # network push, so same-session writes refuse cleanly while concurrent
             # readers/writers in other sessions do not block behind git push.
+            push_target = _push_destination(root)
+            push_sha = sha
             _write_session_ledger(
                 root, recorded, own_session,
                 version=envelope["version"] if envelope is not None else 0,
                 state="committed_unpushed",
                 review=envelope["review"] if envelope is not None else None,
-                commit_sha=sha)
+                commit_sha=sha,
+                push_remote=push_target[0],
+                push_branch=push_target[1])
 
-    pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
-                            text=True, timeout=180)
+    assert push_sha is not None and push_target is not None  # set under the lock
+    pushed = subprocess.run(
+        ["git", "push", push_target[0],
+         f"{push_sha}:refs/heads/{push_target[1]}"],
+        cwd=root, capture_output=True, text=True, timeout=180)
     if pushed.returncode != 0:
         raise ToolFailure(
             stdout=pushed.stdout, stderr=pushed.stderr,
@@ -617,7 +661,9 @@ def repair_replayed_session_ownership(root: Path,
         _write_session_ledger(
             root, merged, session, version=envelope["version"],
             state=envelope["state"], review=envelope["review"],
-            commit_sha=envelope["commit_sha"])
+            commit_sha=envelope["commit_sha"],
+            push_remote=envelope.get("push_remote"),
+            push_branch=envelope.get("push_branch"))
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair replayed session ownership: {exc}"

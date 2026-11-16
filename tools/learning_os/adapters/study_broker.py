@@ -15,7 +15,6 @@ import contextlib
 import io
 import json
 import os
-import signal
 import socket
 import subprocess
 import sys
@@ -27,6 +26,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from learning_os.adapters import cli_parser
+from learning_os.adapters.process_group import terminate_process_group
 from learning_os.adapters.seal_parser import (
     SEAL_GUARDS_STDIN_ENV,
     build_seal_parser,
@@ -180,18 +180,8 @@ Runner = Callable[
 
 
 def _terminate_process_group(proc: subprocess.Popen[str]) -> None:
-    """Terminate an isolated Core process group with SIGTERM then SIGKILL."""
-    with contextlib.suppress(OSError):
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-    try:
-        proc.wait(timeout=1.0)
-        return
-    except subprocess.TimeoutExpired:
-        pass
-    with contextlib.suppress(OSError):
-        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-    with contextlib.suppress(OSError, subprocess.TimeoutExpired):
-        proc.wait(timeout=2.0)
+    """Terminate an isolated Core process group (shared with the launcher)."""
+    terminate_process_group(proc)
 
 
 def _run_subprocess_bounded(
