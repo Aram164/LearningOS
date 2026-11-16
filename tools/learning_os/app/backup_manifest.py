@@ -45,6 +45,29 @@ def _stat_identity(path: Path) -> tuple[int, int, int, int, int]:
     return st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns
 
 
+def _inventory_file(label: str, rel: str, path: Path) -> tuple[dict[str, Any], tuple[int, int, int, int, int]]:
+    """One inventoried file: identity proven before and after its one read.
+
+    Capturing identity only after hashing pairs the old digest with the
+    replacement's identity when the file is swapped in between, and the
+    later verification then passes. Checking on both sides of the single
+    content read closes that window for regular files and shipped UI
+    assets alike.
+    """
+    try:
+        before = _stat_identity(path)
+    except OSError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+    digest = _sha256_file(path)
+    try:
+        after = _stat_identity(path)
+    except OSError as exc:
+        raise _changed_during_inventory(label, f"{rel} became unreadable") from exc
+    if after != before:
+        raise _changed_during_inventory(label, f"{rel} changed")
+    return {"root": label, "path": rel, "size": before[2], "sha256": digest}, before
+
+
 def _changed_during_inventory(label: str, detail: str) -> BackupManifestError:
     return BackupManifestError(
         f"backup source changed during inventory ({label}: {detail}); "
@@ -449,12 +472,9 @@ def build_backup_manifest(
                 if label == "materials":
                     aliases_before = _materials_aliases(authority, excluded)
                 for rel in sorted(admitted_before):
-                    path = authority / rel
-                    entries[(label, rel)] = {
-                        "root": label, "path": rel, "size": path.stat().st_size,
-                        "sha256": _sha256_file(path),
-                    }
-                    observed_stats[rel] = _stat_identity(path)
+                    entry, identity = _inventory_file(label, rel, authority / rel)
+                    entries[(label, rel)] = entry
+                    observed_stats[rel] = identity
                 if label == "ui":
                     for name in shipped_before or []:
                         path = _inside(authority, f"plugin/{name}")
@@ -463,11 +483,9 @@ def build_backup_manifest(
                                 f"declared plugin asset cannot be backed up: plugin/{name}"
                             )
                         rel = path.relative_to(authority).as_posix()
-                        entries[(label, rel)] = {
-                            "root": label, "path": rel, "size": path.stat().st_size,
-                            "sha256": _sha256_file(path),
-                        }
-                        observed_stats[rel] = _stat_identity(path)
+                        entry, identity = _inventory_file(label, rel, path)
+                        entries[(label, rel)] = entry
+                        observed_stats[rel] = identity
                 # Stable-source check: the Core operator lock cannot
                 # serialize external writers, so prove the inventoried
                 # set and every hashed file's identity still hold before

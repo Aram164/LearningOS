@@ -80,6 +80,47 @@ def _run_capability(root: Path, envelope: dict,
     )
 
 
+_BROKEN_PROJECTION_SITE = '''\
+import os
+
+if os.environ.get("LOS_BROKEN_PROJECTION"):
+    try:
+        from learning_os.derive.projection import outputs as _outputs
+
+        def _broken(*_args, **_kwargs):
+            raise OSError("injected projection preparation failure")
+
+        _outputs.build_manifest = _broken
+    except Exception:
+        pass
+'''
+
+
+def _run_capability_broken_projection(root: Path, envelope: dict,
+                                      scratch: Path) -> subprocess.CompletedProcess:
+    """One real CLI commit whose projection *preparation* fails.
+
+    Publication is staged after the receipt now, so a read-only
+    ``generated/`` fails only exposure — after the commit. These
+    scenarios pin the pre-receipt failure, so the fault is injected at
+    the builder through a ``sitecustomize`` the child interpreter loads.
+    """
+    site = scratch / "broken-projection-site"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "sitecustomize.py").write_text(_BROKEN_PROJECTION_SITE, encoding="utf-8")
+    saved = {key: _TRACE_ENV.get(key) for key in ("PYTHONPATH", "LOS_BROKEN_PROJECTION")}
+    _TRACE_ENV["PYTHONPATH"] = str(site)
+    _TRACE_ENV["LOS_BROKEN_PROJECTION"] = "1"
+    try:
+        return _run_capability(root, envelope)
+    finally:
+        for key, value in saved.items():
+            if value is None:
+                _TRACE_ENV.pop(key, None)
+            else:
+                _TRACE_ENV[key] = value
+
+
 def _response(proc: subprocess.CompletedProcess) -> dict | None:
     try:
         return json.loads(proc.stdout)
@@ -321,21 +362,15 @@ def _s6_lost_response(scratch: Path) -> dict:
 
 
 def _s7_projection_failure(scratch: Path) -> dict:
-    # Every capability commit publishes the projection synchronously, so the
-    # failure is injected before the write: generated/ is read-only when the
-    # commit-time publication runs. Measured behavior: INTERNAL_FAILURE
-    # (retryable), rollback, no receipt, no ledger entry.
+    # Every capability commit prepares the projection synchronously before
+    # its receipt, so preparation failure is the pre-receipt publication
+    # fault. Measured behavior: INTERNAL_FAILURE (retryable), rollback, no
+    # receipt, no ledger entry.
     mini = _fresh_mini(scratch, "s7")
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
-    try:
-        proc = _run_capability(mini, approved_v2_envelope(
-            mini, capability="stage.progress.update",
-            payload=dict(STAGE_PAYLOAD),
-            artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s7"))
-    finally:
-        os.chmod(generated, 0o755)
+    proc = _run_capability_broken_projection(mini, approved_v2_envelope(
+        mini, capability="stage.progress.update",
+        payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s7"), scratch)
     body = _response(proc) or {}
     return {
         "scenario": "S7 commit-time projection publication fails",
@@ -405,13 +440,7 @@ def _s9_ambiguous_then_stale_recovery(scratch: Path) -> dict:
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
         artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s9")
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
-    try:
-        first = _run_capability(mini, envelope)
-    finally:
-        os.chmod(generated, 0o755)
+    first = _run_capability_broken_projection(mini, envelope, scratch)
     assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
         (_response(first), first.stderr[-500:])
     # Recovery re-prepares the same request against a snapshot that is
@@ -452,13 +481,7 @@ def _s10_ambiguous_then_revision_recovery(scratch: Path) -> dict:
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
         artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s10")
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
-    try:
-        first = _run_capability(mini, envelope)
-    finally:
-        os.chmod(generated, 0o755)
+    first = _run_capability_broken_projection(mini, envelope, scratch)
     assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
         (_response(first), first.stderr[-500:])
     # A concurrent writer commits the same artifacts between the attempts. It
@@ -528,13 +551,7 @@ def _s11_ambiguous_then_invalid_recovery(scratch: Path) -> dict:
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
         artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s11")
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
-    try:
-        first = _run_capability(mini, envelope)
-    finally:
-        os.chmod(generated, 0o755)
+    first = _run_capability_broken_projection(mini, envelope, scratch)
     assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
         (_response(first), first.stderr[-500:])
     # Recovery re-prepares with an approval flag in the payload instead of

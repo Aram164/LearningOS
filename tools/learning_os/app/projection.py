@@ -62,6 +62,33 @@ def _check_canonical_stable(root: Path, snapshot: str | None) -> None:
         )
 
 
+def staged_from_outputs(repo, outputs: dict, *, inputs_before: dict | None = None,
+                        canonical_before: str | None = None) -> StagedPublication:
+    """The one exposure boundary for already-built outputs.
+
+    Every publication path — transaction, manual generation, and
+    publish-on-read — exposes through here, so the final stability check
+    (pinned inputs and canonical snapshot, observed again at exposure)
+    cannot be bypassed by a path that built its outputs elsewhere.
+    """
+    root = repo.root
+    if IDENTITY_FILENAME not in outputs:
+        raise ProjectionInputChanged(
+            "projection inputs changed during publication; retry",
+            changed_paths=(), changed_paths_total=0,
+        )
+    manifest = json.loads(outputs["manifest.json"])
+    snapshot = (manifest.get("_generated") or {}).get("snapshot_id")
+
+    def expose() -> None:
+        _check_inputs_stable(root, inputs_before)
+        _check_canonical_stable(root, canonical_before or snapshot)
+        write_outputs(repo, outputs)
+
+    return StagedPublication(
+        snapshot=snapshot, expose=expose, paths=tuple(sorted(outputs)))
+
+
 def prepare_repo(repo, *, inputs_before: dict | None = None,
                  canonical_before: str | None = None) -> StagedPublication:
     """Build every output from *repo* without exposing any of it.
@@ -75,23 +102,12 @@ def prepare_repo(repo, *, inputs_before: dict | None = None,
     """
     root = repo.root
     outputs = generate_all(repo, inputs_before=inputs_before)
-    if IDENTITY_FILENAME not in outputs:
-        raise ProjectionInputChanged(
-            "projection inputs changed during publication; retry",
-            changed_paths=(), changed_paths_total=0,
-        )
+    staged = staged_from_outputs(
+        repo, outputs, inputs_before=inputs_before,
+        canonical_before=canonical_before)
     _check_inputs_stable(root, inputs_before)
     _check_canonical_stable(root, canonical_before)
-    manifest = json.loads(outputs["manifest.json"])
-    snapshot = (manifest.get("_generated") or {}).get("snapshot_id")
-
-    def expose() -> None:
-        _check_inputs_stable(root, inputs_before)
-        _check_canonical_stable(root, canonical_before or snapshot)
-        write_outputs(repo, outputs)
-
-    return StagedPublication(
-        snapshot=snapshot, expose=expose, paths=tuple(sorted(outputs)))
+    return staged
 
 
 def publish_with_paths(root: Path) -> list[str]:
@@ -294,7 +310,13 @@ def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
         identity = json.loads(raw_identity)
         if any(identity.get(key) != value for key, value in inputs_before.items()):
             return None
-        write_outputs(repo, outputs)
+        # Expose through the same final stability check as transaction
+        # and manual publication, reusing the outputs just built: an
+        # input that moved after the rebuild refuses here and leaves
+        # the stored pair exactly as stale as it was.
+        staged_from_outputs(
+            repo, outputs, inputs_before=inputs_before,
+            canonical_before=live).expose()
     except Exception:
         # Publication refreshes disposable derived files; the same builders
         # run unguarded on every canonical write and `make views`, which

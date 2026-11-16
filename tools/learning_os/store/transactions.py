@@ -2099,12 +2099,15 @@ class TransactionService:
             projected_snapshot = publish() if publish is not None else None
         if isinstance(projected_snapshot, StagedPublication):
             # Prepared but not exposed: the receipt must become durable
-            # before _expose_projection makes this view visible.
+            # before _expose_projection makes this view visible, and
+            # projection.published is emitted only once it has.
             run.staged_publication = projected_snapshot
             projected_snapshot = projected_snapshot.snapshot
-        diag_tracer.emit_event(
-            diag_conventions.EVENT_PROJECTION_PUBLISHED,
-            attrs={"snapshot": projected_snapshot})
+        else:
+            # A legacy publisher already exposed its view while preparing.
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_PROJECTION_PUBLISHED,
+                attrs={"snapshot": projected_snapshot})
 
         if run.use_combined:
             post_lines: dict[str, bytes] = {}
@@ -2159,6 +2162,9 @@ class TransactionService:
         run.staged_publication = None
         run.failed_stage = "core.projection"
         staged.expose()
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_PROJECTION_PUBLISHED,
+            attrs={"snapshot": staged.snapshot})
 
     def _projection_input_change(
         self, run: _CommitRun, projected: str, actual: str,
