@@ -150,8 +150,22 @@ def test_reads_agree_on_pre_state_after_a_crash(tmp_path: Path):
 
 
 def _crash_stage_write(mini: Path, key: str) -> dict:
-    """A real crashed commit: chmod breaks projection, the v2 journal stays."""
+    """A real crashed commit: projection preparation and its rollback both
+    fail, so the v2 journal stays for restart recovery.
+
+    Exposure is staged after the receipt now, so a read-only ``generated/``
+    no longer crashes a commit before its receipt; the crash is staged at
+    preparation instead, which is the remaining pre-receipt failure point.
+    """
     from gateway_helpers import approved_v2_envelope
+
+    import learning_os.app.commit as commit_module
+    import learning_os.app.pipeline as pipeline_module
+    from learning_os.adapters.cli_parser import build_parser
+    from learning_os.derive.projection import outputs as outputs_module
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.diagnostics import tracer as diag_tracer
+    from learning_os.store.diagnostics.store import bind_store
 
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update",
@@ -159,18 +173,29 @@ def _crash_stage_write(mini: Path, key: str) -> dict:
                  "status": "complete"},
         artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
         idempotency_key=key)
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
+    real_build = outputs_module.build_manifest
+    real_publish = commit_module._publish
+
+    def broken_build(*_args, **_kwargs):
+        raise RuntimeError("injected projection preparation failure")
+
+    def broken_rollback(_root):
+        raise OSError("injected rollback publication failure")
+
+    outputs_module.build_manifest = broken_build
+    commit_module._publish = broken_rollback
     try:
-        proc = subprocess.run(
-            [sys.executable, str(LOS), "--root", str(mini), "capability",
-             "stage.progress.update", "--payload-file", "-"],
-            input=json.dumps(envelope), capture_output=True, text=True,
-            timeout=120)
+        bind_store(mini)
+        attempt = diag_tracer.begin_attempt({"capability": "stage.progress.update"})
+        outcome = pipeline_module.run_gateway(
+            mini, envelope, requested="stage.progress.update",
+            definitions=command_definitions(mini), attempt=attempt,
+            replay_only=False, parser_factory=build_parser)
     finally:
-        os.chmod(generated, 0o755)
-    body = json.loads(proc.stdout)
+        outputs_module.build_manifest = real_build
+        commit_module._publish = real_publish
+    assert outcome is not None
+    body = json.loads(outcome.stdout)
     assert body["error"]["code"] == "INTERNAL_FAILURE", body
     journals = list((mini / "operations" / "transactions" / ".inflight").iterdir())
     assert len(journals) == 1, "the crash must leave exactly one journal"

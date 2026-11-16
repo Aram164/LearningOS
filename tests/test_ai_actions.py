@@ -908,3 +908,29 @@ def test_overnight_delivery_records_shared_ledgers_in_session(ai_repo, tmp_path,
     ledger = load_session_ledger(ai_repo)
     assert "operations/transactions/revisions.yaml" in ledger["paths"]
     assert "operations/transactions/idempotency.yaml" in ledger["paths"]
+
+
+def test_approved_delivery_exposes_manifest_only_after_receipt(
+    ai_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Approval-path parity: the AI delivery publisher shares the
+    receipt-before-manifest rule with the ordinary gateway."""
+    from learning_os.app.projection import publish_with_paths
+
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    publish_with_paths(ai_repo)
+    previous = (ai_repo / "generated/manifest.json").read_bytes()
+    seen: dict[str, bytes] = {}
+    real_write = TransactionService._write_receipt
+
+    def recording_write(self, run, metadata):
+        seen["manifest"] = (ai_repo / "generated/manifest.json").read_bytes()
+        return real_write(self, run, metadata)
+
+    monkeypatch.setattr(TransactionService, "_write_receipt", recording_write)
+    result = apply_approved_delivery(app, delivery["id"])
+    assert result is not None
+    assert seen["manifest"] == previous, (
+        "approved delivery exposed its manifest before the receipt")
+    assert (ai_repo / "generated/manifest.json").read_bytes() != previous

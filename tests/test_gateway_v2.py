@@ -642,11 +642,10 @@ def test_gateway_v2_projection_failure_carries_typed_provenance(
 ):
     """End to end: a projection failure reaches the gateway typed.
 
-    Read-only generated/ breaks both publication and rollback
-    republication, so rollback is incomplete and the code stays
-    INTERNAL_FAILURE — but the details prove the typed path was taken
-    (subsystem plus rollback outcome) rather than the prose fallback,
-    which never sets details.
+    Read-only generated/ now breaks only exposure, which happens after
+    the receipt is durable: the write committed and the code stays
+    INTERNAL_FAILURE with the committed provenance, rather than the
+    prose fallback, which never sets details.
     """
     generated = mini_repo / "generated"
     generated.mkdir(exist_ok=True)
@@ -661,8 +660,8 @@ def test_gateway_v2_projection_failure_carries_typed_provenance(
     assert response["error"]["code"] == "INTERNAL_FAILURE"
     assert response["error"]["retryable"] is True
     assert response["error"]["details"] == {
-        "stage": "core.projection",
-        "rollback_complete": False,
+        "stage": "core.commit",
+        "committed": True,
     }
 
 

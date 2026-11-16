@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -23,6 +23,23 @@ class PublicationState(Enum):
     NOT_PUBLISHED = "not_published"
     PUBLICATION_UNCERTAIN = "publication_uncertain"
     DURABLE = "durable"
+
+
+@dataclass(frozen=True)
+class StagedPublication:
+    """Derived output prepared from validated state, not yet exposed.
+
+    ``snapshot`` names the canonical state the prepared output describes.
+    ``expose`` makes the consumer-facing view (manifest plus its identity
+    sidecar) visible; the transaction engine calls it only after the
+    receipt is durable, so a prepared-but-unexposed publication can never
+    be observed as current. Exposure must re-verify that its inputs still
+    describe the prepared snapshot before writing anything.
+    """
+
+    snapshot: str | None
+    expose: Callable[[], None]
+    paths: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

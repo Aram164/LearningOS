@@ -18,8 +18,8 @@ from pathlib import Path
 from learning_os.app.context import OpContext
 from learning_os.app.outcomes import record_gateway_refusal as _record_gateway_refusal
 from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failure
+from learning_os.app.projection import prepare_repo as _publish_repo
 from learning_os.app.projection import publish as _publish
-from learning_os.app.projection import publish_repo as _publish_repo
 from learning_os.app.proposal import (
     CommitIssues,
     CommitOutcome,
@@ -34,6 +34,7 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.fingerprint import canonical_fingerprint as _canonical_fingerprint
 from learning_os.store.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.manifest_identity import observe_inputs as _observe_inputs
@@ -164,6 +165,7 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
                 2, [f"cannot change {path}: target is not a regular file"], {})
     validated_repo = None
     observed_before: dict | None = None
+    canonical_before: str | None = None
     validation_summary: dict = {}
 
     def _safe_observe() -> dict | None:
@@ -173,8 +175,9 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
             return None
 
     def validation_errors():
-        nonlocal validated_repo, observed_before
+        nonlocal validated_repo, observed_before, canonical_before
         observed_before = _safe_observe()
+        canonical_before = f"sha256:{_canonical_fingerprint(root)}"
         validated_repo = load_repo(root)
         issues = validate(validated_repo, online=False)
         validation_summary.clear()
@@ -183,23 +186,31 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
             return proposal.validate_extra(validated_repo, issues)
         return [issue for issue in issues if issue.severity == "E"]
 
-    def publish_validated_state(snapshot_after_id: str | None = None) -> str:
-        nonlocal validated_repo, observed_before
+    def publish_validated_state(snapshot_after_id: str | None = None):
+        nonlocal validated_repo, observed_before, canonical_before
         if validated_repo is None:
             observed_before = _safe_observe()
+            canonical_before = f"sha256:{_canonical_fingerprint(root)}"
             repo = load_repo(root)
         else:
             repo = validated_repo
         if snapshot_after_id is not None:
             seed_source_fingerprint(repo, snapshot_after_id)
-        if observed_before is not None and "inputs_before" in inspect.signature(_publish_repo).parameters:
-            _publish_repo(repo, inputs_before=observed_before)
+        parameters = inspect.signature(_publish_repo).parameters
+        if "inputs_before" in parameters:
+            staged = _publish_repo(
+                repo, inputs_before=observed_before,
+                canonical_before=canonical_before or snapshot_after_id)
         else:
-            _publish_repo(repo)
-        projected_snapshot = f"sha256:{source_fingerprint(repo)}"
+            # A test double with the legacy one-argument shape: it has
+            # already exposed whatever it chose to expose.
+            staged = _publish_repo(repo)
+            if staged is None:
+                staged = f"sha256:{source_fingerprint(repo)}"
         validated_repo = None
         observed_before = None
-        return projected_snapshot
+        canonical_before = None
+        return staged
 
     if proposal.validate_state == "STANDARD":
         validate_state = validation_errors

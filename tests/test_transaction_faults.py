@@ -896,3 +896,231 @@ def test_overnight_delete_rows_do_not_impose_created_directory_contiguity(tmp_pa
         {"path": "A/B/new.yaml", "before": {"kind": "absent"}, "after": {"kind": "file"}},
         {"path": "A/B/C/old.yaml", "before": {"kind": "absent"}, "after": {"kind": "absent"}}]}
     transaction_module._bind_created_directories(tmp_path, tmp_path / "tx", intent, ["A/B", "A"])
+
+
+# ---------------------------------------------------------------------------
+# Publication ordering: receipt durable before projection exposure.
+# ---------------------------------------------------------------------------
+
+
+def _staged_publish(root: Path):
+    """The production-shaped publisher: prepare from loaded state, expose later."""
+    from learning_os.app.projection import prepare_repo
+    from learning_os.store.fingerprint import seed_source_fingerprint
+    from learning_os.store.loader import load_repo
+    from learning_os.store.manifest_identity import observe_inputs
+
+    def publish(snapshot_after_id: str | None = None):
+        try:
+            inputs_before = observe_inputs(root)
+        except Exception:
+            inputs_before = None
+        repo = load_repo(root)
+        if snapshot_after_id is not None:
+            seed_source_fingerprint(repo, snapshot_after_id)
+        return prepare_repo(repo, inputs_before=inputs_before)
+
+    return publish
+
+
+def _manifest_bytes(root: Path) -> bytes | None:
+    path = root / "generated/manifest.json"
+    return path.read_bytes() if path.is_file() else None
+
+
+def test_failure_before_receipt_keeps_previous_view_and_rolls_back(
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Pause at receipt creation: the new manifest must not be live yet."""
+    from learning_os.app.projection import publish_with_paths
+    from learning_os.app.projection_readiness import observe
+
+    publish_with_paths(mini_repo)
+    previous = _manifest_bytes(mini_repo)
+    assert previous is not None
+    target, context = _commit_capture(mini_repo, "order-before-receipt")
+    seen: dict[str, object] = {}
+
+    def pause_then_fail(self, run, metadata):
+        seen["manifest"] = _manifest_bytes(mini_repo)
+        seen["readiness"] = observe(mini_repo)
+        raise TransactionFailure("injected failure before receipt rename")
+
+    monkeypatch.setattr(TransactionService, "_write_receipt", pause_then_fail)
+    with pytest.raises(TransactionFailure):
+        TransactionService(mini_repo).commit(
+            capability="capture.create",
+            writes={target: "forward\n"},
+            artifact_ids=["capture:order-before-receipt"],
+            expected_revisions={"capture:order-before-receipt": 0},
+            gateway_request=context,
+            publish=_staged_publish(mini_repo),
+            rollback_publish=lambda: publish_with_paths(mini_repo),
+        )
+    assert seen["manifest"] == previous, "new manifest exposed before its receipt"
+    assert seen["readiness"]["published"] is False
+    assert target.read_bytes() == b"old\n"
+    # Rollback re-publishes the restored pre-state as the current view.
+    from learning_os.app.projection_readiness import observe as _observe
+
+    assert _observe(mini_repo)["published"] is True
+    assert not list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert _inflight_dirs(mini_repo) == []
+
+
+def test_receipt_parent_eio_leaves_view_unexposed_then_recovers(
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Receipt visible but not durable: forward state survives, view does not."""
+    from learning_os.app.projection import publish_with_paths
+    from learning_os.app.projection_readiness import observe
+
+    target, context = _commit_capture(mini_repo, "order-parent-eio")
+    TransactionService(mini_repo).commit(
+        capability="capture.create",
+        writes={target: "first\n"},
+        artifact_ids=["capture:order-parent-eio"],
+        expected_revisions={"capture:order-parent-eio": 0},
+        gateway_request=context,
+        publish=_staged_publish(mini_repo),
+    )
+    previous = _manifest_bytes(mini_repo)
+    assert previous is not None
+
+    target2, context2 = _commit_capture(mini_repo, "order-parent-eio-2")
+    known_receipts = {
+        path.name
+        for path in (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    }
+    real_fsync = transaction_module.os.fsync
+    fired: list[bool] = []
+
+    def fake_fsync(fd: int) -> None:
+        if not fired and stat.S_ISDIR(os.fstat(fd).st_mode):
+            current = {
+                path.name
+                for path in (mini_repo / "operations/transactions").glob(
+                    "transaction-*.yaml")
+            }
+            if current - known_receipts:
+                fired.append(True)
+                raise OSError(errno.EIO, "injected receipt parent failure")
+        real_fsync(fd)
+
+    monkeypatch.setattr(transaction_module.os, "fsync", fake_fsync)
+    with pytest.raises(TransactionPublicationUncertain):
+        TransactionService(mini_repo).commit(
+            capability="capture.create",
+            writes={target2: "forward\n"},
+            artifact_ids=["capture:order-parent-eio-2"],
+            expected_revisions={"capture:order-parent-eio-2": 0},
+            gateway_request=context2,
+            publish=_staged_publish(mini_repo),
+        )
+    assert fired
+    assert _manifest_bytes(mini_repo) == previous, "uncertain receipt exposed its view"
+    assert target2.read_bytes() == b"forward\n"
+    assert len(_inflight_dirs(mini_repo)) == 1
+    monkeypatch.undo()
+    reconcile_inflight_transactions(mini_repo)
+    assert _inflight_dirs(mini_repo) == []
+    assert _manifest_bytes(mini_repo) == previous, "recovery settles before publishing"
+    publish_with_paths(mini_repo)
+    assert observe(mini_repo)["published"] is True
+
+
+def test_durable_receipt_with_failed_exposure_is_pending_and_replays_once(
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Committed but unexposed: retry replays the receipt, recovery publishes."""
+    from learning_os.app.projection import publish_with_paths
+    from learning_os.app.projection_readiness import observe, settlement_ready
+    from learning_os.domain.failures import PostCommitFailure
+    from learning_os.domain.transaction import StagedPublication
+
+    target, context = _commit_capture(mini_repo, "order-exposure-fails")
+
+    def publish(snapshot_after_id: str | None = None):
+        def expose() -> None:
+            raise OSError("injected exposure failure")
+
+        return StagedPublication(snapshot=snapshot_after_id, expose=expose)
+
+    with pytest.raises(PostCommitFailure) as caught:
+        TransactionService(mini_repo).commit(
+            capability="capture.create",
+            writes={target: "forward\n"},
+            artifact_ids=["capture:order-exposure-fails"],
+            expected_revisions={"capture:order-exposure-fails": 0},
+            gateway_request=context,
+            publish=publish,
+        )
+    assert target.read_bytes() == b"forward\n", "durable receipt must not roll back"
+    receipts = list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    settled = settlement_ready(
+        mini_repo,
+        f"operations/transactions/{receipts[0].name}",
+        caught.value.snapshot_after,
+    )
+    assert settled["write_completed"] is True and settled["settled"] is False
+
+    replay = TransactionService(mini_repo).commit(
+        capability="capture.create",
+        writes={target: "forward\n"},
+        artifact_ids=["capture:order-exposure-fails"],
+        expected_revisions={"capture:order-exposure-fails": 0},
+        gateway_request=context,
+        publish=publish,
+    )
+    assert replay.replayed is True
+    assert replay.transaction_id == caught.value.transaction_id
+    assert len(list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
+    assert target.read_bytes() == b"forward\n"
+
+    reconcile_inflight_transactions(mini_repo)
+    publish_with_paths(mini_repo)
+    observed = observe(mini_repo)
+    assert observed["published"] is True
+    assert observed["snapshot_id"] == caught.value.snapshot_after
+
+
+def test_restart_during_exposure_never_serves_a_torn_pair(
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Identity exposed without its manifest is pending, never current."""
+    from learning_os.app import projection as plumbing
+    from learning_os.app.projection_readiness import observe
+    from learning_os.domain.failures import PostCommitFailure
+    from learning_os.store.manifest_identity import IDENTITY_FILENAME
+
+    plumbing.publish_with_paths(mini_repo)
+    previous = _manifest_bytes(mini_repo)
+    target, context = _commit_capture(mini_repo, "order-torn")
+
+    def torn_write(repo, outputs):
+        identity = repo.root / "generated" / IDENTITY_FILENAME
+        identity.write_text(outputs[IDENTITY_FILENAME], encoding="utf-8")
+        raise OSError("injected crash during exposure")
+
+    monkeypatch.setattr(plumbing, "write_outputs", torn_write)
+    with pytest.raises(PostCommitFailure):
+        TransactionService(mini_repo).commit(
+            capability="capture.create",
+            writes={target: "forward\n"},
+            artifact_ids=["capture:order-torn"],
+            expected_revisions={"capture:order-torn": 0},
+            gateway_request=context,
+            publish=_staged_publish(mini_repo),
+        )
+    assert _manifest_bytes(mini_repo) == previous
+    assert observe(mini_repo)["published"] is False, "torn pair served as current"
+    monkeypatch.undo()
+    reconcile_inflight_transactions(mini_repo)
+    plumbing.publish_with_paths(mini_repo)
+    assert observe(mini_repo)["published"] is True
+    plumbing.publish_with_paths(mini_repo)
+    assert observe(mini_repo)["published"] is True, "repeated recovery must converge"

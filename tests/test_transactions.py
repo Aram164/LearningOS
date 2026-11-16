@@ -400,9 +400,11 @@ def test_projection_publication_refuses_a_changed_canonical_snapshot(
     external = mini_repo / "knowledge/notes/mathematics/external-race.md"
     original_publish = ops_commit._publish_repo
 
-    def publish_then_mutate(repo):
-        original_publish(repo)
+    def publish_then_mutate(repo, **_kwargs):
+        staged = original_publish(
+            repo, inputs_before=None, canonical_before=None)
         external.write_text("changed outside the transaction\n", encoding="utf-8")
+        return staged
 
     monkeypatch.setattr(ops_commit, "_publish_repo", publish_then_mutate)
     artifact = "capture-test:projection-race"
@@ -418,6 +420,9 @@ def test_projection_publication_refuses_a_changed_canonical_snapshot(
                 artifact_ids=[artifact],
             )
 
+    # The mutation lands after preparation but before the receipt; rollback
+    # cannot re-publish a tree whose foreign note is not publishable, so it
+    # reports incomplete while preserving the foreign edit itself.
     assert caught.value.rollback_complete is False
     assert "changed during projection publication" in str(caught.value)
     assert "rollback incomplete" in str(caught.value)

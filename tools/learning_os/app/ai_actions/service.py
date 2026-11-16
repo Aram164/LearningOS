@@ -85,7 +85,6 @@ from learning_os.store.contracts.gateway import (
 from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.store.evidence import replay_for_request
-from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.materials.slices import (
     MAX_SLICE_BYTES_TOTAL,
@@ -1009,6 +1008,7 @@ class AIActionService:
 
         validated_repo = None
         observed_before: dict | None = None
+        canonical_before: str | None = None
 
         def _safe_observe() -> dict | None:
             from learning_os.store.manifest_identity import observe_inputs
@@ -1019,40 +1019,48 @@ class AIActionService:
                 return None
 
         def validation_errors() -> list:
-            nonlocal validated_repo, observed_before
+            nonlocal validated_repo, observed_before, canonical_before
             from learning_os.derive.validation import validate
+            from learning_os.store.fingerprint import canonical_fingerprint
 
             observed_before = _safe_observe()
+            canonical_before = f"sha256:{canonical_fingerprint(self.root)}"
             validated_repo = load_repo(self.root)
             return [
                 issue for issue in validate(validated_repo, online=False)
                 if issue.severity == "E"
             ]
 
-        def publish(snapshot_after_id: str | None = None) -> str:
-            nonlocal validated_repo, observed_before
-            from learning_os.derive.projection import generate_all, write_outputs
-            from learning_os.store.fingerprint import seed_source_fingerprint
+        def publish(snapshot_after_id: str | None = None):
+            nonlocal validated_repo, observed_before, canonical_before
+            from learning_os.app.projection import prepare_repo
+            from learning_os.store.fingerprint import (
+                canonical_fingerprint,
+                seed_source_fingerprint,
+            )
 
             if validated_repo is None:
                 observed_before = _safe_observe()
+                canonical_before = f"sha256:{canonical_fingerprint(self.root)}"
                 repo = load_repo(self.root)
             else:
                 repo = validated_repo
             if snapshot_after_id is not None:
                 seed_source_fingerprint(repo, snapshot_after_id)
-            write_outputs(repo, generate_all(repo, inputs_before=observed_before))
-            projected_snapshot = f"sha256:{source_fingerprint(repo)}"
+            staged = prepare_repo(
+                repo, inputs_before=observed_before,
+                canonical_before=canonical_before or snapshot_after_id)
             validated_repo = None
             observed_before = None
-            return projected_snapshot
+            canonical_before = None
+            return staged
 
         def rollback_publish() -> None:
-            from learning_os.derive.projection import generate_all, write_outputs
+            from learning_os.app.projection import prepare_repo
 
             inputs_before = _safe_observe()
             repo = load_repo(self.root)
-            write_outputs(repo, generate_all(repo, inputs_before=inputs_before))
+            prepare_repo(repo, inputs_before=inputs_before).expose()
 
         metadata = {
             "request_id": request["id"],
