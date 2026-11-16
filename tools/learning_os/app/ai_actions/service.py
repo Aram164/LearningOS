@@ -1006,62 +1006,6 @@ class AIActionService:
             completed["receipt_id"] = transaction_id
             return {request_path: _dump_yaml(completed)}
 
-        validated_repo = None
-        observed_before: dict | None = None
-        canonical_before: str | None = None
-
-        def _safe_observe() -> dict | None:
-            from learning_os.store.manifest_identity import observe_inputs
-
-            try:
-                return observe_inputs(self.root)
-            except Exception:
-                return None
-
-        def validation_errors() -> list:
-            nonlocal validated_repo, observed_before, canonical_before
-            from learning_os.derive.validation import validate
-            from learning_os.store.fingerprint import canonical_fingerprint
-
-            observed_before = _safe_observe()
-            canonical_before = f"sha256:{canonical_fingerprint(self.root)}"
-            validated_repo = load_repo(self.root)
-            return [
-                issue for issue in validate(validated_repo, online=False)
-                if issue.severity == "E"
-            ]
-
-        def publish(snapshot_after_id: str | None = None):
-            nonlocal validated_repo, observed_before, canonical_before
-            from learning_os.app.projection import prepare_repo
-            from learning_os.store.fingerprint import (
-                canonical_fingerprint,
-                seed_source_fingerprint,
-            )
-
-            if validated_repo is None:
-                observed_before = _safe_observe()
-                canonical_before = f"sha256:{canonical_fingerprint(self.root)}"
-                repo = load_repo(self.root)
-            else:
-                repo = validated_repo
-            if snapshot_after_id is not None:
-                seed_source_fingerprint(repo, snapshot_after_id)
-            staged = prepare_repo(
-                repo, inputs_before=observed_before,
-                canonical_before=canonical_before or snapshot_after_id)
-            validated_repo = None
-            observed_before = None
-            canonical_before = None
-            return staged
-
-        def rollback_publish() -> None:
-            from learning_os.app.projection import prepare_repo
-
-            inputs_before = _safe_observe()
-            repo = load_repo(self.root)
-            prepare_repo(repo, inputs_before=inputs_before).expose()
-
         metadata = {
             "request_id": request["id"],
             "delivery_id": delivery_id,
@@ -1089,9 +1033,6 @@ class AIActionService:
             artifact_ids={*created_ids, *updated_ids, *superseded_ids},
             deletes=None,
             expected_revisions=expected_revisions,
-            validate_state=validation_errors,
-            publish=publish,
-            rollback_publish=rollback_publish,
             touched="STANDARD",
             metadata=metadata,
             expected_snapshot=expected_snapshot,
