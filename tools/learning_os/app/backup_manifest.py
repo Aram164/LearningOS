@@ -31,6 +31,27 @@ class BackupManifestError(ValueError):
     pass
 
 
+def _stat_identity(path: Path) -> tuple[int, int, int, int, int]:
+    """Filesystem identity proving a hashed file did not move afterwards.
+
+    Size plus inode and both timestamps: an atomic same-size replacement
+    changes the inode and ctime, an in-place rewrite changes mtime and
+    ctime. Only a change that also preserves ctime (not settable through
+    ordinary writes) could slip through; restore verification still hashes
+    the bytes it receives, so this check bounds the inventory claim, not
+    the restored bytes.
+    """
+    st = path.lstat()
+    return st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns
+
+
+def _changed_during_inventory(label: str, detail: str) -> BackupManifestError:
+    return BackupManifestError(
+        f"backup source changed during inventory ({label}: {detail}); "
+        "retry the backup"
+    )
+
+
 def _sha256_file(path: Path) -> str:
     try:
         data = path.read_bytes()
@@ -393,6 +414,7 @@ def build_backup_manifest(
         raise BackupManifestError("backup omits durable operational writes: " + ", ".join(omitted))
     excluded = set(contract.get("excluded_names") or [])
     entries: dict[tuple[str, str], dict[str, Any]] = {}
+    verified_aliases: dict[str, str] = {}
     if _inspect_path(authorities[READING_MEMORY]) is None:
         # No reading has been recorded yet: an absent store is not a root of
         # this backup, and a restore that later holds one reports it unaccounted.
@@ -412,40 +434,65 @@ def build_backup_manifest(
         # prunes excluded directory names before descending, so a tree the
         # contract deliberately skips is never read, never fails, and is never
         # confused with one that could not be read.
+        observed_stats: dict[str, tuple[int, int, int, int, int]] = {}
+        shipped_before: list[str] | None = None
+        aliases_before: dict[str, str] | None = None
         try:
             with (
                 ReadingStore(root, root=authority).locked(create=False)
                 if label == READING_MEMORY
                 else contextlib.nullcontext(True)
             ):
-                for rel in _admitted_paths(authority, declared, excluded):
+                admitted_before = _admitted_paths(authority, declared, excluded)
+                if label == "ui":
+                    shipped_before = read_shipped_assets(authority)
+                if label == "materials":
+                    aliases_before = _materials_aliases(authority, excluded)
+                for rel in sorted(admitted_before):
                     path = authority / rel
                     entries[(label, rel)] = {
                         "root": label, "path": rel, "size": path.stat().st_size,
                         "sha256": _sha256_file(path),
                     }
+                    observed_stats[rel] = _stat_identity(path)
+                if label == "ui":
+                    for name in shipped_before or []:
+                        path = _inside(authority, f"plugin/{name}")
+                        if not _admit_file(authority, path, excluded):
+                            raise BackupManifestError(
+                                f"declared plugin asset cannot be backed up: plugin/{name}"
+                            )
+                        rel = path.relative_to(authority).as_posix()
+                        entries[(label, rel)] = {
+                            "root": label, "path": rel, "size": path.stat().st_size,
+                            "sha256": _sha256_file(path),
+                        }
+                        observed_stats[rel] = _stat_identity(path)
+                # Stable-source check: the Core operator lock cannot
+                # serialize external writers, so prove the inventoried
+                # set and every hashed file's identity still hold before
+                # any success result can be built from these digests.
+                if _admitted_paths(authority, declared, excluded) != admitted_before:
+                    raise _changed_during_inventory(label, "file set changed")
+                if label == "ui" and read_shipped_assets(authority) != shipped_before:
+                    raise _changed_during_inventory(label, "plugin assets changed")
+                if label == "materials":
+                    aliases_after = _materials_aliases(authority, excluded)
+                    if aliases_after != aliases_before:
+                        raise _changed_during_inventory(label, "materials aliases changed")
+                    verified_aliases = aliases_after
+                for rel, identity in observed_stats.items():
+                    try:
+                        current = _stat_identity(authority / rel)
+                    except OSError as exc:
+                        raise _changed_during_inventory(
+                            label, f"{rel} became unreadable") from exc
+                    if current != identity:
+                        raise _changed_during_inventory(label, f"{rel} changed")
         except ReadingStoreError as exc:
             raise BackupManifestError(
                 f"reading store lock failed during backup manifest: {exc}"
             ) from exc
-        if label == "ui":
-            # Derived, not declared: the contract names `plugin-assets.json` and
-            # this reads what that declares, so the shipping inventory has one
-            # author. A declared asset the checkout cannot ship is refused here
-            # rather than quietly left out — `install.py` refuses the same case,
-            # and a backup that omits it would restore a plugin that cannot be
-            # installed.
-            for name in read_shipped_assets(authority):
-                path = _inside(authority, f"plugin/{name}")
-                if not _admit_file(authority, path, excluded):
-                    raise BackupManifestError(
-                        f"declared plugin asset cannot be backed up: plugin/{name}"
-                    )
-                rel = path.relative_to(authority).as_posix()
-                entries[(label, rel)] = {
-                    "root": label, "path": rel, "size": path.stat().st_size,
-                    "sha256": _sha256_file(path),
-                }
     rows = [entries[key] for key in sorted(entries)]
     aggregate = "sha256:" + hashlib.sha256(
         json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -457,7 +504,7 @@ def build_backup_manifest(
         "generated_at": timestamp.isoformat(),
         "roots": sorted(authorities),
         "entries": rows,
-        "materials_aliases": _materials_aliases(materials_root, excluded),
+        "materials_aliases": verified_aliases,
         "provenance": {
             "core": _git_provenance(root),
             "ui": _git_provenance(ui_root),
