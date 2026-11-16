@@ -220,8 +220,20 @@ jobs:
           set -eu
           dir="$RUNNER_TEMP/scrut"
           mkdir -p "$dir"
-          curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
-            https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+          url="https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz"
+          attempt=1
+          while true; do
+            if curl --proto '=https' --tlsv1.2 -fsSL --connect-timeout 10 --max-time 120 -o "$dir/scrut.tar.gz" "$url"; then
+              break
+            fi
+            if [ "$attempt" -ge 5 ]; then
+              echo "failed to download Scrut after $attempt attempts" >&2
+              exit 1
+            fi
+            echo "Scrut download attempt $attempt failed; retrying" >&2
+            sleep $((attempt * 5))
+            attempt=$((attempt + 1))
+          done
           echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
           tar -xzf "$dir/scrut.tar.gz" -C "$dir"
           bin="$(find "$dir" -type f -name scrut | head -n 1)"

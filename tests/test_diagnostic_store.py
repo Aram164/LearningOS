@@ -44,6 +44,43 @@ def _mini_with_curriculum(tmp_path: Path, name: str) -> Path:
     return mini
 
 
+_BROKEN_PROJECTION_SITE = """\
+import os
+
+if os.environ.get("LOS_BROKEN_PROJECTION"):
+    try:
+        from learning_os.derive.projection import outputs as _outputs
+
+        def _broken(*_args, **_kwargs):
+            raise OSError("injected projection preparation failure")
+
+        _outputs.build_manifest = _broken
+    except Exception:
+        pass
+"""
+
+
+def _broken_projection_env(tmp_path: Path) -> dict:
+    """Child-interpreter env whose projection preparation fails.
+
+    Publication is staged after the receipt, so a read-only generated/
+    fails only post-receipt exposure; the pre-receipt fault these tests
+    pin is injected at the builder through a sitecustomize. The env
+    stays set for the whole child, so rollback republication fails at
+    the same builder: both the preparation and the rollback-publication
+    faults are injected, and Core reports the incomplete rollback as
+    INTERNAL_FAILURE (a complete rollback would be PROJECTION_FAILED).
+    """
+    site = tmp_path / "broken-projection-site"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "sitecustomize.py").write_text(_BROKEN_PROJECTION_SITE, encoding="utf-8")
+    pythonpath = str(site)
+    if os.environ.get("PYTHONPATH"):
+        pythonpath = pythonpath + os.pathsep + os.environ["PYTHONPATH"]
+    return {**os.environ, "PYTHONPATH": pythonpath,
+            "LOS_BROKEN_PROJECTION": "1"}
+
+
 def _stage_write(mini: Path, key: str, **overrides):
     from learning_os.store.contracts.gateway import intent_sha256
 
@@ -51,13 +88,14 @@ def _stage_write(mini: Path, key: str, **overrides):
         mini, capability="stage.progress.update",
         payload=dict(STAGE_PAYLOAD),
         artifact_ids=list(STAGE_ARTIFACTS), idempotency_key=key)
+    env = overrides.pop("env", None)
     envelope.update(overrides)
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     return subprocess.run(
         [sys.executable, str(LOS), "--root", str(mini), "capability",
          "stage.progress.update", "--payload-file", "-"],
         input=json.dumps(envelope), capture_output=True, text=True,
-        timeout=120)
+        timeout=120, env=env)
 
 
 def _seed_write(mini: Path, key: str):
@@ -229,13 +267,7 @@ def test_s6_resolves_committed_from_persisted_store(tmp_path: Path):
 
 def test_s7_resolves_ambiguous_from_persisted_store(tmp_path: Path):
     mini = _mini_with_curriculum(tmp_path, "store-s7")
-    generated = mini / "generated"
-    generated.mkdir(exist_ok=True)
-    os.chmod(generated, 0o555)
-    try:
-        proc = _stage_write(mini, "store-s7")
-    finally:
-        os.chmod(generated, 0o755)
+    proc = _stage_write(mini, "store-s7", env=_broken_projection_env(tmp_path))
     body = json.loads(proc.stdout)
     assert body["error"]["code"] == "INTERNAL_FAILURE"
     records = _read_in_fresh_process(mini)
@@ -486,9 +518,9 @@ def test_no_validation_body_reaches_the_store(tmp_path: Path):
 def test_no_exception_body_reaches_the_store(tmp_path: Path):
     """Failure-path canary: exception text is caller detail, not telemetry.
 
-    A chmod projection failure raises with an errno body quoting the absolute
-    target path. The store may record the failure kind; the body must not
-    persist anywhere in it.
+    A projection preparation failure raises with a body quoting the
+    injected fault. The store may record the failure kind; the body must
+    not persist anywhere in it.
     """
     from gateway_helpers import approved_v2_envelope, request_artifact_id
 
@@ -499,27 +531,22 @@ def test_no_exception_body_reaches_the_store(tmp_path: Path):
         payload={"title": "Seed probe", "text": "doomed write"},
         artifact_ids=[request_artifact_id("garden.seed.create", key)],
         idempotency_key=key)
-    generated = mini / "generated"
-    os.chmod(generated, 0o555)
-    try:
-        proc = subprocess.run(
-            [sys.executable, str(LOS), "--root", str(mini), "capability",
-             "garden.seed.create", "--payload-file", "-"],
-            input=json.dumps(envelope), capture_output=True, text=True,
-            timeout=120)
-    finally:
-        os.chmod(generated, 0o755)
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini), "capability",
+         "garden.seed.create", "--payload-file", "-"],
+        input=json.dumps(envelope), capture_output=True, text=True,
+        timeout=120, env=_broken_projection_env(tmp_path))
     body = json.loads(proc.stdout)
     assert body["error"]["code"] == "INTERNAL_FAILURE", body
     # The body the canary guards against: it must exist on the response (the
     # failure really happened) and must not exist in the store.
-    assert "Permission denied" in body["error"]["message"], body
+    assert "injected projection preparation failure" in body["error"]["message"], body
     stored = traces_path(mini).read_text(encoding="utf-8")
-    assert "Permission denied" not in stored
+    assert "injected projection preparation failure" not in stored
     assert "[Errno" not in stored
     assert str(mini) not in stored
     failures = [
-        record for record in read_records(mini)
+        record for record in _read_in_fresh_process(mini)
         if record.get("name") == "core.stage.failed"
         and record.get("stage") == "core.projection"
     ]
