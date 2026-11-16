@@ -48,12 +48,17 @@ release certification.
      `material-study-span`, blocks file inputs touching `protected_read_targets(core)`
      or writes under `LearningOS/`, executes allowed read/study-write
      subcommands in isolated `python -I` children, restricts canonical writes to
-     an allowlisted study subset behind operator-approved, intent-bound envelopes
+     an allowlisted study subset behind intent-bound envelopes
      (`tools/seal_envelope.py`, excluding durable note creation/revision, unit
      plan revision, concept-relation edits, review, and program mutations;
      `unit-plan-revise --check` remains read-only preflight only), and refuses
      UI or non-operator approval envelopes across both `seal_envelope` and
-     `los capability`.
+     `los capability`. The broker validates the *declared* approval kind
+     (`approval.kind == 'operator-approval'`) and binds the request contents
+     (the seal's intent hash covers capability, payload, and guards); it does
+     not witness a separate human approval event. Whether study writes should
+     require such an event is a product-policy decision for Aram, not a
+     guarantee this boundary currently makes.
 
 2. **Optional UX hooks and declared perimeter.**
    `tools/study_hooks.py` provides only optional lifecycle UX hooks

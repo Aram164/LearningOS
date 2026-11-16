@@ -1718,6 +1718,62 @@ def test_read_study_json_file_refuses_oversized_input(
         )
 
 
+def test_study_policies_preflight_write_parity(tmp_path: Path) -> None:
+    """Preflight, write, and reviewed-sealing are independent policies.
+
+    `unit-plan-revise --check` is forwarded as a read-only preflight while
+    the `unit.plan.revise` write capability stays refused in study mode.
+    """
+    from learning_os.adapters.study_policies import (
+        REVIEWED_SEALING_CAPABILITIES,
+        STUDY_PREFLIGHT_COMMANDS,
+        STUDY_WRITE_CAPABILITIES,
+    )
+
+    # Independence means each policy is declared on its own: a preflight
+    # entry neither grants nor implies a write. The pinned case is
+    # unit-plan-revise: --check forwards, the write stays refused.
+    assert STUDY_PREFLIGHT_COMMANDS["unit-plan-revise"] == "unit.plan.revise"
+    assert "unit.plan.revise" in REVIEWED_SEALING_CAPABILITIES
+    assert "unit.plan.revise" not in STUDY_WRITE_CAPABILITIES
+
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+    draft = scratch / "draft.yaml"
+    draft.write_text("unit_id: unit-demo-l01\n", encoding="utf-8")
+    preflight = broker.handle_request({
+        "tool": "los",
+        "argv": ["unit-plan-revise", "unit-demo-l01", "--check", "--file", str(draft)],
+        "cwd": str(core),
+    })
+    assert preflight.exit_code == 0, preflight.stderr
+    assert runner.calls, "preflight must reach the Core child"
+
+    refused = broker.handle_request({
+        "tool": "los",
+        "argv": ["capability", "unit.plan.revise", "--payload-file", "-"],
+        "cwd": str(core),
+        "stdin_text": "{}",
+    })
+    assert refused.exit_code == 2
+    assert "not allowed in study mode" in refused.stderr
+
+
+def test_broker_child_env_is_explicit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("UNRELATED_HOST_SECRET", "must-not-leak")
+    monkeypatch.setenv("PATH", os.environ.get("PATH", "/usr/bin"))
+    core, scratch = _make_broker_world(tmp_path)
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch,
+                         runner=RecordingRunner())
+    env = broker._child_env()
+    assert "UNRELATED_HOST_SECRET" not in env
+    assert env["LOS_SESSION_ID"] == SESSION
+    assert env["PATH"]
+
+
 def test_process_group_cleanup_kills_grandchild_after_leader_exits(
     tmp_path: Path,
 ) -> None:
