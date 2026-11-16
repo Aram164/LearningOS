@@ -2450,3 +2450,122 @@ def test_backup_provenance_never_calls_a_checkout_clean_it_could_not_read(
 
     assert provenance["commit"] is not None, "the commit was readable and must be recorded"
     assert provenance["dirty"] is None, "an unreadable status is unknown, not clean"
+
+
+# ---------------------------------------------------------------------------
+# Backup inventory stable-source check: an external writer the Core lock
+# cannot serialize must not yield a manifest combining two source states.
+# ---------------------------------------------------------------------------
+
+
+def _replace_same_size(path: Path, payload: bytes) -> None:
+    assert len(payload) == path.stat().st_size
+    tmp = path.with_name(f".{path.name}.new")
+    tmp.write_bytes(payload)
+    os.replace(tmp, path)
+
+
+def _moving_materials(mini_repo: Path, tmp_path: Path) -> dict[str, Path]:
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    materials = roots["materials"]
+    (materials / "source-demo/alpha.pdf").write_bytes(b"AAAA")
+    (materials / "source-demo/beta.pdf").write_bytes(b"BBBB")
+    return roots
+
+
+def test_backup_refuses_beta_then_alpha_same_size_replacement(
+    mini_repo, tmp_path, monkeypatch
+):
+    """Hashed beta, then atomically replace beta and alpha: no success."""
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _moving_materials(mini_repo, tmp_path)
+    materials = roots["materials"]
+    real_hash = backup_module._sha256_file
+    moved: list[bool] = []
+
+    def hash_then_move(path: Path) -> str:
+        digest = real_hash(path)
+        if path.name == "beta.pdf" and not moved:
+            moved.append(True)
+            _replace_same_size(materials / "source-demo/beta.pdf", b"CCCC")
+            _replace_same_size(materials / "source-demo/alpha.pdf", b"DDDD")
+        return digest
+
+    monkeypatch.setattr(backup_module, "_sha256_file", hash_then_move)
+    with pytest.raises(BackupManifestError, match="changed during inventory"):
+        build_backup_manifest(
+            mini_repo, ui_root=roots["ui"], materials_root=materials)
+    assert moved, "the move must land inside the inventory window"
+
+
+def test_backup_refuses_added_and_removed_admitted_paths(
+    mini_repo, tmp_path, monkeypatch
+):
+    import learning_os.app.backup_manifest as backup_module
+
+    for mode in ("added", "removed"):
+        roots = _moving_materials(mini_repo, tmp_path / mode)
+        materials = roots["materials"]
+        real_hash = backup_module._sha256_file
+        moved: list[bool] = []
+
+        def hash_then_move(path: Path, _mode=mode, _materials=materials, _hash=real_hash, _moved=moved) -> str:
+            digest = _hash(path)
+            if path.name == "beta.pdf" and not _moved:
+                _moved.append(True)
+                if _mode == "added":
+                    (_materials / "source-demo/gamma.pdf").write_bytes(b"GGGG")
+                else:
+                    (_materials / "source-demo/alpha.pdf").unlink()
+            return digest
+
+        monkeypatch.setattr(backup_module, "_sha256_file", hash_then_move)
+        with pytest.raises(BackupManifestError, match="changed during inventory"):
+            build_backup_manifest(
+                mini_repo, ui_root=roots["ui"], materials_root=materials)
+        monkeypatch.undo()
+
+
+def test_backup_refuses_a_moved_shipped_ui_asset(mini_repo, tmp_path, monkeypatch):
+    """UI shipping assets sit outside the Core lock too (Step 3.4 reproduced)."""
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    ui = roots["ui"]
+    real_hash = backup_module._sha256_file
+    moved: list[bool] = []
+
+    def hash_then_move(path: Path) -> str:
+        digest = real_hash(path)
+        if path.name == "build-info.json" and path.parent.name == "plugin" and not moved:
+            # Last shipped asset in declaration order: styles.css is already
+            # hashed and stat-pinned by the time this move lands.
+            moved.append(True)
+            _replace_same_size(ui / "plugin/styles.css", b"/* x */\n")
+        return digest
+
+    monkeypatch.setattr(backup_module, "_sha256_file", hash_then_move)
+    with pytest.raises(BackupManifestError, match="changed during inventory"):
+        build_backup_manifest(
+            mini_repo, ui_root=ui, materials_root=roots["materials"])
+    assert moved
+
+
+def test_backup_stable_inventory_hashes_each_file_once(mini_repo, tmp_path, monkeypatch):
+    """The stable case pays one hash per file: verification re-stats only."""
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    real_hash = backup_module._sha256_file
+    hashed: list[str] = []
+
+    def counting(path: Path) -> str:
+        hashed.append(str(path))
+        return real_hash(path)
+
+    monkeypatch.setattr(backup_module, "_sha256_file", counting)
+    manifest = build_backup_manifest(
+        mini_repo, ui_root=roots["ui"], materials_root=roots["materials"])
+    assert len(hashed) == len(manifest["entries"])
+    assert len(set(hashed)) == len(hashed)
