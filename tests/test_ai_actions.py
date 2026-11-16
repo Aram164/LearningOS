@@ -934,3 +934,57 @@ def test_approved_delivery_exposes_manifest_only_after_receipt(
     assert seen["manifest"] == previous, (
         "approved delivery exposed its manifest before the receipt")
     assert (ai_repo / "generated/manifest.json").read_bytes() != previous
+
+
+def test_approved_delivery_failed_exposure_stays_committed_and_replays_once(
+    ai_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Exposure failure after a durable receipt: committed, pending, replay-safe."""
+    from learning_os.app import projection as projection_module
+    from learning_os.app.projection import publish_with_paths
+    from learning_os.app.projection_readiness import settlement_ready
+    from learning_os.domain.failures import PostCommitFailure
+
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    publish_with_paths(ai_repo)
+    previous = (ai_repo / "generated/manifest.json").read_bytes()
+    tid = target_id(ai_repo)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {
+        artifact_id: artifact_revision(ai_repo, artifact_id)
+        for artifact_id in (
+            tid, f"transcription-{tid}", "relationship-garden-module-demo",
+        )
+    }
+
+    def failing_write(repo, outputs):
+        raise OSError("injected exposure failure")
+
+    monkeypatch.setattr(projection_module, "write_outputs", failing_write)
+    with pytest.raises(PostCommitFailure) as caught:
+        apply_approved_delivery(
+            app, delivery["id"], expected_snapshot=snapshot,
+            expected_revisions=revisions)
+    monkeypatch.undo()
+    assert (ai_repo / "generated/manifest.json").read_bytes() == previous, (
+        "failed exposure must leave the previous manifest visible")
+    receipts = list(
+        (ai_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    settled = settlement_ready(
+        ai_repo,
+        f"operations/transactions/{receipts[0].name}",
+        caught.value.snapshot_after,
+    )
+    assert settled["write_completed"] is True and settled["settled"] is False
+    assert artifact_revision(ai_repo, tid) == 1
+
+    replayed = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot,
+        expected_revisions=revisions)
+    assert replayed["id"] == caught.value.transaction_id
+    assert len(list(
+        (ai_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
+    assert artifact_revision(ai_repo, tid) == 1, (
+        "exact replay must not bump revisions or write again")
