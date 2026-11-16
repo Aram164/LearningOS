@@ -438,6 +438,10 @@ def build_backup_manifest(
     excluded = set(contract.get("excluded_names") or [])
     entries: dict[tuple[str, str], dict[str, Any]] = {}
     verified_aliases: dict[str, str] = {}
+    # Every inventoried file across all roots, for the final cross-root
+    # recheck: per-authority verification cannot see an earlier root's
+    # file replaced while a later root is still being hashed.
+    recorded_identities: list[tuple[str, Path, str, tuple[int, int, int, int, int]]] = []
     if _inspect_path(authorities[READING_MEMORY]) is None:
         # No reading has been recorded yet: an absent store is not a root of
         # this backup, and a restore that later holds one reports it unaccounted.
@@ -507,10 +511,23 @@ def build_backup_manifest(
                             label, f"{rel} became unreadable") from exc
                     if current != identity:
                         raise _changed_during_inventory(label, f"{rel} changed")
+                    recorded_identities.append((label, authority, rel, identity))
         except ReadingStoreError as exc:
             raise BackupManifestError(
                 f"reading store lock failed during backup manifest: {exc}"
             ) from exc
+    # Cross-root recheck: accept the inventory only if every recorded
+    # identity — from the first root hashed to the last — still holds,
+    # so the manifest never combines states that did not coexist. This
+    # reuses the recorded identities and hashes no bytes again.
+    for label, authority, rel, identity in recorded_identities:
+        try:
+            current = _stat_identity(authority / rel)
+        except OSError as exc:
+            raise _changed_during_inventory(
+                label, f"{rel} became unreadable") from exc
+        if current != identity:
+            raise _changed_during_inventory(label, f"{rel} changed")
     rows = [entries[key] for key in sorted(entries)]
     aggregate = "sha256:" + hashlib.sha256(
         json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
