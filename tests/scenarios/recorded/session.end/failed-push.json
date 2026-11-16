@@ -208,6 +208,8 @@
               "state": "file"
             }
           },
+          "push_branch": "main",
+          "push_remote": "origin",
           "review": null,
           "schema_version": 3,
           "session_id": "channel:operator",
@@ -249,7 +251,7 @@
           "version": 1
         }
       },
-      "stderr": "los: fatal: The current branch main has no upstream branch.\nTo push the current branch and set the remote as upstream, use\n\n    git push --set-upstream origin main\n\nTo have this happen automatically for branches without a tracking\nupstream, see 'push.autoSetupRemote' in 'git help config'.\n",
+      "stderr": "los: fatal: '/nonexistent' does not appear to be a git repository\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\n",
       "stdout": "",
       "stdout_json": null,
       "step": 1,
