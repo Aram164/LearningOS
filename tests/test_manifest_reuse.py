@@ -571,3 +571,22 @@ def test_publish_stable_inputs_succeeds_and_is_current(mini_repo):
     plumbing.publish(mini_repo)
     assert plumbing._try_reuse_manifest(
         mini_repo, _live_snapshot(mini_repo), restamp=False) is not None
+
+
+def test_a_material_moving_after_the_rebuild_is_not_published(
+        mini_repo, monkeypatch, tmp_path):
+    """Publish-on-read exposes through the same final stability check:
+    a material that moves after generate_all built the outputs (but
+    before exposure) leaves the stored pair untouched."""
+    before = _yesterdays_build(mini_repo, monkeypatch, tmp_path)
+    real_generate = plumbing.generate_all
+
+    def generate_then_move(*args, **kwargs):
+        outputs = real_generate(*args, **kwargs)
+        (mini_repo.parent / "materials" / "moved-after-rebuild.pdf").write_bytes(b"%PDF new")
+        return outputs
+
+    monkeypatch.setattr(plumbing, "generate_all", generate_then_move)
+    served = plumbing.fresh_manifest(mini_repo)
+    assert _stored_pair(mini_repo) == before
+    assert _without_generated(served) == _without_generated(_stored_manifest(mini_repo))

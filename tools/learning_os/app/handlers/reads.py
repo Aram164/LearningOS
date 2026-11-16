@@ -94,6 +94,23 @@ def _domain_glance(manifest):
 POINTER_STATE_NOTE = "confirmed = where study stopped, not a recommendation"
 
 
+def _recorded_pointer(root: Path) -> dict:
+    """The recorded resume pointer, including one that resolves nowhere.
+
+    The manifest carries only a pointer that resolves (its consumers
+    resume from it), so an unresolvable recorded pointer is absent
+    there — but the brief must call that ``invalid``, not ``missing``.
+    """
+    path = root / "curriculum" / "resume.yaml"
+    try:
+        import yaml
+
+        value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
 def _pointer_state(manifest, pointer) -> str:
     """confirmed/missing/invalid for the brief page; the same rule as resume.
 
@@ -306,7 +323,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
             key=lambda row: row["id"])
         deadlines = _brief_deadlines(manifest)
         pointer = manifest.get("resume_pointer", {})
-        state = _pointer_state(manifest, pointer)
+        state = _pointer_state(manifest, pointer or _recorded_pointer(root))
         session_id, session_source = _resolve_session_identity()
         _snapshot(root, snapshot)
         return Result(

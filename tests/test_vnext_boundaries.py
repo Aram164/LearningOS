@@ -2569,3 +2569,53 @@ def test_backup_stable_inventory_hashes_each_file_once(mini_repo, tmp_path, monk
         mini_repo, ui_root=roots["ui"], materials_root=roots["materials"])
     assert len(hashed) == len(manifest["entries"])
     assert len(set(hashed)) == len(hashed)
+
+
+def test_backup_refuses_a_file_replaced_between_hash_and_identity(
+    mini_repo, tmp_path, monkeypatch
+):
+    """The swap lands after the digest is computed but before identity
+    is recorded: old digest must never pair with the new identity."""
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _moving_materials(mini_repo, tmp_path)
+    materials = roots["materials"]
+    real_hash = backup_module._sha256_file
+    moved: list[bool] = []
+
+    def hash_then_replace_self(path: Path) -> str:
+        digest = real_hash(path)
+        if path.name == "beta.pdf" and not moved:
+            moved.append(True)
+            _replace_same_size(materials / "source-demo/beta.pdf", b"CCCC")
+        return digest
+
+    monkeypatch.setattr(backup_module, "_sha256_file", hash_then_replace_self)
+    with pytest.raises(BackupManifestError, match="changed during inventory"):
+        build_backup_manifest(
+            mini_repo, ui_root=roots["ui"], materials_root=materials)
+    assert moved
+
+
+def test_backup_refuses_a_shipped_asset_replaced_between_hash_and_identity(
+    mini_repo, tmp_path, monkeypatch
+):
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    ui = roots["ui"]
+    real_hash = backup_module._sha256_file
+    moved: list[bool] = []
+
+    def hash_then_replace_self(path: Path) -> str:
+        digest = real_hash(path)
+        if path.name == "styles.css" and path.parent.name == "plugin" and not moved:
+            moved.append(True)
+            _replace_same_size(ui / "plugin/styles.css", b"/* x */\n")
+        return digest
+
+    monkeypatch.setattr(backup_module, "_sha256_file", hash_then_replace_self)
+    with pytest.raises(BackupManifestError, match="changed during inventory"):
+        build_backup_manifest(
+            mini_repo, ui_root=ui, materials_root=roots["materials"])
+    assert moved
