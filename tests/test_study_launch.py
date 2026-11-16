@@ -1574,3 +1574,13 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
     assert data["anthropic_key"] == "keep-provider-key"
     assert data["gate_sock"] is True
     assert wrapper_agents.read_text(encoding="utf-8") == "# Original wrapper instructions\n"
+
+
+def test_launcher_child_starts_in_new_session_for_group_cleanup() -> None:
+    """Descendants share the launcher child's process group, so group
+    termination in launch_study reaches them (Phase 2 hardening)."""
+    import inspect
+
+    source = inspect.getsource(study_launch.launch_study)
+    assert "start_new_session=True" in source
+    assert "os.killpg" in source

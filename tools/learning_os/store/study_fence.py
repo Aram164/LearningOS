@@ -27,6 +27,13 @@ STUDY_FENCE_SCRATCH_ENV = "LOS_STUDY_FENCE_SCRATCH"
 STUDY_STAGED_MANIFEST_ENV = "LOS_STUDY_STAGED_MANIFEST"
 READING_MEMORY_DIRNAME = "reading-memory"
 
+# Bounded-read limits per input type. JSON envelopes/records align with the
+# broker request cap; the staged manifest is a small index; generic study
+# files (bound content/attachments) get a larger but still finite cap.
+MAX_STUDY_JSON_BYTES = 8 * 1024 * 1024
+MAX_STUDY_MANIFEST_BYTES = 1 * 1024 * 1024
+MAX_STUDY_FILE_BYTES = 64 * 1024 * 1024
+
 EXTERNAL_INPUT_PATH_KEYS: frozenset[str] = frozenset({
     "file",
     "body_file",
@@ -417,6 +424,7 @@ def _read_regular_under_root(
     label: str,
     anchored: Path,
     require_existing: bool,
+    max_bytes: int = MAX_STUDY_FILE_BYTES,
 ) -> bytes | None:
     if not rel_parts:
         raise StudyFenceRefused(f"no such {label}: {anchored}")
@@ -452,11 +460,21 @@ def _read_regular_under_root(
     if not stat.S_ISREG(st.st_mode):
         os.close(leaf_fd)
         raise StudyFenceRefused(f"no such {label}: {anchored}")
+    if st.st_size > max_bytes:
+        os.close(leaf_fd)
+        raise StudyFenceRefused(
+            f"{label} exceeds size limit ({max_bytes} bytes): {anchored}"
+        )
     try:
         with os.fdopen(leaf_fd, "rb") as handle:
-            return handle.read()
+            data = handle.read(max_bytes + 1)
     except OSError as exc:
         raise StudyFenceRefused(f"cannot read {label} {anchored}: {exc}") from exc
+    if len(data) > max_bytes:
+        raise StudyFenceRefused(
+            f"{label} exceeds size limit ({max_bytes} bytes): {anchored}"
+        )
+    return data
 
 
 def read_study_file(
@@ -467,6 +485,7 @@ def read_study_file(
     cwd: Path | None = None,
     label: str = "file input",
     allow_core: bool = True,
+    max_bytes: int = MAX_STUDY_FILE_BYTES,
 ) -> tuple[Path, bytes]:
     """Validate and read a regular study file via O_NOFOLLOW descriptors."""
     real_root, anchored, rel_parts = _match_study_anchor(
@@ -483,6 +502,7 @@ def read_study_file(
         label=label,
         anchored=anchored,
         require_existing=True,
+        max_bytes=max_bytes,
     )
     assert data is not None
     return anchored, data
@@ -508,6 +528,7 @@ def _read_staged_study_file(
         label="staged study manifest",
         anchored=manifest_dir / manifest_lex.name,
         require_existing=True,
+        max_bytes=MAX_STUDY_MANIFEST_BYTES,
     )
     assert manifest_bytes is not None
     try:
@@ -655,6 +676,7 @@ def read_study_json_file(
         cwd=cwd,
         label=label,
         allow_core=True,
+        max_bytes=MAX_STUDY_JSON_BYTES,
     )
     try:
         return content.decode("utf-8")
