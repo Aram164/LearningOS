@@ -18,7 +18,7 @@ Preflight reviewed plan packages and bind proposed learning changes to their evi
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `derived-store`, `domain`, `learner-derivations`, `loading`, `masters-planning`, `materials`, `operation-pipeline`, `semantics`, `transactions`, `validation`.
 
-Used by: `operation-handlers`.
+Used by: `operation-handlers`, `operation-pipeline`.
 <!-- system-map:end -->
 
 ## Invariants

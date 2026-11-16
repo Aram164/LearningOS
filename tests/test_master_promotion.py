@@ -315,6 +315,17 @@ def _gateway_envelope(root: Path, package: dict, *, revisions: dict[str, int]) -
         },
     }
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    # Reviewed writes bind to Core-issued check evidence: issue it the
+    # same way the shared gateway helper does for this capability.
+    from learning_os.app.gateway import issue_review_evidence
+    from learning_os.app.handlers.plan import observed_material_for_payload
+
+    fragment, problems = observed_material_for_payload(
+        root, "module.plan.import", envelope["payload"])
+    observed = fragment.get("observed_material") if not problems and fragment else None
+    envelope["review"] = issue_review_evidence(
+        root, "module.plan.import", envelope["payload"],
+        envelope["expected_snapshot"], envelope["expected_revisions"], observed)
     return envelope
 
 

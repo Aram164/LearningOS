@@ -19,7 +19,7 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 68
+contract_version: 67
 schema_fingerprint: sha256:e31bab5053cbef000a7a33edb9c746068b12436366d7087ae904ef17e688c984
 record_schemas: 38
 history:
@@ -479,12 +479,8 @@ history:
   migration: null
   fixture: tests/fixtures/formats/v66/
 - version: 67
-  adopted: '2026-11-15'
-  note: Add receipt-chain-baseline schema and receipt chain gate (D-03)
-  migration: null
-  fixture: tests/fixtures/formats/v66/
-- version: 68
   adopted: '2026-11-16'
-  note: 'capability envelope: optional review.record_sha256 binding for reviewed writes'
+  note: 'Add receipt-chain-baseline schema and receipt chain gate (D-03); capability
+    envelope: optional review.record_sha256 binding for reviewed writes'
   migration: null
   fixture: tests/fixtures/formats/v66/

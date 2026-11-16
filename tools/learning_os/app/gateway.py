@@ -314,10 +314,10 @@ def review_evidence_error(root: Path, envelope: dict) -> str | None:
         return None  # a preflight commits nothing; it *is* the review step
     observed = None
     if capability in _MATERIAL_BOUND_REVIEW:
-        from learning_os.app.handlers.plan import observed_material_for_payload
+        from learning_os.app._plan_gate import observed_material_for_payload
 
         fragment, problems = observed_material_for_payload(
-            root, capability, payload)
+            root, capability, payload, read_content_bound_file)
         if problems:
             return (f"{capability} review evidence cannot be verified: "
                     "the material it binds no longer resolves; re-run "
