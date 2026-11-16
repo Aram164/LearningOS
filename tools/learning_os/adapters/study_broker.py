@@ -32,6 +32,16 @@ from learning_os.adapters.seal_parser import (
     build_seal_parser,
     normalize_check_record,
 )
+from learning_os.adapters.study_policies import (
+    SESSION_COMMANDS as _SESSION_COMMANDS,
+)
+from learning_os.adapters.study_policies import (
+    STUDY_ALLOWED_COMMANDS,
+    STUDY_COMMANDS,
+    STUDY_PREFLIGHT_COMMANDS,
+    STUDY_READ_COMMANDS,
+    STUDY_WRITE_CAPABILITIES,
+)
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.materials.reading_cards import valid_session
 from learning_os.store.study_fence import (
@@ -57,80 +67,12 @@ DEFAULT_MAX_WORKERS = 32
 DEFAULT_CORE_TIMEOUT_S = 120.0
 DEFAULT_LOCK_WAIT_S = 30.0
 
-ALLOWED_LOS_READ_COMMANDS: frozenset[str] = frozenset({
-    "status",
-    "capabilities",
-    "bootstrap",
-    "resume",
-    "dossier",
-    "inspect",
-    "search",
-    "semantic",
-    "note-read",
-    "inbox-read",
-    "inbox-list",
-    "related",
-    "program-list",
-    "plan-template",
-    "module-list",
-    "unit-list",
-    "study-sequence",
-    "ability-context",
-    "runtime-session",
-    "plan-edit-context",
-    "atlas-context",
-    "operations",
-    "projection-observe",
-})
-
-ALLOWED_STUDY_COMMANDS: frozenset[str] = frozenset({
-    "material-search",
-    "material-context",
-    "material-span",
-    "material-study-span",
-    "material-card-settle",
-})
-
-# Read-only `--check` preflights permitted without granting write capabilities.
-ALLOWED_PREFLIGHT_COMMANDS: dict[str, str] = {
-    "source-intake": "source.intake.record",
-    "unit-plan-revise": "unit.plan.revise",
-}
-
-ALLOWED_LOS_COMMANDS: frozenset[str] = (
-    ALLOWED_LOS_READ_COMMANDS
-    | ALLOWED_STUDY_COMMANDS
-    | frozenset({"capability", *ALLOWED_PREFLIGHT_COMMANDS})
-)
-
-SESSION_COMMANDS: frozenset[str] = frozenset({
-    "material-study-span",
-    "material-card-settle",
-    "material-search",
-    "material-context",
-})
-
-# Capabilities permitted to write in sandboxed study mode (host-mediated).
-# Deliberately excludes durable note writes/revisions, unit plan revisions,
-# concept graph edits, review/program/delivery mutations, and legacy locks.
-ALLOWED_CAPABILITIES: frozenset[str] = frozenset({
-    "capture.create",
-    "inbox.resolve",
-    "stage.note.write",
-    "stage.progress.update",
-    "stage.attachment.add",
-    "unit.note.append",
-    "unit.source-selection.set",
-    "detour.create",
-    "detour.resolve",
-    "note.evidence.add",
-    "note.analysis.save",
-    "note.analysis.save_batch",
-    "source.feedback.record",
-    "source.intake.record",
-    "atlas.question.save",
-    "garden.seed.create",
-})
+ALLOWED_LOS_READ_COMMANDS = STUDY_READ_COMMANDS
+ALLOWED_STUDY_COMMANDS = STUDY_COMMANDS
+ALLOWED_PREFLIGHT_COMMANDS = STUDY_PREFLIGHT_COMMANDS
+ALLOWED_LOS_COMMANDS = STUDY_ALLOWED_COMMANDS
+SESSION_COMMANDS = _SESSION_COMMANDS
+ALLOWED_CAPABILITIES = STUDY_WRITE_CAPABILITIES
 
 
 def _validate_study_envelope_origin(
@@ -495,8 +437,22 @@ class StudyBroker:
                 )
         return resolved
 
+    # The Core child gets an explicit environment, not the host's whole
+    # environment: POSIX/runtime basics plus LearningOS's own LOS_* inputs
+    # (minus the broker-only gate socket and staged manifest, set below).
+    _CHILD_ENV_EXACT: frozenset[str] = frozenset({
+        "PATH", "HOME", "LANG", "LANGUAGE", "TMPDIR", "USER", "LOGNAME",
+        "SHELL", "TERM", "TZ",
+    })
+    _CHILD_ENV_PREFIXES: tuple[str, ...] = ("LC_", "LOS_")
+
     def _child_env(self, *, extra: dict[str, str] | None = None) -> dict[str, str]:
-        env = dict(os.environ)
+        env = {
+            key: value
+            for key, value in os.environ.items()
+            if key in self._CHILD_ENV_EXACT
+            or key.startswith(self._CHILD_ENV_PREFIXES)
+        }
         env.pop(GATE_SOCK_ENV, None)
         env.pop(STUDY_STAGED_MANIFEST_ENV, None)
         env["LOS_SESSION_ID"] = self.session_id

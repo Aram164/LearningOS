@@ -37,6 +37,7 @@ from learning_os.adapters.study_broker import (
     send_broker_request,
     write_local_output_file,
 )
+from learning_os.adapters.study_policies import REVIEWED_SEALING_CAPABILITIES
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
 from learning_os.app.registry import REGISTRY
 from learning_os.domain.failures import WriteRefused
@@ -59,23 +60,8 @@ REQUEST_ID_MAX = 128
 
 # Replacement, import, and revision capabilities must pass a reviewed preflight
 # record (`--check-out REC` or `--check --report-out REC`) via `--guards-from`
-# rather than one-call `--submit` (D-13).
-REVIEW_REQUIRED_CAPABILITIES: frozenset[str] = frozenset({
-    "module.plan.import",
-    "unit.plan.revise",
-    "unit.map.import",
-    "route.patch",
-    "module.materials.compact",
-    "note.revise",
-    "source.record.revise",
-    "collection.entry.revise",
-    "coordination.section.revise",
-    "program.semester.update",
-    "lineage.restamp",
-    "concept.relations.change",
-    "review.apply",
-    "garden.update",
-})
+# rather than one-call `--submit` (D-13). Declared in study_policies.
+REVIEW_REQUIRED_CAPABILITIES = REVIEWED_SEALING_CAPABILITIES
 
 
 def _fresh_request_id(key: str) -> str:
