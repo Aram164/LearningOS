@@ -2619,3 +2619,30 @@ def test_backup_refuses_a_shipped_asset_replaced_between_hash_and_identity(
         build_backup_manifest(
             mini_repo, ui_root=ui, materials_root=roots["materials"])
     assert moved
+
+
+def test_backup_refuses_a_ui_file_replaced_while_materials_are_hashed(
+    mini_repo, tmp_path, monkeypatch
+):
+    """Cross-root window: UI is inventoried before materials, so only
+    the final all-roots recheck can catch a UI file replaced while
+    materials are still being hashed."""
+    import learning_os.app.backup_manifest as backup_module
+
+    roots = _moving_materials(mini_repo, tmp_path)
+    ui = roots["ui"]
+    real_hash = backup_module._sha256_file
+    moved: list[bool] = []
+
+    def hash_then_move_ui(path: Path) -> str:
+        digest = real_hash(path)
+        if path.name == "beta.pdf" and not moved:
+            moved.append(True)
+            _replace_same_size(ui / "plugin/styles.css", b"/* x */\n")
+        return digest
+
+    monkeypatch.setattr(backup_module, "_sha256_file", hash_then_move_ui)
+    with pytest.raises(BackupManifestError, match="changed during inventory"):
+        build_backup_manifest(
+            mini_repo, ui_root=ui, materials_root=roots["materials"])
+    assert moved
