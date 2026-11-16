@@ -12,6 +12,7 @@ from learning_os.app.encoders import dumps_compact
 from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
 from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
+from learning_os.app.projection import fresh_manifest_and_repo
 from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
 from learning_os.app.registry import OperationEffects, register
@@ -92,53 +93,6 @@ def _domain_glance(manifest):
 #: recommendation. The note ships in the payload so an agent reading only
 #: this page cannot mistake one for the other.
 POINTER_STATE_NOTE = "confirmed = where study stopped, not a recommendation"
-
-
-def _recorded_pointer(root: Path) -> dict:
-    """The recorded resume pointer, including one that resolves nowhere.
-
-    The manifest carries only a pointer that resolves (its consumers
-    resume from it), so an unresolvable recorded pointer is absent
-    there — but the brief must call that ``invalid``, not ``missing``.
-    """
-    path = root / "curriculum" / "resume.yaml"
-    try:
-        import yaml
-
-        value = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-    return value if isinstance(value, dict) else {}
-
-
-def _pointer_state(manifest, pointer) -> str:
-    """confirmed/missing/invalid for the brief page; the same rule as resume.
-
-    Mirrors ``resume._resolve_stage``'s validity check against the manifest
-    instead of the loaded repo, so the brief and resume cannot disagree:
-    the pointer counts only when its module, unit, map, and stage all
-    resolve and link together. Status plays no part here, exactly as in
-    resume -- a pointer to a paused map is still where study stopped.
-    """
-    if not isinstance(pointer, dict) or not pointer:
-        return "missing"
-    units = {row.get("id"): row for row in manifest.get("units", [])
-             if isinstance(row, dict)}
-    maps = {row.get("id"): row for row in manifest.get("study_maps", [])
-            if isinstance(row, dict)}
-    unit = units.get(str(pointer.get("unit_id") or ""))
-    study_map = maps.get(str(pointer.get("study_map_id") or ""))
-    stages = study_map.get("stages", []) \
-        if isinstance(study_map, dict) else []
-    stage_ids = {stage.get("id") for stage in stages
-                 if isinstance(stage, dict)}
-    if (isinstance(unit, dict) and isinstance(study_map, dict)
-            and unit.get("module_id") == pointer.get("module_id")
-            and study_map.get("unit_id") == unit.get("id")
-            and study_map.get("module_id") == unit.get("module_id")
-            and pointer.get("stage_id") in stage_ids):
-        return "confirmed"
-    return "invalid"
 
 
 def _recorded_options(manifest) -> list[dict]:
@@ -287,7 +241,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
     root = ctx.root
     try:
         snapshot = _snapshot(root, req.get("expected_snapshot"))
-        manifest = _fresh_manifest(root, snapshot_id=snapshot)
+        manifest, repo = fresh_manifest_and_repo(root, snapshot_id=snapshot)
         units = sorted(manifest.get("units", []),
                        key=lambda row: row["id"])
         owed = sorted(row["id"] for row in units
@@ -323,7 +277,9 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
             key=lambda row: row["id"])
         deadlines = _brief_deadlines(manifest)
         pointer = manifest.get("resume_pointer", {})
-        state = _pointer_state(manifest, pointer or _recorded_pointer(root))
+        # Manifest production already applies the shared resume resolver.
+        # The loaded record distinguishes an invalid pointer from an absent one.
+        state = "confirmed" if pointer else ("invalid" if repo.resume_pointer else "missing")
         session_id, session_source = _resolve_session_identity()
         _snapshot(root, snapshot)
         return Result(
