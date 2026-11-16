@@ -15,7 +15,7 @@ Prepare and apply bounded AI deliveries over exact requests and reviewed artifac
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `ai-action-store`, `contracts`, `domain`, `evidence`, `learner-derivations`, `loading`, `materials`, `operation-pipeline`, `projection`, `semantics`, `transactions`, `validation`.
+Depends on: `ai-action-store`, `contracts`, `domain`, `evidence`, `learner-derivations`, `loading`, `materials`, `operation-pipeline`, `semantics`, `transactions`, `validation`.
 
 Used by: `operation-handlers`.
 <!-- system-map:end -->

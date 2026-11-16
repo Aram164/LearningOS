@@ -48,7 +48,11 @@ from learning_os.domain.failures import (
     TransactionSnapshotConflict,
     TransactionValidationFailure,
 )
-from learning_os.domain.transaction import PublicationState, TransactionResult
+from learning_os.domain.transaction import (
+    PublicationState,
+    StagedPublication,
+    TransactionResult,
+)
 from learning_os.store import observations
 from learning_os.store import revisions as revision_store
 from learning_os.store.contracts.gateway import (
@@ -89,6 +93,7 @@ from learning_os.store.revisions import artifact_revision, load_revisions
 
 __all__ = [
     "ReplayEvidenceError",
+    "StagedPublication",
     "TransactionFailure",
     "TransactionIdempotencyConflict",
     "TransactionPublicationUncertain",
@@ -1489,6 +1494,7 @@ class _CommitRun:
     pre_stat_lines: dict[str, bytes] = field(default_factory=dict)
     snapshot_after_id: str | None = None
     data_roots_after_id: str | None = None
+    staged_publication: StagedPublication | None = None
 
 
 class TransactionService:
@@ -1559,6 +1565,7 @@ class TransactionService:
             self._publish_projection(run, publish)
             self._record_idempotency(run)
             self._write_receipt(run, metadata)
+            self._expose_projection(run)
             return self._finish(run, touched)
         except Exception as exc:
             failure = self._failure(run, exc, publish, rollback_publish)
@@ -1872,7 +1879,9 @@ class TransactionService:
             restore_projection = rollback_publish or publish
             if restore_projection is not None:
                 try:
-                    restore_projection()
+                    restored = restore_projection()
+                    if isinstance(restored, StagedPublication):
+                        restored.expose()
                 except OSError:
                     failures.append("<projection publication>")
                 except Exception as exc:
@@ -2088,6 +2097,11 @@ class TransactionService:
                                       else publish())
         else:
             projected_snapshot = publish() if publish is not None else None
+        if isinstance(projected_snapshot, StagedPublication):
+            # Prepared but not exposed: the receipt must become durable
+            # before _expose_projection makes this view visible.
+            run.staged_publication = projected_snapshot
+            projected_snapshot = projected_snapshot.snapshot
         diag_tracer.emit_event(
             diag_conventions.EVENT_PROJECTION_PUBLISHED,
             attrs={"snapshot": projected_snapshot})
@@ -2130,6 +2144,21 @@ class TransactionService:
                 canonical_stat_digest(self.root, stat_lines=post_lines)
                 raise self._projection_input_change(
                     run, projected_snapshot, run.snapshot_after_id, post_lines)
+
+    def _expose_projection(self, run: _CommitRun) -> None:
+        """Expose a staged publication whose receipt is now durable.
+
+        A legacy publisher already exposed its view during preparation and
+        leaves nothing staged. A failure here is post-commit: ``_failure``
+        sees the durable receipt and preserves canonical state and the
+        receipt instead of rolling back behind them.
+        """
+        staged = run.staged_publication
+        if staged is None:
+            return
+        run.staged_publication = None
+        run.failed_stage = "core.projection"
+        staged.expose()
 
     def _projection_input_change(
         self, run: _CommitRun, projected: str, actual: str,

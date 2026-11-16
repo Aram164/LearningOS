@@ -15,6 +15,8 @@ from learning_os.derive.projection import (
     write_outputs,
 )
 from learning_os.derive.projection.common import git_state as _git_state
+from learning_os.domain.failures import ProjectionInputChanged
+from learning_os.domain.transaction import StagedPublication
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.fingerprint import (
     canonical_fingerprint,
@@ -30,14 +32,78 @@ from learning_os.store.manifest_identity import (
 )
 
 
+def _check_inputs_stable(root: Path, inputs_before: dict | None) -> None:
+    """Refuse exposure when an input moved since it was observed.
+
+    Covers the non-canonical identity inputs (materials, operations,
+    code, contract). Canonical movement is checked against the prepared
+    snapshot at exposure. A refusal publishes nothing: the prior valid
+    pair stays exactly as it was and a retry rebuilds from live state.
+    """
+    if inputs_before is None:
+        return
+    after = observe_inputs(root)
+    if any(after.get(key) != value for key, value in inputs_before.items()):
+        raise ProjectionInputChanged(
+            "projection inputs changed during publication; retry",
+            changed_paths=(), changed_paths_total=0,
+        )
+
+
+def _check_canonical_stable(root: Path, snapshot: str | None) -> None:
+    if snapshot is None:
+        return
+    live = f"sha256:{canonical_fingerprint(root)}"
+    if live != snapshot:
+        raise ProjectionInputChanged(
+            "canonical state changed during projection publication "
+            f"(projected {snapshot}, actual {live})",
+            changed_paths=(), changed_paths_total=0,
+        )
+
+
+def prepare_repo(repo, *, inputs_before: dict | None = None,
+                 canonical_before: str | None = None) -> StagedPublication:
+    """Build every output from *repo* without exposing any of it.
+
+    The identity sidecar is the build's own stability proof: ``generate_all``
+    omits it when a pinned input moved mid-build, so its absence refuses
+    here instead of publishing a manifest readiness would call pending.
+    ``canonical_before`` is the fingerprint observed before *repo* was
+    loaded; a canonical move since then refuses even when the manifest
+    stamp was hashed after the move from the stale loaded state.
+    """
+    root = repo.root
+    outputs = generate_all(repo, inputs_before=inputs_before)
+    if IDENTITY_FILENAME not in outputs:
+        raise ProjectionInputChanged(
+            "projection inputs changed during publication; retry",
+            changed_paths=(), changed_paths_total=0,
+        )
+    _check_inputs_stable(root, inputs_before)
+    _check_canonical_stable(root, canonical_before)
+    manifest = json.loads(outputs["manifest.json"])
+    snapshot = (manifest.get("_generated") or {}).get("snapshot_id")
+
+    def expose() -> None:
+        _check_inputs_stable(root, inputs_before)
+        _check_canonical_stable(root, canonical_before or snapshot)
+        write_outputs(repo, outputs)
+
+    return StagedPublication(
+        snapshot=snapshot, expose=expose, paths=tuple(sorted(outputs)))
+
+
 def publish_with_paths(root: Path) -> list[str]:
     """Rebuild and publish generated/ atomically under the exclusive operator lock."""
     with _operator_lock(root):
         inputs_before = observe_inputs(root)
+        canonical_before = f"sha256:{canonical_fingerprint(root)}"
         repo = load_repo(root)
-        outputs = generate_all(repo, inputs_before=inputs_before)
-        write_outputs(repo, outputs)
-        return sorted(outputs)
+        staged = prepare_repo(
+            repo, inputs_before=inputs_before, canonical_before=canonical_before)
+        staged.expose()
+        return list(staged.paths)
 
 
 def publish(root: Path) -> None:
@@ -45,7 +111,8 @@ def publish(root: Path) -> None:
 
 
 def publish_repo(repo, *, inputs_before: dict | None = None) -> None:
-    write_outputs(repo, generate_all(repo, inputs_before=inputs_before))
+    staged = prepare_repo(repo, inputs_before=inputs_before)
+    staged.expose()
 
 
 class _LazyRepo:

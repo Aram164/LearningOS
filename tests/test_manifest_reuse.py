@@ -516,10 +516,16 @@ def test_generate_all_omits_identity_when_materials_move_mid_build(
 
 
 def test_publish_observes_inputs_before_load_repo(mini_repo, monkeypatch):
-    """D-19: publish() observes non-canonical inputs BEFORE loading repo."""
+    """D-19: publish() observes non-canonical inputs BEFORE loading repo.
+
+    A material that moves during the load refuses the publication and
+    preserves the prior valid pair, instead of exposing a manifest whose
+    identity readiness would call pending.
+    """
+    from learning_os.domain.failures import ProjectionInputChanged
+
     _generate(mini_repo)
-    identity_file = mini_repo / "generated" / IDENTITY_FILENAME
-    assert identity_file.is_file()
+    before = _stored_pair(mini_repo)
 
     real_load = plumbing.load_repo
 
@@ -528,7 +534,40 @@ def test_publish_observes_inputs_before_load_repo(mini_repo, monkeypatch):
         return real_load(root)
 
     monkeypatch.setattr(plumbing, "load_repo", mutate_during_load)
+    with pytest.raises(ProjectionInputChanged):
+        plumbing.publish(mini_repo)
+    assert _stored_pair(mini_repo) == before
+
+
+def test_publish_refuses_a_canonical_move_during_the_build(mini_repo, monkeypatch):
+    """A canonical input moving between observation and exposure refuses."""
+    from learning_os.domain.failures import ProjectionInputChanged
+
+    _generate(mini_repo)
+    before = _stored_pair(mini_repo)
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    from learning_os.derive.projection import outputs as outputs_mod
+
+    real = outputs_mod.build_backlinks
+
+    def moving(repo, generated_at):
+        note.write_text(note.read_text(encoding="utf-8") + "\nMoved mid-build.\n",
+                        encoding="utf-8")
+        return real(repo, generated_at)
+
+    monkeypatch.setattr(outputs_mod, "build_backlinks", moving)
+    with pytest.raises(ProjectionInputChanged):
+        plumbing.publish(mini_repo)
+    assert _stored_pair(mini_repo) == before
+    # A retry over the now-stable tree succeeds and is observable as current.
+    monkeypatch.undo()
     plumbing.publish(mini_repo)
-    assert not identity_file.exists()
     assert plumbing._try_reuse_manifest(
-        mini_repo, _live_snapshot(mini_repo), restamp=False) is None
+        mini_repo, _live_snapshot(mini_repo), restamp=False) is not None
+
+
+def test_publish_stable_inputs_succeeds_and_is_current(mini_repo):
+    _generate(mini_repo)
+    plumbing.publish(mini_repo)
+    assert plumbing._try_reuse_manifest(
+        mini_repo, _live_snapshot(mini_repo), restamp=False) is not None
