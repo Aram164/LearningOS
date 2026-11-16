@@ -207,7 +207,7 @@ the exam-prep units have not had this pass.
 ## 2. `records/materials-manifest.yaml` has two writers that disagree on its bytes
 
 **Raised:** 2026-08-28 (operator finding, logged on Aram's instruction) ·
-**Status:** open · **Do not act.**
+**Status:** resolved 2026-11-16 (Aram) — second writer removed by unifying on one renderer (evidence below); residual third-writer measurement deferred, not a blocker.
 
 Not a complaint of Aram's — surfaced during the 2026-08-28 audit and recorded
 here rather than fixed, because the drift is latent and repairing it changes a
@@ -288,7 +288,7 @@ Status unchanged: open. Closing it is Aram's.
 
 ## 3. The normative corpus has no bindingness index, so every agent reads a different subset and returns a different picture of the rules
 
-**Raised:** 2026-08-28 (Aram) · **Status:** open · **Do not act.**
+**Raised:** 2026-08-28 (Aram) · **Status:** resolved 2026-11-16 (Aram) — `system/contracts/normative-corpus.yaml` indexes every binding document; validator enforces it on `make check`.
 
 > "das System ist nicht aus einer strikten Programmierergruppe entstanden, das
 > war sehr willkürlich. alles muss standardisiert sein, alles muss klar
