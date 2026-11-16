@@ -68,9 +68,15 @@ True True 0
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"locator": "lecture-01.pdf, PDF pp. 20-22"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 21, "text": "Worked example part 1 of 4: a biased coin pays two on heads"}]}}' --key s26-locator --request-id request-s26-locator --guards auto --out "$TMPDIR/s26-locator.json"
+$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"locator": "lecture-01.pdf, PDF pp. 20-22"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 21, "text": "Worked example part 1 of 4: a biased coin pays two on heads"}]}}' --key s26-locator --guards auto --check-out "$TMPDIR/s26-locator-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s26-locator-check.json" --request-id request-s26-locator --out "$TMPDIR/s26-locator.json"
 ```
 
 ```scrut {interpolated: true}

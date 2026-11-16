@@ -127,9 +127,15 @@ $ cat > "$TMPDIR/transcription-rev.md" <<'EOF'
 ```
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/transcription-rev.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-probe-derivation\", \"file\": \"$TMPDIR/transcription-rev.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key s17-rev --request-id request-s17-rev --guards auto --out "$TMPDIR/s17-rev.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/transcription-rev.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-probe-derivation\", \"file\": \"$TMPDIR/transcription-rev.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key s17-rev --guards auto --check-out "$TMPDIR/s17-rev-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-probe-derivation=1
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s17-rev-check.json" --request-id request-s17-rev --out "$TMPDIR/s17-rev.json"
 ```
 
 ```scrut {interpolated: true}

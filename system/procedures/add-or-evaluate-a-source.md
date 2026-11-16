@@ -271,9 +271,15 @@ sha256:2f478959e6ecde768db3beffe4aa953f658c82c8a00714cc3704afde1cc9248a
 ## Seal the attach with derived guards
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"material\": \"material://source-scenario-bare/attached.pdf\", \"material_sha256\": \"$MAT_SHA\"}, \"expected_diff_sha256\": \"$ATTACH_DIFF\"}" --key s06-attach --request-id request-s06-attach --guards auto --out "$TMPDIR/s06-attach.json"
+$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"material\": \"material://source-scenario-bare/attached.pdf\", \"material_sha256\": \"$MAT_SHA\"}, \"expected_diff_sha256\": \"$ATTACH_DIFF\"}" --key s06-attach --guards auto --check-out "$TMPDIR/s06-attach-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-scenario-bare=1
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s06-attach-check.json" --request-id request-s06-attach --out "$TMPDIR/s06-attach.json"
 ```
 
 ## Submit the attach
@@ -298,9 +304,15 @@ sha256:875f78222b721f37e24ca30af4b597c88cfd562df9a283540bc0447df1ab38ec
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"short and exact\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$EVAL_DIFF\"}" --key s06-eval --request-id request-s06-eval --guards auto --out "$TMPDIR/s06-eval.json"
+$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"short and exact\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$EVAL_DIFF\"}" --key s06-eval --guards auto --check-out "$TMPDIR/s06-eval-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-scenario-bare=2
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s06-eval-check.json" --request-id request-s06-eval --out "$TMPDIR/s06-eval.json"
 ```
 
 ```scrut {interpolated: true}
@@ -378,9 +390,15 @@ sha256:2282313ea24c7f43af808416941f8b45aee64af28ce53b58c25356ecad4f0c55
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability collection.entry.revise --payload "{\"record\": {\"collection\": \"probe-essays\", \"source\": \"source-scenario-bare\", \"why\": \"The bare essay, examined.\"}, \"expected_diff_sha256\": \"$ENTRY_DIFF\"}" --key s06-entry --request-id request-s06-entry --guards auto --out "$TMPDIR/s06-entry.json"
+$ $H/los-seal --capability collection.entry.revise --payload "{\"record\": {\"collection\": \"probe-essays\", \"source\": \"source-scenario-bare\", \"why\": \"The bare essay, examined.\"}, \"expected_diff_sha256\": \"$ENTRY_DIFF\"}" --key s06-entry --guards auto --check-out "$TMPDIR/s06-entry-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: collection:probe-essays=1
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s06-entry-check.json" --request-id request-s06-entry --out "$TMPDIR/s06-entry.json"
 ```
 
 ```scrut {interpolated: true}

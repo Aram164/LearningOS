@@ -98,9 +98,15 @@ los: INVALID_REQUEST: shelving apply requires --approve and explicit selected pr
 ## Seal the apply of the explicitly selected item
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability review.apply --payload '{"unit_id": "unit-demo-l01", "selected": ["proposal-derivation-note"]}' --key shelve-apply-001 --request-id request-shelve-apply-001 --guards auto --out "$TMPDIR/shelve-apply.json"
+$ $H/los-seal --capability review.apply --payload '{"unit_id": "unit-demo-l01", "selected": ["proposal-derivation-note"]}' --key shelve-apply-001 --guards auto --check-out "$TMPDIR/shelve-apply-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: proposal-derivation-note=0, study-map-demo-l01=1, unit-demo-l01=5
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/shelve-apply-check.json" --request-id request-shelve-apply-001 --out "$TMPDIR/shelve-apply.json"
 ```
 
 ## Submit the envelope
