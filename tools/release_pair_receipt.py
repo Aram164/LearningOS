@@ -49,6 +49,7 @@ SEATBELT_SCOPES = ("not-run", "full")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learning_os.store.contracts.manifest_contract import (  # noqa: E402
     ManifestContractError,
+    declared_closure_sha256,
     declared_schema_sha256,
     declared_version,
 )
@@ -247,6 +248,7 @@ def generate(
     try:
         manifest_contract_version = declared_version(core_root)
         manifest_contract_schema_sha256 = declared_schema_sha256(core_root)
+        manifest_contract_closure_sha256 = declared_closure_sha256(core_root)
     except ManifestContractError as exc:
         raise ReleasePairReceiptError(str(exc)) from exc
 
@@ -278,6 +280,7 @@ def generate(
         "data_contract_version": _data_contract_version(core_root),
         "manifest_contract_version": manifest_contract_version,
         "manifest_contract_schema_sha256": manifest_contract_schema_sha256,
+        "manifest_contract_closure_sha256": manifest_contract_closure_sha256,
         "runtime_source_fingerprint": build_info["source_fingerprint"],
         "bundle_sha256": build_info["bundle_sha256"],
         "stylesheet_sha256": build_info["stylesheet_sha256"],
@@ -294,14 +297,36 @@ def generate(
     return receipt
 
 
-def verify(receipt: dict, artifact_dir: Path) -> None:
+def verify(receipt: dict, artifact_dir: Path,
+           core_root: Path | None = None) -> None:
     """Refuse unless the receipt and every shipped file agree, exactly.
 
     Every check below is independent — one failure is reported by raising
     immediately, but each is written so an unrelated field cannot mask another
     field's mismatch (no early success path skips a later check).
+
+    With ``core_root``, the receipt's manifest contract identity (version,
+    root schema hash, and closure hash where the receipt carries one) must
+    also equal that Core's declared contract identity. A historical
+    receipt without a closure hash is verified only against the identity
+    it contains; it is never failed for evidence it predates.
     """
     validate_receipt(receipt)
+    if core_root is not None:
+        try:
+            declared = {
+                "manifest_contract_version": declared_version(core_root),
+                "manifest_contract_schema_sha256": declared_schema_sha256(core_root),
+                "manifest_contract_closure_sha256": declared_closure_sha256(core_root),
+            }
+        except ManifestContractError as exc:
+            raise ReleasePairReceiptError(str(exc)) from exc
+        for field, expected in declared.items():
+            if field in receipt and receipt[field] != expected:
+                raise ReleasePairReceiptError(
+                    f"receipt {field} ({receipt[field]!r}) does not match the "
+                    f"Core declared contract identity ({expected!r})"
+                )
 
     plugin_dir = artifact_dir / "plugin"
     found = {entry.name for entry in plugin_dir.iterdir()} if plugin_dir.is_dir() else set()
@@ -389,7 +414,8 @@ def _cli_verify(args: argparse.Namespace) -> int:
         print(f"release-pair-receipt: cannot read {args.receipt}: {exc}", file=sys.stderr)
         return 1
     try:
-        verify(receipt, Path(args.artifact_dir).resolve())
+        verify(receipt, Path(args.artifact_dir).resolve(),
+               core_root=None if args.artifact_only else Path(args.core_root).resolve())
     except ReleasePairReceiptError as exc:
         print(f"release-pair-receipt: {exc}", file=sys.stderr)
         return 1
@@ -429,6 +455,14 @@ def build_parser() -> argparse.ArgumentParser:
     verify_parser = sub.add_parser("verify", help="verify a receipt against an artifact directory")
     verify_parser.add_argument("--receipt", required=True)
     verify_parser.add_argument("--artifact-dir", required=True)
+    contract_check = verify_parser.add_mutually_exclusive_group()
+    contract_check.add_argument(
+        "--core-root", default=str(ROOT),
+        help="Core checkout whose declared contract identity the receipt must match "
+             "(default: this tool's own repository)")
+    contract_check.add_argument(
+        "--artifact-only", action="store_true",
+        help="verify a preceding release against its own artifact and receipt")
     verify_parser.set_defaults(func=_cli_verify)
     return parser
 

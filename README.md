@@ -170,8 +170,8 @@ Three Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings
 print but never block) and runs the defect-oriented static checks; **post-commit** rebuilds `generated/` so the local
 dashboards are never stale; **pre-push** requires clean Core and UI worktrees
-and runs `make system-check`, so the release pair is verified through one
-command instead of two remembered checklists. The paired pre-push hook is also
+and checks the pushed refs. The release gate runs upstream on the committed
+Core/UI pair. The paired pre-push hook is also
 installed into the sibling UI checkout when it is present. Each installed hook
 checks itself against its tracked canonical source; if they differ, the gate
 fails with the single repair command `make hooks`.

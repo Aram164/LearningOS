@@ -7,6 +7,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -52,7 +53,8 @@ def _make_core(tmp_path: Path) -> Path:
     (contracts / "manifest-contract.yaml").write_text(
         "contract_version: 8\n"
         "schema_path: system/schema/manifest.schema.json\n"
-        f"schema_sha256: '{schema_sha}'\n",
+        f"schema_sha256: '{schema_sha}'\n"
+        f"closure_sha256: '{schema_sha}'\n",
         encoding="utf-8",
     )
     return core
@@ -262,6 +264,62 @@ def test_a_valid_artifact_verifies(clean_pair, tmp_path):
     receipt = _generate(clean_pair)
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
     rpr.verify(receipt, artifact)  # must not raise
+
+
+def test_generate_carries_the_full_contract_identity(clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    assert receipt["manifest_contract_closure_sha256"] == \
+        receipt["manifest_contract_schema_sha256"]
+    rpr.verify(receipt, artifact, core_root=clean_pair["core"])  # must not raise
+
+
+@pytest.mark.parametrize("field", [
+    "manifest_contract_version",
+    "manifest_contract_schema_sha256",
+    "manifest_contract_closure_sha256",
+])
+def test_mismatched_contract_identity_is_refused_against_core(
+        clean_pair, tmp_path, field):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    receipt[field] = 999 if field.endswith("version") else "sha256:" + "e" * 64
+    with pytest.raises(rpr.ReleasePairReceiptError, match=field):
+        rpr.verify(receipt, artifact, core_root=clean_pair["core"])
+
+
+def test_historical_receipt_without_closure_verifies_against_core(
+        clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    receipt.pop("manifest_contract_closure_sha256")
+    rpr.verify(receipt, artifact, core_root=clean_pair["core"])  # must not raise
+
+
+def test_verify_cli_checks_preceding_artifact_against_its_own_contract(clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    receipt_path = artifact / "pair-receipt.json"
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    declaration = clean_pair["core"] / "system/contracts/manifest-contract.yaml"
+    declaration.write_text(declaration.read_text(encoding="utf-8").replace(
+        "contract_version: 8", "contract_version: 9"), encoding="utf-8")
+    command = [sys.executable, rpr.__file__, "verify", "--receipt", str(receipt_path),
+               "--artifact-dir", str(artifact)]
+
+    incoming = subprocess.run([*command, "--core-root", str(clean_pair["core"])],
+                              capture_output=True, text=True, timeout=30)
+    assert incoming.returncode == 1
+    assert "manifest_contract_version" in incoming.stderr
+    preceding = subprocess.run([*command, "--artifact-only"],
+                               capture_output=True, text=True, timeout=30)
+    assert preceding.returncode == 0, preceding.stderr
+
+    (artifact / "plugin/main.js").write_bytes(b"changed")
+    tampered = subprocess.run([*command, "--artifact-only"],
+                              capture_output=True, text=True, timeout=30)
+    assert tampered.returncode == 1
+    assert "plugin/main.js sha256" in tampered.stderr
 
 
 def test_wrong_schema_version_is_refused(clean_pair, tmp_path):

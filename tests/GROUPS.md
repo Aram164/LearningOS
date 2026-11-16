@@ -78,8 +78,8 @@ The mapping fails closed by design: when in doubt it reruns more, never less.
 Sibling UI changes (outside this repository) are not visible to the script:
 after a UI change rerun `make test-paired` (the `paired` marker: every Core
 test that reads the live sibling checkout), and the release still goes
-through the full paired `make system-check`. The pre-push gate runs
-`test-paired` itself when Core is unchanged against the last stamped pair.
+through the full paired `make system-check` upstream. The pre-push hook only
+checks the pushed refs and the worktrees.
 
 ## Adding a test file
 

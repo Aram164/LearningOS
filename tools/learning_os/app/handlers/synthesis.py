@@ -269,7 +269,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
              "expected_revisions": revisions,
              "reviewed_file_sha256": claims_sha256,
              "gateway_envelope": prepare_review_envelope(
-                 "lineage.restamp", payload, snapshot, revisions)},
+                 "lineage.restamp", payload, snapshot, revisions, checked_root=root)},
 
         )
     request = current_gateway_request()

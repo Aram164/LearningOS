@@ -133,6 +133,8 @@ def normalize_check_record(record: object) -> object:
             "payload": envelope.get("payload"),
             "idempotency_key": record.get("idempotency_key"),
         }
+        if isinstance(envelope.get("review"), dict):
+            normalized["review"] = envelope["review"]
         if isinstance(record.get("observed_material"), dict):
             normalized["observed_material"] = record["observed_material"]
         return normalized

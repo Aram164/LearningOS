@@ -928,8 +928,6 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         result["expected_write_sha256"] = {
             str(p.relative_to(root)): hashlib.sha256(content.encode("utf-8")).hexdigest()
             for p, content in writes.items()}
-        result["gateway_envelope"] = prepare_review_envelope(
-            capability, payload, result["expected_snapshot"], result["expected_revisions"])
         fragment, inventory_problems = _observed_material_binding(
             root, package.get("plan_contract") or {})
         if inventory_problems:
@@ -943,6 +941,9 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             )
         if fragment is not None:
             result.update(fragment)
+        result["gateway_envelope"] = prepare_review_envelope(
+            capability, payload, result["expected_snapshot"], result["expected_revisions"],
+            checked_root=root, observed_material=result.get("observed_material"))
         effective_report_out = report_out if report_out is not None else req.get("report_out")
         if effective_report_out:
             compact, failure = _save_check_report_and_compact(

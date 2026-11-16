@@ -48,6 +48,51 @@ def apply_stage_action(data: dict, unit_data: dict, stage: dict, action: str,
             unit_data["status"] = "ready-to-shelve"
 
 
+def resolve_resume_target(repo):
+    """The recorded resume pointer as one resolved target, or ``None``.
+
+    Returns ``(unit, study_map, stage)`` — the existing ``Unit`` and
+    ``StudyMap`` records and the authored stage row inside that map — only
+    when every declared link agrees: the module is known, the unit belongs
+    to it, the named map is the unit's current map and belongs to that
+    unit and module, and the stage is a member of that map. Individually
+    valid IDs that disagree on ownership resolve nowhere, so no consumer
+    can resume into another module's or unit's stage. A recorded stage
+    stays resumable whatever its status: completion or a skip is where
+    the learner stopped, not a reason to disown the pointer.
+    """
+    pointer = repo.resume_pointer if isinstance(repo.resume_pointer, dict) else None
+    if not pointer:
+        return None
+    # A malformed ID (a list, a number, …) is a schema error for the
+    # validator to name; it must never reach a dict lookup here, where
+    # an unhashable value would crash every reader of the pointer.
+    module_id = pointer.get("module_id")
+    unit_id = pointer.get("unit_id")
+    study_map_id = pointer.get("study_map_id")
+    stage_id = pointer.get("stage_id")
+    if not all(isinstance(value, str)
+               for value in (module_id, unit_id, study_map_id, stage_id)):
+        return None
+    if module_id not in repo.modules:
+        return None
+    unit = repo.units.get(unit_id)
+    if unit is None or unit.module_id != module_id:
+        return None
+    if (unit.data or {}).get("current_study_map") != study_map_id:
+        return None
+    study_map = repo.study_maps.get(study_map_id)
+    if study_map is None or study_map.unit_id != unit.id \
+            or study_map.module_id != unit.module_id:
+        return None
+    stage = next((row for row in study_map.data.get("stages", []) or []
+                  if isinstance(row, dict)
+                  and row.get("id") == stage_id), None)
+    if stage is None:
+        return None
+    return (unit, study_map, stage)
+
+
 def progress_entry(summary: str, upcoming: str | None,
                    today: Callable[[], dt.date]) -> dict:
     """The progress record for a validated summary and optional next step."""

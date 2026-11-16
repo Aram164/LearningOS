@@ -24,6 +24,7 @@
     "data_contract_version": {"type": "integer", "minimum": 1},
     "manifest_contract_version": {"type": "integer", "minimum": 1},
     "manifest_contract_schema_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "manifest_contract_closure_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "description": "The manifest contract closure digest from Core's declared contract identity. Carried by receipts generated after the closure was added to the release identity; historical receipts without it remain valid and are verified only against the identity they contain."},
     "runtime_source_fingerprint": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "bundle_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "stylesheet_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},

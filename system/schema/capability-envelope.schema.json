@@ -73,7 +73,17 @@
             }
           }
         },
-        "payload": {"type": "object"}
+        "payload": {"type": "object"},
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["record_sha256"],
+          "properties": {
+            "record_sha256": {
+              "type": "string", "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          }
+        }
       }
     },
     "resultV1": {

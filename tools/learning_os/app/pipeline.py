@@ -22,7 +22,7 @@ from learning_os.app.commit import commit_proposal
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import json_layout as _json_layout
 from learning_os.app.gateway import context_from_v2 as _context_from_v2
-from learning_os.app.gateway import prepare_dispatch
+from learning_os.app.gateway import prepare_dispatch, review_evidence_error
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.app.outcomes import classify, error_object, resolve
@@ -787,6 +787,10 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             _audit_diagnostic_failed(operation)
             return 1, {"error": error_text}
         return 0, final
+    review_error = review_evidence_error(root, envelope)
+    if review_error is not None:
+        _audit_direct_refused(operation, 2)
+        return 2, {"error": review_error, "error_code": UNCONFIRMED}
     committed = _commit_with_gesture(ctx, operation, res)
     code, commit_errors, confirmation = (
         committed.code, committed.issues, committed.confirmation)

@@ -46,6 +46,7 @@ from learning_os.derive.projection.projection import (
     project_workspaces,
 )
 from learning_os.derive.projection.review import build_review_items
+from learning_os.domain.curriculum.stages import resolve_resume_target
 from learning_os.domain.failures import TransactionFailure, unreadable_refusal
 from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts.manifest_contract import (
@@ -428,7 +429,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
             progress=progress,
             counts=counts,
             project_aliases=repo.project_aliases,
-            resume_pointer=repo.resume_pointer,
+            resume_pointer=repo.resume_pointer
+            if resolve_resume_target(repo) is not None else None,
             academic_deadlines=_academic_deadlines(repo),
         ),
     }

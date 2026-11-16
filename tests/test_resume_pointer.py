@@ -20,7 +20,11 @@ from pathlib import Path
 import pytest
 import yaml
 from gateway_helpers import approved_v2_cli
-from repo_builders import _add_material_overview, add_curriculum, run_los
+from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
+
+from learning_os.derive.projection.manifest import build_manifest
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 POINTER = "curriculum/resume.yaml"
 UNIT_DIR = "curriculum/modules/module-demo/units/unit-demo-l01"
@@ -154,6 +158,116 @@ def test_the_pointer_outranks_a_more_recent_result_elsewhere(repo: Path):
     proc = run_los(repo, "resume", "--json")
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["via"] == "resume pointer"
+
+
+def _errors(root: Path) -> list:
+    return [issue for issue in validate(load_repo(root)) if issue.severity == "E"]
+
+
+def _add_second_module(root: Path) -> None:
+    """A second academic module that owns no units and an empty source map."""
+    module = yaml.safe_load(
+        (root / "curriculum/modules/module-demo/module.yaml").read_text(encoding="utf-8"))
+    module.update({"id": "module-other", "title": "Other Module", "unit_order": []})
+    write_yaml(root / "curriculum/modules/module-other/module.yaml", module)
+    write_yaml(root / "curriculum/modules/module-other/source-map.yaml", {
+        "type": "module-source-map", "module_id": "module-other", "sources": [],
+    })
+
+
+def test_a_pointer_to_another_valid_module_resolves_nowhere(repo: Path):
+    """Every ID exists, yet the declared module does not own the unit.
+
+    Shape-valid is not coherent: validation names the broken ownership,
+    the manifest publishes no pointer, and the CLI keeps its existing
+    recovery/refusal path instead of resuming into the wrong module.
+    """
+    _add_second_module(repo)
+    assert _errors(repo) == []
+    assert build_manifest(load_repo(repo), "T1")["resume_pointer"]["stage_id"] == "stage-demo"
+
+    pointer = _pointer(repo)
+    pointer["module_id"] = "module-other"
+    (repo / POINTER).write_text(
+        yaml.safe_dump(pointer, sort_keys=False), encoding="utf-8")
+
+    assert [issue.code for issue in _errors(repo)] == ["REF-RESUME-OWNER"]
+    assert build_manifest(load_repo(repo), "T1")["resume_pointer"] == {}
+    proc = run_los(repo, "resume", "--json")
+    if proc.returncode == 0:
+        assert json.loads(proc.stdout)["via"] != "resume pointer"
+    else:
+        assert proc.returncode == 2, proc.stderr
+
+    pointer["module_id"] = "module-demo"
+    (repo / POINTER).write_text(
+        yaml.safe_dump(pointer, sort_keys=False), encoding="utf-8")
+    assert _errors(repo) == []
+    assert build_manifest(load_repo(repo), "T1")["resume_pointer"]["stage_id"] == "stage-demo"
+
+
+def test_a_pointer_to_a_map_owned_by_another_unit_resolves_nowhere(repo: Path):
+    """The named map exists but belongs to a different unit of the module."""
+    module_path = repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"] = ["unit-demo-l01", "unit-other-l01"]
+    write_yaml(module_path, module)
+    other_dir = repo / "curriculum/modules/module-demo/units/unit-other-l01"
+    other_unit = yaml.safe_load(
+        (repo / UNIT_DIR / "unit.yaml").read_text(encoding="utf-8"))
+    other_unit.update({
+        "id": "unit-other-l01", "title": "Other lecture", "order": 2,
+        "current_study_map": "study-map-other-l01",
+    })
+    write_yaml(other_dir / "unit.yaml", other_unit)
+    other_map = yaml.safe_load(
+        (repo / UNIT_DIR / "study-map.yaml").read_text(encoding="utf-8"))
+    other_map.update({
+        "id": "study-map-other-l01", "unit_id": "unit-other-l01",
+        "current_stage": "stage-other",
+    })
+    note_rel = ("curriculum/modules/module-demo/units/unit-other-l01"
+                "/stages/stage-other/notes.md")
+    (repo / note_rel).parent.mkdir(parents=True, exist_ok=True)
+    (repo / note_rel).write_text("", encoding="utf-8")
+    other_map["stages"] = [dict(other_map["stages"][0], id="stage-other",
+                                title="Other stage", working_note=note_rel)]
+    write_yaml(other_dir / "study-map.yaml", other_map)
+    assert _errors(repo) == []
+
+    pointer = _pointer(repo)
+    pointer.update({"study_map_id": "study-map-other-l01", "stage_id": "stage-other"})
+    (repo / POINTER).write_text(
+        yaml.safe_dump(pointer, sort_keys=False), encoding="utf-8")
+
+    assert [issue.code for issue in _errors(repo)] == ["REF-RESUME-OWNER"]
+    assert build_manifest(load_repo(repo), "T1")["resume_pointer"] == {}
+    proc = run_los(repo, "resume", "--json")
+    if proc.returncode == 0:
+        assert json.loads(proc.stdout)["via"] != "resume pointer"
+    else:
+        assert proc.returncode == 2, proc.stderr
+
+
+def test_a_malformed_pointer_id_resolves_nowhere(repo: Path):
+    """A non-string ID is a schema error, never a crash.
+
+    Validation names the shape, the manifest publishes no pointer, and
+    the CLI keeps its normal recovery/refusal path.
+    """
+    pointer = _pointer(repo)
+    pointer["module_id"] = []
+    (repo / POINTER).write_text(
+        yaml.safe_dump(pointer, sort_keys=False), encoding="utf-8")
+
+    assert "SCHEMA" in [issue.code for issue in _errors(repo)]
+    assert build_manifest(load_repo(repo), "T1")["resume_pointer"] == {}
+    proc = run_los(repo, "resume", "--json")
+    assert "Traceback" not in proc.stdout + proc.stderr
+    if proc.returncode == 0:
+        assert json.loads(proc.stdout)["via"] != "resume pointer"
+    else:
+        assert proc.returncode == 2, proc.stderr
 
 
 def test_recovery_is_labeled_and_never_silent(repo: Path):
