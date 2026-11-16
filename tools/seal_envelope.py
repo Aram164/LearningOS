@@ -48,6 +48,7 @@ from learning_os.store.contracts.gateway import (
 )
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.study_fence import (
+    MAX_STUDY_JSON_BYTES,
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     read_optional_study_or_staged_file,
@@ -104,7 +105,15 @@ def _parse_revision(spec: str) -> tuple[str, int]:
 
 
 def _load_payload(spec: str) -> dict:
-    text = Path(spec[1:]).read_text(encoding="utf-8") if spec.startswith("@") else spec
+    if spec.startswith("@"):
+        raw = Path(spec[1:]).read_bytes()
+        if len(raw) > MAX_STUDY_JSON_BYTES:
+            raise ValueError(
+                f"payload file exceeds size limit ({MAX_STUDY_JSON_BYTES} bytes)"
+            )
+        text = raw.decode("utf-8")
+    else:
+        text = spec
     try:
         payload = json.loads(text)
     except json.JSONDecodeError as exc:
@@ -382,9 +391,10 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
             if isinstance(fragment, dict) and isinstance(fragment.get("observed_material"), dict):
                 record_out["observed_material"] = fragment["observed_material"]
         Path(check_out).parent.mkdir(parents=True, exist_ok=True)
-        Path(check_out).write_text(
-            json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
-            encoding="utf-8")
+        _record_text = json.dumps(record_out, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+        _fd = os.open(check_out, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+        with os.fdopen(_fd, "w", encoding="utf-8") as _handle:
+            _handle.write(_record_text)
     if record["ok"] is not True:
         errors = record.get("errors") or ["the check failed"]
         raise ValueError(
@@ -658,7 +668,7 @@ def _dispatch_via_socket(
     check_out_raw = resp.get("check_out_text")
     if args.check_out and isinstance(check_out_raw, str):
         try:
-            write_local_output_file(args.check_out, check_out_raw, mkdir_parents=True)
+            write_local_output_file(args.check_out, check_out_raw, mkdir_parents=True, exclusive=True)
         except OSError as exc:
             print(f"seal_envelope: cannot write --check-out {args.check_out}: {exc}",
                   file=sys.stderr)
@@ -668,7 +678,7 @@ def _dispatch_via_socket(
     out = resp.get("stdout")
     if args.out and exit_code == 0 and isinstance(out, str):
         try:
-            write_local_output_file(args.out, out, mkdir_parents=True)
+            write_local_output_file(args.out, out, mkdir_parents=True, exclusive=True)
         except OSError as exc:
             print(f"seal_envelope: cannot write --out {args.out}: {exc}",
                   file=sys.stderr)

@@ -35,6 +35,7 @@ from learning_os.adapters.seal_parser import (
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.materials.reading_cards import valid_session
 from learning_os.store.study_fence import (
+    MAX_STUDY_JSON_BYTES,
     STUDY_FENCE_CORE_ENV,
     STUDY_FENCE_SCRATCH_ENV,
     STUDY_STAGED_MANIFEST_ENV,
@@ -54,6 +55,7 @@ DEFAULT_WRITE_TIMEOUT_S = 5.0
 DEFAULT_MAX_REQUEST_BYTES = 8 * 1024 * 1024
 DEFAULT_MAX_WORKERS = 32
 DEFAULT_CORE_TIMEOUT_S = 120.0
+DEFAULT_LOCK_WAIT_S = 30.0
 
 ALLOWED_LOS_READ_COMMANDS: frozenset[str] = frozenset({
     "status",
@@ -272,6 +274,21 @@ def _default_runner(
     )
 
 
+def _read_capped_text(path: Path) -> str | None:
+    """Read a broker-produced JSON text file, refusing oversized output."""
+    try:
+        if not path.is_file():
+            return None
+        if path.stat().st_size > MAX_STUDY_JSON_BYTES:
+            raise WriteRefused(
+                f"study broker: output exceeds size limit "
+                f"({MAX_STUDY_JSON_BYTES} bytes): {path}"
+            )
+        return path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise WriteRefused(f"study broker: cannot read output {path}: {exc}") from exc
+
+
 def _refuse(reason: str) -> BrokerResult:
     line = reason if reason.endswith("\n") else reason + "\n"
     return BrokerResult(exit_code=2, stdout="", stderr=line)
@@ -404,6 +421,7 @@ class StudyBroker:
         python_executable: Path | None = None,
         runner: Runner | None = None,
         core_timeout_s: float = DEFAULT_CORE_TIMEOUT_S,
+        lock_wait_s: float = DEFAULT_LOCK_WAIT_S,
     ) -> None:
         if not valid_session(session_id):
             raise ValueError(f"invalid study session UUID: {session_id!r}")
@@ -440,6 +458,9 @@ class StudyBroker:
             venv_py = self.core_root / ".venv" / "bin" / "python"
             self.python_executable = venv_py if venv_py.is_file() else Path(sys.executable)
         self.core_timeout_s = float(core_timeout_s)
+        if lock_wait_s <= 0:
+            raise ValueError(f"lock_wait_s must be positive, got {lock_wait_s!r}")
+        self.lock_wait_s = float(lock_wait_s)
         self._custom_runner = runner
         self._lock = threading.Lock()
         self._proc_lock = threading.Lock()
@@ -514,7 +535,12 @@ class StudyBroker:
     ) -> BrokerResult:
         cmd = [str(self.python_executable), "-I", str(script), *argv]
         env = self._child_env(extra=extra_env)
-        with self._lock:
+        if not self._lock.acquire(timeout=self.lock_wait_s):
+            return _refuse(
+                f"study broker: busy — core request did not start within "
+                f"{self.lock_wait_s:g}s; retry the request"
+            )
+        try:
             if self._custom_runner is not None:
                 if self._cancelled_event.is_set():
                     return _refuse("study broker: cancelled")
@@ -530,6 +556,8 @@ class StudyBroker:
                     active_procs=self._active_procs,
                     cancelled_event=self._cancelled_event,
                 )
+        finally:
+            self._lock.release()
         return BrokerResult(exit_code=code, stdout=out, stderr=err)
 
     def _check_root_flag(self, raw_root: object, *, cwd: Path) -> None:
@@ -744,11 +772,7 @@ class StudyBroker:
                     )
                     if host_report is None:
                         return res
-                    report_out_text = (
-                        host_report.read_text(encoding="utf-8")
-                        if host_report.is_file()
-                        else None
-                    )
+                    report_out_text = _read_capped_text(host_report)
                     stdout_text = res.stdout
                     if report_out_text is not None and anchored_report_out is not None:
                         stdout_text = _rewrite_saved_report_stdout(
@@ -893,13 +917,25 @@ class StudyBroker:
                                 label="--payload @PATH",
                             )
                         )
-                        rewritten = _rewrite_value_option(
-                            rewritten, "--payload", self._seal_parser, raw_payload
-                        )
                     else:
                         raw_payload = ns.payload
                     payload_obj = _parse_json_dict(raw_payload, label="--payload")
                     stager.stage_payload_paths(payload_obj)
+                    # Never expand payload JSON into a subprocess argument
+                    # (E2BIG on large payloads): stage it host-only and pass
+                    # an @PATH the host child reads back.
+                    staged_payload = stage_dir / "payload.json"
+                    pfd = os.open(
+                        staged_payload,
+                        os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                        0o400,
+                    )
+                    with os.fdopen(pfd, "w", encoding="utf-8") as phandle:
+                        phandle.write(raw_payload)
+                    rewritten = _rewrite_value_option(
+                        rewritten, "--payload", self._seal_parser,
+                        f"@{staged_payload}",
+                    )
 
                 extra_env.update(stager.manifest_env())
                 run_env = extra_env or None
@@ -916,11 +952,7 @@ class StudyBroker:
                         stdin_data=child_stdin,
                         extra_env=run_env,
                     )
-                    captured = (
-                        check_target.read_text(encoding="utf-8")
-                        if check_target.is_file()
-                        else None
-                    )
+                    captured = _read_capped_text(check_target)
                     return BrokerResult(
                         exit_code=res.exit_code,
                         stdout=res.stdout,

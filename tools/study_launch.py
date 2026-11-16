@@ -723,11 +723,31 @@ def launch_study(
     sigterm_installed = False
     prev_sigterm = signal.getsignal(signal.SIGTERM)
 
+    def _terminate_group(active: subprocess.Popen[bytes], *, force: bool = False) -> None:
+        """Terminate the launcher child's whole process group (descendants included)."""
+        import contextlib as _ctx
+        if active.poll() is not None:
+            return
+        sig = signal.SIGKILL if force else signal.SIGTERM
+        with _ctx.suppress(OSError, ProcessLookupError):
+            os.killpg(os.getpgid(active.pid), sig)
+        if force:
+            return
+        try:
+            active.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            with _ctx.suppress(OSError, ProcessLookupError):
+                os.killpg(os.getpgid(active.pid), signal.SIGKILL)
+            with _ctx.suppress(subprocess.TimeoutExpired):
+                active.wait(timeout=5)
+
     def _on_sigterm(_signum: int, _frame: FrameType | None) -> None:
         nonlocal terminated_by_signal
         terminated_by_signal = True
         if proc is not None and proc.poll() is None:
-            proc.terminate()
+            import contextlib as _ctx
+            with _ctx.suppress(OSError, ProcessLookupError):
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
 
     try:
         if scratch_dir_override is not None:
@@ -803,28 +823,19 @@ def launch_study(
             [str(effective_sandbox), "-f", str(sb_path), *command],
             env=child_env,
             cwd=str(child_cwd),
+            start_new_session=True,
         )
         exit_code = proc.wait()
         return 143 if terminated_by_signal and exit_code < 0 else exit_code
     except KeyboardInterrupt:
         if proc is not None and proc.poll() is None:
-            proc.send_signal(signal.SIGINT)
-            try:
-                proc.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.wait()
+            _terminate_group(proc)
         return 130
     finally:
         if sigterm_installed:
             signal.signal(signal.SIGTERM, prev_sigterm)
         if proc is not None and proc.poll() is None:
-            proc.terminate()
-            try:
-                proc.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.wait()
+            _terminate_group(proc)
         if server is not None:
             server.close()
         if session_started:

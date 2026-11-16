@@ -1636,3 +1636,95 @@ def test_session_end_refusal_and_scratch_boundary_hints(tmp_path: Path) -> None:
     assert "outside the study boundary" in msg
     assert "$LOS_SCRATCH_DIR" in msg
     assert str(scratch) in msg
+
+
+# ---- hardening regressions (Phase 2) ---------------------------------------
+
+def test_seal_payload_is_staged_not_expanded_into_argv(tmp_path: Path) -> None:
+    core, scratch = _make_broker_world(tmp_path)
+    runner = RecordingRunner()
+    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+    big_text = "x" * 200_000
+    payload_file = scratch / "payload.json"
+    payload_file.write_text(
+        json.dumps({"unit_id": "u", "stage_id": "s", "text": big_text}),
+        encoding="utf-8",
+    )
+    res = broker.handle_request({
+        "tool": "seal_envelope",
+        "argv": [
+            "--capability", "stage.note.write",
+            "--payload", f"@{payload_file}",
+            "--key", "k-hardening-1", "--guards", "auto",
+        ],
+        "cwd": str(core),
+    })
+    assert res.exit_code == 0, res.stderr
+    cmd = runner.calls[-1][0]
+    assert all(big_text not in arg for arg in cmd)
+    assert all(len(arg) < 4096 for arg in cmd)
+    payload_args = [
+        cmd[i + 1] for i, a in enumerate(cmd[:-1]) if a == "--payload"
+    ] + [a.split("=", 1)[1] for a in cmd if a.startswith("--payload=")]
+    assert payload_args and payload_args[0].startswith("@")
+
+
+def test_broker_core_lock_wait_is_bounded(tmp_path: Path) -> None:
+    core, scratch = _make_broker_world(tmp_path)
+    started = threading.Event()
+    release = threading.Event()
+
+    def slow_runner(cmd, cwd, env, stdin_data):
+        started.set()
+        release.wait(timeout=10)
+        return 0, "{}\n", ""
+
+    broker = StudyBroker(
+        core, SESSION, scratch_dir=scratch, runner=slow_runner, lock_wait_s=0.3,
+    )
+    first = threading.Thread(
+        target=broker.handle_request,
+        args=({"tool": "los", "argv": ["status"], "cwd": str(core)},),
+        daemon=True,
+    )
+    first.start()
+    assert started.wait(timeout=5)
+    begin = time.monotonic()
+    res = broker.handle_request(
+        {"tool": "los", "argv": ["status"], "cwd": str(core)}
+    )
+    elapsed = time.monotonic() - begin
+    release.set()
+    first.join(timeout=5)
+    assert res.exit_code == 2
+    assert "busy" in res.stderr
+    assert elapsed < 5
+
+
+def test_read_study_json_file_refuses_oversized_input(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from learning_os.domain.failures import StudyFenceRefused
+    from learning_os.store import study_fence
+
+    core, scratch = _make_broker_world(tmp_path)
+    big = scratch / "big.json"
+    big.write_text(json.dumps({"x": "y" * 500}), encoding="utf-8")
+    monkeypatch.setattr(study_fence, "MAX_STUDY_JSON_BYTES", 64)
+    with pytest.raises(StudyFenceRefused, match="exceeds size limit"):
+        study_fence.read_study_json_file(
+            str(big), core_root=core, scratch_dir=scratch, cwd=core,
+            label="--payload-file",
+        )
+
+
+def test_write_local_output_file_exclusive_refuses_overwrite(tmp_path: Path) -> None:
+    target = tmp_path / "check-rec.json"
+    write_local_output_file(
+        str(target), "first\n", exclusive=True, scratch_dir=tmp_path,
+    )
+    with pytest.raises(OSError):
+        write_local_output_file(
+            str(target), "second\n", exclusive=True, scratch_dir=tmp_path,
+        )
+    assert target.read_text(encoding="utf-8") == "first\n"

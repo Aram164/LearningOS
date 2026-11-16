@@ -336,6 +336,30 @@ def test_every_pending_entry_states_a_disposition():
         assert str(entry.get("disposition", "")).strip(), entry["path"]
 
 
+def test_optional_gemini_directory_allowed_when_present_or_absent(tmp_path):
+    """`LearningOS/.gemini` (agy profile) is optional, like `.claude`."""
+    entries = _base_entries() + [
+        {"path": "LearningOS/.gemini", "kind": "directory", "optional": True,
+         "owner": "agent-config", "purpose": "opt-in agy study UX hooks"}]
+    absent = _wrapper(tmp_path, entries=entries)
+    assert pm.check(absent) == []
+    present = _wrapper(
+        tmp_path / "with-gemini",
+        entries=entries,
+        files={"LearningOS/.gemini/config/hooks.json": b"{}\n"},
+    )
+    assert pm.check(present) == []
+
+
+@pytest.mark.full_repo
+def test_live_contract_declares_optional_gemini_directory():
+    by_path = {str(e["path"]): e for e in pm.load(ROOT).entries}
+    entry = by_path.get("LearningOS/.gemini")
+    assert entry is not None, "LearningOS/.gemini must be declared (agy perimeter)"
+    assert entry.get("optional") is True
+    assert entry.get("kind") == "directory"
+
+
 @pytest.mark.full_repo
 def test_the_only_copy_is_never_marked_for_deletion():
     """`mml-book.pdf` has no managed copy. A future edit that changes its
