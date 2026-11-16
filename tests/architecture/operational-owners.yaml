@@ -28,3 +28,6 @@ entries:
   # seal_envelope.py --submit retry state: the exact envelope a lost response
   # retries with, so the gateway replays it (agent-cost plan D1).
   - {glob: "<STATE>/sealed-requests/**", sink: module, owner: learning_os.store.session_ledger}
+  # Reviewed-write preflight evidence (review.record_sha256 binding):
+  # Core's own record that a check ran under one snapshot.
+  - {glob: "<STATE>/review-checks-*.json", sink: module, owner: learning_os.store.session_ledger}
