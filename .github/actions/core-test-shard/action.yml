@@ -1,0 +1,139 @@
+name: Core test shard
+description: Run one Core pytest shard and upload its JUnit and witness population.
+inputs:
+  shard:
+    description: Leg name from the Core checkout's shard manifest.
+    required: true
+  ratchet_base:
+    description: Resolved comparison commit for the Core checkout.
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.14.4"
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    # The documented project environment is the repository venv: parser
+    # diagnostics are characterized bytes pinned to this interpreter, and
+    # the procedure transcripts invoke $LOS_REPO/.venv/bin/python.
+    - name: Install Core development dependencies
+      working-directory: repository
+      shell: bash
+      run: |
+        python -m venv .venv
+        .venv/bin/python -m pip install -e ".[dev]"
+    - name: Install UI dependencies
+      working-directory: obsidian-ui
+      shell: bash
+      run: npm ci --ignore-scripts
+
+    # The procedure transcripts (tests/test_procedures.py, PLAN D11) run
+    # under Scrut v0.5.0. The release archive is pinned by GitHub's
+    # published SHA-256 and checked before use; the binary stays outside
+    # the checkout, clear of the tree-contract test, and reaches the gate
+    # as LOS_SCRUT_BIN.
+    - name: Install PDF text extractor
+      working-directory: repository
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends poppler-utils
+        pdftotext -v
+
+    - name: Install Scrut v0.5.0 (pinned digest)
+      working-directory: repository
+      shell: bash
+      run: |
+        set -eu
+        dir="$RUNNER_TEMP/scrut"
+        mkdir -p "$dir"
+        curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
+          https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+        echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
+        tar -xzf "$dir/scrut.tar.gz" -C "$dir"
+        bin="$(find "$dir" -type f -name scrut | head -n 1)"
+        test -n "$bin"
+        chmod 0755 "$bin"
+        test "$("$bin" --version)" = "scrut 0.5.0"
+        echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
+
+    - name: Resolve this shard's file list from the manifest
+      working-directory: repository
+      id: pick
+      env:
+        SHARD: ${{ inputs.shard }}
+      shell: bash
+      run: |
+        set -eu
+        files="$(python3 -c '
+        import json, os, sys
+        manifest = json.load(open(".github/shard-manifest.json"))["legs"]
+        shard = sys.argv[1]
+        try:
+            files = manifest[shard]
+        except KeyError:
+            raise SystemExit(
+                f"shard {shard!r} is not in .github/shard-manifest.json")
+        missing = sorted(f for f in files if not os.path.isfile(f))
+        assert not missing, f"shard {shard}: files missing from tests/: {missing}"
+        print("\n".join(files))
+        ' "$SHARD")"
+        count="$(printf '%s' "$files" | grep -c .)"
+        printf 'shard %s: %s files\n' "$SHARD" "$count"
+        {
+          echo "files<<SHARD_FILES_EOF"
+          printf '%s\n' "$files"
+          echo "SHARD_FILES_EOF"
+        } >> "$GITHUB_OUTPUT"
+
+    # Run the full shard selection with no marker deselection.
+    # --basetemp pins the session witness file and audit dir under
+    # pytesttmp/ so this leg can upload them for the zz merge below.
+    - name: Run this shard of the suite
+      working-directory: repository
+      env:
+        LOS_RATCHET_BASE: ${{ inputs.ratchet_base }}
+        SHARD: ${{ inputs.shard }}
+        PICKED: ${{ steps.pick.outputs.files }}
+      shell: bash
+      run: |
+        set -eu
+        mkdir -p ../junit-out
+        # shellcheck disable=SC2086  # manifest paths contain no spaces
+        .venv/bin/python -m pytest -q --basetemp=../pytesttmp \
+          --junitxml="../junit-out/junit-$SHARD.xml" $PICKED
+
+    - name: Upload this shard's JUnit results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: junit-${{ inputs.shard }}
+        path: junit-out/
+        if-no-files-found: error
+
+    # The A9/A19 population artifacts, from every suite leg — not just
+    # the legs that historically produce witnesses: the session witness
+    # file, its attribution sidecar, and the audit dir with its
+    # cases.txt index (tests/conftest.py creates all three for every
+    # session, so a leg that produced nothing still uploads the empty
+    # triple). The globs name the session fixtures' own basetemp
+    # locations, because private witness files some tests create under
+    # their per-test tmp dirs must never enter the population.
+    - name: Upload this leg's witness population
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: population-${{ inputs.shard }}
+        path: |
+          pytesttmp/site-witness*/sites.jsonl
+          pytesttmp/site-witness*/sites.jsonl.attribution.json
+          pytesttmp/operational-audit*
+        if-no-files-found: error
+        # Intent: never follow symlinks. Empirically the upload still
+        # materializes pytest's <name>current aliases beside the
+        # session dirs, so the merge below collapses the byte-identical
+        # copies — the dedupe there is load-bearing, not this flag.
+        follow-symbolic-links: false

@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
 VALIDATE = WORKFLOWS / "validate.yml"
 RELEASE_PAIR = WORKFLOWS / "release-pair.yml"
+SHARD_ACTION = ".github/actions/core-test-shard"
+SHARD_ACTION_USES = {f"./repository/{SHARD_ACTION}", f"./ci-workflow/{SHARD_ACTION}"}
 
 HEX40 = r"[0-9a-f]{40}"
 FULL_SHA_RE = re.compile(rf"^{HEX40}$")
@@ -32,10 +34,21 @@ def _triggers(doc: dict) -> dict:
     return doc.get("on", doc.get(True, {}))
 
 
+def _job_steps(job: dict) -> list[dict]:
+    """Include the shared shard action in the policy checks on its callers."""
+    steps = []
+    for step in job.get("steps", []):
+        if step.get("uses") in SHARD_ACTION_USES:
+            steps.extend(_load(ROOT / SHARD_ACTION / "action.yml")["runs"]["steps"])
+        else:
+            steps.append(step)
+    return steps
+
+
 def _all_run_steps(doc: dict) -> list[str]:
     steps = []
     for job in doc.get("jobs", {}).values():
-        for step in job.get("steps", []):
+        for step in _job_steps(job):
             if "run" in step:
                 steps.append(step["run"])
     return steps
@@ -130,7 +143,7 @@ def _pytest_leg_steps(doc: dict) -> list[dict]:
     """Steps that run one suite shard: pytest writing shard JUnit results."""
     return [step for job_id, job in doc.get("jobs", {}).items()
             if job_id != "seatbelt-macos"
-            for step in job.get("steps", [])
+            for step in _job_steps(job)
             if "-m pytest" in step.get("run", "")
             and "--junitxml" in step.get("run", "")]
 
@@ -149,7 +162,9 @@ def test_ci_runs_full_collected_suite_and_dynamic_ratchet_base():
         for step in legs:
             env = step.get("env", {})
             assert "PYTEST_ADDOPTS" not in env, (workflow.name, step.get("name"))
-            assert env.get("LOS_RATCHET_BASE") == "${{ steps.ratchet.outputs.base }}", (
+            assert env.get("LOS_RATCHET_BASE") in {
+                "${{ steps.ratchet.outputs.base }}", "${{ inputs.ratchet_base }}",
+            }, (
                 workflow.name, step.get("name"))
             assert set(env) == {"LOS_RATCHET_BASE", "SHARD", "PICKED"}, (
                 workflow.name, sorted(env))
@@ -159,6 +174,34 @@ def test_ci_runs_full_collected_suite_and_dynamic_ratchet_base():
         text = workflow.read_text(encoding="utf-8")
         assert "not live_install" not in text, workflow.name
         assert "LOS_RATCHET_BASE: origin/main" not in text, workflow.name
+
+
+def test_both_workflows_run_the_same_core_shard_recipe_after_checkout():
+    for workflow, recipe_checkout in ((VALIDATE, "repository"), (RELEASE_PAIR, "ci-workflow")):
+        job = _load(workflow)["jobs"]["pytest-shards"]
+        steps = job["steps"]
+        calls = [step for step in steps if step.get("uses") in SHARD_ACTION_USES]
+        assert len(calls) == 1
+        call = calls[0]
+        assert call["uses"] == f"./{recipe_checkout}/{SHARD_ACTION}"
+        assert call["with"] == {
+            "shard": "${{ matrix.shard }}",
+            "ratchet_base": "${{ steps.ratchet.outputs.base }}",
+        }
+        setup = steps[:steps.index(call)]
+        checkouts = {step["with"]["path"]: step["with"] for step in setup
+                     if str(step.get("uses", "")).startswith("actions/checkout@")}
+        assert {"repository", "obsidian-ui", recipe_checkout} <= checkouts.keys()
+        assert any(step.get("id") == "ratchet" for step in setup)
+        if workflow == RELEASE_PAIR:
+            assert checkouts["repository"]["ref"] == "${{ steps.inputs.outputs.core_sha }}"
+            assert checkouts["obsidian-ui"]["ref"] == "${{ steps.inputs.outputs.ui_sha }}"
+            assert checkouts[recipe_checkout]["ref"] == "${{ github.workflow_sha }}"
+
+        shard_steps = _pytest_leg_steps({"jobs": {"pytest-shards": job}})
+        assert len(shard_steps) == 1
+        assert shard_steps[0]["env"]["LOS_RATCHET_BASE"] == "${{ inputs.ratchet_base }}"
+        assert shard_steps[0]["env"]["SHARD"] == "${{ inputs.shard }}"
 
 
 def test_hosted_gates_run_macos_seatbelt_without_skips():
@@ -241,13 +284,14 @@ def test_ci_installs_the_pinned_scrut_before_the_gate():
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
         doc = _load(workflow)
-        legs = _pytest_leg_steps(doc)
-        assert legs, workflow.name
-        leg_scripts = {id(step) for step in legs}
-        for job in doc["jobs"].values():
-            steps = job.get("steps", [])
+        assert _pytest_leg_steps(doc), workflow.name
+        for name, job in doc["jobs"].items():
+            if name == "seatbelt-macos":
+                continue
+            steps = _job_steps(job)
             job_legs = [index for index, step in enumerate(steps)
-                        if id(step) in leg_scripts]
+                        if "-m pytest" in step.get("run", "")
+                        and "--junitxml" in step.get("run", "")]
             if not job_legs:
                 continue
             installs = [index for index, step in enumerate(steps)
@@ -287,7 +331,7 @@ def test_ci_pins_the_verified_interpreter_patch():
         text = workflow.read_text(encoding="utf-8")
         any_setup = False
         for name, job in doc["jobs"].items():
-            setups = [step for step in job.get("steps", [])
+            setups = [step for step in _job_steps(job)
                       if str(step.get("uses", "")).startswith(
                           "actions/setup-python@")]
             assert len(setups) <= 1, (workflow.name, name)
@@ -313,7 +357,7 @@ def test_ci_installs_core_dependencies_into_the_project_venv():
     for workflow in (VALIDATE, RELEASE_PAIR):
         doc = _load(workflow)
         for job in doc["jobs"].values():
-            installs = [step for step in job.get("steps", [])
+            installs = [step for step in _job_steps(job)
                         if step.get("name") == "Install Core development dependencies"]
             assert len(installs) <= 1, workflow.name
             for install in installs:
@@ -465,11 +509,11 @@ def test_workflow_matrices_and_population_flow_match_the_manifest():
             f"{workflow.name}: zz job {zz_job_id!r} must run after the "
             f"suite job {suite_job_id!r}")
 
-        uploads = [step for step in suite_job.get("steps", [])
+        uploads = [step for step in _job_steps(suite_job)
                    if str(step.get("uses", "")).startswith(
                        "actions/upload-artifact")
                    and step.get("with", {}).get("name")
-                   == "population-${{ matrix.shard }}"]
+                   == "population-${{ inputs.shard }}"]
         assert len(uploads) == 1, (
             f"{workflow.name}: expected exactly one population upload "
             "step, run by every suite leg")

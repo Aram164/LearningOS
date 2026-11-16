@@ -86,11 +86,26 @@ three roots and declared plugin assets included
 
 ## The manifest binds data to Core's commit
 
+Compare the manifest's data contract version with the fixture's declaration.
+
 ```scrut {interpolated: true}
-$ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
+$ $LOS_REPO/.venv/bin/python - <<'PY'
+> import json, os
+> from pathlib import Path
+> import yaml
+> manifest_path = Path(os.environ["TMPDIR"]) / "backup/manifest.json"
+> contract_path = Path(os.environ["LOS_FX"]) / "system/contracts/data-contract.yaml"
+> manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+> declared = yaml.safe_load(contract_path.read_text(encoding="utf-8"))["contract_version"]
+> provenance = manifest["provenance"]
+> recorded = provenance["data_contract_version"]
+> assert recorded == declared, f"backup recorded data contract {recorded!r}, expected {declared!r}"
+> print(len(manifest["entries"]))
+> print(manifest["aggregate_sha256"])
+> print(provenance["core"]["commit"] is not None, provenance["ui"]["commit"])
+> PY
 $BACKUP_ENTRIES
 $BACKUP_AGGREGATE
-68
 True None
 ```
 
