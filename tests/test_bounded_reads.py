@@ -636,16 +636,24 @@ def test_brief_next_action_whole_under_the_bound_and_marked_over_it(mini_repo):
     assert whole[len(cut) - 1] == " "
 
 
-def test_brief_pointer_invalid_matches_missing(mini_repo):
+@pytest.mark.parametrize("stale_target", ["stage", "current_map"])
+def test_brief_reports_invalid_recorded_pointer(mini_repo, stale_target):
     add_curriculum(mini_repo)
     pointer_path = mini_repo / "curriculum/resume.yaml"
     pointer = yaml.safe_load(pointer_path.read_text(encoding="utf-8"))
-    pointer["stage_id"] = "stage-no-such-stage"
-    write_yaml(pointer_path, pointer)
+    if stale_target == "stage":
+        pointer["stage_id"] = "stage-no-such-stage"
+        write_yaml(pointer_path, pointer)
+    else:
+        unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+        unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+        unit["current_study_map"] = "study-map-no-longer-present"
+        write_yaml(unit_path, unit)
     brief = run_los(mini_repo, "bootstrap", "--brief")
     assert brief.returncode == 0, brief.stderr
     data = json.loads(brief.stdout)
     assert data["pointer_state"] == "invalid"
+    assert data["resume_pointer"] == {}
     assert [opt["workspace_id"] for opt in data["recorded_options"]] == ["workspace-demo"]
 
 
