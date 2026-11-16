@@ -15,8 +15,6 @@ from pathlib import Path
 import yaml
 
 from learning_os.app._plan_gate import coverage_audit_problems as _coverage_audit_problems
-from learning_os.app._plan_gate import enumerate_inventory_roots as _enumerate_inventory_roots
-from learning_os.app._plan_gate import inventory_row_problems as _inventory_row_problems
 from learning_os.app._plan_gate import is_source_plan_only as _is_source_plan_only
 from learning_os.app._plan_gate import (
     master_promotion_check_result as _master_promotion_check_result,
@@ -28,6 +26,10 @@ from learning_os.app._plan_gate import (
 )
 from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
+)
+from learning_os.app._plan_gate import observed_material_binding as _observed_material_binding
+from learning_os.app._plan_gate import (
+    observed_material_for_payload as _observed_material_for_payload_with_reader,
 )
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app._plan_gate import staged_plan_repository
@@ -72,8 +74,6 @@ from learning_os.domain.plan_import import apply_unit_route_changes as _apply_un
 from learning_os.domain.plan_import import (
     assemble_compact_module_revision as _assemble_compact_module_revision,
 )
-from learning_os.domain.plan_import import inventory_block as _inventory_block
-from learning_os.domain.plan_import import inventory_view as _inventory_view
 from learning_os.domain.plan_import import minimal_artifact_ids as _minimal_artifact_ids
 from learning_os.domain.plan_import import (
     module_plan_ordering_problems as _module_plan_ordering_problems,
@@ -98,55 +98,20 @@ from learning_os.store.transactions import parse_expected_revisions
 #: pattern; this is the same rule in the one place the write path needs it.
 _MODULE_ID = re.compile(r"^module-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
+def observed_material_for_payload(
+    root: Path, capability: str, payload: dict,
+) -> tuple[dict | None, list[str]]:
+    """Return ``(fragment, problems)`` for a plan import/revise sealing payload."""
+    return _observed_material_for_payload_with_reader(
+        root, capability, payload, _read_content_bound_file)
+
+
 # -------------------- module.plan.import / unit.plan.revise (PLAN 4.1,
 # Task 82). Pure construction lives in learning_os/domain/plan_import.py;
 # these helpers (repository reads, gateway context, report presentation)
 # moved verbatim from commands/module.py; the handlers convert the three
 # entries by SPEC 12 (R1 promotion/compact branches, R4 shared tail).
 
-
-def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
-    """Bind the observed material set to the preflight report.
-
-    Returns (None, []) for a legacy audit without an inventory-v1 block.
-    Otherwise the fragment carries the observed-set digest the reviewed
-    apply re-verifies, plus the generated human view of the rows.
-    """
-    audit_ref = contract.get("coverage_audit")
-    if not isinstance(audit_ref, str) or not audit_ref.strip():
-        return None, []
-    audit = (root / audit_ref).resolve()
-    try:
-        audit.relative_to(root.resolve())
-    except ValueError:
-        return None, []
-    if not audit.is_file():
-        return None, []
-    block, problems = _inventory_block(audit.read_text(encoding="utf-8"))
-    if problems or block is None:
-        return None, problems
-    roots = block.get("roots")
-    if not isinstance(roots, list) or not roots:
-        return None, ["coverage audit inventory-v1 block needs a nonempty roots list"]
-    materials = root.parent / "materials"
-    observed, problems = _enumerate_inventory_roots(materials, roots)
-    if problems:
-        return None, problems
-    problems = _inventory_row_problems(block, observed, materials)
-    if problems:
-        return None, problems
-    digest = hashlib.sha256(json.dumps(
-        {"roots": sorted(str(r) for r in roots),
-         "files": {path: observed[path] for path in sorted(observed)}},
-        ensure_ascii=False, sort_keys=True,
-        separators=(",", ":")).encode("utf-8")).hexdigest()
-    return ({"observed_material": {
-                "sha256": f"sha256:{digest}",
-                "roots": sorted(str(r) for r in roots),
-                "local_files": len(observed),
-                "rows": len(block.get("rows") or []),
-             },
-             "inventory_view": _inventory_view(block)}, [])
 
 def _verify_observed_material(root: Path, contract: dict,
                               review_report: str | None,
@@ -182,46 +147,6 @@ def _verify_observed_material(root: Path, contract: dict,
         return ("relevant material changed since --check; re-run --check, "
                 "review the new report, then apply that report")
     return None
-
-
-def observed_material_for_payload(
-    root: Path, capability: str, payload: dict,
-) -> tuple[dict | None, list[str]]:
-    """Return ``(fragment, problems)`` for a plan import/revise sealing payload."""
-    contract: dict = {}
-    if capability == "unit.plan.revise":
-        if isinstance(payload.get("record"), dict):
-            candidate = payload["record"].get("plan_contract")
-            if isinstance(candidate, dict):
-                contract = candidate
-        elif payload.get("file"):
-            try:
-                _, raw = _read_content_bound_file(
-                    payload.get("file"), payload.get("file_sha256"),
-                    label="unit revision file")
-                loaded = yaml.safe_load(raw.decode("utf-8"))
-            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
-                return None, [str(exc)]
-            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
-                contract = loaded["plan_contract"]
-    elif capability == "module.plan.import":
-        if isinstance(payload.get("promotion"), dict):
-            candidate = payload["promotion"].get("plan_contract")
-            if isinstance(candidate, dict):
-                contract = candidate
-        elif payload.get("file"):
-            try:
-                _, raw = _read_content_bound_file(
-                    payload.get("file"), payload.get("file_sha256"),
-                    label="module plan file")
-                loaded = yaml.safe_load(raw.decode("utf-8"))
-            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
-                return None, [str(exc)]
-            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
-                contract = loaded["plan_contract"]
-    if not contract:
-        return None, []
-    return _observed_material_binding(root, contract)
 
 
 def _drop_unchanged_writes(writes: dict[Path, str]) -> dict[Path, str]:

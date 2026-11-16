@@ -63,7 +63,8 @@ def _check_canonical_stable(root: Path, snapshot: str | None) -> None:
 
 
 def staged_from_outputs(repo, outputs: dict, *, inputs_before: dict | None = None,
-                        canonical_before: str | None = None) -> StagedPublication:
+                        canonical_before: str | None = None,
+                        canonical_stat_before: str | None = None) -> StagedPublication:
     """The one exposure boundary for already-built outputs.
 
     Every publication path — transaction, manual generation, and
@@ -82,7 +83,21 @@ def staged_from_outputs(repo, outputs: dict, *, inputs_before: dict | None = Non
 
     def expose() -> None:
         _check_inputs_stable(root, inputs_before)
-        _check_canonical_stable(root, canonical_before or snapshot)
+        if canonical_stat_before is not None:
+            # Stat-only identity: publish-on-read already paid for the
+            # content snapshot, and a second content walk would break
+            # its bounded-hash budget. Any realistic move changes the
+            # stat digest; content is proven by the snapshot check the
+            # caller already made against the manifest stamp.
+            from learning_os.store.fingerprint import canonical_stat_digest
+
+            if canonical_stat_digest(root) != canonical_stat_before:
+                raise ProjectionInputChanged(
+                    "canonical state changed during projection publication; retry",
+                    changed_paths=(), changed_paths_total=0,
+                )
+        else:
+            _check_canonical_stable(root, canonical_before or snapshot)
         write_outputs(repo, outputs)
 
     return StagedPublication(
@@ -300,6 +315,9 @@ def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
     if (manifest.get("_generated") or {}).get("snapshot_id") != live:
         return None
     try:
+        from learning_os.store.fingerprint import canonical_stat_digest
+
+        stat_before = canonical_stat_digest(repo.root)
         outputs = generate_all(
             repo, generated_at, backlinks=backlinks, manifest=manifest,
             inputs_before=inputs_before,
@@ -316,7 +334,7 @@ def _publish_rebuild(repo, generated_at: str, backlinks: dict, manifest: dict,
         # the stored pair exactly as stale as it was.
         staged_from_outputs(
             repo, outputs, inputs_before=inputs_before,
-            canonical_before=live).expose()
+            canonical_stat_before=stat_before).expose()
     except Exception:
         # Publication refreshes disposable derived files; the same builders
         # run unguarded on every canonical write and `make views`, which

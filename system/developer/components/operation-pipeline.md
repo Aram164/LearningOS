@@ -39,7 +39,7 @@ Admit, lock, dispatch and settle one operation through the shared application bo
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `backup`, `contracts`, `derived-store`, `diagnostics`, `domain`, `evidence`, `learner-derivations`, `legacy-archive`, `loading`, `materials`, `operation-handlers`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
+Depends on: `backup`, `contracts`, `derived-store`, `diagnostics`, `domain`, `evidence`, `learner-derivations`, `legacy-archive`, `loading`, `materials`, `operation-handlers`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 
 Used by: `ai-delivery`, `cli-adapter`, `operation-handlers`, `plan-gate`.
 <!-- system-map:end -->

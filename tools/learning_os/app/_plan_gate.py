@@ -8,6 +8,8 @@ handler can use them without an upward import.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
 from pathlib import Path
@@ -25,9 +27,11 @@ from learning_os.derive.material_synthesis import (
 )
 from learning_os.derive.semantics.claim_status import claim_impacts, observe_claims
 from learning_os.derive.validation import validate
+from learning_os.domain.failures import WriteRefused
 from learning_os.domain.plan_import import INVENTORY_ROW_DISPOSITIONS as _INVENTORY_ROW_DISPOSITIONS
 from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
 from learning_os.domain.plan_import import inventory_block as _inventory_block
+from learning_os.domain.plan_import import inventory_view as _inventory_view
 from learning_os.domain.plan_import import minimal_artifact_ids as _minimal_artifact_ids
 from learning_os.domain.plan_import import (
     module_plan_routing_problems as _module_plan_routing_problems,
@@ -1072,3 +1076,87 @@ def master_promotion_check_result(
         "diff": plan.diff,
         "canonical_files_written": 0,
     }
+
+
+def observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
+    """Bind the observed material set to the preflight report.
+
+    Returns (None, []) for a legacy audit without an inventory-v1 block.
+    Otherwise the fragment carries the observed-set digest the reviewed
+    apply re-verifies, plus the generated human view of the rows.
+    """
+    audit_ref = contract.get("coverage_audit")
+    if not isinstance(audit_ref, str) or not audit_ref.strip():
+        return None, []
+    audit = (root / audit_ref).resolve()
+    try:
+        audit.relative_to(root.resolve())
+    except ValueError:
+        return None, []
+    if not audit.is_file():
+        return None, []
+    block, problems = _inventory_block(audit.read_text(encoding="utf-8"))
+    if problems or block is None:
+        return None, problems
+    roots = block.get("roots")
+    if not isinstance(roots, list) or not roots:
+        return None, ["coverage audit inventory-v1 block needs a nonempty roots list"]
+    materials = root.parent / "materials"
+    observed, problems = enumerate_inventory_roots(materials, roots)
+    if problems:
+        return None, problems
+    problems = inventory_row_problems(block, observed, materials)
+    if problems:
+        return None, problems
+    digest = hashlib.sha256(json.dumps(
+        {"roots": sorted(str(r) for r in roots),
+         "files": {path: observed[path] for path in sorted(observed)}},
+        ensure_ascii=False, sort_keys=True,
+        separators=(",", ":")).encode("utf-8")).hexdigest()
+    return ({"observed_material": {
+                "sha256": f"sha256:{digest}",
+                "roots": sorted(str(r) for r in roots),
+                "local_files": len(observed),
+                "rows": len(block.get("rows") or []),
+             },
+             "inventory_view": _inventory_view(block)}, [])
+
+
+def observed_material_for_payload(
+    root: Path, capability: str, payload: dict, read_bound_file,
+) -> tuple[dict | None, list[str]]:
+    """Return ``(fragment, problems)`` for a plan import/revise sealing payload."""
+    contract: dict = {}
+    if capability == "unit.plan.revise":
+        if isinstance(payload.get("record"), dict):
+            candidate = payload["record"].get("plan_contract")
+            if isinstance(candidate, dict):
+                contract = candidate
+        elif payload.get("file"):
+            try:
+                _, raw = read_bound_file(
+                    payload.get("file"), payload.get("file_sha256"),
+                    label="unit revision file")
+                loaded = yaml.safe_load(raw.decode("utf-8"))
+            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
+                return None, [str(exc)]
+            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
+                contract = loaded["plan_contract"]
+    elif capability == "module.plan.import":
+        if isinstance(payload.get("promotion"), dict):
+            candidate = payload["promotion"].get("plan_contract")
+            if isinstance(candidate, dict):
+                contract = candidate
+        elif payload.get("file"):
+            try:
+                _, raw = read_bound_file(
+                    payload.get("file"), payload.get("file_sha256"),
+                    label="module plan file")
+                loaded = yaml.safe_load(raw.decode("utf-8"))
+            except (WriteRefused, UnicodeDecodeError, yaml.YAMLError) as exc:
+                return None, [str(exc)]
+            if isinstance(loaded, dict) and isinstance(loaded.get("plan_contract"), dict):
+                contract = loaded["plan_contract"]
+    if not contract:
+        return None, []
+    return observed_material_binding(root, contract)

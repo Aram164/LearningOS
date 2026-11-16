@@ -304,6 +304,13 @@ def test_route_patch_stale_revision_still_refuses(mini_repo: Path, tmp_path: Pat
     stale = next(iter(sorted(artifacts)))
     envelope["expected_revisions"][stale] += 1
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    # The review binds the revisions it checked: re-issue it for the
+    # stale floor so the revision guard, not the review check, refuses.
+    from learning_os.app.gateway import issue_review_evidence
+
+    envelope["review"] = issue_review_evidence(
+        mini_repo, "route.patch", envelope["payload"],
+        envelope["expected_snapshot"], envelope["expected_revisions"], None)
     envelope_path = tmp_path / "stale.json"
     envelope_path.write_text(json.dumps(envelope), encoding="utf-8")
     before = canonical_fingerprint(mini_repo)
