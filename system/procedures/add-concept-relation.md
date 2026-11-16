@@ -38,9 +38,15 @@ The narrowest fitting type is `requires`; the condition and the
 supporting note ride along.
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability concept.relations.change --payload '{"change": {"operations": [{"action": "add", "new": {"from": "concept-variance", "type": "requires", "to": "concept-expected-value", "context": "When variance is learned as a second moment.", "source": "note-demo"}}]}}' --key relation-requires --request-id request-relation-requires --guards auto --out "$TMPDIR/relation-requires.json"
+$ $H/los-seal --capability concept.relations.change --payload '{"change": {"operations": [{"action": "add", "new": {"from": "concept-variance", "type": "requires", "to": "concept-expected-value", "context": "When variance is learned as a second moment.", "source": "note-demo"}}]}}' --key relation-requires --guards auto --check-out "$TMPDIR/relation-requires-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: registry-concept-relations=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/relation-requires-check.json" --request-id request-relation-requires --out "$TMPDIR/relation-requires.json"
 ```
 
 ## Submit the envelope

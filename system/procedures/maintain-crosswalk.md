@@ -94,9 +94,15 @@ $ cat > "$TMPDIR/crosswalk-narrative.md" <<'EOF'
 ## Seal the narrative revision with derived guards
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-narrative --request-id request-crosswalk-narrative --guards auto --out "$TMPDIR/crosswalk-narrative.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-narrative --guards auto --check-out "$TMPDIR/crosswalk-narrative-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=1
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/crosswalk-narrative-check.json" --request-id request-crosswalk-narrative --out "$TMPDIR/crosswalk-narrative.json"
 ```
 
 ## Submit the narrative revision
@@ -136,9 +142,15 @@ sha256:5cf4f53f2b78917c2c821605236cb675c32bead66dec3d73a7f3519798303260
 ## Seal the judgment with derived guards
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-demo-book\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"clear intuition\", \"worked variance examples\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$CROSS_DIFF\"}" --key crosswalk-judgment --request-id request-crosswalk-judgment --guards auto --out "$TMPDIR/crosswalk-judgment.json"
+$ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-demo-book\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"clear intuition\", \"worked variance examples\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$CROSS_DIFF\"}" --key crosswalk-judgment --guards auto --check-out "$TMPDIR/crosswalk-judgment-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-demo-book=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/crosswalk-judgment-check.json" --request-id request-crosswalk-judgment --out "$TMPDIR/crosswalk-judgment.json"
 ```
 
 ## Submit the judgment
@@ -213,9 +225,15 @@ $ cat > "$TMPDIR/crosswalk-table.md" <<'EOF'
 ```
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-table.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-table.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-table --request-id request-crosswalk-table --guards auto --out "$TMPDIR/crosswalk-table.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-table.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-table.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-table --guards auto --check-out "$TMPDIR/crosswalk-table-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=2
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/crosswalk-table-check.json" --request-id request-crosswalk-table --out "$TMPDIR/crosswalk-table.json"
 ```
 
 ```scrut {interpolated: true}
@@ -245,9 +263,15 @@ $ los validate | grep -c "CROSSWALK-TABLE"
 ## Move the judgment back out
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-restore --request-id request-crosswalk-restore --guards auto --out "$TMPDIR/crosswalk-restore.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-restore --guards auto --check-out "$TMPDIR/crosswalk-restore-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=3
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/crosswalk-restore-check.json" --request-id request-crosswalk-restore --out "$TMPDIR/crosswalk-restore.json"
 ```
 
 ```scrut {interpolated: true}

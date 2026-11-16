@@ -72,9 +72,15 @@ unchanged
 ## Seal the revision with derived guards
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Commitments\", \"text\": \"Ship the demo module plan.\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key coord-commit --request-id request-coord-commit --guards auto --out "$TMPDIR/coord-commit.json"
+$ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Commitments\", \"text\": \"Ship the demo module plan.\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key coord-commit --guards auto --check-out "$TMPDIR/coord-commit-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/coord-commit-check.json" --request-id request-coord-commit --out "$TMPDIR/coord-commit.json"
 ```
 
 ## Submit the revision

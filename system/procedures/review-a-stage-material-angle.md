@@ -53,9 +53,15 @@ True True 0
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"vault_path": "material://source-demo-book/lecture-01.pdf"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": "Expected value, page 1 of 24: an outcome is a value a variable can take"}]}}' --key s29-vault --request-id request-s29-vault --guards auto --out "$TMPDIR/s29-vault.json"
+$ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"vault_path": "material://source-demo-book/lecture-01.pdf"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": "Expected value, page 1 of 24: an outcome is a value a variable can take"}]}}' --key s29-vault --guards auto --check-out "$TMPDIR/s29-vault-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-demo=0, unit-demo-l01=3
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s29-vault-check.json" --request-id request-s29-vault --out "$TMPDIR/s29-vault.json"
 ```
 
 ```scrut {interpolated: true}
@@ -175,9 +181,15 @@ sha256:b0dc8a4cdd0385a383a1b418aee13023cc9ffddfbbc550666e5665e56f0314ff
 ## Seal the replacement with derived guards
 
 ```scrut {output_stream: stderr}
-$ MAP_SHA=$(sha256sum "$TMPDIR/map-l01-replace.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l01\", \"file\": \"$TMPDIR/map-l01-replace.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\", \"replace\": true}" --key s29-replace --request-id request-s29-replace --guards auto --out "$TMPDIR/s29-replace.json"
+$ MAP_SHA=$(sha256sum "$TMPDIR/map-l01-replace.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l01\", \"file\": \"$TMPDIR/map-l01-replace.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\", \"replace\": true}" --key s29-replace --guards auto --check-out "$TMPDIR/s29-replace-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=4
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s29-replace-check.json" --request-id request-s29-replace --out "$TMPDIR/s29-replace.json"
 ```
 
 ```scrut {interpolated: true}

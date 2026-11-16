@@ -71,9 +71,15 @@ $ cat > "$TMPDIR/durable-revised.md" <<'EOF'
 ## Seal the revision with derived guards
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/durable-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/durable-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key durable-revise-demo --request-id request-durable-revise-demo --guards auto --out "$TMPDIR/durable-revise.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/durable-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/durable-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key durable-revise-demo --guards auto --check-out "$TMPDIR/durable-revise-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/durable-revise-check.json" --request-id request-durable-revise-demo --out "$TMPDIR/durable-revise.json"
 ```
 
 ## Submit the revision

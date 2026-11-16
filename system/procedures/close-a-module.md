@@ -140,9 +140,15 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 ```
 
 ```scrut {output_stream: stderr}
-$ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Deferrals\", \"text\": \"(none)\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key s19-defer --request-id request-s19-defer --guards auto --out "$TMPDIR/s19-defer.json"
+$ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Deferrals\", \"text\": \"(none)\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key s19-defer --guards auto --check-out "$TMPDIR/s19-defer-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/s19-defer-check.json" --request-id request-s19-defer --out "$TMPDIR/s19-defer.json"
 ```
 
 ```scrut {interpolated: true}

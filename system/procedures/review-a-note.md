@@ -45,9 +45,15 @@ and the next, and binds `file_sha256` itself
 ([build a write envelope](build-write-envelope.md)).
 
 ```scrut {output_stream: stderr}
-$ REV_SHA=$(sha256sum "$TMPDIR/review-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/review-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key review-demo --request-id request-review-demo --guards auto --out "$TMPDIR/review-demo.json"
+$ REV_SHA=$(sha256sum "$TMPDIR/review-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/review-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key review-demo --guards auto --check-out "$TMPDIR/review-demo-check.json" > /dev/null
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo=0
+```
+
+Inspect the saved check report before approving the revision. Seal the approved draft with the report's guards.
+
+```scrut
+$ $H/los-seal --guards-from "$TMPDIR/review-demo-check.json" --request-id request-review-demo --out "$TMPDIR/review-demo.json"
 ```
 
 ## Submit the revision
