@@ -136,7 +136,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"program.semester.update\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"program_id\":\"program-bachelors\",\"current_semester_before\":{\"id\":\"semester-sose-2026\",\"title\":\"SoSe 2026\",\"status\":\"current\",\"order\":1},\"current_semester_after\":{\"id\":\"semester-wise-2026\",\"title\":\"WiSe 2026/27\",\"status\":\"current\",\"order\":2},\"semester_added\":true,\"module_listing\":{\"rule\":\"open learning modules: kind in (academic, project) and not compatibility_only and status not in (completed, archived, dropped)\",\"listed_module_ids\":[\"module-demo\"],\"changed\":false},\"preserved\":\"exam outcomes, registrations, learner state and study work live in other records and are untouched\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"program-bachelors\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"program.semester.update\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"mode\":\"apply\",\"program_id\":\"program-bachelors\",\"current_semester_before\":{\"id\":\"semester-sose-2026\",\"title\":\"SoSe 2026\",\"status\":\"current\",\"order\":1},\"current_semester_after\":{\"id\":\"semester-wise-2026\",\"title\":\"WiSe 2026/27\",\"status\":\"current\",\"order\":2},\"semester_added\":true,\"module_listing\":{\"rule\":\"open learning modules: kind in (academic, project) and not compatibility_only and status not in (awaiting-grade, completed, archived, dropped)\",\"listed_module_ids\":[\"module-demo\"],\"changed\":false},\"preserved\":\"exam outcomes, registrations, learner state and study work live in other records and are untouched\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"program-bachelors\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
   "stdout_json": {
     "capability": "program.semester.update",
     "error": null,
@@ -167,7 +167,7 @@
         "listed_module_ids": [
           "module-demo"
         ],
-        "rule": "open learning modules: kind in (academic, project) and not compatibility_only and status not in (completed, archived, dropped)"
+        "rule": "open learning modules: kind in (academic, project) and not compatibility_only and status not in (awaiting-grade, completed, archived, dropped)"
       },
       "ok": true,
       "preserved": "exam outcomes, registrations, learner state and study work live in other records and are untouched",
