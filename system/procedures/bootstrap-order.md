@@ -150,7 +150,7 @@ $ los unit-list --compact
 ```scrut {interpolated: true}
 $ los inspect note-demo concept-expected-value
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-{"schema_version":1,"snapshot_id":"$LOS_FIXTURE_SNAPSHOT_1","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
+{"schema_version":1,"snapshot_id":"$LOS_FIXTURE_SNAPSHOT_1","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","domain_bucket":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
 ```
 
 ## Resolve the id through its alias
@@ -199,9 +199,6 @@ Demo Module · Expected value · stage-demo
   Stage note   nothing recorded yet (curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md)
 
   Open here    —
-
-  Top goal     Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved (1 goal)
-               tier 1 — 2026-10-09 (8 days); seeing it files nothing
 
   Exam         2. Termin — 2026-10-09 (8 days)
 ```
