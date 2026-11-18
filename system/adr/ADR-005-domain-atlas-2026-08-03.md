@@ -1,5 +1,12 @@
 # ADR-005 — Domain atlas: cross-domain reach without new canon (2026-08-03)
 
+> **Amended by ADR-023 (2026-11-18):** decision 1's view-level shelf→domain
+> placement is retired — domain grouping is published once through the
+> manifest catalog per ADR-023, not computed in the view. The remaining
+> decisions — no new canonical entity, the at-a-glance bootstrap block,
+> health-owned wiring debt, and the unregistered-files listing — all remain
+> in force.
+
 **Status:** accepted · **Context:** Aram reported that the operator's scope
 feels *confined*: standing in one module's workspace, Claude rarely surfaces
 sources or notes from other domains, even though the repository holds 228
@@ -36,8 +43,8 @@ discussion); **no new canonical entity, no schema change, no legacy rework**:
    counts by role, crosswalk hubs, shelves with entry counts and their
    *canonical* `description:` fields (harvested, never authored in the view),
    plus a "deliberately excluded strata" section with live counts. Built by
-   `tools/learning_os/derive/projection.py::build_domain_atlas`; the shelf→domain map is
-   view-level presentation (same pattern as the materials indexer), with a
+   `tools/learning_os/derive/projection/atlas.py::build_domain_atlas`; the shelf→domain map is
+   view-level presentation (retired 2026-11-18 by the ADR-023 banner above), with a
    `cross-domain` fallback so new shelves are never dropped.
 2. **(2D)** Hybrid bootstrap: the atlas opens with an **At a glance** block
    (~15 lines) read at every session start (CLAUDE.md §2 item 8); the full

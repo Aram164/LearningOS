@@ -1322,6 +1322,23 @@ documents:
       - system/adr/ADR-021-private-reading-memory-2026-11-12.md
       - system/ARCHITECTURE.md
 
+  - path: system/adr/ADR-023-study-prioritization-removal-and-domain-catalog-2026-11-18.md
+    audience: developer
+    applies_to: []
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The system offers study choices without ranking, decorating or filtering
+      them — one candidate builder owns eligibility, ordering and the recovery
+      matrix — and publishes domain grouping exactly once as a manifest v20
+      catalog with per-note buckets. Extends ADR-005 and ADR-006.
+    amends:
+      - system/adr/ADR-005-domain-atlas-2026-08-03.md
+      - system/ARCHITECTURE.md
+      - system/VALIDATION.md
+
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md
