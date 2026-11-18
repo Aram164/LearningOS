@@ -210,7 +210,7 @@ def build_health(repo: Repo, generated_at: str) -> str:
     # map does not name renders under `cross-domain`: counts stay right,
     # placement is wrong, and nothing else flags it. A maintenance SIGNAL,
     # never a backlog: give the shelf an explicit domain in
-    # ATLAS_COLLECTION_DOMAIN (genout/atlas.py).
+    # ATLAS_COLLECTION_DOMAIN (tools/learning_os/derive/projection/atlas.py).
     unmapped = sorted(name for name in repo.collections
                       if name not in ATLAS_COLLECTION_DOMAIN)
     lines.append("## Atlas shelf placement")

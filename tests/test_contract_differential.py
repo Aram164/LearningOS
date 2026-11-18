@@ -24,7 +24,7 @@ from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 
-V16_REL = "system/contracts/manifest-v19.schema.json"
+V16_REL = "system/contracts/manifest-v20.schema.json"
 VALIDATOR_REL = "src/contracts/generated/manifest.validator.cjs"
 VERDICT_REL = "scripts/ajv-verdict.mjs"
 FIXTURE_REL = "fixture-vault/generated/manifest.json"
@@ -323,7 +323,7 @@ def test_generated_lock_matches_hand_mirrored_lock(repo_root: Path) -> None:
     """Every scalar the generator emits must equal the hand-mirrored lock."""
 
     ui = _paired_ui(repo_root)
-    production = json.loads((ui / "contracts" / "manifest-v19.lock.json").read_text(
+    production = json.loads((ui / "contracts" / "manifest-v20.lock.json").read_text(
         encoding="utf-8"))
     generated = json.loads((ui / "src" / "contracts" / "generated"
                             / "manifest.contract.lock.json").read_text(encoding="utf-8"))

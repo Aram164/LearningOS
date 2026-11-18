@@ -47,7 +47,7 @@
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
 # Historical adoption log. `mirrored_in_ui` records the lock name paired with each
-# version at adoption; only the active lock (`contracts/manifest-v19.lock.json`) is
+# version at adoption; only the active lock (`contracts/manifest-v20.lock.json`) is
 # retained on disk in LearningOS/obsidian-ui.
 contract_version: 20
 top_level_keys:

@@ -27,7 +27,7 @@ from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = pytest.mark.full_repo
 
-V15_REL = "system/contracts/manifest-v19.schema.json"
+V15_REL = "system/contracts/manifest-v20.schema.json"
 SCHEMA_DIR_REL = "system/schema"
 
 # The v18 root references sources.schema.json for the projected discovery
@@ -101,7 +101,7 @@ def test_bundle_envelope_carries_generated_warning(repo_root: Path) -> None:
 def test_serialization_does_not_change_digest(repo_root: Path, tmp_path: Path) -> None:
     schema_copy = tmp_path / "schema"
     _copy_tree_with_indent(repo_root / SCHEMA_DIR_REL, schema_copy, indent=2)
-    root_copy = tmp_path / "manifest-v19.schema.json"
+    root_copy = tmp_path / "manifest-v20.schema.json"
     root_value = json.loads((repo_root / V15_REL).read_text(encoding="utf-8"))
     root_copy.write_text(json.dumps(root_value, indent=4), encoding="utf-8")
     assert root_copy.read_bytes() != (repo_root / V15_REL).read_bytes()

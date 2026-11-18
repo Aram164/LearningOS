@@ -221,9 +221,9 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v19.schema.json
+  - path: system/contracts/manifest-v20.schema.json
     reason: >-
-      The current projection schema (system/contracts/manifest-v19.schema.json
+      The current projection schema (system/contracts/manifest-v20.schema.json
       per manifest-contract.yaml schema_path). Enforced through
       manifest-contract.yaml at build time, so it is not separately registered.
       Superseded versioned schemas are not retained; their history lives in
