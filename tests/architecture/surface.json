@@ -9716,7 +9716,7 @@
   "projection.observe.schema.json": "6c846a118a81d9bbb7f8153007542f3587b50ef90ee23b80cd0d59e837c8abe6",
   "related.read.schema.json": "bed0d80d693eaa35143226b0da7849f1c0e2620fdb17216e86842b06c0ce994e",
   "repository.validate.schema.json": "ae2e47618d9bd5229f6bedeb2a6b45db14b15fb8e71fe117e7ac8f94278f03bd",
-  "resume.read.schema.json": "873cd342a30c7e35416eb7f62688de7a3c2df3e5848b000aa100a2cbfb97460e",
+  "resume.read.schema.json": "c98347af052f60fa31c6ce2b86c2784427c24b81952b7c2cc386b54060425f73",
   "review.apply.schema.json": "756fa765f842b035c3818fe32f0132d7a1a7bf7708ed48459576046188cd61b1",
   "review.prepare.schema.json": "2981bf0a3879aeda9253b905b637abcc3b2fab631459e6d50ebdb8f538290fa4",
   "route.patch.schema.json": "de5a79260f68751d3daeec9afc55aafc502b42424b5fccf0c51207baaf7bef5d",

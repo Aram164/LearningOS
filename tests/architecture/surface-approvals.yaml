@@ -1,5 +1,9 @@
 schema: 1
 approvals:
+  - key: request_schemas.resume.read.schema.json
+    change: changed
+    plan_ref: "outputs/2026-11-18-streamlining-plan/PLAN.md"
+    pre_approved_by: "Aram 2026-11-18: start executing in a separate worktree run focussed tests and finihs as fast as possible and run full gate only if absolutly needed and run full gates upstream only"
   - key: request_schemas.material.study-span.schema.json
     change: changed
     plan_ref: "system/adr/ADR-022-sandboxed-study-isolation-2026-11-13.md (align request schema descriptions with study broker / Seatbelt isolation)"

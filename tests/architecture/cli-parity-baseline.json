@@ -1377,7 +1377,7 @@
       ]
     },
     "resume": {
-      "help": "one-screen return to study: stage, requirement, evidence, exam",
+      "help": "one-screen return to study: stage, requirement, evidence",
       "description": null,
       "epilog": null,
       "prog": "los resume",
@@ -1428,7 +1428,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": "show the nearest recorded exam's active stage as a read-only study suggestion",
+          "help": "show the single open study map across all modules as a read-only study suggestion, or a bounded menu of choices",
           "metavar": null,
           "action": "store_true"
         },
@@ -1443,7 +1443,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": "with --study: study this exam-module unit explicitly instead of the single active map",
+          "help": "with --study: study this unit explicitly (same eligibility as the menu)",
           "metavar": "UNIT_ID",
           "action": "store"
         }
