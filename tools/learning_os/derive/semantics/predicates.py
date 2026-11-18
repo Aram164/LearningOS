@@ -22,6 +22,13 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
+from learning_os.domain.curriculum.lifecycle import (
+    LIVE_UNIT_STATUSES,
+    STUDIED_MODULE_STATUSES,
+)
+from learning_os.domain.curriculum.lifecycle import (
+    UNIT_STATUSES_WITHOUT_OBLIGATION as UNIT_STATUSES_WITHOUT_OBLIGATION,
+)
 from learning_os.domain.route_identity import ROUTE_ID_RE
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, ID_RE, RELATION_TYPES, UNIT_ID_RE
 from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches
@@ -34,18 +41,6 @@ from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matc
 #: owning record and no units owes its initial units. Every claim judged
 #: under 2 is stale under 3 and must be re-examined before it is believed.
 CONTRACT_VERSION = 3
-
-#: A module whose units are still being studied. A dropped or archived module
-#: keeps its records as history and is never asked for new plans.
-STUDIED_MODULE_STATUSES = frozenset({"active", "enrolled"})
-
-#: A unit that is finished, paused/inactive, or explicitly set aside is not
-#: owed a plan either. `ready-to-shelve` is operationally inactive: asking it
-#: to acquire a new study map while it is leaving active study would reverse
-#: the user's lifecycle decision.
-UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({
-    "complete", "archived", "paused", "ready-to-shelve",
-})
 
 #: Module kinds that carry a registrar's decision. Skill, project and
 #: foundation modules have no enrolment, so no module-level obligation can
@@ -130,7 +125,9 @@ def needs_study_map(
         return False
     if module_status not in STUDIED_MODULE_STATUSES:
         return False
-    return unit_status not in UNIT_STATUSES_WITHOUT_OBLIGATION
+    if unit_status is None:
+        return True
+    return unit_status in LIVE_UNIT_STATUSES
 
 
 def module_record_is_owned(owner_path: str | None) -> bool:

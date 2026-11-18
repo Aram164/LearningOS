@@ -407,6 +407,8 @@
         "administrative_status",
         "operational_state",
         "is_actionable",
+        "is_settled",
+        "is_retired",
         "institution",
         "code",
         "credits",
@@ -497,6 +499,12 @@
           ]
         },
         "is_actionable": {
+          "type": "boolean"
+        },
+        "is_settled": {
+          "type": "boolean"
+        },
+        "is_retired": {
           "type": "boolean"
         },
         "institution": {
@@ -1492,6 +1500,7 @@
         "status",
         "standing",
         "archived",
+        "is_open",
         "deadline",
         "objective",
         "next_action",
@@ -1534,6 +1543,9 @@
           "type": "boolean"
         },
         "archived": {
+          "type": "boolean"
+        },
+        "is_open": {
           "type": "boolean"
         },
         "deadline": {
@@ -2909,7 +2921,8 @@
       "additionalProperties": false,
       "required": [
         "kind",
-        "label"
+        "label",
+        "is_entry"
       ],
       "properties": {
         "id": {
@@ -2955,6 +2968,9 @@
         },
         "material_exists": {
           "type": "boolean"
+        },
+        "is_entry": {
+          "type": "boolean"
         }
       }
     },
@@ -2965,6 +2981,7 @@
         "id",
         "title",
         "status",
+        "is_open",
         "objective",
         "done_when",
         "resources",
@@ -2988,6 +3005,9 @@
         },
         "status": {
           "type": "string"
+        },
+        "is_open": {
+          "type": "boolean"
         },
         "objective": {
           "type": "string"

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from learning_os.derive.projection.common import md_header as _md_header
+from learning_os.domain.curriculum.lifecycle import is_retired
 from learning_os.domain.snapshot import Repo
 from learning_os.store import observations
 
@@ -18,11 +19,6 @@ def exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:
     spine.sort()
     return spine
 
-
-#: Module statuses whose sittings and windows are no longer actionable.
-#: A retired module keeps its records, but the deadline list is for work
-#: ahead — retired rows only mislead.
-_RETIRED_MODULE_STATUSES = frozenset({"archived", "dropped"})
 
 #: Attempt results that settle a termin: once one is recorded, the
 #: withdrawal deadline no longer governs any decision.
@@ -76,7 +72,7 @@ def academic_deadlines(repo: Repo) -> list[dict]:
 
     for mid in sorted(repo.modules):
         module = repo.modules[mid]
-        if module.get("status") in _RETIRED_MODULE_STATUSES:
+        if is_retired(module):
             continue
         examination = module.get("examination") or {}
         attempts = module.get("attempts", []) or []
@@ -147,7 +143,7 @@ def academic_deadlines(repo: Repo) -> list[dict]:
     # backfilled with an available-sitting record. Retired modules stay out
     # here too: their registered rows are history, not deadlines.
     for date, mid, module, attempt in exam_spine(repo):
-        if module.get("status") in _RETIRED_MODULE_STATUSES:
+        if is_retired(module):
             continue
         key = (mid, int(attempt.get("termin", 1)), date)
         if key in represented_attempts:

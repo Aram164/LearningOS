@@ -5,7 +5,7 @@ Two questions an operator asks after creating a module or turning a term:
 * **Is this module listed?** The rule is Core-owned, because the facts it
   reads are Core-owned: a module is listed when its kind is academic or
   project, it is not ``compatibility_only``, and its status is still open —
-  not completed, archived or dropped. The sibling
+  not awaiting-grade, completed, archived or dropped. The sibling
   interface applies the same rule when it renders the module list
   (``src/manifest-store.ts`` — ``openAcademicModules``). The semester is
   context there, not a gate: a module created for a later term is not
@@ -26,15 +26,16 @@ from __future__ import annotations
 import copy
 from collections.abc import Mapping
 
+from learning_os.domain.curriculum.lifecycle import SETTLED_MODULE_STATUSES, is_settled
 from learning_os.domain.snapshot import Repo
 
 #: Statuses that close a module: the record stays, the module leaves the list.
-CLOSED_MODULE_STATUSES = ("completed", "archived", "dropped")
+CLOSED_MODULE_STATUSES = SETTLED_MODULE_STATUSES
 
 #: The rule, in the words the interface uses for it.
 LISTING_RULE = (
     "open learning modules: kind in (academic, project) and not compatibility_only and status not in "
-    "(completed, archived, dropped)"
+    "(awaiting-grade, completed, archived, dropped)"
 )
 
 #: One canonical record: a YAML document whose fields vary by kind.
@@ -74,7 +75,7 @@ def is_listed(module: Record) -> bool:
         return False
     if module.get("kind") not in ("academic", "project"):
         return False
-    return _text(module.get("status")) not in CLOSED_MODULE_STATUSES
+    return not is_settled(module)
 
 
 def current_semester(program_data: Record | None) -> Record | None:

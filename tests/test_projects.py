@@ -14,6 +14,7 @@ pytestmark = pytest.mark.full_repo
     ("academic", "enrolled", False, True),
     ("project", "active", False, True),
     ("project", "planned", False, True),
+    ("academic", "awaiting-grade", False, False),
     ("project", "completed", False, False),
     ("project", "archived", False, False),
     ("project", "dropped", False, False),

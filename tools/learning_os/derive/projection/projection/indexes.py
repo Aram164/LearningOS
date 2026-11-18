@@ -87,7 +87,7 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
                     if module_id:
                         source_to_modules.setdefault(sid, []).append(module_id)
     for workspace in [r for r in records
-                      if r.get("type") == "workspace" and not r.get("archived")]:
+                      if r.get("type") == "workspace" and r.get("is_open")]:
         workspace_to_modules[workspace["id"]] = list(workspace.get("module_ids", []) or [])
         workspace_to_units[workspace["id"]] = list(workspace.get("unit_ids", []) or [])
     for table in (component_to_units, source_to_modules, source_to_units,

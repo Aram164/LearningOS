@@ -8,24 +8,85 @@ clock is read exactly where the rule needs a date.
 from __future__ import annotations
 
 import datetime as dt
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 
-from learning_os.domain.curriculum.lifecycle import (
-    SETTLED_ADMINISTRATIVE,
-    administrative_status,
-)
+from learning_os.domain.curriculum.lifecycle import is_settled
 
 STAGE_ACTIONS = ("active", "paused", "complete", "skipped", "revisit")
+
+
+@dataclass(frozen=True, slots=True)
+class StudyMapStatusRule:
+    """Classification flags for one authored `study-map.status` value."""
+
+    study_open: bool
+
+
+@dataclass(frozen=True, slots=True)
+class StageStatusRule:
+    """Classification flags for one authored `stage.status` value."""
+
+    open: bool
+
+
+STUDY_MAP_STATUS_TABLE: dict[str, StudyMapStatusRule] = {
+    "not-started": StudyMapStatusRule(study_open=False),
+    "ready": StudyMapStatusRule(study_open=True),
+    "active": StudyMapStatusRule(study_open=True),
+    "paused": StudyMapStatusRule(study_open=True),
+    "ready-to-shelve": StudyMapStatusRule(study_open=False),
+    "complete": StudyMapStatusRule(study_open=False),
+}
+
+STAGE_STATUS_TABLE: dict[str, StageStatusRule] = {
+    "pending": StageStatusRule(open=True),
+    "active": StageStatusRule(open=True),
+    "paused": StageStatusRule(open=True),
+    "complete": StageStatusRule(open=False),
+    "skipped": StageStatusRule(open=False),
+}
+
+STUDY_MAP_STATUSES: frozenset[str] = frozenset(STUDY_MAP_STATUS_TABLE)
 
 #: Study-map statuses eligible as open study choices. Active maps are work in
 #: progress, paused ones are shelved tracks worth resuming, ready ones are
 #: prepared ground; anything else (not-started and beyond) is not a next step.
-_STUDY_OPEN_STATUSES = frozenset({"active", "paused", "ready"})
+_STUDY_OPEN_STATUSES: frozenset[str] = frozenset(
+    status for status, rule in STUDY_MAP_STATUS_TABLE.items() if rule.study_open
+)
+
+STAGE_STATUSES: frozenset[str] = frozenset(STAGE_STATUS_TABLE)
+
+_STUDY_OPEN_STAGES: frozenset[str] = frozenset(
+    status for status, rule in STAGE_STATUS_TABLE.items() if rule.open
+)
 
 #: Stage statuses that close a stage to fresh suggestions. Skipped joins
-#: complete and archived so this predicate agrees with the UI's isOpenStage:
-#: a skipped stage is a decision already made, never a next step.
-_STUDY_CLOSED_STAGES = frozenset({"complete", "archived", "skipped"})
+#: complete so this predicate agrees with the UI's isOpenStage: a skipped stage
+#: is a decision already made, never a next step.
+_STUDY_CLOSED_STAGES: frozenset[str] = frozenset(
+    status for status, rule in STAGE_STATUS_TABLE.items() if not rule.open
+)
+
+
+def stage_is_open(stage: Mapping[str, object]) -> bool:
+    """Whether a stage is still open to fresh study (pending, active, or paused)."""
+    return stage.get("status") in _STUDY_OPEN_STAGES
+
+
+def entry_resource(stage: Mapping[str, object]) -> dict[str, object] | None:
+    """The primary entry resource of ``stage``: first ``required-now``, else first untriaged."""
+    resources = stage.get("resources")
+    if not isinstance(resources, list):
+        return None
+    for row in resources:
+        if isinstance(row, dict) and row.get("scope_triage") == "required-now":
+            return row
+    for row in resources:
+        if isinstance(row, dict) and not row.get("scope_triage"):
+            return row
+    return None
 
 
 def study_candidate_stage(repo, study_map):
@@ -33,12 +94,12 @@ def study_candidate_stage(repo, study_map):
 
     The one implementation of study-candidate eligibility. A map is eligible
     when its status is active, paused, or ready; its module is not settled;
-    its unit resolves; and its current stage resolves and is neither complete,
-    archived, nor skipped. Module kind never enters the rule, and enrollment
-    stays display metadata: only settled administrative status closes the
-    pool, so skill, foundation and project modules — which have no registrar —
-    remain eligible. Status is eligibility only: it is never a rank or a
-    recommendation, and the resume pointer overrides every fresh suggestion.
+    its unit resolves; and its current stage resolves and is open (pending,
+    active, or paused). Module kind never enters the rule, and enrollment
+    stays display metadata: only settled status closes the pool, so skill,
+    foundation and project modules — which have no registrar — remain eligible.
+    Status is eligibility only: it is never a rank or a recommendation, and the
+    resume pointer overrides every fresh suggestion.
     """
     data = study_map.data or {}
     if data.get("status") not in _STUDY_OPEN_STATUSES:
@@ -50,9 +111,9 @@ def study_candidate_stage(repo, study_map):
     if not isinstance(stage_id, str) or stage is None \
             or study_map.unit_id not in repo.units:
         return None
-    if module is not None and administrative_status(module) in SETTLED_ADMINISTRATIVE:
+    if module is not None and is_settled(module):
         return None
-    if stage.get("status") in _STUDY_CLOSED_STAGES:
+    if not stage_is_open(stage):
         return None
     return stage_id, stage
 
@@ -62,25 +123,35 @@ def is_study_candidate(repo, study_map) -> bool:
     return study_candidate_stage(repo, study_map) is not None
 
 
+def activate_stage(data: dict, unit_data: dict, stage: dict) -> None:
+    """Activate ``stage`` inside ``data``, clearing any prior active/paused stage."""
+    for other in data.get("stages", []) or []:
+        if other.get("status") in {"active", "paused"}:
+            other["status"] = "pending"
+    stage["status"] = "active"
+    stage.pop("completed", None)
+    data["current_stage"] = stage["id"]
+    data["status"] = "active"
+    unit_data["status"] = "active"
+
+
+def pause_stage(data: dict, unit_data: dict, stage: dict) -> None:
+    """Pause ``stage`` inside ``data`` and point the map cursor at it."""
+    stage["status"] = "paused"
+    data["current_stage"] = stage["id"]
+    data["status"] = "paused"
+    unit_data["status"] = "paused"
+
+
 def apply_stage_action(data: dict, unit_data: dict, stage: dict, action: str,
                        today: Callable[[], dt.date]) -> None:
     """Move ``stage`` (one of ``data["stages"]``) by ``action``; update map and unit status."""
-    stages = data.get("stages", []) or []
     if action in {"active", "revisit"}:
-        for other in stages:
-            if other.get("status") in {"active", "paused"}:
-                other["status"] = "pending"
-        stage["status"] = "active"
-        stage.pop("completed", None)
-        data["current_stage"] = stage["id"]
-        data["status"] = "active"
-        unit_data["status"] = "active"
+        activate_stage(data, unit_data, stage)
     elif action == "paused":
-        stage["status"] = "paused"
-        data["current_stage"] = stage["id"]
-        data["status"] = "paused"
-        unit_data["status"] = "paused"
+        pause_stage(data, unit_data, stage)
     else:
+        stages = data.get("stages", []) or []
         stage["status"] = action
         if action == "complete":
             stage["completed"] = today().isoformat()

@@ -19,7 +19,9 @@ from learning_os.derive.learning_runtime import requirement_id_for
 from learning_os.derive.routes import route_with_identity
 from learning_os.domain.curriculum.stages import (
     STAGE_ACTIONS,
+    activate_stage,
     apply_stage_action,
+    pause_stage,
     progress_entry,
 )
 from learning_os.domain.failures import NotFound, WriteRefused
@@ -339,10 +341,8 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
     data.setdefault("detours", []).append(detour)
     stage["detour_id"] = did
     if req["classification"] == "required-now":
-        stage["status"] = "paused"
-        data["status"] = "paused"
         unit_data = copy.deepcopy(unit.data)
-        unit_data["status"] = "paused"
+        pause_stage(data, unit_data, stage)
     elif req["classification"] in {"helpful-now", "deferred", "reference-only"}:
         unit_data = unit.data
     else:
@@ -400,15 +400,8 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
     if req.get("resolution"):
         detour["resolution"] = req["resolution"]
     target_stage = require_stage(ctx, data, detour["return_to_stage"])
-    for other in data.get("stages", []) or []:
-        if other.get("status") in {"active", "paused"}:
-            other["status"] = "pending"
-    target_stage["status"] = "active"
-    target_stage.pop("completed", None)
-    data["current_stage"] = target_stage["id"]
-    data["status"] = "active"
     unit_data = copy.deepcopy(unit.data)
-    unit_data["status"] = "active"
+    activate_stage(data, unit_data, target_stage)
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:

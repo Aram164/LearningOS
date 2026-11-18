@@ -31,6 +31,12 @@ from learning_os.derive.semantics.claim_audits import (
     eligible_pool,
 )
 from learning_os.derive.semantics.claim_status import ClaimStatus
+from learning_os.domain.curriculum.lifecycle import (
+    RETIRED_MODULE_STATUSES,
+)
+from learning_os.domain.curriculum.lifecycle import (
+    STUDIED_MODULE_STATUSES as STUDYING_MODULE_STATUSES,
+)
 
 
 class GoalError(ValueError):
@@ -432,12 +438,6 @@ def cluster_goals(goals: Sequence[CandidateGoal]) -> tuple[GoalCluster, ...]:
 #: window they are near. Hand-set, readable, no weights to tune.
 URGENT_SITTING_DAYS = 30
 NEAR_SITTING_DAYS = 90
-
-#: Module statuses that sort last, always: history, not work.
-RETIRED_MODULE_STATUSES = frozenset({"dropped", "archived"})
-
-#: Modules being studied but not exam-registered: pressure-free by default.
-STUDYING_MODULE_STATUSES = frozenset({"enrolled", "active"})
 
 #: Within one urgency tier, belief risk outranks fan-out size: a lone
 #: contested claim surfaces above a ten-route obligation cluster, and

@@ -442,10 +442,10 @@ def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
     assert data["contract"] == "bootstrap-brief"
     assert data["snapshot_id"].startswith("sha256:")
     assert "resume_pointer" in data and "counts" in data
-    # The mapped demo unit owes nothing; its active map is resumable.
+    # The mapped demo unit owes nothing; its active map is a study candidate.
     assert data["owed_study_maps"] == []
-    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
-    assert data["active_study_maps"][0]["current_stage"] == "stage-demo"
+    assert [row["id"] for row in data["study_candidates"]] == ["study-map-demo-l01"]
+    assert data["study_candidates"][0]["current_stage"] == "stage-demo"
     assert data["deadline_count"] == len(data["academic_deadlines"]) > 0
     assert {row["module_id"] for row in data["academic_deadlines"]
             if row.get("module_id")} == {"module-demo"}
@@ -539,7 +539,7 @@ def test_brief_pointer_state_confirmed_when_the_pointer_resolves(mini_repo):
     assert "not current priorities" in data["recorded_options_note"]
     assert data["expand"]["coordination"] == "inspect coordination"
     assert data["expand"]["intelligence_scan"] == "intelligence-scan --brief --json"
-    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    assert [row["id"] for row in data["study_candidates"]] == ["study-map-demo-l01"]
     # The brief agrees with resume about what the pointer means.
     resumed = run_los(mini_repo, "resume", "--json")
     assert resumed.returncode == 0, resumed.stderr
@@ -572,7 +572,33 @@ def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
     ]
     for option in data["recorded_options"]:
         assert set(option) <= {"workspace_id", "next_action", "source", "past_last_sitting"}
-    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    assert [row["id"] for row in data["study_candidates"]] == ["study-map-demo-l01"]
+
+
+def test_bootstrap_modes_share_is_study_candidate_verdict(mini_repo):
+    add_curriculum(mini_repo)
+    map_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    data["status"] = "paused"
+    write_yaml(map_path, data)
+
+    brief = json.loads(run_los(mini_repo, "bootstrap", "--brief").stdout)
+    compact = json.loads(run_los(mini_repo, "bootstrap", "--compact").stdout)
+    full = json.loads(run_los(mini_repo, "bootstrap").stdout)
+
+    assert [row["id"] for row in brief["study_candidates"]] == ["study-map-demo-l01"]
+    assert [row["id"] for row in full["study_candidates"]] == ["study-map-demo-l01"]
+    assert compact["collections"]["study_maps"]["items"][0]["is_study_candidate"] is True
+
+    # Closing the current stage removes the map from study_candidates in all modes.
+    data["stages"][0]["status"] = "skipped"
+    write_yaml(map_path, data)
+    brief2 = json.loads(run_los(mini_repo, "bootstrap", "--brief").stdout)
+    compact2 = json.loads(run_los(mini_repo, "bootstrap", "--compact").stdout)
+    full2 = json.loads(run_los(mini_repo, "bootstrap").stdout)
+    assert brief2["study_candidates"] == []
+    assert full2["study_candidates"] == []
+    assert compact2["collections"]["study_maps"]["items"][0]["is_study_candidate"] is False
 
 
 def test_excerpt_cuts_visibly_never_silently():

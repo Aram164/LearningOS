@@ -117,3 +117,31 @@ def test_authored_note_provenance_survives_the_projection(manifest):
         "no note reached the projection carrying its transcription state, but "
         "handwritten notes author it — the field is being dropped again"
     )
+
+
+def test_published_lifecycle_verdicts_cover_modules_stages_resources_and_workspaces(manifest):
+    from learning_os.domain.curriculum.lifecycle import is_retired, is_settled, workspace_is_open
+    from learning_os.domain.curriculum.stages import entry_resource, stage_is_open
+
+    assert manifest["modules"]
+    for module in manifest["modules"]:
+        assert module["is_settled"] is is_settled(module)
+        assert module["is_retired"] is is_retired(module)
+
+    assert manifest["stages"]
+    for stage in manifest["stages"]:
+        assert stage["is_open"] is stage_is_open(stage)
+        expected_entry = entry_resource(stage)
+        entry_flags = [res["is_entry"] for res in stage["resources"]]
+        assert all(isinstance(flag, bool) for flag in entry_flags)
+        assert sum(1 for flag in entry_flags if flag) <= 1
+        for res in stage["resources"]:
+            assert res["is_entry"] is (res is expected_entry)
+
+    workspaces = [r for r in manifest["records"] if r.get("type") == "workspace"]
+    assert workspaces
+    for ws in workspaces:
+        assert ws["is_open"] is workspace_is_open(ws.get("archived"), ws.get("status"))
+    open_ids = {ws["id"] for ws in workspaces if ws["is_open"]}
+    assert set(manifest["indexes"]["workspace_to_modules"]) <= open_ids
+    assert set(manifest["indexes"]["workspace_to_units"]) <= open_ids

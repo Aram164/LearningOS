@@ -22,7 +22,6 @@ from learning_os.derive.learning_runtime import (
 from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
-from learning_os.derive.projection.projection.lifecycle import module_lifecycle
 from learning_os.derive.projection.resume_dossier import ResumeDossierError, build_resume_dossier
 from learning_os.derive.semantics.claim_status import claims_summary, observe_claims_with_audits
 from learning_os.derive.semantics.dossiers import (
@@ -35,7 +34,9 @@ from learning_os.derive.semantics.dossiers import (
 )
 from learning_os.derive.semantics.goals import stale_observations
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION as SEMANTIC_CONTRACT_VERSION
+from learning_os.domain.curriculum.lifecycle import module_lifecycle
 from learning_os.domain.curriculum.stages import (
+    entry_resource,
     resolve_resume_target,
     study_candidate_stage,
 )
@@ -416,14 +417,19 @@ MAX_STAGE_RESULTS = 5
 
 def _study_open(stage):
     """The first required-now resource locator, or None (today's shape)."""
-    resource = next((row for row in stage.get("resources", [])
-                     if isinstance(row, dict)
-                     and row.get("scope_triage") == "required-now"
-                     and row.get("label") and row.get("locator")), None)
-    if resource is None:
+    resource = entry_resource(stage)
+    if (
+        resource is None
+        or resource.get("scope_triage") != "required-now"
+        or not resource.get("label")
+        or not resource.get("locator")
+    ):
         return None
-    return {"label": resource["label"], "locator": resource["locator"],
-            "source_id": resource.get("source_id")}
+    return {
+        "label": resource["label"],
+        "locator": resource["locator"],
+        "source_id": resource.get("source_id"),
+    }
 
 
 def _study_rows(repo):
@@ -503,7 +509,7 @@ def _study_menu(rows, recovery=None):
     one-screen bound never lies about how many choices exist. Every
     continuation names a command that exists: ``unit-list --compact``
     lists units, ``bootstrap --compact`` publishes every study map with
-    status and current stage.
+    status, current_stage, and is_study_candidate.
     """
     payload = {
         "contract": "resume-study-options",
@@ -511,8 +517,8 @@ def _study_menu(rows, recovery=None):
         "total": len(rows),
         "select_with": "resume --study --unit UNIT_ID",
         "continuation": ("list units with `unit-list --compact`; every "
-                         "study map with status and current stage rides "
-                         "`bootstrap --compact`"),
+                         "study map with status, current_stage, and "
+                         "is_study_candidate rides `bootstrap --compact`"),
     }
     if recovery is not None:
         payload["recovery"] = recovery

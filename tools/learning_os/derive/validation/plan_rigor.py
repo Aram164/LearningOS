@@ -25,6 +25,7 @@ from collections import defaultdict
 from pathlib import PurePosixPath
 from typing import Literal
 
+from learning_os.domain.curriculum.lifecycle import is_retired
 from learning_os.domain.material_refs import (
     MATERIAL_FIELDS,
     MaterialReferenceError,
@@ -380,8 +381,8 @@ class ChecksPlanRigor:
                 pass  # MATERIALS-MANIFEST owns malformed inventory diagnostics.
         for mid, source_map in r.module_source_maps.items():
             module = r.modules.get(mid)
-            if module is not None and module.get("status") == "archived":
-                # Archived modules remain canonical so they can be restored,
+            if module is not None and is_retired(module):
+                # Retired modules remain canonical so they can be restored,
                 # but their source maps are historical rather than active
                 # learning surfaces.  Re-activation makes the same warnings
                 # visible again because the source bytes are left untouched.
@@ -865,7 +866,7 @@ class ChecksPlanRigor:
             # Archived modules keep their source maps as history, not as an
             # active learning surface, so their stages are not scope-checked.
             scope_for = None
-            if module_id and not (module and module.get("status") == "archived"):
+            if module_id and not (module and is_retired(module)):
                 scope_for = scope.get(module_id)
             authored_routes = self._authored_route_bindings(study_map)
             unit_nodes: set[str] | None = None

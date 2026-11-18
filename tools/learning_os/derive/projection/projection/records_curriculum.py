@@ -8,7 +8,6 @@ from pathlib import Path
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.common import git_last_commit as _git_last_commit
 from learning_os.derive.projection.projection.grouping import ordered_thematic_group_ids
-from learning_os.derive.projection.projection.lifecycle import module_lifecycle
 from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.derive.routes import (
     exact_selection_matches,
@@ -16,6 +15,7 @@ from learning_os.derive.routes import (
     route_with_identity,
 )
 from learning_os.derive.semantics import predicates as semantic_predicates
+from learning_os.domain.curriculum.lifecycle import module_lifecycle
 from learning_os.domain.curriculum.stages import is_study_candidate
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.unit_notes import unit_note_sections as parse_unit_note_sections

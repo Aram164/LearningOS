@@ -93,8 +93,13 @@ def test_a_skill_module_has_no_registrar():
 def test_the_projection_carries_all_three_fields(mini_repo):
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     for module in manifest["modules"]:
-        assert set(module) >= {"administrative_status", "operational_state", "is_actionable"}
+        assert set(module) >= {
+            "administrative_status", "operational_state", "is_actionable",
+            "is_settled", "is_retired",
+        }
         assert isinstance(module["is_actionable"], bool)
+        assert isinstance(module["is_settled"], bool)
+        assert isinstance(module["is_retired"], bool)
 
 
 def test_the_raw_authored_status_is_still_published(mini_repo):

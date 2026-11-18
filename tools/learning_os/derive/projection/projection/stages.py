@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from learning_os.derive.projection.common import git_last_commit as _git_last_commit
+from learning_os.domain.curriculum.stages import entry_resource, stage_is_open
 from learning_os.domain.snapshot import Repo
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolved_inside
 from learning_os.store.materials.resolution import (
@@ -136,12 +137,19 @@ def project_stages(repo: Repo, data: dict,
         projected = _without_runtime_keys(
             dict(stage), _RUNTIME_ONLY_STAGE_KEYS + _CORE_ONLY_STAGE_KEYS
         )
+        if isinstance(stage, dict):
+            projected["is_open"] = stage_is_open(stage)
         if isinstance(stage, dict) and isinstance(stage.get("resources"), list):
-            projected["resources"] = [
+            projected_resources = [
                 _project_stage_resource(repo, resource, resource_routes)
                 if isinstance(resource, dict) else resource
                 for resource in stage["resources"]
             ]
+            projected["resources"] = projected_resources
+            entry = entry_resource(projected)
+            for resource in projected_resources:
+                if isinstance(resource, dict):
+                    resource["is_entry"] = resource is entry
         elif isinstance(stage, dict) and "resources" not in stage:
             # The manifest contract publishes a stable collection even when a
             # stage has no resource rows.  Preserve malformed authored values

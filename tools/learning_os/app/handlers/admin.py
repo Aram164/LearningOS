@@ -18,6 +18,7 @@ from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.semesters import LISTING_RULE as _LISTING_RULE
 from learning_os.derive.semesters import is_listed as _is_listed
 from learning_os.derive.semesters import semester_plan as _semester_plan
+from learning_os.domain.curriculum.lifecycle import MODULE_STATUSES
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.render import parse_sections
 from learning_os.domain.render import replace_h2_section as _replace_h2_section
@@ -29,16 +30,6 @@ from learning_os.store.revisions import artifact_revision, load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
 ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
-MODULE_STATUSES = (
-    "planned",
-    "enrolled",
-    "active",
-    "paused",
-    "awaiting-grade",
-    "completed",
-    "dropped",
-    "archived",
-)
 
 #: A semester's canonical identity, as the program record declares it.
 _SEMESTER_ID = re.compile(r"^semester-[a-z0-9]+(?:-[a-z0-9]+)*$")

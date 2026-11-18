@@ -44,20 +44,24 @@ removal is never over-applied:
 single domain predicate (`domain/curriculum/stages.py::study_candidate_stage`)
 owns eligibility; the Core builder (`resume.py::_study_rows`) consumes it for
 scope, ordering and row construction, and the manifest projection publishes its
-verdict as `study_maps[].is_study_candidate`. Untargeted `--study`, the
-recovery menu, explicit `--unit`, and every interface all consume that one
-verdict; no path bypasses it and no consumer re-derives the rule. Eligibility
-filters before anything counts: one valid row beside one ineligible map is one
-choice. The lifecycle table it implements:
+verdict as `study_maps[].is_study_candidate`. The supporting lifecycle verdicts
+are likewise owned by schema-pinned classification tables in
+`domain/curriculum/{lifecycle,stages}.py` and published once in the manifest
+(`modules[].is_settled`, `modules[].is_retired`, `stages[].is_open`,
+`resources[].is_entry`, `workspaces[].is_open`). Untargeted `--study`, the
+recovery menu, explicit `--unit`, `bootstrap` (`--brief`, `--compact`, full,
+exposing `study_candidates`), and every interface all consume those published
+verdicts; no path bypasses them and no consumer re-derives the rules.
+Eligibility filters before anything counts: one valid row beside one ineligible
+map is one choice. The lifecycle table it implements:
 
 | Dimension | Values | Rule |
 |---|---|---|
 | Module kind | academic, skill, foundation, project | Every kind is in the pool; kind never filters. |
 | Module status | planned, enrolled, active, paused, awaiting-grade, completed, dropped, archived | Settled administrative statuses (awaiting-grade, completed, dropped, archived) close the pool; planned, enrolled, active and paused never filter. The lifecycle projection displays academic `active` as administratively enrolled; skill, foundation and project modules have no administrative status. |
 | Study-map status | active, paused, ready | Eligible as open study choices. `not-started`, `ready-to-shelve` and `complete` are not. |
-| Stage status | pending, active, paused | Fresh-suggestion eligible. |
-| Stage status | complete, skipped | Closed to fresh suggestions. Skipped joins complete so the builder agrees with the UI's `isOpenStage` — a skipped stage is a decision already made, never a next step. |
-| Stage status | archived | Not in the stage schema enum; the builder also excludes it, defensively. |
+| Stage status | pending, active, paused | Fresh-suggestion eligible (`stage_is_open` / `stages[].is_open` is true). |
+| Stage status | complete, skipped | Closed to fresh suggestions (`stage_is_open` / `stages[].is_open` is false; unknown values fail closed). Skipped joins complete so the builder agrees with the UI's `isOpenStage` — a skipped stage is a decision already made, never a next step. |
 | Units without maps | — | Produce no rows; the pool is defined by study-map ownership. |
 
 Enrollment rides each row as display-only lifecycle metadata
@@ -146,22 +150,31 @@ union of the domains a concept actually touches. No inferred concept edges.
 **11. Browse context is preserved; one validated resolver (D11).**
 Breadcrumbs and return navigation preserve the selected browse domain while it
 remains a membership of the focused concept; deep links and search without a
-browse context may fall back to canonical placement. Atlas's study marker and
-every raw-pointer "current destination" claimant reuse Home's validated
-resolver — ownership and stage checked, no second resolver, and an incoherent
-pointer yields no marker at all. (Decisions 6, 10 and 11 are executed in the
-UI package; Core publishes the catalog and buckets they consume.)
+browse context may fall back to canonical placement. Core validates pointer
+ownership and stage coherence at manifest publication (`resolve_resume_target`),
+publishing `resume_pointer` only when coherent; Atlas's study marker and every
+raw-pointer "current destination" claimant reuse Home's resolver, which looks
+up the published records by ID (checking `unitMap.id === pointer.study_map_id`
+and stage membership, and returning unresolved if any lookup misses — including
+pointers to retired modules filtered from the UI store). (Decisions 6, 10 and
+11 are executed in the UI package; Core publishes the catalog, buckets,
+verdicts, and validated pointer they consume.)
 
 ## Consequences
 
 - Core's resume screen no longer contains an exam gate, a status rank, or a
   passive ranking; `ranking.py` and `goals.py` survive untouched because the
   explicitly requested scan still uses them.
-- Skipped stages cannot re-enter the menu quietly: the builder's closed set and
-  the UI's `isOpenStage` state the same rule in the same words.
-- The manifest gains `domains` and `domain_bucket` under contract v20; the UI
-  lock moves with it in the same release, and the UI stops re-deriving labels,
-  order and membership.
+- Schema-pinned tables in `domain/curriculum/{lifecycle,stages}.py` own every
+  curriculum status vocabulary, and skipped stages cannot re-enter the menu
+  quietly: `stage_is_open` and the UI's `isOpenStage` read one published
+  `stages[].is_open` verdict.
+- The manifest gains `domains`, `domain_bucket`, `modules[].is_settled`,
+  `modules[].is_retired`, `stages[].is_open`, `resources[].is_entry`, and
+  `workspaces[].is_open` under contract v20 (`bootstrap` also aligns on
+  `is_study_candidate` under `study_candidates`); the UI lock moves with it in
+  the same release, and the UI stops re-deriving labels, order, membership,
+  and lifecycle verdicts.
 - The re-record of scenario goldens is owned by the campaign's final package;
   until then, recordings that embed v19 paths or old resume screens are known
   stale, not silently wrong.

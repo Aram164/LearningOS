@@ -78,7 +78,7 @@ def test_a_paused_module_is_not_caught_by_the_administrative_projection():
     Using the administrative state here would flag every paused academic
     module in the tree. The predicate reads the authored status.
     """
-    from learning_os.derive.projection.projection.lifecycle import module_lifecycle
+    from learning_os.domain.curriculum.lifecycle import module_lifecycle
 
     projected = module_lifecycle(
         {"kind": "academic", "status": "paused"}, [])

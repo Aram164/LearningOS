@@ -6,6 +6,7 @@ from collections.abc import Callable
 
 from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.domain.curriculum.lifecycle import workspace_is_open
 from learning_os.domain.snapshot import Repo
 
 Revision = Callable[..., int]
@@ -19,6 +20,7 @@ def project_workspaces(repo: Repo, revision: Revision) -> list[dict]:
             "revision": revision(ws.id, ws.meta),
             "path": str(ws.path.relative_to(repo.root)),
             "status": ws.status, "standing": ws.standing, "archived": ws.archived,
+            "is_open": workspace_is_open(ws.archived, ws.status),
             "deadline": ws.meta.get("deadline"),
             # interface fields: the two sections every surface wants to show.
             # Parsed HERE so no interface ever regexes CONTEXT.md again. Bounded

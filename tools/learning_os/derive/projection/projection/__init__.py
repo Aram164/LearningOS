@@ -19,7 +19,6 @@ from learning_os.derive.projection.projection.grouping import (
     source_thematic_groups,
 )
 from learning_os.derive.projection.projection.indexes import build_indexes
-from learning_os.derive.projection.projection.lifecycle import module_lifecycle
 from learning_os.derive.projection.projection.records_aliases import project_project_aliases
 from learning_os.derive.projection.projection.records_curriculum import (
     project_module_source_maps,
@@ -44,8 +43,10 @@ from learning_os.derive.projection.projection.records_work import (
 )
 from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.derive.projection.projection.tallies import build_counts, build_progress
+from learning_os.domain.curriculum.lifecycle import LIVE_UNIT_STATUSES, module_lifecycle
 
 __all__ = [
+    "LIVE_UNIT_STATUSES",
     "build_counts", "build_indexes", "build_module_concept_edges",
     "build_progress", "cross_module_concepts", "module_lifecycle",
     "ordered_thematic_group_ids", "project_collections", "project_concepts",

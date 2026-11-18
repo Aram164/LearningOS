@@ -104,8 +104,8 @@ index_keys:
 - workspace_to_modules
 - workspace_to_units
 schema_path: system/contracts/manifest-v20.schema.json
-schema_sha256: sha256:1ef7031be9ea88e02740cfde92fae5bf64e8eb60b5cbfd1f32d840099e4cabc1
-closure_sha256: sha256:7d7e52f8a532452c06caeca70c0789021569c127f9025f294ffbab6edb2b1402
+schema_sha256: sha256:e2169561904ad15b60c6956eb0f7b97d4f810589cd1684639808c4ef24ae3236
+closure_sha256: sha256:7250f565e3cfb16e583a1d22e2dbaa267a87274c8654977d6160afa638cf4253
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -221,6 +221,7 @@ history:
   mirrored_in_ui: contracts/manifest-v19.lock.json
 - version: 20
   adopted: '2026-11-18'
-  note: publish the domain catalog, per-note buckets, and the study-candidate
-    eligibility fact on every study map (v20)
+  note: publish the domain catalog, per-note buckets, study-candidate eligibility,
+    and schema-pinned lifecycle verdicts (is_settled, is_retired, stages[].is_open,
+    resources[].is_entry, workspaces[].is_open) (v20)
   mirrored_in_ui: contracts/manifest-v20.lock.json

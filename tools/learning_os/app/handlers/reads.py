@@ -40,6 +40,7 @@ from learning_os.derive.semantics.scan import observe_goal_ledger
 from learning_os.derive.semantics.session_counts import FeedError, feed_scan_kwargs
 from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
 from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
+from learning_os.domain.curriculum.lifecycle import UNIT_STATUSES
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.store.contracts.capability_catalog import load_capability_catalog
@@ -176,7 +177,8 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
         snapshot = _snapshot(root, req.get("expected_snapshot"))
         manifest = _fresh_manifest(root, snapshot_id=snapshot)
         fields = ("id", "title", "status", "module_id", "program_id", "unit_id",
-                  "current_study_map", "current_stage", "needs_study_map")
+                  "current_study_map", "current_stage", "needs_study_map",
+                  "is_study_candidate")
         collections = {}
         for name in ("programs", "modules", "units", "study_maps"):
             rows = sorted(manifest.get(name, []), key=lambda row: row["id"])
@@ -265,15 +267,13 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
                 owned=module_record_is_owned(row.get("path")),
             )
         )
-        # Resumable work only: paused maps are shelved tracks, not
-        # candidates for the next session. Full bootstrap still lists
-        # them; the brief names what can actually start.
-        active = sorted(
+        # Candidate study maps published once by Core (`is_study_candidate`).
+        study_candidates = sorted(
             ({"id": row["id"], "unit_id": row.get("unit_id"),
               "status": row.get("status"),
               "current_stage": row.get("current_stage")}
              for row in manifest.get("study_maps", [])
-             if row.get("status") in {"active", "ready"}),
+             if row.get("is_study_candidate") is True),
             key=lambda row: row["id"])
         deadlines = _brief_deadlines(manifest)
         pointer = manifest.get("resume_pointer", {})
@@ -309,7 +309,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
              "counts": manifest.get("counts", {}),
              "owed_study_maps": owed,
              "owed_module_scopes": owed_module_scopes,
-             "active_study_maps": active,
+             "study_candidates": study_candidates,
              "academic_deadlines": deadlines,
              "deadline_count": len(deadlines),
              "domain_atlas": _domain_glance(manifest),
@@ -376,8 +376,8 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "programs": manifest.get("programs", []),
         "modules": manifest.get("modules", []),
         "units": manifest.get("units", []),
-        "active_study_maps": [m for m in manifest.get("study_maps", [])
-                              if m.get("status") in {"active", "paused", "ready"}],
+        "study_candidates": [m for m in manifest.get("study_maps", [])
+                             if m.get("is_study_candidate") is True],
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
@@ -1244,16 +1244,6 @@ _COMPACT_LIMIT_DEFAULT = 20
 def _unit_summary(row):
     """The eight discovery fields, with explicit nulls kept and absent dropped."""
     return {key: row[key] for key in _UNIT_SUMMARY_FIELDS if key in row}
-
-
-#: The unit ``status`` enum from ``system/schema/unit.schema.json``.
-#: A test pins this copy against the schema, so the two cannot drift.
-#: An unknown filter value refuses with exit 2 instead of answering an
-#: empty result, so ``total: 0`` always means "valid filter, no matches".
-UNIT_STATUSES = frozenset({
-    "needs-map", "not-started", "ready", "active", "paused",
-    "ready-to-shelve", "complete",
-})
 
 
 def _component_ids(manifest) -> set[str]:
