@@ -16,6 +16,7 @@ from learning_os.derive.routes import (
     route_with_identity,
 )
 from learning_os.derive.semantics import predicates as semantic_predicates
+from learning_os.domain.curriculum.stages import is_study_candidate
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.unit_notes import unit_note_sections as parse_unit_note_sections
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolved_inside
@@ -204,6 +205,10 @@ def project_study_maps(repo: Repo, revision: Revision,
         data = study_map.data
         records.append({
             **{k: v for k, v in data.items() if k != "stages"},
+            # Eligibility, computed once by the domain predicate every
+            # consumer shares. It is not priority, a recommendation, or a
+            # pointer: interfaces read this fact instead of re-deriving it.
+            "is_study_candidate": is_study_candidate(repo, study_map),
             "revision": revision(study_map.id, data),
             "module_id": study_map.module_id,
             "path": str(study_map.path.relative_to(repo.root)),

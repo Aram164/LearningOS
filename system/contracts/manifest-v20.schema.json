@@ -3084,6 +3084,7 @@
         "unit_id",
         "module_id",
         "status",
+        "is_study_candidate",
         "current_stage",
         "source_plan",
         "stages",
@@ -3097,6 +3098,9 @@
         },
         "type": {
           "const": "study-map"
+        },
+        "is_study_candidate": {
+          "type": "boolean"
         },
         "plan_template_version": {
           "type": "integer",

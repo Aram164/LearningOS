@@ -58,6 +58,7 @@ mypy_path = "tools"
 cache_dir = "/dev/null"
 files = [
   "tools/learning_os/domain/transaction.py",
+  "tools/learning_os/domain/curriculum/lifecycle.py",
   "tools/learning_os/app/claim_admission.py",
   "tools/learning_os/derive/semesters.py",
   "tools/learning_os/derive/semantics/claim_status.py",

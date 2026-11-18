@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from learning_os.domain.curriculum.lifecycle import (
+    SETTLED_ADMINISTRATIVE,
+    administrative_status,
+)
+
 # `module.status` mixes two state machines. `planned / enrolled / awaiting-grade
 # / completed / dropped / archived` answer "what does the university think?";
 # `active / paused` answer "am I working on this?". They are independent — Algo 2
@@ -15,11 +20,9 @@ from __future__ import annotations
 # every stored module record. Projecting both axes plus the answer the interface
 # actually wants costs nothing and removes the guessing today (engineering audit
 # 2026-08-08, finding 4).
-ADMINISTRATIVE_STATUSES = frozenset({
-    "planned", "enrolled", "awaiting-grade", "completed", "dropped", "archived",
-})
-# Nothing is expected of you for these, whatever the units say.
-SETTLED_ADMINISTRATIVE = frozenset({"awaiting-grade", "completed", "dropped", "archived"})
+#
+# The administrative axis lives in the domain: the study-candidate predicate
+# reads the same settled set this projection displays.
 # Unit states that mean there is something to pick up. `not-started` counts:
 # unstarted work is still work. `ready-to-shelve` does not — it is a review
 # decision, which Review surfaces, not a study session.
@@ -34,16 +37,7 @@ def module_lifecycle(module: dict, unit_statuses: list[str]) -> dict:
     cannot be operationally active while every unit under it is paused, no
     matter what its own field says.
     """
-    status = str(module.get("status", "") or "")
-    if status in ADMINISTRATIVE_STATUSES:
-        administrative = status
-    elif module.get("kind", "academic") == "academic":
-        # `active`/`paused` on an academic module says nothing administrative,
-        # but you cannot be working on one you are not enrolled in.
-        administrative = "enrolled"
-    else:
-        # Skill, foundation and project modules have no registrar.
-        administrative = None
+    administrative = administrative_status(module)
 
     if not unit_statuses:
         operational = "none"
@@ -57,7 +51,7 @@ def module_lifecycle(module: dict, unit_statuses: list[str]) -> dict:
     actionable = (
         operational == "active"
         and administrative not in SETTLED_ADMINISTRATIVE
-        and status != "paused"
+        and module.get("status") != "paused"
     )
     return {
         "administrative_status": administrative,

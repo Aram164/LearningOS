@@ -10,7 +10,56 @@ from __future__ import annotations
 import datetime as dt
 from collections.abc import Callable
 
+from learning_os.domain.curriculum.lifecycle import (
+    SETTLED_ADMINISTRATIVE,
+    administrative_status,
+)
+
 STAGE_ACTIONS = ("active", "paused", "complete", "skipped", "revisit")
+
+#: Study-map statuses eligible as open study choices. Active maps are work in
+#: progress, paused ones are shelved tracks worth resuming, ready ones are
+#: prepared ground; anything else (not-started and beyond) is not a next step.
+_STUDY_OPEN_STATUSES = frozenset({"active", "paused", "ready"})
+
+#: Stage statuses that close a stage to fresh suggestions. Skipped joins
+#: complete and archived so this predicate agrees with the UI's isOpenStage:
+#: a skipped stage is a decision already made, never a next step.
+_STUDY_CLOSED_STAGES = frozenset({"complete", "archived", "skipped"})
+
+
+def study_candidate_stage(repo, study_map):
+    """(stage_id, stage) when this map is an eligible study choice, else None.
+
+    The one implementation of study-candidate eligibility. A map is eligible
+    when its status is active, paused, or ready; its module is not settled;
+    its unit resolves; and its current stage resolves and is neither complete,
+    archived, nor skipped. Module kind never enters the rule, and enrollment
+    stays display metadata: only settled administrative status closes the
+    pool, so skill, foundation and project modules — which have no registrar —
+    remain eligible. Status is eligibility only: it is never a rank or a
+    recommendation, and the resume pointer overrides every fresh suggestion.
+    """
+    data = study_map.data or {}
+    if data.get("status") not in _STUDY_OPEN_STATUSES:
+        return None
+    stage_id = data.get("current_stage")
+    stage = next((row for row in data.get("stages", [])
+                  if isinstance(row, dict) and row.get("id") == stage_id), None)
+    module = repo.modules.get(study_map.module_id)
+    if not isinstance(stage_id, str) or stage is None \
+            or study_map.unit_id not in repo.units:
+        return None
+    if module is not None and administrative_status(module) in SETTLED_ADMINISTRATIVE:
+        return None
+    if stage.get("status") in _STUDY_CLOSED_STAGES:
+        return None
+    return stage_id, stage
+
+
+def is_study_candidate(repo, study_map) -> bool:
+    """Whether this map is an eligible study choice, never a priority."""
+    return study_candidate_stage(repo, study_map) is not None
 
 
 def apply_stage_action(data: dict, unit_data: dict, stage: dict, action: str,

@@ -35,7 +35,10 @@ from learning_os.derive.semantics.dossiers import (
 )
 from learning_os.derive.semantics.goals import stale_observations
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION as SEMANTIC_CONTRACT_VERSION
-from learning_os.domain.curriculum.stages import resolve_resume_target
+from learning_os.domain.curriculum.stages import (
+    resolve_resume_target,
+    study_candidate_stage,
+)
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.material_refs import unit_routes
 from learning_os.domain.suggest import not_found, with_suggestions
@@ -401,17 +404,6 @@ def _resolve_stage(repo):
                   "start any stage to set one")
 
 
-#: Study-map statuses eligible as open study choices. Active maps are
-#: work in progress, paused ones are shelved tracks worth resuming, ready
-#: ones are prepared ground; anything else (not-started and beyond) is
-#: not a next step. Status is row metadata: it never ranks the menu.
-_STUDY_OPEN_STATUSES = frozenset({"active", "paused", "ready"})
-
-#: Stage statuses that close a stage to fresh suggestions. Skipped joins
-#: complete and archived so this builder agrees with the UI's isOpenStage:
-#: a skipped stage is a decision already made, never a next step.
-_STUDY_CLOSED_STAGES = frozenset({"complete", "archived", "skipped"})
-
 #: At most this many options; the menu stays one screen.
 MAX_STUDY_OPTIONS = 5
 
@@ -434,45 +426,32 @@ def _study_open(stage):
             "source_id": resource.get("source_id")}
 
 
-def _study_stage(repo, study_map):
-    """(stage_id, stage) for one map's current stage, else None."""
-    stage_id = (study_map.data or {}).get("current_stage")
-    stage = next((row for row in (study_map.data or {}).get("stages", [])
-                  if isinstance(row, dict) and row.get("id") == stage_id), None)
-    if not isinstance(stage_id, str) or stage is None \
-            or study_map.unit_id not in repo.units:
-        return None
-    return stage_id, stage
-
-
 def _study_rows(repo):
     """Every open study choice in the repository, in the pinned order.
 
-    One row per eligible study map. A map is eligible when its status is
-    active, paused, or ready, its unit resolves, and its current stage
-    resolves and is neither complete, archived, nor skipped — the openness
-    the UI's isOpenStage applies, so a skipped stage never becomes a fresh
-    suggestion. The pool spans every module of any kind: enrollment rides
-    each row as display-only lifecycle metadata and never filters it.
-    Ordered by module ID, then each unit's position in the authored
-    ``module.unit_order``, then the unit's numeric ``order``, then unit
-    ID, then map ID — status is metadata, not a rank. Eligibility filters
-    before anything counts: one valid row beside one ineligible map is one
-    choice. ``learner_choice`` is False on every row, and nothing here
-    writes the resume pointer — only an explicit stage action does.
+    One row per map the domain predicate calls a candidate
+    (``study_candidate_stage``): active, paused, or ready, with a
+    resolvable unit and a current stage that is neither complete,
+    archived, nor skipped. The pool spans every module of any kind, but a
+    settled administrative status (awaiting-grade, completed, dropped,
+    archived) closes it: those modules keep their records as history.
+    Enrollment rides each row as display-only lifecycle metadata and
+    never filters it. Ordered by module ID, then each unit's position in the
+    authored ``module.unit_order``, then the unit's numeric ``order``,
+    then unit ID, then map ID — status is metadata, not a rank.
+    Eligibility filters before anything counts: one valid row beside one
+    ineligible map is one choice. ``learner_choice`` is False on every
+    row, and nothing here writes the resume pointer — only an explicit
+    stage action does.
     """
     rows: list[dict] = []
     lifecycles: dict[str, dict] = {}
     for study_map in repo.study_maps.values():
-        map_status = (study_map.data or {}).get("status")
-        if map_status not in _STUDY_OPEN_STATUSES:
-            continue
-        found = _study_stage(repo, study_map)
+        found = study_candidate_stage(repo, study_map)
         if found is None:
             continue
         stage_id, stage = found
-        if stage.get("status") in _STUDY_CLOSED_STAGES:
-            continue
+        map_status = (study_map.data or {}).get("status")
         module = repo.modules.get(study_map.module_id) or {}
         module_kind = str(module.get("kind", "academic") or "academic")
         if study_map.module_id not in lifecycles:

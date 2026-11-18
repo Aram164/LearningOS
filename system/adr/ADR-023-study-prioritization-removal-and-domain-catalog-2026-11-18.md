@@ -24,8 +24,10 @@ against a memory of it.
 
 ## Decision
 
-**1. The system offers choices; it does not filter, rank or decorate them
-(D1).** Every built-in study prioritization is removed: the exam-module
+**1. The system offers choices; it does not filter them by preference, rank
+or decorate them (D1).** Eligibility rules still decide what counts as a
+choice; the point is that no preference or ranking does. Every built-in study
+prioritization is removed: the exam-module
 `--unit` confinement, the Study Desk semester chain, the menu status-rank
 preference, recovery auto-steering, the passive "Top goal" decoration, and the
 subordinate active-unit selection inside module rows. What stays is named, so
@@ -39,16 +41,19 @@ removal is never over-applied:
 | The pointer-first in-progress list (`study-work.ts`) | The learner's own recorded pointer, not a preference. |
 
 **2. One candidate builder defines eligible study choices once (D2, D10).** A
-single Core builder (`resume.py::_study_rows`) owns scope, ownership,
-eligibility, ordering and row construction; untargeted `--study`, the recovery
-menu, and explicit `--unit` all consume it, and no path bypasses it. Eligibility
+single domain predicate (`domain/curriculum/stages.py::study_candidate_stage`)
+owns eligibility; the Core builder (`resume.py::_study_rows`) consumes it for
+scope, ordering and row construction, and the manifest projection publishes its
+verdict as `study_maps[].is_study_candidate`. Untargeted `--study`, the
+recovery menu, explicit `--unit`, and every interface all consume that one
+verdict; no path bypasses it and no consumer re-derives the rule. Eligibility
 filters before anything counts: one valid row beside one ineligible map is one
 choice. The lifecycle table it implements:
 
 | Dimension | Values | Rule |
 |---|---|---|
 | Module kind | academic, skill, foundation, project | Every kind is in the pool; kind never filters. |
-| Module status | planned, enrolled, active, paused, awaiting-grade, completed, dropped, archived | Never filters. The lifecycle projection displays academic `active` as administratively enrolled; skill, foundation and project modules have no administrative status. |
+| Module status | planned, enrolled, active, paused, awaiting-grade, completed, dropped, archived | Settled administrative statuses (awaiting-grade, completed, dropped, archived) close the pool; planned, enrolled, active and paused never filter. The lifecycle projection displays academic `active` as administratively enrolled; skill, foundation and project modules have no administrative status. |
 | Study-map status | active, paused, ready | Eligible as open study choices. `not-started`, `ready-to-shelve` and `complete` are not. |
 | Stage status | pending, active, paused | Fresh-suggestion eligible. |
 | Stage status | complete, skipped | Closed to fresh suggestions. Skipped joins complete so the builder agrees with the UI's `isOpenStage` — a skipped stage is a decision already made, never a next step. |
@@ -56,8 +61,11 @@ choice. The lifecycle table it implements:
 | Units without maps | — | Produce no rows; the pool is defined by study-map ownership. |
 
 Enrollment rides each row as display-only lifecycle metadata
-(`administrative_status`) and never filters the pool. "Exactly one" is decided
-only over valid rows, after eligibility filtering.
+(`administrative_status`) and never filters the pool. The settled filter reads
+the administrative axis only, so the enrollment trap above does not return:
+skill, foundation and project modules have no administrative status and stay
+eligible. "Exactly one" is decided only over valid rows, after eligibility
+filtering.
 
 **3. One pinned ordering (D2).** Module ID ascending, then each unit's position
 in the authored `module.unit_order`, then the unit's numeric `order` for

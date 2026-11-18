@@ -60,6 +60,7 @@
    "tests/test_source_intake.py",
    "tests/test_structural_inspect.py",
    "tests/test_study_broker.py",
+   "tests/test_study_candidates.py",
    "tests/test_study_hooks.py",
    "tests/test_study_launch.py",
    "tests/test_system_audit_2026_09_05.py",
