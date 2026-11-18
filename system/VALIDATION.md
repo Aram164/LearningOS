@@ -92,7 +92,7 @@ rule as current, which is indistinguishable from the rule being wrong.
 - **E** Evidence refs use a valid URI scheme (`note://`, `source://`, `concept://`, `workspace://`, `material://`, `project://`, `github://`, or https URL).
 - **W** `material://` or `project://` URI does not resolve on disk (reported, not fatal — media may be offline).
 - **E** `RESOURCE-ROUTE-OWNER` — a stage resource names a route that belongs to another unit.
-- **E** `REF-RESUME-OWNER` — the resume pointer's module, unit, current study map and stage are each known but do not resolve together (the declared module does not own the unit, the named map is not the unit's current map or belongs to another unit/module, or the stage is not in that map). The manifest publishes no pointer in this state. Governed recovery: make an explicit stage action, which rewrites the pointer in the same transaction, or correct `curriculum/resume.yaml`; `los resume` otherwise follows its labelled recovery/refusal path.
+- **E** `REF-RESUME-OWNER` — the resume pointer's module, unit, current study map and stage are each known but do not resolve together (the declared module does not own the unit, the named map is not the unit's current map or belongs to another unit/module, or the stage is not in that map). The manifest publishes no pointer in this state. Governed recovery: make an explicit stage action, which rewrites the pointer in the same transaction, or correct `curriculum/resume.yaml`; `los resume` otherwise follows its governed recovery path — the open study choices as an explicit selection menu first, the historical trail only as labeled context (ADR-023).
 
 ## Registries
 

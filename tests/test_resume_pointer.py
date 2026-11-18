@@ -195,7 +195,9 @@ def test_a_pointer_to_another_valid_module_resolves_nowhere(repo: Path):
     assert build_manifest(load_repo(repo), "T1")["resume_pointer"] == {}
     proc = run_los(repo, "resume", "--json")
     if proc.returncode == 0:
-        assert json.loads(proc.stdout)["via"] != "resume pointer"
+        # A menu payload carries no via at all; either way, the CLI must
+        # not resume into the wrong module.
+        assert json.loads(proc.stdout).get("via") != "resume pointer"
     else:
         assert proc.returncode == 2, proc.stderr
 
@@ -244,7 +246,7 @@ def test_a_pointer_to_a_map_owned_by_another_unit_resolves_nowhere(repo: Path):
     assert build_manifest(load_repo(repo), "T1")["resume_pointer"] == {}
     proc = run_los(repo, "resume", "--json")
     if proc.returncode == 0:
-        assert json.loads(proc.stdout)["via"] != "resume pointer"
+        assert json.loads(proc.stdout).get("via") != "resume pointer"
     else:
         assert proc.returncode == 2, proc.stderr
 
@@ -265,13 +267,15 @@ def test_a_malformed_pointer_id_resolves_nowhere(repo: Path):
     proc = run_los(repo, "resume", "--json")
     assert "Traceback" not in proc.stdout + proc.stderr
     if proc.returncode == 0:
-        assert json.loads(proc.stdout)["via"] != "resume pointer"
+        assert json.loads(proc.stdout).get("via") != "resume pointer"
     else:
         assert proc.returncode == 2, proc.stderr
 
 
 def test_recovery_is_labeled_and_never_silent(repo: Path):
-    """A guess must read as a guess on the screen it produces."""
+    """A guess must read as a guess on the screen it produces. With
+    selectable choices, recovery asks: the menu carries the labeled trail
+    as clearly secondary context, and nothing claims a destination."""
     _runtime_target(repo)
     assert _progress(repo, "active", "resume-recovery").returncode == 0
     observed = run_los(repo, "observe", "req-demo-l01-demo", "--activity",
@@ -281,6 +285,25 @@ def test_recovery_is_labeled_and_never_silent(repo: Path):
     (repo / POINTER).unlink()
     proc = run_los(repo, "resume", "--json")
     assert proc.returncode == 0, proc.stderr
-    via = json.loads(proc.stdout)["via"]
-    assert via != "resume pointer"
-    assert "resume pointer missing or stale" in via
+    payload = json.loads(proc.stdout)
+    assert payload["contract"] == "resume-study-options"
+    assert "via" not in payload
+    historical = payload["recovery"]["historical"]
+    assert historical["via"] != "resume pointer"
+    assert "resume pointer missing or stale" in historical["via"]
+    assert payload["recovery"]["pointer"] == "missing"
+
+
+def test_a_terminal_stage_pointer_still_resolves_exactly(repo: Path):
+    """Completion is where the learner stopped, not a reason to disown the
+    pointer: the resolver applies no status filter, so a pointer naming a
+    terminal stage opens exactly that stage."""
+    assert _progress(repo, "active", "resume-terminal-activate").returncode == 0
+    proc = _progress(repo, "complete", "resume-terminal-complete")
+    assert proc.returncode == 0, proc.stderr
+    assert _pointer(repo)["stage_id"] == "stage-demo"
+    result = run_los(repo, "resume", "--json")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["via"] == "resume pointer"
+    assert payload["content"]["stage"]["stage_id"] == "stage-demo"

@@ -9,7 +9,6 @@ builder keeps content-addressed keys; the command resolves and renders.
 from __future__ import annotations
 
 import copy
-import datetime as _dt
 import json
 from pathlib import Path
 
@@ -113,14 +112,11 @@ def _runtime_repo(mini_repo: Path) -> Path:
     return mini_repo
 
 
-def test_study_mode_suggests_a_recorded_exam_stage_without_moving_pointer(mini_repo: Path):
+def test_bare_study_suggests_the_single_open_map_without_any_exam(mini_repo: Path):
+    """No exam gate anywhere: the fixture's only sitting dates are long
+    past, which the old nearest-exam scoping refused with "no upcoming
+    exam". Study itself is the offer now, and the pointer never moves."""
     root = _runtime_repo(mini_repo)
-    module_path = root / "curriculum/modules/module-demo/module.yaml"
-    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    module["examination"]["sittings"][1]["date"] = date
-    module["attempts"][1]["date"] = date
-    write_yaml(module_path, module)
     study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
     study_map["stages"][0]["resources"][0]["scope_triage"] = "required-now"
     write_yaml(root / MAP, study_map)
@@ -129,20 +125,14 @@ def test_study_mode_suggests_a_recorded_exam_stage_without_moving_pointer(mini_r
     proc = run_los(root, "resume", "--study", "--json")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
-    assert payload["via"] == "nearest recorded exam (study suggestion)"
-    assert payload["study_option"]["exam_date"] == date
-    assert payload["study_option"]["learner_choice"] is False
+    assert payload["via"] == "single open study map (suggestion)"
     assert payload["study_option"]["open"]["locator"] == "§1"
+    assert payload["study_option"]["learner_choice"] is False
     assert (root / "curriculum/resume.yaml").read_bytes() == pointer
-
-
-def _exam_on(root: Path, date: str) -> None:
-    """Move the demo module's recorded sitting to an explicit date."""
-    module_path = root / "curriculum/modules/module-demo/module.yaml"
-    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
-    module["examination"]["sittings"][1]["date"] = date
-    module["attempts"][1]["date"] = date
-    write_yaml(module_path, module)
+    text = run_los(root, "resume", "--study")
+    assert text.returncode == 0, text.stderr
+    assert "Study suggestion" in text.stdout
+    assert "your resume pointer is unchanged" in text.stdout
 
 
 def _add_unit(root: Path, unit_id: str, order: int, map_status: str,
@@ -185,165 +175,220 @@ def _add_unit(root: Path, unit_id: str, order: int, map_status: str,
     write_yaml(module_path, module)
 
 
-def test_study_mode_lists_options_without_any_active_map(mini_repo: Path):
+def test_a_single_paused_map_still_suggests(mini_repo: Path):
+    """Paused maps are shelved tracks worth resuming: one open map of any
+    status is a suggestion, never a menu and never a refusal."""
     root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
     study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
-    study_map["status"] = "ready"
+    study_map["status"] = "paused"
+    write_yaml(root / MAP, study_map)
+    payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
+    assert payload["via"] == "single open study map (suggestion)"
+    assert payload["content"]["stage"]["stage_id"] == "stage-demo"
+
+
+def test_two_open_maps_become_a_menu_with_rows_and_metadata(mini_repo: Path):
+    """The menu is the machine-readable contract: pinned row fields, an
+    exact total, a select_with, and a continuation naming commands that
+    exist. A plain --study menu carries no recovery context."""
+    root = _runtime_repo(mini_repo)
+    study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
     study_map["stages"][0]["resources"][0]["scope_triage"] = "required-now"
     write_yaml(root / MAP, study_map)
-    pointer = (root / "curriculum/resume.yaml").read_bytes()
-    proc = run_los(root, "resume", "--study")
-    assert proc.returncode == 0, proc.stderr
-    assert date in proc.stdout
-    assert "registered" in proc.stdout
-    assert "unit-demo-l01" in proc.stdout
-    assert "resume --study --unit" in proc.stdout
-    assert len(proc.stdout.encode()) < 2048
-    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
-    payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
-    assert payload["contract"] == "resume-study-options"
-    assert payload["module_id"] == "module-demo"
-    assert payload["exam_date"] == date
-    assert payload["registration_state"] == "registered"
-    assert [row["unit_id"] for row in payload["options"]] == ["unit-demo-l01"]
-    row = payload["options"][0]
-    assert row["study_map_id"] == "study-map-demo-l01"
-    assert row["current_stage"] == "stage-demo"
-    assert row["stage_title"] == "Derive expected value"
-    assert row["open"]["locator"] == "§1"
-    assert row["learner_choice"] is False
-    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
-
-
-def test_study_mode_lists_options_with_several_active_maps(mini_repo: Path):
-    root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
     _add_unit(root, "unit-demo-l02", 2, "active")
     proc = run_los(root, "resume", "--study", "--json")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
+    assert payload["contract"] == "resume-study-options"
+    assert payload["select_with"] == "resume --study --unit UNIT_ID"
+    assert "unit-list --compact" in payload["continuation"]
+    assert "bootstrap --compact" in payload["continuation"]
     assert [row["unit_id"] for row in payload["options"]] == [
         "unit-demo-l01", "unit-demo-l02"]
     assert all(row["learner_choice"] is False for row in payload["options"])
+    first = payload["options"][0]
+    assert first["module_id"] == "module-demo"
+    assert first["study_map_id"] == "study-map-demo-l01"
+    assert first["current_stage"] == "stage-demo"
+    assert first["stage_title"] == "Derive expected value"
+    assert first["open"]["locator"] == "§1"
+    assert first["map_status"] == "active"
+    assert first["module_kind"] == "academic"
+    assert first["administrative_status"] == "enrolled"
+    assert payload["options"][1]["map_status"] == "active"
+    assert payload["total"] == 2
+    assert "recovery" not in payload
+    pointer = (root / "curriculum/resume.yaml").read_bytes()
+    text = run_los(root, "resume", "--study")
+    assert text.returncode == 0, text.stderr
+    assert "Study options" in text.stdout
+    assert "module-demo · unit-demo-l01" in text.stdout
+    assert "resume --study --unit UNIT_ID" in text.stdout
+    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
 
 
-def test_study_mode_orders_options_by_status_then_curriculum_order(mini_repo: Path):
+def test_menu_ordering_pins_module_then_authored_then_numeric(mini_repo: Path):
+    """Status never ranks the menu: authored unit_order positions decide,
+    and unlisted units fall back to their numeric order, then the unit id.
+    The paused map stays where the authored order put it."""
     root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
-    lapsed = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
-    lapsed["status"] = "ready"
-    write_yaml(root / MAP, lapsed)
     _add_unit(root, "unit-demo-l03", 3, "ready")
     _add_unit(root, "unit-demo-l02", 2, "paused")
+    _add_unit(root, "unit-demo-l05", 1, "active")
+    _add_unit(root, "unit-demo-l04", 4, "active")
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"] = ["unit-demo-l01", "unit-demo-l03", "unit-demo-l02"]
+    write_yaml(module_path, module)
     payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
     assert [row["unit_id"] for row in payload["options"]] == [
-        "unit-demo-l02", "unit-demo-l01", "unit-demo-l03"]
-    assert len(payload["options"]) <= 5
+        "unit-demo-l01", "unit-demo-l03", "unit-demo-l02",
+        "unit-demo-l05", "unit-demo-l04"]
+    assert [row["map_status"] for row in payload["options"]] == [
+        "active", "ready", "paused", "active", "active"]
+    assert payload["total"] == 5
+
+
+def test_menu_total_computes_before_the_one_screen_truncation(mini_repo: Path):
+    """The sixth option stays reachable: the total counts every choice,
+    the screen carries five rows, and the continuation names the discovery
+    commands that list the rest."""
+    root = _runtime_repo(mini_repo)
+    for number in range(2, 7):
+        _add_unit(root, f"unit-demo-l{number:02d}", number, "active")
+    payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
+    assert payload["total"] == 6
+    assert len(payload["options"]) == 5
+    assert payload["options"][0]["unit_id"] == "unit-demo-l01"
+    assert "unit-list --compact" in payload["continuation"]
+    assert "bootstrap --compact" in payload["continuation"]
+    text = run_los(root, "resume", "--study")
+    assert text.returncode == 0, text.stderr
+    assert "1 more past the one-screen bound" in text.stdout
 
 
 def test_study_mode_unit_selects_one_option(mini_repo: Path):
     root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
     _add_unit(root, "unit-demo-l02", 2, "ready")
     payload = json.loads(run_los(
         root, "resume", "--study", "--unit", "unit-demo-l02", "--json").stdout)
-    assert payload["via"] == "nearest recorded exam (study suggestion)"
+    assert payload["via"] == "requested unit (study suggestion)"
     assert payload["content"]["stage"]["unit_id"] == "unit-demo-l02"
-    assert payload["study_option"]["exam_date"] == date
     assert payload["study_option"]["open"]["locator"] == "§1"
     assert payload["study_option"]["learner_choice"] is False
 
 
-def test_study_mode_unit_refuses_outside_the_exam_module(mini_repo: Path):
-    root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
-    other = root / "curriculum/modules/module-other"
-    write_yaml(other / "module.yaml", {
-        "id": "module-other", "type": "module", "kind": "academic",
+def _add_module_with_unit(root: Path, module_id: str, unit_id: str) -> None:
+    """A second module owning one lecture unit with an open study map."""
+    module_dir = root / f"curriculum/modules/{module_id}"
+    write_yaml(module_dir / "module.yaml", {
+        "id": module_id, "type": "module", "kind": "academic",
         "area_id": "program-bachelors", "institution": "HU Berlin",
         "title": "Other Module", "semester": "sose-2026", "status": "enrolled",
-        "unit_order": ["unit-other-l01"], "source_map": "source-map.yaml",
+        "unit_order": [unit_id], "source_map": "source-map.yaml",
     })
-    write_yaml(other / "source-map.yaml", {
-        "type": "module-source-map", "module_id": "module-other", "sources": []})
-    write_yaml(other / "units/unit-other-l01/unit.yaml", {
-        "id": "unit-other-l01", "type": "unit", "module_id": "module-other",
+    write_yaml(module_dir / "source-map.yaml", {
+        "type": "module-source-map", "module_id": module_id, "sources": []})
+    unit_dir = module_dir / "units" / unit_id
+    unit_dir.mkdir(parents=True)
+    stage_id = f"stage-{unit_id[5:]}"
+    map_id = f"study-map-{unit_id[5:]}"
+    write_yaml(unit_dir / "unit.yaml", {
+        "id": unit_id, "type": "unit", "module_id": module_id,
         "kind": "lecture", "title": "Elsewhere", "order": 1,
         "scope": "The lecture as taught.", "status": "active",
-        "scope_sources": [], "artifacts": {}, "workspace_ids": [],
+        "current_study_map": map_id, "scope_sources": [], "artifacts": {},
+        "workspace_ids": [],
     })
-    proc = run_los(root, "resume", "--study", "--unit", "unit-other-l01")
-    assert proc.returncode == 2
-    assert "outside the nearest-exam module" in proc.stderr
-    assert "resume --study" in proc.stderr
+    note_rel = (f"curriculum/modules/{module_id}/units/{unit_id}"
+                f"/stages/{stage_id}/notes.md")
+    (root / note_rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / note_rel).write_text("", encoding="utf-8")
+    write_yaml(unit_dir / "study-map.yaml", {
+        "id": map_id, "type": "study-map", "unit_id": unit_id,
+        "status": "active", "current_stage": stage_id,
+        "source_plan": {"path": "work/active/workspace-demo/CONTEXT.md",
+                        "provenance": "operator"},
+        "detours": [], "shelving": {"state": "none"},
+        "stages": [{
+            "id": stage_id, "title": "Elsewhere stage", "status": "active",
+            "objective": "Study the lecture.",
+            "done_when": ["Explain the lecture."], "scope_triage": "required-now",
+            "resources": [{
+                "kind": "read", "label": "Other Book §1",
+                "source_id": "source-demo-book", "locator": "§1",
+                "scope_triage": "required-now"}],
+            "working_note": note_rel, "attachments": [], "source_feedback": [],
+        }],
+    })
+
+
+def test_study_mode_unit_works_across_modules(mini_repo: Path):
+    """--unit honors any module's unit: the exam-module confinement is
+    gone, and bare --study menus across modules with module_id on rows."""
+    root = _runtime_repo(mini_repo)
+    _add_module_with_unit(root, "module-other", "unit-other-l01")
+    proc = run_los(root, "resume", "--study", "--unit", "unit-other-l01", "--json")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["via"] == "requested unit (study suggestion)"
+    assert payload["content"]["stage"]["unit_id"] == "unit-other-l01"
+    assert payload["study_option"]["open"]["locator"] == "§1"
+    assert payload["study_option"]["learner_choice"] is False
+    pointer = (root / "curriculum/resume.yaml").read_bytes()
+    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
+
+    menu = json.loads(run_los(root, "resume", "--study", "--json").stdout)
+    assert menu["total"] == 2
+    assert [row["module_id"] for row in menu["options"]] == [
+        "module-demo", "module-other"]
+
     missing = run_los(root, "resume", "--study", "--unit", "unit-no-such")
     assert missing.returncode == 2
     assert "unit not found: unit-no-such" in missing.stderr
-    assert "unit-list" in missing.stderr
+    assert "unit-list --compact" in missing.stderr
     bare = run_los(root, "resume", "--unit", "unit-demo-l01")
     assert bare.returncode == 2
     assert "resume --unit needs --study" in bare.stderr
 
 
-def test_study_mode_reports_a_missing_registration_as_a_missing_fact(
-        mini_repo: Path):
-    # #114 item 3: `resume --study` says `registration not recorded`
-    # for an upcoming sitting with no attempt, like the brief.
-    from learning_os.app.handlers.resume import _display_registration_state
-
-    assert _display_registration_state("unregistered") == "registration not recorded"
-    assert _display_registration_state("unrecorded") == "unrecorded"
-    assert _display_registration_state("registered") == "registered"
+def test_a_skipped_stage_is_an_ineligible_map_not_a_choice(mini_repo: Path):
+    """The UI's isOpenStage excludes skipped stages; the builder agrees.
+    Eligibility filters before anything counts: one eligible row beside
+    one ineligible map is one choice, so the suggestion path fires."""
     root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    module_path = root / "curriculum/modules/module-demo/module.yaml"
-    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
-    module["examination"]["sittings"][1]["date"] = date
-    module["attempts"] = [att for att in module["attempts"]
-                          if att.get("termin") != 2]
-    write_yaml(module_path, module)
+    _add_unit(root, "unit-demo-l02", 2, "active", stage_status="skipped")
     proc = run_los(root, "resume", "--study", "--json")
     assert proc.returncode == 0, proc.stderr
-    option = json.loads(proc.stdout)["study_option"]
-    assert option["exam_date"] == date
-    assert option["registration_state"] == "registration not recorded"
-    text = run_los(root, "resume", "--study")
-    assert text.returncode == 0, text.stderr
-    assert "registration recorded as registration not recorded" in text.stdout
-    assert "unregistered" not in text.stdout
+    payload = json.loads(proc.stdout)
+    assert payload["via"] == "single open study map (suggestion)"
+    assert payload["content"]["stage"]["unit_id"] == "unit-demo-l01"
 
 
-def test_study_mode_refusal_names_a_command_when_nothing_is_studyable(mini_repo: Path):
+def test_study_mode_refusal_names_discovery_commands_when_nothing_is_open(
+        mini_repo: Path):
     root = _runtime_repo(mini_repo)
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    _exam_on(root, date)
     study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
     study_map["status"] = "not-started"
     write_yaml(root / MAP, study_map)
     proc = run_los(root, "resume", "--study")
     assert proc.returncode == 2
-    assert "unit-list --compact --module-id module-demo" in proc.stderr
+    assert "no open study map" in proc.stderr
+    assert "unit-list --compact" in proc.stderr
+    assert "bootstrap --compact" in proc.stderr
 
 
-def test_study_mode_does_not_offer_a_withdrawn_sitting(mini_repo: Path):
+def test_study_mode_ignores_recorded_sittings(mini_repo: Path):
+    """A withdrawn attempt changes nothing here: exam facts stay canonical
+    in the module record and the screen's exam line, never a study filter."""
     root = _runtime_repo(mini_repo)
     module_path = root / "curriculum/modules/module-demo/module.yaml"
     module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
-    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
-    module["examination"]["sittings"][1]["date"] = date
-    module["attempts"][1]["date"] = date
     module["attempts"][1]["result"] = "withdrawn"
     write_yaml(module_path, module)
-    proc = run_los(root, "resume", "--study")
-    assert proc.returncode == 2
-    assert "no upcoming exam" in proc.stderr
-    assert "status" in proc.stderr
+    proc = run_los(root, "resume", "--study", "--json")
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["via"] == "single open study map (suggestion)"
 
 
 def test_resume_renders_the_pointer_stage(
@@ -428,29 +473,24 @@ def test_resume_json_carries_the_top_cluster_section(mini_repo: Path):
     assert "top-cluster" in payload["content"]
 
 
-def test_render_shows_one_top_goal_row_and_files_nothing():
+def test_render_shows_no_top_goal_section():
+    """The passive Top goal decoration is gone from the screen. The
+    explicitly requested --json dossier keeps its top-cluster section
+    (test_resume_json_carries_the_top_cluster_section pins that side)."""
     from learning_os.app.handlers.resume import _render
     from learning_os.derive.projection.resume_dossier import build_resume_dossier as build
 
-    top = _cluster()
-    dossier = build(**_inputs(top_cluster=top))
-    text = _render(dossier, {"id": "req-x"}, [], [], [], {"module": "M", "unit": "U", "stage": "S"},
-                   "via resume pointer", 0, top)
-    assert "Top goal" in text
-    assert top["title"] in text
-    assert "seeing it files nothing" in text
-    assert "los goal <id> --reject|--defer|--close" in text
-    assert text.count("Top goal") == 1
-
-
-def test_render_omits_the_section_without_a_cluster():
-    from learning_os.app.handlers.resume import _render
-    from learning_os.derive.projection.resume_dossier import build_resume_dossier as build
-
-    dossier = build(**_inputs())
-    text = _render(dossier, None, [], [], [], {"module": "M", "unit": "U", "stage": "S"},
-                   "via resume pointer", 0, None)
+    dossier = build(**_inputs(top_cluster=_cluster()))
+    text = _render(dossier, {"id": "req-x"}, [], [], [],
+                   {"module": "M", "unit": "U", "stage": "S"},
+                   "via resume pointer")
     assert "Top goal" not in text
+
+
+def test_resume_screen_shows_no_top_goal(mini_repo: Path):
+    text = run_los(_runtime_repo(mini_repo), "resume")
+    assert text.returncode == 0, text.stderr
+    assert "Top goal" not in text.stdout
 
 
 def test_resume_shows_recorded_evidence(mini_repo: Path):
@@ -464,7 +504,11 @@ def test_resume_shows_recorded_evidence(mini_repo: Path):
     assert "Last result  partial" in text.stdout
 
 
-def test_resume_falls_back_to_the_last_result(mini_repo: Path):
+def test_recovery_presents_the_menu_when_choices_exist(mini_repo: Path):
+    """Choices + history: the menu is the answer, and it rides in the
+    payload — the human view is presentation-only. The trail appears as
+    clearly labeled context, never as the destination, and nothing here
+    writes the pointer."""
     root = _runtime_repo(mini_repo)
     assert run_los(root, "observe", "req-demo-l01-demo",
                    "--activity", "exercise", "--result", "correct").returncode == 0
@@ -472,30 +516,69 @@ def test_resume_falls_back_to_the_last_result(mini_repo: Path):
     proc = run_los(root, "resume", "--json")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
-    assert payload["via"].startswith("last recorded result")
-    assert payload["content"]["stage"]["stage_id"] == "stage-demo"
+    assert payload["contract"] == "resume-study-options"
+    assert payload["recovery"]["pointer"] == "missing"
+    historical = payload["recovery"]["historical"]
+    assert historical["via"] == (
+        "last recorded result (resume pointer missing or stale)")
+    assert historical["module_id"] == "module-demo"
+    assert historical["unit_id"] == "unit-demo-l01"
+    assert historical["study_map_id"] == "study-map-demo-l01"
+    assert historical["stage_id"] == "stage-demo"
+    assert [row["unit_id"] for row in payload["options"]] == ["unit-demo-l01"]
+    assert "via" not in payload
+    assert not (root / "curriculum/resume.yaml").exists()
+    text = run_los(root, "resume")
+    assert text.returncode == 0, text.stderr
+    assert "recovery asks" in text.stdout
+    assert "Where you were (history, not a choice)" in text.stdout
+    assert "last recorded result (resume pointer missing or stale)" in text.stdout
+
+
+def test_recovery_menu_without_any_history(mini_repo: Path, monkeypatch):
+    """Missing pointer + no history + a selectable map is a menu, not the
+    old refusal. The menu is built independently of the recovery trail:
+    monkeypatched-away commit timestamps change nothing but the context
+    (precedent: the newest-touch test's timestamp monkeypatch)."""
+    import learning_os.store.session.githistory as _git
+    from learning_os.app.handlers.resume import _resolve_stage
+    from learning_os.store.loader import load_repo
+
+    root = _runtime_repo(mini_repo)
+    (root / "curriculum/resume.yaml").unlink()
+    monkeypatch.setattr(_git, "last_commit_timestamps", lambda _root: {})
+    resolved = _resolve_stage(load_repo(root))
+    assert resolved[0] is None
+    payload = resolved[1]
+    assert payload["contract"] == "resume-study-options"
+    assert payload["recovery"]["pointer"] == "missing"
+    assert payload["recovery"]["historical"] is None
+    assert [row["unit_id"] for row in payload["options"]] == ["unit-demo-l01"]
+    proc = run_los(root, "resume", "--json")
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["recovery"]["historical"] is None
 
 
 def test_resume_refuses_without_anything_to_resume(mini_repo: Path):
     proc = run_los(mini_repo, "resume")
     assert proc.returncode == 2
     assert "no resumable stage" in proc.stderr
+    assert "unit-list --compact" in proc.stderr
 
 
-def test_recovery_follows_the_newest_touch_even_with_no_requirement(
+def test_recovery_context_names_the_newest_touch_when_a_menu_is_present(
         mini_repo: Path, monkeypatch):
-    """Recovery reports where he was, not where the feature demos best.
+    """History is context, not steering: the newest touched map labels the
+    historical row, while the menu itself stays independent of the trail.
 
-    This used to skip past the most recently touched map to find one whose
-    stage carried an authored runtime requirement, so the screen would not
-    open on "none authored". With one authored requirement in the whole
-    repository, that preference and "always return to that one stage" were
-    the same rule, and it outranked the subject he had actually chosen
-    (audit `synthetic-learner-2026-09-12`, F05). A truthful "none authored"
-    for the right stage beats a complete screen for the wrong one.
+    This used to steer the destination: recovery skipped past the menu
+    question entirely and opened the most recently touched map as the
+    answer, preferencing requirement-bearing stages along the way (audit
+    `synthetic-learner-2026-09-12`, F05). Now the same timestamps only
+    label the secondary context row.
     """
     root = _runtime_repo(mini_repo)
-    # l01 keeps its stage but loses its requirement: only l02 offers work.
+    # l01 keeps its stage but loses its requirement: only l02 offers one.
     lapsed = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
     del lapsed["stages"][0]["runtime_target"]
     write_yaml(root / MAP, lapsed)
@@ -535,16 +618,49 @@ def test_recovery_follows_the_newest_touch_even_with_no_requirement(
     # The requirement-less map was touched more recently.
     monkeypatch.setattr(_git, "last_commit_timestamps",
                         lambda _root: {old_map: "200", new_map: "100"})
-    via, module_id, unit_id, study_map_id, stage_id = _resolve_stage(
-        load_repo(root))
-    assert via == "recently touched stage (resume pointer missing or stale)"
-    assert (unit_id, stage_id) == ("unit-demo-l01", "stage-demo")
+    resolved = _resolve_stage(load_repo(root))
+    assert resolved[0] is None
+    payload = resolved[1]
+    historical = payload["recovery"]["historical"]
+    assert historical["via"] == (
+        "recently touched stage (resume pointer missing or stale)")
+    assert (historical["unit_id"], historical["stage_id"]) == (
+        "unit-demo-l01", "stage-demo")
+    # The menu itself is independent of the trail: both maps offer rows.
+    assert [row["unit_id"] for row in payload["options"]] == [
+        "unit-demo-l01", "unit-demo-l02"]
     # And the other way round, so this pins the ordering rather than a
-    # constant: make the requirement-bearing map the newer one and it wins.
+    # constant: make the requirement-bearing map the newer one and the
+    # labeled context follows it.
     monkeypatch.setattr(_git, "last_commit_timestamps",
                         lambda _root: {old_map: "100", new_map: "200"})
-    _, _, unit_id, _, stage_id = _resolve_stage(load_repo(root))
-    assert (unit_id, stage_id) == ("unit-demo-l02", "stage-demo2")
+    resolved = _resolve_stage(load_repo(root))
+    historical = resolved[1]["recovery"]["historical"]
+    assert (historical["unit_id"], historical["stage_id"]) == (
+        "unit-demo-l02", "stage-demo2")
+
+
+def test_recovery_opens_the_labeled_history_when_nothing_is_selectable(
+        mini_repo: Path):
+    """No choices + history: the historical destination opens, labeled as
+    history — never claimed as an available study choice."""
+    root = _runtime_repo(mini_repo)
+    assert run_los(root, "observe", "req-demo-l01-demo",
+                   "--activity", "exercise", "--result", "correct").returncode == 0
+    study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
+    study_map["status"] = "not-started"
+    write_yaml(root / MAP, study_map)
+    (root / "curriculum/resume.yaml").unlink()
+    proc = run_los(root, "resume", "--json")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["via"] == (
+        "last recorded result (resume pointer missing or stale)")
+    assert payload["content"]["stage"]["stage_id"] == "stage-demo"
+    text = run_los(root, "resume")
+    assert text.returncode == 0, text.stderr
+    assert ("(via last recorded result (resume pointer missing or stale))"
+            in text.stdout)
 
 
 def test_stage_note_section_moves_the_digest_and_refuses_non_mappings():

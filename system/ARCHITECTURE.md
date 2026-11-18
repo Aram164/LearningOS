@@ -716,7 +716,10 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
     subject he chose to sit down with next. Until 2026-09-13 nothing wrote this
     file, so recovery *was* the destination and both interfaces disagreed with
     the learner and with each other (audit
-    `workbench/audits/synthetic-learner-2026-09-12`, F05).
+    `workbench/audits/synthetic-learner-2026-09-12`, F05). Recovery asks rather
+    than guesses: it presents the open study choices as a menu first, with the
+    historical trail as clearly labeled context, and opens a historical
+    destination only when nothing is selectable anywhere (ADR-023).
 22a. `unit_order` is an ordering, not a claim that every entry is the same kind
     of thing. Each unit carries `kind` (`lecture`, `topic`, `lecture-cluster`,
     `milestone`, `exam-block`, `bridge`), the manifest projects it, and
