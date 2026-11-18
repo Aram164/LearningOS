@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from learning_os.derive.projection.atlas import note_domain_bucket
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.common import strip_headings as _strip_headings
 from learning_os.domain.snapshot import Repo
 
 
 def project_notes(repo: Repo) -> list[dict]:
+    notes_dir = repo.root / "knowledge" / "notes"
     records = []
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
         rel = note.path.relative_to(repo.root)
@@ -16,6 +18,11 @@ def project_notes(repo: Repo) -> list[dict]:
             "title": note.meta.get("title", ""),
             "path": str(rel),
             "domain": rel.parent.name if rel.parent.name != "notes" else "",
+            # The atlas bucket (first folder under knowledge/notes/) is the
+            # published placement (D5): one rule shared with the domain
+            # catalog, so no interface re-derives it from the path. The
+            # deeper-subject ``domain`` above keeps its own semantics.
+            "domain_bucket": note_domain_bucket(note.path, notes_dir),
             "summary": _first_para(_strip_headings(note.body))[:400],
             "role": note.meta.get("role", "synthesis"),
             "state": note.meta.get("state"),

@@ -49,7 +49,7 @@
 # Historical adoption log. `mirrored_in_ui` records the lock name paired with each
 # version at adoption; only the active lock (`contracts/manifest-v19.lock.json`) is
 # retained on disk in LearningOS/obsidian-ui.
-contract_version: 19
+contract_version: 20
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -57,6 +57,7 @@ top_level_keys:
 - artifact_revisions
 - backlinks
 - counts
+- domains
 - garden_entries
 - indexes
 - module_concept_edges
@@ -102,9 +103,9 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v19.schema.json
-schema_sha256: sha256:c1960c667a40f38e32c91723791fef2f6eeb235c90f72c9eea259a687f47222b
-closure_sha256: sha256:82d0fd3886fd69dcc1cee51fb53f7b90640c6fce7795cb91166ba8a1610e6b18
+schema_path: system/contracts/manifest-v20.schema.json
+schema_sha256: sha256:050a6163b16b9cdcc9bc737e6a15215d3e11e4f91213d6bb532dc66415d40017
+closure_sha256: sha256:0d039aa7a31617f10c2ecbbad9350892208b76b5205ee68a297b0397dfa34f79
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -218,3 +219,7 @@ history:
   adopted: '2026-11-15'
   note: Stamp schema closure_sha256 into _generated and enforce at UI boundary (D-20)
   mirrored_in_ui: contracts/manifest-v19.lock.json
+- version: 20
+  adopted: '2026-11-18'
+  note: publish domain catalog and per-note buckets (v20)
+  mirrored_in_ui: contracts/manifest-v20.lock.json

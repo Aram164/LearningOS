@@ -71,6 +71,18 @@ def test_topics_is_part_of_the_contract(mini_repo):
     assert "topics" in _manifest(mini_repo)
 
 
+def test_domains_catalog_is_part_of_the_contract(mini_repo):
+    """D5: the ordered domain catalog is a declared top-level key, published
+    with unique ids and a one-based order."""
+    contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
+    assert "domains" in contract["top_level_keys"]
+    catalog = _manifest(mini_repo)["domains"]
+    assert catalog, "the catalog must always publish, even with no notes"
+    ids = [row["id"] for row in catalog]
+    assert len(ids) == len(set(ids))
+    assert [row["order"] for row in catalog] == list(range(1, len(catalog) + 1))
+
+
 def test_adding_a_top_level_key_without_bumping_fails(mini_repo):
     """The exact 2026-08-08 defect, reproduced: new key, unchanged version."""
     manifest = _manifest(mini_repo)
@@ -316,7 +328,7 @@ def test_unit_without_scope_sources_stays_projectable(mini_repo):
 
 @pytest.mark.full_repo
 def test_live_manifest_contract_declares_schema_closure_digest(repo_root):
-    schema = repo_root / "system" / "contracts" / "manifest-v19.schema.json"
+    schema = repo_root / "system" / "contracts" / "manifest-v20.schema.json"
     expected = digest_of(build_bundle(schema, repo_root / "system" / "schema"))
     assert declared_closure_sha256(repo_root) == expected
 

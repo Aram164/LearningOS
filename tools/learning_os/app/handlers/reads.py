@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from learning_os import __version__
@@ -23,7 +23,6 @@ from learning_os.derive.learning_runtime import (
     temporary_study_sequence,
 )
 from learning_os.derive.projection import adoption_counts, exam_spine
-from learning_os.derive.projection.atlas import ATLAS_DOMAINS
 from learning_os.derive.projection.learner_interpreter import (
     collect_and_interpret as _collect_and_interpret,
 )
@@ -59,23 +58,24 @@ from learning_os.store.validation_cache import observe_pins
 
 
 def _domain_glance(manifest):
-    """Summarize the complete projection, independently of record pagination."""
+    """Summarize the complete projection, independently of record pagination.
+
+    Reads the published manifest — the ordered domain catalog (``domains``)
+    and each note's ``domain_bucket`` — and never re-derives buckets from
+    paths: the catalog is the one place the placement rule lives (D5).
+    """
+    catalog = [row.get("id") for row in manifest.get("domains", [])]
     domains = {domain: {"domain": domain, "notes": 0, "crosswalks": 0,
                         "shelves": 0, "entries": 0}
-               for domain in ATLAS_DOMAINS}
+               for domain in catalog}
     for record in manifest.get("records", []):
         kind = record.get("type")
         if kind not in {"note", "collection", "topic-pack"}:
             continue
-        domain = record.get("domain") or "cross-domain"
-        if kind == "note" and record.get("path"):
-            # The Domain atlas groups by the first directory under notes;
-            # a record's domain can instead name a deeper subject folder.
-            try:
-                parts = PurePosixPath(record["path"]).relative_to("knowledge/notes").parts
-                domain = parts[0] if len(parts) > 1 else "cross-domain"
-            except ValueError:
-                domain = "cross-domain"
+        if kind == "note":
+            domain = record.get("domain_bucket") or "cross-domain"
+        else:
+            domain = record.get("domain") or "cross-domain"
         row = domains.setdefault(domain, {"domain": domain, "notes": 0,
                                          "crosswalks": 0, "shelves": 0, "entries": 0})
         if kind == "note":
@@ -84,7 +84,7 @@ def _domain_glance(manifest):
         else:
             row["shelves"] += 1
             row["entries"] += len(record.get("entries") or [])
-    order = [*ATLAS_DOMAINS, *sorted(set(domains) - set(ATLAS_DOMAINS))]
+    order = [*catalog, *sorted(set(domains) - set(catalog))]
     return [domains[domain] for domain in order]
 
 

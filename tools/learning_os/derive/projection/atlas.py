@@ -13,6 +13,53 @@ ATLAS_DOMAINS = [
 ]
 
 
+# Display labels for the known buckets, resolved once here and published in
+# the manifest's domain catalog — interfaces read them instead of keeping
+# parallel label rules (D5).
+DOMAIN_LABELS = {
+    "mathematics": "Mathematics", "machine-learning": "Machine learning",
+    "systems": "Systems", "data-systems": "Data systems",
+    "algorithms": "Algorithms", "programming": "Programming",
+    "cross-domain": "Across domains",
+}
+
+
+def note_domain_bucket(path: Path, notes_dir: Path) -> str:
+    """The ONE bucket rule (D5): the first folder under knowledge/notes/, or
+    'cross-domain' for a note outside that tree or sitting directly under it.
+    The projection publishes each note's bucket, so consumers never re-derive
+    placement from paths."""
+    try:
+        bucket = path.relative_to(notes_dir).parts[0]
+    except ValueError:
+        return "cross-domain"
+    if bucket.endswith(".md"):  # note directly under notes/ (unbucketed)
+        return "cross-domain"
+    return bucket
+
+
+def _fallback_domain_label(domain_id: str) -> str:
+    """Title-cased label for a future bucket the label map does not name."""
+    return " ".join(part[:1].upper() + part[1:] for part in domain_id.split("-"))
+
+
+def build_domain_catalog(note_buckets, shelf_domains) -> list[dict]:
+    """The ordered published domain catalog (D5): the known ATLAS_DOMAINS in
+    their fixed order — empty domains included, so a consumer seeding rows
+    from this catalog never drops one — then every observed future bucket,
+    sorted. Rows carry unique ids, a one-based ``order`` and a label resolved
+    here once, and cover every domain id the published notes (buckets) and
+    shelves (domains) name. 'Not yet grouped' is a UI presentation concept
+    and deliberately not part of the catalog."""
+    ids = list(ATLAS_DOMAINS)
+    for extra in sorted({*note_buckets, *shelf_domains}):
+        if extra not in ids:  # future bucket: appears, never dropped
+            ids.append(extra)
+    return [{"id": dom, "label": DOMAIN_LABELS.get(dom, _fallback_domain_label(dom)),
+             "order": index}
+            for index, dom in enumerate(ids, start=1)]
+
+
 ATLAS_COLLECTION_DOMAIN = {
     "math-bookshelf": "mathematics", "math-lecture-series": "mathematics",
     "ml-bookshelf": "machine-learning", "ml-lecture-series": "machine-learning",
@@ -92,13 +139,7 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
     notes_dir = repo.root / "knowledge" / "notes"
     notes_by_domain: dict[str, list] = {}
     for n in repo.notes.values():
-        try:
-            bucket = n.path.relative_to(notes_dir).parts[0]
-        except ValueError:
-            bucket = "cross-domain"
-        if bucket.endswith(".md"):  # note directly under notes/ (unbucketed)
-            bucket = "cross-domain"
-        notes_by_domain.setdefault(bucket, []).append(n)
+        notes_by_domain.setdefault(note_domain_bucket(n.path, notes_dir), []).append(n)
 
     shelves_by_domain: dict[str, list[tuple[str, dict, int]]] = {}
     for name in sorted(repo.collections):

@@ -79,7 +79,7 @@ def test_every_note_field_reaches_the_projection(repo_root, manifest):
     projected = {key for note in notes for key in note}
 
     # The projection adds navigational keys the schema has no reason to carry.
-    derived = {"type", "path", "domain", "summary"}
+    derived = {"type", "path", "domain", "domain_bucket", "summary"}
     missing = allowed - projected - {"created"}
     assert not missing, (
         f"the note schema allows {sorted(missing)} but the projection drops them"

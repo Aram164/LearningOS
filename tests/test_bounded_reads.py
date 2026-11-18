@@ -120,17 +120,20 @@ def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
 
 def test_domain_glance_keeps_empty_future_and_unbucketed_domains():
     from learning_os.app.handlers.reads import _domain_glance
+    from learning_os.derive.projection.atlas import ATLAS_DOMAINS, build_domain_catalog
 
     records = [
-        {"type": "note", "domain": "future", "role": "crosswalk"},
-        {"type": "note", "domain": ""},
+        {"type": "note", "domain_bucket": "future", "role": "crosswalk"},
+        {"type": "note", "domain_bucket": ""},
         {"type": "collection", "domain": "cross-domain", "entries": [{}, {}]},
         {"type": "topic-pack", "domain": "cross-domain", "entries": [{}]},
-        {"type": "note", "domain": "nested", "path": "knowledge/notes/data-systems/nested/note.md"},
+        {"type": "note", "domain": "nested", "domain_bucket": "data-systems"},
         {"type": "source", "domain": "future"},
     ]
-    glance = _domain_glance({"records": records})
-    assert glance == _domain_glance({"records": records[::-1]})
+    manifest = {"domains": build_domain_catalog(ATLAS_DOMAINS, []),
+                "records": records}
+    glance = _domain_glance(manifest)
+    assert glance == _domain_glance({**manifest, "records": records[::-1]})
     domains = {row["domain"]: row for row in glance}
     assert domains["mathematics"]["notes"] == 0
     assert domains["future"]["notes"] == domains["future"]["crosswalks"] == 1
