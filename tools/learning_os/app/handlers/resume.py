@@ -389,7 +389,7 @@ def _resolve_stage(repo):
             "pointer": "stale" if pointer else "missing",
             "historical": (dict(zip(("via", "module_id", "unit_id",
                                      "study_map_id", "stage_id"),
-                                    historical))
+                                    historical, strict=True))
                            if historical is not None else None),
         }
         return (None, _study_menu(rows, recovery=recovery))
