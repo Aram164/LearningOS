@@ -301,7 +301,10 @@ def test_module_attempt_records_a_registration_visible_on_every_read(mini_repo):
     study = run_los(mini_repo, "resume", "--study", "--json")
     assert study.returncode == 0, study.stderr
     option = json.loads(study.stdout)["study_option"]
-    assert (option["exam_date"], option["registration_state"]) == (date, "registered")
+    # Resume is de-examed: its study suggestion carries no exam state. The
+    # registration still rides the reads that own academic deadlines.
+    assert "exam_date" not in option and "registration_state" not in option
+    assert option["learner_choice"] is False
 
     brief = run_los(mini_repo, "bootstrap", "--brief")
     assert brief.returncode == 0, brief.stderr
