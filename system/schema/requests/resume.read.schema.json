@@ -29,7 +29,7 @@
     },
     "study": {
       "type": "boolean",
-      "description": "show the nearest recorded exam's active stage as a read-only study suggestion",
+      "description": "show the single open study map across all modules as a read-only study suggestion, or a bounded menu of choices",
       "x-los-cli": {
         "flags": [
           "--study"
@@ -50,7 +50,7 @@
     },
     "unit": {
       "type": "string",
-      "description": "with --study: study this exam-module unit explicitly instead of the single active map",
+      "description": "with --study: study this unit explicitly (same eligibility as the menu)",
       "x-los-cli": {
         "flags": [
           "--unit"
@@ -72,7 +72,7 @@
   },
   "x-los-cli-command": {
     "name": "resume",
-    "help": "one-screen return to study: stage, requirement, evidence, exam",
+    "help": "one-screen return to study: stage, requirement, evidence",
     "description": null,
     "epilog": null,
     "mutually_exclusive": [],

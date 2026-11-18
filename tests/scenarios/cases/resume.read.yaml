@@ -61,11 +61,18 @@ cases:
   expect:
     site: resume.read.unit-without-study
 untriggered:
-- where: tools/learning_os/app/handlers/reads.py:2036
+- where: tools/learning_os/app/handlers/resume.py:910
   reason: 'unresolvable stage: the fixture pointer resolves, and no step can break
     it'
-- where: tools/learning_os/app/handlers/reads.py:2124
+- where: tools/learning_os/app/handlers/resume.py:998
   reason: 'dossier build failure: needs dossier-breaking data no step can author'
+- where: tools/learning_os/app/handlers/resume.py:577
+  reason: 'cross-module study menu: rich_world owns one module with one open map,
+    so bare --study resolves to a single suggestion and no step can author a second
+    eligible row'
+- where: tools/learning_os/app/handlers/resume.py:565
+  reason: 'cross-module --unit success: needs a unit of another module owning an
+    open study map; rich_world has no second study map to select'
 - site: resume.read.no-resumable-stage
   reason: fixture-inexpressible
 - site: resume.read.dossier-build-failed

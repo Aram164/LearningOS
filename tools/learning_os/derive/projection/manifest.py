@@ -20,6 +20,7 @@ from functools import partial
 from pathlib import Path
 
 from learning_os.derive.garden import project_garden_entries
+from learning_os.derive.projection.atlas import build_domain_catalog
 from learning_os.derive.projection.common import git_state as _git_state
 from learning_os.derive.projection.common import json_header as _json_header
 from learning_os.derive.projection.coordination import adoption_counts
@@ -290,6 +291,16 @@ def assemble_manifest_semantic_payload(
     """The complete semantic body: every payload key except ``_generated``."""
     return {
         "records": records,
+        # The domain catalog (D5): ordered ids, labels and one-based positions,
+        # assembled once here from the published records themselves — every
+        # domain id the notes (buckets) and shelves (domains) reference is
+        # covered, so interfaces read the catalog instead of re-deriving it.
+        "domains": build_domain_catalog(
+            (row.get("domain_bucket") or "cross-domain"
+             for row in records if row.get("type") == "note"),
+            (row.get("domain") or "cross-domain"
+             for row in records if row.get("type") in {"collection", "topic-pack"}),
+        ),
         "relations": relations,
         # Backlinks are part of the SAME atomic manifest snapshot. The legacy
         # backlinks.json remains as a compatibility view, but interfaces never

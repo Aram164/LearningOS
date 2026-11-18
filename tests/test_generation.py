@@ -15,6 +15,7 @@ import pytest
 from stress_check import _generation_stress
 
 from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.derive.projection.atlas import ATLAS_DOMAINS, DOMAIN_LABELS
 from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS
 from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.domain.failures import TransactionFailure
@@ -363,6 +364,69 @@ def test_domain_atlas_enumerates_and_links_every_note(mini_repo):
     # The compact session-start block stays a census, not a listing.
     glance = atlas.split("## At a glance")[1].split("\n## ")[0]
     assert f"`{note.id}`" not in glance
+
+
+def _nested_demo_note(mini_repo, bucket_dir: str, note_id: str) -> None:
+    """A second note under knowledge/notes/<bucket>/, shaped like note-demo."""
+    target = mini_repo / "knowledge" / "notes" / bucket_dir
+    target.mkdir(parents=True, exist_ok=True)
+    (target / f"{note_id}.md").write_text(
+        f"---\nid: {note_id}\ntype: note\ntitle: Nested note\n"
+        "created: 2026-07-16\nrole: synthesis\n"
+        "concepts: [concept-variance]\nsources: [source-demo-book]\n"
+        "---\n\nBody prose.\n",
+        encoding="utf-8")
+
+
+def test_manifest_publishes_the_ordered_domain_catalog(mini_repo):
+    """D5: the catalog publishes once — known domains first in ATLAS_DOMAINS
+    order, unique ids, one-based order, labels resolved in Core."""
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    catalog = manifest["domains"]
+    ids = [row["id"] for row in catalog]
+    assert len(ids) == len(set(ids)), "catalog ids must be unique"
+    assert ids[:len(ATLAS_DOMAINS)] == list(ATLAS_DOMAINS)
+    assert [row["order"] for row in catalog] == list(range(1, len(catalog) + 1))
+    for row in catalog:
+        if row["id"] in DOMAIN_LABELS:
+            assert row["label"] == DOMAIN_LABELS[row["id"]]
+
+
+def test_manifest_domain_catalog_covers_every_published_reference(mini_repo):
+    """Every note bucket and shelf domain is cataloged — and a note filed in a
+    deeper subject folder is covered by its BUCKET, never by its subject name."""
+    _nested_demo_note(mini_repo, "data-systems/narrow-topic", "note-nested")
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    ids = {row["id"] for row in manifest["domains"]}
+    published = {row["domain_bucket"] for row in manifest["records"]
+                 if row.get("type") == "note"}
+    published |= {row["domain"] for row in manifest["records"]
+                  if row.get("type") in {"collection", "topic-pack"}}
+    assert published <= ids, "every referenced domain id is cataloged"
+    assert "narrow-topic" not in ids, "a deeper subject folder is not a bucket"
+
+
+def test_domain_catalog_keeps_empty_known_domains_and_labels_future_ones(mini_repo):
+    """Empty known domains stay cataloged (a consumer seeding rows from the
+    catalog never drops one), and a future bucket joins with a title-cased
+    fallback label."""
+    _nested_demo_note(mini_repo, "biophysics", "note-bio")
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    catalog = manifest["domains"]
+    assert set(ATLAS_DOMAINS) <= {row["id"] for row in catalog}
+    assert {"id": "biophysics", "label": "Biophysics",
+            "order": len(ATLAS_DOMAINS) + 1} in catalog
+
+
+def test_domain_glance_counts_notes_by_published_bucket(mini_repo):
+    """_domain_glance consumes the published catalog + domain_bucket: a note
+    under a deeper subject folder counts under its bucket, not its subject."""
+    _nested_demo_note(mini_repo, "data-systems/narrow-topic", "note-nested")
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    from learning_os.app.handlers.reads import _domain_glance
+    rows = {row["domain"]: row for row in _domain_glance(manifest)}
+    assert "narrow-topic" not in rows
+    assert rows["data-systems"]["notes"] == 1
 
 
 def test_collection_records_carry_their_curation(mini_repo):
