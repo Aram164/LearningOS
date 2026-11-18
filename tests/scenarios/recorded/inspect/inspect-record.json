@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"atlas_question\":null,\"attachments\":[],\"authorship\":null,\"concepts\":[\"concept-expected-value\"],\"contexts\":[],\"domain\":\"mathematics\",\"evidence\":[],\"id\":\"note-demo\",\"material_analysis\":null,\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"reviewed\":null,\"role\":\"synthesis\",\"semantic_review\":null,\"sources\":[\"source-demo-book\"],\"state\":null,\"summary\":\"Body prose.\",\"supersedes\":[],\"title\":\"Demo note\",\"transcription\":null,\"type\":\"note\"}\n",
+  "stdout": "{\"atlas_question\":null,\"attachments\":[],\"authorship\":null,\"concepts\":[\"concept-expected-value\"],\"contexts\":[],\"domain\":\"mathematics\",\"domain_bucket\":\"mathematics\",\"evidence\":[],\"id\":\"note-demo\",\"material_analysis\":null,\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"reviewed\":null,\"role\":\"synthesis\",\"semantic_review\":null,\"sources\":[\"source-demo-book\"],\"state\":null,\"summary\":\"Body prose.\",\"supersedes\":[],\"title\":\"Demo note\",\"transcription\":null,\"type\":\"note\"}\n",
   "stdout_json": {
     "atlas_question": null,
     "attachments": [],
@@ -17,6 +17,7 @@
     ],
     "contexts": [],
     "domain": "mathematics",
+    "domain_bucket": "mathematics",
     "evidence": [],
     "id": "note-demo",
     "material_analysis": null,

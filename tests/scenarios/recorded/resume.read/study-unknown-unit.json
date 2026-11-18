@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: unit not found: unit-nope; list the exam module's units with `unit-list --compact --module-id module-demo`\n",
+  "stderr": "los: unit not found: unit-nope; list units with `unit-list --compact`\n",
   "stdout": "",
   "stdout_json": null
 }
