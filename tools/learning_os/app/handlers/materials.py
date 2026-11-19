@@ -68,6 +68,7 @@ from learning_os.store.materials.slices import (
 )
 from learning_os.store.materials.slices import read_part as _read_part
 from learning_os.store.materials.slices import route_material_files as _route_material_files
+from learning_os.store.materials.slices import unit_card_scope as _unit_card_scope
 from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
 
 MAX_STAGE_RESULTS = 5
@@ -1209,7 +1210,7 @@ def _study_reads(ctx, payload) -> tuple[list[Read], list[dict], list[dict]]:
                 "discontiguous page runs, and one excerpt is one combined text, so a "
                 "study read of it cannot carry the exact digest of the pages a card "
                 "would cover; issue one read per contiguous range, e.g. "
-                f'--pages "pdf p. {runs[0][0]}" then --pages "pdf p. {runs[-1][0]}"',
+                f'--pages "{pages_label(*runs[0])}" then --pages "{pages_label(*runs[-1])}"',
                 site=f"{ctx.operation}.discontiguous", prefixed=True, exit_code=2)
         digest = str(span["file_sha256"]).removeprefix("sha256:")
         text_sha = hashlib.sha256(excerpt.encode("utf-8")).hexdigest()
@@ -1348,6 +1349,25 @@ def material_study_span(ctx: OpContext, req: dict) -> Result:
                 memory.append({"kind": "card", **store.served_card(card, known)})
     memory.sort(key=lambda row: 0 if row["kind"] == "analysis-note" else 1)
     open_rows = [entry_view(row) for row in admission.open_entries]
+    if payload.get("availability") == "local-observed" and any(
+        row.get("adopted_from") for row in admission.open_entries
+    ):
+        delivered = [
+            (read.digest, read.start, read.end)
+            for state, span_ref in zip(admission.states, span_refs, strict=True)
+            if "excerpt_omitted" not in span_ref
+            and isinstance(span_ref.get("excerpt"), str)
+            and bool(span_ref["excerpt"].strip())
+            for read in [state["read"]]
+        ]
+        if delivered:
+            try:
+                store.record_observations(session, delivered)
+            except ReadingStoreError as exc:
+                raise WriteRefused(
+                    f"the reading store cannot record this read, so no text is returned: {exc}",
+                    site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2,
+                ) from exc
     next_action = None
     if open_rows:
         next_action = (
@@ -1418,6 +1438,9 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
             f"the reading store cannot be updated; the entry stays as it was: {exc}",
             site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2) from exc
     except SettleRefusal as exc:
+        if exc.slug == "adopted-unread":
+            raise WriteRefused(str(exc), site=f"{ctx.operation}.adopted-unread", prefixed=True,
+                               exit_code=2, remedy=exc.remedy) from exc
         if exc.slug == "bad-card":
             raise WriteRefused(str(exc), site=f"{ctx.operation}.bad-card", prefixed=True,
                                exit_code=2, remedy=exc.remedy) from exc
@@ -1478,8 +1501,17 @@ def _study_hit_cards(ctx, repo, session, payload) -> None:
     payload["study"] = study
 
 
-def _study_context_cards(ctx, repo, *, raw_terms, concept_id, material) -> dict:
-    """Current cards matching the need: every query word, the concept, the material."""
+def _study_context_cards(
+    ctx,
+    repo,
+    *,
+    raw_terms,
+    concept_id,
+    material,
+    unit=None,
+    include_related: bool = False,
+) -> dict:
+    """Current cards matching the need: every query word, the concept, the material, the unit."""
     store = ReadingStore(ctx.root)
     known = set(repo.concepts)
     words = [term.casefold() for term in raw_terms]
@@ -1487,8 +1519,14 @@ def _study_context_cards(ctx, repo, *, raw_terms, concept_id, material) -> dict:
         with store.locked(create=False):
             rows = store.all_cards()
     except ReadingStoreError as exc:
-        return {"items": [], "total": 0, "cards_unavailable": str(exc)}
-    matched = []
+        out: dict = {"items": [], "total": 0, "cards_unavailable": str(exc)}
+        if unit is not None:
+            out["related_total"] = 0
+        return out
+    unit_routes = _unit_route_pairs(repo, unit) if unit is not None else None
+    digest_cache: dict[Path, str] = {}
+    direct_matched: list[tuple[dict, str | None]] = []
+    related_matched: list[tuple[dict, str | None]] = []
     for card in rows:
         if material and card["material"] != material:
             continue
@@ -1497,11 +1535,36 @@ def _study_context_cards(ctx, repo, *, raw_terms, concept_id, material) -> dict:
         text = " ".join([card["paraphrase"], *(row["label"] for row in card["pointers"])]).casefold()
         if any(word not in text for word in words):
             continue
-        matched.append(card)
-    matched.sort(key=lambda card: (card["material"], card["inspected_range"]["start"], card["card"]))
-    return {"items": [store.served_card(card, known, compact=True) for card in matched[:5]],
-            "total": len(matched),
-            "review": "unreviewed private cards; never coverage evidence"}
+        scope: str | None = None
+        if unit_routes is not None:
+            scope = _unit_card_scope(repo, card, unit_routes, digest_cache=digest_cache)
+            if scope is None:
+                continue
+        if scope == "related":
+            related_matched.append((card, scope))
+        else:
+            direct_matched.append((card, scope))
+    direct_matched.sort(
+        key=lambda pair: (pair[0]["material"], pair[0]["inspected_range"]["start"], pair[0]["card"])
+    )
+    related_matched.sort(
+        key=lambda pair: (pair[0]["material"], pair[0]["inspected_range"]["start"], pair[0]["card"])
+    )
+    matched = [*direct_matched, *related_matched] if include_related else direct_matched
+    items = []
+    for card, scope in matched[:5]:
+        served = store.served_card(card, known, compact=True)
+        if scope is not None:
+            served["scope"] = scope
+        items.append(served)
+    result: dict = {
+        "items": items,
+        "total": len(matched),
+        "review": "unreviewed private cards; never coverage evidence",
+    }
+    if unit is not None:
+        result["related_total"] = len(related_matched)
+    return result
 
 
 ASSESSMENT_TEXT_FIELDS = ("contribution", "assumptions", "notation",
@@ -2142,7 +2205,8 @@ def material_context(ctx: OpContext, req: dict) -> Result:
         if session is not None:
             payload["study_cards"] = _study_context_cards(
                 ctx, repo, raw_terms=raw_terms, concept_id=concept_id,
-                material=material_ref)
+                material=material_ref, unit=req.get("unit"),
+                include_related=bool(req.get("include_related")))
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},

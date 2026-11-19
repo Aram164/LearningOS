@@ -119,3 +119,10 @@ saved card, one dismissed as irrelevant, the session record and its settlement
 log. `tests/test_format_fixtures.py` places that tree beside the materialised
 repository, as the live layout does, and validates every record against the
 current `material-reading-card` schema.
+
+`v68` (adopted 2026-11-19) extends `material-reading-card` settlement log lines
+with the additive `"observed"` outcome (`recorded_source_digest` and
+`inspected_range` required when `outcome == "observed"`), recording active-session
+PDF excerpt delivery for adopted reading entries before card settlement. `v66`
+log lines remain valid without migration; `v68` freezes an adopted pending entry
+and its `"adopted"` + `"observed"` log records.

@@ -146,6 +146,23 @@ def _overlaps(outer: dict[str, int], start: int, end: int) -> bool:
     return outer["start"] <= end and start <= outer["end"]
 
 
+def _contiguous_runs(pages: Iterable[int]) -> list[tuple[int, int]]:
+    """Inclusive (start, end) runs for a set or sequence of physical page numbers."""
+    ordered = sorted(set(pages))
+    if not ordered:
+        return []
+    runs: list[tuple[int, int]] = []
+    start = prev = ordered[0]
+    for page in ordered[1:]:
+        if page == prev + 1:
+            prev = page
+        else:
+            runs.append((start, prev))
+            start = prev = page
+    runs.append((start, prev))
+    return runs
+
+
 def _row_range(row: dict[str, object]) -> dict[str, int]:
     """The inspected_range of a loaded record: a JSON object with start and end."""
     return cast("dict[str, int]", row["inspected_range"])
@@ -716,7 +733,18 @@ class ReadingStore:
             admission.open_entries = list(mine)
             operations = [self._touch_op(session, moment)]
             if new:
-                overdue = [row for row in mine if row["state"] == "overdue"]
+                overdue = [
+                    row for row in mine
+                    if row["state"] == "overdue"
+                    and not (
+                        row.get("adopted_from")
+                        and any(
+                            read.digest == row["recorded_source_digest"]
+                            and _overlaps(_row_range(row), read.start, read.end)
+                            for read in new
+                        )
+                    )
+                ]
                 adoptable = self.adoptable(session, moment, pending_entries=all_pending)
                 if overdue:
                     admission.refusal, admission.blocking = "overdue", overdue
@@ -808,6 +836,108 @@ class ReadingStore:
     def _remaining(self, session: str) -> list[dict[str, object]]:
         return self.entries(session=session)
 
+    def record_observations(
+        self,
+        session: str,
+        observations_read: Iterable[tuple[str, int, int]],
+        *,
+        now: dt.datetime | None = None,
+    ) -> list[str]:
+        """Record actual PDF excerpt delivery in ``session`` for owned adopted pending entries."""
+        if not valid_session(session):
+            raise ReadingStoreError(f"not a session id: {session!r}")
+        obs_list = list(observations_read)
+        if not obs_list:
+            return []
+        moment = now or observations.now()
+        with self.locked(create=True):
+            adopted_entries = [
+                row for row in self.entries(session=session)
+                if row.get("adopted_from")
+            ]
+            if not adopted_entries:
+                return []
+            operations: list[dict[str, object]] = []
+            recorded_entries: list[str] = []
+            for digest, start, end in obs_list:
+                for row in adopted_entries:
+                    if row["recorded_source_digest"] != digest:
+                        continue
+                    rng = _row_range(row)
+                    if not _overlaps(rng, start, end):
+                        continue
+                    obs_start = max(rng["start"], start)
+                    obs_end = min(rng["end"], end)
+                    hop = len(cast("list[str]", row["adopted_from"]))
+                    entry_name = cast(str, row["entry"])
+                    line: dict[str, object] = {
+                        "record": "log",
+                        "schema_version": 1,
+                        "at": _iso(moment),
+                        "session": session,
+                        "entry": entry_name,
+                        "outcome": "observed",
+                        "card_version": None,
+                        "from_session": None,
+                        "recorded_source_digest": digest,
+                        "inspected_range": {"start": obs_start, "end": obs_end},
+                    }
+                    self._validated(dict(line, key="0" * 64))
+                    seed = f"{entry_name}\0observed\0{hop}\0{digest}\0{obs_start}\0{obs_end}"
+                    operations.append({
+                        "op": "append",
+                        "path": f"log/{session}.jsonl",
+                        "line": line,
+                        "key": hashlib.sha256(seed.encode("utf-8")).hexdigest(),
+                    })
+                    if entry_name not in recorded_entries:
+                        recorded_entries.append(entry_name)
+            if operations:
+                self._commit(operations)
+            return recorded_entries
+
+    def _unobserved_adopted_pages(
+        self, session: str, name: str, digest: str, rng: dict[str, int]
+    ) -> list[int]:
+        """Pages of an adopted entry not yet observed in ``session`` since its latest adoption."""
+        log_path = self.root / "log" / f"{session}.jsonl"
+        observed_pages: set[int] = set()
+        if log_path.is_file():
+            self._repair_log_tail(log_path)
+            for raw_line in log_path.read_text(encoding="utf-8").splitlines():
+                if not raw_line.strip():
+                    continue
+                try:
+                    event = json.loads(raw_line)
+                except ValueError:
+                    continue
+                if not isinstance(event, dict) or event.get("entry") != name:
+                    continue
+                outcome = event.get("outcome")
+                if outcome == "adopted":
+                    observed_pages.clear()
+                elif (
+                    outcome == "observed"
+                    and event.get("session") == session
+                    and event.get("recorded_source_digest") == digest
+                    and isinstance(event.get("inspected_range"), dict)
+                ):
+                    ir = cast("dict[str, object]", event["inspected_range"])
+                    start, end = ir.get("start"), ir.get("end")
+                    if (
+                        isinstance(start, int)
+                        and not isinstance(start, bool)
+                        and isinstance(end, int)
+                        and not isinstance(end, bool)
+                        and start <= end
+                    ):
+                        lo = max(rng["start"], start)
+                        hi = min(rng["end"], end)
+                        if lo <= hi:
+                            observed_pages.update(range(lo, hi + 1))
+        required = set(range(rng["start"], rng["end"] + 1))
+        return sorted(required - observed_pages)
+
     def save(self, session: str, name: str, card_input: object, *,
              now: dt.datetime | None = None) -> Settlement:
         """Settle one entry with a card admitted by structure (step 3)."""
@@ -822,6 +952,28 @@ class ReadingStore:
             assert row is not None
             digest = cast(str, row["recorded_source_digest"])
             rng = _row_range(row)
+            if row.get("adopted_from"):
+                missing = self._unobserved_adopted_pages(session, name, digest, rng)
+                if missing:
+                    runs = _contiguous_runs(missing)
+                    missing_label = ", ".join(pages_label(s, e) for s, e in runs)
+                    first_run = pages_label(*runs[0])
+                    read_cmd = (
+                        f'{LOS_COMMAND} material-study-span --material {row["material"]} '
+                        f'--pages "{first_run}" --extract --session {session}'
+                    )
+                    dismiss_cmd = (
+                        f"{LOS_COMMAND} material-card-settle {name} --dismiss irrelevant "
+                        "--reason '<why>'"
+                    )
+                    raise SettleRefusal(
+                        "adopted-unread",
+                        f"{name} was adopted from an earlier session and cannot be settled with "
+                        f"--card until this session observes {pages_label(rng['start'], rng['end'])} "
+                        f"of {row['material']} via material-study-span (missing: {missing_label}); "
+                        "read the missing pages first, or dismiss the entry as irrelevant or redundant",
+                        remedy=f"{read_cmd}\nOr dismiss that entry:\n{dismiss_cmd}",
+                    )
             card_fields = admit_card(card_input, rng)
             handle = card_name(digest, rng["start"], rng["end"])
             directory = f"cards/{digest}/p{rng['start']}-{rng['end']}"

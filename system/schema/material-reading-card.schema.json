@@ -189,11 +189,25 @@
         "session": {"$ref": "#/$defs/session_id"},
         "entry": {"$ref": "#/$defs/entry_handle"},
         "outcome": {"enum": ["saved", "dismissed-irrelevant", "dismissed-redundant",
-                             "source-changed", "source-gone", "adopted"]},
+                             "source-changed", "source-gone", "adopted", "observed"]},
         "card_version": {"type": ["integer", "null"], "minimum": 1},
         "from_session": {"oneOf": [{"$ref": "#/$defs/session_id"}, {"type": "null"}]},
+        "recorded_source_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "inspected_range": {"oneOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]},
         "key": {"$ref": "#/$defs/digest"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"outcome": {"const": "observed"}}},
+          "then": {
+            "required": ["recorded_source_digest", "inspected_range"],
+            "properties": {
+              "recorded_source_digest": {"$ref": "#/$defs/digest"},
+              "inspected_range": {"$ref": "#/$defs/range"}
+            }
+          }
+        }
+      ]
     }
   }
 }

@@ -1153,3 +1153,100 @@ def test_assessment_results_name_their_route_beside_its_id(mini_repo):
     [gone] = _context(mini_repo, "--concept", "concept-expected-value")["items"]
     assert gone["route_id"] == "route-demo-gone"
     assert gone["route_title"] is None and gone["route_angle"] is None
+
+
+# ---- unit-scoped study cards (S12) -------------------------------------------------
+
+_CARD_SESSION = "aaaaaaaa-1111-4111-8111-111111111111"
+
+
+def _seed_card(root: Path, material: str, digest: str, start: int, end: int) -> None:
+    """One private reading card, written through the store API (no PDF needed)."""
+    from learning_os.store.materials.reading_cards import Read, ReadingStore
+
+    store = ReadingStore(root)
+    read = Read(digest=digest, material=material, start=start, end=end,
+                text_sha256=hashlib.sha256(f"{material}{start}".encode()).hexdigest())
+    entry = store.admit(_CARD_SESSION, [read]).opened[0]["entry"]
+    card = {"paraphrase": f"Restates the density result of pages {start} to {end} plainly.",
+            "kinds": ["statement"],
+            "pointers": [{"page": start, "kind": "statement", "label": "the main claim"}]}
+    store.save(_CARD_SESSION, entry, card)
+
+
+def _card_keys(block: dict) -> list[tuple[str, str, str | None]]:
+    return [(row["material"], row["pages"], row.get("scope")) for row in block["items"]]
+
+
+def test_unit_scopes_study_cards_by_route_and_live_digest(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    book = "source-demo-book"
+    _seed_card(mini_repo, f"{book}/deck.pdf", digests["deck.pdf"], 2, 3)      # inside pp. 1-3
+    _seed_card(mini_repo, f"{book}/deck.pdf", digests["deck.pdf"], 10, 12)    # disjoint window
+    _seed_card(mini_repo, f"{book}/multi.pdf", digests["multi.pdf"], 99, 99)  # multi-range route
+    _seed_card(mini_repo, f"{book}/other.pdf", digests["other.pdf"], 1, 1)    # unrouted file
+    # The slides moved after the card was written: the live bytes still match.
+    _seed_card(mini_repo, "_unsorted/old/slides-moved.pdf", digests["slides.pdf"], 1, 1)
+    # Another module's source (the S12 leak): never part of this unit.
+    _seed_card(mini_repo, "source-other-module/paper.pdf", "ef" * 32, 1, 2)
+    session = ("--session", _CARD_SESSION)
+
+    everything = _context(mini_repo, "restates", *session)["study_cards"]
+    assert everything["total"] == 6 and "related_total" not in everything
+    assert all("scope" not in row for row in everything["items"])
+
+    scoped = _context(mini_repo, "restates", "--unit", "unit-demo-l01", *session)["study_cards"]
+    assert _card_keys(scoped) == [
+        ("_unsorted/old/slides-moved.pdf", "pdf p. 1", "direct"),
+        (f"{book}/deck.pdf", "pdf pp. 2-3", "direct"),
+        (f"{book}/multi.pdf", "pdf p. 99", "direct"),
+    ]
+    assert scoped["total"] == 3 and scoped["related_total"] == 2
+    assert scoped["review"] == "unreviewed private cards; never coverage evidence"
+
+    widened = _context(mini_repo, "restates", "--unit", "unit-demo-l01", "--include-related",
+                       *session)["study_cards"]
+    assert _card_keys(widened) == [
+        ("_unsorted/old/slides-moved.pdf", "pdf p. 1", "direct"),
+        (f"{book}/deck.pdf", "pdf pp. 2-3", "direct"),
+        (f"{book}/multi.pdf", "pdf p. 99", "direct"),
+        (f"{book}/deck.pdf", "pdf pp. 10-12", "related"),
+        (f"{book}/other.pdf", "pdf p. 1", "related"),
+    ]
+    assert widened["total"] == 5 and widened["related_total"] == 2
+    assert all(row["material"] != "source-other-module/paper.pdf" for row in widened["items"])
+    # Cards stay out of the canonical pool: unit scoping never counts them as evidence.
+    assert "study_cards" not in json.dumps(widened.get("pool", {}))
+
+
+def test_study_cards_need_a_session_even_under_unit(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    _seed_card(mini_repo, "source-demo-book/deck.pdf", digests["deck.pdf"], 2, 3)
+    assert "study_cards" not in _context(mini_repo, "restates", "--unit", "unit-demo-l01")
+    assert "study_cards" not in _context(mini_repo, "restates")
+
+
+def test_unit_card_scope_defensive_branches(mini_repo):
+    from learning_os.store.loader import load_repo
+    from learning_os.store.materials.slices import unit_card_scope
+
+    digests = _seed_routed_unit(mini_repo)
+    repo = load_repo(mini_repo)
+    route = {"locator": "deck.pdf, pp. 1-3",
+             "vault_path": "material://source-demo-book/deck.pdf"}
+    routes = [("source-demo-book", route)]
+    assert unit_card_scope(repo, None, routes) is None
+    assert unit_card_scope(repo, {"material": "x.pdf"}, []) is None
+    deck = {"material": "source-demo-book/deck.pdf", "recorded_source_digest": digests["deck.pdf"],
+            "inspected_range": {"start": 3, "end": 5}}
+    assert unit_card_scope(repo, deck, routes) == "direct"  # overlaps pp. 1-3 at p. 3
+    moved = {**deck, "material": "elsewhere/deck.pdf"}
+    assert unit_card_scope(repo, moved, routes) == "direct"
+    assert unit_card_scope(repo, {**moved, "recorded_source_digest": ""}, routes) is None
+    # A routed file that is gone matches by path only; its digest is never hashed.
+    deck_file = (mini_repo.parent / "materials/source-demo-book/deck.pdf").resolve()
+    deck_file.unlink()
+    cache: dict = {}
+    assert unit_card_scope(repo, deck, routes, digest_cache=cache) == "direct"
+    assert unit_card_scope(repo, moved, routes, digest_cache=cache) is None
+    assert deck_file not in cache

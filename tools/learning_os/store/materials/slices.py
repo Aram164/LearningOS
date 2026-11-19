@@ -183,6 +183,98 @@ def unit_note_scope(repo, binding, routes) -> str | None:
     return standing
 
 
+def _card_matches_file(
+    repo,
+    card_material: object,
+    card_digest: object,
+    rel: str,
+    digest_cache: dict[Path, str],
+) -> bool:
+    """True when a reading card matches ``rel`` by path or live SHA-256 digest."""
+    if isinstance(card_material, str) and card_material and card_material == rel:
+        return True
+    if not isinstance(card_digest, str) or not card_digest:
+        return False
+    candidate = repo.materials_root / rel
+    try:
+        if not candidate.is_file():
+            return False
+        return (
+            sha256_file(candidate, cache=digest_cache).removeprefix("sha256:")
+            == card_digest.removeprefix("sha256:")
+        )
+    except OSError:
+        return False
+
+
+def unit_card_scope(
+    repo,
+    card,
+    routes,
+    *,
+    digest_cache: dict[Path, str] | None = None,
+) -> str | None:
+    """"direct", "related", or None: one reading card's standing against unit routes.
+
+    Mirrors :func:`unit_note_scope` for private reading cards (which carry
+    ``material``, ``recorded_source_digest`` and ``inspected_range``, without
+    ``source_id``). A card matches a routed file by materials-relative path
+    or by live byte digest (so cards follow moved files), and is ``"direct"``
+    when the route has no single page range or the card's range overlaps that
+    single page range. A card on another page window of a routed file, or on
+    another file of a routed source, is ``"related"``; cards from other
+    sources or modules return ``None``.
+    """
+    if not isinstance(card, dict):
+        return None
+    card_material = card.get("material")
+    card_digest = card.get("recorded_source_digest")
+    pages = _note_pages(card)
+    cache = {} if digest_cache is None else digest_cache
+    standing = None
+    for source_id, route in routes:
+        route_files = route_material_files(repo, source_id, route)
+        same_file = any(
+            _card_matches_file(repo, card_material, card_digest, rel, cache)
+            for rel in route_files
+        )
+        if same_file:
+            window = _single_route_range(route) if len(route_files) == 1 else None
+            if window is None or (
+                pages is not None and window[0] <= pages[1] and pages[0] <= window[1]
+            ):
+                return "direct"
+            standing = "related"
+            continue
+        record = repo.sources.get(source_id) if isinstance(source_id, str) else None
+        held = record.get("material") if isinstance(record, dict) else None
+        held_rel = _materials_rel_for_uri(repo, held)
+        authority = material_uri_authority(held)
+        if authority is None and isinstance(source_id, str) and source_id:
+            authority = source_id
+        same_source = (
+            (
+                held_rel is not None
+                and _card_matches_file(repo, card_material, card_digest, held_rel, cache)
+            )
+            or (
+                isinstance(card_material, str)
+                and isinstance(source_id, str)
+                and bool(source_id)
+                and card_material.startswith(f"{source_id}/")
+            )
+            or (
+                isinstance(card_material, str)
+                and isinstance(authority, str)
+                and bool(authority)
+                and card_material.startswith(f"{authority}/")
+            )
+        )
+        if same_source:
+            standing = "related"
+    return standing
+
+
 MANDATORY_SLICE_SCOPES = frozenset({"current", "prerequisite"})
 
 #: Per-file page ceiling for PDF slices. No route-count ceiling exists: every

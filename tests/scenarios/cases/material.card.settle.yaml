@@ -79,3 +79,4 @@ cases:
     expect: {site: material.card.settle.bad-adopt}
 untriggered:
   - {site: material.card.settle.store-unavailable, reason: os-error-only}
+  - {site: material.card.settle.adopted-unread, reason: fixture-inexpressible}

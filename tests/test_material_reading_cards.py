@@ -141,6 +141,9 @@ def test_the_study_read_nests_the_unchanged_material_span_answer(world):
 def test_a_discontiguous_selection_refuses_one_read_per_contiguous_range(world):
     message = _refused(_read(world, A, "pdf pp. 2 and 4"), "discontiguous")
     assert '--pages "pdf p. 2"' in message and '--pages "pdf p. 4"' in message
+    # Multi-page runs are named whole, not by their first page.
+    runs = _refused(_read(world, A, "pdf pp. 2-3 and 5-6"), "discontiguous")
+    assert '--pages "pdf pp. 2-3"' in runs and '--pages "pdf pp. 5-6"' in runs
     assert _store(world).entries() == []
 
 
@@ -196,6 +199,11 @@ def test_adoption_refuses_a_live_session_and_takes_an_idle_or_ended_one(world):
     assert adopted["entries"][0]["state"] == "overdue"
     # Adopted debts are B's overdue debts: settle before any new span (G2).
     _refused(_read(world, B, "pdf p. 10", now=LATER), "overdue reading entries")
+    # An adopted entry saves with --card only after B itself reads its pages (S11).
+    _refused(_settle(world, B, entry, "--card", _card(8, 8), now=LATER),
+             "cannot be settled with --card until this session observes pdf p. 8")
+    reread = _ok(_read(world, B, "pdf p. 8", now=LATER))
+    assert reread["study"]["reads"][0]["state"] == "pending"
     _ok(_settle(world, B, entry, "--card", _card(8, 8), now=LATER))
     # B retrying its exact card settlement replays idempotently; A can no longer settle or mask a conflict.
     exact = _ok(_settle(world, B, entry, "--card", _card(8, 8), now=LATER))
@@ -205,7 +213,7 @@ def test_adoption_refuses_a_live_session_and_takes_an_idle_or_ended_one(world):
     retry = _ok(_settle(world, B, "--adopt", A, now=LATER))
     assert retry["replayed"] is True
     log = (store_root(world) / "log" / f"{B}.jsonl").read_text().splitlines()
-    assert [json.loads(line)["outcome"] for line in log] == ["adopted", "saved"]
+    assert [json.loads(line)["outcome"] for line in log] == ["adopted", "observed", "saved"]
 
 
 def test_a_recorded_end_makes_a_session_adoptable_at_once(world):
@@ -244,6 +252,120 @@ def test_adopting_the_same_entry_back_logs_each_transfer(tmp_path):
     log = (store.root / "log" / f"{B}.jsonl").read_text().splitlines()
     assert len(log) == 2
     assert all(json.loads(line)["entry"] == entry for line in log)
+
+
+# ---- adopted entries need a fresh observation (S11) ----------------------------------
+
+
+def _end_and_adopt(root: Path, owner: str, adopter: str, *, now: str = NOW) -> list[str]:
+    _store(root).session_end(owner, now=dt.datetime.fromisoformat(now))
+    adopted = _ok(_settle(root, adopter, "--adopt", owner, now=now))
+    return [row["entry"] for row in adopted["entries"]]
+
+
+def _log_outcomes(root: Path, session: str) -> list[str]:
+    path = store_root(root) / "log" / f"{session}.jsonl"
+    if not path.is_file():
+        return []
+    return [json.loads(line)["outcome"] for line in path.read_text().splitlines()]
+
+
+def test_an_adopted_entry_refuses_a_card_until_every_page_is_observed(world):
+    entry = _entry(_ok(_read(world, A, "pdf pp. 1-4")))
+    assert _end_and_adopt(world, A, B) == [entry]
+    unread = _refused(_settle(world, B, entry, "--card", _card(1, 4)), "(missing: pdf pp. 1-4)")
+    assert f"material-study-span --material {BOOK} --pages \"pdf pp. 1-4\" --extract --session {B}" in unread
+    assert f"material-card-settle {entry} --dismiss irrelevant" in unread
+    # Observation accumulates across reads: pp. 1-2, then pp. 3-4, covers [1, 4].
+    assert _ok(_read(world, B, "pdf pp. 1-2"))["study"]["reads"][0]["state"] == "pending"
+    _refused(_settle(world, B, entry, "--card", _card(1, 4)), "(missing: pdf pp. 3-4)")
+    _ok(_read(world, B, "pdf pp. 3-4"))
+    saved = _ok(_settle(world, B, entry, "--card", _card(1, 4)))
+    assert saved["outcome"] == "saved"
+    log = [json.loads(line) for line in
+           (store_root(world) / "log" / f"{B}.jsonl").read_text().splitlines()]
+    assert [line["outcome"] for line in log] == ["adopted", "observed", "observed", "saved"]
+    assert [line["inspected_range"] for line in log[1:3]] == [{"start": 1, "end": 2},
+                                                             {"start": 3, "end": 4}]
+    for line in log:
+        validate_contract(Path(__file__).resolve().parents[1],
+                          "material-reading-card.schema.json", line)
+
+
+def test_a_superset_read_observes_an_adopted_entry(world):
+    entry = _entry(_ok(_read(world, A, "pdf pp. 4-6")))
+    _end_and_adopt(world, A, B)
+    # The adopted overdue entry does not block an overlapping read of the same digest;
+    # that read opens its own entry and observes only the adopted entry's pages.
+    wide = _ok(_read(world, B, "pdf pp. 3-7"))
+    assert wide["study"]["reads"][0]["state"] == "opened"
+    observed = [json.loads(line) for line in
+                (store_root(world) / "log" / f"{B}.jsonl").read_text().splitlines()][-1]
+    assert observed["outcome"] == "observed" and observed["entry"] == entry
+    assert observed["inspected_range"] == {"start": 4, "end": 6}
+    _ok(_settle(world, B, entry, "--card", _card(4, 6)))
+
+
+def test_re_adoption_resets_observation(tmp_path):
+    from learning_os.store.materials.reading_cards import SettleRefusal
+
+    store = ReadingStore(Path(__file__).resolve().parents[1], root=tmp_path / "store")
+    now = dt.datetime.fromisoformat(NOW)
+    c = "cccccccc-3333-4333-8333-333333333333"
+    read = Read(digest="a" * 64, material=BOOK, start=1, end=2, text_sha256="b" * 64)
+    entry = store.admit(c, [read], now=now).opened[0]["entry"]
+    store.session_end(c, now=now)
+    store.adopt(A, c, now=now)
+    assert store.record_observations(A, [(read.digest, 1, 2)], now=now) == [entry]
+    # A loses the entry to B and takes it back: its earlier observation no longer counts.
+    store.session_end(A, now=now)
+    store.adopt(B, A, now=now)
+    store.session_end(B, now=now)
+    store.adopt(A, B, now=now)
+    with pytest.raises(SettleRefusal, match=r"missing: pdf pp\. 1-2") as refusal:
+        store.save(A, entry, json.loads(_card(1, 2)), now=now)
+    assert refusal.value.slug == "adopted-unread"
+    # The hop count keeps the second observation from replaying as the first.
+    assert store.record_observations(A, [(read.digest, 1, 2)], now=now) == [entry]
+    assert store.save(A, entry, json.loads(_card(1, 2)), now=now).outcome == "saved"
+    assert _outcomes(store.root / "log" / f"{A}.jsonl") == [
+        "adopted", "observed", "adopted", "observed", "saved"]
+
+
+def _outcomes(path: Path) -> list[str]:
+    return [json.loads(line)["outcome"] for line in path.read_text().splitlines()]
+
+
+def test_omitted_and_ordinary_reads_record_no_observation(world):
+    single = _entry(_ok(_read(world, A, "pdf p. 5")))
+    _ok(_settle(world, A, single, "--card", _card(5, 5)))
+    entry = _entry(_ok(_read(world, A, "pdf pp. 4-6")))  # the p. 5 card does not contain it
+    assert _log_outcomes(world, A) == ["saved"], "a non-adopted read writes no observation"
+    _end_and_adopt(world, A, B)
+    omitted = _ok(_los(world, "material-study-span", "--material", BOOK, "--pages", "pdf p. 5",
+                       "--extract", "--omit-covered-text", "--session", B))
+    assert omitted["span"]["spans"][0]["excerpt_omitted"] == "covered"
+    assert _log_outcomes(world, B) == ["adopted"], "an omitted excerpt is not an observation"
+    _refused(_settle(world, B, entry, "--card", _card(4, 6)), "(missing: pdf pp. 4-6)")
+    # An unreadable extraction delivers no text and records nothing either.
+    unreadable = _ok(_read(world, B, "pdf p. 99"))
+    assert unreadable["span"]["spans"][0]["extraction"] == "unreadable"
+    assert _log_outcomes(world, B) == ["adopted"]
+
+
+def test_adopted_entries_dismiss_without_rereading(world):
+    gone = _entry(_ok(_read(world, A, "pdf p. 2")))
+    wide = _entry(_ok(_read(world, B, "pdf pp. 8-10")))
+    narrow = _entry(_ok(_read(world, A, "pdf p. 9")))
+    _ok(_settle(world, B, wide, "--card", _card(8, 10)))
+    card = _store(world).all_cards()[0]["card"]
+    c = "cccccccc-3333-4333-8333-333333333333"
+    assert sorted(_end_and_adopt(world, A, c)) == sorted([gone, narrow])
+    irrelevant = _ok(_settle(world, c, gone, "--dismiss", "irrelevant", "--reason", "a title page"))
+    assert irrelevant["outcome"] == "dismissed-irrelevant"
+    redundant = _ok(_settle(world, c, narrow, "--dismiss", "redundant", "--covering-card", card))
+    assert redundant["outcome"] == "dismissed-redundant"
+    assert "observed" not in _log_outcomes(world, c)
 
 
 # ---- settlement ---------------------------------------------------------------------
@@ -560,6 +682,8 @@ def test_cross_session_settled_card_permutations_fail_closed(world):
     store.adopt(B, A, now=t0)
     c1 = json.loads(_card(2, 3))
     c2 = json.loads(_card(1, 5))
+    # B observes the adopted pages before its --card save (S11).
+    assert store.record_observations(B, [(rd.digest, 2, 3)], now=t0) == [e1]
     first = store.save(B, e1, c1, now=t0)
     assert first.outcome == "saved" and not first.replayed
 
@@ -1012,6 +1136,8 @@ def test_generated_commands_separate_alternatives_and_preserve_covered_source_ex
     # Source fidelity baseline (Option B): default covered study reads preserve raw excerpt
     # and unreviewed/non-evidence card metadata; --omit-covered-text remains explicit opt-in.
     assert _settle(world, C, "--adopt", A).returncode == 0
+    # C observes the adopted page before its --card save (S11).
+    assert _ok(_read(world, C, "pdf p. 4"))["study"]["reads"][0]["state"] == "pending"
     assert _settle(world, C, entry4, "--card", _card(4, 4)).returncode == 0
     default_covered = _ok(_read(world, C, "pdf p. 4"))
     assert "page 4 on Bayes and evidence" in default_covered["span"]["spans"][0]["excerpt"]

@@ -44,6 +44,8 @@ queries:
     - a PDF span that no current card or settled dismissal of the same digest contains persists an open reading entry before any text returns; if the entry cannot be persisted the read refuses
     - a span inside one of the session's pending entries, or covered, opens nothing; a clipped, truncated or non-PDF extraction returns no text and opens nothing
     - a new uncovered span refuses while the session holds an overdue entry, while any ended or idle session's entries are adoptable, or when it would hold more than four open entries; every refusal names the entries and the exact settle or adopt command
+    - an adopted overdue entry does not refuse a new span of the same digest that overlaps it; that span opens its own entry under the other refusals
+    - a read that returns a non-omitted local excerpt overlapping one of the session's adopted pending entries appends an observed log line (digest and the overlapped pages) after the text is assembled; non-adopted entries, omitted, failed and remote reads record nothing
     - returns exact durable analysis notes first, then the covering unreviewed cards; concept ids are checked when served and dangling ones are marked; a card is never coverage evidence
   material.card.settle:
     handler: material_card_settle
@@ -58,6 +60,7 @@ queries:
     - --source-changed and --source-gone close an entry only after the gateway observes the changed digest or the absence
     - one atomic update writes the card version, closes the entry and appends the log line; retries replay idempotently and a refused settlement leaves the entry open
     - --adopt moves the unsettled entries of a session with a recorded end, or no gateway call for two hours, to the caller as overdue entries; a live session's entries refuse
+    - an adopted entry saves with --card only once the adopting session's observed log lines since its latest adoption cover every page of the entry; otherwise the save refuses (material.card.settle.adopted-unread) naming the missing pages, before any repository load; dismissals and source closures need no observation
     - requires the hook-injected --session; entries of other sessions refuse
   study.sequence:
     handler: study_sequence
@@ -142,6 +145,7 @@ queries:
     - ranked by recorded stage use-evidence per source (positive feedback first, mismatch feedback last); ties keep stable order (notes by id, then assessments by unit and route); --include-related appends related notes under the same ranking
     - use evidence is canonical study-map data under the snapshot guard; skipped is reported, never ranking
     - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval; direct notes share a routed file (and overlap its single stated page range when it states one); same-source-only notes are related, listed only via --include-related
+    - study_cards appear only with --session; with --unit they follow the same route rule (a card matches a routed file by path or live byte digest), each item carries its scope, cards of other sources are excluded, related cards list only via --include-related, and related_total counts them
     - excerpts are bounded (8 note snippets — a title label or true file line numbers — 3 assessment fields); default 5 items, at most 20
     - analysis-note anchors preview at most 8 per note with exact totals and clipping flags (purpose matches first); the complete index lists only via --include-anchors
     - source freshness is observed live per result; review state and resolution are reported, never inferred

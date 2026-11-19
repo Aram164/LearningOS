@@ -125,6 +125,11 @@ def session_start(event: dict[str, object]) -> str:
         "  .venv/bin/python tools/los.py material-card-settle ENTRY --dismiss irrelevant --reason '...'\n"
         f"  {treatment_kinds_hint()} Cards are private and unreviewed; "
         "reads show them beside the text unless --omit-covered-text is passed.",
+        "- Provenance: never claim to have inspected PDF pages this session did not open "
+        "through material-study-span; attribute what you know from cards or notes to them. "
+        "An adopted entry settles with --card only after this session has read its pages "
+        "via material-study-span; otherwise dismiss it (--dismiss irrelevant, or "
+        "--dismiss redundant --covering-card CARD).",
         "- Write scratch / --check-out / --out files under $LOS_SCRATCH_DIR "
         "(ephemeral per launch unless --persist-scratch or --scratch-dir is passed; "
         "on a resumed confirmation turn without the prior check record, re-run "

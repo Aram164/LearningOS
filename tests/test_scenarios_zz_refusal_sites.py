@@ -3523,6 +3523,40 @@ def _prove_settle_store_unavailable(mini_repo: Path, tmp_path: Path, monkeypatch
     assert lines == _study_line("material.card.settle", "store-unavailable")
 
 
+def _prove_settle_adopted_unread(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """An adopted entry refuses a --card save until the adopter reads it (fixture-inexpressible).
+
+    Adoption needs a recorded end (the SessionEnd hook, ADR-021 decision 5)
+    or two idle hours, which one scenario clock cannot express; as for
+    material.study-span.adoptable, the proof records the end through the store.
+    """
+    from learning_os.store.materials.reading_cards import ReadingStore
+
+    root = _a9_world("material.card.settle", "adopt-live", tmp_path).root
+    outcome, _ = _a9_run_cli(root, "material.study-span", _study_argv(2, _STUDY_S1),
+                             tmp_path, monkeypatch)
+    assert outcome.ok is True
+    store = ReadingStore(root)
+    store.session_end(_STUDY_S1)
+    (tmp_path / "adopt").mkdir()
+    outcome, _ = _a9_run_cli(
+        root, "material.card.settle",
+        ["material-card-settle", "--adopt", _STUDY_S1, "--session", _STUDY_S2],
+        tmp_path / "adopt", monkeypatch)
+    assert outcome.ok is True
+    entry = str(store.entries(session=_STUDY_S2)[0]["entry"])
+    card = json.dumps({"paraphrase": "Introduces the lecture topic and states the first definition.",
+                       "kinds": ["statement"],
+                       "pointers": [{"page": 2, "kind": "statement", "label": "first definition"}]})
+    (tmp_path / "save").mkdir()
+    outcome, lines = _a9_run_cli(
+        root, "material.card.settle",
+        ["material-card-settle", entry, "--card", card, "--session", _STUDY_S2],
+        tmp_path / "save", monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.card.settle", "adopted-unread")
+
+
 def _prove_study_not_pdf(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
     """A non-PDF excerpt refuses (fixture-inexpressible: no fixture route reads text)."""
     import learning_os.app.handlers.materials as materials
@@ -3607,6 +3641,7 @@ _PROOF_FNS.update({
     "material.study-span.read-failed": _prove_study_read_failed,
     "material.study-span.placement-source-mismatch": _prove_study_placement_source_mismatch,
     "material.card.settle.store-unavailable": _prove_settle_store_unavailable,
+    "material.card.settle.adopted-unread": _prove_settle_adopted_unread,
 })
 
 
