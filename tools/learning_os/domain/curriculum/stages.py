@@ -75,17 +75,29 @@ def stage_is_open(stage: Mapping[str, object]) -> bool:
     return stage.get("status") in _STUDY_OPEN_STAGES
 
 
-def entry_resource(stage: Mapping[str, object]) -> dict[str, object] | None:
-    """The primary entry resource of ``stage``: first ``required-now``, else first untriaged."""
+def entry_resource(
+    stage: Mapping[str, object],
+    *,
+    allow_untriaged: bool = True,
+) -> dict[str, object] | None:
+    """The primary entry resource of ``stage``.
+
+    Selects the first ``required-now`` resource. When ``allow_untriaged`` is
+    True (the manifest projection default for pre-v1 stages whose resources
+    carry no ``scope_triage`` field), falls back to the first untriaged
+    resource; the CLI ``resume`` open payload passes ``allow_untriaged=False``
+    so it only opens an explicitly triaged ``required-now`` locator.
+    """
     resources = stage.get("resources")
     if not isinstance(resources, list):
         return None
     for row in resources:
         if isinstance(row, dict) and row.get("scope_triage") == "required-now":
             return row
-    for row in resources:
-        if isinstance(row, dict) and not row.get("scope_triage"):
-            return row
+    if allow_untriaged:
+        for row in resources:
+            if isinstance(row, dict) and not row.get("scope_triage"):
+                return row
     return None
 
 
@@ -93,13 +105,15 @@ def study_candidate_stage(repo, study_map):
     """(stage_id, stage) when this map is an eligible study choice, else None.
 
     The one implementation of study-candidate eligibility. A map is eligible
-    when its status is active, paused, or ready; its module is not settled;
-    its unit resolves; and its current stage resolves and is open (pending,
-    active, or paused). Module kind never enters the rule, and enrollment
-    stays display metadata: only settled status closes the pool, so skill,
-    foundation and project modules — which have no registrar — remain eligible.
-    Status is eligibility only: it is never a rank or a recommendation, and the
-    resume pointer overrides every fresh suggestion.
+    when its status is active, paused, or ready; its module resolves and is not
+    settled; its unit resolves, belongs to that same module, and does not point
+    its ``current_study_map`` at a different map; and its current stage
+    resolves and is open (pending, active, or paused). Module kind never enters
+    the rule, and enrollment stays display metadata: only settled status closes
+    the pool, so skill, foundation and project modules — which have no
+    registrar — remain eligible. Status is eligibility only: it is never a rank
+    or a recommendation, and the resume pointer overrides every fresh
+    suggestion.
     """
     data = study_map.data or {}
     if data.get("status") not in _STUDY_OPEN_STATUSES:
@@ -108,10 +122,31 @@ def study_candidate_stage(repo, study_map):
     stage = next((row for row in data.get("stages", [])
                   if isinstance(row, dict) and row.get("id") == stage_id), None)
     module = repo.modules.get(study_map.module_id)
+    unit = repo.units.get(study_map.unit_id)
     if not isinstance(stage_id, str) or stage is None \
-            or study_map.unit_id not in repo.units:
+            or module is None or unit is None:
         return None
-    if module is not None and is_settled(module):
+    unit_module_id = getattr(unit, "module_id", None)
+    if unit_module_id != study_map.module_id:
+        return None
+    unit_data = getattr(unit, "data", None)
+    if isinstance(unit_data, Mapping):
+        authored_unit_module = unit_data.get("module_id")
+        if isinstance(authored_unit_module, str) and authored_unit_module != study_map.module_id:
+            return None
+        unit_map_id = unit_data.get("current_study_map")
+    else:
+        unit_map_id = None
+    authored_map_unit = data.get("unit_id")
+    if isinstance(authored_map_unit, str) and authored_map_unit != study_map.unit_id:
+        return None
+    authored_map_module = data.get("module_id")
+    if isinstance(authored_map_module, str) and authored_map_module != study_map.module_id:
+        return None
+    map_id = getattr(study_map, "id", None) or data.get("id")
+    if isinstance(unit_map_id, str) and isinstance(map_id, str) and unit_map_id != map_id:
+        return None
+    if is_settled(module):
         return None
     if not stage_is_open(stage):
         return None

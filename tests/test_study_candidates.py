@@ -19,6 +19,7 @@ from repo_builders import add_curriculum, run_los, write_yaml
 
 from learning_os.derive.projection.manifest import build_manifest
 from learning_os.domain.curriculum.stages import (
+    entry_resource,
     is_study_candidate,
     study_candidate_stage,
 )
@@ -75,7 +76,14 @@ def _fake_map(*, map_status="active", stage_status="active",
 def _fake_repo(*unit_ids: str, module_status="enrolled",
                module_kind="academic") -> SimpleNamespace:
     return SimpleNamespace(
-        units={unit_id: object() for unit_id in unit_ids},
+        units={
+            unit_id: SimpleNamespace(
+                id=unit_id,
+                module_id="module-demo",
+                data={"current_study_map": "study-map-demo-l01"},
+            )
+            for unit_id in unit_ids
+        },
         modules={"module-demo": {
             "id": "module-demo", "kind": module_kind, "status": module_status,
         }},
@@ -216,24 +224,52 @@ def test_a_unit_without_a_map_is_browsable_and_never_a_candidate(
     assert "has no open study map" in refused.stderr
 
 
-def test_inconsistent_map_unit_ownership_keeps_the_current_rule(
+def test_inconsistent_or_unresolved_ownership_is_not_a_candidate(
         mini_repo: Path) -> None:
-    """Eligibility asks whether the unit resolves, not whether the tree agrees.
+    """Eligibility rejects unknown modules and map/unit/module ownership mismatches."""
+    repo = _fake_repo("unit-demo-l01")
+    missing_module_map = _fake_map(module_id="module-missing")
+    assert is_study_candidate(repo, missing_module_map) is False
 
-    Ownership coherence is the resume pointer resolver's rule; the candidate
-    rule has always been narrower. This pins that exact behavior, so moving
-    the predicate did not quietly add a filter or a rescue.
-    """
+    stale_map = SimpleNamespace(
+        id="study-map-other",
+        unit_id="unit-demo-l01",
+        module_id="module-demo",
+        data={
+            "id": "study-map-other",
+            "status": "active",
+            "current_stage": "stage-demo",
+            "stages": [{"id": "stage-demo", "status": "active"}],
+        },
+    )
+    assert is_study_candidate(repo, stale_map) is False
+
     add_curriculum(mini_repo)
     unit = yaml.safe_load((mini_repo / UNIT).read_text(encoding="utf-8"))
     unit["module_id"] = "module-elsewhere"
     write_yaml(mini_repo / UNIT, unit)
-    # The map still lives under module-demo; its unit now claims another
-    # module. The unit resolves, so the map stays a candidate.
-    assert _flags(mini_repo) == {"study-map-demo-l01": True}
-    offered = run_los(mini_repo, "resume", "--study", "--unit",
+    assert _flags(mini_repo) == {"study-map-demo-l01": False}
+    refused = run_los(mini_repo, "resume", "--study", "--unit",
                       "unit-demo-l01", "--json")
-    assert offered.returncode == 0, offered.stderr
-    payload = json.loads(offered.stdout)
-    assert payload["content"]["stage"]["module_id"] == "module-demo"
-    assert payload["content"]["stage"]["unit_id"] == "unit-demo-l01"
+    assert refused.returncode == 2
+    assert "has no open study map" in refused.stderr
+
+
+def test_entry_resource_distinguishes_untriaged_fallback_from_explicit_triage() -> None:
+    stage = {
+        "resources": [
+            {"id": "res-1", "label": "Untriaged deck", "locator": "p. 1"},
+            {"id": "res-2", "label": "Reference book", "scope_triage": "optional"},
+        ],
+    }
+    assert entry_resource(stage) == stage["resources"][0]
+    assert entry_resource(stage, allow_untriaged=False) is None
+
+    triaged_stage = {
+        "resources": [
+            {"id": "res-1", "label": "Untriaged deck", "locator": "p. 1"},
+            {"id": "res-2", "label": "Required notes", "locator": "§2", "scope_triage": "required-now"},
+        ],
+    }
+    assert entry_resource(triaged_stage) == triaged_stage["resources"][1]
+    assert entry_resource(triaged_stage, allow_untriaged=False) == triaged_stage["resources"][1]

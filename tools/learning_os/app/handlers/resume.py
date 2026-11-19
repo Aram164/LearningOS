@@ -417,10 +417,9 @@ MAX_STAGE_RESULTS = 5
 
 def _study_open(stage):
     """The first required-now resource locator, or None (today's shape)."""
-    resource = entry_resource(stage)
+    resource = entry_resource(stage, allow_untriaged=False)
     if (
         resource is None
-        or resource.get("scope_triage") != "required-now"
         or not resource.get("label")
         or not resource.get("locator")
     ):
