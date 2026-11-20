@@ -71,6 +71,27 @@ release certification.
    - `tools/study_launch.py` filters inherited host environment variables down
      to an explicit POSIX/runtime/provider allowlist (dropping arbitrary host
      secrets and `LOS_OBSERVATIONS`) before spawning the sandboxed child.
+     **By exact name only (amended 2026-11-20, fourth pass).**
+     - Vendor variables pass only as provider credentials, endpoint and model
+       choice: `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`
+       and the like, `CLAUDE_CODE_OAUTH_TOKEN`, `OPENAI_API_KEY`,
+       `CODEX_API_KEY`, the Gemini and Google keys, and agy's account
+       choice.
+     - Locale, XDG and CoreFoundation settings keep their prefixes.
+     - The earlier vendor prefixes (`CLAUDE_`, `CODEX_`, `ANTHROPIC_`,
+       `OPENAI_`, `GEMINI_`, `GOOGLE_`, `AGY_`) are gone. A launch from
+       inside a Claude Code session forwarded that session's state for its
+       own children into the sandbox:
+       - its messaging socket and token, a channel back into an unsandboxed
+         session;
+       - its session, account and organization ids, and its notes folder;
+       - feature flags, such as `CLAUDE_CODE_CHILD_SESSION`, which turned
+         the study session's transcripts off.
+     - Codex's token-URL overrides stay out as well: they redirect where the
+       refresh token is sent.
+     - A denylist of such names would have to keep up with every runtime's
+       next release. An allowlist fails closed instead: a new provider
+       variable a runtime needs is added by name, deliberately.
    <!-- los:reference {"kind": "command", "text": "los capability"} -->
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
@@ -144,8 +165,9 @@ release certification.
    A runtime that starts writing somewhere new is refused and must be traced
    and added to `tools/study_launch.py` deliberately.
    `tools/study_launch.py` filters inherited host environment variables through
-   an explicit POSIX/runtime/provider allowlist (dropping unrelated host
-   secrets and `LOS_OBSERVATIONS`), while outbound HTTPS network access remains
+   an explicit POSIX/runtime/provider allowlist of exact names (dropping
+   unrelated host secrets, `LOS_OBSERVATIONS` and every host session's own
+   state, §1), while outbound HTTPS network access remains
    permitted so supported AI runtimes can reach dynamic API/CDN endpoints.
 
 4. **V1 runtime certification, Darwin verification, and deferred items.**

@@ -524,6 +524,89 @@ def test_child_env_points_runtimes_at_their_study_homes(tmp_path: Path) -> None:
         assert not set(study_launch._RUNTIME_HOME_ENV) & set(env_for(runtime)), runtime
 
 
+#: What the Claude desktop app's Claude Code session sets for its children
+#: (names seen in a real session's environment, 2026-11-20), plus what a Codex
+#: or agy session sets for its own. None of it may reach a study runtime.
+_HOST_SESSION_ENV = (
+    "CLAUDECODE",
+    "CLAUDE_CODE_MESSAGING_SOCKET",
+    "CLAUDE_CODE_MESSAGING_TOKEN",
+    "CLAUDE_CODE_CHILD_SESSION",
+    "CLAUDE_CODE_CHILD_NOTES_DIR",
+    "CLAUDE_CODE_HOST_SESSION_ID",
+    "CLAUDE_CODE_HOST_SHORT_TEMP_DIRS",
+    "CLAUDE_CODE_SESSION_ID",
+    "CLAUDE_CODE_SESSION_ATTENDED",
+    "CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH",
+    "CLAUDE_CODE_ENTRYPOINT",
+    "CLAUDE_CODE_EXECPATH",
+    "CLAUDE_CODE_USER_EMAIL",
+    "CLAUDE_CODE_ACCOUNT_UUID",
+    "CLAUDE_CODE_ORGANIZATION_UUID",
+    "CLAUDE_CODE_DESKTOP_APP_VERSION",
+    "CLAUDE_CODE_SIMPLE",
+    "CLAUDE_CODE_DISABLE_CRON",
+    "CLAUDE_CODE_EAGER_FLUSH",
+    "CLAUDE_CODE_EMIT_TOOL_USE_SUMMARIES",
+    "CLAUDE_CODE_ENABLE_ASK_USER_QUESTION_TOOL",
+    "CLAUDE_CODE_TERMINAL_MCP_TOOLS",
+    "CLAUDE_PLUGIN_DATA",
+    "CLAUDE_PID",
+    "CLAUDE_AGENT_SDK_VERSION",
+    "CLAUDE_AGENT_SDK_MCP_NO_PREFIX",
+    "CLAUDE_EFFORT",
+    "CODEX_COMPANION_SESSION_ID",
+    "CODEX_COMPANION_TRANSCRIPT_PATH",
+    "CODEX_THREAD_ID",
+    "CODEX_REFRESH_TOKEN_URL_OVERRIDE",
+    "CODEX_REVOKE_TOKEN_URL_OVERRIDE",
+    "ANTIGRAVITY_LS_ADDRESS",
+    "ANTIGRAVITY_CSRF_TOKEN",
+    "ANTIGRAVITY_CONVERSATION_ID",
+    "AGY_CLI_OSC7501",
+    "GEMINI_CLI_HOME",
+)
+
+
+def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path) -> None:
+    """Default-deny by exact name: a launch from inside a Claude Code, Codex or
+    agy session hands the study runtime none of that session's channels, ids
+    or flags, while the user's provider credentials and model choice pass."""
+    provider = {
+        "ANTHROPIC_API_KEY": "sk-ant",
+        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+        "ANTHROPIC_MODEL": "claude-opus-5-5",
+        "CLAUDE_CODE_OAUTH_TOKEN": "oat",
+        "OPENAI_API_KEY": "sk-openai",
+        "CODEX_API_KEY": "sk-codex",
+        "GEMINI_API_KEY": "gem",
+        "GOOGLE_CLOUD_PROJECT": "proj",
+        "AGY_ACCOUNT": "someone@example.invalid",
+    }
+    system = {"PATH": "/usr/bin", "HOME": "/Users/x", "LANG": "en_US.UTF-8", "LC_ALL": "C",
+              "XDG_CONFIG_HOME": "/Users/x/.config", "__CF_USER_TEXT_ENCODING": "0x1F5:0:0"}
+    host = {
+        **system,
+        **provider,
+        **{name: f"host-{name}" for name in _HOST_SESSION_ENV},
+        "LOS_OBSERVATIONS": "/host/obs.yaml",
+        "AWS_SECRET_ACCESS_KEY": "aws",
+    }
+    child = study_launch._build_child_env(
+        host, sock_path=tmp_path / "gate.sock", session_id=S1, scratch_dir=tmp_path,
+        child_cwd=tmp_path,
+    )
+    leaked = sorted(set(_HOST_SESSION_ENV) & set(child))
+    assert leaked == [], leaked
+    assert {k: child[k] for k in provider} == provider
+    assert {k: child[k] for k in system} == system
+    assert "LOS_OBSERVATIONS" not in child and "AWS_SECRET_ACCESS_KEY" not in child
+    # Only exact names and the system prefixes pass: nothing else from the host.
+    launcher_set = {study_launch.GATE_SOCK_ENV, "LOS_SESSION_ID", "LOS_SCRATCH_DIR", "TMPDIR", "PWD",
+                    "PYTHONDONTWRITEBYTECODE"}
+    assert set(child) - launcher_set == set(system) | set(provider)
+
+
 def test_session_uuid_codex_args_and_entrypoint_contract(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:

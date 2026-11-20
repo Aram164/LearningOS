@@ -27,8 +27,12 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   instruction file it did not name: ``CLAUDE.md`` in any parent folder,
   agy's MCP config, a CLI binary under ``~/.local/bin`` or Homebrew's
   prefix, ``~/Library/LaunchAgents``.
-- Filters inherited host environment variables through an explicit allowlist
-  (dropping unrelated secrets and host ``LOS_OBSERVATIONS``) before launch.
+- Filters inherited host environment variables by exact name (POSIX,
+  terminal, proxy and certificate settings, and each provider's credentials,
+  endpoint and model choice) plus the locale, XDG and CoreFoundation
+  prefixes. Unrelated secrets, host ``LOS_OBSERVATIONS`` and every variable a
+  host Claude Code or Codex session sets for its children (its messaging
+  socket and token, ids, notes folder, feature flags) are dropped.
 - Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
   tokens (except inline code following ``-c``/``-e``/``-m``), rewrites
   caller-relative existing path tokens under ``caller_cwd`` that lie outside
@@ -114,8 +118,8 @@ _CLAUDE_GLOBAL_COPY = ("hasCompletedOnboarding", "lastOnboardingVersion")
 #: program, plugins, MCP servers and global model are not.
 _CODEX_CONFIG_COPY = ("personality", "service_tier")
 #: Variables the launcher sets for the runtime it starts. Host values are
-#: dropped for every launch: each would pass the ``CLAUDE_``/``CODEX_``
-#: prefix allowlist and point a runtime back at a shared folder.
+#: dropped for every launch, even if a later allowlist entry would admit one:
+#: each would point a runtime back at a shared folder.
 _RUNTIME_HOME_ENV = (
     "CLAUDE_CONFIG_DIR",
     "CLAUDE_SECURESTORAGE_CONFIG_DIR",
@@ -161,17 +165,48 @@ _CHILD_ENV_ALLOW_EXACT = frozenset({
     "MallocNanoZone",
 })
 
+#: What a study runtime may take from the host about its provider: the
+#: credentials, the endpoint and the model choice, by exact name (2026-11-20,
+#: fourth pass). Vendor prefixes (``CLAUDE_``, ``CODEX_``, …) used to pass
+#: whole, and a launch from inside a Claude Code session then forwarded that
+#: session's state into the sandbox: its messaging socket and token (a channel
+#: back into the unsandboxed session), its session, account and organization
+#: ids, its notes folder, and feature flags such as
+#: ``CLAUDE_CODE_CHILD_SESSION``, which turned the study session's transcripts
+#: off. Codex's token-URL overrides are left out too: they redirect where the
+#: refresh token is sent.
+_CHILD_ENV_PROVIDER_EXACT = frozenset({
+    # Claude Code (Anthropic API, or a long-lived subscription token).
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+    "ANTHROPIC_CUSTOM_HEADERS",
+    "ANTHROPIC_MODEL",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+    # Codex (OpenAI).
+    "OPENAI_API_KEY",
+    "OPENAI_BASE_URL",
+    "CODEX_API_KEY",
+    # agy and the Gemini CLI (Google).
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_CLOUD_LOCATION",
+    "GOOGLE_GENAI_USE_VERTEXAI",
+    "AGY_ACCOUNT",
+    "AGY_ADC_AUTH",
+})
+
+#: Locale, XDG base-directory and CoreFoundation settings: the user's system
+#: environment, never a vendor's or a session's.
 _CHILD_ENV_ALLOW_PREFIXES = (
     "LC_",
     "XDG_",
     "__CF_",
-    "ANTHROPIC_",
-    "CLAUDE_",
-    "OPENAI_",
-    "CODEX_",
-    "GEMINI_",
-    "GOOGLE_",
-    "AGY_",
 )
 
 
@@ -184,11 +219,21 @@ def _build_child_env(
     child_cwd: Path,
     runtime_env: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
-    """Filter inherited host env down to an explicit runtime/provider allowlist."""
+    """Filter inherited host env down to exact POSIX, terminal and provider names.
+
+    Default-deny: a variable passes only by exact name (``_CHILD_ENV_ALLOW_EXACT``,
+    ``_CHILD_ENV_PROVIDER_EXACT``) or a system prefix (locale, XDG,
+    CoreFoundation). Nothing a host session sets for its own children reaches
+    the study runtime.
+    """
     child_env = {
         k: v
         for k, v in host_env.items()
-        if (k in _CHILD_ENV_ALLOW_EXACT or k.startswith(_CHILD_ENV_ALLOW_PREFIXES))
+        if (
+            k in _CHILD_ENV_ALLOW_EXACT
+            or k in _CHILD_ENV_PROVIDER_EXACT
+            or k.startswith(_CHILD_ENV_ALLOW_PREFIXES)
+        )
         and k not in _RUNTIME_HOME_ENV
     }
     child_env.update(runtime_env or {})
