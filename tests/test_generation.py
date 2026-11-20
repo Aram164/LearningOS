@@ -81,7 +81,7 @@ def test_projection_rebuild_keeps_sibling_caches(mini_repo):
     them alone while still removing genuinely stale views."""
     repo = load_repo(mini_repo)
     gen = mini_repo / "generated"
-    kept = gen / "text-cache" / ("ab" * 32) / "pp-0001.txt"
+    kept = gen / ".text-cache" / ("ab" * 32) / "pp-0001.txt"
     kept.parent.mkdir(parents=True, exist_ok=True)
     kept.write_text("cached page", encoding="utf-8")
     search = gen / "material-search" / "index.json"

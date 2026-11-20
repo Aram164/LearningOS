@@ -78,7 +78,7 @@ def _make_broker_world(tmp_path: Path) -> tuple[Path, Path]:
     for rel in (
         "tools",
         "knowledge/notes",
-        "generated/text-cache/x",
+        "generated/.text-cache/x",
         "generated/material-search",
         "generated/material-outlines",
         "generated/derived-state",
@@ -89,7 +89,7 @@ def _make_broker_world(tmp_path: Path) -> tuple[Path, Path]:
     (core / "operations/ai-actions/requests/req-1/slice.md").write_text(
         "SECRET_SLICE", encoding="utf-8"
     )
-    (core / "generated/text-cache/x/p1.txt").write_text("SECRET_TEXT_CACHE", encoding="utf-8")
+    (core / "generated/.text-cache/x/p1.txt").write_text("SECRET_TEXT_CACHE", encoding="utf-8")
     (core / "generated/material-search/idx.sqlite3").write_text("SECRET_IDX", encoding="utf-8")
     (core / "generated/material-outlines/o.json").write_text("SECRET_OUTLINE", encoding="utf-8")
     (core / "generated/derived-state/s.json").write_text("SECRET_STATE", encoding="utf-8")
@@ -617,7 +617,7 @@ def test_gateway_read_content_bound_file_enforces_study_fence(
     with pytest.raises(WriteRefused):
         read_content_bound_file(str(core.parent / "materials/book.pdf"))
     with pytest.raises(WriteRefused):
-        read_content_bound_file(str(core / "generated/text-cache/x/p1.txt"))
+        read_content_bound_file(str(core / "generated/.text-cache/x/p1.txt"))
     with pytest.raises(WriteRefused):
         read_content_bound_file(str(outside))
     with pytest.raises(WriteRefused):

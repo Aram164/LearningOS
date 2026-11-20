@@ -168,6 +168,12 @@ GENERATED_ALLOWED = {
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
+# Digest-keyed page-text cache, written by tools/material_text.py and read by
+# the search index, summaries, outlines, the study fence and the validation
+# cache, which all take its name from here. A dot-folder because Obsidian loads
+# and watches every file in a vault except under dot-folders, and this cache is
+# tens of thousands of page files (ADR-020, 2026-11-20 amendment).
+TEXT_CACHE_TOP_DIR = ".text-cache"
 SEARCH_TOP_DIR = "material-search"
 # Digest-keyed PDF outline sections, harvested by tools/material_outline.py and
 # read by material.search to group hits by section.

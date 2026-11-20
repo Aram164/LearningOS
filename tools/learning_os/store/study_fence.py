@@ -19,6 +19,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from learning_os.domain.failures import StudyFenceRefused
+from learning_os.domain.validation import TEXT_CACHE_TOP_DIR
 
 _DIR_FD_EINVAL_ATTEMPTS = 4
 
@@ -52,7 +53,7 @@ def protected_reads(core: Path) -> list[Path]:
     return [
         learningos / "materials",
         learningos / READING_MEMORY_DIRNAME,
-        resolved / "generated" / "text-cache",
+        resolved / "generated" / TEXT_CACHE_TOP_DIR,
         resolved / "generated" / "material-search",
         resolved / "generated" / "material-outlines",
         resolved / "generated" / "derived-state",

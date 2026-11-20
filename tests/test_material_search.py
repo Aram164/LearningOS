@@ -76,7 +76,7 @@ def _cached_pdf(world: Path, pdf: Path) -> tuple[str, int]:
 
     sha = hashlib.sha256(pdf.read_bytes()).hexdigest()
     record = json.loads(
-        (world / "generated" / "text-cache" / sha / "index.json").read_text(encoding="utf-8"))
+        (world / "generated" / ".text-cache" / sha / "index.json").read_text(encoding="utf-8"))
     return sha, int(record["pages"])
 
 
@@ -105,7 +105,7 @@ def _refresh_manifest_and_text_cache(root: Path) -> None:
     manifest_path = root / "records" / "materials-manifest.yaml"
     manifest_path.write_text(render_manifest(manifest), encoding="utf-8")
 
-    cache_dir = root / "generated" / "text-cache"
+    cache_dir = root / "generated" / ".text-cache"
     rc = material_text.main(
         [
             "--cache-dir",
@@ -288,7 +288,7 @@ def test_cache_entry_added_serves_results_with_matches_text_cache_false(
 ) -> None:
     """Row 5 (D6): cache entry added -> results still served (status ok), matches_text_cache false."""
     extra_sha = "e" * 64
-    extra_dir = world / "generated" / "text-cache" / extra_sha
+    extra_dir = world / "generated" / ".text-cache" / extra_sha
     extra_dir.mkdir(parents=True)
     (extra_dir / "index.json").write_text(
         json.dumps({"sha256": extra_sha, "pages": 1, "extractor": "pdftotext+pypdf"}),
@@ -365,7 +365,7 @@ def test_corrupted_cache_page_excluded_before_build(world: Path) -> None:
     res_initial = execute_search(world, "Chebyshev", limit=5)
     lecture_sha = str(res_initial.hits[0]["sha256"])
 
-    page_19 = world / "generated" / "text-cache" / lecture_sha / "pp-0019.txt"
+    page_19 = world / "generated" / ".text-cache" / lecture_sha / "pp-0019.txt"
     page_19.write_text("CORRUPTED_PROBE_TOKEN_B4\n", encoding="utf-8")
 
     # Rebuild without --force: fingerprint changes because lecture_sha becomes excluded
@@ -554,7 +554,7 @@ def test_nfd_input_punctuation_refusal_has_more_and_deterministic_order(
     # Inject a diaeresis token into page 1 of lecture-01 cache and rebuild to test NFC vs NFD
     res0 = execute_search(world, "Chebyshev", limit=1)
     lecture_sha = str(res0.hits[0]["sha256"])
-    cache_dir = world / "generated" / "text-cache"
+    cache_dir = world / "generated" / ".text-cache"
     p1_path = cache_dir / lecture_sha / "pp-0001.txt"
     p1_path.write_text(
         p1_path.read_text(encoding="utf-8") + "\nÜbung zur Induktion\n",
@@ -647,7 +647,7 @@ def test_legacy_cache_records_labeled_and_empty_index_refused(
     """
     res_initial = execute_search(world, "Chebyshev", limit=5)
     lecture_sha = str(res_initial.hits[0]["sha256"])
-    cache_dir = world / "generated" / "text-cache"
+    cache_dir = world / "generated" / ".text-cache"
 
     # Add a second valid PDF so one valid record remains when lecture_sha is made legacy
     second_pdf = world.parent / "materials" / "source-demo-book" / "second-valid.pdf"
@@ -904,7 +904,7 @@ def test_material_outline_tool_harvests_bookmarks_and_skips_changed_bytes(world:
     builder.build_index_generation(world, force=True)
     sha, pages = _cached_pdf(world, lecture)
 
-    paths = {"text_cache": world / "generated" / "text-cache",
+    paths = {"text_cache": world / "generated" / ".text-cache",
              "outline_dir": get_outline_base_dir(world),
              "materials_root": world.parent / "materials"}
     pending = material_outline.run(refresh=False, **paths)

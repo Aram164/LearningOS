@@ -56,7 +56,7 @@ def _make_study_world(core: Path) -> Path:
         [f"Evidence paragraph on page {n}." for n in range(1, 6)],
     )
     for rel in (
-        "generated/text-cache/doc1",
+        "generated/.text-cache/doc1",
         "generated/material-search",
         "generated/material-outlines",
         "generated/derived-state",
@@ -65,7 +65,7 @@ def _make_study_world(core: Path) -> Path:
         "knowledge/garden",
     ):
         (core / rel).mkdir(parents=True, exist_ok=True)
-    (core / "generated/text-cache/doc1/p1.txt").write_text("CANARY_TEXT_CACHE", encoding="utf-8")
+    (core / "generated/.text-cache/doc1/p1.txt").write_text("CANARY_TEXT_CACHE", encoding="utf-8")
     (core / "generated/material-search/idx.sqlite3").write_text("CANARY_SEARCH", encoding="utf-8")
     (core / "generated/material-outlines/o.json").write_text(
         json.dumps({"_generated": "generated; do not edit", "canary": "CANARY_OUTLINE"}),
@@ -123,7 +123,7 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
     expected_closed = [
         real_learningos / "materials",
         real_learningos / "reading-memory",
-        real_core / "generated" / "text-cache",
+        real_core / "generated" / ".text-cache",
         real_core / "generated" / "material-search",
         real_core / "generated" / "material-outlines",
         real_core / "generated" / "derived-state",
@@ -726,7 +726,7 @@ closed_files = [
     learningos / "materials/secret.txt",
     Path("~/materials/secret.txt").expanduser(),
     learningos / f"reading-memory/sessions/{os.environ['LOS_SESSION_ID']}.json",
-    core / "generated/text-cache/doc1/p1.txt",
+    core / "generated/.text-cache/doc1/p1.txt",
     core / "generated/material-search/idx.sqlite3",
     core / "generated/material-outlines/o.json",
     core / "generated/derived-state/d.json",
@@ -787,7 +787,7 @@ if rg_bin:
     rg_ok = subprocess.run([rg_bin, "PUBLIC_GREP_NEEDLE"], cwd=str(core), capture_output=True, text=True)
     assert rg_ok.returncode == 0, rg_ok.stderr
     rg_raw = subprocess.run(
-        [rg_bin, "--no-ignore", "CANARY_TEXT_CACHE", str(core / "generated/text-cache")],
+        [rg_bin, "--no-ignore", "CANARY_TEXT_CACHE", str(core / "generated/.text-cache")],
         capture_output=True, text=True,
     )
     assert rg_raw.returncode != 0

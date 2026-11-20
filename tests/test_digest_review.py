@@ -185,7 +185,7 @@ def test_nested_text_cache_input_edit_misses_status(
     import learning_os.store.validation_cache as cache
 
     _stage_validation_producers(mini_repo)
-    target = mini_repo / f"generated/text-cache/demo/pages/unexpected.{suffix}"
+    target = mini_repo / f"generated/.text-cache/demo/pages/unexpected.{suffix}"
     target.parent.mkdir(parents=True)
     target.write_text(initial)
     validation_service.status_issues(load_repo(mini_repo))
@@ -199,7 +199,7 @@ def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
     import learning_os.store.validation_cache as cache
 
     _stage_validation_producers(mini_repo)
-    directory = mini_repo / "generated/text-cache/demo"
+    directory = mini_repo / "generated/.text-cache/demo"
     directory.mkdir(parents=True)
     blob = directory / "blob.txt"
     blob.write_text('{"_generated": {}}')

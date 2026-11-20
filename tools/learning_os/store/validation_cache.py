@@ -70,7 +70,7 @@ from typing import TYPE_CHECKING
 
 from learning_os.domain import generated_reads
 from learning_os.domain.failures import TransactionFailure
-from learning_os.domain.validation import Issue, is_live_advisory
+from learning_os.domain.validation import TEXT_CACHE_TOP_DIR, Issue, is_live_advisory
 from learning_os.store.contracts.local_attachments import local_paths
 from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.identity import digest_code_identity, runtime_digest
@@ -125,7 +125,7 @@ _WALK_PRUNE = frozenset({".git", ".venv", "node_modules", "__pycache__",
 #: inside the text cache is its JSON/Markdown files, which GEN-* reads:
 #: ``validator_inputs_digest`` lists that tree separately and stats only
 #: those checked files, leaving page blobs unstatted.
-_WALK_NAME_ONLY = frozenset({"generated/text-cache", "operations/diagnostics"})
+_WALK_NAME_ONLY = frozenset({f"generated/{TEXT_CACHE_TOP_DIR}", "operations/diagnostics"})
 
 #: Subtrees skipped by the main stat walk: the derived-state cache this
 #: module now writes through. Statting it would self-invalidate every
@@ -385,7 +385,7 @@ def validator_inputs_digest(root: Path) -> str:
     # An index-only shortcut misses an unexpected nested *.json/*.md,
     # whose corruption the full validator would report. Page blobs are
     # never statted or read, keeping the expensive part bounded.
-    text_cache = os.path.join(root_str, "generated", "text-cache")
+    text_cache = os.path.join(root_str, "generated", TEXT_CACHE_TOP_DIR)
     text_stack = [text_cache]
     while text_stack:
         directory = text_stack.pop()

@@ -18,7 +18,7 @@ release certification.
      `tools/learning_os/store/study_fence.py` (`protected_reads` and
      `protected_read_literals`) denying reads to `LearningOS/.env`,
      `LearningOS/materials/`, `LearningOS/reading-memory/`,
-     `generated/text-cache/`, `generated/material-search/`,
+     `generated/.text-cache/`, `generated/material-search/`,
      `generated/material-outlines/`, `generated/derived-state/`,
      `knowledge/summaries/`, and all children of `operations/ai-actions/requests/`
      except `.gitkeep`. **Writes are default-deny (amended 2026-11-20, D-02):**

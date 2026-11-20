@@ -47,6 +47,7 @@ from learning_os.store.materials.search_index import (  # noqa: E402
     check_index_integrity,
     compute_text_cache_fingerprint,
     get_search_base_dir,
+    get_text_cache_dir,
     open_index,
 )
 
@@ -159,7 +160,7 @@ def build_index_generation(
     """Build a complete, verified self-describing index file and atomically publish it."""
     t0 = time.perf_counter()
     repo_root = repo_root.resolve()
-    cache_dir = repo_root / "generated" / "text-cache"
+    cache_dir = get_text_cache_dir(repo_root)
     if not cache_dir.is_dir():
         raise SystemExit(
             f"Text cache missing at {cache_dir}. Run `python tools/material_text.py --refresh` first."

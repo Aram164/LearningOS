@@ -7,7 +7,7 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 
 - Read-denies ``LearningOS/.env``, ``LearningOS/materials/``,
   ``LearningOS/reading-memory/``,
-  ``generated/{text-cache,material-search,material-outlines,derived-state}/``,
+  ``generated/{.text-cache,material-search,material-outlines,derived-state}/``,
   ``knowledge/summaries/``,
   and non-``.gitkeep`` children of ``operations/ai-actions/requests/``.
 - Denies every write by default (D-02). Writes are allowed only to the

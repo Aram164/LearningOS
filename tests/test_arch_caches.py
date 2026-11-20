@@ -893,7 +893,7 @@ def _text_world(tmp_path: Path, mt, monkeypatch, spec: dict):
     fake.mkdir()
     _stage_text_producers(fake, mt)
     monkeypatch.setattr(mt, "REPO", fake)
-    monkeypatch.setattr(mt, "CACHE_DIR", fake / "generated" / "text-cache")
+    monkeypatch.setattr(mt, "CACHE_DIR", fake / "generated" / ".text-cache")
     base = work / "materials"
     _tree(base, spec)
     manifest = work / "manifest.yaml"
@@ -956,7 +956,7 @@ def test_text_spec_covers_the_independent_inventory():
     assert inputs[f"cache.text.extractor:{digest}"] == mt.EXTRACTOR
     assert inputs[f"cache.text.pages:{digest}"] == "2"
     # The default anchor is the module's own verified root, never inferred.
-    assert mt.CACHE_DIR == mt.REPO / "generated" / "text-cache"
+    assert mt.CACHE_DIR == mt.REPO / "generated" / ".text-cache"
     assert mt.REPO == Path(mt.__file__).resolve().parents[1]
 
 
@@ -1115,6 +1115,33 @@ def test_text_corrupt_page_reprojects_and_matches_fresh(tmp_path: Path, capsys, 
     fresh_page, fresh_index = _text_views(mt.CACHE_DIR, digest)
     assert (warm_page, _index_semantics(warm_index)) == (fresh_page, _index_semantics(fresh_index))
 
+
+
+def test_text_cache_location_is_one_dot_folder_every_reader_shares():
+    """Obsidian skips dot-folders, so the cache's page files stay out of the vault.
+
+    The writer, the search index, the study fence and the validation-cache
+    walk all take the location from one constant, and the tree contract
+    declares it once (kept across projection rebuilds, known to validation).
+    """
+    from learning_os.domain.validation import TEXT_CACHE_TOP_DIR
+    from learning_os.store.contracts.tree_contract import (
+        generated_directories,
+        generated_keep_directories,
+    )
+    from learning_os.store.materials.search_index import get_text_cache_dir
+    from learning_os.store.study_fence import protected_reads
+
+    mt = _load_material_text()
+    assert TEXT_CACHE_TOP_DIR == ".text-cache"
+    assert mt.CACHE_DIR == mt.REPO / "generated" / TEXT_CACHE_TOP_DIR
+    assert TEXT_CACHE_TOP_DIR in generated_keep_directories(REPO_ROOT)
+    assert TEXT_CACHE_TOP_DIR in generated_directories(REPO_ROOT)
+    assert "text-cache" not in generated_directories(REPO_ROOT)
+    assert get_text_cache_dir(REPO_ROOT) == REPO_ROOT / "generated" / ".text-cache"
+    assert (REPO_ROOT / "generated" / ".text-cache").resolve() in [
+        Path(path).resolve() for path in protected_reads(REPO_ROOT)]
+    assert "generated/.text-cache" in vc._WALK_NAME_ONLY
 
 @needs_pdftotext
 def test_text_corrupt_blob_matches_fresh(tmp_path: Path, capsys, monkeypatch):

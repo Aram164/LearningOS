@@ -375,7 +375,7 @@ which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
 (`tools/learning_os/adapters/study_broker.py`). Seatbelt denies reads to
 `LearningOS/.env`,
 `LearningOS/materials/`, `LearningOS/reading-memory/`,
-`generated/text-cache/`, `generated/material-search/`,
+`generated/.text-cache/`, `generated/material-search/`,
 `generated/material-outlines/`, `generated/derived-state/`,
 `knowledge/summaries/`, and non-`.gitkeep`
 entries under `operations/ai-actions/requests/`, and denies every write

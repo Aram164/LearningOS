@@ -44,7 +44,9 @@ from material_toc import outline_rows  # noqa: E402
 from learning_os.store.materials.pdf_text import PDFTextError, pdf_reader  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
     OUTLINE_TOP_DIR,
+    TEXT_CACHE_TOP_DIR,
     OutlineRecord,
+    get_text_cache_dir,
     normalize_outline,
     outline_payload,
     parse_outline_payload,
@@ -192,7 +194,7 @@ def build_parser() -> argparse.ArgumentParser:
                       help="harvest missing or invalid entries and prune orphaned ones")
     parser.add_argument("--repo", default=str(REPO), help="Core repository root")
     parser.add_argument("--text-cache", default=None,
-                        help="page-text cache (default: REPO/generated/text-cache)")
+                        help=f"page-text cache (default: REPO/generated/{TEXT_CACHE_TOP_DIR})")
     parser.add_argument("--outline-dir", default=None,
                         help=f"outline cache (default: REPO/generated/{OUTLINE_TOP_DIR})")
     parser.add_argument("--materials-root", default=None,
@@ -207,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
     logging.getLogger("pypdf").setLevel(logging.ERROR)
     repo = Path(args.repo).resolve()
     summary = run(
-        text_cache=Path(args.text_cache) if args.text_cache else repo / "generated" / "text-cache",
+        text_cache=Path(args.text_cache) if args.text_cache else get_text_cache_dir(repo),
         outline_dir=(Path(args.outline_dir) if args.outline_dir
                      else repo / "generated" / OUTLINE_TOP_DIR),
         materials_root=(Path(args.materials_root) if args.materials_root

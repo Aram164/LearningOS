@@ -2,7 +2,7 @@
 """Digest-keyed page-text cache for local materials.
 
 Extracting the same deck twice is rework, not learning. This tool keeps one
-UTF-8 page-text file per PDF page under ``generated/text-cache/<sha256>/``
+UTF-8 page-text file per PDF page under ``generated/.text-cache/<sha256>/``
 plus an ``index.json`` per digest (material, digest, pages, extractor,
 per-page content hashes, built-at). Keys are the live file bytes, so changed
 bytes always miss and
@@ -14,8 +14,9 @@ Usage:
     python tools/material_text.py --build     # cache every PDF in the manifest
     python tools/material_text.py --refresh   # cache missing digests, prune orphans
 
-The default cache (``generated/text-cache/`` under this tool's own
-repository root) is backed by per-digest derived nodes
+The default cache (``generated/.text-cache/`` under this tool's own
+repository root; a dot-folder, so Obsidian neither loads nor watches its
+page files) is backed by per-digest derived nodes
 (``cache.text:<sha256>``, SPEC §14, D-12): extraction persists the
 node's texts, and a run serves the entry from cache only when the node
 and the file views agree, so source, extractor, producer, runtime, and
@@ -24,7 +25,9 @@ views of their node: page loss or corruption re-projects from the
 node without re-running extraction. An explicit ``--cache-dir``
 elsewhere keeps the legacy file-only behavior (§14 disposition: no
 repo root is expressible for an arbitrary directory, so no derived
-reads or writes happen there).
+reads or writes happen there). The location's name is
+``TEXT_CACHE_TOP_DIR`` (``learning_os.domain.validation``), shared with
+every reader of the cache.
 """
 
 from __future__ import annotations
@@ -50,6 +53,7 @@ from materials_manifest import (  # noqa: E402
 )
 
 from learning_os.domain.failures import TransactionFailure  # noqa: E402
+from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
 from learning_os.store.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
 from learning_os.store.derived.model import (  # noqa: E402
     DERIVED_SUBSTRATE_FILES,
@@ -59,7 +63,7 @@ from learning_os.store.derived.model import (  # noqa: E402
 from learning_os.store.derived.store import invalidate  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
-CACHE_DIR = REPO / "generated" / "text-cache"
+CACHE_DIR = REPO / "generated" / TEXT_CACHE_TOP_DIR
 EXTRACTOR = "pdftotext+pypdf"
 
 #: Per-digest derived nodes for the default cache (SPEC §14, D-12): one
@@ -149,7 +153,7 @@ def _is_default_cache(cache: Path) -> bool:
     """Whether `cache` is the default text cache under this tool's repo.
 
     The default location is this module's own verified anchor
-    (``REPO/generated/text-cache``, from this file's location), never
+    (``REPO/generated/.text-cache``, from this file's location), never
     inferred from arguments: any other `--cache-dir` keeps the legacy
     file-only behavior with no derived reads or writes.
     """
