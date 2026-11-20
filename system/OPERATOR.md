@@ -380,15 +380,18 @@ which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
 `knowledge/summaries/`, and non-`.gitkeep`
 entries under `operations/ai-actions/requests/`, and denies every write
 except to `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp` and the runtime state each
-supported runtime writes in a normal session; `LearningOS/` and instruction,
-config and executable paths stay denied even inside those. It also filters
+supported runtime writes in a normal session; `LearningOS/`, instruction,
+config and executable paths, and runtime state that other sessions source or
+read back (shell snapshots, task lists, Codex's model cache, memories and
+message queue) stay denied even inside those. It also filters
 inherited environment variables and allocates `$LOS_SCRATCH_DIR` outside
 `LearningOS/` for temporary files and `--check-out` / `--out` artifacts.
 
 Boundary scope: reads and outbound HTTPS stay open outside the closed trees;
-writes are default-deny, so runtime state outside `LearningOS/` (such as
-`~/.claude/projects/` transcripts or agy's conversation logs) persists after
-`$LOS_SCRATCH_DIR` cleanup while nothing else on the host can be changed.
+writes are default-deny, so runtime state outside `LearningOS/` (such as the
+Core project's Claude Code transcripts or agy's conversation logs) persists
+after `$LOS_SCRATCH_DIR` cleanup; ADR-022 §3 lists the residuals that stay
+writable.
 `tools/study_launch.py` owns session creation, `--root` and host
 `LOS_OBSERVATIONS` pinning, and `session_end` on exit; `tools/study_hooks.py`
 supplies only optional UX lifecycle nudges (`session-start`, `stop`,

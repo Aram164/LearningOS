@@ -162,12 +162,52 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
     allow_scratch = f'(subpath "{study_launch._sbpl_quote(os.path.realpath(scratch))}")'
     assert allow_scratch in with_scratch and allow_scratch not in sb_first
 
+    # Claude Code's per-user temp folder is denied after /private/tmp is
+    # allowed, except the Core checkout's own folder; the scratch directory
+    # is allowed after the deny, wherever it was allocated.
+    deny_claude_tmp = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(study_launch._CLAUDE_USER_TMP))}"))'
+    core_tmp = study_launch._CLAUDE_USER_TMP / study_launch._claude_project_slug(real_core)
+    allow_core_tmp = f'(subpath "{study_launch._sbpl_quote(str(core_tmp))}")'
+    assert first_allow < lines.index(deny_claude_tmp)
+    assert sb_first.index(deny_claude_tmp) < sb_first.index(allow_core_tmp)
+    assert with_scratch.index(deny_claude_tmp) < with_scratch.index(allow_scratch)
+
     real_home = Path(os.path.realpath(fake_home))
     deny_home_claude = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_home / ".claude"))}"))'
-    allow_home_projects = f'(subpath "{study_launch._sbpl_quote(str(real_home / ".claude/projects"))}")'
+    core_slug = study_launch._claude_project_slug(real_core)
+    allow_home_projects = f'(subpath "{study_launch._sbpl_quote(str(real_home / ".claude/projects" / core_slug))}")'
     assert deny_home_claude in sb_first
     assert allow_home_projects in sb_first
     assert sb_first.index(deny_home_claude) < sb_first.index(allow_home_projects)
+    # Transcripts only in the Core project's folder. Scripts and lists other
+    # sessions source or read back are never allowed (Claude Code's own
+    # sandbox keeps them too).
+    for claude_shared in ("projects", "shell-snapshots", "session-env", "todos", "tasks"):
+        quoted = study_launch._sbpl_quote(str(real_home / ".claude" / claude_shared))
+        assert f'(subpath "{quoted}")' not in sb_first, claude_shared
+    # Codex is allowed path by path; ~/.codex as a whole and the surfaces
+    # other Codex sessions take as input never are.
+    codex_root = real_home / ".codex"
+    assert f'(subpath "{study_launch._sbpl_quote(str(codex_root))}")' not in sb_first
+    for codex_ok in ('(subpath "{}")'.format(study_launch._sbpl_quote(str(codex_root / "sessions"))),
+                     '(literal "{}")'.format(study_launch._sbpl_quote(str(codex_root / "installation_id"))),
+                     '(literal "{}")'.format(study_launch._sbpl_quote(str(codex_root / "auth.json")))):
+        assert codex_ok in sb_first, codex_ok
+    for codex_input in ("models_cache.json", "memories", "queue_1.sqlite", "state_5.sqlite",
+                        "computer-use", "shell_snapshots", "tmp", ".tmp", "cache"):
+        assert study_launch._sbpl_quote(str(codex_root / codex_input)) + '"' not in sb_first, codex_input
+    # npm's package cache and npx's installs are code other agents run.
+    for npm_code in (".npm/_npx", ".npm/_cacache"):
+        assert study_launch._sbpl_quote(str(real_home / npm_code)) not in sb_first, npm_code
+    # Claude Code's OAuth refresh locks are allowed as literals only, after
+    # ~/.claude is denied, and the lock's owner record is never allowed.
+    for lock_rel in (".claude/.oauth_refresh.lock", ".claude/.storage-write.lock", ".claude.lock"):
+        quoted_lock = study_launch._sbpl_quote(str(real_home / lock_rel))
+        allow_lock = f'(literal "{quoted_lock}")'
+        assert allow_lock in sb_first, lock_rel
+        assert f'(subpath "{quoted_lock}")' not in sb_first, lock_rel
+        assert sb_first.index(deny_home_claude) < sb_first.index(allow_lock)
+    assert ".oauth_refresh.lock.owner" not in sb_first
     for home_instr in (
         ".claude.json",
         ".claude.json.backup",
@@ -1512,6 +1552,10 @@ def test_seatbelt_blocks_env_instruction_writes_and_filters_child_env(
     core_slug = study_launch._claude_project_slug(Path(os.path.realpath(core)))
     # Deny-by-default (D-02) refuses tmp_path itself; /private/tmp stays open.
     result_out = Path(tempfile.mkdtemp(prefix="los-probe-", dir="/tmp")) / "probe-result.json"
+    # A stand-in for /private/tmp/claude-<uid>, so the probe never writes into
+    # the real folder other Claude Code sessions use.
+    fake_claude_tmp = Path(os.path.realpath(tempfile.mkdtemp(prefix="los-claude-tmp-", dir="/tmp")))
+    monkeypatch.setattr(study_launch, "_CLAUDE_USER_TMP", fake_claude_tmp)
     (fake_home / ".gemini" / "antigravity-cli" / "conversations").mkdir(parents=True)
     (fake_home / ".gemini" / "config").mkdir(parents=True)
     probe = f"""
@@ -1569,6 +1613,27 @@ for label, target in [
     ("home_launch_agent", {str(fake_home / "Library" / "LaunchAgents" / "evil.plist")!r}),
     ("home_gitconfig", {str(fake_home / ".gitconfig")!r}),
     ("codex_plugins", {str(fake_home / ".codex" / "plugins" / "cache" / "x" / "plugin.json")!r}),
+    # The OAuth refresh lock's owner record steers an unsandboxed takeover.
+    ("claude_refresh_lock_owner", {str(fake_home / ".claude" / ".oauth_refresh.lock.owner")!r}),
+    # State other sessions source, run or read back as their own input.
+    ("claude_other_transcript", {str(fake_home / ".claude" / "projects" / "existing-proj" / "s.jsonl")!r}),
+    ("claude_projects_root", {str(fake_home / ".claude" / "projects" / "session.jsonl")!r}),
+    ("claude_shell_snapshot", {str(fake_home / ".claude" / "shell-snapshots" / "snapshot-zsh-1.sh")!r}),
+    ("claude_session_env", {str(fake_home / ".claude" / "session-env" / "s1" / "sessionstart-hook-1.sh")!r}),
+    ("claude_tasks", {str(fake_home / ".claude" / "tasks" / "s1" / "1.json")!r}),
+    ("claude_todos", {str(fake_home / ".claude" / "todos" / "s1.json")!r}),
+    ("claude_tmp_other_session", {str(fake_claude_tmp / "-Users-x-other" / "s1" / "tasks" / "a.output")!r}),
+    ("codex_models_cache", {str(fake_home / ".codex" / "models_cache.json")!r}),
+    ("codex_memories", {str(fake_home / ".codex" / "memories" / "memory_summary.md")!r}),
+    ("codex_queue", {str(fake_home / ".codex" / "queue_1.sqlite")!r}),
+    ("codex_state", {str(fake_home / ".codex" / "state_5.sqlite")!r}),
+    ("codex_computer_use", {str(fake_home / ".codex" / "computer-use" / "Client.app" / "Client")!r}),
+    ("codex_shell_snapshot", {str(fake_home / ".codex" / "shell_snapshots" / "s1.sh")!r}),
+    ("codex_arg0", {str(fake_home / ".codex" / "tmp" / "arg0" / "codex-arg0x" / "apply_patch")!r}),
+    ("codex_tool_cache", {str(fake_home / ".codex" / "cache" / "codex_apps_tools" / "t.json")!r}),
+    ("codex_plugin_staging", {str(fake_home / ".codex" / ".tmp" / "plugins" / "p" / "plugin.json")!r}),
+    ("npm_npx", {str(fake_home / ".npm" / "_npx" / "abc" / "node_modules" / "pkg" / "index.js")!r}),
+    ("npm_cacache", {str(fake_home / ".npm" / "_cacache" / "index-v5" / "aa" / "x")!r}),
 ]:
     p = Path(target)
     try:
@@ -1578,9 +1643,42 @@ for label, target in [
     except PermissionError:
         results[label] = "DENIED"
 
-cache_file = Path({str(fake_home / ".claude" / "projects" / "session.jsonl")!r})
-cache_file.write_text("ok\\n")
-results["home_claude_cache"] = cache_file.read_text().strip()
+# Claude Code refreshes its OAuth token under these proper-lockfile locks: a
+# directory it creates, touches and removes. Nothing may be written inside.
+for label, target in [
+    ("claude_refresh_lock", {str(fake_home / ".claude" / ".oauth_refresh.lock")!r}),
+    ("claude_storage_lock", {str(fake_home / ".claude" / ".storage-write.lock")!r}),
+    ("claude_legacy_lock", {str(fake_home / ".claude.lock")!r}),
+]:
+    lock = Path(target)
+    try:
+        lock.mkdir()
+        os.utime(lock)
+    except PermissionError:
+        results[label] = "DENIED"
+        continue
+    try:
+        (lock / "planted.md").write_text("POISONED")
+        inner = "ALLOWED"
+    except PermissionError:
+        inner = "DENIED"
+    try:
+        lock.rmdir()
+        removed = "REMOVED"
+    except OSError:
+        removed = "KEPT"
+    results[label] = f"LOCKED,{{removed}},inner-{{inner}}"
+
+for label, target in [
+    ("codex_installation_id", {str(fake_home / ".codex" / "installation_id")!r}),
+    ("codex_log", {str(fake_home / ".codex" / "log" / "codex-tui.log")!r}),
+    ("claude_tmp_core", {str(fake_claude_tmp / core_slug / "s1" / "tasks" / "a.output")!r}),
+    ("claude_debug", {str(fake_home / ".claude" / "debug" / "s1.txt")!r}),
+]:
+    p = Path(target)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text("ok\\n")
+    results[label] = p.read_text().strip()
 proj_cache = Path({str(fake_home / ".claude" / "projects" / core_slug / "session.jsonl")!r})
 proj_cache.parent.mkdir(parents=True, exist_ok=True)
 proj_cache.write_text("ok\\n")
@@ -1645,9 +1743,35 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
         "home_launch_agent",
         "home_gitconfig",
         "codex_plugins",
+        "claude_refresh_lock_owner",
+        "claude_other_transcript",
+        "claude_projects_root",
+        "claude_shell_snapshot",
+        "claude_session_env",
+        "claude_tasks",
+        "claude_todos",
+        "claude_tmp_other_session",
+        "codex_models_cache",
+        "codex_memories",
+        "codex_queue",
+        "codex_state",
+        "codex_computer_use",
+        "codex_shell_snapshot",
+        "codex_arg0",
+        "codex_tool_cache",
+        "codex_plugin_staging",
+        "npm_npx",
+        "npm_cacache",
     ):
         assert data[key] == "DENIED", (key, data)
-    assert data["home_claude_cache"] == "ok"
+    for key in ("codex_installation_id", "codex_log", "claude_tmp_core", "claude_debug"):
+        assert data[key] == "ok", (key, data)
+    for lock_key in ("claude_refresh_lock", "claude_storage_lock", "claude_legacy_lock"):
+        assert data[lock_key] == "LOCKED,REMOVED,inner-DENIED", (lock_key, data)
+    for lock_rel in (".claude/.oauth_refresh.lock", ".claude/.storage-write.lock", ".claude.lock"):
+        assert not (fake_home / lock_rel).exists(), lock_rel
+    assert not (fake_claude_tmp / "-Users-x-other").exists()
+    shutil.rmtree(fake_claude_tmp, ignore_errors=True)
     assert data["home_proj_cache"] == "ok"
     assert data["agy_conversation"] == "ok"
     assert data["codex_session"] == "ok"

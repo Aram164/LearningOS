@@ -15,7 +15,8 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   state each runtime writes during a normal session (traced 2026-11-20:
   ``~/.claude/{projects,…}``, agy's conversation, transcript, log and cache
   paths, ``~/.codex/`` minus its config and code, npm's cache, and the
-  keychain). ``LearningOS/``, every instruction, config or executable
+  keychain), plus the lock directories Claude Code takes to refresh its
+  OAuth token. ``LearningOS/``, every instruction, config or executable
   surface inside an allowed runtime root (``~/.claude/projects/*/memory``,
   ``~/.codex/{AGENTS*.md,config.toml,rules,skills,plugins,…}``, agy's
   settings, knowledge, MCP config and binaries) and the wrapper's
@@ -162,22 +163,45 @@ def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
     return str(uuid.uuid5(LEARNINGOS_STUDY_NAMESPACE, f"{runtime}:{external_id}"))
 
 
+#: Claude Code state a study session may write under ``~/.claude``, allowed
+#: after ``~/.claude`` is denied: debug logs, edit checkpoints, the feature-flag
+#: cache and queued telemetry. Transcripts are allowed only in the Core
+#: project's own folder (``build_seatbelt_profile``). Kept denied, as Claude
+#: Code's own Bash sandbox keeps them: ``shell-snapshots`` and ``session-env``
+#: (scripts every other session sources before each Bash command), ``todos``
+#: and ``tasks`` (lists other sessions read back as their own plan), and every
+#: other project's transcripts (2026-11-20).
 _CLAUDE_WRITABLE_CACHE_SUBDIRS = (
-    "projects",
     "debug",
-    "todos",
-    "tasks",
-    "shell-snapshots",
     "file-history",
     "statsig",
-    "session-env",
     "telemetry",
+)
+
+#: Lock directories Claude Code takes to refresh its OAuth token (read from
+#: claude 2.1.283's vendored proper-lockfile, 2026-11-20): the refresh lock
+#: and the credential-store write lock under ``~/.claude``, and the legacy
+#: refresh lock beside it. Without the refresh lock a sandboxed session sent
+#: the expired token ("401 OAuth access token has expired"). Without the store
+#: lock it would fetch a new token pair and fail to save it. These two must be
+#: allowed together. A lock is an empty directory that is only created,
+#: touched and removed, so each is allowed as a ``literal``: nothing can be
+#: written inside it. The lock's owner record stays denied, because an
+#: unsandboxed Claude trusts it to take over a lock it believes is dead.
+_CLAUDE_TOKEN_REFRESH_LOCKS = (
+    ".claude/.oauth_refresh.lock",
+    ".claude/.storage-write.lock",
+    ".claude.lock",
 )
 
 #: Paths every launch may write besides its scratch directory: terminals and
 #: ``/dev/null``, and ``/private/tmp``, where Claude Code's Bash tool hands its
 #: working directory back to the CLI.
 _SYSTEM_WRITE_SUBPATHS = (Path("/dev"), Path("/private/tmp"))
+
+#: Claude Code's per-user temp folder, where unsandboxed sessions keep their
+#: scratchpads and background-task output (``/private/tmp/claude-<uid>``).
+_CLAUDE_USER_TMP = Path("/private/tmp") / f"claude-{os.getuid()}"
 
 #: Runtime state under ``$HOME`` that a study runtime writes during a normal
 #: session, traced 2026-11-20 by diffing the home folder around one launch of
@@ -200,15 +224,41 @@ _RUNTIME_WRITABLE_SUBDIRS = (
     ".gemini/tmp",
     ".gemini/history",
     "Library/Logs/Antigravity",
-    # npx, which runtimes use to start MCP servers; npm verifies its cache.
-    ".npm/_cacache",
+    # npm's logs. Its package cache and npx's installs stay denied: an
+    # unsandboxed agent runs the MCP servers it starts with npx from there.
     ".npm/_logs",
-    ".npm/_npx",
     # Credential refreshes go through the login keychain.
     "Library/Keychains",
-    # Codex keeps sessions and SQLite state directly under ~/.codex; its
-    # read-only surfaces are re-denied in _RUNTIME_READ_ONLY.
-    ".codex",
+    # Codex's own state is allowed path by path in _CODEX_WRITABLE_*.
+)
+
+#: Codex state a study session writes under ``~/.codex`` (traced 2026-11-20,
+#: codex 0.153.4): its transcripts, logs, per-thread locks, the login it
+#: refreshes, prompt history and the session index. The rest of ``~/.codex``
+#: stays denied, because other Codex sessions take it as input:
+#: ``models_cache.json`` carries every model's base instructions,
+#: ``memories*`` are fed into later sessions, ``queue_*.sqlite`` holds
+#: messages waiting for other threads, ``state_*.sqlite`` their dynamic
+#: tools, ``cache/`` tool descriptions, ``shell_snapshots/`` and ``tmp/``
+#: scripts and PATH entries other sessions source or run, ``.tmp/`` plugin
+#: staging, and ``computer-use/`` the program ``notify`` runs after every turn.
+_CODEX_WRITABLE_SUBDIRS = (
+    "sessions",
+    "archived_sessions",
+    "log",
+    "thread-writer-locks",
+)
+_CODEX_WRITABLE_FILES = (
+    "auth.json",
+    "auth.json.lock",
+    "auth.lock",
+    # Opened for writing at start-up even when it exists; without it Codex
+    # fails with "failed to initialize in-process app-server client".
+    "installation_id",
+    "history.jsonl",
+    "session_index.jsonl",
+    "session_index.jsonl.lock",
+    "version.json",
 )
 _SQLITE_SIDECARS = ("", "-wal", "-shm", "-journal")
 _RUNTIME_WRITABLE_FILES = (
@@ -312,11 +362,31 @@ def build_seatbelt_profile(
 
     # Every write is denied unless a later rule allows it back (D-02).
     lines.append("(deny file-write*)")
-    allow_parts = [
+    system_parts = [
         f'(subpath "{_sbpl_quote(str(Path(os.path.realpath(root))))}")'
-        for root in (*_SYSTEM_WRITE_SUBPATHS, *write_roots)
+        for root in _SYSTEM_WRITE_SUBPATHS
     ]
-    lines.append(f"(allow file-write* {' '.join(dict.fromkeys(allow_parts))})")
+    lines.append(f"(allow file-write* {' '.join(dict.fromkeys(system_parts))})")
+    # /private/tmp stays open, but not the per-user folder where unsandboxed
+    # Claude Code sessions keep their scratchpads and background-task output:
+    # a script or output planted there is run or read outside the sandbox.
+    # The scratch directory is allowed after it, wherever it was allocated.
+    lines.append(
+        f'(deny file-write* (subpath "{_sbpl_quote(str(_CLAUDE_USER_TMP))}"))'
+    )
+    # Except the Core checkout's own folder there, where a sandboxed Claude
+    # Code keeps its Bash tool's task output; without it every Bash call fails.
+    core_tmp = " ".join(dict.fromkeys(
+        f'(subpath "{_sbpl_quote(str(_CLAUDE_USER_TMP / _claude_project_slug(core)))}")'
+        for core in (Path(os.path.abspath(core_root)), real_core)
+    ))
+    lines.append(f"(allow file-write* {core_tmp})")
+    if write_roots:
+        root_parts = [
+            f'(subpath "{_sbpl_quote(str(Path(os.path.realpath(root))))}")'
+            for root in write_roots
+        ]
+        lines.append(f"(allow file-write* {' '.join(dict.fromkeys(root_parts))})")
 
     deny_seen: set[Path] = set()
     real_home = Path(os.path.realpath(home_dir if home_dir is not None else Path.home()))
@@ -326,12 +396,19 @@ def build_seatbelt_profile(
         and not is_within(real_home, real_learningos)
     )
     if home_ok and real_home != real_wrapper:
+        codex_dir = real_home / ".codex"
         runtime_parts = [
             f'(subpath "{_sbpl_quote(str(real_home / rel))}")'
             for rel in _RUNTIME_WRITABLE_SUBDIRS
         ] + [
             f'(literal "{_sbpl_quote(str(real_home / rel))}")'
             for rel in _RUNTIME_WRITABLE_FILES
+        ] + [
+            f'(subpath "{_sbpl_quote(str(codex_dir / rel))}")'
+            for rel in _CODEX_WRITABLE_SUBDIRS
+        ] + [
+            f'(literal "{_sbpl_quote(str(codex_dir / rel))}")'
+            for rel in _CODEX_WRITABLE_FILES
         ]
         lines.append(f"(allow file-write* {' '.join(runtime_parts)})")
 
@@ -347,6 +424,19 @@ def build_seatbelt_profile(
                 for sub in _CLAUDE_WRITABLE_CACHE_SUBDIRS
             )
             lines.append(f"(allow file-write* {claude_allow})")
+            # Transcripts only in the folder Claude Code keeps for the Core
+            # checkout, the launch's working directory; its memory folder is
+            # denied again below.
+            core_transcripts = " ".join(dict.fromkeys(
+                f'(subpath "{_sbpl_quote(str(claude_dir / "projects" / _claude_project_slug(core)))}")'
+                for core in (Path(os.path.abspath(core_root)), real_core)
+            ))
+            lines.append(f"(allow file-write* {core_transcripts})")
+            lock_allow = " ".join(
+                f'(literal "{_sbpl_quote(str(real_home / rel))}")'
+                for rel in _CLAUDE_TOKEN_REFRESH_LOCKS
+            )
+            lines.append(f"(allow file-write* {lock_allow})")
             claude_projects = claude_dir / "projects"
             memory_targets: list[Path] = []
             if claude_projects.is_dir():
