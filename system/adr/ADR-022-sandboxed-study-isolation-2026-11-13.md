@@ -23,33 +23,36 @@ release certification.
      `knowledge/summaries/`, and all children of `operations/ai-actions/requests/`
      except `.gitkeep`. **Writes are default-deny (amended 2026-11-20, D-02):**
      the profile denies `file-write*` everywhere, allows back only
-     `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp` and the runtime state the
-     supported runtimes were traced writing in a normal session (Claude
-     Code's transcripts in the Core project's own folder and its debug,
-     checkpoint, feature-flag and telemetry folders; agy's conversation,
-     transcript, log and cache paths; Codex's sessions, logs, thread locks,
-     login, prompt history, session index and installation id; npm's logs;
-     the login keychain), plus, as literal directories only, the three locks
-     Claude Code takes to refresh its OAuth token
+     `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp`, the launched runtime's own
+     study home (§3) and what that runtime must still write in the real home
+     folder (amended 2026-11-20, third pass): for Claude Code, as literal
+     directories only, the three locks it takes to refresh its OAuth token
      (`~/.claude/.oauth_refresh.lock`, `~/.claude/.storage-write.lock`,
-     `~/.claude.lock`). Without them a sandboxed Claude session failed with an
-     expired token. **Runtime state that other sessions take as input stays
-     denied (amended 2026-11-20, second pass):** Claude Code's
-     `shell-snapshots/`, `session-env/`, `todos/`, `tasks/` and every other
-     project's transcripts; Codex's `models_cache.json` (every model's base
-     instructions), `memories*`, `queue_*.sqlite` (messages waiting for other
-     threads), `state_*.sqlite`, `cache/`, `shell_snapshots/`, `tmp/` (PATH
-     helpers), `.tmp/` (plugin staging) and `computer-use/` (the program
-     Codex's `notify` runs after every turn); npm's package cache and npx's
-     installs; and `/private/tmp/claude-<uid>/` except the Core project's own
-     folder, which holds other Claude Code sessions' scratchpads and task
-     output. Each of these let a study agent run code in, or put
-     instructions into, a session outside the sandbox. Then it denies
+     `~/.claude.lock`; without them a sandboxed Claude session failed with
+     an expired token), and the login keychain; for Codex, the literal
+     `~/.codex/auth.json`; for agy, its traced conversation, transcript, log
+     and cache paths, the Gemini CLI's `tmp/` and `history/`, npm's logs and
+     the login keychain; for the Gemini CLI, the last three; for `--cmd`,
+     nothing. **Everything else in the real runtime folders stays denied,
+     including the state other sessions take as input (amended 2026-11-20,
+     second pass):** Claude Code's `shell-snapshots/`, `session-env/`,
+     `todos/`, `tasks/` and transcripts; Codex's `models_cache.json` (every
+     model's base instructions), `memories*`, `queue_*.sqlite` (messages
+     waiting for other threads), `state_*.sqlite`, `cache/`,
+     `shell_snapshots/`, `tmp/` (PATH helpers), `.tmp/` (plugin staging) and
+     `computer-use/` (the program Codex's `notify` runs after every turn);
+     npm's package cache and npx's installs; and all of
+     `/private/tmp/claude-<uid>/`, which holds other Claude Code sessions'
+     scratchpads and task output (a sandboxed Claude Code keeps its temp
+     root in `$LOS_SCRATCH_DIR`, via `CLAUDE_CODE_TMPDIR`). Each of these
+     let a study agent run code in, or put instructions into, a session
+     outside the sandbox. Then it denies
      again `LearningOS/`, Claude project memory, the wrapper's `AGENTS.md`,
      `CLAUDE.md`, `CLAUDE.local.md`, `GEMINI.md`, `.mcp.json`, `.claude/`,
-     `.opencode/`, `.codex/`, `.gemini/`, and the read-only surfaces inside
-     allowed runtime roots (`~/.codex/{AGENTS*.md,config.toml,rules,skills,
-     plugins,prompts,automations,hooks*}`). The earlier denylist on top of
+     `.opencode/`, `.codex/`, `.gemini/`, the read-only surfaces of the real
+     runtime folders (`~/.codex/{AGENTS*.md,config.toml,rules,skills,
+     plugins,prompts,automations,hooks*}`), and in a study home its
+     ownership marker and Codex's `auth.json` link. The earlier denylist on top of
      `(allow default)` left every unnamed path writable: `CLAUDE.md` in any
      parent folder, agy's MCP config (which agy loads and runs inside the
      sandbox, verified), CLI binaries under `~/.local/bin` and Homebrew's
@@ -101,17 +104,45 @@ release certification.
 
 3. **Boundary scope, runtime caches, environment filtering, and egress.**
    Seatbelt keeps reads open outside the closed trees and makes writes
-   default-deny (§1). Runtime state outside `LearningOS/` (Claude Code's
-   transcripts in the Core project's folder, Codex's sessions, agy's
-   conversation logs) stays writable and persists on the host after
-   `$LOS_SCRATCH_DIR` is removed; a runtime that starts writing somewhere new
-   is refused and must be traced and added to `tools/study_launch.py`
-   deliberately. Accepted residuals: a study agent can still edit those
-   transcripts, which a session reads back only when it is resumed (and
-   Codex's own memory pipeline may read its session files), and can rewrite
-   the credentials the runtimes refresh (the login keychain,
-   `~/.codex/auth.json`). Closing these needs a per-session runtime home
-   (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`) rather than path rules.
+   default-deny (§1). **Per-session runtime homes (amended 2026-11-20, third
+   pass).**
+   - Claude Code and Codex run with a home of their own for each study
+     session (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`), under
+     `~/.local/state/learningos/study-runtimes/<checkout>/<runtime>/<session>/`.
+   - The launcher seeds a new home with a minimal config: onboarding done,
+     Core trusted, Codex's file login store, and display and model
+     preferences copied from the real config. Hooks, permissions, plugins,
+     MCP servers and Codex's `notify` are never copied.
+   - It keeps the home after the session. A resumed launch returns to it:
+     `--session`, or `--resume-runtime-id` with the runtime's own session
+     id, which also finds the one home whose transcript carries that id.
+   - Their transcripts, caches and settings therefore never reach a session
+     outside the sandbox, which closes the residual accepted until then: a
+     study agent could edit the transcripts unsandboxed sessions of the Core
+     project read back on resume, and Codex's memory pipeline read.
+
+   Residuals, re-scoped:
+   - **The credentials the runtimes refresh stay writable.** Refresh tokens
+     rotate, so each runtime must keep one login shared with unsandboxed
+     sessions. A private copy that refreshed inside the sandbox would leave
+     the real login holding a dead token.
+     - Claude Code keeps its default keychain item and its three refresh
+       locks in the real `~/.claude`: `CLAUDE_SECURESTORAGE_CONFIG_DIR=""`
+       replaces the config directory for credentials only (claude 2.1.283).
+     - Codex writes the real `~/.codex/auth.json` through the home's link.
+       codex 0.153.4 saves it in place and reads it again before refreshing.
+       The link can be neither removed nor replaced from inside, so a later
+       Codex that saved by rename would fail to save a refreshed login, and
+       `codex login` outside the sandbox would mend it.
+   - **agy has no home override** (no data-dir flag; its
+     `ANTIGRAVITY_EXECUTABLE_DATA_DIR` only serves sidecar plugins). It keeps
+     its traced path rules, now granted to agy launches only. An agy study
+     agent can still edit agy's conversation and memory files, which
+     unsandboxed agy sessions read. The Gemini CLI, which can no longer sign
+     in, keeps its two path rules the same way.
+
+   A runtime that starts writing somewhere new is refused and must be traced
+   and added to `tools/study_launch.py` deliberately.
    `tools/study_launch.py` filters inherited host environment variables through
    an explicit POSIX/runtime/provider allowlist (dropping unrelated host
    secrets and `LOS_OBSERVATIONS`), while outbound HTTPS network access remains

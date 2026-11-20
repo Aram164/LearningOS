@@ -791,9 +791,10 @@ gateway broker (`tools/learning_os/adapters/study_broker.py`). Seatbelt
 denies reads across the closed material, text-cache, search-index, outline,
 derived-state, summary, request-slice, and private `LearningOS/reading-memory/`
 trees defined in `tools/learning_os/store/study_fence.py`, and denies every
-write except to the session scratch directory, `/dev`, `/private/tmp` and the
-runtime state the supported runtimes write (ADR-022 §1, default-deny since
-2026-11-20). Gateway reads and study-store writes traverse
+write except to the session scratch directory, `/dev`, `/private/tmp`, the
+launched runtime's own per-session home (Claude Code, Codex) and the login
+refresh paths it shares with unsandboxed sessions (ADR-022 §1 and §3,
+default-deny since 2026-11-20). Gateway reads and study-store writes traverse
 `LOS_GATE_SOCK` with launcher-pinned session identity; canonical writes inside
 the study capability allowlist remain separated on the host behind
 intent-bound envelopes (`tools/seal_envelope.py`) whose approval kind the

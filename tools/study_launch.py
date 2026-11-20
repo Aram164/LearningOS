@@ -11,19 +11,22 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   ``knowledge/summaries/``,
   and non-``.gitkeep`` children of ``operations/ai-actions/requests/``.
 - Denies every write by default (D-02). Writes are allowed only to the
-  session's scratch directory, ``/dev``, ``/private/tmp`` and the runtime
-  state each runtime writes during a normal session (traced 2026-11-20:
-  ``~/.claude/{projects,…}``, agy's conversation, transcript, log and cache
-  paths, ``~/.codex/`` minus its config and code, npm's cache, and the
-  keychain), plus the lock directories Claude Code takes to refresh its
-  OAuth token. ``LearningOS/``, every instruction, config or executable
-  surface inside an allowed runtime root (``~/.claude/projects/*/memory``,
-  ``~/.codex/{AGENTS*.md,config.toml,rules,skills,plugins,…}``, agy's
-  settings, knowledge, MCP config and binaries) and the wrapper's
-  instruction paths stay denied. A denylist on top of ``(allow default)``
-  reopened the gap for every runtime or instruction file it did not name:
-  ``CLAUDE.md`` in any parent folder, agy's MCP config, a CLI binary under
-  ``~/.local/bin`` or Homebrew's prefix, ``~/Library/LaunchAgents``.
+  session's scratch directory, ``/dev``, ``/private/tmp`` and the state of
+  the runtime being launched. Claude Code and Codex get a home of their own
+  for each study session (``CLAUDE_CONFIG_DIR``, ``CODEX_HOME``) under
+  ``~/.local/state/learningos/study-runtimes/``, so their transcripts,
+  caches and settings never reach Aram's real ``~/.claude`` or ``~/.codex``.
+  In the real folders they may write only what they must share with
+  unsandboxed sessions to refresh one login: Claude Code's three refresh
+  lock directories and the login keychain, and Codex's ``auth.json``, which
+  the session's home links to. agy and the Gemini CLI have no such home, so
+  their launches keep the traced path rules (ADR-022 §3). ``LearningOS/``,
+  every instruction, config or executable surface in the real runtime
+  folders and the wrapper's instruction paths stay denied. A denylist on
+  top of ``(allow default)`` reopened the gap for every runtime or
+  instruction file it did not name: ``CLAUDE.md`` in any parent folder,
+  agy's MCP config, a CLI binary under ``~/.local/bin`` or Homebrew's
+  prefix, ``~/Library/LaunchAgents``.
 - Filters inherited host environment variables through an explicit allowlist
   (dropping unrelated secrets and host ``LOS_OBSERVATIONS``) before launch.
 - Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
@@ -36,6 +39,10 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   ``--persist-scratch`` or ``--scratch-dir`` to retain a dedicated,
   ``.learningos-scratch.json``-owned, session-bound scratch directory across
   resumed launches until manually removed).
+- Keeps each Claude Code or Codex home after the session, keyed by the study
+  session UUID, so a resumed launch (``--session`` or
+  ``--resume-runtime-id``) finds its transcript again; ``--resume-runtime-id``
+  also finds the one home whose transcripts carry that vendor id.
 - Records ``ReadingStore.session_end`` and cleans up the socket in ``finally:``
   even on child crash or kill.
 """
@@ -53,6 +60,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import tomllib
 import uuid
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -78,6 +86,42 @@ RUNTIMES = ("claude", "codex", "gemini", "agy")
 SCRATCH_MARKER_NAME = ".learningos-scratch.json"
 _SCRATCH_MARKER_SCHEMA = 1
 _SCRATCH_MARKER_OWNER = "learningos-study-scratch"
+
+#: Runtimes that get a home of their own for each study session instead of
+#: Aram's real ``~/.claude`` or ``~/.codex`` (ADR-022 §3, 2026-11-20). agy
+#: has no home override and the Gemini CLI cannot sign in any more, so both
+#: keep path rules.
+HOMED_RUNTIMES = ("claude", "codex")
+RUNTIME_HOME_MARKER_NAME = ".learningos-runtime-home.json"
+_RUNTIME_HOME_MARKER_SCHEMA = 1
+_RUNTIME_HOME_MARKER_OWNER = "learningos-study-runtime-home"
+#: Where the homes live, relative to ``$HOME``: no spaces, because both
+#: runtimes build shell-snapshot and temp paths under their home, and kept
+#: across reboots, so a resumed launch still finds its transcript.
+_RUNTIME_HOMES_REL = Path(".local") / "state" / "learningos" / "study-runtimes"
+#: A vendor session id the resume lookup may search for (Claude Code and
+#: Codex use UUIDs); anything else skips the lookup.
+_VENDOR_ID_SAFE = re.compile(r"[A-Za-z0-9._-]{1,128}")
+#: Display and model preferences copied from the real Claude Code settings
+#: into a new home. Hooks, permissions, ``env``, plugins, marketplaces, the
+#: status line, API-key helpers and MCP servers are never copied: each runs
+#: code or adds instructions.
+_CLAUDE_SETTINGS_COPY = ("model", "effortLevel", "theme", "tui", "modelSettings")
+#: Onboarding state copied from the real ``~/.claude.json``, so an
+#: interactive launch shows no first-run dialog.
+_CLAUDE_GLOBAL_COPY = ("hasCompletedOnboarding", "lastOnboardingVersion")
+#: Preference strings copied from the real Codex config. Its ``notify``
+#: program, plugins, MCP servers and global model are not.
+_CODEX_CONFIG_COPY = ("personality", "service_tier")
+#: Variables the launcher sets for the runtime it starts. Host values are
+#: dropped for every launch: each would pass the ``CLAUDE_``/``CODEX_``
+#: prefix allowlist and point a runtime back at a shared folder.
+_RUNTIME_HOME_ENV = (
+    "CLAUDE_CONFIG_DIR",
+    "CLAUDE_SECURESTORAGE_CONFIG_DIR",
+    "CLAUDE_CODE_TMPDIR",
+    "CODEX_HOME",
+)
 
 _CHILD_ENV_ALLOW_EXACT = frozenset({
     "PATH",
@@ -138,13 +182,16 @@ def _build_child_env(
     session_id: str,
     scratch_dir: Path,
     child_cwd: Path,
+    runtime_env: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Filter inherited host env down to an explicit runtime/provider allowlist."""
     child_env = {
         k: v
         for k, v in host_env.items()
-        if k in _CHILD_ENV_ALLOW_EXACT or k.startswith(_CHILD_ENV_ALLOW_PREFIXES)
+        if (k in _CHILD_ENV_ALLOW_EXACT or k.startswith(_CHILD_ENV_ALLOW_PREFIXES))
+        and k not in _RUNTIME_HOME_ENV
     }
+    child_env.update(runtime_env or {})
     child_env[GATE_SOCK_ENV] = str(sock_path)
     child_env["LOS_SESSION_ID"] = session_id
     child_env["LOS_SCRATCH_DIR"] = str(scratch_dir)
@@ -152,6 +199,33 @@ def _build_child_env(
     child_env["PWD"] = str(child_cwd)
     child_env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
     return child_env
+
+
+def runtime_home_env(runtime: str, runtime_home: Path, scratch_dir: Path) -> dict[str, str]:
+    """Point ``runtime`` at its own study home.
+
+    Claude Code: ``CLAUDE_SECURESTORAGE_CONFIG_DIR=""`` keeps the default
+    keychain item and the OAuth refresh locks in the real ``~/.claude``
+    (claude 2.1.283's ``Bw()``/``JL()``: the variable, even empty, replaces
+    the config directory for credentials only), so a refresh stays
+    coordinated with unsandboxed sessions. ``CLAUDE_CODE_TMPDIR`` moves the
+    per-user temp root out of ``/private/tmp/claude-<uid>``, where
+    unsandboxed sessions keep their task output. ``DISABLE_AUTOUPDATER``:
+    the sandbox refuses writes to Claude Code's install folder, so an update
+    started inside it can only fail ("Auto-update failed" in every
+    interactive study launch, because a new home lacks the real config's
+    ``autoUpdates`` setting).
+    """
+    if runtime == "claude":
+        return {
+            "CLAUDE_CONFIG_DIR": str(runtime_home),
+            "CLAUDE_SECURESTORAGE_CONFIG_DIR": "",
+            "CLAUDE_CODE_TMPDIR": str(scratch_dir),
+            "DISABLE_AUTOUPDATER": "1",
+        }
+    if runtime == "codex":
+        return {"CODEX_HOME": str(runtime_home)}
+    return {}
 
 
 def _sbpl_quote(value: str) -> str:
@@ -162,21 +236,6 @@ def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
     """Derive a deterministic lowercase UUIDv5 for non-UUID vendor handles."""
     return str(uuid.uuid5(LEARNINGOS_STUDY_NAMESPACE, f"{runtime}:{external_id}"))
 
-
-#: Claude Code state a study session may write under ``~/.claude``, allowed
-#: after ``~/.claude`` is denied: debug logs, edit checkpoints, the feature-flag
-#: cache and queued telemetry. Transcripts are allowed only in the Core
-#: project's own folder (``build_seatbelt_profile``). Kept denied, as Claude
-#: Code's own Bash sandbox keeps them: ``shell-snapshots`` and ``session-env``
-#: (scripts every other session sources before each Bash command), ``todos``
-#: and ``tasks`` (lists other sessions read back as their own plan), and every
-#: other project's transcripts (2026-11-20).
-_CLAUDE_WRITABLE_CACHE_SUBDIRS = (
-    "debug",
-    "file-history",
-    "statsig",
-    "telemetry",
-)
 
 #: Lock directories Claude Code takes to refresh its OAuth token (read from
 #: claude 2.1.283's vendored proper-lockfile, 2026-11-20): the refresh lock
@@ -201,17 +260,21 @@ _SYSTEM_WRITE_SUBPATHS = (Path("/dev"), Path("/private/tmp"))
 
 #: Claude Code's per-user temp folder, where unsandboxed sessions keep their
 #: scratchpads and background-task output (``/private/tmp/claude-<uid>``).
+#: A study launch points Claude Code's temp root at its scratch directory
+#: instead (``CLAUDE_CODE_TMPDIR``), so no part of this folder is writable.
 _CLAUDE_USER_TMP = Path("/private/tmp") / f"claude-{os.getuid()}"
 
-#: Runtime state under ``$HOME`` that a study runtime writes during a normal
-#: session, traced 2026-11-20 by diffing the home folder around one launch of
-#: claude 2.1.283, agy 1.5.12 and codex 0.153.4. Writes anywhere else under
-#: ``$HOME`` are denied by default, so a runtime that starts writing somewhere
-#: new fails visibly instead of widening the boundary in silence.
-_RUNTIME_WRITABLE_SUBDIRS = (
-    # Claude Code's subdirectories are allowed in their own block below, after
-    # ~/.claude is denied, so its project memory can be denied again last.
-    # agy: conversations, transcripts, memory it records itself, logs, caches.
+#: The login keychain. Claude Code saves a refreshed token pair to its
+#: default item there; agy's and the Gemini CLI's sign-ins go through it too.
+_LOGIN_KEYCHAIN = "Library/Keychains"
+
+#: agy state under ``$HOME`` that an agy launch writes during a normal session
+#: (traced 2026-11-20 by diffing the home folder around one launch of agy
+#: 1.5.12): conversations, transcripts, memory it records itself, logs and
+#: caches. agy has no home override (no data-dir flag; the binary's
+#: ``ANTIGRAVITY_EXECUTABLE_DATA_DIR`` only serves sidecar plugins), so agy
+#: keeps these path rules; no other launch may write them.
+_AGY_WRITABLE_SUBDIRS = (
     ".gemini/antigravity-cli/conversations",
     ".gemini/antigravity-cli/brain",
     ".gemini/antigravity-cli/annotations",
@@ -221,47 +284,10 @@ _RUNTIME_WRITABLE_SUBDIRS = (
     ".gemini/antigravity-cli/cache",
     ".gemini/antigravity-cli/crashes",
     ".gemini/antigravity-cli/scratch",
-    ".gemini/tmp",
-    ".gemini/history",
     "Library/Logs/Antigravity",
-    # npm's logs. Its package cache and npx's installs stay denied: an
-    # unsandboxed agent runs the MCP servers it starts with npx from there.
-    ".npm/_logs",
-    # Credential refreshes go through the login keychain.
-    "Library/Keychains",
-    # Codex's own state is allowed path by path in _CODEX_WRITABLE_*.
-)
-
-#: Codex state a study session writes under ``~/.codex`` (traced 2026-11-20,
-#: codex 0.153.4): its transcripts, logs, per-thread locks, the login it
-#: refreshes, prompt history and the session index. The rest of ``~/.codex``
-#: stays denied, because other Codex sessions take it as input:
-#: ``models_cache.json`` carries every model's base instructions,
-#: ``memories*`` are fed into later sessions, ``queue_*.sqlite`` holds
-#: messages waiting for other threads, ``state_*.sqlite`` their dynamic
-#: tools, ``cache/`` tool descriptions, ``shell_snapshots/`` and ``tmp/``
-#: scripts and PATH entries other sessions source or run, ``.tmp/`` plugin
-#: staging, and ``computer-use/`` the program ``notify`` runs after every turn.
-_CODEX_WRITABLE_SUBDIRS = (
-    "sessions",
-    "archived_sessions",
-    "log",
-    "thread-writer-locks",
-)
-_CODEX_WRITABLE_FILES = (
-    "auth.json",
-    "auth.json.lock",
-    "auth.lock",
-    # Opened for writing at start-up even when it exists; without it Codex
-    # fails with "failed to initialize in-process app-server client".
-    "installation_id",
-    "history.jsonl",
-    "session_index.jsonl",
-    "session_index.jsonl.lock",
-    "version.json",
 )
 _SQLITE_SIDECARS = ("", "-wal", "-shm", "-journal")
-_RUNTIME_WRITABLE_FILES = (
+_AGY_WRITABLE_FILES = (
     *(f".gemini/antigravity-cli/conversation_summaries.db{s}" for s in _SQLITE_SIDECARS),
     ".gemini/antigravity-cli/jetbox_summaries_proto.pb",
     ".gemini/antigravity-cli/jetski_state.pbtxt",
@@ -274,9 +300,36 @@ _RUNTIME_WRITABLE_FILES = (
 # randomly named temp file inside the Antigravity IDE's own app-data folder,
 # which also holds the IDE's settings and extensions. agy logs the refusal and
 # runs normally (verified 2026-11-20).
-#: Instruction, configuration and executable surfaces inside an allowed
-#: runtime root. A runtime only reads these; a write would reach the next
-#: session that loads them, sandboxed or not.
+#: Gemini CLI state, written by agy launches too, and npm's logs from the MCP
+#: servers both start with npx. npm's package cache and npx's installs stay
+#: denied: an unsandboxed agent runs the MCP servers it starts from there.
+_GEMINI_WRITABLE_SUBDIRS = (".gemini/tmp", ".gemini/history", ".npm/_logs")
+
+#: What each runtime may still write in the real home folder, relative to
+#: ``$HOME``: subpaths, then literals. Claude Code and Codex keep only what
+#: they share with unsandboxed sessions to refresh one login; Claude Code's
+#: refresh locks are allowed separately, after ``~/.claude`` is denied. Codex
+#: saves a refreshed login in place (codex 0.153.4 ``FileAuthStorage::save``
+#: opens ``auth.json`` with truncate and writes it; ``refresh_token`` reads it
+#: again first), so writing through the study home's link keeps both sides on
+#: one rotating refresh token. A ``--cmd`` launch gets nothing.
+_RUNTIME_REAL_HOME_SUBPATHS: dict[str, tuple[str, ...]] = {
+    "claude": (_LOGIN_KEYCHAIN,),
+    "codex": (),
+    "agy": (*_AGY_WRITABLE_SUBDIRS, *_GEMINI_WRITABLE_SUBDIRS, _LOGIN_KEYCHAIN),
+    "gemini": (*_GEMINI_WRITABLE_SUBDIRS, _LOGIN_KEYCHAIN),
+}
+_CODEX_REAL_AUTH = ".codex/auth.json"
+_CODEX_AUTH_LINK = "auth.json"
+_RUNTIME_REAL_HOME_LITERALS: dict[str, tuple[str, ...]] = {
+    "claude": (),
+    "codex": (_CODEX_REAL_AUTH,),
+    "agy": _AGY_WRITABLE_FILES,
+    "gemini": (),
+}
+#: Instruction, configuration and executable surfaces in the real runtime
+#: folders. A runtime only reads these; a write would reach the next session
+#: that loads them, sandboxed or not.
 _RUNTIME_READ_ONLY = (
     ".codex/AGENTS.md",
     ".codex/AGENTS.override.md",
@@ -295,6 +348,9 @@ _CLAUDE_PROJECT_SLUG_UNSAFE = re.compile(r"[^A-Za-z0-9-]")
 
 
 def _claude_project_slug(path: Path) -> str:
+    """The folder name Claude Code gives a project under ``projects/`` and in
+    its temp root. A study home holds that folder for the Core checkout; the
+    tests use this to find a home's transcripts."""
     return _CLAUDE_PROJECT_SLUG_UNSAFE.sub("-", str(path))
 
 
@@ -325,15 +381,20 @@ def build_seatbelt_profile(
     deny_extra_literals: Sequence[Path] = (),
     home_dir: Path | None = None,
     write_roots: Sequence[Path] = (),
+    runtime: str | None = None,
+    runtime_home: Path | None = None,
 ) -> str:
     """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout.
 
     Seatbelt applies the last rule that matches, so the order is the policy:
     reads are open except the protected trees; every write is denied; the
-    scratch directory (``write_roots``), ``/dev``, ``/private/tmp`` and the
-    traced runtime state are allowed back; and the surfaces that must never be
-    written (``LearningOS/``, memory and instruction files inside allowed
-    runtime roots, the stage directory) are denied again last.
+    scratch directory (``write_roots``), the study home of ``runtime``
+    (``runtime_home``), ``/dev``, ``/private/tmp`` and what ``runtime`` must
+    still write in the real home folder are allowed back; and the surfaces
+    that must never be written (``LearningOS/``, the real runtime folders'
+    memory, instruction and config files, the home's ownership marker and
+    Codex's login link, the stage directory) are denied again last.
+    ``runtime=None`` is a ``--cmd`` launch: no runtime state at all.
     """
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
@@ -369,22 +430,18 @@ def build_seatbelt_profile(
     lines.append(f"(allow file-write* {' '.join(dict.fromkeys(system_parts))})")
     # /private/tmp stays open, but not the per-user folder where unsandboxed
     # Claude Code sessions keep their scratchpads and background-task output:
-    # a script or output planted there is run or read outside the sandbox.
-    # The scratch directory is allowed after it, wherever it was allocated.
+    # a script or output planted there is run or read outside the sandbox. A
+    # sandboxed Claude Code keeps its own temp root in the scratch directory
+    # (CLAUDE_CODE_TMPDIR), which is allowed after this, wherever it was
+    # allocated.
     lines.append(
         f'(deny file-write* (subpath "{_sbpl_quote(str(_CLAUDE_USER_TMP))}"))'
     )
-    # Except the Core checkout's own folder there, where a sandboxed Claude
-    # Code keeps its Bash tool's task output; without it every Bash call fails.
-    core_tmp = " ".join(dict.fromkeys(
-        f'(subpath "{_sbpl_quote(str(_CLAUDE_USER_TMP / _claude_project_slug(core)))}")'
-        for core in (Path(os.path.abspath(core_root)), real_core)
-    ))
-    lines.append(f"(allow file-write* {core_tmp})")
-    if write_roots:
+    roots = [*write_roots, *((runtime_home,) if runtime_home is not None else ())]
+    if roots:
         root_parts = [
             f'(subpath "{_sbpl_quote(str(Path(os.path.realpath(root))))}")'
-            for root in write_roots
+            for root in roots
         ]
         lines.append(f"(allow file-write* {' '.join(dict.fromkeys(root_parts))})")
 
@@ -395,22 +452,19 @@ def build_seatbelt_profile(
         and real_home != real_learningos
         and not is_within(real_home, real_learningos)
     )
-    if home_ok and real_home != real_wrapper:
-        codex_dir = real_home / ".codex"
+    if home_ok and real_home != real_wrapper and runtime is not None:
         runtime_parts = [
             f'(subpath "{_sbpl_quote(str(real_home / rel))}")'
-            for rel in _RUNTIME_WRITABLE_SUBDIRS
+            for rel in _RUNTIME_REAL_HOME_SUBPATHS.get(runtime, ())
         ] + [
-            f'(literal "{_sbpl_quote(str(real_home / rel))}")'
-            for rel in _RUNTIME_WRITABLE_FILES
-        ] + [
-            f'(subpath "{_sbpl_quote(str(codex_dir / rel))}")'
-            for rel in _CODEX_WRITABLE_SUBDIRS
-        ] + [
-            f'(literal "{_sbpl_quote(str(codex_dir / rel))}")'
-            for rel in _CODEX_WRITABLE_FILES
+            f'(literal "{_sbpl_quote(str(candidate))}")'
+            for rel in _RUNTIME_REAL_HOME_LITERALS.get(runtime, ())
+            for candidate in dict.fromkeys(
+                (real_home / rel, Path(os.path.realpath(real_home / rel)))
+            )
         ]
-        lines.append(f"(allow file-write* {' '.join(runtime_parts)})")
+        if runtime_parts:
+            lines.append(f"(allow file-write* {' '.join(dict.fromkeys(runtime_parts))})")
 
     # Denied again after the allows, whatever root it sits in: LearningOS/
     # itself, then memory, instruction, configuration and code surfaces.
@@ -418,39 +472,12 @@ def build_seatbelt_profile(
     if home_ok:
         claude_dir = real_home / ".claude"
         lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(claude_dir))}"))')
-        if real_home != real_wrapper:
-            claude_allow = " ".join(
-                f'(subpath "{_sbpl_quote(str(claude_dir / sub))}")'
-                for sub in _CLAUDE_WRITABLE_CACHE_SUBDIRS
-            )
-            lines.append(f"(allow file-write* {claude_allow})")
-            # Transcripts only in the folder Claude Code keeps for the Core
-            # checkout, the launch's working directory; its memory folder is
-            # denied again below.
-            core_transcripts = " ".join(dict.fromkeys(
-                f'(subpath "{_sbpl_quote(str(claude_dir / "projects" / _claude_project_slug(core)))}")'
-                for core in (Path(os.path.abspath(core_root)), real_core)
-            ))
-            lines.append(f"(allow file-write* {core_transcripts})")
+        if real_home != real_wrapper and runtime == "claude":
             lock_allow = " ".join(
                 f'(literal "{_sbpl_quote(str(real_home / rel))}")'
                 for rel in _CLAUDE_TOKEN_REFRESH_LOCKS
             )
             lines.append(f"(allow file-write* {lock_allow})")
-            claude_projects = claude_dir / "projects"
-            memory_targets: list[Path] = []
-            if claude_projects.is_dir():
-                for entry in sorted(claude_projects.iterdir(), key=lambda p: p.name):
-                    if entry.is_dir():
-                        memory_targets.append(entry / "memory")
-            for workspace_root in (real_wrapper, real_learningos, real_core):
-                memory_targets.append(
-                    claude_projects / _claude_project_slug(workspace_root) / "memory"
-                )
-            for memory_dir in memory_targets:
-                _add_write_deny_target(
-                    lines, deny_seen, memory_dir, real_learningos=real_learningos
-                )
         for read_only in _RUNTIME_READ_ONLY:
             _add_write_deny_target(
                 lines, deny_seen, real_home / read_only, real_learningos=real_learningos
@@ -496,6 +523,17 @@ def build_seatbelt_profile(
         _add_write_deny_target(
             lines, deny_seen, wrapper_instr, real_learningos=real_learningos
         )
+
+    if runtime_home is not None:
+        # The home's ownership marker, and Codex's login link itself (not its
+        # target, so the final component is not resolved): the link can be
+        # written through, but neither removed nor replaced from inside.
+        real_runtime_home = Path(os.path.realpath(runtime_home))
+        guarded = [real_runtime_home / RUNTIME_HOME_MARKER_NAME]
+        if runtime == "codex":
+            guarded.append(real_runtime_home / _CODEX_AUTH_LINK)
+        for literal in guarded:
+            lines.append(f'(deny file-write* (literal "{_sbpl_quote(str(literal))}"))')
 
     for extra in deny_extra_subpaths:
         real_extra = Path(os.path.realpath(extra))
@@ -825,6 +863,302 @@ def _resolve_session_id(
     return str(uuid.uuid4())
 
 
+def runtime_home_parent(home_dir: Path, real_learningos: Path, runtime: str) -> Path:
+    """The folder holding every study home of ``runtime`` for one checkout."""
+    checkout = hashlib.sha256(str(real_learningos).encode("utf-8")).hexdigest()[:12]
+    return home_dir / _RUNTIME_HOMES_REL / checkout / runtime
+
+
+def _vendor_session_globs(runtime: str, vendor_id: str) -> tuple[str, ...]:
+    """Where ``runtime`` keeps the transcript of vendor session ``vendor_id``."""
+    if runtime == "claude":
+        return (f"projects/*/{vendor_id}.jsonl",)
+    if runtime == "codex":
+        return (
+            f"sessions/*/*/*/rollout-*-{vendor_id}.jsonl",
+            f"archived_sessions/rollout-*-{vendor_id}.jsonl*",
+        )
+    return ()
+
+
+def _validate_runtime_home_marker(
+    marker: Path,
+    *,
+    real_learningos: Path,
+    runtime: str,
+) -> None:
+    try:
+        lstat = os.lstat(marker)
+    except FileNotFoundError as exc:
+        raise ValueError(
+            f"refusing study home without its ownership marker "
+            f"({RUNTIME_HOME_MARKER_NAME}): {marker.parent}"
+        ) from exc
+    if stat.S_ISLNK(lstat.st_mode) or not stat.S_ISREG(lstat.st_mode):
+        raise ValueError(f"study home marker must be a regular file: {marker}")
+    if lstat.st_uid != os.geteuid():
+        raise ValueError(f"study home marker must be owned by current user: {marker}")
+    if (lstat.st_mode & 0o077) != 0:
+        raise ValueError(
+            f"study home marker has unsafe permissions "
+            f"({oct(stat.S_IMODE(lstat.st_mode))}): {marker}"
+        )
+    try:
+        fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
+        with os.fdopen(fd, "r", encoding="utf-8") as handle:
+            raw: object = json.loads(handle.read())
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        raise ValueError(f"unreadable study home marker {marker}: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ValueError(f"invalid study home marker {marker}: expected JSON object")
+    if (
+        raw.get("schema") != _RUNTIME_HOME_MARKER_SCHEMA
+        or raw.get("owner") != _RUNTIME_HOME_MARKER_OWNER
+    ):
+        raise ValueError(f"not a LearningOS study home: {marker.parent}")
+    if raw.get("learningos") != str(real_learningos):
+        raise ValueError(
+            f"study home belongs to LearningOS root {raw.get('learningos')!r}, "
+            f"refusing it for {real_learningos}"
+        )
+    if raw.get("runtime") != runtime:
+        raise ValueError(
+            f"study home belongs to runtime {raw.get('runtime')!r}, refusing it for {runtime}"
+        )
+
+
+def _find_home_for_vendor_session(
+    parent: Path,
+    *,
+    runtime: str,
+    vendor_id: str,
+    real_learningos: Path,
+) -> Path | None:
+    """The one study home whose transcripts carry ``vendor_id``, if any.
+
+    A home whose marker does not belong to this checkout and runtime is
+    ignored. Two homes claiming the same vendor session are refused rather
+    than guessed between, because an agent can plant a transcript under any
+    name in its own home.
+    """
+    if not _VENDOR_ID_SAFE.fullmatch(vendor_id) or not parent.is_dir():
+        return None
+    patterns = _vendor_session_globs(runtime, vendor_id)
+    matches: list[Path] = []
+    for entry in sorted(parent.iterdir(), key=lambda p: p.name):
+        if entry.is_symlink() or not entry.is_dir():
+            continue
+        try:
+            _validate_runtime_home_marker(
+                entry / RUNTIME_HOME_MARKER_NAME,
+                real_learningos=real_learningos,
+                runtime=runtime,
+            )
+        except ValueError:
+            continue
+        if any(next(entry.glob(pattern), None) is not None for pattern in patterns):
+            matches.append(entry)
+    if len(matches) > 1:
+        listed = ", ".join(str(match) for match in matches)
+        raise ValueError(
+            f"--resume-runtime-id {vendor_id!r} names a session found in several study "
+            f"homes ({listed}); pass --session with the study session UUID to pick one"
+        )
+    return matches[0] if matches else None
+
+
+def resolve_runtime_home(
+    *,
+    runtime: str,
+    session_id: str,
+    resume_runtime_id: str | None,
+    home_dir: Path,
+    real_learningos: Path,
+) -> Path:
+    """Where this launch's study home lives (``prepare_runtime_home`` makes it).
+
+    The home is keyed by the study session UUID, so ``--session S`` and a
+    repeated ``--resume-runtime-id H`` return to the same home. When no home
+    exists yet under the UUID derived from ``H``, the earlier home whose
+    transcripts carry vendor session ``H`` is reused, so a conversation that a
+    plain launch started can still be resumed.
+    """
+    parent = runtime_home_parent(home_dir, real_learningos, runtime)
+    direct = parent / session_id
+    if resume_runtime_id is None or os.path.lexists(direct):
+        return direct
+    found = _find_home_for_vendor_session(
+        parent,
+        runtime=runtime,
+        vendor_id=resume_runtime_id.strip(),
+        real_learningos=real_learningos,
+    )
+    return found if found is not None else direct
+
+
+def _mkdir_private_parents(path: Path) -> None:
+    """Create ``path`` and its missing ancestors with mode 0700."""
+    missing: list[Path] = []
+    current = path
+    while not os.path.lexists(current) and current.parent != current:
+        missing.append(current)
+        current = current.parent
+    for directory in reversed(missing):
+        try:
+            os.mkdir(directory, 0o700)
+        except FileExistsError:
+            pass
+
+
+def _write_private_file(path: Path, text: str) -> None:
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(text)
+
+
+def _read_json_object(path: Path) -> dict[str, object]:
+    try:
+        raw: object = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, ValueError):
+        return {}
+    return {str(key): value for key, value in raw.items()} if isinstance(raw, dict) else {}
+
+
+def _seed_claude_home(home: Path, *, real_home: Path, core_paths: Sequence[Path]) -> None:
+    """A minimal Claude Code config: no onboarding, theme or trust dialog."""
+    real_global = _read_json_object(real_home / ".claude.json")
+    real_settings = _read_json_object(real_home / ".claude" / "settings.json")
+    global_config: dict[str, object] = {
+        key: real_global[key] for key in _CLAUDE_GLOBAL_COPY if key in real_global
+    }
+    global_config["hasCompletedOnboarding"] = True
+    global_config["projects"] = {
+        str(core): {"hasTrustDialogAccepted": True} for core in core_paths
+    }
+    settings = {key: real_settings[key] for key in _CLAUDE_SETTINGS_COPY if key in real_settings}
+    _write_private_file(home / ".claude.json", json.dumps(global_config, indent=2) + "\n")
+    _write_private_file(home / "settings.json", json.dumps(settings, indent=2) + "\n")
+
+
+def _seed_codex_home(home: Path, *, real_home: Path, core_paths: Sequence[Path]) -> None:
+    """A minimal Codex config: the file login store and a trusted Core.
+
+    Codex loads Core's ``.codex/config.toml`` (its model) only for a trusted
+    project, and trust is recorded in ``$CODEX_HOME/config.toml``.
+    """
+    real_codex = real_home / ".codex"
+    try:
+        with (real_codex / "config.toml").open("rb") as handle:
+            real_config: dict[str, object] = tomllib.load(handle)
+    except (OSError, tomllib.TOMLDecodeError):
+        real_config = {}
+    lines = [
+        "# Written by tools/study_launch.py for one study session (ADR-022 §3).",
+        "# The login stays in ~/.codex/auth.json; auth.json here links to it.",
+        'cli_auth_credentials_store = "file"',
+    ]
+    for key in _CODEX_CONFIG_COPY:
+        value = real_config.get(key)
+        if isinstance(value, str):
+            lines.append(f"{key} = {json.dumps(value)}")
+    for core in core_paths:
+        lines += ["", f"[projects.{json.dumps(str(core))}]", 'trust_level = "trusted"']
+    _write_private_file(home / "config.toml", "\n".join(lines) + "\n")
+    try:
+        installation_id = (real_codex / "installation_id").read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return
+    if installation_id.strip():
+        _write_private_file(home / "installation_id", installation_id)
+
+
+def _ensure_codex_auth_link(home: Path, *, real_home: Path) -> None:
+    """Keep the home's ``auth.json`` a link to the one login Codex refreshes.
+
+    Codex rotates its refresh token. A private copy refreshed inside the
+    sandbox would leave the real ``~/.codex/auth.json`` holding a dead token
+    and log every other Codex session out.
+    """
+    link = home / _CODEX_AUTH_LINK
+    target = str(real_home / _CODEX_REAL_AUTH)
+    try:
+        link_stat = os.lstat(link)
+    except FileNotFoundError:
+        os.symlink(target, link)
+        return
+    if not stat.S_ISLNK(link_stat.st_mode) or os.readlink(link) != target:
+        raise ValueError(
+            f"refusing Codex study home {home}: {link} must link to {target}, the login "
+            "unsandboxed Codex sessions refresh too; remove this home, and log in outside "
+            "the sandbox"
+        )
+
+
+def prepare_runtime_home(
+    home: Path,
+    *,
+    runtime: str,
+    real_learningos: Path,
+    session_id: str,
+    real_home: Path,
+    core_paths: Sequence[Path],
+) -> Path:
+    """Create and seed, or validate, the study home of one launch.
+
+    A new home gets ``0700`` folders, a write-protected ownership marker and a
+    minimal config for ``runtime``. An existing one must be a real directory
+    owned by the user, ``0700``, with a marker for this checkout and runtime;
+    the launcher writes nothing else into it, so the runtime's own state (its
+    transcripts above all) carries over to the resumed launch.
+    """
+    expanded = Path(os.path.abspath(home))
+    if is_within(Path(os.path.realpath(expanded.parent)), real_learningos):
+        raise ValueError(f"study home must live outside LearningOS/: {expanded}")
+    try:
+        home_stat = os.lstat(expanded)
+    except FileNotFoundError:
+        _mkdir_private_parents(expanded.parent)
+        try:
+            os.mkdir(expanded, 0o700)
+        except FileExistsError as exc:
+            raise ValueError(f"study home appeared unexpectedly: {expanded}") from exc
+        try:
+            os.chmod(expanded, 0o700)
+            marker = {
+                "schema": _RUNTIME_HOME_MARKER_SCHEMA,
+                "owner": _RUNTIME_HOME_MARKER_OWNER,
+                "learningos": str(real_learningos),
+                "runtime": runtime,
+                "created_by_session": session_id,
+            }
+            _write_private_file(
+                expanded / RUNTIME_HOME_MARKER_NAME, json.dumps(marker, indent=2) + "\n"
+            )
+            if runtime == "claude":
+                _seed_claude_home(expanded, real_home=real_home, core_paths=core_paths)
+            elif runtime == "codex":
+                _seed_codex_home(expanded, real_home=real_home, core_paths=core_paths)
+        except Exception:
+            shutil.rmtree(expanded, ignore_errors=True)
+            raise
+    else:
+        if stat.S_ISLNK(home_stat.st_mode) or not stat.S_ISDIR(home_stat.st_mode):
+            raise ValueError(f"study home must be a real directory: {expanded}")
+        if home_stat.st_uid != os.geteuid():
+            raise ValueError(f"study home must be owned by current user: {expanded}")
+        if (home_stat.st_mode & 0o077) != 0:
+            raise ValueError(
+                f"study home has unsafe permissions "
+                f"({oct(stat.S_IMODE(home_stat.st_mode))}): {expanded}"
+            )
+        _validate_runtime_home_marker(
+            expanded / RUNTIME_HOME_MARKER_NAME, real_learningos=real_learningos, runtime=runtime
+        )
+    if runtime == "codex":
+        _ensure_codex_auth_link(expanded, real_home=real_home)
+    return Path(os.path.realpath(expanded))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -889,8 +1223,15 @@ def launch_study(
     cwd: Path | None = None,
     persist_scratch: bool = False,
     scratch_dir_override: Path | None = None,
+    runtime: str | None = None,
+    resume_runtime_id: str | None = None,
 ) -> int:
-    """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state."""
+    """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state.
+
+    ``runtime`` names the agent CLI ``command`` starts (``None`` for
+    ``--cmd``). It selects the runtime state the profile allows, and for
+    Claude Code and Codex the study home the child is pointed at.
+    """
     effective_sandbox = SANDBOX_EXEC if sandbox_exec is None else sandbox_exec
     if platform != "darwin" or not effective_sandbox.is_file():
         print(
@@ -968,6 +1309,29 @@ def launch_study(
                 print(f"study_launch: {exc}", file=sys.stderr)
                 return 2
 
+        home_dir = Path(os.environ["HOME"]) if os.environ.get("HOME") else Path.home()
+        runtime_home: Path | None = None
+        if runtime in HOMED_RUNTIMES:
+            real_home = Path(os.path.realpath(home_dir))
+            try:
+                runtime_home = prepare_runtime_home(
+                    resolve_runtime_home(
+                        runtime=runtime,
+                        session_id=session_id,
+                        resume_runtime_id=resume_runtime_id,
+                        home_dir=real_home,
+                        real_learningos=real_learningos,
+                    ),
+                    runtime=runtime,
+                    real_learningos=real_learningos,
+                    session_id=session_id,
+                    real_home=real_home,
+                    core_paths=tuple(dict.fromkeys((Path(os.path.abspath(core_root)), real_core))),
+                )
+            except (ValueError, OSError) as exc:
+                print(f"study_launch: {exc}", file=sys.stderr)
+                return 2
+
         try:
             store.touch(session_id, start=True)
             session_started = True
@@ -982,14 +1346,15 @@ def launch_study(
         sock_path = sock_dir / "gate.sock"
         sb_path = sock_dir / "study.sb"
         deny_literals = (scratch_dir / SCRATCH_MARKER_NAME,) if keep_scratch else ()
-        home_override = Path(os.environ["HOME"]) if os.environ.get("HOME") else None
         sb_path.write_text(
             build_seatbelt_profile(
                 real_core,
                 deny_extra_subpaths=(stage_dir,),
                 deny_extra_literals=deny_literals,
-                home_dir=home_override,
+                home_dir=home_dir,
                 write_roots=(scratch_dir,),
+                runtime=runtime,
+                runtime_home=runtime_home,
             ),
             encoding="utf-8",
         )
@@ -1010,6 +1375,11 @@ def launch_study(
             session_id=session_id,
             scratch_dir=scratch_dir,
             child_cwd=child_cwd,
+            runtime_env=(
+                runtime_home_env(runtime, runtime_home, scratch_dir)
+                if runtime is not None and runtime_home is not None
+                else None
+            ),
         )
 
         signal.signal(signal.SIGTERM, _on_sigterm)
@@ -1084,6 +1454,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         cwd=real_core,
         persist_scratch=bool(args.persist_scratch),
         scratch_dir_override=scratch_override,
+        runtime=args.runtime,
+        resume_runtime_id=args.resume_runtime_id,
     )
 
 
