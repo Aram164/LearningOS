@@ -70,10 +70,12 @@ def approved_v2_envelope(
     # The test-side operator asserts its review exactly as the sealer
     # carries a check record's: a digest over the checked payload,
     # snapshot and revisions (plus current material, where bound).
-    from learning_os.adapters.study_policies import REVIEWED_SEALING_CAPABILITIES
+    # Production's per-payload rule decides, so a write that replaces only
+    # in one mode (`stage.note.write` with `replace`) is reviewed too.
+    from learning_os.adapters.study_policies import requires_reviewed_seal
     from learning_os.app.gateway import issue_review_evidence
 
-    if capability in REVIEWED_SEALING_CAPABILITIES:
+    if requires_reviewed_seal(capability, payload):
         observed = None
         if capability in ("module.plan.import", "unit.plan.revise"):
             from learning_os.app.handlers.plan import (
