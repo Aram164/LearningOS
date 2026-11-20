@@ -217,7 +217,7 @@ repository/
 ├── generated/              gitignored, rebuildable; shape declared by manifest-contract.yaml
 │   ├── reports/            validation and health reports
 │   ├── collections/        collection-level derived views written by projection
-│   ├── text-cache/         page-text caches owned by tools/material_text.py
+│   ├── .text-cache/        page-text caches owned by tools/material_text.py; a dot-folder, so Obsidian neither loads nor watches its page files
 │   ├── dossiers/           semantic dossiers owned by los dossier
 │   ├── derived-state/      derived state caches owned by learning_os.store.derived
 │   ├── material-search/    SQLite FTS5 index owned by tools/material_search.py

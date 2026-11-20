@@ -149,7 +149,7 @@ tree (`make inventory` rebuilds it after adding or moving sources),
 name, and `tools/material_toc.py --toc` prints a local material's contents
 with PDF pages while `--verify --page N --expect "…"` checks a locator
 against the file. For repeated reading, refresh the digest-keyed page-text
-cache (`tools/material_text.py --refresh`, under `generated/text-cache/`),
+cache (`tools/material_text.py --refresh`, under `generated/.text-cache/`),
 rebuild the derived full-text search index (`tools/build_material_search_index.py`,
 under `generated/material-search/`) when keyword discovery via `material.search`
 is useful, and read cached pages instead of re-extracting. Sibling code repositories are not automatic material

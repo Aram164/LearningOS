@@ -176,9 +176,9 @@ directories:
       - path: generated/collections
         rebuildable: true
         purpose: collection-level derived views written by projection
-      - path: generated/text-cache
+      - path: generated/.text-cache
         rebuildable: false
-        purpose: page-text caches owned by tools/material_text.py
+        purpose: page-text caches owned by tools/material_text.py; a dot-folder, so Obsidian neither loads nor watches its page files
       - path: generated/dossiers
         rebuildable: false
         purpose: semantic dossiers owned by los dossier

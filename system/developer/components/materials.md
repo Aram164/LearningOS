@@ -29,6 +29,7 @@ Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `contracts`,
 ## Invariants
 
 - A locator must bind its own source bytes; never widen an invalid requested window. Pinning: `tests/test_material_span.py`.
+- The page-text cache that `tools/material_text.py` writes lives in `generated/.text-cache/`, a dot-folder so Obsidian neither loads nor watches its page files (ADR-020, 2026-11-20). The writer, every reader, the search index, the study fence and the validation cache take the name from `TEXT_CACHE_TOP_DIR` (`learning_os.domain.validation`). Pinning: `tests/test_arch_caches.py`.
 - The full-text material search index is a self-describing, disposable read-only artifact under `generated/material-search/` that validates live material bytes and reports text-cache freshness and corpus coverage on every query. Pinning: `tests/test_material_search.py`.
 - Search hits are section groups. A page belongs to the PDF outline section that owns it, read from the digest-keyed `generated/material-outlines/` cache that `tools/material_outline.py` harvests; a document's pages without a section form one explicit unsectioned group with its reason. `limit` and `offset` count groups over one fixed candidate scan. A query equal to a registered concept label or alias also searches the concept's other names. Pinning: `tests/test_material_search.py`.
 

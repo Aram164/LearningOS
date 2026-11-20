@@ -47,7 +47,7 @@ def triage_sample() -> dict:
             continue
         full_bytes = 0
         for page in range(span[0], span[1] + 1):
-            page_path = (ROOT / "generated" / "text-cache" / digest
+            page_path = (ROOT / "generated" / ".text-cache" / digest
                          / f"pp-{page:04d}.txt")
             try:
                 full_bytes += len(page_path.read_bytes())
@@ -59,7 +59,7 @@ def triage_sample() -> dict:
         rows.append({"material": record.get("material"), "digest": digest,
                      "page_range": span, "summary_bytes": summary_bytes,
                      "full_bytes": full_bytes})
-    cached_materials = len(list((ROOT / "generated").glob("text-cache/*/index.json")))
+    cached_materials = len(list((ROOT / "generated").glob(".text-cache/*/index.json")))
     totals = {"chapters": len(rows),
               "summary_bytes": sum(row["summary_bytes"] for row in rows),
               "full_bytes": sum(row["full_bytes"] for row in rows),

@@ -102,7 +102,7 @@ def _summary_world(root):
     (summary_dir / "meta.json").write_text(json.dumps({
         "_generated": {"generator": "tools/material_summarize.py"},
         "sha256": SUMMARY_SHA, "pages": [1, 2]}), encoding="utf-8")
-    sibling = root / "generated" / "text-cache" / SUMMARY_SHA
+    sibling = root / "generated" / ".text-cache" / SUMMARY_SHA
     sibling.mkdir(parents=True)
     (sibling / "index.json").write_text('{"_generated": {}}', encoding="utf-8")
     (root / "generated" / "manifest.json").write_text('{"_generated": {}}', encoding="utf-8")

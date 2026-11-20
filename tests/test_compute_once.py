@@ -310,7 +310,7 @@ def _receipt_node_count(root: Path) -> int:
 
 
 def _text_cache_index(root: Path, entry: str = "ab" * 32) -> Path:
-    path = root / "generated" / "text-cache" / entry / "index.json"
+    path = root / "generated" / ".text-cache" / entry / "index.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({
         "_generated": {"warning": "GENERATED"},
@@ -331,7 +331,7 @@ def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
     _text_cache_index(mini_repo)
     validation_service.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
-    (mini_repo / "generated" / "text-cache" / ("ab" * 32) / "index.json").write_text(
+    (mini_repo / "generated" / ".text-cache" / ("ab" * 32) / "index.json").write_text(
         "{ not json\n", encoding="utf-8")
     assert vc.read_cached_static_issues(mini_repo) is None
     issues = validation_service.status_issues(load_repo(mini_repo))

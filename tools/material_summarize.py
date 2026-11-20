@@ -51,8 +51,10 @@ if str(TOOLS) not in sys.path:
 from material_text import cache_index  # noqa: E402
 from materials_manifest import materials_root, sha256  # noqa: E402
 
+from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
+
 REPO = Path(__file__).resolve().parents[1]
-TEXT_CACHE = REPO / "generated" / "text-cache"
+TEXT_CACHE = REPO / "generated" / TEXT_CACHE_TOP_DIR
 SUMMARY_CACHE = REPO / "knowledge" / "summaries"
 
 MIN_DRAFT_CHARS = 200

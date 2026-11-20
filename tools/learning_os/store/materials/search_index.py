@@ -34,7 +34,11 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import unit_routes
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.suggest import with_suggestions
-from learning_os.domain.validation import OUTLINE_TOP_DIR, SEARCH_TOP_DIR
+from learning_os.domain.validation import (
+    OUTLINE_TOP_DIR,
+    SEARCH_TOP_DIR,
+    TEXT_CACHE_TOP_DIR,
+)
 from learning_os.store.loading import load_repo
 from learning_os.store.materials.resolution import (
     resolve_route_material_files,
@@ -67,6 +71,7 @@ __all__ = [
     "STOPWORDS",
     "SearchHit",
     "SearchResult",
+    "TEXT_CACHE_TOP_DIR",
     "UNSECTIONED_REASONS",
     "build_tiered_queries",
     "check_index_integrity",
@@ -76,6 +81,7 @@ __all__ = [
     "expand_query_names",
     "get_outline_base_dir",
     "get_search_base_dir",
+    "get_text_cache_dir",
     "load_outline",
     "material_bindings",
     "material_bindings_with_paths",
@@ -690,6 +696,11 @@ def get_search_base_dir(repo_root: Path) -> Path:
     return repo_root / "generated" / SEARCH_TOP_DIR
 
 
+def get_text_cache_dir(repo_root: Path) -> Path:
+    """The page-text cache this index is built from (``tools/material_text.py``)."""
+    return repo_root / "generated" / TEXT_CACHE_TOP_DIR
+
+
 def compute_text_cache_fingerprint(
     valid_records: Sequence[tuple[str, int, str, Sequence[str]]],
     excluded_records: Sequence[tuple[str, str]] = (),
@@ -1133,7 +1144,7 @@ def _compute_text_cache_freshness(
     repo_root: Path, recorded_cache: Mapping[str, tuple[int, int]]
 ) -> dict[str, object]:
     """Compare recorded cache index.json stats with current text-cache directory (D6, D7, Step 4.5)."""
-    cache_dir = repo_root / "generated" / "text-cache"
+    cache_dir = get_text_cache_dir(repo_root)
     live_stats: dict[str, tuple[int, int]] = {}
     if cache_dir.is_dir():
         try:

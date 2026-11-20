@@ -10,12 +10,12 @@ ban on any database or server as a canonical store of record.
 One derived, rebuildable, read-only SQLite FTS5 index under
 `generated/material-search/index-<F[:16]>.sqlite3` is permitted to serve the
 `material.search` query capability over the local PDF page-text cache
-(`generated/text-cache/`). There is no canonical database, no server, and no
+(`generated/.text-cache/` since 2026-11-20; see the amendment below). There is no canonical database, no server, and no
 daemon, so `system/SEMANTIC-CONTRACT.md` and the plain-file source-of-truth
 contract hold unchanged:
 
 1. **Disposable derived artifact, never a store of record.** The index is built
-   purely from validated `generated/text-cache/<sha256>/` page files and the
+   purely from validated `generated/.text-cache/<sha256>/` page files and the
    checked-in `records/materials-manifest.yaml` inventory. Deleting
    `generated/material-search/` loses no canonical or learner data; queries
    degrade cleanly to `status: "unavailable", reason: "index_missing"` with the
@@ -38,7 +38,7 @@ contract hold unchanged:
    deserialization.
 4. **Precedent in projection publication.** Sibling tool-maintained caches
    under `generated/` are declared once in `system/contracts/tree-contract.yaml`
-   (`rebuildable: false` children: `text-cache`, `dossiers`, `derived-state`,
+   (`rebuildable: false` children: `.text-cache`, `dossiers`, `derived-state`,
    `material-search`, `material-outlines`), loaded into projection publisher
    `_KEEP_TOP_DIRS` via
    `learning_os.store.contracts.tree_contract.generated_keep_directories()`
@@ -181,3 +181,46 @@ BM25, and the response reports them in `expansion`. Only an exact name
 expands: a concept word inside a longer question does not. The OR tier stays
 the query's own words.
 
+
+## 2026-11-20: the page-text cache moves to a dot-folder
+
+The page-text cache this index is built from moves from `generated/text-cache/`
+to `generated/.text-cache/`. Paths in the dated evaluation sections above name
+the old location.
+
+**Why.** Obsidian opens `repository/` as a vault, and it loads and watches
+every file there. Its "Excluded files" setting does not stop that, but it
+skips dot-folders, below the vault root too. The cache held 75,134 of the
+vault's 82,857 visible files. Measured in an isolated Obsidian 1.15.1
+against a copy of the vault, with the cache under `generated/.text-cache/`:
+Obsidian saw 7,723 files, layout ready went from 1.9 s to 0.6 s, and
+Obsidian's own startup CPU from 2.2 s to 0.6 s. A symlink would not help:
+Obsidian does not follow a symlinked folder, and the projection publisher
+refuses any symlink under `generated/`.
+
+**What does not change.** The cache stays under `generated/`, so it is still
+gitignored (`generated/*`), kept across projection rebuilds, read-denied in
+study mode, and checked by GEN-*: the validator's `rglob` enters dot
+directories. Its contract name is `generated/.text-cache` in
+`system/contracts/tree-contract.yaml`. The response field
+`matches_text_cache` and the reason `not-in-text-cache` keep their names.
+
+**One location constant.** Code reads the location from `TEXT_CACHE_TOP_DIR`
+in `learning_os.domain.validation`. Before, seven sites spelled the path
+separately: the writer, the index builder and its freshness check, summaries,
+outlines, the study fence and the validation cache.
+
+**Cost: one full re-extraction, as after any Core code change.** A
+`cache.text:<sha256>` node's key carries its producer files
+(`tools/material_text.py` and the derived substrate). It also carries the
+digest of the whole `tools/learning_os` tree (`digest_code_identity`). So any
+Core code change misses every text node, and the next default `--refresh`
+re-extracts every PDF: valid page files are never adopted without a node.
+This move is one such change. It pays that cost once, and no second
+extraction is added.
+
+**One-time costs on the live vault.**
+- One full re-extraction.
+- One rebuild of this index. Its fingerprint covers record contents, not the
+  path, but freshness compares each `index.json`'s size and mtime.
+- One reconciliation in Obsidian of the files that left the vault.
