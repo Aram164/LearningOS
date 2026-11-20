@@ -1199,6 +1199,60 @@ def test_one_call_submit_refuses_replacement_capabilities_without_guards_from(
     assert _receipts(mini_repo) == []
 
 
+def test_stage_note_replace_needs_a_reviewed_record_but_append_stays_one_call(
+        mini_repo: Path, tmp_path: Path):
+    """D-13 residual (S1 closure check, 2026-11-20).
+
+    ``stage.note.write --replace`` overwrites the note an agent read earlier.
+    With guards derived at seal time, an edit made in between was lost unseen,
+    so replace now follows the reviewed-record rule, in the sealer and in the
+    gateway. Appending adds text and stays a one-call write.
+    """
+    from repo_builders import add_curriculum
+
+    from learning_os.app.admission import requires_reviewed_seal
+
+    add_curriculum(mini_repo)
+    base = {"unit_id": "unit-demo-l01", "stage_id": "stage-demo"}
+    assert requires_reviewed_seal("stage.note.write", {**base, "text": "x", "replace": True})
+    assert not requires_reviewed_seal("stage.note.write", {**base, "text": "x"})
+    assert not requires_reviewed_seal("stage.note.write", {**base, "text": "x", "replace": False})
+
+    appended = _one_call(mini_repo, capability="stage.note.write",
+                         payload={**base, "text": "appended in one call"},
+                         key="note-append-001")
+    assert appended.returncode == 0, appended.stdout + appended.stderr
+    assert len(_receipts(mini_repo)) == 1
+
+    replace = {**base, "text": "replacement text", "replace": True}
+    refused = _one_call(mini_repo, capability="stage.note.write", payload=replace,
+                        key="note-replace-001")
+    assert refused.returncode == 2
+    assert "refuses one-call --submit without --guards-from" in refused.stderr
+    assert len(_receipts(mini_repo)) == 1
+
+    # A hand-built envelope with derived guards is refused by the gateway itself.
+    sealed = tmp_path / "replace-sealed.json"
+    built = _seal(mini_repo, sealed, capability="stage.note.write", payload=replace,
+                  key="note-replace-002")
+    assert built.returncode == 0, built.stderr
+    bypass = _submit(mini_repo, sealed)
+    assert bypass.returncode != 0
+    assert "requires a reviewed check record" in bypass.stdout + bypass.stderr
+    assert len(_receipts(mini_repo)) == 1
+
+    record = tmp_path / "replace-review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json", capability="stage.note.write",
+                     payload=replace, key="note-replace-003",
+                     extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    applied = _one_call(mini_repo, capability="stage.note.write", payload=replace,
+                        key="note-replace-003", extra=["--guards-from", str(record)])
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    assert json.loads(applied.stdout)["ok"] is True
+    assert len(_receipts(mini_repo)) == 2
+
+
 def test_guards_from_submit_verifies_observed_material_and_plan_handler_strict_report(
         mini_repo: Path, tmp_path: Path):
     import hashlib

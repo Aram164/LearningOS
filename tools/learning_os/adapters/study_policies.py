@@ -97,10 +97,12 @@ STUDY_WRITE_CAPABILITIES: frozenset[str] = frozenset({
 # gateway enforces; re-exported here for the study boundary.
 from learning_os.app.admission import (  # noqa: E402
     REVIEWED_SEALING_CAPABILITIES,
+    requires_reviewed_seal,
 )
 
 __all__ = [
     "REVIEWED_SEALING_CAPABILITIES",
+    "requires_reviewed_seal",
     "SESSION_COMMANDS",
     "STUDY_ALLOWED_COMMANDS",
     "STUDY_COMMANDS",

@@ -37,7 +37,10 @@ from learning_os.adapters.study_broker import (
     send_broker_request,
     write_local_output_file,
 )
-from learning_os.adapters.study_policies import REVIEWED_SEALING_CAPABILITIES
+from learning_os.adapters.study_policies import (
+    REVIEWED_SEALING_CAPABILITIES,
+    requires_reviewed_seal,
+)
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
 from learning_os.app.registry import REGISTRY
 from learning_os.domain.failures import WriteRefused
@@ -60,7 +63,9 @@ REQUEST_ID_MAX = 128
 
 # Replacement, import, and revision capabilities must pass a reviewed preflight
 # record (`--check-out REC` or `--check --report-out REC`) via `--guards-from`
-# rather than one-call `--submit` (D-13). Declared in study_policies.
+# rather than one-call `--submit` (D-13). Declared in study_policies; a
+# capability that replaces only in one mode (`stage.note.write --replace`)
+# is decided per payload by `requires_reviewed_seal`.
 REVIEW_REQUIRED_CAPABILITIES = REVIEWED_SEALING_CAPABILITIES
 
 
@@ -372,7 +377,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
 
             sealing = {name: value for name, value in payload.items() if name != "check"}
             record_out = {**record, "payload": sealing, "idempotency_key": key}
-            if record["ok"] is True and capability in REVIEW_REQUIRED_CAPABILITIES:
+            if record["ok"] is True and requires_reviewed_seal(capability, sealing):
                 observed = None
                 if capability in ("module.plan.import", "unit.plan.revise"):
                     from learning_os.app.handlers.plan import observed_material_for_payload
@@ -562,7 +567,7 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
             guards = _record_guards(
                 args.guards_from, args.capability, payload, root=root)
         else:
-            if args.capability in REVIEW_REQUIRED_CAPABILITIES:
+            if requires_reviewed_seal(args.capability, payload):
                 raise ValueError(
                     f"{args.capability!r} requires --guards-from REC with --submit"
                 )
@@ -858,6 +863,20 @@ def main(argv: list[str] | None = None) -> int:
                                      force=derived_payload)
     except ValueError as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
+        return 2
+
+    if (args.submit and not args.guards_from
+            and args.capability not in REVIEW_REQUIRED_CAPABILITIES
+            and requires_reviewed_seal(args.capability, payload)):
+        # The same rule as above, for a write that replaces only in one mode:
+        # `stage.note.write --replace` overwrites the note it read earlier.
+        print(
+            f"seal_envelope: {args.capability!r} with this payload replaces an "
+            "existing record and refuses one-call --submit without --guards-from; "
+            "run --guards auto --check-out REC, inspect REC, then submit with "
+            "--guards-from REC --submit",
+            file=sys.stderr,
+        )
         return 2
 
     if explicit_payload is not None:

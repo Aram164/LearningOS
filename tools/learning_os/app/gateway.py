@@ -300,16 +300,16 @@ def review_evidence_error(root: Path, envelope: dict) -> str | None:
     A direct user gesture admitted for the capability is its own
     authorization and needs no record.
     """
-    from learning_os.app.admission import REVIEWED_SEALING_CAPABILITIES, gesture_allowed
+    from learning_os.app.admission import gesture_allowed, requires_reviewed_seal
 
     capability = envelope.get("capability")
-    if capability not in REVIEWED_SEALING_CAPABILITIES:
+    payload = envelope.get("payload") or {}
+    if not requires_reviewed_seal(capability, payload):
         return None
     approval = envelope.get("approval") or {}
     if approval.get("kind") == "direct-user-gesture" \
             and gesture_allowed(capability, envelope.get("channel")):
         return None
-    payload = envelope.get("payload") or {}
     if payload.get("check") is True:
         return None  # a preflight commits nothing; it *is* the review step
     observed = None

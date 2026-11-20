@@ -375,7 +375,16 @@ receipt.
   gitignored AI-action handoff files under
   `operations/ai-actions/{requests,deliveries,incoming}/` are skipped on clean
   checkouts, while any present file whose digest differs or is a symlink still
-  fails).
+  fails). Learner prose is the one exception, below.
+- **W** `TRANSACTION-DRIFT-PROSE`: the same drift on receipted Markdown under
+  `knowledge/`, `curriculum/` or `work/` (notes, unit notes, exercise sheets,
+  workspace context) that still exists on disk. These are the learner's own
+  files, read and written in Obsidian, so a hand edit is reported rather than
+  refused: as an error it stopped every gateway write until the edit was
+  reverted. Writes stay safe because every sealed or UI write carries the
+  canonical snapshot, which the edit has already moved, so nothing is written
+  over it unseen. A deleted note, and drift anywhere else, stays
+  `TRANSACTION-DRIFT`. Amended 2026-11-20 (S1 closure check of D-03).
 - **E** `TRANSACTION-CHAIN-BASELINE`: `operations/receipt-chain-baseline.yaml`
   (schema `receipt-chain-baseline`) parses, matches its schema, and pins only
   genuine historical breaks/drifts by exact transaction id, path, and SHA-256

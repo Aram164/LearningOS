@@ -506,6 +506,85 @@ def test_validate_reports_unbaselined_on_disk_drift_and_clears_when_baselined(
     assert cleared == []
 
 
+def test_learner_prose_drift_warns_and_never_freezes_the_gateway(mini_repo: Path):
+    """D-03 amended 2026-11-20: a hand edit to the learner's own Markdown warns.
+
+    One appended sentence in a receipted note used to make validation fail, and
+    the gateway refuses every write while validation fails, so a single
+    keystroke in Obsidian stopped the whole system. Prose drift is now
+    `TRANSACTION-DRIFT-PROSE` (W). A deleted note, and drift in anything the
+    system interprets (YAML, code, operations/), stays `TRANSACTION-DRIFT` (E).
+    """
+    import hashlib
+
+    import yaml as _yaml
+    from repo_builders import add_curriculum
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+    from learning_os.store.receipt_chain import is_learner_prose_path
+
+    add_curriculum(mini_repo)
+    note_rel = "knowledge/notes/mathematics/note-demo.md"
+    stage_rel = "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    program_rel = "curriculum/programs/program-bachelors.yaml"
+    for rel in (note_rel, stage_rel, "work/COORDINATION.md"):
+        assert is_learner_prose_path(rel), rel
+    for rel in (program_rel, "operations/migrations/x/before/work/a.md", "archive/inbox/a.md",
+                "curriculum/modules/m/units/u/stages/s/attachments/check.py"):
+        assert not is_learner_prose_path(rel), rel
+
+    tx_dir = mini_repo / "operations/transactions"
+    tx_dir.mkdir(parents=True, exist_ok=True)
+    writes = []
+    for rel in (note_rel, stage_rel, program_rel):
+        digest = hashlib.sha256((mini_repo / rel).read_bytes()).hexdigest()
+        writes.append({"path": rel, "sha256_before": "0" * 64, "sha256_after": digest, "created": False})
+    tx_id = "transaction-20261120-000001-001"
+    (tx_dir / f"{tx_id}.yaml").write_text(_yaml.safe_dump({
+        "schema_version": 1,
+        "id": tx_id,
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "note.revise",
+        "snapshot_before": "sha256:" + "0" * 64,
+        "snapshot_after": "sha256:" + "1" * 64,
+        "expected_revisions": {},
+        "artifact_revisions": {},
+        "writes": writes,
+    }, sort_keys=False), encoding="utf-8")
+
+    def drift_issues():
+        return [
+            i for i in validate(load_repo(mini_repo), online=False)
+            if i.code in {"TRANSACTION-DRIFT", "TRANSACTION-DRIFT-PROSE"}
+        ]
+
+    assert drift_issues() == []
+
+    # The learner types into a note and a stage note in Obsidian.
+    for rel in (note_rel, stage_rel):
+        path = mini_repo / rel
+        path.write_text(path.read_text(encoding="utf-8") + "\nA thought added by hand.\n",
+                        encoding="utf-8")
+    prose = drift_issues()
+    assert sorted(i.path for i in prose) == sorted([note_rel, stage_rel]), prose
+    assert {(i.code, i.severity) for i in prose} == {("TRANSACTION-DRIFT-PROSE", "W")}
+    assert not any(i.severity == "E" and i.code.startswith("TRANSACTION")
+                   for i in validate(load_repo(mini_repo), online=False))
+
+    # Deleting a receipted note is not an edit to prose: still an error.
+    (mini_repo / stage_rel).unlink()
+    deleted = [i for i in drift_issues() if i.path == stage_rel]
+    assert [(i.code, i.severity) for i in deleted] == [("TRANSACTION-DRIFT", "E")]
+
+    # A hand edit to a record the system interprets stays an error.
+    program = mini_repo / program_rel
+    program.write_bytes(program.read_bytes() + b"\n# hand edit\n")
+    record = [i for i in drift_issues() if i.path == program_rel]
+    assert [(i.code, i.severity) for i in record] == [("TRANSACTION-DRIFT", "E")]
+
+
 def _seed_ai_action_clean_clone_state(
     root: Path,
     *,

@@ -10,13 +10,19 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   ``generated/{text-cache,material-search,material-outlines,derived-state}/``,
   ``knowledge/summaries/``,
   and non-``.gitkeep`` children of ``operations/ai-actions/requests/``.
-- Write-denies all of ``LearningOS/``, instruction/config paths in the
-  wrapper (``AGENTS.md``, ``.claude/``, ``.opencode/``, ``.codex/``,
-  ``.gemini/``), and user home instruction/config paths (``~/.claude/``
-  outside runtime cache subdirectories,
-  ``~/.codex/{AGENTS*.md,config.toml,rules,skills}``,
-  ``~/.gemini/{GEMINI.md,settings.json,skills}``, ``~/.agents/``, and
-  ``~/.config/opencode/``).
+- Denies every write by default (D-02). Writes are allowed only to the
+  session's scratch directory, ``/dev``, ``/private/tmp`` and the runtime
+  state each runtime writes during a normal session (traced 2026-11-20:
+  ``~/.claude/{projects,…}``, agy's conversation, transcript, log and cache
+  paths, ``~/.codex/`` minus its config and code, npm's cache, and the
+  keychain). ``LearningOS/``, every instruction, config or executable
+  surface inside an allowed runtime root (``~/.claude/projects/*/memory``,
+  ``~/.codex/{AGENTS*.md,config.toml,rules,skills,plugins,…}``, agy's
+  settings, knowledge, MCP config and binaries) and the wrapper's
+  instruction paths stay denied. A denylist on top of ``(allow default)``
+  reopened the gap for every runtime or instruction file it did not name:
+  ``CLAUDE.md`` in any parent folder, agy's MCP config, a CLI binary under
+  ``~/.local/bin`` or Homebrew's prefix, ``~/Library/LaunchAgents``.
 - Filters inherited host environment variables through an explicit allowlist
   (dropping unrelated secrets and host ``LOS_OBSERVATIONS``) before launch.
 - Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
@@ -168,6 +174,72 @@ _CLAUDE_WRITABLE_CACHE_SUBDIRS = (
     "telemetry",
 )
 
+#: Paths every launch may write besides its scratch directory: terminals and
+#: ``/dev/null``, and ``/private/tmp``, where Claude Code's Bash tool hands its
+#: working directory back to the CLI.
+_SYSTEM_WRITE_SUBPATHS = (Path("/dev"), Path("/private/tmp"))
+
+#: Runtime state under ``$HOME`` that a study runtime writes during a normal
+#: session, traced 2026-11-20 by diffing the home folder around one launch of
+#: claude 2.1.283, agy 1.5.12 and codex 0.153.4. Writes anywhere else under
+#: ``$HOME`` are denied by default, so a runtime that starts writing somewhere
+#: new fails visibly instead of widening the boundary in silence.
+_RUNTIME_WRITABLE_SUBDIRS = (
+    # Claude Code's subdirectories are allowed in their own block below, after
+    # ~/.claude is denied, so its project memory can be denied again last.
+    # agy: conversations, transcripts, memory it records itself, logs, caches.
+    ".gemini/antigravity-cli/conversations",
+    ".gemini/antigravity-cli/brain",
+    ".gemini/antigravity-cli/annotations",
+    ".gemini/antigravity-cli/implicit",
+    ".gemini/antigravity-cli/presence",
+    ".gemini/antigravity-cli/log",
+    ".gemini/antigravity-cli/cache",
+    ".gemini/antigravity-cli/crashes",
+    ".gemini/antigravity-cli/scratch",
+    ".gemini/tmp",
+    ".gemini/history",
+    "Library/Logs/Antigravity",
+    # npx, which runtimes use to start MCP servers; npm verifies its cache.
+    ".npm/_cacache",
+    ".npm/_logs",
+    ".npm/_npx",
+    # Credential refreshes go through the login keychain.
+    "Library/Keychains",
+    # Codex keeps sessions and SQLite state directly under ~/.codex; its
+    # read-only surfaces are re-denied in _RUNTIME_READ_ONLY.
+    ".codex",
+)
+_SQLITE_SIDECARS = ("", "-wal", "-shm", "-journal")
+_RUNTIME_WRITABLE_FILES = (
+    *(f".gemini/antigravity-cli/conversation_summaries.db{s}" for s in _SQLITE_SIDECARS),
+    ".gemini/antigravity-cli/jetbox_summaries_proto.pb",
+    ".gemini/antigravity-cli/jetski_state.pbtxt",
+    ".gemini/antigravity-cli/last_check.timestamp",
+    ".gemini/antigravity-cli/cli.log",
+    *(f".gemini/antigravity/conversation_summaries.db{s}" for s in _SQLITE_SIDECARS),
+    ".gemini/antigravity/agyhub_summaries_proto.pb",
+)
+# Not allowed, on purpose: agy saves its credential-scope cache through a
+# randomly named temp file inside the Antigravity IDE's own app-data folder,
+# which also holds the IDE's settings and extensions. agy logs the refusal and
+# runs normally (verified 2026-11-20).
+#: Instruction, configuration and executable surfaces inside an allowed
+#: runtime root. A runtime only reads these; a write would reach the next
+#: session that loads them, sandboxed or not.
+_RUNTIME_READ_ONLY = (
+    ".codex/AGENTS.md",
+    ".codex/AGENTS.override.md",
+    ".codex/config.toml",
+    ".codex/rules",
+    ".codex/skills",
+    ".codex/plugins",
+    ".codex/prompts",
+    ".codex/automations",
+    ".codex/hooks",
+    ".codex/hooks.json",
+)
+
 
 _CLAUDE_PROJECT_SLUG_UNSAFE = re.compile(r"[^A-Za-z0-9-]")
 
@@ -202,8 +274,17 @@ def build_seatbelt_profile(
     deny_extra_subpaths: Sequence[Path] = (),
     deny_extra_literals: Sequence[Path] = (),
     home_dir: Path | None = None,
+    write_roots: Sequence[Path] = (),
 ) -> str:
-    """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout."""
+    """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout.
+
+    Seatbelt applies the last rule that matches, so the order is the policy:
+    reads are open except the protected trees; every write is denied; the
+    scratch directory (``write_roots``), ``/dev``, ``/private/tmp`` and the
+    traced runtime state are allowed back; and the surfaces that must never be
+    written (``LearningOS/``, memory and instruction files inside allowed
+    runtime roots, the stage directory) are denied again last.
+    """
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
     real_wrapper = real_learningos.parent
@@ -229,23 +310,43 @@ def build_seatbelt_profile(
         for candidate in dict.fromkeys((lex_lit, real_lit)):
             lines.append(f'(deny file-read* (literal "{_sbpl_quote(str(candidate))}"))')
 
-    lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(real_learningos))}"))')
+    # Every write is denied unless a later rule allows it back (D-02).
+    lines.append("(deny file-write*)")
+    allow_parts = [
+        f'(subpath "{_sbpl_quote(str(Path(os.path.realpath(root))))}")'
+        for root in (*_SYSTEM_WRITE_SUBPATHS, *write_roots)
+    ]
+    lines.append(f"(allow file-write* {' '.join(dict.fromkeys(allow_parts))})")
 
     deny_seen: set[Path] = set()
     real_home = Path(os.path.realpath(home_dir if home_dir is not None else Path.home()))
-    if (
+    home_ok = (
         real_home != Path("/")
         and real_home != real_learningos
         and not is_within(real_home, real_learningos)
-    ):
+    )
+    if home_ok and real_home != real_wrapper:
+        runtime_parts = [
+            f'(subpath "{_sbpl_quote(str(real_home / rel))}")'
+            for rel in _RUNTIME_WRITABLE_SUBDIRS
+        ] + [
+            f'(literal "{_sbpl_quote(str(real_home / rel))}")'
+            for rel in _RUNTIME_WRITABLE_FILES
+        ]
+        lines.append(f"(allow file-write* {' '.join(runtime_parts)})")
+
+    # Denied again after the allows, whatever root it sits in: LearningOS/
+    # itself, then memory, instruction, configuration and code surfaces.
+    lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(real_learningos))}"))')
+    if home_ok:
         claude_dir = real_home / ".claude"
         lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(claude_dir))}"))')
         if real_home != real_wrapper:
-            allow_parts = " ".join(
+            claude_allow = " ".join(
                 f'(subpath "{_sbpl_quote(str(claude_dir / sub))}")'
                 for sub in _CLAUDE_WRITABLE_CACHE_SUBDIRS
             )
-            lines.append(f"(allow file-write* {allow_parts})")
+            lines.append(f"(allow file-write* {claude_allow})")
             claude_projects = claude_dir / "projects"
             memory_targets: list[Path] = []
             if claude_projects.is_dir():
@@ -260,6 +361,10 @@ def build_seatbelt_profile(
                 _add_write_deny_target(
                     lines, deny_seen, memory_dir, real_learningos=real_learningos
                 )
+        for read_only in _RUNTIME_READ_ONLY:
+            _add_write_deny_target(
+                lines, deny_seen, real_home / read_only, real_learningos=real_learningos
+            )
         for user_instr in (
             real_home / ".claude.json",
             real_home / ".claude.json.backup",
@@ -289,6 +394,10 @@ def build_seatbelt_profile(
 
     for wrapper_instr in (
         real_wrapper / "AGENTS.md",
+        real_wrapper / "CLAUDE.md",
+        real_wrapper / "CLAUDE.local.md",
+        real_wrapper / "GEMINI.md",
+        real_wrapper / ".mcp.json",
         real_wrapper / ".claude",
         real_wrapper / ".opencode",
         real_wrapper / ".codex",
@@ -790,6 +899,7 @@ def launch_study(
                 deny_extra_subpaths=(stage_dir,),
                 deny_extra_literals=deny_literals,
                 home_dir=home_override,
+                write_roots=(scratch_dir,),
             ),
             encoding="utf-8",
         )

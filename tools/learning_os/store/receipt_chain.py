@@ -50,6 +50,32 @@ OPERATIONAL_HANDOFF_PREFIXES = (
 )
 
 
+#: Roots whose receipted Markdown is the learner's own prose: durable notes,
+#: unit notes, exercise sheets and workspace context. Obsidian is where the
+#: learner reads and writes these files, so a hand edit there is ordinary use,
+#: not an ungated change to a record the system interprets.
+LEARNER_PROSE_ROOTS = ("knowledge", "curriculum", "work")
+
+
+def is_learner_prose_path(relative: str) -> bool:
+    """Return True for receipted learner-owned Markdown (notes, sheets, context).
+
+    Drift on these paths is reported as a warning, never a gateway-blocking
+    error: one stray keystroke in a note must not stop every write in the
+    system. The canonical snapshot guard still refuses any write sealed
+    against the bytes from before the edit, so a hand edit cannot be
+    overwritten silently. YAML, JSON, code and everything under
+    ``operations/`` stay error-level, and so does Markdown elsewhere
+    (``archive/`` is frozen history).
+    """
+    parts = PurePosixPath(relative).parts
+    return (
+        len(parts) >= 2
+        and parts[0] in LEARNER_PROSE_ROOTS
+        and parts[-1].endswith(".md")
+    )
+
+
 def is_operational_handoff_path(relative: str) -> bool:
     """Return True when *relative* is gitignored AI-action operational handoff state."""
     normalized = relative.strip("/")

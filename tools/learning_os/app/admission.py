@@ -163,6 +163,24 @@ REVIEWED_SEALING_CAPABILITIES: frozenset[str] = frozenset({
     "garden.update",
 })
 
+#: Capabilities that replace an existing record only in one mode. When the
+#: payload flag named here is true, the write falls under the same reviewed
+#: check-record rule as REVIEWED_SEALING_CAPABILITIES. Added 2026-11-20 for
+#: the S1 closure check's D-13 residual: ``stage.note.write --replace``
+#: overwrote a stage note with guards derived from the live tree at seal
+#: time, so an edit made after the agent read the note was lost unseen.
+#: (``masters-planning.catalog.update`` needs no entry: its record carries
+#: its own revision, and the handler refuses anything but current + 1.)
+REVIEWED_SEALING_MODES: dict[str, str] = {"stage.note.write": "replace"}
+
+
+def requires_reviewed_seal(capability: object, payload: object) -> bool:
+    """Whether a write needs a reviewed check record before a fresh apply."""
+    if capability in REVIEWED_SEALING_CAPABILITIES:
+        return True
+    flag = REVIEWED_SEALING_MODES.get(capability) if isinstance(capability, str) else None
+    return flag is not None and isinstance(payload, dict) and payload.get(flag) is True
+
 
 def gesture_allowed(capability: str, channel: str | None = None) -> bool:
     """Whether a capability admits ``direct-user-gesture`` from this channel.

@@ -106,6 +106,15 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
     assert "(version 1)" in sb_first
     assert "(allow default)" in sb_first
     assert "regex" not in sb_first
+    # D-02: every write is denied first; Seatbelt's last matching rule wins, so
+    # the allows come after the blanket deny and the re-denies after the allows.
+    lines = sb_first.splitlines()
+    assert lines.count("(deny file-write*)") == 1
+    blanket = lines.index("(deny file-write*)")
+    assert lines.index("(allow default)") < blanket
+    first_allow = next(i for i, line in enumerate(lines) if line.startswith("(allow file-write*"))
+    assert blanket < first_allow
+    assert '(subpath "/dev")' in lines[first_allow] and '(subpath "/private/tmp")' in lines[first_allow]
 
     real_core = Path(os.path.realpath(core))
     real_learningos = Path(os.path.realpath(real_core.parent))
@@ -138,10 +147,20 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
 
     deny_write = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_learningos))}"))'
     assert deny_write in sb_first
+    assert lines.index(deny_write) > first_allow
 
     real_wrapper = real_learningos.parent
-    for rel_instr in ("AGENTS.md", ".claude", ".opencode", ".codex", ".gemini"):
+    for rel_instr in (
+        "AGENTS.md", "CLAUDE.md", "CLAUDE.local.md", "GEMINI.md", ".mcp.json",
+        ".claude", ".opencode", ".codex", ".gemini",
+    ):
         assert f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_wrapper / rel_instr))}"))' in sb_first
+
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    with_scratch = study_launch.build_seatbelt_profile(core, home_dir=fake_home, write_roots=(scratch,))
+    allow_scratch = f'(subpath "{study_launch._sbpl_quote(os.path.realpath(scratch))}")'
+    assert allow_scratch in with_scratch and allow_scratch not in sb_first
 
     real_home = Path(os.path.realpath(fake_home))
     deny_home_claude = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_home / ".claude"))}"))'
@@ -160,8 +179,19 @@ def test_build_seatbelt_profile_is_deterministic_non_regex_and_complete(tmp_path
         ".codex/config.toml",
         ".gemini/GEMINI.md",
         ".gemini/settings.json",
+        ".codex/plugins",
+        ".codex/prompts",
     ):
         assert f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(real_home / home_instr))}"))' in sb_first
+    # agy's settings, knowledge, MCP config and binaries are never allowed back.
+    for agy_surface in (
+        ".gemini/antigravity-cli/settings.json",
+        ".gemini/antigravity-cli/knowledge",
+        ".gemini/antigravity-cli/mcp",
+        ".gemini/antigravity-cli/bin",
+        ".gemini/config",
+    ):
+        assert study_launch._sbpl_quote(str(real_home / agy_surface)) + '"' not in sb_first, agy_surface
     core_mem = real_home / ".claude" / "projects" / study_launch._claude_project_slug(real_core) / "memory"
     deny_core_mem = f'(deny file-write* (subpath "{study_launch._sbpl_quote(str(core_mem))}"))'
     assert deny_core_mem in sb_first
@@ -564,7 +594,9 @@ assert settled.returncode == 0, settled.stderr
 
     s3 = "aaaaaaaa-7777-4777-8777-777777777777"
     s4 = "bbbbbbbb-8888-4888-8888-888888888888"
-    ready_file = tmp_path / "launcher-ready.txt"
+    # Written from inside the sandbox, which denies every write outside its
+    # scratch directory, /dev and /private/tmp (D-02).
+    ready_file = Path(tempfile.mkdtemp(prefix="los-ready-", dir="/tmp")) / "launcher-ready.txt"
     wait_script = tmp_path / "wait_child.py"
     wait_script.write_text(
         f"""
@@ -666,12 +698,14 @@ def test_concurrent_multi_session_sandboxes_and_killed_broker_isolation(
     # Launch two concurrent study sessions reading distinct PDF pages without interference.
     worker_a = tmp_path / "worker_a.py"
     worker_b = tmp_path / "worker_b.py"
+    # Results are written from inside the sandbox, which denies tmp_path (D-02).
+    results = Path(tempfile.mkdtemp(prefix="los-res-", dir="/tmp"))
     for idx, (worker, page) in enumerate(((worker_a, 3), (worker_b, 4)), start=1):
         worker.write_text(
             f"""
 import json, os, subprocess
 core = {str(core)!r}
-out = {str(tmp_path / f"res-{idx}.json")!r}
+out = {str(results / f"res-{idx}.json")!r}
 proc = subprocess.run(
     [core + "/.venv/bin/python", core + "/tools/los.py",
      "material-span", "--material", {BOOK!r}, "--pages", "pdf p. {page}", "--extract"],
@@ -722,8 +756,8 @@ with open(out, "w", encoding="utf-8") as fh:
     assert p1.returncode == 0, err1.decode("utf-8", "replace")
     assert p2.returncode == 0, err2.decode("utf-8", "replace")
 
-    r1 = json.loads((tmp_path / "res-1.json").read_text("utf-8"))
-    r2 = json.loads((tmp_path / "res-2.json").read_text("utf-8"))
+    r1 = json.loads((results / "res-1.json").read_text("utf-8"))
+    r2 = json.loads((results / "res-2.json").read_text("utf-8"))
     assert r1["sock"] != r2["sock"]
     assert r1["scratch"] != r2["scratch"]
     assert r1["study"]["session"] == S1
@@ -896,6 +930,7 @@ def test_seatbelt_denies_host_stage_dir_and_allows_mediated_unit_plan_report_out
         ),
     )
 
+    (tmp_path / "outside-target.json").write_text('{"intact": true}\n', encoding="utf-8")
     probe = tmp_path / "seatbelt_stage_probe.py"
     probe.write_text(
         f"""
@@ -946,8 +981,13 @@ assert report_out.is_file()
 assert json.loads(report_out.read_text(encoding="utf-8"))["ok"] is True
 
 # 3. Symlink --report-out is refused with specific symlink/boundary error.
+#    The host wrote the target; the sandbox may not write outside scratch (D-02).
 outside = tmp_root / "outside-target.json"
-outside.write_text('{{"intact": true}}\\n', encoding="utf-8")
+try:
+    outside.write_text("tampered", encoding="utf-8")
+    raise AssertionError("Seatbelt allowed a write outside the scratch directory")
+except PermissionError as exc:
+    assert exc.errno == errno.EPERM
 sym = scratch / "sym-report.json"
 sym.symlink_to(outside)
 bad = subprocess.run(
@@ -1470,7 +1510,10 @@ def test_seatbelt_blocks_env_instruction_writes_and_filters_child_env(
     monkeypatch.setenv("ANTHROPIC_API_KEY", "keep-provider-key")
 
     core_slug = study_launch._claude_project_slug(Path(os.path.realpath(core)))
-    result_out = tmp_path / "probe-result.json"
+    # Deny-by-default (D-02) refuses tmp_path itself; /private/tmp stays open.
+    result_out = Path(tempfile.mkdtemp(prefix="los-probe-", dir="/tmp")) / "probe-result.json"
+    (fake_home / ".gemini" / "antigravity-cli" / "conversations").mkdir(parents=True)
+    (fake_home / ".gemini" / "config").mkdir(parents=True)
     probe = f"""
 import json, os
 from pathlib import Path
@@ -1511,6 +1554,21 @@ for label, target in [
     ("home_codex_config", {str(fake_home / ".codex" / "config.toml")!r}),
     ("home_gemini_md", {str(fake_home / ".gemini" / "GEMINI.md")!r}),
     ("home_gemini_settings", {str(fake_home / ".gemini" / "settings.json")!r}),
+    # Found writable by the 2026-11-20 S1 closure probe under the old denylist.
+    ("wrapper_claude_md", {str(wrapper / "CLAUDE.md")!r}),
+    ("wrapper_claude_local_md", {str(wrapper / "CLAUDE.local.md")!r}),
+    ("wrapper_gemini_md", {str(wrapper / "GEMINI.md")!r}),
+    ("wrapper_mcp_json", {str(wrapper / ".mcp.json")!r}),
+    ("parent_claude_md", {str(wrapper.parent / "CLAUDE.md")!r}),
+    ("agy_settings", {str(fake_home / ".gemini" / "antigravity-cli" / "settings.json")!r}),
+    ("agy_knowledge", {str(fake_home / ".gemini" / "antigravity-cli" / "knowledge" / "ki.md")!r}),
+    ("agy_mcp_cache", {str(fake_home / ".gemini" / "antigravity-cli" / "mcp" / "x" / "instructions.md")!r}),
+    ("agy_mcp_config", {str(fake_home / ".gemini" / "config" / "mcp_config.json")!r}),
+    # Whatever no rule names is denied too: binaries, login items, git config.
+    ("home_local_bin", {str(fake_home / ".local" / "bin" / "claude")!r}),
+    ("home_launch_agent", {str(fake_home / "Library" / "LaunchAgents" / "evil.plist")!r}),
+    ("home_gitconfig", {str(fake_home / ".gitconfig")!r}),
+    ("codex_plugins", {str(fake_home / ".codex" / "plugins" / "cache" / "x" / "plugin.json")!r}),
 ]:
     p = Path(target)
     try:
@@ -1527,6 +1585,16 @@ proj_cache = Path({str(fake_home / ".claude" / "projects" / core_slug / "session
 proj_cache.parent.mkdir(parents=True, exist_ok=True)
 proj_cache.write_text("ok\\n")
 results["home_proj_cache"] = proj_cache.read_text().strip()
+agy_conv = Path({str(fake_home / ".gemini" / "antigravity-cli" / "conversations" / "c.db")!r})
+agy_conv.write_text("ok\\n")
+results["agy_conversation"] = agy_conv.read_text().strip()
+codex_session = Path({str(fake_home / ".codex" / "sessions" / "rollout.jsonl")!r})
+codex_session.parent.mkdir(parents=True, exist_ok=True)
+codex_session.write_text("ok\\n")
+results["codex_session"] = codex_session.read_text().strip()
+scratch_note = Path(os.environ["LOS_SCRATCH_DIR"]) / "note.txt"
+scratch_note.write_text("ok\\n")
+results["scratch"] = scratch_note.read_text().strip()
 
 results["foo_probe"] = "FOO_PROBE" in os.environ
 results["aws_secret"] = "AWS_SECRET_ACCESS_KEY" in os.environ
@@ -1564,10 +1632,28 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
         "home_codex_config",
         "home_gemini_md",
         "home_gemini_settings",
+        "wrapper_claude_md",
+        "wrapper_claude_local_md",
+        "wrapper_gemini_md",
+        "wrapper_mcp_json",
+        "parent_claude_md",
+        "agy_settings",
+        "agy_knowledge",
+        "agy_mcp_cache",
+        "agy_mcp_config",
+        "home_local_bin",
+        "home_launch_agent",
+        "home_gitconfig",
+        "codex_plugins",
     ):
         assert data[key] == "DENIED", (key, data)
     assert data["home_claude_cache"] == "ok"
     assert data["home_proj_cache"] == "ok"
+    assert data["agy_conversation"] == "ok"
+    assert data["codex_session"] == "ok"
+    assert data["scratch"] == "ok"
+    for planted in ("CLAUDE.md", "CLAUDE.local.md", "GEMINI.md", ".mcp.json"):
+        assert not (wrapper / planted).exists(), planted
     assert data["foo_probe"] is False
     assert data["aws_secret"] is False
     assert data["los_obs_leaked"] is False

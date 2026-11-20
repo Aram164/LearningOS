@@ -106,6 +106,7 @@ class ChecksProjects:
             CHAIN_BASELINE_RELATIVE,
             CHAIN_BASELINE_SCHEMA,
             analyze_receipt_chain,
+            is_learner_prose_path,
         )
 
         def _check_baseline_schema(data: dict) -> bool:
@@ -130,13 +131,17 @@ class ChecksProjects:
             )
         for drift in chain_analysis.unbaselined_drift:
             note = drift.get("note") or "bytes differ from the last receipt"
-            self.err(
-                "TRANSACTION-DRIFT",
+            message = (
                 f"unbaselined on-disk drift on '{drift['path']}' since receipt "
                 f"{drift['receipt']} ({note}: expected {drift['expected']}, "
-                f"actual {drift['actual']})",
-                str(drift["path"]),
+                f"actual {drift['actual']})"
             )
+            if is_learner_prose_path(str(drift["path"])) and drift["actual"] is not None:
+                # The learner's own Markdown, edited in place: say so, never
+                # freeze the gateway over it (D-03, amended 2026-11-20).
+                self.warn("TRANSACTION-DRIFT-PROSE", message, str(drift["path"]))
+            else:
+                self.err("TRANSACTION-DRIFT", message, str(drift["path"]))
 
         # Cross-check every idempotency ledger entry against its receipt.
         from learning_os.store.evidence import verify_idempotency_ledger_rows

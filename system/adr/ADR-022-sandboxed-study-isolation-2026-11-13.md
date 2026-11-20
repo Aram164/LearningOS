@@ -21,13 +21,21 @@ release certification.
      `generated/text-cache/`, `generated/material-search/`,
      `generated/material-outlines/`, `generated/derived-state/`,
      `knowledge/summaries/`, and all children of `operations/ai-actions/requests/`
-     except `.gitkeep`, while denying all writes anywhere under `LearningOS/`
-     as well as instruction/config paths in the workspace wrapper
-     (`AGENTS.md`, `.claude/`, `.opencode/`, `.codex/`, `.gemini/`) and user
-     runtime home configs (`~/.claude/` outside runtime cache subdirectories,
-     `~/.codex/{AGENTS*.md,config.toml,rules,skills}`,
-     `~/.gemini/{GEMINI.md,settings.json,skills}`, `~/.agents/`, and
-     `~/.config/opencode/`).
+     except `.gitkeep`. **Writes are default-deny (amended 2026-11-20, D-02):**
+     the profile denies `file-write*` everywhere, allows back only
+     `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp` and the runtime state the
+     supported runtimes were traced writing in a normal session (Claude
+     Code's `~/.claude/{projects,…}`, agy's conversation, transcript, log and
+     cache paths, `~/.codex/`, npm's cache, the login keychain), then denies
+     again `LearningOS/`, Claude project memory, the wrapper's `AGENTS.md`,
+     `CLAUDE.md`, `CLAUDE.local.md`, `GEMINI.md`, `.mcp.json`, `.claude/`,
+     `.opencode/`, `.codex/`, `.gemini/`, and the read-only surfaces inside
+     allowed runtime roots (`~/.codex/{AGENTS*.md,config.toml,rules,skills,
+     plugins,prompts,automations,hooks*}`). The earlier denylist on top of
+     `(allow default)` left every unnamed path writable: `CLAUDE.md` in any
+     parent folder, agy's MCP config (which agy loads and runs inside the
+     sandbox, verified), CLI binaries under `~/.local/bin` and Homebrew's
+     prefix, `~/Library/LaunchAgents`, and `~/.gitconfig`.
    - `knowledge/summaries/` is read-denied alongside the text/search caches
      because promoted chapter summaries (`tools/material_summarize.py`) can
      condense up to 80% (`MAX_SOURCE_FRACTION = 0.8`) of primary PDF page text.
@@ -74,12 +82,12 @@ release certification.
    hook.
 
 3. **Boundary scope, runtime caches, environment filtering, and egress.**
-   Seatbelt `(allow default)` protects LearningOS canonical data, `.env`,
-   raw materials, `LearningOS/reading-memory/`, and wrapper/user agent
-   instruction/configuration files rather than full-host confinement. Safe
-   runtime cache subdirectories outside `LearningOS/` (such as
-   `~/.claude/projects/` tool-result caches or agent session logs) stay writable
-   and persist on the host after `$LOS_SCRATCH_DIR` is removed.
+   Seatbelt keeps reads open outside the closed trees and makes writes
+   default-deny (§1). Runtime state outside `LearningOS/` (such as
+   `~/.claude/projects/` transcripts or agy's conversation logs) stays writable
+   and persists on the host after `$LOS_SCRATCH_DIR` is removed; a runtime that
+   starts writing somewhere new is refused and must be traced and added to
+   `tools/study_launch.py` deliberately.
    `tools/study_launch.py` filters inherited host environment variables through
    an explicit POSIX/runtime/provider allowlist (dropping unrelated host
    secrets and `LOS_OBSERVATIONS`), while outbound HTTPS network access remains

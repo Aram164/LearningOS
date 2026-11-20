@@ -790,11 +790,14 @@ Study-mode agents run under a launcher-built macOS Seatbelt sandbox
 gateway broker (`tools/learning_os/adapters/study_broker.py`). Seatbelt
 denies reads across the closed material, text-cache, search-index, outline,
 derived-state, summary, request-slice, and private `LearningOS/reading-memory/`
-trees defined in `tools/learning_os/store/study_fence.py` while denying all
-writes to `LearningOS/`. Gateway reads and study-store writes traverse
+trees defined in `tools/learning_os/store/study_fence.py`, and denies every
+write except to the session scratch directory, `/dev`, `/private/tmp` and the
+runtime state the supported runtimes write (ADR-022 §1, default-deny since
+2026-11-20). Gateway reads and study-store writes traverse
 `LOS_GATE_SOCK` with launcher-pinned session identity; canonical writes inside
 the study capability allowlist remain separated on the host behind
-intent-bound, operator-approved envelopes (`tools/seal_envelope.py`), while
+intent-bound envelopes (`tools/seal_envelope.py`) whose approval kind the
+caller declares; no separate human approval event is witnessed (ADR-022 §1), while
 durable note creation/revision, unit plan revision, concept-relation edits,
 review, and program mutations remain outside the study allowlist. Optional UX
 lifecycle hooks live in
