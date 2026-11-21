@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -20,9 +22,52 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.domain.snapshot import Repo
 from learning_os.store.layout import PathBoundaryError
 
+_MIN_UTC = datetime.min.replace(tzinfo=UTC)
+_TIMESTAMP_VALIDATED_RECORDS = frozenset({
+    "learner-observation",
+    "learner-stage-result",
+    "ability-observation",
+})
+
 
 class RuntimeInputError(ValueError):
     """A runtime input is invalid or cannot be read safely."""
+
+
+def parse_utc_instant(value: object) -> datetime:
+    """Parse an ISO-8601 timestamp with an explicit offset and return UTC.
+
+    Preserves callers' original serialized strings; this helper is used only
+    for instant validation and chronological ordering.
+    """
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise RuntimeInputError(f"invalid timestamp: {value!r}")
+    if "T" not in value and "t" not in value and " " not in value:
+        raise RuntimeInputError(f"invalid timestamp: {value!r}")
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError as exc:
+        raise RuntimeInputError(f"invalid timestamp: {value!r}") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise RuntimeInputError(f"timestamp must include a timezone offset: {value!r}")
+    return parsed.astimezone(UTC)
+
+
+def timestamp_sort_key(
+    row: Mapping[str, object],
+    *,
+    allow_unparseable: bool = False,
+) -> tuple[datetime, str]:
+    """Chronological sort key: UTC instant, then record id."""
+    row_id = row.get("id")
+    tie_id = row_id if isinstance(row_id, str) else (str(row_id) if row_id is not None else "")
+    try:
+        instant = parse_utc_instant(row.get("timestamp"))
+    except RuntimeInputError:
+        if not allow_unparseable:
+            raise
+        instant = _MIN_UTC
+    return (instant, tie_id)
 
 
 def runtime_path(root: Path, path: Path) -> Path:
@@ -46,6 +91,11 @@ def validate_runtime_record(repo: Repo, name: str, value: dict) -> None:
     errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value), key=str)
     if errors:
         raise RuntimeInputError(f"{name}: {errors[0].message}")
+    if name in _TIMESTAMP_VALIDATED_RECORDS and "timestamp" in value:
+        try:
+            parse_utc_instant(value["timestamp"])
+        except RuntimeInputError as exc:
+            raise RuntimeInputError(f"{name}: {exc}") from exc
     if name == "learner-observation" and set(value.get("conditions", ())) & set(value.get("conditions_not_met", ())):
         raise RuntimeInputError("learner-observation: conditions and conditions_not_met must be disjoint")
 
@@ -382,11 +432,11 @@ def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[
             if isinstance(row, dict) and row.get("id") not in superseded
             and row.get("unit") == unit_id and row.get("stage") == stage_id]
 
-    def _when(row: dict) -> str:
-        stamp = row.get("timestamp")
-        return stamp if isinstance(stamp, str) else ""
-
-    return sorted(live, key=_when, reverse=True)
+    return sorted(
+        live,
+        key=lambda row: timestamp_sort_key(row, allow_unparseable=True),
+        reverse=True,
+    )
 
 
 def temporary_study_sequence(repo: Repo, unit_id: str, stage_ids: object) -> dict:

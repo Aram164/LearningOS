@@ -13,7 +13,12 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from learning_os.derive.learning_runtime import RuntimeInputError, runtime_path
+from learning_os.derive.learning_runtime import (
+    RuntimeInputError,
+    parse_utc_instant,
+    runtime_path,
+    timestamp_sort_key,
+)
 from learning_os.domain.material_refs import matching_routes, unit_routes
 from learning_os.domain.snapshot import Repo
 
@@ -140,6 +145,10 @@ def read_ability_observations(repo: Repo) -> list[dict]:
             errors = sorted(validator.iter_errors(row), key=str)
             if errors:
                 raise RuntimeInputError(f"{rel}:{line_number}: {errors[0].message}")
+            try:
+                parse_utc_instant(row["timestamp"])
+            except RuntimeInputError as exc:
+                raise RuntimeInputError(f"{rel}:{line_number}: {exc}") from exc
             aid = row["ability_id"]
             if aid not in repo.abilities:
                 raise RuntimeInputError(f"{rel}:{line_number}: unknown ability {aid}")
@@ -220,10 +229,11 @@ def _latest_and_conflicts(valid, comparable):
     """
     if not valid:
         return None, []
-    latest = sorted(valid, key=lambda row: (row["timestamp"], row["id"]))[-1]
+    latest = sorted(valid, key=timestamp_sort_key)[-1]
+    latest_key = timestamp_sort_key(latest)
     conflicts = [row for row in comparable
                  if row["result"] in {"incorrect", "partial"}
-                 and (row["timestamp"], row["id"]) > (latest["timestamp"], latest["id"])]
+                 and timestamp_sort_key(row) > latest_key]
     return latest, conflicts
 
 
@@ -325,8 +335,7 @@ def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
     history, active, comparable, valid, _current_hash, _corrections = _evidence_sets(
         ability, observations)
     latest, conflicts = _latest_and_conflicts(valid, comparable)
-    ordered_conflicts = sorted(conflicts,
-                               key=lambda row: (row["timestamp"], row["id"]))
+    ordered_conflicts = sorted(conflicts, key=timestamp_sort_key)
     conflict_preview = ordered_conflicts[:_BRIEF_LIST_LIMIT]
     basis = []
     if latest is not None:

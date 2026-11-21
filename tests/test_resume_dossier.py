@@ -730,3 +730,32 @@ def test_resume_shows_recorded_stage_progress(mini_repo: Path):
     assert "next: Re-derive closed-book." in text.stdout
     payload = json.loads(run_los(mini_repo, "resume", "--json").stdout)
     assert payload["content"]["stage-progress"]["summary"].endswith("zephyr-progress.")
+
+
+def test_stage_results_and_resume_order_mixed_utc_offsets():
+    from learning_os.app.handlers.resume import _live_observations
+    from learning_os.derive.learning_runtime import stage_results_for
+
+    stage_rows = [
+        {"id": "sr-early", "unit": "unit-demo-l01", "stage": "stage-demo",
+         "timestamp": "2026-09-23T10:00:00+02:00"},   # 08:00Z
+        {"id": "sr-late", "unit": "unit-demo-l01", "stage": "stage-demo",
+         "timestamp": "2026-09-23T04:00:00-05:00"},   # 09:00Z
+        {"id": "sr-mid", "unit": "unit-demo-l01", "stage": "stage-demo",
+         "timestamp": "2026-09-23T08:30:00Z"},        # 08:30Z
+        {"id": "sr-naive", "unit": "unit-demo-l01", "stage": "stage-demo",
+         "timestamp": "2026-09-23T12:00:00"},         # missing offset -> oldest fallback
+    ]
+    ordered_sr = stage_results_for(stage_rows, "unit-demo-l01", "stage-demo")
+    assert [row["id"] for row in ordered_sr] == [
+        "sr-late", "sr-mid", "sr-early", "sr-naive"]
+    assert ordered_sr[0]["timestamp"] == "2026-09-23T04:00:00-05:00"
+
+    obs_rows = [
+        {"id": "obs-early", "timestamp": "2026-09-23T10:00:00+02:00"},
+        {"id": "obs-late", "timestamp": "2026-09-23T04:00:00-05:00"},
+        {"id": "obs-bad", "timestamp": "not-a-timestamp"},
+    ]
+    ordered_obs = _live_observations(obs_rows)
+    assert [row["id"] for row in ordered_obs] == [
+        "obs-late", "obs-early", "obs-bad"]

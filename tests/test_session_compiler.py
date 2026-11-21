@@ -1519,3 +1519,55 @@ def test_temporary_sequence_reports_unmapped_prerequisite_scope(sequence_root):
     packet = temporary_study_sequence(load_repo(sequence_root), 'unit-demo-l01', ['stage-seq-b'])
     assert packet['prerequisite_edges'] == []
     assert any('knowledge-seq-a has no mapped stage' in note for note in packet['limitations'])
+
+
+def test_observation_offset_chronology_equivalence_and_validation(runtime_root: Path):
+    from learning_os.derive.learning_runtime import validate_runtime_record
+
+    repo = load_repo(runtime_root)
+    req = collect_requirements(repo)[0]
+    fp = requirement_fingerprint(req)
+
+    def _obs(obs_id: str, result: str, timestamp: str, number: int = 1) -> dict:
+        row = observation(req['id'], number, requirement_sha256=fp, result=result, timestamp=timestamp)
+        row['id'] = obs_id
+        return row
+
+    # Mixed offsets: earlier correct (+02:00 = 08:00Z) vs later incorrect (-05:00 = 09:00Z).
+    utc_rows = [
+        _obs('obs-1', 'correct', '2026-09-23T08:00:00Z', 1),
+        _obs('obs-2', 'incorrect', '2026-09-23T09:00:00Z', 2),
+    ]
+    mixed_rows = [
+        _obs('obs-2', 'incorrect', '2026-09-23T04:00:00-05:00', 2),
+        _obs('obs-1', 'correct', '2026-09-23T10:00:00+02:00', 1),
+    ]
+    utc_state = interpret_observations(utc_rows, req)
+    mixed_state = interpret_observations(mixed_rows, req)
+    assert mixed_state['status'] == utc_state['status']
+    assert mixed_state['evidence_ids'] == utc_state['evidence_ids'] == ['obs-1', 'obs-2']
+    assert mixed_state['last_observed_at'] == '2026-09-23T04:00:00-05:00'
+
+    # Equal instants with different offsets tie-break deterministically by id.
+    tie_a = interpret_observations([
+        _obs('obs-a', 'correct', '2026-09-23T10:00:00+02:00', 1),
+        _obs('obs-b', 'incorrect', '2026-09-23T03:00:00-05:00', 2),
+    ], req)
+    tie_b = interpret_observations([
+        _obs('obs-b', 'incorrect', '2026-09-23T03:00:00-05:00', 2),
+        _obs('obs-a', 'correct', '2026-09-23T10:00:00+02:00', 1),
+    ], req)
+    assert tie_a['evidence_ids'] == tie_b['evidence_ids'] == ['obs-a', 'obs-b']
+    assert tie_a['last_observed_at'] == '2026-09-23T03:00:00-05:00'
+
+    # Mixed naive + aware records fail closed with RuntimeInputError rather than TypeError.
+    with pytest.raises(RuntimeInputError, match='timezone offset'):
+        interpret_observations([
+            _obs('obs-1', 'correct', '2026-09-23T08:00:00Z', 1),
+            _obs('obs-2', 'incorrect', '2026-09-23T09:00:00', 2),
+        ], req)
+    for bad_stamp in ('2026-09-23T09:00:00', '2026-09-23', 'not-a-timestamp'):
+        bad = _obs('observation-bad', 'correct', bad_stamp, 3)
+        bad.pop('origin', None)
+        with pytest.raises(RuntimeInputError, match='timestamp'):
+            validate_runtime_record(repo, 'learner-observation', bad)

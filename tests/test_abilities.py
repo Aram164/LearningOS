@@ -928,3 +928,98 @@ def test_brief_later_conflicts_stays_bounded(ability_root: Path):
     assert brief["ability"]["reasons"] == full["ability"]["reasons"]
     assert len(big.stdout) - len(mid.stdout) < 500
     assert len(big.stdout) < 12000
+
+
+def test_mixed_offset_chronology_equivalence_and_ties(tmp_path: Path):
+    from conftest import build_mini_repo
+
+    def _setup(name: str) -> Path:
+        root = build_mini_repo(tmp_path / name)
+        add_curriculum(root)
+        ability = {
+            "title": "Derive simple least squares", "claim": "Derive slope and intercept.",
+            "conditions": ["one predictor with nonzero variance", "intercept included"],
+            "evidence_spec": ["correct derivation"],
+            "concept_ids": ["concept-expected-value"], "module_ids": ["module-demo"],
+            "review": {"state": "reviewed", "reviewed_by": "test reviewer",
+                       "reviewed_on": "2026-09-23"},
+        }
+        (root / "knowledge/abilities.yaml").write_text(
+            yaml.safe_dump({"abilities": [{**ability, "id": "ability-sad-ols", "preparation_routes": []}],
+                            "bridges": []}, sort_keys=False),
+            encoding="utf-8",
+        )
+        return root
+
+    # Scenario 1: earlier correct vs later independent incorrect across mixed offsets.
+    utc_root = _setup("utc-independent")
+    mixed_root = _setup("mixed-independent")
+    for root, earlier_ts, later_ts in (
+        (utc_root, "2026-11-21T08:00:00Z", "2026-11-21T09:00:00Z"),
+        (mixed_root, "2026-11-21T10:00:00+02:00", "2026-11-21T04:00:00-05:00"),
+    ):
+        repo = load_repo(root)
+        _append(root, _work(repo, "ability-sad-ols", 1, timestamp=earlier_ts, result="correct"))
+        _append(root, _work(repo, "ability-sad-ols", 2, timestamp=later_ts, result="incorrect"))
+    utc_ctx = ability_context(load_repo(utc_root), focus="ability-sad-ols", brief=True)
+    mixed_ctx = ability_context(load_repo(mixed_root), focus="ability-sad-ols", brief=True)
+    mixed_full = ability_context(load_repo(mixed_root), focus="ability-sad-ols")
+    assert mixed_ctx["ability"]["state"] == utc_ctx["ability"]["state"]
+    assert mixed_ctx["ability"]["reasons"] == utc_ctx["ability"]["reasons"]
+    assert ([p["id"] for p in mixed_ctx["evidence_summary"]["state_basis"]]
+            == [p["id"] for p in utc_ctx["evidence_summary"]["state_basis"]]
+            == ["ability-observation-2"])
+    # Original serialized offset string is preserved untouched in output.
+    by_id = {row["id"]: row for row in mixed_full["ability"]["evidence"]}
+    assert by_id["ability-observation-1"]["timestamp"] == "2026-11-21T10:00:00+02:00"
+    assert by_id["ability-observation-2"]["timestamp"] == "2026-11-21T04:00:00-05:00"
+
+    # Scenario 2: later assisted failures must surface as conflicting later work and sort chronologically.
+    conflict_root = _setup("mixed-conflicts")
+    crepo = load_repo(conflict_root)
+    _append(conflict_root, _work(crepo, "ability-sad-ols", 1,
+                                 timestamp="2026-11-21T10:00:00+02:00", result="correct"))
+    _append(conflict_root, _work(crepo, "ability-sad-ols", 3,
+                                 timestamp="2026-11-21T09:45:00Z", result="partial", assistance="hint"))
+    _append(conflict_root, _work(crepo, "ability-sad-ols", 2,
+                                 timestamp="2026-11-21T04:15:00-05:00", result="incorrect", assistance="hint"))
+    conflict_brief = ability_context(load_repo(conflict_root), focus="ability-sad-ols", brief=True)
+    assert conflict_brief["ability"]["state"] == "uncertain"
+    assert conflict_brief["ability"]["reasons"] == ["conflicting later work"]
+    assert [(row["role"], row["id"]) for row in conflict_brief["evidence_summary"]["state_basis"]] == [
+        ("latest-comparable", "ability-observation-1"),
+        ("later-conflict", "ability-observation-2"),
+        ("later-conflict", "ability-observation-3"),
+    ]
+
+    # Scenario 3: equal UTC instants expressed with different offsets tie-break deterministically by id.
+    tie_a = _setup("tie-a")
+    tie_b = _setup("tie-b")
+    for root, order in ((tie_a, (1, 2)), (tie_b, (2, 1))):
+        trepo = load_repo(root)
+        stamps = {1: "2026-11-21T10:00:00+02:00", 2: "2026-11-21T03:00:00-05:00"}
+        res = {1: "correct", 2: "incorrect"}
+        for num in order:
+            _append(root, _work(trepo, "ability-sad-ols", num, timestamp=stamps[num], result=res[num]))
+    ctx_a = ability_context(load_repo(tie_a), focus="ability-sad-ols", brief=True)
+    ctx_b = ability_context(load_repo(tie_b), focus="ability-sad-ols", brief=True)
+    assert ctx_a["ability"]["state"] == ctx_b["ability"]["state"]
+    assert ([p["id"] for p in ctx_a["evidence_summary"]["state_basis"]]
+            == [p["id"] for p in ctx_b["evidence_summary"]["state_basis"]]
+            == ["ability-observation-2"])
+
+
+def test_invalid_and_naive_ability_timestamps_fail_closed(ability_root: Path):
+    repo = load_repo(ability_root)
+    ledger = ability_root / "work/active/workspace-demo/ability-observations.jsonl"
+    for bad_stamp, err_match in (
+        ("2026-09-23T10:00:00", "timezone offset"),
+        ("2026-09-23", "invalid timestamp"),
+        ("not-a-timestamp", "invalid timestamp"),
+    ):
+        ledger.write_text("", encoding="utf-8")
+        _append(ability_root, _work(repo, "ability-sad-ols", 1, timestamp=bad_stamp))
+        with pytest.raises(RuntimeInputError, match=err_match):
+            read_ability_observations(load_repo(ability_root))
+        refused = run_los(ability_root, "ability-context", "ability-sad-ols")
+        assert refused.returncode != 0

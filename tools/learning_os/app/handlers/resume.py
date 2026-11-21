@@ -18,6 +18,7 @@ from learning_os.derive.learning_runtime import (
     read_observations,
     read_stage_results,
     stage_results_for,
+    timestamp_sort_key,
 )
 from learning_os.derive.projection.common import excerpt as _excerpt
 from learning_os.derive.projection.common import first_para as _first_para
@@ -262,17 +263,11 @@ def _live_observations(observations: list[dict]) -> list[dict]:
     live = [obs for obs in observations
             if isinstance(obs, dict) and obs.get("id") not in superseded]
 
-    def _when(obs: dict) -> str:
-        stamp = obs.get("timestamp")
-        if not isinstance(stamp, str):
-            return ""
-        try:
-            _dt.datetime.fromisoformat(stamp)
-        except ValueError:
-            return ""
-        return stamp
-
-    return sorted(live, key=_when, reverse=True)
+    return sorted(
+        live,
+        key=lambda obs: timestamp_sort_key(obs, allow_unparseable=True),
+        reverse=True,
+    )
 
 
 def _historical_destination(repo):

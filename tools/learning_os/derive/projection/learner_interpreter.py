@@ -1,10 +1,10 @@
 import json
-from datetime import datetime
 
 from learning_os.derive.learning_runtime import (
     collect_requirements,
     read_observations,
     requirement_fingerprint,
+    timestamp_sort_key,
 )
 from learning_os.domain.snapshot import Repo
 
@@ -66,7 +66,7 @@ def interpret_observations(observations: list[dict], requirement: dict | None = 
     could not count toward the new basis are named in ``not_counted_evidence``
     rather than silently ignored.
     """
-    ordered = sorted(observations, key=lambda obs: (datetime.fromisoformat(obs["timestamp"]), obs["id"]))
+    ordered = sorted(observations, key=timestamp_sort_key)
     evidence_ids = [obs["id"] for obs in ordered]
     conditions = set((requirement or {}).get("conditions", []))
     evidence_spec = set((requirement or {}).get("evidence_spec", []))
