@@ -69,12 +69,15 @@ release certification.
    - `tools/study_launch.py` filters inherited host environment variables down
      to an explicit POSIX/runtime/provider allowlist (dropping arbitrary host
      secrets and `LOS_OBSERVATIONS`) before spawning the sandboxed child.
-     **By exact name only (amended 2026-11-20, fourth pass).**
-     - Vendor variables pass only as provider credentials, endpoint and model
-       choice: `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`
-       and the like, `OPENAI_API_KEY`, `CODEX_API_KEY`, the Gemini and Google
-       keys, and agy's account choice. Host `CLAUDE_CODE_OAUTH_TOKEN` is
-       dropped so only Claude Code launches receive the dedicated study token.
+     **By exact name and selected runtime only (amended 2026-11-21).**
+     - Only the launched runtime receives its declared provider variables;
+       `--cmd` receives no provider variables. Claude Code inherits model
+       preferences only (`ANTHROPIC_MODEL`, `ANTHROPIC_DEFAULT_*_MODEL`) and
+       drops host `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`,
+       `ANTHROPIC_BASE_URL`, `ANTHROPIC_CUSTOM_HEADERS`, and
+       `CLAUDE_CODE_OAUTH_TOKEN`, so only its dedicated study token supplies
+       auth to the default Anthropic endpoint. Codex, Gemini, and agy keep
+       their explicitly declared provider variables separately.
      - Locale, XDG and CoreFoundation settings keep their prefixes.
      - The earlier vendor prefixes (`CLAUDE_`, `CODEX_`, `ANTHROPIC_`,
        `OPENAI_`, `GEMINI_`, `GOOGLE_`, `AGY_`) are gone. A launch from
@@ -228,8 +231,8 @@ release certification.
    A runtime that starts writing somewhere new is refused and must be traced
    and added to `tools/study_launch.py` deliberately.
    `tools/study_launch.py` filters inherited host environment variables through
-   an explicit POSIX/runtime/provider allowlist of exact names (dropping
-   unrelated host secrets, `LOS_OBSERVATIONS` and every host session's own
+   an explicit runtime-scoped allowlist of exact names (dropping unrelated host
+   secrets, `LOS_OBSERVATIONS` and every host session's own
    state, §1), while outbound HTTPS network access remains
    permitted so supported AI runtimes can reach dynamic API/CDN endpoints.
 

@@ -138,7 +138,6 @@ _RUNTIME_HOME_RETENTION_DAYS = 30
 #: release tag. A study home's login is a link to the real ``auth.json`` and
 #: depends on exactly that, so any other version is refused (ADR-022 §3).
 _CODEX_IN_PLACE_AUTH_VERSIONS = frozenset({"0.153.4"})
-_CODEX_VERSION = re.compile(r"\bcodex-cli (\d+\.\d+\.\d+)\b")
 #: The SSH agent: its variable is not forwarded, and connecting to its socket,
 #: or to any socket under ``~/.ssh`` (OpenSSH's default ``agent/`` folder,
 #: ControlMaster sockets), is denied. Reads are open, so a study agent could
@@ -204,41 +203,45 @@ _CHILD_ENV_ALLOW_EXACT = frozenset({
     "MallocNanoZone",
 })
 
-#: What a study runtime may take from the host about its provider: the
-#: credentials, the endpoint and the model choice, by exact name (2026-11-20,
-#: fourth pass). Vendor prefixes (``CLAUDE_``, ``CODEX_``, …) used to pass
-#: whole, and a launch from inside a Claude Code session then forwarded that
-#: session's state into the sandbox: its messaging socket and token (a channel
-#: back into the unsandboxed session), its session, account and organization
-#: ids, its notes folder, and feature flags such as
-#: ``CLAUDE_CODE_CHILD_SESSION``, which turned the study session's transcripts
-#: off. Codex's token-URL overrides are left out too: they redirect where the
-#: refresh token is sent.
-_CHILD_ENV_PROVIDER_EXACT = frozenset({
-    # Claude Code (Anthropic API, or a long-lived subscription token).
-    "ANTHROPIC_API_KEY",
-    "ANTHROPIC_AUTH_TOKEN",
-    "ANTHROPIC_BASE_URL",
-    "ANTHROPIC_CUSTOM_HEADERS",
-    "ANTHROPIC_MODEL",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL",
-    # (CLAUDE_CODE_OAUTH_TOKEN is the launcher's: the study token, Claude Code only.)
-    # Codex (OpenAI).
-    "OPENAI_API_KEY",
-    "OPENAI_BASE_URL",
-    "CODEX_API_KEY",
-    # agy and the Gemini CLI (Google).
-    "GEMINI_API_KEY",
-    "GOOGLE_API_KEY",
-    "GOOGLE_APPLICATION_CREDENTIALS",
-    "GOOGLE_CLOUD_PROJECT",
-    "GOOGLE_CLOUD_LOCATION",
-    "GOOGLE_GENAI_USE_VERTEXAI",
-    "AGY_ACCOUNT",
-    "AGY_ADC_AUTH",
-})
+#: What a study runtime may take from the host about its provider, scoped by
+#: runtime name (amended 2026-11-21). Vendor prefixes (``CLAUDE_``, ``CODEX_``, …)
+#: used to pass whole, forwarding host session control channels and flags into
+#: the sandbox. Claude Code uses its dedicated study token, so it inherits
+#: model preferences only — never ``ANTHROPIC_API_KEY``,
+#: ``ANTHROPIC_AUTH_TOKEN``, ``ANTHROPIC_BASE_URL``, or
+#: ``ANTHROPIC_CUSTOM_HEADERS``, which could override or redirect that auth.
+#: ``--cmd`` receives no provider variables at all.
+_CHILD_ENV_PROVIDER_BY_RUNTIME: dict[str, frozenset[str]] = {
+    "claude": frozenset({
+        "ANTHROPIC_MODEL",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+    }),
+    "codex": frozenset({
+        "OPENAI_API_KEY",
+        "OPENAI_BASE_URL",
+        "CODEX_API_KEY",
+    }),
+    "gemini": frozenset({
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "GOOGLE_CLOUD_PROJECT",
+        "GOOGLE_CLOUD_LOCATION",
+        "GOOGLE_GENAI_USE_VERTEXAI",
+    }),
+    "agy": frozenset({
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "GOOGLE_CLOUD_PROJECT",
+        "GOOGLE_CLOUD_LOCATION",
+        "GOOGLE_GENAI_USE_VERTEXAI",
+        "AGY_ACCOUNT",
+        "AGY_ADC_AUTH",
+    }),
+}
 
 #: Locale, XDG base-directory and CoreFoundation settings: the user's system
 #: environment, never a vendor's or a session's.
@@ -257,20 +260,27 @@ def _build_child_env(
     scratch_dir: Path,
     child_cwd: Path,
     runtime_env: Mapping[str, str] | None = None,
+    runtime: str | None = None,
 ) -> dict[str, str]:
-    """Filter inherited host env down to exact POSIX, terminal and provider names.
+    """Filter inherited host env down to exact system names and the launched runtime.
 
-    Default-deny: a variable passes only by exact name (``_CHILD_ENV_ALLOW_EXACT``,
-    ``_CHILD_ENV_PROVIDER_EXACT``) or a system prefix (locale, XDG,
-    CoreFoundation). Nothing a host session sets for its own children reaches
-    the study runtime.
+    Default-deny: a variable passes only by exact system name
+    (``_CHILD_ENV_ALLOW_EXACT``), an explicit per-runtime provider entry
+    (``_CHILD_ENV_PROVIDER_BY_RUNTIME``), or a system prefix (locale, XDG,
+    CoreFoundation). ``--cmd`` (``runtime is None``) receives no provider
+    variables; Claude Code's study token enters only via ``runtime_env``.
     """
+    provider_allow = (
+        frozenset()
+        if runtime is None
+        else _CHILD_ENV_PROVIDER_BY_RUNTIME.get(runtime, frozenset())
+    )
     child_env = {
         k: v
         for k, v in host_env.items()
         if (
             k in _CHILD_ENV_ALLOW_EXACT
-            or k in _CHILD_ENV_PROVIDER_EXACT
+            or k in provider_allow
             or k.startswith(_CHILD_ENV_ALLOW_PREFIXES)
         )
         and k not in _RUNTIME_HOME_ENV
@@ -1356,6 +1366,20 @@ def prune_runtime_homes(home_dir: Path, *, keep: Path, now: float) -> list[Path]
     return removed
 
 
+def _parse_codex_cli_version(raw: str) -> str | None:
+    """Extract an unambiguous ``codex-cli X.Y.Z`` token pair without regex prose matching."""
+    tokens = raw.split()
+    matches: list[str] = []
+    for index, token in enumerate(tokens[:-1]):
+        if token != "codex-cli":
+            continue
+        candidate = tokens[index + 1]
+        parts = candidate.split(".")
+        if len(parts) == 3 and all(part.isascii() and part.isdigit() for part in parts):
+            matches.append(candidate)
+    return matches[0] if len(matches) == 1 else None
+
+
 def check_codex_saves_login_in_place(binary: str) -> str:
     """Return the Codex version, or refuse one not verified to save in place.
 
@@ -1372,13 +1396,12 @@ def check_codex_saves_login_in_place(binary: str) -> str:
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise ValueError(f"refusing --runtime codex: cannot read its version: {exc}") from exc
-    match = _CODEX_VERSION.search(probe.stdout)
-    if probe.returncode != 0 or match is None:
+    version = _parse_codex_cli_version(probe.stdout)
+    if probe.returncode != 0 or version is None:
         raise ValueError(
             f"refusing --runtime codex: `{binary} --version` gave no codex-cli version "
             f"(exit {probe.returncode})"
         )
-    version = match.group(1)
     if version not in _CODEX_IN_PLACE_AUTH_VERSIONS:
         verified = ", ".join(sorted(_CODEX_IN_PLACE_AUTH_VERSIONS))
         raise ValueError(
@@ -1737,6 +1760,7 @@ def launch_study(
 
         child_env = _build_child_env(
             os.environ,
+            runtime=runtime,
             sock_path=sock_path,
             session_id=session_id,
             scratch_dir=scratch_dir,

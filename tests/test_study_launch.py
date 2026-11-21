@@ -513,8 +513,8 @@ def test_child_env_points_runtimes_at_their_study_homes(tmp_path: Path) -> None:
 
     def env_for(runtime: str | None, *, claude_token: str | None = None) -> dict[str, str]:
         return study_launch._build_child_env(
-            host, sock_path=tmp_path / "gate.sock", session_id=S1, scratch_dir=scratch,
-            child_cwd=tmp_path,
+            host, runtime=runtime, sock_path=tmp_path / "gate.sock", session_id=S1,
+            scratch_dir=scratch, child_cwd=tmp_path,
             runtime_env=(
                 study_launch.runtime_home_env(runtime, home, scratch, claude_token=claude_token)
                 if runtime
@@ -531,7 +531,7 @@ def test_child_env_points_runtimes_at_their_study_homes(tmp_path: Path) -> None:
     assert claude["CLAUDE_CODE_TMPDIR"] == str(scratch) == claude["TMPDIR"]
     # The sandbox refuses writes to the install folder; an update can only fail.
     assert claude["DISABLE_AUTOUPDATER"] == "1"
-    assert "CODEX_HOME" not in claude and claude["ANTHROPIC_API_KEY"] == "keep"
+    assert "CODEX_HOME" not in claude and "ANTHROPIC_API_KEY" not in claude
     codex = env_for("codex")
     assert codex["CODEX_HOME"] == str(home)
     assert not {
@@ -586,20 +586,28 @@ _HOST_SESSION_ENV = (
 )
 
 
-def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path) -> None:
-    """Default-deny by exact name: a launch from inside a Claude Code, Codex or
-    agy session hands the study runtime none of that session's channels, ids
-    or flags, while the user's provider credentials and model choice pass. Host
-    CLAUDE_CODE_OAUTH_TOKEN is dropped so only Claude Code's study token fills it."""
+def test_child_env_is_scoped_to_runtime_and_drops_host_session_state(tmp_path: Path) -> None:
+    """Default-deny by exact name and selected runtime: a launch from inside a
+    Claude Code, Codex or agy session hands the study runtime none of that
+    session's control channels, ids, or other vendors' credentials. Claude Code
+    inherits model preferences only so its dedicated study token controls auth
+    and endpoint, and --cmd (runtime=None) inherits no provider variables."""
     provider = {
         "ANTHROPIC_API_KEY": "sk-ant",
-        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+        "ANTHROPIC_AUTH_TOKEN": "auth-ant",
+        "ANTHROPIC_BASE_URL": "https://proxy.example.invalid",
+        "ANTHROPIC_CUSTOM_HEADERS": "Authorization: secret",
         "ANTHROPIC_MODEL": "claude-opus-5-5",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
         "OPENAI_API_KEY": "sk-openai",
+        "OPENAI_BASE_URL": "https://api.openai.com",
         "CODEX_API_KEY": "sk-codex",
         "GEMINI_API_KEY": "gem",
+        "GOOGLE_API_KEY": "google",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gcp.json",
         "GOOGLE_CLOUD_PROJECT": "proj",
         "AGY_ACCOUNT": "someone@example.invalid",
+        "AGY_ADC_AUTH": "1",
     }
     system = {"PATH": "/usr/bin", "HOME": "/Users/x", "LANG": "en_US.UTF-8", "LC_ALL": "C",
               "XDG_CONFIG_HOME": "/Users/x/.config", "__CF_USER_TEXT_ENCODING": "0x1F5:0:0"}
@@ -611,24 +619,52 @@ def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path
         "LOS_OBSERVATIONS": "/host/obs.yaml",
         "AWS_SECRET_ACCESS_KEY": "aws",
     }
-    child = study_launch._build_child_env(
-        host, sock_path=tmp_path / "gate.sock", session_id=S1, scratch_dir=tmp_path,
-        child_cwd=tmp_path,
-    )
-    leaked = sorted(set(_HOST_SESSION_ENV) & set(child))
-    assert leaked == [], leaked
-    assert {k: child[k] for k in provider} == provider
-    assert {k: child[k] for k in system} == system
-    assert "CLAUDE_CODE_OAUTH_TOKEN" not in child
-    assert "LOS_OBSERVATIONS" not in child and "AWS_SECRET_ACCESS_KEY" not in child
-    # Only exact names and the system prefixes pass: nothing else from the host.
+    expected = {
+        None: {},
+        "claude": {
+            "ANTHROPIC_MODEL": provider["ANTHROPIC_MODEL"],
+            "ANTHROPIC_DEFAULT_HAIKU_MODEL": provider["ANTHROPIC_DEFAULT_HAIKU_MODEL"],
+        },
+        "codex": {k: provider[k] for k in ("OPENAI_API_KEY", "OPENAI_BASE_URL", "CODEX_API_KEY")},
+        "gemini": {
+            k: provider[k]
+            for k in (
+                "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_APPLICATION_CREDENTIALS",
+                "GOOGLE_CLOUD_PROJECT",
+            )
+        },
+        "agy": {
+            k: provider[k]
+            for k in (
+                "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_APPLICATION_CREDENTIALS",
+                "GOOGLE_CLOUD_PROJECT", "AGY_ACCOUNT", "AGY_ADC_AUTH",
+            )
+        },
+    }
     launcher_set = {study_launch.GATE_SOCK_ENV, "LOS_SESSION_ID", "LOS_SCRATCH_DIR", "TMPDIR", "PWD",
                     "PYTHONDONTWRITEBYTECODE"}
-    assert set(child) - launcher_set == set(system) | set(provider)
+    for runtime, allowed in expected.items():
+        child = study_launch._build_child_env(
+            host, runtime=runtime, sock_path=tmp_path / "gate.sock", session_id=S1,
+            scratch_dir=tmp_path, child_cwd=tmp_path,
+        )
+        leaked = sorted(set(_HOST_SESSION_ENV) & set(child))
+        assert leaked == [], (runtime, leaked)
+        assert {k: child[k] for k in provider if k in child} == allowed, runtime
+        assert {k: child[k] for k in system} == system, runtime
+        assert set(child) - launcher_set == set(system) | set(allowed), runtime
+        assert "CLAUDE_CODE_OAUTH_TOKEN" not in child, runtime
+        assert "LOS_OBSERVATIONS" not in child and "AWS_SECRET_ACCESS_KEY" not in child, runtime
+    # Unknown runtimes fail closed with no provider variables either.
+    unknown = study_launch._build_child_env(
+        host, runtime="other", sock_path=tmp_path / "gate.sock", session_id=S1,
+        scratch_dir=tmp_path, child_cwd=tmp_path,
+    )
+    assert set(unknown) - launcher_set == set(system)
     # The SSH agent's variable is not forwarded either (its socket is denied too).
     with_agent = study_launch._build_child_env(
-        {**host, "SSH_AUTH_SOCK": "/private/tmp/agent.sock"}, sock_path=tmp_path / "gate.sock",
-        session_id=S1, scratch_dir=tmp_path, child_cwd=tmp_path,
+        {**host, "SSH_AUTH_SOCK": "/private/tmp/agent.sock"}, runtime="codex",
+        sock_path=tmp_path / "gate.sock", session_id=S1, scratch_dir=tmp_path, child_cwd=tmp_path,
     )
     assert "SSH_AUTH_SOCK" not in with_agent
 
@@ -764,12 +800,19 @@ def test_codex_launch_only_for_versions_that_save_login_in_place(
     for needed in ("codex 0.154.0", "rust-v0.154.0", "FileAuthStorage::save",
                    "codex-rs/login/src/auth/storage.rs", "_CODEX_IN_PLACE_AUTH_VERSIONS"):
         assert needed in message, needed
-    for unreadable in ("", "garbage"):
-        broken = tmp_path / f"broken-{unreadable or 'empty'}"
+    for unreadable in ("", "garbage", "0.153.4", "codex-cli 0.153", "codex-cli v0.153.4",
+                       "codex-cli 0.153.4-beta", "other-codex-cli 0.153.4",
+                       "codex-cli 0.153.4 codex-cli 0.154.0"):
+        broken = tmp_path / f"broken-{len(unreadable)}-{abs(hash(unreadable))}"
         broken.write_text(f"#!/bin/sh\necho '{unreadable}'\nexit 0\n", encoding="utf-8")
         broken.chmod(0o755)
         with pytest.raises(ValueError, match="no codex-cli version"):
             study_launch.check_codex_saves_login_in_place(str(broken))
+    nonzero = tmp_path / "codex-nonzero"
+    nonzero.write_text("#!/bin/sh\necho 'codex-cli 0.153.4'\nexit 1\n", encoding="utf-8")
+    nonzero.chmod(0o755)
+    with pytest.raises(ValueError, match="no codex-cli version"):
+        study_launch.check_codex_saves_login_in_place(str(nonzero))
     with pytest.raises(ValueError, match="cannot read its version"):
         study_launch.check_codex_saves_login_in_place(str(tmp_path / "no-such-codex"))
 
@@ -2457,7 +2500,8 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
     assert data["foo_probe"] is False
     assert data["aws_secret"] is False
     assert data["los_obs_leaked"] is False
-    assert data["anthropic_key"] == "keep-provider-key"
+    # --cmd receives no provider credentials either.
+    assert data["anthropic_key"] is None
     assert data["gate_sock"] is True
     assert wrapper_agents.read_text(encoding="utf-8") == "# Original wrapper instructions\n"
 
