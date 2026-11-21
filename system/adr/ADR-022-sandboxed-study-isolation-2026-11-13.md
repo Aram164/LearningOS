@@ -25,15 +25,13 @@ release certification.
      the profile denies `file-write*` everywhere, allows back only
      `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp`, the launched runtime's own
      study home (§3) and what that runtime must still write in the real home
-     folder (amended 2026-11-20, third pass): for Claude Code, as literal
-     directories only, the three locks it takes to refresh its OAuth token
-     (`~/.claude/.oauth_refresh.lock`, `~/.claude/.storage-write.lock`,
-     `~/.claude.lock`; without them a sandboxed Claude session failed with
-     an expired token), and the login keychain; for Codex, the literal
+     folder (amended 2026-11-21): for Claude Code, nothing (it runs on the
+     dedicated study token, §3); for Codex, the literal
      `~/.codex/auth.json`; for agy, its traced conversation, transcript, log
      and cache paths, the Gemini CLI's `tmp/` and `history/`, npm's logs and
      the login keychain; for the Gemini CLI, the last three; for `--cmd`,
-     nothing. **Everything else in the real runtime folders stays denied,
+     nothing. `~/.config/learningos` (holding the study token) is read- and
+     write-denied in every launch. **Everything else in the real runtime folders stays denied,
      including the state other sessions take as input (amended 2026-11-20,
      second pass):** Claude Code's `shell-snapshots/`, `session-env/`,
      `todos/`, `tasks/` and transcripts; Codex's `models_cache.json` (every
@@ -74,9 +72,9 @@ release certification.
      **By exact name only (amended 2026-11-20, fourth pass).**
      - Vendor variables pass only as provider credentials, endpoint and model
        choice: `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`
-       and the like, `CLAUDE_CODE_OAUTH_TOKEN`, `OPENAI_API_KEY`,
-       `CODEX_API_KEY`, the Gemini and Google keys, and agy's account
-       choice.
+       and the like, `OPENAI_API_KEY`, `CODEX_API_KEY`, the Gemini and Google
+       keys, and agy's account choice. Host `CLAUDE_CODE_OAUTH_TOKEN` is
+       dropped so only Claude Code launches receive the dedicated study token.
      - Locale, XDG and CoreFoundation settings keep their prefixes.
      - The earlier vendor prefixes (`CLAUDE_`, `CODEX_`, `ANTHROPIC_`,
        `OPENAI_`, `GEMINI_`, `GOOGLE_`, `AGY_`) are gone. A launch from
@@ -170,23 +168,33 @@ release certification.
      project read back on resume, and Codex's memory pipeline read.
 
    Residuals, re-scoped:
-   - **The credentials the runtimes refresh stay writable.** Refresh tokens
-     rotate, so each runtime must keep one login shared with unsandboxed
-     sessions. A private copy that refreshed inside the sandbox would leave
-     the real login holding a dead token.
-     - Claude Code keeps its default keychain item and its three refresh
-       locks in the real `~/.claude`: `CLAUDE_SECURESTORAGE_CONFIG_DIR=""`
-       replaces the config directory for credentials only (claude 2.1.283).
-     - The refresh lock's owner record stays denied (amended 2026-11-21).
-       Unsandboxed Claude Code trusts it to take over a lock whose holder is
-       gone. Claude Code 2.1.283 writes it best effort: `Mc` logs "owner
-       record not written" and refreshes anyway. So the deny costs at most a
-       wait. If a study session dies holding the refresh lock, other
-       sessions wait until the lock goes stale, after 60 s (`stale: 60000`).
-       The credential-store lock goes stale after 15 s.
-     - Codex writes the real `~/.codex/auth.json` through the home's link.
-       codex 0.153.4 saves it in place and reads it again before refreshing.
-       The link can be neither removed nor replaced from inside.
+   - **Claude Code uses a dedicated study token (amended 2026-11-21).** It no
+     longer shares Aram's interactive login and writes nothing in the real home
+     folder: `~/Library/Keychains` and the three refresh-lock literals are
+     gone from Claude launches.
+     - **Token source:** Aram mints a long-lived subscription token with
+       `claude setup-token` outside the sandbox and stores it at
+       `~/.config/learningos/claude_study_token` (regular file, not a symlink,
+       owned by the user, mode `0600`, inside a `0700` directory). For Claude
+       launches only, the unsandboxed launcher reads it (`O_NOFOLLOW |
+       O_NONBLOCK`) and passes it as `CLAUDE_CODE_OAUTH_TOKEN`, replacing any
+       host value; missing or invalid files fail closed with exit 2 before a
+       study home or reading-memory session exists.
+     - **File protection:** `~/.config/learningos` is read- and write-denied in
+       every launch (`claude`, `codex`, `agy`, `gemini`, `--cmd`).
+     - **No fallback to shared login:** `CLAUDE_SECURESTORAGE_CONFIG_DIR` is
+       left unset (not empty), so secure storage resolves to the study home's
+       own nonexistent keychain item. In claude 2.1.283 (`La`/`tL`/`FOo`/`JL`),
+       an env token carries no refresh token (no refresh lock taken) and on a
+       401 adopts a stored `claudeAiOauth` only when one exists at that item;
+       keeping the item nonexistent prevents quietly borrowing Aram's
+       interactive login. The study agent can still read
+       `CLAUDE_CODE_OAUTH_TOKEN` from its own environment while running.
+   - **Other runtimes' shared logins and keychains stay writable.**
+     - Codex writes the real `~/.codex/auth.json` through the home's link
+       because refresh tokens rotate and a private copy would log other Codex
+       sessions out. codex 0.153.4 saves it in place and reads it again before
+       refreshing. The link can be neither removed nor replaced from inside.
      - **Version gate (amended 2026-11-21).** The launcher runs Codex only at
        versions verified to save the login in place
        (`_CODEX_IN_PLACE_AUTH_VERSIONS`, now 0.153.4, read in
@@ -198,13 +206,18 @@ release certification.
          logs every Codex session out. ASSUMPTION: the auth server rejects a
          reused refresh token.
        - Failing closed costs one source check per Codex upgrade.
+     - **agy and the Gemini CLI keep `~/Library/Keychains`** for their own
+       launches only (remaining keychain residual). Narrowing the rule to
+       `login.keychain-db` plus lock/WAL sidecars wouldn't close the risk: the
+       login keychain file itself stays writable, corruptible, and deletable by
+       any process granted write access to it.
    - **Credential files stay readable.** Reads are open outside the closed
      trees, so a study agent can read, and with open egress send out, the
      private key files under `~/.ssh` and other tokens kept as files.
      Denying the agent socket (§1) stops signing through the agent, not a copy
      of a key without a passphrase. Whether to read-deny `~/.ssh` and similar
-     stores is open (2026-11-21), next to the question of the keychain folder
-     that Claude Code, agy and the Gemini CLI may write.
+     stores is open (2026-11-21), next to the remaining `~/Library/Keychains`
+     write access for agy and Gemini launches.
    - **agy has no home override** (no data-dir flag; its
      `ANTIGRAVITY_EXECUTABLE_DATA_DIR` only serves sidecar plugins). It keeps
      its traced path rules, now granted to agy launches only. An agy study

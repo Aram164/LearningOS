@@ -380,9 +380,13 @@ which enforces the closed-tree and read-only `LearningOS/` boundary with macOS
 `knowledge/summaries/`, and non-`.gitkeep`
 entries under `operations/ai-actions/requests/`, and denies every write
 except to `$LOS_SCRATCH_DIR`, `/dev`, `/private/tmp`, the launched runtime's
-own study home and the login refresh paths that runtime shares with
-unsandboxed sessions. Claude Code and Codex get a home of their own for each
-study session (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`); agy launches keep agy's
+own study home and, for Codex/agy/Gemini only, the login or keychain paths
+those runtimes share with unsandboxed sessions. Claude Code and Codex get a
+home of their own for each study session (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`),
+and Claude Code runs on Aram's dedicated study token
+(`~/.config/learningos/claude_study_token` -> `CLAUDE_CODE_OAUTH_TOKEN`,
+without touching the system keychain or refresh locks; `~/.config/learningos`
+is read- and write-denied in every launch); agy launches keep agy's
 traced state paths. `LearningOS/`, instruction, config and executable paths,
 and the rest of the real runtime folders stay denied. It also filters
 inherited environment variables and allocates `$LOS_SCRATCH_DIR` outside

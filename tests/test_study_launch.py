@@ -215,9 +215,10 @@ def _allowed_writes(profile: str) -> set[tuple[str, str]]:
 
 def test_profile_allows_only_the_launched_runtimes_state(tmp_path: Path) -> None:
     """Per-session homes (ADR-022 §3): each launch may write its own study home
-    and, in the real home folder, only what its runtime shares with unsandboxed
-    sessions to refresh one login. Nothing in the real ~/.claude or ~/.codex
-    is writable besides Claude Code's refresh locks and Codex's auth.json."""
+    and, in the real home folder, only Codex's auth.json and agy/gemini's
+    traced paths. Claude Code runs on the dedicated study token, writes nothing
+    in $HOME (no Keychains or refresh locks), and ~/.config/learningos is read-
+    and write-denied in every launch."""
     core = tmp_path / "LearningOS" / "repository"
     core.mkdir(parents=True)
     fake_home = tmp_path / "home"
@@ -233,10 +234,6 @@ def test_profile_allows_only_the_launched_runtimes_state(tmp_path: Path) -> None
         ("subpath", q(os.path.realpath(scratch))),
     }
     keychain = ("subpath", q(str(real_home / "Library/Keychains")))
-    locks = {
-        ("literal", q(str(real_home / rel)))
-        for rel in (".claude/.oauth_refresh.lock", ".claude/.storage-write.lock", ".claude.lock")
-    }
     gemini_shared = {
         ("subpath", q(str(real_home / rel))) for rel in (".gemini/tmp", ".gemini/history", ".npm/_logs")
     }
@@ -256,9 +253,7 @@ def test_profile_allows_only_the_launched_runtimes_state(tmp_path: Path) -> None
         )
 
     assert _allowed_writes(profiles[None]) == common
-    assert _allowed_writes(profiles["claude"]) == (
-        common | {("subpath", q(str(homes["claude"]))), keychain} | locks
-    )
+    assert _allowed_writes(profiles["claude"]) == common | {("subpath", q(str(homes["claude"])))}
     assert _allowed_writes(profiles["codex"]) == (
         common
         | {("subpath", q(str(homes["codex"]))), ("literal", q(str(real_home / ".codex/auth.json")))}
@@ -272,13 +267,15 @@ def test_profile_allows_only_the_launched_runtimes_state(tmp_path: Path) -> None
         assert home.parent.parent.parent == real_home / ".local/state/learningos/study-runtimes"
         assert home.parent.name == runtime and " " not in str(home)
 
-    claude_lines = profiles["claude"].splitlines()
-    deny_home_claude = f'(deny file-write* (subpath "{q(str(real_home / ".claude"))}"))'
-    lock_line = next(i for i, line in enumerate(claude_lines) if q(str(real_home / ".claude.lock")) in line)
-    # The refresh locks are allowed after ~/.claude is denied, as literals only;
-    # the lock's owner record is never allowed.
-    assert claude_lines.index(deny_home_claude) < lock_line
-    assert ".oauth_refresh.lock.owner" not in profiles["claude"]
+    # Claude Code keeps no keychain or refresh-lock allows, and every launch
+    # read- and write-denies ~/.config/learningos.
+    assert "Library/Keychains" not in profiles["claude"]
+    for lock_rel in (".oauth_refresh.lock", ".storage-write.lock", ".claude.lock"):
+        assert lock_rel not in profiles["claude"], lock_rel
+    secrets_subpath = f'(subpath "{q(str(real_home / ".config/learningos"))}")'
+    for runtime, profile in profiles.items():
+        assert f"(deny file-read* {secrets_subpath})" in profile, runtime
+        assert f"(deny file-write* {secrets_subpath})" in profile, runtime
     # The marker of every home, and Codex's login link itself, are denied last.
     for runtime, home in homes.items():
         lines = profiles[runtime].splitlines()
@@ -293,8 +290,19 @@ def test_profile_allows_only_the_launched_runtimes_state(tmp_path: Path) -> None
     assert f'(literal "{q(str(homes["claude"] / "auth.json"))}")' not in profiles["claude"]
 
 
+def _write_fake_claude_study_token(home: Path, token: str = "sk-ant-oat01-fake-study-token") -> Path:
+    secrets = home / ".config" / "learningos"
+    secrets.mkdir(parents=True, exist_ok=True)
+    secrets.chmod(0o700)
+    token_file = secrets / "claude_study_token"
+    token_file.write_text(f"{token}\n", encoding="utf-8")
+    token_file.chmod(0o600)
+    return token_file
+
+
 def _fake_real_runtime_folders(home: Path) -> None:
     """A real home folder with the config keys the seed must and must not copy."""
+    _write_fake_claude_study_token(home)
     (home / ".claude").mkdir(parents=True)
     (home / ".claude.json").write_text(json.dumps({
         "hasCompletedOnboarding": True,
@@ -497,29 +505,39 @@ def test_child_env_points_runtimes_at_their_study_homes(tmp_path: Path) -> None:
         "CLAUDE_CONFIG_DIR": "/Users/x/.claude",
         "CLAUDE_SECURESTORAGE_CONFIG_DIR": "/Users/x/.claude",
         "CLAUDE_CODE_TMPDIR": "/private/tmp",
+        "CLAUDE_CODE_OAUTH_TOKEN": "host-oauth-token",
         "CODEX_HOME": "/Users/x/.codex",
     }
     scratch = tmp_path / "scratch"
     home = tmp_path / "home"
 
-    def env_for(runtime: str | None) -> dict[str, str]:
+    def env_for(runtime: str | None, *, claude_token: str | None = None) -> dict[str, str]:
         return study_launch._build_child_env(
             host, sock_path=tmp_path / "gate.sock", session_id=S1, scratch_dir=scratch,
             child_cwd=tmp_path,
-            runtime_env=study_launch.runtime_home_env(runtime, home, scratch) if runtime else None,
+            runtime_env=(
+                study_launch.runtime_home_env(runtime, home, scratch, claude_token=claude_token)
+                if runtime
+                else None
+            ),
         )
 
-    claude = env_for("claude")
+    claude = env_for("claude", claude_token="study-tok")
     assert claude["CLAUDE_CONFIG_DIR"] == str(home)
-    # Empty, not unset: the default keychain item and ~/.claude's refresh locks.
-    assert claude["CLAUDE_SECURESTORAGE_CONFIG_DIR"] == ""
+    # Unset, not empty: secure storage resolves to this home's own item, which
+    # does not exist, so a 401 never borrows Aram's shared login.
+    assert "CLAUDE_SECURESTORAGE_CONFIG_DIR" not in claude
+    assert claude["CLAUDE_CODE_OAUTH_TOKEN"] == "study-tok"
     assert claude["CLAUDE_CODE_TMPDIR"] == str(scratch) == claude["TMPDIR"]
     # The sandbox refuses writes to the install folder; an update can only fail.
     assert claude["DISABLE_AUTOUPDATER"] == "1"
     assert "CODEX_HOME" not in claude and claude["ANTHROPIC_API_KEY"] == "keep"
     codex = env_for("codex")
     assert codex["CODEX_HOME"] == str(home)
-    assert not {"CLAUDE_CONFIG_DIR", "CLAUDE_SECURESTORAGE_CONFIG_DIR", "CLAUDE_CODE_TMPDIR"} & set(codex)
+    assert not {
+        "CLAUDE_CONFIG_DIR", "CLAUDE_SECURESTORAGE_CONFIG_DIR", "CLAUDE_CODE_TMPDIR",
+        "CLAUDE_CODE_OAUTH_TOKEN",
+    } & set(codex)
     for runtime in (None, "agy", "gemini"):
         assert not set(study_launch._RUNTIME_HOME_ENV) & set(env_for(runtime)), runtime
 
@@ -571,12 +589,12 @@ _HOST_SESSION_ENV = (
 def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path) -> None:
     """Default-deny by exact name: a launch from inside a Claude Code, Codex or
     agy session hands the study runtime none of that session's channels, ids
-    or flags, while the user's provider credentials and model choice pass."""
+    or flags, while the user's provider credentials and model choice pass. Host
+    CLAUDE_CODE_OAUTH_TOKEN is dropped so only Claude Code's study token fills it."""
     provider = {
         "ANTHROPIC_API_KEY": "sk-ant",
         "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
         "ANTHROPIC_MODEL": "claude-opus-5-5",
-        "CLAUDE_CODE_OAUTH_TOKEN": "oat",
         "OPENAI_API_KEY": "sk-openai",
         "CODEX_API_KEY": "sk-codex",
         "GEMINI_API_KEY": "gem",
@@ -588,6 +606,7 @@ def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path
     host = {
         **system,
         **provider,
+        "CLAUDE_CODE_OAUTH_TOKEN": "host-oat",
         **{name: f"host-{name}" for name in _HOST_SESSION_ENV},
         "LOS_OBSERVATIONS": "/host/obs.yaml",
         "AWS_SECRET_ACCESS_KEY": "aws",
@@ -600,6 +619,7 @@ def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path
     assert leaked == [], leaked
     assert {k: child[k] for k in provider} == provider
     assert {k: child[k] for k in system} == system
+    assert "CLAUDE_CODE_OAUTH_TOKEN" not in child
     assert "LOS_OBSERVATIONS" not in child and "AWS_SECRET_ACCESS_KEY" not in child
     # Only exact names and the system prefixes pass: nothing else from the host.
     launcher_set = {study_launch.GATE_SOCK_ENV, "LOS_SESSION_ID", "LOS_SCRATCH_DIR", "TMPDIR", "PWD",
@@ -611,6 +631,111 @@ def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path
         session_id=S1, scratch_dir=tmp_path, child_cwd=tmp_path,
     )
     assert "SSH_AUTH_SOCK" not in with_agent
+
+
+def test_claude_study_token_reader_and_fail_closed_launch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Dedicated Claude study token: regular 0600 file in 0700 folder, no
+    symlinks/FIFOs, fails closed before a home or reading-memory session
+    exists, and never echoes file contents in error messages."""
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    secrets_dir = fake_home / ".config" / "learningos"
+    token_path = secrets_dir / "claude_study_token"
+
+    # 1. Missing folder/file -> names `claude setup-token` and path.
+    with pytest.raises(ValueError) as missing:
+        study_launch.read_claude_study_token(fake_home)
+    assert "claude setup-token" in str(missing.value)
+    assert "claude_study_token" in str(missing.value)
+
+    # Through launch_study: exit 2, no home created, no reading-memory session.
+    core = tmp_path / "LearningOS" / "repository"
+    core.mkdir(parents=True)
+    monkeypatch.setenv("HOME", str(fake_home))
+    fake_sb = tmp_path / "sandbox-exec"
+    fake_sb.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    fake_sb.chmod(0o755)
+    rc = study_launch.launch_study(
+        core_root=core, command=["claude", "-p", "hi"], session_id=S1,
+        sandbox_exec=fake_sb, platform="darwin", runtime="claude",
+    )
+    assert rc == 2
+    assert not (fake_home / ".local").exists()
+    assert not (core.parent / "reading-memory").exists()
+
+    # 2. Symlink folder refused.
+    (fake_home / ".config").mkdir()
+    real_other = tmp_path / "other-dir"
+    real_other.mkdir()
+    secrets_dir.symlink_to(real_other)
+    with pytest.raises(ValueError, match="real directory"):
+        study_launch.read_claude_study_token(fake_home)
+    secrets_dir.unlink()
+
+    # 3. Unsafe folder permissions refused.
+    secrets_dir.mkdir(mode=0o755)
+    secrets_dir.chmod(0o755)
+    with pytest.raises(ValueError, match="unsafe permissions"):
+        study_launch.read_claude_study_token(fake_home)
+    secrets_dir.chmod(0o700)
+
+    # 4. Symlink token file refused.
+    target_file = tmp_path / "target-tok"
+    target_file.write_text("SECRET_DO_NOT_ECHO\n", encoding="utf-8")
+    target_file.chmod(0o600)
+    token_path.symlink_to(target_file)
+    with pytest.raises(ValueError) as sym_err:
+        study_launch.read_claude_study_token(fake_home)
+    assert "SECRET_DO_NOT_ECHO" not in str(sym_err.value)
+    assert "claude setup-token" in str(sym_err.value)
+    token_path.unlink()
+
+    # 5. FIFO does not hang (O_NONBLOCK) and is refused.
+    os.mkfifo(token_path, 0o600)
+    with pytest.raises(ValueError, match="regular file"):
+        study_launch.read_claude_study_token(fake_home)
+    token_path.unlink()
+
+    # 6. Directory at token path refused.
+    token_path.mkdir(mode=0o700)
+    with pytest.raises(ValueError, match="regular file"):
+        study_launch.read_claude_study_token(fake_home)
+    token_path.rmdir()
+
+    # 7. Unsafe permissions on token file refused (0644, 0640, 0604).
+    token_path.write_text("SECRET_DO_NOT_ECHO\n", encoding="utf-8")
+    for bad_mode in (0o644, 0o640, 0o604):
+        token_path.chmod(bad_mode)
+        with pytest.raises(ValueError) as mode_err:
+            study_launch.read_claude_study_token(fake_home)
+        assert "unsafe permissions" in str(mode_err.value)
+        assert "SECRET_DO_NOT_ECHO" not in str(mode_err.value)
+    token_path.chmod(0o600)
+
+    # 8. Empty / whitespace, multiline, invalid UTF-8, oversized -> all refused without echoing bytes.
+    token_path.write_text("   \n\t ", encoding="utf-8")
+    with pytest.raises(ValueError, match="empty"):
+        study_launch.read_claude_study_token(fake_home)
+
+    token_path.write_text("SECRET_LINE_1\nSECRET_LINE_2\n", encoding="utf-8")
+    with pytest.raises(ValueError) as multi_err:
+        study_launch.read_claude_study_token(fake_home)
+    assert "single line" in str(multi_err.value)
+    assert "SECRET_LINE" not in str(multi_err.value)
+
+    token_path.write_bytes(b"\xff\xfe\xfd")
+    with pytest.raises(ValueError, match="UTF-8"):
+        study_launch.read_claude_study_token(fake_home)
+
+    token_path.write_text("x" * (study_launch._CLAUDE_STUDY_TOKEN_MAX_BYTES + 10), encoding="utf-8")
+    with pytest.raises(ValueError, match="exceeds"):
+        study_launch.read_claude_study_token(fake_home)
+
+    # 9. Valid token strips leading/trailing whitespace and returns cleanly.
+    token_path.write_text("  sk-ant-oat01-valid-study-token  \n", encoding="utf-8")
+    assert study_launch.read_claude_study_token(fake_home) == "sk-ant-oat01-valid-study-token"
 
 
 def _fake_codex_version(folder: Path, version: str) -> Path:
@@ -1674,10 +1799,11 @@ import errno, json, os, shlex, subprocess, sys
 from pathlib import Path
 
 assert Path(os.path.realpath(os.getcwd())) == Path({str(real_core)!r}), os.getcwd()
-# Its own study home, never the real ~/.claude, with the login shared.
+# Its own study home, never the real ~/.claude, running on the study token.
 config_dir = Path(os.environ["CLAUDE_CONFIG_DIR"])
 assert config_dir.parent.parent.parent == Path({str(Path(os.path.realpath(tmp_path)) / "home" / ".local/state/learningos/study-runtimes")!r}), config_dir
-assert os.environ["CLAUDE_SECURESTORAGE_CONFIG_DIR"] == ""
+assert "CLAUDE_SECURESTORAGE_CONFIG_DIR" not in os.environ
+assert os.environ["CLAUDE_CODE_OAUTH_TOKEN"] == "sk-ant-oat01-fake-study-token"
 assert os.environ["CLAUDE_CODE_TMPDIR"] == os.environ["LOS_SCRATCH_DIR"]
 idx = sys.argv.index("--settings")
 settings_path = Path(sys.argv[idx + 1])
@@ -1740,11 +1866,13 @@ assert end_res.stdout == ""
     fake_claude.chmod(0o755)
 
     # A fake HOME, so the study home never lands in the real ~/.local/state.
-    (Path(os.path.realpath(tmp_path)) / "home").mkdir()
+    rt_home = Path(os.path.realpath(tmp_path)) / "home"
+    rt_home.mkdir()
+    _write_fake_claude_study_token(rt_home)
     runtime_env = dict(
         base_env,
         PATH=f"{fakebin}{os.pathsep}{base_env.get('PATH', '')}",
-        HOME=str(Path(os.path.realpath(tmp_path)) / "home"),
+        HOME=str(rt_home),
     )
     rt_session = "cdcdcdcd-2222-4222-8222-222222222222"
     rt_proc = subprocess.run(
@@ -2079,6 +2207,7 @@ def test_seatbelt_blocks_env_instruction_writes_and_filters_child_env(
     monkeypatch.setattr(study_launch, "_CLAUDE_USER_TMP", fake_claude_tmp)
     (fake_home / ".gemini" / "antigravity-cli" / "conversations").mkdir(parents=True)
     (fake_home / ".gemini" / "config").mkdir(parents=True)
+    study_token_file = _write_fake_claude_study_token(fake_home)
     probe = f"""
 import json, os
 from pathlib import Path
@@ -2091,6 +2220,12 @@ try:
     results["env_read"] = "ALLOWED"
 except PermissionError:
     results["env_read"] = "DENIED"
+
+try:
+    Path({str(study_token_file)!r}).read_text()
+    results["study_token_read"] = "ALLOWED"
+except PermissionError:
+    results["study_token_read"] = "DENIED"
 
 sym_env = Path(os.environ["LOS_SCRATCH_DIR"]) / "env-link"
 sym_env.symlink_to(env_p)
@@ -2133,6 +2268,7 @@ for label, target in [
     ("home_local_bin", {str(fake_home / ".local" / "bin" / "claude")!r}),
     ("home_launch_agent", {str(fake_home / "Library" / "LaunchAgents" / "evil.plist")!r}),
     ("home_gitconfig", {str(fake_home / ".gitconfig")!r}),
+    ("study_token_write", {str(study_token_file)!r}),
     ("codex_plugins", {str(fake_home / ".codex" / "plugins" / "cache" / "x" / "plugin.json")!r}),
     # The OAuth refresh lock's owner record steers an unsandboxed takeover.
     ("claude_refresh_lock_owner", {str(fake_home / ".claude" / ".oauth_refresh.lock.owner")!r}),
@@ -2158,7 +2294,10 @@ for label, target in [
 ]:
     p = Path(target)
     try:
-        p.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            p.parent.mkdir(parents=True, exist_ok=True)
+        except FileExistsError:
+            pass
         p.write_text("POISONED")
         results[label] = "ALLOWED"
     except PermissionError:
@@ -2207,7 +2346,10 @@ for label, target in [
 ]:
     p = Path(target)
     try:
-        p.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            p.parent.mkdir(parents=True, exist_ok=True)
+        except FileExistsError:
+            pass
         p.write_text("POISONED")
         results[label] = "ALLOWED"
     except PermissionError:
@@ -2233,6 +2375,7 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
     data = json.loads(result_out.read_text(encoding="utf-8"))
     assert data["env_read"] == "DENIED"
     assert data["env_sym_read"] == "DENIED"
+    assert data["study_token_read"] == "DENIED"
     for key in (
         "wrapper_agents",
         "wrapper_claude_cfg",
@@ -2264,6 +2407,7 @@ Path({str(result_out)!r}).write_text(json.dumps(results))
         "home_local_bin",
         "home_launch_agent",
         "home_gitconfig",
+        "study_token_write",
         "codex_plugins",
         "claude_refresh_lock_owner",
         "claude_other_transcript",
@@ -2338,9 +2482,14 @@ def attempt(label, action):
 
 def write(path):
     p = Path(path.replace("{scratch}", os.environ["LOS_SCRATCH_DIR"]))
-    p.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+    except FileExistsError:
+        pass
     p.write_text("PROBE")
 
+for label, path in spec.get("reads", {}).items():
+    attempt(label, lambda path=path: Path(path).read_text())
 for label, path in spec.get("writes", {}).items():
     attempt(label, lambda path=path: write(path))
 for label, path in spec.get("through_link", {}).items():
@@ -2402,8 +2551,10 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
         (fake_home / parent).mkdir(parents=True)
     monkeypatch.setenv("HOME", str(fake_home))
     # Host values must never reach the child: they would point it back at a
-    # shared folder.
+    # shared folder or login.
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(fake_home / ".claude"))
+    monkeypatch.setenv("CLAUDE_SECURESTORAGE_CONFIG_DIR", str(fake_home / ".claude"))
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "host-oauth-should-drop")
     monkeypatch.setenv("CODEX_HOME", str(fake_home / ".codex"))
     monkeypatch.setenv("CLAUDE_CODE_TMPDIR", "/private/tmp")
     fake_claude_tmp = Path(os.path.realpath(tempfile.mkdtemp(prefix="los-claude-tmp-", dir="/tmp")))
@@ -2411,6 +2562,7 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
     core_slug = study_launch._claude_project_slug(Path(os.path.realpath(core)))
     probe_dir = Path(tempfile.mkdtemp(prefix="los-probe-", dir="/tmp"))
     real_auth = fake_home / ".codex" / "auth.json"
+    study_token_path = fake_home / ".config" / "learningos" / "claude_study_token"
     homes = {
         runtime: study_launch.runtime_home_parent(fake_home, real_learningos, runtime) / S1
         for runtime in study_launch.HOMED_RUNTIMES
@@ -2429,6 +2581,7 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
         "real_agy_conversation": fake_home / ".gemini" / "antigravity-cli" / "conversations" / "c.db",
         "real_keychain": fake_home / "Library" / "Keychains" / "probe.db",
         "real_npm_logs": fake_home / ".npm" / "_logs" / "probe.log",
+        "real_study_token": study_token_path,
     }
     other_home = study_launch.runtime_home_parent(fake_home, real_learningos, "claude") / S2
     # The probe stands in for codex; the version check reads this one.
@@ -2452,6 +2605,7 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
     try:
         other_home.mkdir(parents=True, mode=0o700)
         claude = run("claude", {
+            "reads": {"read_study_token": str(study_token_path)},
             "writes": {
                 **{k: str(v) for k, v in real_targets.items()},
                 "home_transcript": str(homes["claude"] / "projects" / core_slug / "s.jsonl"),
@@ -2466,22 +2620,28 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
                 "storage_lock": str(fake_home / ".claude" / ".storage-write.lock"),
                 "legacy_lock": str(fake_home / ".claude.lock"),
             },
-            "env": ["CLAUDE_CONFIG_DIR", "CLAUDE_SECURESTORAGE_CONFIG_DIR", "CLAUDE_CODE_TMPDIR", "CODEX_HOME"],
+            "env": [
+                "CLAUDE_CONFIG_DIR",
+                "CLAUDE_SECURESTORAGE_CONFIG_DIR",
+                "CLAUDE_CODE_OAUTH_TOKEN",
+                "CLAUDE_CODE_TMPDIR",
+                "CODEX_HOME",
+            ],
         })
         assert claude["env:CLAUDE_CONFIG_DIR"] == str(homes["claude"])
-        assert claude["env:CLAUDE_SECURESTORAGE_CONFIG_DIR"] == ""
+        assert claude["env:CLAUDE_SECURESTORAGE_CONFIG_DIR"] is None
+        assert claude["env:CLAUDE_CODE_OAUTH_TOKEN"] == "sk-ant-oat01-fake-study-token"
         assert claude["env:CLAUDE_CODE_TMPDIR"] == claude["env:LOS_SCRATCH_DIR"]
         assert claude["env:CODEX_HOME"] is None
-        for key in ("home_transcript", "home_shell_snapshot", "home_global_config", "real_keychain",
-                    "scratch_tmp_root"):
+        for key in ("home_transcript", "home_shell_snapshot", "home_global_config", "scratch_tmp_root"):
             assert claude[key] == "ALLOWED", (key, claude)
-        for key in (*(k for k in real_targets if k != "real_keychain"), "home_marker", "other_study_home"):
+        for key in (*real_targets, "read_study_token", "home_marker", "other_study_home",
+                    "refresh_lock", "storage_lock", "legacy_lock"):
             assert claude[key] == "DENIED", (key, claude)
-        for key in ("refresh_lock", "storage_lock", "legacy_lock"):
-            assert claude[key] == "LOCKED,inner-DENIED", (key, claude)
 
         original_auth = real_auth.read_text(encoding="utf-8")
         codex = run("codex", {
+            "reads": {"read_study_token": str(study_token_path)},
             "writes": {
                 **{k: str(v) for k, v in real_targets.items()},
                 "home_session": str(homes["codex"] / "sessions" / "2026" / "11" / "20" / "rollout-x.jsonl"),
@@ -2493,28 +2653,33 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
             "through_link": {"refresh_through_link": str(homes["codex"] / "auth.json")},
             "unlinks": {"unlink_link": str(homes["codex"] / "auth.json")},
             "renames_over": {"rename_over_link": str(homes["codex"] / "auth.json")},
-            "env": ["CODEX_HOME", "CLAUDE_CONFIG_DIR"],
+            "env": ["CODEX_HOME", "CLAUDE_CONFIG_DIR", "CLAUDE_CODE_OAUTH_TOKEN"],
         })
         assert codex["env:CODEX_HOME"] == str(homes["codex"])
         assert codex["env:CLAUDE_CONFIG_DIR"] is None
+        assert codex["env:CLAUDE_CODE_OAUTH_TOKEN"] is None
         for key in ("home_session", "home_models_cache", "home_installation_id", "refresh_through_link"):
             assert codex[key] == "ALLOWED", (key, codex)
-        for key in (*real_targets, "home_marker", "claude_home", "unlink_link", "rename_over_link"):
+        for key in (*real_targets, "read_study_token", "home_marker", "claude_home",
+                    "unlink_link", "rename_over_link"):
             assert codex[key] == "DENIED", (key, codex)
         # The refresh landed in the one shared login, and the link survived.
         assert "rotated-in-sandbox" in real_auth.read_text(encoding="utf-8") != original_auth
         assert os.readlink(homes["codex"] / "auth.json") == str(real_auth)
 
         agy = run("agy", {
+            "reads": {"read_study_token": str(study_token_path)},
             "writes": {k: str(v) for k, v in real_targets.items()},
             "locks": {"refresh_lock": str(fake_home / ".claude" / ".oauth_refresh.lock")},
-            "env": ["CLAUDE_CONFIG_DIR", "CODEX_HOME"],
+            "env": ["CLAUDE_CONFIG_DIR", "CODEX_HOME", "CLAUDE_CODE_OAUTH_TOKEN"],
         })
         assert agy["env:CLAUDE_CONFIG_DIR"] is None and agy["env:CODEX_HOME"] is None
+        assert agy["env:CLAUDE_CODE_OAUTH_TOKEN"] is None
         for key in ("real_agy_conversation", "real_keychain", "real_npm_logs"):
             assert agy[key] == "ALLOWED", (key, agy)
         for key in (k for k in real_targets if k not in ("real_agy_conversation", "real_keychain", "real_npm_logs")):
             assert agy[key] == "DENIED", (key, agy)
+        assert agy["read_study_token"] == "DENIED"
         assert agy["refresh_lock"] == "DENIED"
         assert sorted(p.name for p in homes["claude"].parent.iterdir()) == sorted([S1, S2])
         assert not study_launch.runtime_home_parent(fake_home, real_learningos, "agy").exists()
@@ -2544,7 +2709,8 @@ def test_seatbelt_resumed_launches_return_to_their_runtime_home(
 import json, os, sys
 from pathlib import Path
 home = Path(os.environ["CLAUDE_CONFIG_DIR"])
-assert os.environ["CLAUDE_SECURESTORAGE_CONFIG_DIR"] == ""
+assert "CLAUDE_SECURESTORAGE_CONFIG_DIR" not in os.environ
+assert os.environ["CLAUDE_CODE_OAUTH_TOKEN"] == "sk-ant-oat01-fake-study-token"
 trust = json.loads((home / ".claude.json").read_text())["projects"]
 assert trust[{str(real_core)!r}]["hasTrustDialogAccepted"] is True
 args = sys.argv[1:]

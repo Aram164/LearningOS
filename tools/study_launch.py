@@ -16,11 +16,12 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   for each study session (``CLAUDE_CONFIG_DIR``, ``CODEX_HOME``) under
   ``~/.local/state/learningos/study-runtimes/``, so their transcripts,
   caches and settings never reach Aram's real ``~/.claude`` or ``~/.codex``.
-  In the real folders they may write only what they must share with
-  unsandboxed sessions to refresh one login: Claude Code's three refresh
-  lock directories and the login keychain, and Codex's ``auth.json``, which
-  the session's home links to. agy and the Gemini CLI have no such home, so
-  their launches keep the traced path rules (ADR-022 §3). ``LearningOS/``,
+  Claude Code writes nothing in the real home folder: it runs on a dedicated
+  study token (``~/.config/learningos/claude_study_token`` ->
+  ``CLAUDE_CODE_OAUTH_TOKEN``), and ``~/.config/learningos`` is read- and
+  write-denied in every launch. Codex keeps only ``auth.json`` linked to the
+  real login (at versions verified to save it in place). agy and the Gemini CLI
+  have no such home, so their launches keep the traced path rules (ADR-022 §3). ``LearningOS/``,
   every instruction, config or executable surface in the real runtime
   folders and the wrapper's instruction paths stay denied. A denylist on
   top of ``(allow default)`` reopened the gap for every runtime or
@@ -144,13 +145,25 @@ _CODEX_VERSION = re.compile(r"\bcodex-cli (\d+\.\d+\.\d+)\b")
 #: find the socket without the variable and sign with Aram's keys: push to
 #: his repositories, log in to his hosts (2026-11-21).
 _SSH_AGENT_ENV = "SSH_AUTH_SOCK"
+#: Where the dedicated study token lives (2026-11-21): Aram mints it with
+#: ``claude setup-token`` and saves it here, mode 0600. A Claude Code launch
+#: runs on it instead of his interactive login. The launcher reads it
+#: unsandboxed; inside every launch the whole folder is read- and
+#: write-denied.
+_STUDY_SECRETS_REL = Path(".config") / "learningos"
+_CLAUDE_STUDY_TOKEN_REL = _STUDY_SECRETS_REL / "claude_study_token"
+_CLAUDE_STUDY_TOKEN_MAX_BYTES = 4096
+_CLAUDE_TOKEN_ENV = "CLAUDE_CODE_OAUTH_TOKEN"
 #: Variables the launcher sets for the runtime it starts. Host values are
 #: dropped for every launch, even if a later allowlist entry would admit one:
-#: each would point a runtime back at a shared folder.
+#: each would point a runtime back at a shared folder or login. A host
+#: ``CLAUDE_CODE_OAUTH_TOKEN`` included: a Claude Code launch gets the study
+#: token instead, and no other launch needs one.
 _RUNTIME_HOME_ENV = (
     "CLAUDE_CONFIG_DIR",
     "CLAUDE_SECURESTORAGE_CONFIG_DIR",
     "CLAUDE_CODE_TMPDIR",
+    _CLAUDE_TOKEN_ENV,
     "CODEX_HOME",
 )
 
@@ -211,7 +224,7 @@ _CHILD_ENV_PROVIDER_EXACT = frozenset({
     "ANTHROPIC_DEFAULT_OPUS_MODEL",
     "ANTHROPIC_DEFAULT_SONNET_MODEL",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL",
-    "CLAUDE_CODE_OAUTH_TOKEN",
+    # (CLAUDE_CODE_OAUTH_TOKEN is the launcher's: the study token, Claude Code only.)
     # Codex (OpenAI).
     "OPENAI_API_KEY",
     "OPENAI_BASE_URL",
@@ -272,28 +285,40 @@ def _build_child_env(
     return child_env
 
 
-def runtime_home_env(runtime: str, runtime_home: Path, scratch_dir: Path) -> dict[str, str]:
-    """Point ``runtime`` at its own study home.
+def runtime_home_env(
+    runtime: str,
+    runtime_home: Path,
+    scratch_dir: Path,
+    *,
+    claude_token: str | None = None,
+) -> dict[str, str]:
+    """Point ``runtime`` at its own study home (and Claude Code at its study token).
 
-    Claude Code: ``CLAUDE_SECURESTORAGE_CONFIG_DIR=""`` keeps the default
-    keychain item and the OAuth refresh locks in the real ``~/.claude``
-    (claude 2.1.283's ``Bw()``/``JL()``: the variable, even empty, replaces
-    the config directory for credentials only), so a refresh stays
-    coordinated with unsandboxed sessions. ``CLAUDE_CODE_TMPDIR`` moves the
-    per-user temp root out of ``/private/tmp/claude-<uid>``, where
-    unsandboxed sessions keep their task output. ``DISABLE_AUTOUPDATER``:
-    the sandbox refuses writes to Claude Code's install folder, so an update
-    started inside it can only fail ("Auto-update failed" in every
-    interactive study launch, because a new home lacks the real config's
-    ``autoUpdates`` setting).
+    Claude Code (2026-11-21) runs on the dedicated study token
+    (``CLAUDE_CODE_OAUTH_TOKEN``), never on Aram's interactive login, which
+    it never touches. In claude 2.1.283 credentials from that variable carry
+    no refresh token, so nothing is refreshed and no refresh lock is taken
+    (``La``/``tL``). On a 401 it keeps a user-supplied token (``FOo``); it
+    adopts a stored credential only in a remote session or over
+    ``ANTHROPIC_UNIX_SOCKET``, and ``CLAUDE_SECURESTORAGE_CONFIG_DIR`` is left
+    unset, so secure storage resolves to this home's own keychain item
+    (``JL``), which does not exist: there is nothing to adopt, whatever the
+    path. ``CLAUDE_CODE_TMPDIR`` moves the per-user temp root out of
+    ``/private/tmp/claude-<uid>``, where unsandboxed sessions keep their task
+    output. ``DISABLE_AUTOUPDATER``: the sandbox refuses writes to Claude
+    Code's install folder, so an update started inside it can only fail
+    ("Auto-update failed" in every interactive study launch, because a new
+    home lacks the real config's ``autoUpdates`` setting).
     """
     if runtime == "claude":
-        return {
+        env = {
             "CLAUDE_CONFIG_DIR": str(runtime_home),
-            "CLAUDE_SECURESTORAGE_CONFIG_DIR": "",
             "CLAUDE_CODE_TMPDIR": str(scratch_dir),
             "DISABLE_AUTOUPDATER": "1",
         }
+        if claude_token is not None:
+            env[_CLAUDE_TOKEN_ENV] = claude_token
+        return env
     if runtime == "codex":
         return {"CODEX_HOME": str(runtime_home)}
     return {}
@@ -308,22 +333,6 @@ def session_uuid_for_runtime(runtime: str, external_id: str) -> str:
     return str(uuid.uuid5(LEARNINGOS_STUDY_NAMESPACE, f"{runtime}:{external_id}"))
 
 
-#: Lock directories Claude Code takes to refresh its OAuth token (read from
-#: claude 2.1.283's vendored proper-lockfile, 2026-11-20): the refresh lock
-#: and the credential-store write lock under ``~/.claude``, and the legacy
-#: refresh lock beside it. Without the refresh lock a sandboxed session sent
-#: the expired token ("401 OAuth access token has expired"). Without the store
-#: lock it would fetch a new token pair and fail to save it. These two must be
-#: allowed together. A lock is an empty directory that is only created,
-#: touched and removed, so each is allowed as a ``literal``: nothing can be
-#: written inside it. The lock's owner record stays denied, because an
-#: unsandboxed Claude trusts it to take over a lock it believes is dead.
-_CLAUDE_TOKEN_REFRESH_LOCKS = (
-    ".claude/.oauth_refresh.lock",
-    ".claude/.storage-write.lock",
-    ".claude.lock",
-)
-
 #: Paths every launch may write besides its scratch directory: terminals and
 #: ``/dev/null``, and ``/private/tmp``, where Claude Code's Bash tool hands its
 #: working directory back to the CLI.
@@ -335,8 +344,9 @@ _SYSTEM_WRITE_SUBPATHS = (Path("/dev"), Path("/private/tmp"))
 #: instead (``CLAUDE_CODE_TMPDIR``), so no part of this folder is writable.
 _CLAUDE_USER_TMP = Path("/private/tmp") / f"claude-{os.getuid()}"
 
-#: The login keychain. Claude Code saves a refreshed token pair to its
-#: default item there; agy's and the Gemini CLI's sign-ins go through it too.
+#: The login keychain, for agy's and the Gemini CLI's sign-ins. A Claude
+#: Code launch no longer writes it: it runs on the study token, refreshes
+#: nothing and has no keychain item of its own (2026-11-21).
 _LOGIN_KEYCHAIN = "Library/Keychains"
 
 #: agy state under ``$HOME`` that an agy launch writes during a normal session
@@ -377,15 +387,15 @@ _AGY_WRITABLE_FILES = (
 _GEMINI_WRITABLE_SUBDIRS = (".gemini/tmp", ".gemini/history", ".npm/_logs")
 
 #: What each runtime may still write in the real home folder, relative to
-#: ``$HOME``: subpaths, then literals. Claude Code and Codex keep only what
-#: they share with unsandboxed sessions to refresh one login; Claude Code's
-#: refresh locks are allowed separately, after ``~/.claude`` is denied. Codex
-#: saves a refreshed login in place (codex 0.153.4 ``FileAuthStorage::save``
-#: opens ``auth.json`` with truncate and writes it; ``refresh_token`` reads it
-#: again first), so writing through the study home's link keeps both sides on
-#: one rotating refresh token. A ``--cmd`` launch gets nothing.
+#: ``$HOME``: subpaths, then literals. Claude Code writes nothing there: it
+#: runs on the study token. Codex keeps only the login it shares with
+#: unsandboxed sessions; it saves a refreshed login in place (codex 0.153.4
+#: ``FileAuthStorage::save`` opens ``auth.json`` with truncate and writes it;
+#: ``refresh_token`` reads it again first), so writing through the study
+#: home's link keeps both sides on one rotating refresh token. A ``--cmd``
+#: launch gets nothing.
 _RUNTIME_REAL_HOME_SUBPATHS: dict[str, tuple[str, ...]] = {
-    "claude": (_LOGIN_KEYCHAIN,),
+    "claude": (),
     "codex": (),
     "agy": (*_AGY_WRITABLE_SUBDIRS, *_GEMINI_WRITABLE_SUBDIRS, _LOGIN_KEYCHAIN),
     "gemini": (*_GEMINI_WRITABLE_SUBDIRS, _LOGIN_KEYCHAIN),
@@ -547,12 +557,19 @@ def build_seatbelt_profile(
     if home_ok:
         claude_dir = real_home / ".claude"
         lines.append(f'(deny file-write* (subpath "{_sbpl_quote(str(claude_dir))}"))')
-        if real_home != real_wrapper and runtime == "claude":
-            lock_allow = " ".join(
-                f'(literal "{_sbpl_quote(str(real_home / rel))}")'
-                for rel in _CLAUDE_TOKEN_REFRESH_LOCKS
-            )
-            lines.append(f"(allow file-write* {lock_allow})")
+        # The study token's folder: no launch reads or writes it. A Claude
+        # Code launch gets the token through its environment.
+        secrets_dir = real_home / _STUDY_SECRETS_REL
+        for candidate in dict.fromkeys((secrets_dir, Path(os.path.realpath(secrets_dir)))):
+            if (
+                candidate == Path("/")
+                or is_within(candidate, real_learningos)
+                or is_within(real_learningos, candidate)
+            ):
+                continue
+            quoted_secrets = _sbpl_quote(str(candidate))
+            lines.append(f'(deny file-read* (subpath "{quoted_secrets}"))')
+            lines.append(f'(deny file-write* (subpath "{quoted_secrets}"))')
         for read_only in _RUNTIME_READ_ONLY:
             _add_write_deny_target(
                 lines, deny_seen, real_home / read_only, real_learningos=real_learningos
@@ -1376,6 +1393,118 @@ def check_codex_saves_login_in_place(binary: str) -> str:
     return version
 
 
+def read_claude_study_token(home_dir: Path) -> str:
+    """Read Aram's dedicated Claude Code study token, failing closed.
+
+    The token lives at ``~/.config/learningos/claude_study_token`` (minted with
+    ``claude setup-token`` outside the sandbox). Error messages never include
+    file contents, and ``O_NOFOLLOW | O_NONBLOCK`` refuses symlinks and keeps a
+    FIFO from hanging the launcher.
+    """
+    real_home = Path(os.path.realpath(home_dir))
+    secrets_dir = real_home / _STUDY_SECRETS_REL
+    token_path = real_home / _CLAUDE_STUDY_TOKEN_REL
+    remediation = (
+        f"run `claude setup-token` outside the sandbox and save it to {token_path} (mode 0600)"
+    )
+    try:
+        parent_stat = os.lstat(secrets_dir)
+    except FileNotFoundError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: missing study token at {token_path}; {remediation}"
+        ) from exc
+    except OSError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: cannot inspect {secrets_dir}: "
+            f"{exc.strerror or exc}; {remediation}"
+        ) from exc
+    if stat.S_ISLNK(parent_stat.st_mode) or not stat.S_ISDIR(parent_stat.st_mode):
+        raise ValueError(
+            f"refusing --runtime claude: {secrets_dir} must be a real directory; {remediation}"
+        )
+    if parent_stat.st_uid != os.geteuid():
+        raise ValueError(
+            f"refusing --runtime claude: {secrets_dir} must be owned by current user; {remediation}"
+        )
+    if (parent_stat.st_mode & 0o077) != 0:
+        raise ValueError(
+            f"refusing --runtime claude: {secrets_dir} has unsafe permissions "
+            f"({oct(stat.S_IMODE(parent_stat.st_mode))}); run chmod 0700 {secrets_dir}"
+        )
+    try:
+        lstat = os.lstat(token_path)
+    except FileNotFoundError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: missing study token at {token_path}; {remediation}"
+        ) from exc
+    except OSError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: cannot inspect {token_path}: "
+            f"{exc.strerror or exc}; {remediation}"
+        ) from exc
+    if stat.S_ISLNK(lstat.st_mode) or not stat.S_ISREG(lstat.st_mode):
+        raise ValueError(
+            f"refusing --runtime claude: study token at {token_path} must be a regular file, "
+            f"not a symlink or special file; {remediation}"
+        )
+    try:
+        fd = os.open(token_path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except OSError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: cannot open study token at {token_path}: "
+            f"{exc.strerror or exc}; {remediation}"
+        ) from exc
+    try:
+        with os.fdopen(fd, "rb") as handle:
+            fstat = os.fstat(handle.fileno())
+            if not stat.S_ISREG(fstat.st_mode):
+                raise ValueError(
+                    f"refusing --runtime claude: study token at {token_path} must be a regular "
+                    f"file; {remediation}"
+                )
+            if fstat.st_uid != os.geteuid():
+                raise ValueError(
+                    f"refusing --runtime claude: study token at {token_path} must be owned by "
+                    f"current user; {remediation}"
+                )
+            if (fstat.st_mode & 0o077) != 0:
+                raise ValueError(
+                    f"refusing --runtime claude: study token at {token_path} has unsafe "
+                    f"permissions ({oct(stat.S_IMODE(fstat.st_mode))}); run chmod 0600 "
+                    f"{token_path}; {remediation}"
+                )
+            raw = handle.read(_CLAUDE_STUDY_TOKEN_MAX_BYTES + 1)
+    except ValueError:
+        raise
+    except OSError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: cannot read study token at {token_path}: "
+            f"{exc.strerror or exc}; {remediation}"
+        ) from exc
+    if len(raw) > _CLAUDE_STUDY_TOKEN_MAX_BYTES:
+        raise ValueError(
+            f"refusing --runtime claude: study token at {token_path} exceeds "
+            f"{_CLAUDE_STUDY_TOKEN_MAX_BYTES} bytes; {remediation}"
+        )
+    try:
+        token = raw.decode("utf-8").strip()
+    except UnicodeDecodeError as exc:
+        raise ValueError(
+            f"refusing --runtime claude: study token at {token_path} is not valid UTF-8; "
+            f"{remediation}"
+        ) from exc
+    if not token:
+        raise ValueError(
+            f"refusing --runtime claude: study token at {token_path} is empty; {remediation}"
+        )
+    if any(ch in token for ch in ("\n", "\r", "\x00")):
+        raise ValueError(
+            f"refusing --runtime claude: study token at {token_path} must be a single line; "
+            f"{remediation}"
+        )
+    return token
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -1450,7 +1579,9 @@ def launch_study(
     ``--cmd``). It selects the runtime state the profile allows, and for
     Claude Code and Codex the study home the child is pointed at.
     ``runtime_binary`` is that CLI's executable (default ``command[0]``); a
-    Codex launch first checks its version (``check_codex_saves_login_in_place``).
+    Claude Code launch first reads its dedicated study token
+    (``read_claude_study_token``), and a Codex launch first checks its version
+    (``check_codex_saves_login_in_place``).
     """
     effective_sandbox = SANDBOX_EXEC if sandbox_exec is None else sandbox_exec
     if platform != "darwin" or not effective_sandbox.is_file():
@@ -1531,9 +1662,12 @@ def launch_study(
 
         home_dir = Path(os.environ["HOME"]) if os.environ.get("HOME") else Path.home()
         runtime_home: Path | None = None
+        claude_token: str | None = None
         if runtime in HOMED_RUNTIMES:
             real_home = Path(os.path.realpath(home_dir))
             try:
+                if runtime == "claude":
+                    claude_token = read_claude_study_token(real_home)
                 if runtime == "codex":
                     check_codex_saves_login_in_place(runtime_binary or command[0])
                 runtime_home = prepare_runtime_home(
@@ -1608,7 +1742,12 @@ def launch_study(
             scratch_dir=scratch_dir,
             child_cwd=child_cwd,
             runtime_env=(
-                runtime_home_env(runtime, runtime_home, scratch_dir)
+                runtime_home_env(
+                    runtime,
+                    runtime_home,
+                    scratch_dir,
+                    claude_token=claude_token,
+                )
                 if runtime is not None and runtime_home is not None
                 else None
             ),
