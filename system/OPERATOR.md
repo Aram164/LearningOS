@@ -391,10 +391,12 @@ inherited environment variables and allocates `$LOS_SCRATCH_DIR` outside
 Boundary scope: reads and outbound HTTPS stay open outside the closed trees;
 writes are default-deny, so runtime state outside `LearningOS/` (a study
 home's transcripts, agy's conversation logs) persists after `$LOS_SCRATCH_DIR`
-cleanup. Study homes live under `~/.local/state/learningos/study-runtimes/`
-until removed by hand; a resumed launch (`--session`, or
-`--resume-runtime-id` with the runtime's own session id) returns to its home.
-ADR-022 §3 lists the residuals that stay writable.
+cleanup. Study homes live under `~/.local/state/learningos/study-runtimes/`;
+one unused for 30 days is removed at the next Claude Code or Codex launch. A
+resumed launch (`--session`, or `--resume-runtime-id` with the runtime's own
+session id) returns to its home. The SSH agent is unreachable inside the
+sandbox, and Codex runs only at versions verified to save its login in
+place. ADR-022 §3 lists the residuals that stay writable.
 `tools/study_launch.py` owns session creation, `--root` and host
 `LOS_OBSERVATIONS` pinning, and `session_end` on exit; `tools/study_hooks.py`
 supplies only optional UX lifecycle nudges (`session-start`, `stop`,

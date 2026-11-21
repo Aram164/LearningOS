@@ -92,6 +92,21 @@ release certification.
      - A denylist of such names would have to keep up with every runtime's
        next release. An allowlist fails closed instead: a new provider
        variable a runtime needs is added by name, deliberately.
+   - **The SSH agent is out of reach (amended 2026-11-21).**
+     - `SSH_AUTH_SOCK` is no longer forwarded.
+     - The profile also denies connecting to the host's agent socket and to
+       every unix socket under `~/.ssh`. The agent socket is found at launch
+       from `SSH_AUTH_SOCK`, and from launchd for a launch without the
+       variable. The `~/.ssh` rule covers OpenSSH's default `agent/` folder
+       and ControlMaster sockets.
+     - The variable alone was not enough: reads are open, so a study agent
+       could find the socket and sign with Aram's keys, pushing to his
+       repositories or logging in to his hosts.
+     - Seatbelt matches a unix socket by its resolved path, so each rule
+       names the real path. A connect through a symlink, the `/tmp` alias or
+       a hard link made outside the sandbox is refused too, and a hard link
+       made inside it cannot be created (measured).
+     - The study gate and every other unix socket stay reachable.
    <!-- los:reference {"kind": "command", "text": "los capability"} -->
    - Over `LOS_GATE_SOCK`, the broker pins the launcher-minted session UUID,
      `--root`, and host `LOS_OBSERVATIONS`, rewrites `material-span --extract` to
@@ -137,6 +152,18 @@ release certification.
    - It keeps the home after the session. A resumed launch returns to it:
      `--session`, or `--resume-runtime-id` with the runtime's own session
      id, which also finds the one home whose transcript carries that id.
+   - **Retention (amended 2026-11-21).**
+     - A Claude Code or Codex launch removes the homes, of any checkout and
+       runtime, unused for 30 days. That is Claude Code's own default
+       transcript retention (`cleanupPeriodDays`), after which the
+       transcripts a resume needs are gone anyway.
+     - Last use is the mtime of the home's marker. The launcher refreshes it
+       at every launch, and the sandbox cannot change it.
+     - The home being launched or resumed is never removed: the lookup and
+       the refresh run first, and pruning skips it.
+     - Only directories with the launcher's marker are touched, and links
+       inside them are removed, never followed.
+     - The cost is one directory scan per launch.
    - Their transcripts, caches and settings therefore never reach a session
      outside the sandbox, which closes the residual accepted until then: a
      study agent could edit the transcripts unsandboxed sessions of the Core
@@ -150,11 +177,34 @@ release certification.
      - Claude Code keeps its default keychain item and its three refresh
        locks in the real `~/.claude`: `CLAUDE_SECURESTORAGE_CONFIG_DIR=""`
        replaces the config directory for credentials only (claude 2.1.283).
+     - The refresh lock's owner record stays denied (amended 2026-11-21).
+       Unsandboxed Claude Code trusts it to take over a lock whose holder is
+       gone. Claude Code 2.1.283 writes it best effort: `Mc` logs "owner
+       record not written" and refreshes anyway. So the deny costs at most a
+       wait. If a study session dies holding the refresh lock, other
+       sessions wait until the lock goes stale, after 60 s (`stale: 60000`).
+       The credential-store lock goes stale after 15 s.
      - Codex writes the real `~/.codex/auth.json` through the home's link.
        codex 0.153.4 saves it in place and reads it again before refreshing.
-       The link can be neither removed nor replaced from inside, so a later
-       Codex that saved by rename would fail to save a refreshed login, and
-       `codex login` outside the sandbox would mend it.
+       The link can be neither removed nor replaced from inside.
+     - **Version gate (amended 2026-11-21).** The launcher runs Codex only at
+       versions verified to save the login in place
+       (`_CODEX_IN_PLACE_AUTH_VERSIONS`, now 0.153.4, read in
+       `FileAuthStorage::save`).
+       - Any other version, or an unreadable one, is refused before a home or
+         a session exists, and the message says what to re-verify.
+       - Reason: a Codex that saved by rename could not save through the
+         link. It would fetch a rotated token pair and lose it, which likely
+         logs every Codex session out. ASSUMPTION: the auth server rejects a
+         reused refresh token.
+       - Failing closed costs one source check per Codex upgrade.
+   - **Credential files stay readable.** Reads are open outside the closed
+     trees, so a study agent can read, and with open egress send out, the
+     private key files under `~/.ssh` and other tokens kept as files.
+     Denying the agent socket (§1) stops signing through the agent, not a copy
+     of a key without a passphrase. Whether to read-deny `~/.ssh` and similar
+     stores is open (2026-11-21), next to the question of the keychain folder
+     that Claude Code, agy and the Gemini CLI may write.
    - **agy has no home override** (no data-dir flag; its
      `ANTIGRAVITY_EXECUTABLE_DATA_DIR` only serves sidecar plugins). It keeps
      its traced path rules, now granted to agy launches only. An agy study

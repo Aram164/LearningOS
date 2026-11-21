@@ -605,6 +605,147 @@ def test_child_env_drops_host_session_state_keeps_provider_config(tmp_path: Path
     launcher_set = {study_launch.GATE_SOCK_ENV, "LOS_SESSION_ID", "LOS_SCRATCH_DIR", "TMPDIR", "PWD",
                     "PYTHONDONTWRITEBYTECODE"}
     assert set(child) - launcher_set == set(system) | set(provider)
+    # The SSH agent's variable is not forwarded either (its socket is denied too).
+    with_agent = study_launch._build_child_env(
+        {**host, "SSH_AUTH_SOCK": "/private/tmp/agent.sock"}, sock_path=tmp_path / "gate.sock",
+        session_id=S1, scratch_dir=tmp_path, child_cwd=tmp_path,
+    )
+    assert "SSH_AUTH_SOCK" not in with_agent
+
+
+def _fake_codex_version(folder: Path, version: str) -> Path:
+    """A stand-in codex that answers ``--version`` like codex-cli does."""
+    fake = folder / f"codex-{version.replace(' ', '_') or 'none'}"
+    fake.write_text(
+        f"#!/bin/sh\n[ \"$1\" = --version ] && echo 'codex-cli {version}' && exit 0\nexit 1\n",
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    return fake
+
+
+def test_codex_launch_only_for_versions_that_save_login_in_place(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The study home's auth.json link is safe only where Codex saves the login
+    in place (0.153.4, read in its source). Any other version is refused before
+    a home exists or a session starts: fail closed."""
+    assert study_launch.check_codex_saves_login_in_place(
+        str(_fake_codex_version(tmp_path, "0.153.4"))
+    ) == "0.153.4"
+    with pytest.raises(ValueError) as refused:
+        study_launch.check_codex_saves_login_in_place(str(_fake_codex_version(tmp_path, "0.154.0")))
+    message = str(refused.value)
+    for needed in ("codex 0.154.0", "rust-v0.154.0", "FileAuthStorage::save",
+                   "codex-rs/login/src/auth/storage.rs", "_CODEX_IN_PLACE_AUTH_VERSIONS"):
+        assert needed in message, needed
+    for unreadable in ("", "garbage"):
+        broken = tmp_path / f"broken-{unreadable or 'empty'}"
+        broken.write_text(f"#!/bin/sh\necho '{unreadable}'\nexit 0\n", encoding="utf-8")
+        broken.chmod(0o755)
+        with pytest.raises(ValueError, match="no codex-cli version"):
+            study_launch.check_codex_saves_login_in_place(str(broken))
+    with pytest.raises(ValueError, match="cannot read its version"):
+        study_launch.check_codex_saves_login_in_place(str(tmp_path / "no-such-codex"))
+
+    # Through launch_study: refused with exit 2, no home created, no session.
+    core = tmp_path / "LearningOS" / "repository"
+    core.mkdir(parents=True)
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    fake_sb = tmp_path / "sandbox-exec"
+    fake_sb.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    fake_sb.chmod(0o755)
+    unverified = _fake_codex_version(tmp_path, "0.160.1")
+    rc = study_launch.launch_study(
+        core_root=core, command=[str(unverified), "exec", "status"], session_id=S1,
+        sandbox_exec=fake_sb, platform="darwin", runtime="codex",
+    )
+    assert rc == 2
+    assert not (fake_home / ".local").exists()
+    assert not (core.parent / "reading-memory").exists()
+
+
+def test_prune_runtime_homes_removes_only_stale_launcher_homes(tmp_path: Path) -> None:
+    """Homes unused for 30 days (Claude Code's own transcript retention) go at the
+    next launch; the launched or resumed home, recent homes and anything the
+    launcher does not own stay, and a link inside a pruned home is removed,
+    never followed."""
+    real_home = Path(os.path.realpath(tmp_path)) / "home"
+    real_home.mkdir()
+    _fake_real_runtime_folders(real_home)
+    learningos = Path(os.path.realpath(tmp_path)) / "LearningOS"
+    other_checkout = Path(os.path.realpath(tmp_path)) / "Other" / "LearningOS"
+    for checkout in (learningos, other_checkout):
+        (checkout / "repository").mkdir(parents=True)
+    now = time.time()
+    day = 86400
+
+    def home(checkout: Path, runtime: str, session: str, age_days: float) -> Path:
+        made = study_launch.prepare_runtime_home(
+            study_launch.runtime_home_parent(real_home, checkout, runtime) / session,
+            runtime=runtime, real_learningos=checkout, session_id=session, real_home=real_home,
+            core_paths=(checkout / "repository",),
+        )
+        stamp = now - age_days * day
+        os.utime(made / study_launch.RUNTIME_HOME_MARKER_NAME, (stamp, stamp))
+        return made
+
+    resumed = home(learningos, "claude", S1, 90)
+    stale_claude = home(learningos, "claude", S2, 31)
+    stale_codex = home(other_checkout, "codex", S1, 45)
+    recent = home(learningos, "codex", S2, 29)
+    unmarked = study_launch.runtime_home_parent(real_home, learningos, "claude") / "not-a-home"
+    unmarked.mkdir()
+    (unmarked / "keep.txt").write_text("x", encoding="utf-8")
+    outside = tmp_path / "outside.txt"
+    outside.write_text("must survive", encoding="utf-8")
+    (stale_claude / "link-out").symlink_to(outside)
+
+    removed = study_launch.prune_runtime_homes(real_home, keep=resumed, now=now)
+    assert sorted(removed) == sorted([stale_claude, stale_codex])
+    assert resumed.is_dir() and recent.is_dir() and unmarked.is_dir()
+    assert not stale_claude.exists() and not stale_codex.exists()
+    # The pruned Codex home's auth.json link was removed; the real login was not.
+    assert (real_home / ".codex" / "auth.json").read_text(encoding="utf-8").startswith("{")
+    assert outside.read_text(encoding="utf-8") == "must survive"
+    # Reusing a home refreshes its last use, so a resume never looks stale.
+    again = study_launch.prepare_runtime_home(
+        resumed, runtime="claude", real_learningos=learningos, session_id=S1,
+        real_home=real_home, core_paths=(learningos / "repository",),
+    )
+    assert time.time() - (again / study_launch.RUNTIME_HOME_MARKER_NAME).stat().st_mtime < 60
+    # No homes root at all is not an error.
+    assert study_launch.prune_runtime_homes(tmp_path / "nobody", keep=resumed, now=now) == []
+
+
+def test_profile_denies_ssh_agent_sockets_by_real_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    core = tmp_path / "LearningOS" / "repository"
+    core.mkdir(parents=True)
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    real_home = Path(os.path.realpath(fake_home))
+    q = study_launch._sbpl_quote
+    profile = study_launch.build_seatbelt_profile(
+        core, home_dir=fake_home, agent_sockets=(Path("/var/run/com.apple.launchd.x/Listeners"),),
+    )
+    # Seatbelt matches a socket by its resolved path, so the rule names /private/var.
+    real_agent = os.path.realpath("/var/run/com.apple.launchd.x/Listeners")
+    assert f'(deny network-outbound (remote unix-socket (path-literal "{q(real_agent)}")))' in profile
+    assert f'(deny network-outbound (remote unix-socket (subpath "{q(str(real_home / ".ssh"))}")))' in profile
+    assert "regex" not in profile
+    # Only the agent's sockets: no blanket network rule.
+    network = [line for line in profile.splitlines() if "network" in line]
+    assert len(network) == 2 and all("unix-socket" in line for line in network)
+    # The agent is found from the host's variable (and, on macOS, launchd).
+    monkeypatch.setenv("SSH_AUTH_SOCK", "/var/run/com.apple.launchd.y/Listeners")
+    found = study_launch.host_agent_sockets(os.environ)
+    assert Path(os.path.realpath("/var/run/com.apple.launchd.y/Listeners")) in found
+    # A relative value is no socket path; only launchd's (if any) remains.
+    assert study_launch.host_agent_sockets({"SSH_AUTH_SOCK": "relative/agent"}) == (
+        study_launch.host_agent_sockets({})
+    )
 
 
 def test_session_uuid_codex_args_and_entrypoint_contract(
@@ -2290,6 +2431,8 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
         "real_npm_logs": fake_home / ".npm" / "_logs" / "probe.log",
     }
     other_home = study_launch.runtime_home_parent(fake_home, real_learningos, "claude") / S2
+    # The probe stands in for codex; the version check reads this one.
+    verified_codex = _fake_codex_version(tmp_path, "0.153.4")
 
     def run(runtime: str, spec: dict[str, object]) -> dict[str, object]:
         spec_path = probe_dir / f"{runtime}-spec.json"
@@ -2300,6 +2443,7 @@ def test_seatbelt_runtime_homes_and_real_home_rules(
             command=[str(core / ".venv/bin/python"), "-c", _WRITE_PROBE, str(spec_path)],
             session_id=S1,
             runtime=runtime,
+            runtime_binary=str(verified_codex) if runtime == "codex" else None,
         )
         assert rc == 0, runtime
         result: dict[str, object] = json.loads(out.read_text(encoding="utf-8"))
@@ -2423,6 +2567,9 @@ print(json.dumps({{"home": str(home), "turns": len(transcript.read_text().splitl
         f"""#!{sys.executable}
 import json, os, sys
 from pathlib import Path
+if sys.argv[1:] == ["--version"]:
+    print("codex-cli 0.153.4")
+    raise SystemExit(0)
 home = Path(os.environ["CODEX_HOME"])
 assert os.readlink(home / "auth.json") == {str(fake_home / ".codex" / "auth.json")!r}
 assert 'trust_level = "trusted"' in (home / "config.toml").read_text()
@@ -2456,11 +2603,29 @@ print(json.dumps({{"home": str(home)}}))
         )
         assert proc.returncode == 0, proc.stdout + proc.stderr
         result: dict[str, object] = json.loads(proc.stdout.strip().splitlines()[-1])
+        result["stderr"] = proc.stderr
         return result
 
     first = launch("--runtime", "claude", "--", "--session-id", vendor)
+    # Retention: the first home was last used 40 days ago, and another home
+    # 31 days ago. The resume must keep (and refresh) its own home anyway,
+    # and remove the other.
+    first_home = Path(str(first["home"]))
+    stale = study_launch.prepare_runtime_home(
+        first_home.with_name("12121212-4444-4444-8444-444444444444"),
+        runtime="claude", real_learningos=Path(os.path.realpath(core.parent)), session_id=S2,
+        real_home=fake_home, core_paths=(real_core,),
+    )
+    day = 86400
+    for home, age in ((first_home, 40 * day), (stale, 31 * day)):
+        old = time.time() - age
+        os.utime(home / study_launch.RUNTIME_HOME_MARKER_NAME, (old, old))
     resumed = launch("--runtime", "claude", "--resume-runtime-id", vendor, "--persist-scratch",
                      "--", "--resume", vendor)
+    assert first_home.is_dir() and not stale.exists()
+    assert "removed 1 study home(s) unused for over 30 days" in str(resumed["stderr"])
+    marker_age = time.time() - (first_home / study_launch.RUNTIME_HOME_MARKER_NAME).stat().st_mtime
+    assert marker_age < 300, "a resumed launch refreshes its home's last use"
     again = launch("--runtime", "claude", "--resume-runtime-id", vendor, "--persist-scratch",
                    "--", "--resume", vendor)
     assert first["home"] == resumed["home"] == again["home"]
@@ -2478,6 +2643,96 @@ print(json.dumps({{"home": str(home)}}))
     c1 = launch("--runtime", "codex", "--", "exec", "status")
     c2 = launch("--runtime", "codex", "--resume-runtime-id", thread, "--", "exec", "resume", thread)
     assert c1["home"] == c2["home"]
+
+
+@pytest.mark.skipif(not DARWIN_SEATBELT, reason="Darwin /usr/bin/sandbox-exec required")
+def test_seatbelt_denies_ssh_agent_sockets_keeps_the_study_gate(
+    mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Inside the sandbox, the host's SSH agent and every socket under ~/.ssh
+    refuse a connect, also through a link, while the study gate and any other
+    unix socket still connect. Only connects: nothing is ever sent."""
+    import socket
+    import threading
+
+    core = _make_study_world(mini_repo)
+    # Short paths: a unix socket path must fit in 104 bytes.
+    base = Path(os.path.realpath(tempfile.mkdtemp(prefix="losk-", dir="/tmp")))
+    fake_home = base / "h"
+    paths = {
+        "agent": base / "a" / "Listeners",
+        "ssh_dir_agent": fake_home / ".ssh" / "agent" / "s.x.agent.y",
+        "other": base / "o" / "other.sock",
+    }
+    servers: list[socket.socket] = []
+    for path in paths.values():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        server = socket.socket(socket.AF_UNIX)
+        server.bind(str(path))
+        server.listen(8)
+        servers.append(server)
+
+    def serve(server: socket.socket) -> None:
+        while True:
+            try:
+                conn, _ = server.accept()
+            except OSError:
+                return
+            conn.close()
+
+    for server in servers:
+        threading.Thread(target=serve, args=(server,), daemon=True).start()
+    host_link = base / "o" / "agent-hardlink"
+    os.link(paths["agent"], host_link)
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("SSH_AUTH_SOCK", str(paths["agent"]))
+    result_out = base / "result.json"
+    probe = f"""
+import json, os, socket, subprocess
+from pathlib import Path
+targets = {{k: v for k, v in {({k: str(v) for k, v in paths.items()})!r}.items()}}
+targets["agent_host_hardlink"] = {str(host_link)!r}
+targets["agent_via_tmp_alias"] = {str(paths["agent"]).replace("/private/tmp/", "/tmp/", 1)!r}
+targets["gate"] = os.environ["LOS_GATE_SOCK"]
+results = {{"ssh_auth_sock_env": os.environ.get("SSH_AUTH_SOCK")}}
+for name, path in targets.items():
+    s = socket.socket(socket.AF_UNIX)
+    try:
+        s.connect(path)
+        results[name] = "CONNECTED"
+    except OSError as exc:
+        results[name] = f"ERR {{exc.errno}}"
+    finally:
+        s.close()
+try:
+    os.link(targets["agent"], os.path.join(os.environ["LOS_SCRATCH_DIR"], "agent-link"))
+    results["hardlink_in_sandbox"] = "LINKED"
+except OSError as exc:
+    results["hardlink_in_sandbox"] = f"ERR {{exc.errno}}"
+status = subprocess.run([".venv/bin/python", "tools/los.py", "status", "--json"],
+                        capture_output=True, text=True)
+results["gate_call_exit"] = status.returncode
+Path({str(result_out)!r}).write_text(json.dumps(results))
+"""
+    try:
+        rc = study_launch.launch_study(
+            core_root=core,
+            command=[str(core / ".venv/bin/python"), "-c", probe],
+            session_id=S1,
+        )
+        assert rc == 0
+        data = json.loads(result_out.read_text(encoding="utf-8"))
+        assert data["ssh_auth_sock_env"] is None, data
+        for denied in ("agent", "ssh_dir_agent", "agent_host_hardlink", "agent_via_tmp_alias"):
+            assert data[denied] == "ERR 1", (denied, data)
+        assert data["hardlink_in_sandbox"] == "ERR 1", data
+        assert data["other"] == "CONNECTED", data
+        assert data["gate"] == "CONNECTED", data
+        assert data["gate_call_exit"] == 0, data
+    finally:
+        for server in servers:
+            server.close()
+        shutil.rmtree(base, ignore_errors=True)
 
 
 def test_launcher_child_starts_in_new_session_for_group_cleanup() -> None:

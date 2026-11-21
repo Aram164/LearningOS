@@ -32,7 +32,10 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
   endpoint and model choice) plus the locale, XDG and CoreFoundation
   prefixes. Unrelated secrets, host ``LOS_OBSERVATIONS`` and every variable a
   host Claude Code or Codex session sets for its children (its messaging
-  socket and token, ids, notes folder, feature flags) are dropped.
+  socket and token, ids, notes folder, feature flags) are dropped, and so is
+  ``SSH_AUTH_SOCK``.
+- Denies connecting to the host's SSH agent socket and to any unix socket
+  under ``~/.ssh``; the study gate and other sockets stay reachable.
 - Runs the child with ``cwd=LearningOS/repository``; for ``--cmd -- ...`` argv
   tokens (except inline code following ``-c``/``-e``/``-m``), rewrites
   caller-relative existing path tokens under ``caller_cwd`` that lie outside
@@ -46,7 +49,10 @@ boundary (``/usr/bin/sandbox-exec``) paired with an unsandboxed AF_UNIX broker
 - Keeps each Claude Code or Codex home after the session, keyed by the study
   session UUID, so a resumed launch (``--session`` or
   ``--resume-runtime-id``) finds its transcript again; ``--resume-runtime-id``
-  also finds the one home whose transcripts carry that vendor id.
+  also finds the one home whose transcripts carry that vendor id. Homes unused
+  for 30 days are removed at the next Claude Code or Codex launch.
+- Runs Codex only at versions verified to save ``auth.json`` in place, which
+  the study home's login link depends on; any other version is refused.
 - Records ``ReadingStore.session_end`` and cleans up the socket in ``finally:``
   even on child crash or kill.
 """
@@ -64,6 +70,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 import uuid
 from collections.abc import Mapping, Sequence
@@ -117,6 +124,26 @@ _CLAUDE_GLOBAL_COPY = ("hasCompletedOnboarding", "lastOnboardingVersion")
 #: Preference strings copied from the real Codex config. Its ``notify``
 #: program, plugins, MCP servers and global model are not.
 _CODEX_CONFIG_COPY = ("personality", "service_tier")
+#: A study home whose last launch is older than this is removed at the next
+#: Claude Code or Codex launch (2026-11-21). It is Claude Code's own default
+#: transcript retention (``cleanupPeriodDays``), after which the transcripts
+#: a resume needs are gone anyway. The home being launched or resumed is
+#: never removed: the lookup runs first and every launch refreshes the
+#: home's marker.
+_RUNTIME_HOME_RETENTION_DAYS = 30
+#: Codex versions verified to save ``auth.json`` in place (opened with
+#: truncate and written, never replaced by a renamed temp file): read in
+#: ``FileAuthStorage::save``, ``codex-rs/login/src/auth/storage.rs``, at the
+#: release tag. A study home's login is a link to the real ``auth.json`` and
+#: depends on exactly that, so any other version is refused (ADR-022 §3).
+_CODEX_IN_PLACE_AUTH_VERSIONS = frozenset({"0.153.4"})
+_CODEX_VERSION = re.compile(r"\bcodex-cli (\d+\.\d+\.\d+)\b")
+#: The SSH agent: its variable is not forwarded, and connecting to its socket,
+#: or to any socket under ``~/.ssh`` (OpenSSH's default ``agent/`` folder,
+#: ControlMaster sockets), is denied. Reads are open, so a study agent could
+#: find the socket without the variable and sign with Aram's keys: push to
+#: his repositories, log in to his hosts (2026-11-21).
+_SSH_AGENT_ENV = "SSH_AUTH_SOCK"
 #: Variables the launcher sets for the runtime it starts. Host values are
 #: dropped for every launch, even if a later allowlist entry would admit one:
 #: each would point a runtime back at a shared folder.
@@ -145,7 +172,6 @@ _CHILD_ENV_ALLOW_EXACT = frozenset({
     "SHLVL",
     "TMPDIR",
     "VIRTUAL_ENV",
-    "SSH_AUTH_SOCK",
     "SSL_CERT_FILE",
     "SSL_CERT_DIR",
     "REQUESTS_CA_BUNDLE",
@@ -428,6 +454,7 @@ def build_seatbelt_profile(
     write_roots: Sequence[Path] = (),
     runtime: str | None = None,
     runtime_home: Path | None = None,
+    agent_sockets: Sequence[Path] = (),
 ) -> str:
     """Generate a non-regex macOS Seatbelt profile for one LearningOS checkout.
 
@@ -440,6 +467,9 @@ def build_seatbelt_profile(
     memory, instruction and config files, the home's ownership marker and
     Codex's login link, the stage directory) are denied again last.
     ``runtime=None`` is a ``--cmd`` launch: no runtime state at all.
+    Connecting to the SSH agent (``agent_sockets``) or to any socket under
+    ``~/.ssh`` is denied; every other unix socket, the study gate included,
+    stays reachable.
     """
     real_core = Path(os.path.realpath(Path(core_root).resolve()))
     real_learningos = Path(os.path.realpath(real_core.parent))
@@ -588,7 +618,39 @@ def build_seatbelt_profile(
     for extra_literal in deny_extra_literals:
         real_lit = Path(os.path.realpath(extra_literal))
         lines.append(f'(deny file-write* (literal "{_sbpl_quote(str(real_lit))}"))')
+
+    # The SSH agent. Seatbelt matches a unix socket by its resolved path, and
+    # a symlink, or a hard link made outside the sandbox, to a denied socket
+    # is refused too (measured 2026-11-21); so each rule names the real path.
+    unix_parts = [
+        f'(path-literal "{_sbpl_quote(os.path.realpath(sock))}")' for sock in agent_sockets
+    ]
+    if home_ok:
+        unix_parts.append(f'(subpath "{_sbpl_quote(str(real_home / ".ssh"))}")')
+    for part in dict.fromkeys(unix_parts):
+        lines.append(f"(deny network-outbound (remote unix-socket {part}))")
     return "\n".join(lines) + "\n"
+
+
+def host_agent_sockets(host_env: Mapping[str, str]) -> tuple[Path, ...]:
+    """The SSH agent sockets a study launch must make unreachable.
+
+    The host's ``SSH_AUTH_SOCK``, and the one launchd hands every login
+    session (``launchctl getenv SSH_AUTH_SOCK``), so a launch from a shell
+    without the variable is covered too. Real paths, as Seatbelt matches them.
+    """
+    candidates = [host_env.get(_SSH_AGENT_ENV, "")]
+    try:
+        launchd = subprocess.run(
+            ["/bin/launchctl", "getenv", _SSH_AGENT_ENV],
+            capture_output=True, text=True, timeout=5, stdin=subprocess.DEVNULL,
+        )
+        candidates.append(launchd.stdout.strip())
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return tuple(dict.fromkeys(
+        Path(os.path.realpath(raw)) for raw in candidates if raw and os.path.isabs(raw)
+    ))
 
 
 _RUNTIME_PATH_FLAGS = ("--settings", "--mcp-config", "--plugin-dir", "--add-dir")
@@ -1199,9 +1261,119 @@ def prepare_runtime_home(
         _validate_runtime_home_marker(
             expanded / RUNTIME_HOME_MARKER_NAME, real_learningos=real_learningos, runtime=runtime
         )
+        # The marker's mtime is the home's last use, for retention; the
+        # sandbox cannot change it (the marker is write-denied inside).
+        os.utime(expanded / RUNTIME_HOME_MARKER_NAME)
     if runtime == "codex":
         _ensure_codex_auth_link(expanded, real_home=real_home)
     return Path(os.path.realpath(expanded))
+
+
+def _runtime_home_last_use(home: Path) -> float | None:
+    """When the launcher last used ``home``, or ``None`` if it is not one of its homes.
+
+    A home is the launcher's only with a regular, private, user-owned marker
+    naming its owner and schema; anything else under the homes root is left
+    alone.
+    """
+    marker = home / RUNTIME_HOME_MARKER_NAME
+    try:
+        home_stat = os.lstat(home)
+        marker_stat = os.lstat(marker)
+    except OSError:
+        return None
+    if (
+        stat.S_ISLNK(home_stat.st_mode)
+        or not stat.S_ISDIR(home_stat.st_mode)
+        or home_stat.st_uid != os.geteuid()
+        or not stat.S_ISREG(marker_stat.st_mode)
+        or marker_stat.st_uid != os.geteuid()
+        or (marker_stat.st_mode & 0o077) != 0
+    ):
+        return None
+    try:
+        fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
+        with os.fdopen(fd, "r", encoding="utf-8") as handle:
+            raw: object = json.loads(handle.read())
+    except (OSError, UnicodeDecodeError, ValueError):
+        return None
+    if (
+        not isinstance(raw, dict)
+        or raw.get("schema") != _RUNTIME_HOME_MARKER_SCHEMA
+        or raw.get("owner") != _RUNTIME_HOME_MARKER_OWNER
+    ):
+        return None
+    return marker_stat.st_mtime
+
+
+def prune_runtime_homes(home_dir: Path, *, keep: Path, now: float) -> list[Path]:
+    """Remove the study homes, of any checkout and runtime, unused for 30 days.
+
+    ``keep`` (the home this launch uses) is never removed. ``shutil.rmtree``
+    does not follow symlinks, so a link a study agent left in its home (to
+    ``~/.codex/auth.json``, or anywhere) is removed, never its target.
+    """
+    root = home_dir / _RUNTIME_HOMES_REL
+    cutoff = now - _RUNTIME_HOME_RETENTION_DAYS * 86400
+    keep_real = Path(os.path.realpath(keep))
+    removed: list[Path] = []
+    try:
+        checkouts = sorted(root.iterdir())
+    except OSError:
+        return removed
+    for checkout in checkouts:
+        if checkout.is_symlink() or not checkout.is_dir():
+            continue
+        for runtime_dir in sorted(checkout.iterdir()):
+            if runtime_dir.is_symlink() or not runtime_dir.is_dir():
+                continue
+            for home in sorted(runtime_dir.iterdir()):
+                if Path(os.path.realpath(home)) == keep_real:
+                    continue
+                last_use = _runtime_home_last_use(home)
+                if last_use is None or last_use >= cutoff:
+                    continue
+                shutil.rmtree(home, ignore_errors=True)
+                if not os.path.lexists(home):
+                    removed.append(home)
+    return removed
+
+
+def check_codex_saves_login_in_place(binary: str) -> str:
+    """Return the Codex version, or refuse one not verified to save in place.
+
+    A study home's ``auth.json`` links to the real login. A Codex that saved
+    it by renaming a temp file over it could not save through the link: it
+    would fetch a rotated token pair and lose it, which would likely log
+    every Codex session out. ASSUMPTION: the auth server rejects a reused
+    refresh token. Fails closed: an unreadable version is refused too.
+    """
+    try:
+        probe = subprocess.run(
+            [binary, "--version"],
+            capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ValueError(f"refusing --runtime codex: cannot read its version: {exc}") from exc
+    match = _CODEX_VERSION.search(probe.stdout)
+    if probe.returncode != 0 or match is None:
+        raise ValueError(
+            f"refusing --runtime codex: `{binary} --version` gave no codex-cli version "
+            f"(exit {probe.returncode})"
+        )
+    version = match.group(1)
+    if version not in _CODEX_IN_PLACE_AUTH_VERSIONS:
+        verified = ", ".join(sorted(_CODEX_IN_PLACE_AUTH_VERSIONS))
+        raise ValueError(
+            f"refusing --runtime codex: codex {version} is not verified to save its login "
+            f"in place (verified: {verified}). A study home links auth.json to the real "
+            "~/.codex/auth.json, and a Codex that saved it by rename would lose a rotated "
+            "token pair. Re-verify FileAuthStorage::save in "
+            f"codex-rs/login/src/auth/storage.rs at tag rust-v{version}: it must open "
+            "auth.json with truncate and write it, not rename a temp file over it. Then add "
+            f"{version} to _CODEX_IN_PLACE_AUTH_VERSIONS in tools/study_launch.py"
+        )
+    return version
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1270,12 +1442,15 @@ def launch_study(
     scratch_dir_override: Path | None = None,
     runtime: str | None = None,
     resume_runtime_id: str | None = None,
+    runtime_binary: str | None = None,
 ) -> int:
     """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state.
 
     ``runtime`` names the agent CLI ``command`` starts (``None`` for
     ``--cmd``). It selects the runtime state the profile allows, and for
     Claude Code and Codex the study home the child is pointed at.
+    ``runtime_binary`` is that CLI's executable (default ``command[0]``); a
+    Codex launch first checks its version (``check_codex_saves_login_in_place``).
     """
     effective_sandbox = SANDBOX_EXEC if sandbox_exec is None else sandbox_exec
     if platform != "darwin" or not effective_sandbox.is_file():
@@ -1359,6 +1534,8 @@ def launch_study(
         if runtime in HOMED_RUNTIMES:
             real_home = Path(os.path.realpath(home_dir))
             try:
+                if runtime == "codex":
+                    check_codex_saves_login_in_place(runtime_binary or command[0])
                 runtime_home = prepare_runtime_home(
                     resolve_runtime_home(
                         runtime=runtime,
@@ -1376,6 +1553,15 @@ def launch_study(
             except (ValueError, OSError) as exc:
                 print(f"study_launch: {exc}", file=sys.stderr)
                 return 2
+            # After the lookup and the marker refresh, so the home being
+            # launched or resumed is the newest one and is passed to keep.
+            removed = prune_runtime_homes(real_home, keep=runtime_home, now=time.time())
+            if removed:
+                print(
+                    f"study_launch: removed {len(removed)} study home(s) unused for over "
+                    f"{_RUNTIME_HOME_RETENTION_DAYS} days",
+                    file=sys.stderr,
+                )
 
         try:
             store.touch(session_id, start=True)
@@ -1400,6 +1586,7 @@ def launch_study(
                 write_roots=(scratch_dir,),
                 runtime=runtime,
                 runtime_home=runtime_home,
+                agent_sockets=host_agent_sockets(os.environ),
             ),
             encoding="utf-8",
         )
