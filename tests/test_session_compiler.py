@@ -1566,8 +1566,13 @@ def test_observation_offset_chronology_equivalence_and_validation(runtime_root: 
             _obs('obs-1', 'correct', '2026-09-23T08:00:00Z', 1),
             _obs('obs-2', 'incorrect', '2026-09-23T09:00:00', 2),
         ], req)
-    for bad_stamp in ('2026-09-23T09:00:00', '2026-09-23', 'not-a-timestamp'):
+    for bad_stamp, err_match in (
+        ('2026-09-23T09:00:00', "is not a 'date-time'"),
+        ('2026-09-23', "is not a 'date-time'"),
+        ('not-a-timestamp', "is not a 'date-time'"),
+        ('2026-12-31T23:59:60Z', 'invalid timestamp'),
+    ):
         bad = _obs('observation-bad', 'correct', bad_stamp, 3)
         bad.pop('origin', None)
-        with pytest.raises(RuntimeInputError, match='timestamp'):
+        with pytest.raises(RuntimeInputError, match=err_match):
             validate_runtime_record(repo, 'learner-observation', bad)

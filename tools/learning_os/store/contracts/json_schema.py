@@ -4,12 +4,99 @@ from __future__ import annotations
 
 import functools
 import json
+import re
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 from referencing import Registry, Resource
+
+# --- formats ---------------------------------------------------------------
+# jsonschema's FormatChecker() checks "date-time" and "uri" only when the
+# optional rfc3339-validator / rfc3987 distributions are installed; without
+# them both formats silently validate anything. The UI's Ajv (ajv-formats
+# 3.0.1, full mode) enforces both. These checkers port ajv-formats' full
+# definitions, so Core — the producer and the only writer — refuses what the
+# UI would refuse, and the answer no longer depends on which optional
+# packages happen to be installed. tests/test_contract_differential.py
+# compares the two sides on a set of edge cases.
+
+_DATE = re.compile(r"(\d\d\d\d)-(\d\d)-(\d\d)", re.ASCII)
+_DAYS = (0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+_TIME = re.compile(
+    r"(\d\d):(\d\d):(\d\d(?:\.\d+)?)(z|([+-])(\d\d)(?::?(\d\d))?)?",
+    re.ASCII | re.IGNORECASE)
+_DATE_TIME_SEPARATOR = re.compile(r"t|\s", re.IGNORECASE)
+_NOT_URI_FRAGMENT = re.compile(r"/|:")
+_URI = re.compile(
+    (
+        r"(?:[a-z][a-z0-9+\-.]*:)(?:\/?\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*@)?(?:"
+        r"\[(?:(?:(?:(?:[0-9a-f]{1,4}:){6}|::(?:[0-9a-f]{1,4}:){5}|(?:[0-9a-f]{1,4})?::(?:[0-9a"
+        r"-f]{1,4}:){4}|(?:(?:[0-9a-f]{1,4}:){0,1}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}|(?:(?"
+        r":[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}|(?:(?:[0-9a-f]{1,4}:){0,"
+        r"3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::)(?:[0-"
+        r"9a-f]{1,4}:[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d"
+        r"|[01]?\d\d?))|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f"
+        r"]{1,4}:){0,6}[0-9a-f]{1,4})?::)|[Vv][0-9a-f]+\.[a-z0-9\-._~!$&'()*+,;=:]+)\]|(?:(?:2"
+        r"5[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:[a-z0-9\-._~!$&'"
+        r"()*+,;=]|%[0-9a-f]{2})*)(?::\d*)?(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*"
+        r"|\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]"
+        r"|%[0-9a-f]{2})*)*)?|(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~"
+        r"!$&'()*+,;=:@]|%[0-9a-f]{2})*)*)(?:\?(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)"
+        r"?(?:#(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)?"
+    ),
+    re.ASCII | re.IGNORECASE)
+
+
+def _is_full_date(value: str) -> bool:
+    match = _DATE.fullmatch(value)
+    if match is None:
+        return False
+    year, month, day = (int(part) for part in match.groups())
+    leap = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+    return 1 <= month <= 12 and 1 <= day <= (29 if month == 2 and leap else _DAYS[month])
+
+
+def _is_full_time(value: str) -> bool:
+    match = _TIME.fullmatch(value)
+    if match is None:
+        return False
+    hour, minute = int(match[1]), int(match[2])
+    second = float(match[3])
+    zone, sign = match[4], -1 if match[5] == "-" else 1
+    zone_hour, zone_minute = int(match[6] or 0), int(match[7] or 0)
+    if zone_hour > 23 or zone_minute > 59 or not zone:
+        return False
+    if hour <= 23 and minute <= 59 and second < 60:
+        return True
+    # A leap second is valid only at 23:59 UTC.
+    utc_minute = minute - zone_minute * sign
+    utc_hour = hour - zone_hour * sign - (1 if utc_minute < 0 else 0)
+    return utc_hour in (23, -1) and utc_minute in (59, -1) and second < 61
+
+
+def is_date_time(value: object) -> bool:
+    """RFC 3339 date-time with a required offset, as ajv-formats checks it."""
+    if not isinstance(value, str):
+        return True
+    parts = _DATE_TIME_SEPARATOR.split(value)
+    return len(parts) == 2 and _is_full_date(parts[0]) and _is_full_time(parts[1])
+
+
+def is_uri(value: object) -> bool:
+    """An absolute RFC 3986 URI, as ajv-formats checks it."""
+    if not isinstance(value, str):
+        return True
+    return bool(_NOT_URI_FRAGMENT.search(value)) and _URI.fullmatch(value) is not None
+
+
+def core_format_checker() -> FormatChecker:
+    """jsonschema's format checker, with Core's own date-time and uri checks."""
+    checker = FormatChecker()
+    checker.checks("date-time")(is_date_time)
+    checker.checks("uri")(is_uri)
+    return checker
 
 
 @functools.lru_cache(maxsize=64)
@@ -33,7 +120,7 @@ def _compiled_validator_for_dir(
     return Draft202012Validator(
         schema,
         registry=registry,
-        format_checker=FormatChecker() if use_format else None,
+        format_checker=core_format_checker() if use_format else None,
     )
 
 
@@ -132,7 +219,7 @@ def validate_contract(
         Draft202012Validator(
             schema,
             registry=schema_registry(path.parent),
-            format_checker=FormatChecker(),
+            format_checker=core_format_checker(),
         ).iter_errors(value),
         key=lambda error: [str(part) for part in error.absolute_path],
     )

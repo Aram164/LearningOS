@@ -35,7 +35,11 @@ from learning_os.domain.snapshot import Repo
 from learning_os.domain.validation import CANONICAL_TREES, Issue
 from learning_os.domain.validation import in_garden as _in_garden
 from learning_os.domain.validation import in_quarantine as _in_quarantine
-from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
+from learning_os.store.contracts.json_schema import (
+    ContractValidationError,
+    core_format_checker,
+    schema_registry,
+)
 
 
 class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
@@ -55,7 +59,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         # Without a format checker jsonschema ignores "format" entirely, so
         # `2026-13-45` validated clean on the most operationally critical field
         # in the repository — exam dates. One checker serves every validator.
-        self._format_checker = jsonschema.FormatChecker()
+        self._format_checker = core_format_checker()
         self._canonical_text_cache: list[tuple[Path, str]] | None = None
         self.timings: dict[str, float] = {}
         try:

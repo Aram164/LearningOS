@@ -11,7 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
@@ -21,6 +21,7 @@ from learning_os.derive.learning_runtime import (
 )
 from learning_os.domain.material_refs import matching_routes, unit_routes
 from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.json_schema import core_format_checker
 
 
 def ability_fingerprint(ability: dict) -> str:
@@ -126,7 +127,7 @@ def validate_ability_registry(repo: Repo) -> list[str]:
 def read_ability_observations(repo: Repo) -> list[dict]:
     """Read exact workspace-owned evidence, preserving corrections and history."""
     schema = json.loads((repo.root / "system/schema/ability-observation.schema.json").read_text())
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    validator = Draft202012Validator(schema, format_checker=core_format_checker())
     rows: list[dict] = []
     seen: set[str] = set()
     corrected: set[str] = set()
@@ -175,7 +176,7 @@ def read_ability_candidates(repo: Repo) -> list[dict]:
     if not path.exists():
         return []
     schema = json.loads((repo.root / "system/schema/ability-candidate.schema.json").read_text())
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    validator = Draft202012Validator(schema, format_checker=core_format_checker())
     rows: list[dict] = []
     seen: set[str] = set()
     for line_number, line in enumerate(path.read_text(encoding="utf-8").split("\n"), 1):

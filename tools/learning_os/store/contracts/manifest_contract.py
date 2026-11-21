@@ -26,11 +26,15 @@ import json
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 from learning_os.store import observations
 from learning_os.store.contracts.bundle import BundleError, build_bundle, digest_of
-from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
+from learning_os.store.contracts.json_schema import (
+    ContractValidationError,
+    core_format_checker,
+    schema_registry,
+)
 
 CONTRACT_RELATIVE = "system/contracts/manifest-contract.yaml"
 
@@ -188,7 +192,7 @@ def _schema_problems(manifest: dict, root: Path, contract: dict) -> list[str]:
             Draft202012Validator(
                 schema,
                 registry=registry,
-                format_checker=FormatChecker(),
+                format_checker=core_format_checker(),
             ).iter_errors(manifest),
             key=lambda error: [str(part) for part in error.absolute_path],
         )

@@ -17,9 +17,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.json_schema import core_format_checker
 from learning_os.store.layout import PathBoundaryError
 
 _MIN_UTC = datetime.min.replace(tzinfo=UTC)
@@ -88,7 +89,7 @@ def runtime_path(root: Path, path: Path) -> Path:
 
 def validate_runtime_record(repo: Repo, name: str, value: dict) -> None:
     schema = json.loads((repo.root / "system/schema" / f"{name}.schema.json").read_text())
-    errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value), key=str)
+    errors = sorted(Draft202012Validator(schema, format_checker=core_format_checker()).iter_errors(value), key=str)
     if errors:
         raise RuntimeInputError(f"{name}: {errors[0].message}")
     if name in _TIMESTAMP_VALIDATED_RECORDS and "timestamp" in value:

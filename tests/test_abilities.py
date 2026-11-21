@@ -1013,9 +1013,12 @@ def test_invalid_and_naive_ability_timestamps_fail_closed(ability_root: Path):
     repo = load_repo(ability_root)
     ledger = ability_root / "work/active/workspace-demo/ability-observations.jsonl"
     for bad_stamp, err_match in (
-        ("2026-09-23T10:00:00", "timezone offset"),
-        ("2026-09-23", "invalid timestamp"),
-        ("not-a-timestamp", "invalid timestamp"),
+        ("2026-09-23T10:00:00", "is not a 'date-time'"),
+        ("2026-09-23", "is not a 'date-time'"),
+        ("not-a-timestamp", "is not a 'date-time'"),
+        # Valid RFC 3339, but no Python datetime can hold it: still fails
+        # closed, so chronological ordering never meets an unparseable stamp.
+        ("2026-12-31T23:59:60Z", "invalid timestamp"),
     ):
         ledger.write_text("", encoding="utf-8")
         _append(ability_root, _work(repo, "ability-sad-ols", 1, timestamp=bad_stamp))

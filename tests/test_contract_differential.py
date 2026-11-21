@@ -17,10 +17,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 from learning_os.store.contracts.bundle import build_bundle, digest_of
-from learning_os.store.contracts.json_schema import schema_registry
+from learning_os.store.contracts.json_schema import core_format_checker, schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 
@@ -53,7 +53,7 @@ def _python_validator(repo_root: Path) -> Draft202012Validator:
     return Draft202012Validator(
         schema,
         registry=schema_registry(repo_root / "system" / "schema"),
-        format_checker=FormatChecker(),
+        format_checker=core_format_checker(),
     )
 
 
@@ -176,9 +176,8 @@ def _s_ref_target(manifest: dict) -> None:
 
 
 def _s_bad_format(manifest: dict) -> None:
-    # Deliberately `date` only: it is the one format vocabulary both sides
-    # enforce. date-time/uri divergence is pinned (not hidden) in
-    # test_format_vocabulary_agreement.
+    # One `date` mutation is enough here: test_format_vocabulary_agreement
+    # compares both sides on every format the contract declares.
     deadlines = manifest.get("academic_deadlines")
     if isinstance(deadlines, list) and deadlines and "start_date" in deadlines[0]:
         deadlines[0]["start_date"] = "not-a-date"
@@ -285,38 +284,50 @@ def _format_subschemas(repo_root: Path, tmp_path: Path) -> dict[str, dict]:
 
 
 def test_format_vocabulary_agreement(repo_root: Path, tmp_path: Path) -> None:
+    """Core's production checker and the UI's Ajv agree on every case.
+
+    Until 2026-11-21 Core used jsonschema's bare FormatChecker(), which
+    without the optional rfc3339-validator/rfc3987 packages checks neither
+    date-time nor uri, so the producer silently accepted what Ajv refuses.
+    Core now ports ajv-formats' full date-time and uri checks
+    (``core_format_checker``); these cases hold the two sides together.
+    """
     ui = _paired_ui(repo_root)
     subs = _format_subschemas(repo_root, tmp_path)
     cases = {
-        "date": ("2026-01-01", "not-a-date"),
-        "date-time": ("2026-01-01T00:00:00Z", "not-a-datetime"),
-        "uri": ("https://example.com/x", "::::"),
+        "date": ["2026-01-01", "not-a-date", "2026-02-30", "2024-02-29", "20260101"],
+        "date-time": [
+            "2026-01-01T00:00:00Z", "not-a-datetime", "2026-01-01T00:00:00",
+            "2026-01-01", "2026-01-01 00:00:00+01:00", "20260101T000000Z",
+            "2026-02-30T00:00:00Z", "2026-12-31T23:59:60Z", "2026-12-31T22:59:60Z",
+            "2026-11-21t09:00:00.5z", "2026-11-21T09:00:00+0200",
+            "2026-11-21T09:00:00+24:00", "2026-11-21T24:00:00Z",
+            "2026-01-01T00:00:00Z\n", "2026-11-21T09:00:00.123456789-05:00",
+        ],
+        "uri": [
+            "https://example.com/x", "::::", "conversation://learningos-app/abc",
+            "relative/path", "mailto:a@b.c", "https://exa mple.com", "urn:isbn:123",
+            "https://example.com/a?b=c#d", "http://[::1]:8080/", "https://example.com/%zz",
+            "x:", "https://example.com/\u00fc", "//example.com/x",
+        ],
     }
     assert set(cases) <= set(subs), f"missing format subschemas: {set(cases) - set(subs)}"
     registry = schema_registry(repo_root / "system" / "schema")
-    for name, (good, bad) in cases.items():
-        subschema = subs[name]
+    disagreements = []
+    for name, values in cases.items():
         python = Draft202012Validator(
-            subschema, registry=registry, format_checker=FormatChecker())
-        verdicts = _ajv_verdicts(ui, tmp_path, {f"{name}-good": good, f"{name}-bad": bad},
-                                 subschema=subschema)
-        assert not list(python.iter_errors(good)), f"{name}: Python rejects the valid value"
-        assert verdicts[f"{name}-good.json"]["valid"] is True, f"{name}: Ajv rejects valid"
-        if name == "date":
-            assert list(python.iter_errors(bad)), "date: Python accepts the invalid value"
-            assert verdicts["date-bad.json"]["valid"] is False, "date: Ajv accepts invalid"
-            continue
-        # PINNED DIVERGENCE (contract parity note, 2026-09-20): Core's
-        # FormatChecker() ships without date-time/uri checkers, so the
-        # producer silently ignores those formats today, while Ajv with
-        # ajv-formats enforces them. A production cutover must extend Core's
-        # checker set (a production strictness change, out of scope here) —
-        # aligning Ajv down to the gap would hide it.
-        assert not list(python.iter_errors(bad)), (
-            f"{name}: Python now rejects invalid — the pinned divergence changed; "
-            "revisit the cutover decision, do not just update this line")
-        assert verdicts[f"{name}-bad.json"]["valid"] is False, (
-            f"{name}: Ajv accepts invalid — ajv-formats behavior changed")
+            subs[name], registry=registry, format_checker=core_format_checker())
+        samples = {f"{name}-{index}": value for index, value in enumerate(values)}
+        verdicts = _ajv_verdicts(ui, tmp_path, samples, subschema=subs[name])
+        for key, value in samples.items():
+            python_valid = not list(python.iter_errors(value))
+            ajv_valid = verdicts[f"{key}.json"]["valid"]
+            if python_valid != ajv_valid:
+                disagreements.append(f"{name} {value!r}: Core={python_valid} Ajv={ajv_valid}")
+        # Each format still separates its canonical good and bad values.
+        assert not list(python.iter_errors(values[0])), f"{name}: Core rejects {values[0]!r}"
+        assert list(python.iter_errors(values[1])), f"{name}: Core accepts {values[1]!r}"
+    assert not disagreements, "Core/Ajv format disagreement:\n" + "\n".join(disagreements)
 
 
 def test_generated_lock_matches_hand_mirrored_lock(repo_root: Path) -> None:
