@@ -19,10 +19,24 @@ repository root; a dot-folder, so Obsidian neither loads nor watches its
 page files) is backed by per-digest derived nodes
 (``cache.text:<sha256>``, SPEC §14, D-12): extraction persists the
 node's texts, and a run serves the entry from cache only when the node
-and the file views agree, so source, extractor, producer, runtime, and
-page-count changes each invalidate. The files stay byte-identical
-views of their node: page loss or corruption re-projects from the
-node without re-running extraction. An explicit ``--cache-dir``
+and the file views agree. Source, extractor and page-count changes
+re-extract. The files stay byte-identical views of their node: page
+loss or corruption re-projects from the node without re-running
+extraction.
+
+The extracted text depends only on the source bytes, the page count and
+the extractor; ``EXTRACTOR`` names the extraction behaviour. A node key
+also covers the producer files, the whole Core code tree and the runtime,
+so it goes stale on any Core change or Python upgrade. When only that
+happened, the texts the node last recorded are recorded again under the
+current key — if they still match the live digest, page count and
+``EXTRACTOR``, and the verified file views hold exactly those texts —
+instead of re-running ``pdftotext`` for every page of every PDF. To
+re-extract everything on purpose, change ``EXTRACTOR``;
+``tests/test_arch_caches.py`` pins the extraction functions so that
+decision cannot be skipped.
+
+An explicit ``--cache-dir``
 elsewhere keeps the legacy file-only behavior (§14 disposition: no
 repo root is expressible for an arbitrary directory, so no derived
 reads or writes happen there). The location's name is
@@ -36,6 +50,7 @@ import argparse
 import datetime as _dt
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -60,7 +75,8 @@ from learning_os.store.derived.model import (  # noqa: E402
     DerivedError,
     NodeSpec,
 )
-from learning_os.store.derived.store import invalidate  # noqa: E402
+from learning_os.store.derived.store import invalidate, read_state  # noqa: E402
+from learning_os.store.derived.store import lookup as recorded_node  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 CACHE_DIR = REPO / "generated" / TEXT_CACHE_TOP_DIR
@@ -346,6 +362,56 @@ def _persist_text_node(digest: str, rel: str, cache: Path, pages: int) -> None:
         return
 
 
+def _rekey_recorded_texts(
+    pairs: list[tuple[str, int]], cache: Path,
+) -> dict[tuple[str, int], dict]:
+    """Record each digest's last recorded texts again under today's key.
+
+    For digests whose node missed only because its key went stale (Core
+    code or runtime changed): the value the store still holds for the
+    node — under whatever key — is re-recorded when it still matches the
+    live digest, page count and ``EXTRACTOR`` and the verified file views
+    hold exactly its texts. Nothing is extracted. One session, one index
+    write. A fresh run (``LOS_NO_CACHE=1``, SPEC §14) never reads the
+    store, so it re-keys nothing. Returns the re-recorded values; any
+    failure returns none of them, and those digests extract as before.
+    """
+    unique = list(dict.fromkeys(pairs))
+    if not unique or os.environ.get("LOS_NO_CACHE") == "1":
+        return {}
+    try:
+        states = read_state(REPO)
+    except OSError:
+        return {}
+    eligible: dict[tuple[str, int], dict] = {}
+    for digest, pages in unique:
+        found = recorded_node(REPO, _text_node_id(digest), states=states)
+        if found is None:
+            continue
+        value = found[1]
+        if (_valid_text_value(value) and _value_matches_inputs(value, digest, pages)
+                and _texts_match_index(value, cache, digest)):
+            eligible[(digest, pages)] = value
+    if not eligible:
+        return {}
+
+    def _recorded(value: dict):
+        return lambda _ctx: value
+
+    registry = {
+        _text_node_id(digest): (_text_spec(digest), _recorded(value))
+        for (digest, _pages), value in eligible.items()
+    }
+    inputs: dict[str, str] = {}
+    for digest, pages in eligible:
+        inputs.update(_text_inputs(digest, pages))
+    try:
+        evaluate_many(REPO, list(registry), registry=registry, inputs=inputs)
+    except (OSError, DerivedError, TransactionFailure, ValueError):
+        return {}
+    return eligible
+
+
 def _project_views(path: Path, digest: str, rel: str, cache: Path,
                    pages: int, texts: list[str]) -> bool:
     """Rewrite one digest's file views from its node texts.
@@ -540,7 +606,7 @@ def main(argv: list[str] | None = None) -> int:
     default_cache = _is_default_cache(cache)
 
     recorded = (manifest.get("files") or {})
-    cached = extracted = healed = 0
+    cached = extracted = healed = rekeyed = 0
     skipped: list[dict] = []
     stale: list[str] = []
     live: set[str] = set()
@@ -590,8 +656,16 @@ def main(argv: list[str] | None = None) -> int:
     if pending:
         values = _default_text_lookups(
             [(digest, pages) for _, _, digest, pages, _ in pending])
+        # A key that went stale while the texts stayed attested: record
+        # them again instead of extracting (see the module docstring).
+        rerecorded = _rekey_recorded_texts(
+            [(digest, pages) for _, _, digest, pages, files_ok in pending
+             if values[(digest, pages)] is None and files_ok], cache)
         for rel, path, digest, pages, files_ok in pending:
             value = values[(digest, pages)]
+            if value is None and rerecorded.pop((digest, pages), None) is not None:
+                rekeyed += 1
+                continue
             if value is None:
                 # A batch miss resolves singly now, picking up any node
                 # or view this run published for a shared digest — the
@@ -620,7 +694,8 @@ def main(argv: list[str] | None = None) -> int:
         skipped.sort(key=lambda entry: order[entry["material"]])
     pruned = _prune(cache, live) if (args.refresh or not args.build) else 0
     print(json.dumps({"cached": cached, "extracted": extracted,
-                      "healed": healed, "skipped": skipped, "stale": sorted(stale),
+                      "healed": healed, "rekeyed": rekeyed,
+                      "skipped": skipped, "stale": sorted(stale),
                       "pruned": pruned, "cache": str(cache)},
                      ensure_ascii=False, separators=(",", ":")))
     return 0

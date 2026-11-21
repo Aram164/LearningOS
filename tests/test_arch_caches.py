@@ -1002,6 +1002,7 @@ def test_text_extractor_mutation_matches_fresh(tmp_path: Path, capsys, monkeypat
     assert mt._default_text_lookup(digest, 1) is None
     code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
     assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    assert warm["rekeyed"] == 0
     page, index = _text_views(mt.CACHE_DIR, digest)
     assert index["extractor"] == "other-extractor"
     code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
@@ -1046,14 +1047,28 @@ def test_text_producer_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatc
                       encoding="utf-8")
     digest_a = _digest_of(spec["deck-a.pdf"])
     assert mt._default_text_lookup(digest_a, 1) is None
+    calls = []
+    real_page_text = mt._page_text
+
+    def counted(path, page):
+        calls.append((str(path), page))
+        return real_page_text(path, page)
+
+    # The key went stale but the texts did not: they are re-recorded under
+    # the new key, and pdftotext never runs.
+    monkeypatch.setattr(mt, "_page_text", counted)
     code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
-    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 2)
+    assert code == 0
+    assert (warm["cached"], warm["extracted"], warm["rekeyed"]) == (0, 0, 2)
+    assert calls == []
+    monkeypatch.setattr(mt, "_page_text", real_page_text)
+    assert mt._default_text_lookup(digest_a, 1) is not None
     warm_views = {}
     for rel in ("deck-a.pdf", "deck-b.pdf"):
         warm_views[rel] = _text_views(
             mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
-    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
-    assert code == 0
+    code, fresh = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0 and (fresh["extracted"], fresh["rekeyed"]) == (2, 0)
     for rel in ("deck-a.pdf", "deck-b.pdf"):
         page, index = _text_views(mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
         old_page, old_index = warm_views[rel]
@@ -1076,7 +1091,8 @@ def test_text_runtime_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch
     digest = _digest_of(spec["deck-a.pdf"])
     assert mt._default_text_lookup(digest, 1) is None
     code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
-    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    assert code == 0
+    assert (warm["cached"], warm["extracted"], warm["rekeyed"]) == (0, 0, 1)
     page, index = _text_views(mt.CACHE_DIR, digest)
     code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
     assert code == 0
@@ -1084,6 +1100,54 @@ def test_text_runtime_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch
     assert (page, _index_semantics(index)) == (fresh_page, _index_semantics(fresh_index))
     code, warm2 = _run_text_default(mt, base, manifest, capsys, "--refresh")
     assert code == 0 and (warm2["cached"], warm2["extracted"]) == (1, 0)
+
+
+@needs_pdftotext
+def test_text_stale_key_never_adopts_views_the_node_did_not_record(
+        tmp_path: Path, capsys, monkeypatch):
+    """A stale key re-records the node's own texts, never the files':
+    views rewritten coherently (fresh hashes) still re-extract."""
+    import learning_os.store.derived.engine as engine_module
+
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("True page text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    page_path = mt.CACHE_DIR / digest / "pp-0001.txt"
+    page_path.write_text("Coherent lies\n", encoding="utf-8")
+    index_path = mt.CACHE_DIR / digest / "index.json"
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    index["pages_sha256"] = [hashlib.sha256(b"Coherent lies\n").hexdigest()]
+    index_path.write_text(json.dumps(index), encoding="utf-8")
+    assert mt._index_valid(mt.CACHE_DIR, digest, 1)
+    monkeypatch.setattr(engine_module, "runtime_digest", lambda: "e" * 64)
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0
+    assert (warm["cached"], warm["extracted"], warm["rekeyed"]) == (0, 1, 0)
+    assert "True page text" in page_path.read_text(encoding="utf-8")
+
+
+#: Pinned with EXTRACTOR: see the test below before changing either.
+EXTRACTION_FINGERPRINT = "bf43fc7f4e7e82993d8ae5e487a85c4c13a4b12c7e7e11bbb9485e3b65ac1c04"
+
+
+def test_text_extraction_code_is_pinned_to_its_extractor_name():
+    """A stale key re-records texts instead of extracting them, trusting
+    ``EXTRACTOR`` to name how text is extracted. Changing the extraction
+    code without changing ``EXTRACTOR`` would keep serving the old text,
+    so the two are pinned together."""
+    import inspect
+
+    mt = _load_material_text()
+    source = "".join(inspect.getsource(fn) for fn in (
+        mt._page_text, mt._page_count, mt._extract))
+    fingerprint = hashlib.sha256(source.encode("utf-8")).hexdigest()
+    assert (mt.EXTRACTOR, fingerprint) == ("pdftotext+pypdf", EXTRACTION_FINGERPRINT), (
+        "The page-text extraction code changed. If the text it extracts can "
+        "change, change EXTRACTOR so every PDF re-extracts once; then update "
+        "EXTRACTOR and EXTRACTION_FINGERPRINT here.")
 
 
 @needs_pdftotext
