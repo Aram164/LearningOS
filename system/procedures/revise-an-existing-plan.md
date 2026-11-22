@@ -45,6 +45,12 @@ assembly preflight failed; no draft files were written
 
 ## Start from the named route's edit context
 
+Every focused route edit follows four steps:
+1. **Entry read:** fetch the snapshot and artifact revision guards with `plan-edit-context UNIT_ID --route-id ROUTE_ID` (or `--route-ids A B`).
+2. **Preview (`--check`) and review (`--check-out`):** run `route-patch UNIT_ID ROUTE_ID --changes JSON --check` to preview the exact field diff with `"canonical_files_written": 0`, and write the check record outside the repository (`--guards auto --check-out REC`). When the agent chose the content (boundary 2), show the learner the exact `--check` diff and wait for approval; inspect `REC` before submitting.
+3. **Guarded submit (`--guards-from ... --submit`):** submit in a separate invocation using `tools/seal_envelope.py --guards-from REC --request-id ID --submit` (never chain `--check-out` and `--submit` in one call).
+4. **Receipt:** confirm `ok: true`, `receipt_path`, and the updated `artifact_revisions`. If `route-patch` refuses because the change alters route identity, source, scope, coverage, or stage membership, recover through the declared structural revision path (`unit-plan-revise UNIT_ID --record ... --check` / `unit.plan.revise` or `unit-map-import`).
+
 ```scrut
 $ los plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["unit_id"]); print(d["route"]["id"], d["route"]["title"]); print(d["patch_capability"])'
 plan-edit-context unit-demo-l01
@@ -52,7 +58,7 @@ route-b2f1f80014860a929a3af0bc Demo book — expected-value derivation
 route.patch
 ```
 
-## Preflight the bounded patch: concrete diff, zero writes
+### Preflight the bounded patch: concrete diff, zero writes
 
 ```scrut
 $ los route-patch unit-demo-l01 route-b2f1f80014860a929a3af0bc --changes '{"angle": "Probe revision angle."}' --check | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"], d["check"], d["canonical_files_written"]); print(json.dumps(d["changes"]["angle"], sort_keys=True)); print(d["affected_files"]); print(json.dumps(d["expected_revisions"], sort_keys=True))'
@@ -62,7 +68,7 @@ True True 0
 {"module-demo": 0, "study-map-demo-l01": 0, "unit-demo-l01": 3}
 ```
 
-## Seal the patch with derived guards
+### Seal the patch with derived guards
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Probe revision angle."}}' --key s25a-patch --guards auto --check-out "$TMPDIR/s25a-patch-check.json" > /dev/null
@@ -70,7 +76,7 @@ $ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "
 seal_envelope: guards auto: module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
 ```
 
-## Apply the patch through the gateway
+### Apply the patch through the gateway
 
 ```scrut {interpolated: true}
 $ $H/los-seal --guards-from "$TMPDIR/s25a-patch-check.json" --request-id request-s25a-patch --submit
@@ -78,20 +84,22 @@ $ $H/los-seal --guards-from "$TMPDIR/s25a-patch-check.json" --request-id request
 {"schema_version":2,"request_id":"request-s25a-patch","idempotency_key":"s25a-patch","capability":"route.patch","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","result":{"schema_version":1,"unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":{"before":"Derives the weighted sum and works a discrete example.","after":"Probe revision angle."}},"claim_anchors":[],"claims":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","before":"stale","after":"will-be-stale","warning":"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check","next":"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check","claim_evidence_scaffold":{"claim_evidence":[{"claim_id":"covers:route-b2f1f80014860a929a3af0bc","evidence":[{"kind":"quote","ref":"material://source-demo-book/lecture-01.pdf","text":"","page":null}],"reads":{}}],"material_scope":[{"ref":"material://source-demo-book/lecture-01.pdf","locator":"lecture-01.pdf","page_ranges":[]}],"instruction":"Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence."}}],"plan_sha256":"sha256:b34bbc807f64b2d5be4e9dc9c2d26cefa9254f1ff41b8e0521c0499ed567f963","affected_files":["curriculum/modules/module-demo/source-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"ok":true,"transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false},"error":null}
 ```
 
-## The newest receipt names the capability
+### The newest receipt names the capability
 
 ```scrut
 $ $H/los-assert-receipt --last --capability route.patch
 ```
 
-## The route carries the revised angle
+### The route carries the revised angle
 
 ```scrut
 $ grep -n "Probe revision angle" curriculum/modules/module-demo/source-map.yaml
 13:    angle: Probe revision angle.
 ```
 
-## An identity change is refused: that needs the full plan path
+### An identity change is refused: that needs the full plan path
+
+When a change targets `source_id`, `covers`, `scope`, or stage placements, `route-patch` refuses; recover through the declared compact unit revision path (`unit-plan-revise ... --check` -> `unit.plan.revise`) shown below.
 
 ```scrut {output_stream: stderr}
 $ los route-patch unit-demo-l01 route-b2f1f80014860a929a3af0bc --changes '{"source_id": "source-demo-book"}' --check
@@ -315,7 +323,7 @@ True check
 {"module-demo": 3}
 ```
 
-## Seal the unit revision with derived guards
+### Seal the unit revision with derived guards
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.plan.revise --payload '{"unit_id": "unit-demo-l01", "record": {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed probe angle."}}]}}}' --key s25a-rev --guards auto --check-out "$TMPDIR/s25a-rev-check.json" > /dev/null
@@ -329,13 +337,13 @@ $ $H/los-seal --guards-from "$TMPDIR/s25a-rev-check.json" --request-id request-s
 {"schema_version":2,"request_id":"request-s25a-rev","idempotency_key":"s25a-rev","capability":"unit.plan.revise","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","result":{"ok":true,"mode":"apply","module_id":"module-demo","units_written":["unit-demo-l01"],"files_written":1,"transaction_id":"transaction-20261001-090000-004","receipt_path":"operations/transactions/transaction-20261001-090000-004.yaml","artifact_revisions":{"module-demo":4},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_5","replayed":false},"error":null}
 ```
 
-## The newest receipt names the capability
+### The newest receipt names the capability
 
 ```scrut
 $ $H/los-assert-receipt --last --capability unit.plan.revise
 ```
 
-## The route carries the reviewed detail
+### The route carries the reviewed detail
 
 ```scrut
 $ grep -n "reviewed detailed probe angle" curriculum/modules/module-demo/source-map.yaml

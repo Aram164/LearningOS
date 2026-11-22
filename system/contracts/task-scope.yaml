@@ -100,10 +100,12 @@ tasks:
 
   - id: edit-a-known-material-route
     task: Edit a known material route
-    entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`'
+    entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`, then `route-patch UNIT_ID ROUTE_ID --changes JSON --check` and `capabilities route.patch --json`'
     procedures:
       - label: Revise a plan
         target: system/procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context
+      - label: compact unit revision
+        target: system/procedures/revise-an-existing-plan.md#preflight-the-compact-route-operation
     scope:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#25a-revise-an-existing-plan
@@ -111,10 +113,12 @@ tasks:
 
   - id: edit-a-known-stage
     task: Edit a known stage
-    entry_read: '`plan-edit-context UNIT_ID --stage-id STAGE_ID`'
+    entry_read: '`plan-edit-context UNIT_ID --stage-id STAGE_ID`, then `unit-plan-revise UNIT_ID --file REVISION.yaml --check` or `unit-map-import UNIT_ID --file MAP.yaml --check`'
     procedures:
       - label: Enter through the stage
         target: system/procedures/bootstrap-order.md#enter-through-the-named-stage
+      - label: compact unit revision
+        target: system/procedures/revise-an-existing-plan.md#preflight-the-compact-route-operation
     scope:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#25a-revise-an-existing-plan
@@ -166,17 +170,19 @@ tasks:
 
   - id: material-or-concept-explanation
     task: Material or concept explanation
-    entry_read: '`material-context`, then an exact `material-span` when needed; on a whole-book or long-chapter route, `material-search` first'
+    entry_read: '`material-context`, then an exact `material-span` (or `material-study-span` in a study session) when needed; on a whole-book or long-chapter route, `material-search` first'
     procedures:
       - label: Retrieve explanations
         target: system/procedures/retrieval-behavior.md#read-what-explains-it
+      - label: find and settle a PDF span
+        target: system/procedures/retrieval-behavior.md#find-the-page-inside-a-wide-route
     scope:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#26-source-routing-and-feedback
 
   - id: find-a-page-in-unit-materials
     task: Find where a topic sits inside a unit's PDF materials
-    entry_read: '`material-search --unit UNIT_ID "terms"`, then `material-span` with the hit''s `span_reference` pages'
+    entry_read: '`material-search --unit UNIT_ID "terms"`, then `material-span` (or `material-study-span` in a study session) with the hit''s `span_reference` pages, settling open entries with `material-card-settle`'
     procedures:
       - label: Find the page
         target: system/procedures/retrieval-behavior.md#find-the-page-inside-a-wide-route

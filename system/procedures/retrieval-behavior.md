@@ -122,26 +122,76 @@ source-demo-book/book.pdf [1, 1] current
 
 ## Find the page inside a wide route
 
-On a whole-book or long-chapter route, do not read the route end to end and
-do not settle for a cut-off `material-span --extract` excerpt. Locate the
-page first: run `material-search --unit UNIT_ID "terms"` with one to three
-content terms from the question, then rerun `material-span` with the hit's
-`span_reference` pages, for example
-`material-span UNIT_ID ROUTE_ID --extract --pages "pdf pp. 21-26"`.
+On a whole-book or long-chapter route, do not read the route end to end or
+settle for a cut-off `material-span --extract` excerpt. Locate the page first
+with `material-search --unit UNIT_ID "terms"` (PDF text only; video
+transcripts, notebooks and scans are not searched), then read the hit's
+`span_reference` pages with `material-span` (or `material-study-span` in a
+study session; inside `tools/study_launch.py`, the broker rewrites
+`material-span ... --extract` to `material-study-span` and injects
+`--session`). In study mode, inspect inline reading cards (`hits[].cards` and
+`study` on `material-search`; `study_cards` on `material-context`) before
+opening PDFs, read narrow `span_reference` ranges, settle every open `rd-...`
+entry with `material-card-settle ENTRY --card JSON` or
+`--dismiss irrelevant --reason REASON`, and pass `--omit-covered-text` when
+re-checking covered spans.
 
-`material-search` searches the text of PDF materials only. Video
-transcripts, notebooks and scanned pages are not searched: an empty result,
-or one with PDF hits only, says nothing about them. When `material-span`
-returns a cut-off extract, its `next_action` carries this same instruction.
+### Example: study request over a lecture PDF with reading-memory settlement and reuse
 
-In sandboxed study mode (`--session` / study launch), inspect inline
-reading cards (`hits[].cards` and `study` on `material-search`; `study_cards`
-on `material-context`) before
-opening PDF pages, narrow unsectioned PDFs to the hit's `span_reference` /
-uncovered pages rather than wide multi-page ranges, add `--omit-covered-text`
-on `material-study-span` (or `material-span ... --extract`) when checking
-already-covered spans without repeating raw PDF text, and dismiss isolated
-irrelevant pages with `--dismiss irrelevant`.
+Learner request: *"In `unit-demo-l01`, where does the lecture present the Chebyshev deviation bound, and what is on the next page before the worked example?"*
+
+Build the fixture's disposable text cache and FTS5 index, then search the unit's PDF materials and reading memory:
+
+```scrut
+$ export S=11111111-1111-4111-8111-111111111111 R=route-b2f1f80014860a929a3af0bc PY=$LOS_REPO/.venv/bin/python && $PY $LOS_REPO/tools/material_text.py --cache-dir "$LOS_FX/generated/.text-cache" --manifest "$LOS_FX/records/materials-manifest.yaml" --materials-root "$(dirname "$LOS_FX")/materials" > /dev/null && $PY $LOS_REPO/tools/build_material_search_index.py --root "$LOS_FX" > /dev/null
+```
+
+```scrut
+$ los material-search --unit unit-demo-l01 "Chebyshev" --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); h = d["hits"][0]; print(d["contract"], d["status"], d["study"]["cards"]); print(h["material"], h["page"], h["span_reference"]["pages"], h["cards"])'
+material-search-v1 ok 0
+source-demo-book/lecture-01.pdf 19 pdf p. 19 []
+```
+
+No card covers page 19 yet (`cards: []`). Read the narrow `span_reference` range (`pdf p. 19`) on route `route-b2f1f80014860a929a3af0bc`, which returns the excerpt and opens reading entry `rd-b791b4e8f829196f`:
+
+```scrut
+$ los material-study-span unit-demo-l01 "$R" --extract --pages "pdf p. 19" --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); r = d["study"]["reads"][0]; print(d["contract"], r["state"], r["entry"], r["pages"]); print(d["span"]["spans"][0]["excerpt"].strip()); print([e["entry"] for e in d["study"]["open_entries"]])'
+material-study-span-v1 opened rd-b791b4e8f829196f pdf p. 19
+--- PDF p.19 ---
+Expected value, page 19 of 24: Chebyshev squares the deviation bound
+['rd-b791b4e8f829196f']
+```
+
+Settle `rd-b791b4e8f829196f` with `material-card-settle --card` (`paraphrase` 20–800 chars, matched `kinds` and `pointers[].kind`, `page` inside the entry's range):
+
+```scrut
+$ los material-card-settle rd-b791b4e8f829196f --card '{"paraphrase": "Chebyshev bounds tail deviations by squaring the distance from the mean.", "kinds": ["statement"], "pointers": [{"page": 19, "kind": "statement", "label": "Chebyshev squared-deviation bound"}], "concepts": ["concept-expected-value"]}' --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["outcome"], d["card"]["card"], d["card"]["pages"], d["remaining"])'
+material-card-settle-v1 saved card-395ded80ff4a721e-p19-19 pdf p. 19 []
+```
+
+Read `pdf p. 20` (a transition line before the worked example, opening `rd-c255e393ce320d62`) and settle it with a legitimate `--dismiss irrelevant --reason`:
+
+```scrut
+$ los material-study-span unit-demo-l01 "$R" --extract --pages "pdf p. 20" --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); r = d["study"]["reads"][0]; print(r["state"], r["entry"], d["span"]["spans"][0]["excerpt"].splitlines()[-1])'
+opened rd-c255e393ce320d62 Expected value, page 20 of 24: the first pass ends here, example unread
+```
+
+```scrut
+$ los material-card-settle rd-c255e393ce320d62 --dismiss irrelevant --reason "Section break page noting that the first pass ends before the worked example." --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["outcome"], d["entries"][0]["state"], d["card"], d["remaining"])'
+material-card-settle-v1 dismissed-irrelevant settled None []
+```
+
+On a repeat lookup, `material-search` returns the saved card inline on `hits[].cards`, and `material-study-span ... --omit-covered-text` reuses it (`state: "covered"`, `excerpt_omitted: "covered"`, `open_entries: []`):
+
+```scrut
+$ los material-search --unit unit-demo-l01 "Chebyshev" --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); c = d["hits"][0]["cards"][0]; print(d["study"]["cards"], c["card"], c["kinds"], c["paraphrase"])'
+1 card-395ded80ff4a721e-p19-19 ['statement'] Chebyshev bounds tail deviations by squaring the distance from the mean.
+```
+
+```scrut
+$ los material-study-span unit-demo-l01 "$R" --extract --omit-covered-text --pages "pdf p. 19" --session "$S" | $PY -c 'import json,sys; d = json.load(sys.stdin); r = d["study"]["reads"][0]; s = d["span"]["spans"][0]; print(r["state"], r["covered_by"], s["excerpt_omitted"], d["study"]["memory"][0]["card"], d["study"]["open_entries"])'
+covered ['card-395ded80ff4a721e-p19-19'] covered card-395ded80ff4a721e-p19-19 []
+```
 
 The learner's own notes are searched separately, over their full bodies:
 

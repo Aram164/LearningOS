@@ -370,6 +370,15 @@ stage-demo-pending 0
 
 ## Read one ability through the bounded horizon
 
+Operators read Ability state and observation history through `ability-context`
+(bounded horizon first, then one ability with `--brief` or `--section evidence`).
+Completing a study-map stage (`stage.progress.update`) records workflow progress,
+not Ability evidence; learner-reported stage results use `observe`
+(`learner.observation.append`) or `learner.stage-result.append` ([record-evidence.md](record-evidence.md)),
+while Ability observations (`learner.ability-observation.append`) and candidate
+bridges (`ability.candidate.append`) are confirmed only in the Obsidian UI
+Review view (`channel: "ui"`).
+
 ```scrut
 $ los ability-context ability-demo-derive --brief | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["focus"], d["ability"]["id"], d["brief"])'
 ability-demo-derive ability-demo-derive True

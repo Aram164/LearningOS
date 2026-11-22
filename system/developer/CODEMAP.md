@@ -12,8 +12,11 @@ Start at `tools/los.py`. The adapters parse (including the study-session
 `tools/study_launch.py`); the app pipeline admits and coordinates; handlers own
 operation families. Derivations compute views and
 judgments over loaded state; store owns loading, contracts and persistence;
-domain holds semantic leaves. Follow one component below instead of reading
-every package. `tools/README.md` classifies the separate executable tools.
+domain holds semantic leaves. Follow one component page under
+`system/developer/components/` (listed below by `<component>.md` stem) instead of
+reading every package. `tools/README.md` classifies the separate executable
+tools, and `tools/learning_os/README.md` documents package facades and retained
+compatibility surfaces.
 
 <!-- system-map:begin name=index -->
 - `ai-action-store` — Persist bounded AI request/delivery state and exact artifact bindings.
@@ -35,12 +38,7 @@ every package. `tools/README.md` classifies the separate executable tools.
 - `package-root` — Expose package metadata from the declared project version.
 - `plan-gate` — Preflight reviewed plan packages and bind proposed learning changes to their evidence.
 - `projection` — Publish deterministic views and the producer-owned manifest from loaded state.
-- `search` — Build bounded searchable views over already-loaded knowledge (for full-text search over local PDF material pages, see [materials](materials.md)).
-
-`material-search` (see [materials](materials.md)) searches the text of PDF
-materials only; video transcripts, notebooks and scanned pages are not
-searched. The learner's own notes are searched over their full bodies with
-`search QUERY --type note --content`.
+- `search` — Build bounded searchable views over already-loaded knowledge; full-text PDF material page search lives in `materials`.
 - `semantics` — Interpret evidence through predicates, policy, lineage, dossiers and proposals.
 - `session-ledger` — Track session-owned touched files and closure boundaries separately from learner content.
 - `transactions` — Own atomic canonical commits, artifact revisions, before-images and receipts.

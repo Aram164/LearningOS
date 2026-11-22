@@ -24,25 +24,35 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## The direct path needs no envelope
 
+Keep the three learner write surfaces distinct:
+- **Stage progress** (`stage.progress.update`, [end-a-session.md](end-a-session.md)) updates a study-map stage's completion status (`pending` / `active` / `completed`) and never records requirement or Ability evidence.
+- **Stage-level learner results** use `observe REQ_ID --activity ACTIVITY --result RESULT` (`learner.observation.append`) when the stage declares a `runtime_target` (producing a requirement ID such as `req-demo-l01-demo`), or a sealed `learner.stage-result.append` envelope when `observe` refuses because the stage has no `runtime_target`.
+- **Ability evidence** (`learner.ability-observation.append` and `ability.candidate.append`) is confirmed exclusively by the learner in the Obsidian UI Review view (`admission_channels: ['ui']`, refused on the `operator` CLI channel); operators read Ability state via `ability-context`.
+
+```scrut
+$ los capabilities learner.ability-observation.append --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); c = d["commands"]["learner.ability-observation.append"]; print(c["admission"], c["admission_channels"])'
+direct-user-gesture ['ui']
+```
+
 ```scrut {interpolated: true}
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false}
 ```
 
-## The newest receipt names the capability
+### The newest receipt names the capability
 
 ```scrut
 $ $H/los-assert-receipt --last --capability learner.observation.append
 ```
 
-## The observation landed in the workspace ledger
+### The observation landed in the workspace ledger
 
 ```scrut
 $ $H/los-assert-file work/active/workspace-demo/observations.jsonl --sha256 52810523494d31d7007378d649067845fedf42258d41d7fe3692dd5e3d7ae946
 ```
 
-## A mistyped requirement suggests the real one
+### A mistyped requirement suggests the real one
 
 ```scrut {output_stream: stderr}
 $ los observe req-demo-l01-demb --activity exercise --result correct
@@ -50,7 +60,9 @@ los: INVALID_REQUEST: unknown requirement: req-demo-l01-demb (did you mean: req-
 [2]
 ```
 
-## A stage without a target is named, never "unknown requirement"
+### A stage without a target is named, never "unknown requirement"
+
+When `observe` refuses because the stage has no `runtime_target`, recover through the declared untargeted ledger path (`learner.stage-result.append`) below, or author a `runtime_target` via `unit-plan-revise UNIT_ID --file REVISION.yaml --check`.
 
 ```scrut {output_stream: stderr}
 $ los observe stage-demo-pending --activity exercise --result correct
@@ -62,7 +74,8 @@ los: INVALID_REQUEST: stage stage-demo-pending (unit unit-demo-l01) has no requi
 
 The bare command refuses without one; its first clause differs from the
 message §25c quotes for the class (M-01 in
-`tests/architecture/mismatches.yaml`).
+`tests/architecture/mismatches.yaml`). Seal a `learner.stage-result.append`
+envelope with derived guards and submit it through `capability learner.stage-result.append --payload-file ENVELOPE.json`:
 
 ```scrut {output_stream: stderr}
 $ los stage-result --workspace workspace-demo --unit unit-demo-l01 --stage stage-demo-pending --activity exercise --result correct
@@ -70,7 +83,7 @@ los: INVALID_REQUEST: stage results require GatewayEnvelopeV2; direct CLI applic
 [2]
 ```
 
-## Seal the untargeted result with derived guards
+### Seal the untargeted result with derived guards
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability learner.stage-result.append --payload '{"workspace": "workspace-demo", "unit": "unit-demo-l01", "stage": "stage-demo-pending", "activity": "exercise", "result": "correct", "condition": ["unfamiliar-example"], "note": "No target yet; recorded without credit."}' --key stage-result-001 --request-id request-stage-result-001 --guards auto --out "$TMPDIR/stage-result.json"
@@ -78,7 +91,7 @@ $ $H/los-seal --capability learner.stage-result.append --payload '{"workspace": 
 seal_envelope: guards auto: workspace-demo=1
 ```
 
-## Submit the envelope
+### Submit the envelope
 
 ```scrut {interpolated: true}
 $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-result.json"
@@ -86,13 +99,13 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
 {"schema_version":2,"request_id":"request-stage-result-001","idempotency_key":"stage-result-001","capability":"learner.stage-result.append","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","result":{"ok":true,"stage_result_id":"stage-result-5f47ee7619671e2e6dfc38582fca09a0","workspace_id":"workspace-demo","unit":"unit-demo-l01","stage":"stage-demo-pending","credit":"none","transaction_id":"transaction-20261001-090000-002","receipt_path":"operations/transactions/transaction-20261001-090000-002.yaml","artifact_revisions":{"workspace-demo":2},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_3","replayed":false},"error":null}
 ```
 
-## The newest receipt names the capability
+### The newest receipt names the capability
 
 ```scrut
 $ $H/los-assert-receipt --last --capability learner.stage-result.append
 ```
 
-## The row landed in the workspace ledger
+### The row landed in the workspace ledger
 
 ```scrut
 $ $H/los-assert-file work/active/workspace-demo/stage-results.jsonl --sha256 19ba94e9086771c86aa4e0775332de37fdb2883fae4a275591096caeb5deb450
