@@ -47,8 +47,10 @@ compatibility operations (`path.*`, legacy archive, route-identity planner; see
 `tools/learning_os/README.md`). Exercise write paths against synthetic fixtures
 (`mini_repo`, `rich_world`) or an isolated disposable worktree — never against live
 learner records. If `system/contracts/*` or `system/schema/*` content changed,
-re-record scenario expectations (`LOS_RECORD_SCENARIOS=1`) and `tests/architecture/engine-baseline.json` (`tests/test_arch_engine_neutrality.py`) last (see
-[changing contracts](developer/changing-contracts.md#scenario-recordings-pin-contract-content--re-record-last)).
+re-record scenario expectations (`LOS_RECORD_SCENARIOS=1`, see
+[changing contracts](developer/changing-contracts.md#scenario-recordings-pin-contract-content--re-record-last))
+last; the historical engine oracle (`tests/architecture/engine-baseline.json`)
+freezes its `074f4717` contract inventory independently of current contracts.
 
 Compare the generated system map and tree; run the owning tests and existing
 architecture gates. Keep stored-record and manifest changes under their own

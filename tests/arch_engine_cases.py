@@ -119,21 +119,28 @@ def _build_root(tmp_path: Path, name: str) -> Path:
     # snapshot hashes. Keep its original inputs when later contracts change;
     # the full scenario suite exercises current contracts independently.
     historical = historical_files("074f4717e14527798752de84b3c9c4e88348b658")
-    # Freeze the inventory as well as bytes: later schemas are not inputs
-    # to this historical oracle. Current-contract scenarios run separately.
-    schema_inputs = list((root / "system/schema").rglob("*.schema.json"))
-    schema_inputs += list((root / "system/contracts").glob("manifest-v*.schema.json"))
-    for target in schema_inputs:
-        if target.relative_to(root).as_posix() not in historical:
-            target.unlink()
+    # Freeze the complete contract and schema inventory as well as bytes:
+    # later contracts (e.g. task-scope.yaml, review-consolidation.yaml) are
+    # not inputs to this historical oracle, and historical schemas/contracts
+    # removed from the current repository (e.g. manifest-v15.schema.json)
+    # must still be restored. Current-contract scenarios run separately.
+    for contract_root in ("system/schema", "system/contracts"):
+        base = root / contract_root
+        if not base.exists():
+            continue
+        for target in sorted(base.rglob("*"), reverse=True):
+            if target.is_file() or target.is_symlink():
+                if target.relative_to(root).as_posix() not in historical:
+                    target.unlink()
+            elif target.is_dir() and not any(target.iterdir()):
+                target.rmdir()
     for relpath, data in historical.items():
-        target = root / relpath
         # build_mini_repo deliberately omits host-local attachment policy.
         if relpath == "system/contracts/local-attachments.yaml":
             continue
-        if target.is_file() or relpath.startswith("system/schema/"):
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
+        target = root / relpath
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
     return root
 
 

@@ -8,13 +8,16 @@ engine. The phase marker (Task 2) must not change any effect.
 from __future__ import annotations
 
 import contextvars
+import hashlib
 import json
+import shutil
 import sys
 import threading
 from pathlib import Path
 
 import arch_engine_cases
 import pytest
+from history_baselines import historical_files
 
 from learning_os.store.transactions import (
     _engine_phase,
@@ -37,6 +40,70 @@ def test_engine_matches_baseline(case: str, tmp_path: Path):
     assert record == baseline[case]
     # (a) The marker is reset after every case, including exception cases.
     assert current_engine_phase() is None
+
+
+def test_historical_fixture_matches_frozen_inventory(tmp_path: Path):
+    """Historical engine fixtures exclude newer contracts and restore archived ones."""
+    historical = historical_files("074f4717e14527798752de84b3c9c4e88348b658")
+    expected_paths = set(historical) - {"system/contracts/local-attachments.yaml"}
+
+    root = arch_engine_cases._build_root(tmp_path, "inventory-check")
+    actual: dict[str, bytes] = {}
+    for contract_root in ("system/schema", "system/contracts"):
+        for target in (root / contract_root).rglob("*"):
+            if target.is_file():
+                actual[target.relative_to(root).as_posix()] = target.read_bytes()
+
+    assert set(actual) == expected_paths
+    for relpath in expected_paths:
+        assert actual[relpath] == historical[relpath]
+
+    # Explicit positive check: archived manifest-v15 schema is restored with exact bytes.
+    v15_rel = "system/contracts/manifest-v15.schema.json"
+    assert hashlib.sha256(actual[v15_rel]).hexdigest() == hashlib.sha256(historical[v15_rel]).hexdigest()
+
+    # Explicit negative check: post-074f4717 current contracts never leak in.
+    for leaked in (
+        "system/contracts/task-scope.yaml",
+        "system/contracts/review-consolidation.yaml",
+        "system/contracts/review-consolidation.schema.json",
+        "system/contracts/agent-plan-input.schema.json",
+        "system/contracts/agent-plan-report.schema.json",
+    ):
+        assert not (root / leaked).exists()
+
+
+def test_task_scope_mutation_leaves_historical_engine_baseline_unchanged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """Mutating task-scope.yaml or adding a contract in a disposable copy preserves baseline."""
+    import conftest
+
+    mutated_repo = tmp_path / "mutated-repo"
+    shutil.copytree(conftest.REPO_ROOT / "system" / "schema", mutated_repo / "system" / "schema")
+    shutil.copytree(conftest.REPO_ROOT / "system" / "contracts", mutated_repo / "system" / "contracts")
+    task_scope = mutated_repo / "system" / "contracts" / "task-scope.yaml"
+    task_scope.write_text(
+        task_scope.read_text(encoding="utf-8") + "\n# synthetic disposable mutation\n",
+        encoding="utf-8",
+    )
+    (mutated_repo / "system" / "contracts" / "synthetic-future.yaml").write_text(
+        "future: true\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(conftest, "REPO_ROOT", mutated_repo)
+    monkeypatch.setattr(conftest, "_MINI_REPO_TEMPLATE", None)
+    mutated_template: Path | None = None
+    try:
+        actual = arch_engine_cases.run_all(tmp_path / "engine-run")
+        mutated_template = conftest._MINI_REPO_TEMPLATE
+    finally:
+        if mutated_template is not None:
+            shutil.rmtree(mutated_template.parent, ignore_errors=True)
+
+    assert actual == _load_baseline()
 
 
 def _mini_root(tmp_path: Path):
