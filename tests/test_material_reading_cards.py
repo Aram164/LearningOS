@@ -1281,14 +1281,18 @@ def test_f1a_union_of_adjacent_cards_and_dismissals_covers_span(world):
     e3 = _entry(_ok(_read(world, A, "pdf p. 3")))
     c3 = _ok(_settle(world, A, e3, "--card", _card(3, 3)))["card"]["card"]
 
-    # Adjacent Cards jointly cover pp. 2-3 without opening an entry; --omit-covered-text omits excerpt.
+    # Adjacent Cards jointly cover pp. 2-3 without opening an entry; --omit-covered-text omits excerpt
+    # and covered_by ordering stays deterministic across repeated calls.
     union = _ok(_los(world, "material-study-span", "--material", BOOK,
                      "--pages", "pdf pp. 2-3", "--extract", "--omit-covered-text", "--session", B))
     _validate_study(union, world)
     read_union = union["study"]["reads"][0]
     assert read_union["state"] == "covered"
     assert read_union["entry"] is None
-    assert set(read_union["covered_by"]) == {c2, c3}
+    assert read_union["covered_by"] == [c2, c3]
+    union_repeat = _ok(_los(world, "material-study-span", "--material", BOOK,
+                            "--pages", "pdf pp. 2-3", "--extract", "--omit-covered-text", "--session", B))
+    assert union_repeat["study"]["reads"][0]["covered_by"] == [c2, c3]
     assert union["study"]["open_entries"] == []
     assert union["span"]["spans"][0]["excerpt_omitted"] == "covered"
     assert "excerpt" not in union["span"]["spans"][0]
@@ -1302,7 +1306,7 @@ def test_f1a_union_of_adjacent_cards_and_dismissals_covers_span(world):
                        "--pages", "pdf pp. 2-4", "--extract", "--omit-covered-text", "--session", B))
     _validate_study(b_union, world)
     assert b_union["study"]["reads"][0]["state"] == "covered"
-    assert set(b_union["study"]["reads"][0]["covered_by"]) == {c2, c3, e4_b}
+    assert b_union["study"]["reads"][0]["covered_by"] == [c2, c3, e4_b]
     assert b_union["span"]["spans"][0]["excerpt_omitted"] == "covered"
 
     a_uncovered = _ok(_los(world, "material-study-span", "--material", BOOK,
@@ -1323,6 +1327,20 @@ def test_f1a_union_of_adjacent_cards_and_dismissals_covers_span(world):
     assert read_b_mixed["entry"] is not None
     assert read_b_mixed["covered_by"] == []
     assert "page 5 on Bayes" in b_mixed["span"]["spans"][0]["excerpt"]
+
+    # Non-adjacent cards with a middle gap (p. 6 and p. 8, leaving p. 7 unread) still open pp. 6-8.
+    e6 = _entry(_ok(_read(world, A, "pdf p. 6")))
+    _ok(_settle(world, A, e6, "--card", _card(6, 6)))
+    e8 = _entry(_ok(_read(world, A, "pdf p. 8")))
+    _ok(_settle(world, A, e8, "--card", _card(8, 8)))
+    b_gap = _ok(_los(world, "material-study-span", "--material", BOOK,
+                     "--pages", "pdf pp. 6-8", "--extract", "--omit-covered-text", "--session", B))
+    _validate_study(b_gap, world)
+    read_b_gap = b_gap["study"]["reads"][0]
+    assert read_b_gap["state"] == "opened"
+    assert read_b_gap["entry"] is not None
+    assert read_b_gap["covered_by"] == []
+    assert "page 7 on Bayes" in b_gap["span"]["spans"][0]["excerpt"]
 
 
 def test_f2_compact_preview_pointer_labels_and_material_card_read(world):

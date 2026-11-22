@@ -410,6 +410,8 @@ def test_material_span_rewrite_session_pinning_and_adopt(tmp_path: Path) -> None
         ["material-span", "unit-demo-l01", "--s", "stage-1", "--resource-index", "0", "--extract"],
         ["material-search", "Bayes", "--s", OTHER_SESSION],
         ["material-context", "Bayes", f"--session={OTHER_SESSION}"],
+        ["material-card", "card-395ded80ff4a721e-p2-2", "--session", OTHER_SESSION],
+        ["material-card", "card-395ded80ff4a721e-p2-2", "--s", OTHER_SESSION],
     ):
         denied = broker.handle_request({"tool": "los", "argv": bad_los, "cwd": str(core)})
         assert denied.exit_code == 2, bad_los
@@ -761,6 +763,25 @@ def test_live_unix_socket_end_to_end_round_trip_and_fail_closed(
             timeout=120,
         )
         assert settle_proc.returncode == 0, settle_proc.stderr
+        card_id = json.loads(settle_proc.stdout)["card"]["card"]
+
+        # 4b. material-card reads the settled unreviewed card cleanly via broker without coverage_evidence.
+        card_proc = subprocess.run(
+            [py, los_py, "material-card", card_id],
+            cwd=str(mini_repo),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert card_proc.returncode == 0, card_proc.stderr
+        card_data = json.loads(card_proc.stdout)
+        assert card_data["contract"] == "material-card-read-v1"
+        assert card_data["session"] == SESSION
+        assert card_data["card"]["card"] == card_id
+        assert card_data["card"]["review"] == "unreviewed"
+        assert card_data["card"]["coverage_evidence"] is False
+        assert card_data["card"]["paraphrase"] == card["paraphrase"]
 
         # 5. seal_envelope --guards auto --check-out and --guards-from --submit round-trip.
         check_rec = scratch / "check-rec.json"
