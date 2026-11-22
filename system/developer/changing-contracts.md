@@ -78,7 +78,10 @@ Additive still bumps. Consumers declare an exact version and fail closed, so
 `tests/scenarios/recorded/` holds the pinned expectations the scenario suite
 compares against: with `LOS_RECORD_SCENARIOS=1` the suite re-records; without
 it each case compares against its recording (see the module docstring of
-`tests/test_scenarios_effects.py`). These are unrelated to lecture recordings,
+`tests/test_scenarios_effects.py`). Likewise, `tests/architecture/engine-baseline.json`
+(`tests/test_arch_engine_neutrality.py`, regenerated from `tests/arch_engine_cases.py::run_all`
+with `indent=1, sort_keys=True`) pins the tree digests and derived snapshots of non-historical
+`system/contracts/*.yaml` files (such as `system/contracts/task-scope.yaml`). These are unrelated to lecture recordings,
 the material authority named in unit schemas — "recordings" in this section
 always means the pinned test expectations.
 
