@@ -267,7 +267,7 @@ def test_unlisted_and_future_capabilities_fail_closed(tmp_path: Path, capability
 
 def test_allowlist_counts_and_sets_match_plan_d() -> None:
     assert len(ALLOWED_LOS_READ_COMMANDS) == 23
-    assert len(ALLOWED_STUDY_COMMANDS) == 5
+    assert len(ALLOWED_STUDY_COMMANDS) == 6
     # `unit-plan-revise --check` is preflight-only (for `--report-out`);
     # canonical `unit.plan.revise` writes stay outside `ALLOWED_CAPABILITIES`.
     assert "unit-plan-revise" in ALLOWED_PREFLIGHT_COMMANDS
@@ -436,6 +436,16 @@ def test_material_span_rewrite_session_pinning_and_adopt(tmp_path: Path) -> None
     adopt_cmd = runner.calls[-1][0]
     assert "--adopt" in adopt_cmd and OTHER_SESSION in adopt_cmd
     assert adopt_cmd[-2:] == ["--session", SESSION]
+
+    # material-card passes through STUDY_COMMANDS and injects --session <broker.session_id>.
+    card_res = broker.handle_request({
+        "tool": "los",
+        "argv": ["material-card", "card-395ded80ff4a721e-p2-2"],
+        "cwd": str(core),
+    })
+    assert card_res.exit_code == 0, card_res.stderr
+    card_cmd = runner.calls[-1][0]
+    assert "material-card" in card_cmd and card_cmd[-2:] == ["--session", SESSION]
 
 
 def test_root_pinning_and_host_observations_isolation(

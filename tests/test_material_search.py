@@ -1023,3 +1023,69 @@ def test_indexed_material_search_returns_schema_valid_ok_hits(world: Path) -> No
     _validate_response(res.to_dict())
     assert res.status == "ok"
     assert any(h["material"] == "_unsorted/notes/mittelwertsatz.pdf" for h in res.hits)
+
+
+@needs_pdftotext
+def test_f2_study_search_compact_pointer_labels_and_card_read(world: Path) -> None:
+    """Study-scoped material-search surfaces pointer_labels without full pointers, and material-card expands it."""
+    lecture = world.parent / "materials" / "source-demo-book" / "lecture-01.pdf"
+    long_paraphrase = (
+        "Derives the Chebyshev inequality directly from Markov's bound applied to squared "
+        "deviations around the expectation, then demonstrates explicit numerical tail bounds "
+        "across four example distributions including Bernoulli sums and sample averages so "
+        "readers can see every constant without re-opening the full derivation pages."
+    )
+    assert len(long_paraphrase) > 300
+    session = "11111111-1111-4111-8111-111111111111"
+    other_session = "22222222-2222-4222-8222-222222222222"
+
+    _refresh_manifest_and_text_cache(world)
+    builder.build_index_generation(world, force=True)
+
+    span_proc = run_los(
+        world, "material-study-span",
+        "--material", "source-demo-book/lecture-01.pdf",
+        "--pages", "pdf pp. 18-20", "--extract", "--session", session,
+    )
+    assert span_proc.returncode == 0, span_proc.stderr
+    entry_id = json.loads(span_proc.stdout)["study"]["reads"][0]["entry"]
+
+    card_req = {
+        "paraphrase": long_paraphrase,
+        "kinds": ["statement", "derivation", "worked-example"],
+        "pointers": [
+            {"page": 18, "kind": "statement", "label": "variance notation recap"},
+            {"page": 19, "kind": "derivation", "label": "Chebyshev tail bound proof"},
+            {"page": 20, "kind": "worked-example", "label": "Chebyshev Bernoulli tail example"},
+            {"page": 20, "kind": "statement", "label": "sample average corollary"},
+        ],
+    }
+    settle_proc = run_los(
+        world, "material-card-settle", entry_id,
+        "--card", json.dumps(card_req), "--session", session,
+    )
+    assert settle_proc.returncode == 0, settle_proc.stderr
+    card_id = json.loads(settle_proc.stdout)["card"]["card"]
+    assert lecture.is_file()
+
+    search_proc = run_los(world, "material-search", "Chebyshev", "--session", other_session)
+    assert search_proc.returncode == 0, search_proc.stderr
+    payload = json.loads(search_proc.stdout)
+    _validate_response(payload)
+    cheb_hits = [h for h in payload["hits"] if h.get("cards")]
+    assert cheb_hits, payload
+    compact = cheb_hits[0]["cards"][0]
+    assert "pointers" not in compact
+    assert compact["paraphrase_truncated"] is True
+    assert compact["pointers_total"] == 4
+    assert compact["pointer_labels"][:2] == [
+        "Chebyshev tail bound proof",
+        "Chebyshev Bernoulli tail example",
+    ]
+    assert len(compact["pointer_labels"]) == 3
+
+    read_proc = run_los(world, "material-card", card_id, "--session", other_session)
+    assert read_proc.returncode == 0, read_proc.stderr
+    full = json.loads(read_proc.stdout)
+    assert full["card"]["paraphrase"] == long_paraphrase
+    assert len(full["card"]["pointers"]) == 4

@@ -1273,3 +1273,103 @@ def test_material_card_settle_repo_load_failure_persists_no_card(world, monkeypa
     assert res.payload["outcome"] == "saved"
     assert res.payload["replayed"] is False
     assert res.payload["card"]["dangling_concepts"] == ["concept-not-registered"]
+
+
+def test_f1a_union_of_adjacent_cards_and_dismissals_covers_span(world):
+    e2 = _entry(_ok(_read(world, A, "pdf p. 2")))
+    c2 = _ok(_settle(world, A, e2, "--card", _card(2, 2)))["card"]["card"]
+    e3 = _entry(_ok(_read(world, A, "pdf p. 3")))
+    c3 = _ok(_settle(world, A, e3, "--card", _card(3, 3)))["card"]["card"]
+
+    # Adjacent Cards jointly cover pp. 2-3 without opening an entry; --omit-covered-text omits excerpt.
+    union = _ok(_los(world, "material-study-span", "--material", BOOK,
+                     "--pages", "pdf pp. 2-3", "--extract", "--omit-covered-text", "--session", B))
+    _validate_study(union, world)
+    read_union = union["study"]["reads"][0]
+    assert read_union["state"] == "covered"
+    assert read_union["entry"] is None
+    assert set(read_union["covered_by"]) == {c2, c3}
+    assert union["study"]["open_entries"] == []
+    assert union["span"]["spans"][0]["excerpt_omitted"] == "covered"
+    assert "excerpt" not in union["span"]["spans"][0]
+
+    # Dismiss p. 4 individually under session B: cards (p.2, p.3) + B's dismissal (p.4)
+    # jointly cover pp. 2-4 ONLY for session B, never for session A.
+    e4_b = _entry(_ok(_read(world, B, "pdf p. 4")))
+    _ok(_settle(world, B, e4_b, "--dismiss", "irrelevant", "--reason", "page 4 is blank filler"))
+
+    b_union = _ok(_los(world, "material-study-span", "--material", BOOK,
+                       "--pages", "pdf pp. 2-4", "--extract", "--omit-covered-text", "--session", B))
+    _validate_study(b_union, world)
+    assert b_union["study"]["reads"][0]["state"] == "covered"
+    assert set(b_union["study"]["reads"][0]["covered_by"]) == {c2, c3, e4_b}
+    assert b_union["span"]["spans"][0]["excerpt_omitted"] == "covered"
+
+    a_uncovered = _ok(_los(world, "material-study-span", "--material", BOOK,
+                           "--pages", "pdf pp. 2-4", "--extract", "--omit-covered-text", "--session", A))
+    _validate_study(a_uncovered, world)
+    read_a = a_uncovered["study"]["reads"][0]
+    assert read_a["state"] == "opened"
+    assert read_a["entry"] is not None
+    assert read_a["covered_by"] == []
+    assert "page 4 on Bayes" in a_uncovered["span"]["spans"][0]["excerpt"]
+
+    # Mixed covered + uncovered range for B (pp. 2-5 where p. 5 is unread) still opens and returns text.
+    b_mixed = _ok(_los(world, "material-study-span", "--material", BOOK,
+                       "--pages", "pdf pp. 2-5", "--extract", "--omit-covered-text", "--session", B))
+    _validate_study(b_mixed, world)
+    read_b_mixed = b_mixed["study"]["reads"][0]
+    assert read_b_mixed["state"] == "opened"
+    assert read_b_mixed["entry"] is not None
+    assert read_b_mixed["covered_by"] == []
+    assert "page 5 on Bayes" in b_mixed["span"]["spans"][0]["excerpt"]
+
+
+def test_f2_compact_preview_pointer_labels_and_material_card_read(world):
+    entry = _entry(_ok(_read(world, A, "pdf pp. 1-5")))
+    long_paraphrase = (
+        "Introduces foundational definitions for variance and entropy before deriving "
+        "concentration bounds across five dense lecture pages; later pages work through "
+        "Markov, Chebyshev, Chernoff, and Jensen inequality applications in detail and "
+        "compare tight tail regimes against empirical finite-sample averages for students "
+        "to review alongside worked exercises."
+    )
+    assert len(long_paraphrase) > 300
+    card_req = {
+        "paraphrase": long_paraphrase,
+        "kinds": ["statement", "derivation", "worked-example"],
+        "pointers": [
+            {"page": 1, "kind": "statement", "label": "variance definition"},
+            {"page": 2, "kind": "statement", "label": "Markov inequality setup"},
+            {"page": 3, "kind": "derivation", "label": "Chebyshev bound proof"},
+            {"page": 4, "kind": "worked-example", "label": "Jensen convex tail example"},
+            {"page": 5, "kind": "derivation", "label": "Chernoff moment generating step"},
+        ],
+        "concepts": ["concept-variance"],
+    }
+    saved = _ok(_settle(world, A, entry, "--card", json.dumps(card_req)))
+    card_id = saved["card"]["card"]
+
+    # material-context uses compact=True with query terms prioritizing matching pointer_labels.
+    context = _ok(_los(world, "material-context", "Chernoff", "--session", B))
+    served = context["study_cards"]["items"][0]
+    assert "pointers" not in served
+    assert served["paraphrase"].endswith("...")
+    assert len(served["paraphrase"]) <= 300
+    assert served["paraphrase_truncated"] is True
+    assert served["pointers_total"] == 5
+    assert served["pointer_labels"][0] == "Chernoff moment generating step"
+    assert len(served["pointer_labels"]) == 3
+
+    # material-card returns the untruncated paraphrase and full pointer list.
+    full = _ok(_los(world, "material-card", card_id, "--session", B))
+    validate_contract(Path(__file__).resolve().parents[1], "material-card-read.schema.json", full)
+    assert full["contract"] == "material-card-read-v1"
+    assert full["card"]["paraphrase"] == long_paraphrase
+    assert len(full["card"]["pointers"]) == 5
+    assert full["card"]["written"]["entry"] == entry
+
+    # Unknown card handle fails closed with suggestions; missing/bad session refuses.
+    err = _refused(_los(world, "material-card", f"{card_id[:-1]}9", "--session", B), "card not found")
+    assert f"did you mean: {card_id}" in err
+    _refused(_los(world, "material-card", card_id), "study session is missing or malformed")

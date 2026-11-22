@@ -417,12 +417,14 @@ Study workflow boundaries:
 - **Reuse existing reading memory first:** Run `material-search` or
   `material-context` first (with study scope, `material-search` attaches
   matching compact cards on `hits[].cards` alongside top-level `study`, and
-  `material-context` returns `study_cards`), target
-  exact `span_reference` / uncovered pages rather than wide unsectioned PDF
-  ranges, pass `--omit-covered-text` on `material-study-span` (or
-  `material-span ... --extract`) when checking covered cards without repeating
-  raw PDF text, and dismiss isolated off-topic pages via
-  `material-card-settle ENTRY --dismiss irrelevant --reason '...'`.
+  `material-context` returns `study_cards`), call `material-card CARD` when a
+  compact card truncates `paraphrase` or holds additional pointers beyond
+  `pointer_labels`, target exact `span_reference` / uncovered pages rather than
+  wide unsectioned PDF ranges, pass `--omit-covered-text` on
+  `material-study-span` (or `material-span ... --extract`) when checking
+  covered cards (or contiguous unions of adjacent cards and your own
+  dismissals) without repeating raw PDF text, and dismiss isolated off-topic
+  pages via `material-card-settle ENTRY --dismiss irrelevant --reason '...'`.
 - **Scratch, validation, and closing:** Point `--check-out`, `--out`, and
   `--report-out` under `$LOS_SCRATCH_DIR`. By default `$LOS_SCRATCH_DIR` is
   ephemeral and removed on exit. Opt-in `--persist-scratch` or

@@ -488,13 +488,20 @@
             "pattern": "^pdf (p\\. [0-9]+|pp\\. [0-9]+-[0-9]+)$"
           },
           "cards": {
-            "description": "Study scope only (--session, ADR-021): at most three current private reading cards of this file whose pages overlap span_pages. Unreviewed, never coverage evidence.",
+            "description": "Study scope only (--session, ADR-021): at most three current private reading cards of this file whose pages overlap span_pages. Bounded compact preview (paraphrase clipped to 300 chars with paraphrase_truncated, plus pointers_total and up to three query-ranked pointer_labels); full details require material-card. Unreviewed, never coverage evidence.",
             "type": "array",
             "maxItems": 3,
             "items": {
               "type": "object",
               "required": ["card", "version", "pages", "kinds", "paraphrase", "review", "coverage_evidence"],
               "properties": {
+                "paraphrase_truncated": {"type": "boolean"},
+                "pointers_total": {"type": "integer", "minimum": 1},
+                "pointer_labels": {
+                  "type": "array",
+                  "maxItems": 3,
+                  "items": {"type": "string", "minLength": 1, "maxLength": 160}
+                },
                 "review": {"const": "unreviewed"},
                 "coverage_evidence": {"const": false}
               }

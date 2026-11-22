@@ -50,6 +50,7 @@ STUDY_COMMANDS: frozenset[str] = frozenset({
     "material-context",
     "material-span",
     "material-study-span",
+    "material-card",
     "material-card-settle",
 })
 
@@ -67,6 +68,7 @@ STUDY_ALLOWED_COMMANDS: frozenset[str] = (
 
 SESSION_COMMANDS: frozenset[str] = frozenset({
     "material-study-span",
+    "material-card",
     "material-card-settle",
     "material-search",
     "material-context",

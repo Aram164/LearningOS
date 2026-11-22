@@ -169,6 +169,26 @@ def _row_range(row: dict[str, object]) -> dict[str, int]:
 
 
 LOS_COMMAND = ".venv/bin/python tools/los.py"
+COMPACT_PARAPHRASE_LIMIT = 300
+COMPACT_POINTER_LABELS_LIMIT = 3
+
+
+def _compact_pointer_labels(
+    pointers: list[dict[str, object]],
+    query_terms: Iterable[str],
+) -> list[str]:
+    """Select up to three bounded pointer labels, prioritizing query-term matches."""
+    terms = [str(term).casefold() for term in query_terms if str(term).strip()]
+    ranked: list[tuple[int, int, int, str]] = []
+    for idx, ptr in enumerate(pointers):
+        label = cast(str, ptr["label"])
+        kind = cast(str, ptr.get("kind") or "")
+        page = int(cast(int, ptr["page"]))
+        haystack = f"{label} {kind}".casefold()
+        score = sum(1 for term in terms if term in haystack) if terms else 0
+        ranked.append((-score, page, idx, label))
+    ranked.sort()
+    return [row[3] for row in ranked[:COMPACT_POINTER_LABELS_LIMIT]]
 
 CARD_JSON_TEMPLATE = (
     '{"paraphrase": "<what these pages do, in your words>", '
@@ -569,28 +589,54 @@ class ReadingStore:
                  session: str,
                  cards: Iterable[dict[str, object]] | None = None,
                  settled_entries: Iterable[dict[str, object]] | None = None) -> list[dict[str, object]]:
-        """Current cards, plus this session's own settled dismissals, for the range (C4).
+        """Current cards and caller's settled dismissals whose union covers [start, end] (F1-A).
 
         A saved card is reusable coverage for every caller. A dismissal closes
         the obligation only for the session that dismissed it (ADR-021 decision
         4): another session's one-time judgement never suppresses this
-        session's reading memory.
+        session's reading memory. Every page in ``[start, end]`` must be covered
+        by at least one current card or eligible caller dismissal of the exact
+        source digest; partial gaps still return ``[]``.
         """
+        if start > end:
+            return []
         card_source = self.cards(digest) if cards is None else cards
-        rows: list[dict[str, object]] = [
+        overlapping_cards: list[dict[str, object]] = [
             card for card in card_source
-            if _contains(_row_range(card), start, end)]
-        rows.sort(key=lambda card: (_row_range(card)["end"] - _row_range(card)["start"],
-                                    cast(str, card["card"])))
+            if card.get("recorded_source_digest", digest) == digest
+            and _overlaps(_row_range(card), start, end)
+        ]
+        overlapping_cards.sort(key=lambda card: (
+            0 if _contains(_row_range(card), start, end) else 1,
+            _row_range(card)["start"],
+            _row_range(card)["end"] - _row_range(card)["start"],
+            cast(str, card["card"]),
+        ))
         settled_source = self.entries(settled=True) if settled_entries is None else settled_entries
+        overlapping_dismissals: list[dict[str, object]] = []
         for entry in settled_source:
             settlement = cast("dict[str, object]", entry.get("settlement") or {})
             if (entry["recorded_source_digest"] == digest
                     and entry.get("session") == session
                     and settlement.get("outcome") in ("dismissed-irrelevant", "dismissed-redundant")
-                    and _contains(_row_range(entry), start, end)):
-                rows.append(entry)
-        return rows
+                    and _overlaps(_row_range(entry), start, end)):
+                overlapping_dismissals.append(entry)
+        overlapping_dismissals.sort(key=lambda entry: (
+            0 if _contains(_row_range(entry), start, end) else 1,
+            _row_range(entry)["start"],
+            _row_range(entry)["end"] - _row_range(entry)["start"],
+            cast(str, entry["entry"]),
+        ))
+        covered_pages: set[int] = set()
+        for row in overlapping_cards:
+            rng = _row_range(row)
+            covered_pages.update(range(max(start, rng["start"]), min(end, rng["end"]) + 1))
+        for row in overlapping_dismissals:
+            rng = _row_range(row)
+            covered_pages.update(range(max(start, rng["start"]), min(end, rng["end"]) + 1))
+        if len(covered_pages) < (end - start + 1):
+            return []
+        return [*overlapping_cards, *overlapping_dismissals]
 
     def prior_dismissals(self, digest: str, start: int, end: int, *,
                          settled_entries: Iterable[dict[str, object]] | None = None) -> list[dict[str, object]]:
@@ -652,27 +698,35 @@ class ReadingStore:
     # ----------------------------------------------------------------- serve
 
     def served_card(self, card: dict[str, object], known_concepts: Iterable[str] | None,
-                    *, compact: bool = False) -> dict[str, object]:
+                    *, compact: bool = False,
+                    query_terms: Iterable[str] = ()) -> dict[str, object]:
         """One card as reads return it: visibly unreviewed, dangling concepts marked."""
         rng = _row_range(card)
         concepts = list(cast("list[str]", card.get("concepts") or []))
         known = set(known_concepts) if known_concepts is not None else None
         dangling = [name for name in concepts if known is not None and name not in known]
         paraphrase = cast(str, card["paraphrase"])
+        pointers = cast("list[dict[str, object]]", card["pointers"])
+        paraphrase_truncated = len(paraphrase) > COMPACT_PARAPHRASE_LIMIT
         value: dict[str, object] = {
             "card": card["card"], "version": card["version"],
             "pages": pages_label(rng["start"], rng["end"]),
             "material": card["material"],
             "file_sha256": f"sha256:{card['recorded_source_digest']}",
             "kinds": list(cast("list[str]", card["kinds"])),
-            "paraphrase": paraphrase if not compact or len(paraphrase) <= 300
-            else paraphrase[:297].rstrip() + "...",
+            "paraphrase": (
+                paraphrase if not compact or not paraphrase_truncated
+                else paraphrase[: COMPACT_PARAPHRASE_LIMIT - 3].rstrip() + "..."
+            ),
             "concepts": concepts, "dangling_concepts": dangling,
             "review": "unreviewed", "coverage_evidence": False,
         }
-        if not compact:
-            value["pointers"] = [dict(row) for row in
-                                 cast("list[dict[str, object]]", card["pointers"])]
+        if compact:
+            value["paraphrase_truncated"] = paraphrase_truncated
+            value["pointers_total"] = len(pointers)
+            value["pointer_labels"] = _compact_pointer_labels(pointers, query_terms)
+        else:
+            value["pointers"] = [dict(row) for row in pointers]
             value["written"] = dict(cast("dict[str, object]", card["written"]))
         return value
 
@@ -1036,7 +1090,8 @@ class ReadingStore:
                     candidates = [cast(str, row2["card"]) for row2 in self.covering(
                         cast(str, row["recorded_source_digest"]), rng["start"], rng["end"],
                         session=session)
-                        if row2.get("record") == "card"]
+                        if row2.get("record") == "card"
+                        and _contains(_row_range(row2), rng["start"], rng["end"])]
                     raise SettleRefusal(
                         "not-covering",
                         f"{covering_card} does not hold {pages_label(rng['start'], rng['end'])} "

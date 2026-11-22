@@ -47,6 +47,16 @@ queries:
     - an adopted overdue entry does not refuse a new span of the same digest that overlaps it; that span opens its own entry under the other refusals
     - a read that returns a non-omitted local excerpt overlapping one of the session's adopted pending entries appends an observed log line (digest and the overlapped pages) after the text is assembled; non-adopted entries, omitted, failed and remote reads record nothing
     - returns exact durable analysis notes first, then the covering unreviewed cards; concept ids are checked when served and dangling ones are marked; a card is never coverage evidence
+  material.card.read:
+    handler: material_card_read
+    cli_command: material-card
+    kind: query
+    result: material-card-read-v1
+    schema: system/schema/material-card-read.schema.json
+    invariants:
+    - reads one unreviewed private reading card in full by card handle from the private reading store beside the repository (LearningOS/reading-memory/, ADR-021); never creates a store or writes canonical files
+    - requires the hook-injected --session; a missing or malformed session refuses and unknown card handles refuse with near-miss suggestions
+    - serves the full paraphrase, all page pointers with kind and label, write provenance, and concepts checked against the repository (dangling concepts marked); never coverage evidence
   material.card.settle:
     handler: material_card_settle
     cli_command: material-card-settle

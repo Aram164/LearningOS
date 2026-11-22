@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: card not found: card-0000000000000000-p1-1\n",
+  "stdout": "",
+  "stdout_json": null
+}

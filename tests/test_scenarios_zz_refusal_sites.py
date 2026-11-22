@@ -3523,6 +3523,18 @@ def _prove_settle_store_unavailable(mini_repo: Path, tmp_path: Path, monkeypatch
     assert lines == _study_line("material.card.settle", "store-unavailable")
 
 
+def _prove_card_read_store_unavailable(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """A corrupted store path refuses material-card cleanly (os-error-only)."""
+    root = _a9_world("material.card.read", "unknown-card", tmp_path).root
+    (root.parent / "reading-memory").write_text("not a directory", encoding="utf-8")
+    outcome, lines = _a9_run_cli(
+        root, "material.card.read",
+        ["material-card", "card-395ded80ff4a721e-p2-2", "--session", _STUDY_S1],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False and outcome.exit_code == 2
+    assert lines == _study_line("material.card.read", "store-unavailable")
+
+
 def _prove_settle_adopted_unread(mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
     """An adopted entry refuses a --card save until the adopter reads it (fixture-inexpressible).
 
@@ -3642,6 +3654,7 @@ _PROOF_FNS.update({
     "material.study-span.placement-source-mismatch": _prove_study_placement_source_mismatch,
     "material.card.settle.store-unavailable": _prove_settle_store_unavailable,
     "material.card.settle.adopted-unread": _prove_settle_adopted_unread,
+    "material.card.read.store-unavailable": _prove_card_read_store_unavailable,
 })
 
 

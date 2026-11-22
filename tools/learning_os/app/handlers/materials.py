@@ -35,7 +35,13 @@ from learning_os.domain.material_refs import (
     matching_routes,
     unit_routes,
 )
-from learning_os.domain.suggest import MAX_SUGGESTIONS, expansion, suggest, with_suggestions
+from learning_os.domain.suggest import (
+    MAX_SUGGESTIONS,
+    expansion,
+    not_found,
+    suggest,
+    with_suggestions,
+)
 from learning_os.domain.vocabulary import FRONTMATTER_RE
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.fs import note_bytes as _note_bytes
@@ -1470,7 +1476,44 @@ def material_card_settle(ctx: OpContext, req: dict) -> Result:
     return _settle_result(session, settlement, store, known_concepts=known_concepts)
 
 
-def _study_hit_cards(ctx, repo, session, payload) -> None:
+@register("material.card.read", kind="query", effects=OperationEffects.READ)
+def material_card_read(ctx: OpContext, req: dict) -> Result:
+    """Return one unreviewed private reading card in full, with full pointers."""
+    session = _study_session(ctx, req, required=True)
+    card_name = req["card"]
+    store = ReadingStore(ctx.root)
+    try:
+        with store.locked(create=False) as exists:
+            row = store.card(card_name) if exists else None
+            candidates = (
+                sorted(str(item["card"]) for item in store.all_cards())
+                if row is None and exists
+                else []
+            )
+    except ReadingStoreError as exc:
+        raise WriteRefused(
+            f"the reading store cannot be read: {exc}",
+            site=f"{ctx.operation}.store-unavailable", prefixed=True, exit_code=2,
+        ) from exc
+    if row is None:
+        complaint = not_found("card", card_name, candidates)
+        raise NotFound(
+            "card", card_name, candidates,
+            message=complaint,
+            site=f"{ctx.operation}.unknown-card",
+            gateway_message=f"los: {complaint}",
+            exit_code=2,
+        )
+    known = set(ctx.repo().concepts)
+    return Result({
+        "schema_version": 1,
+        "contract": "material-card-read-v1",
+        "session": session,
+        "card": store.served_card(row, known),
+    })
+
+
+def _study_hit_cards(ctx, repo, session, payload, *, query_terms=()) -> None:
     """Attach compact current cards to each search hit whose pages they overlap."""
     store = ReadingStore(ctx.root)
     known = set(repo.concepts)
@@ -1489,7 +1532,7 @@ def _study_hit_cards(ctx, repo, session, payload) -> None:
                 start, end = ranges[0][0], ranges[-1][1]
                 if digest not in cards_by_digest:
                     cards_by_digest[digest] = store.cards(digest)
-                cards = [store.served_card(card, known, compact=True)
+                cards = [store.served_card(card, known, compact=True, query_terms=query_terms)
                          for card in cards_by_digest[digest]
                          if card["inspected_range"]["start"] <= end
                          and start <= card["inspected_range"]["end"]]
@@ -1553,7 +1596,7 @@ def _study_context_cards(
     matched = [*direct_matched, *related_matched] if include_related else direct_matched
     items = []
     for card, scope in matched[:5]:
-        served = store.served_card(card, known, compact=True)
+        served = store.served_card(card, known, compact=True, query_terms=raw_terms)
         if scope is not None:
             served["scope"] = scope
         items.append(served)
@@ -2341,7 +2384,7 @@ def material_search(ctx: OpContext, req: dict) -> Result:
     payload = search_res.to_dict()
     payload["snapshot_id"] = snapshot_val
     if session is not None:
-        _study_hit_cards(ctx, repo, session, payload)
+        _study_hit_cards(ctx, repo, session, payload, query_terms=terms)
 
     return Result(payload)
 

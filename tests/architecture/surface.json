@@ -448,6 +448,10 @@
     "cli_command": null,
     "handler": "masters_planning_dashboard"
    },
+   "material.card.read": {
+    "cli_command": "material-card",
+    "handler": "material_card_read"
+   },
    "material.card.settle": {
     "cli_command": "material-card-settle",
     "handler": "material_card_settle"
@@ -3907,6 +3911,59 @@
     "nargs": 0,
     "option_strings": [
      "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "material-card": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "card",
+    "metavar": "CARD",
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "session",
+    "metavar": "SESSION",
+    "nargs": null,
+    "option_strings": [
+     "--session"
     ],
     "required": false,
     "type": null
@@ -9686,6 +9743,7 @@
   "masters-planning.catalog.update.schema.json": "ba9aabed3b802b3d6f4bc99f5df9d08443f2bec3e5a4c59b613a6809e2991a13",
   "masters-planning.comparison.publish.schema.json": "f5829d2b7e99a965092bc41b6028e483a88aa108a002250321de4efbc78c6358",
   "masters-planning.dashboard.schema.json": "12d94e731b549690282ab6baec772a0409fb9badb7aabe7b167967d3f484c35f",
+  "material.card.read.schema.json": "0bde439e0fe3cad3305c2c1e7a6686673f63345f2318ee994e09e862706b4bd7",
   "material.card.settle.schema.json": "7117a1c113b4678a435d604dc8ae595fc8fbbc888c4226bde00924e9bde87365",
   "material.context.schema.json": "f6341db219f9d6669740ba634b618878bf66d306303f001d051e7c77da73a0e0",
   "material.search.schema.json": "95dbf07ff72eca23b3e5ef20ace16e952a513b9577617b1767184d622eaf9ba2",
