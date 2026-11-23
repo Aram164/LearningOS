@@ -52,9 +52,11 @@ abilities keep every existing protection.
    `active` and today lies between its `granted` and `expires` dates, at most
    `max_operations` operations per batch. Authority comes from that recorded
    delegation and the deterministic checks, never from the model. Setting
-   `status: suspended` stops every keeper write at once. The file is
-   Git-tracked, and each keeper receipt records the `system-task` channel
-   and its commit time, which identify the delegation in force.
+   `status: suspended` stops every keeper write at once. Each keeper
+   receipt records the `system-task` channel and its commit time; because
+   the file is Git-tracked, that identifies the delegation in force only when
+   it was committed before the write. An uncommitted edit is recorded
+   nowhere until the receipt carries the digest (below).
 7. **Every keeper claim is grounded.** An active keeper relation cites at
    least one evidence binding whose quote Core finds verbatim on the pinned
    page of a registered PDF. The keeper's additions are stamped `origin:
@@ -68,7 +70,8 @@ abilities keep every existing protection.
    `artifact_sha256` must equal the item's current content hash as
    `practice.context` showed it; Core pins a source PDF's digest itself; a
    `source-matched` proof quotes the official answer, found verbatim on the
-   pinned page; and eligibility is decided per item, so one ambiguous item
+   pinned page when recorded and again on every read, so a hand-edited excerpt
+   reads unverified and is not exported; and eligibility is decided per item, so one ambiguous item
    never blocks its siblings. `cross-checked` stays in the stored format, but
    Core refuses new records and reads existing ones as unverified until it
    stores the independent comparison a digest would name.

@@ -383,3 +383,20 @@ def test_cross_checked_and_unquoted_source_matched_are_refused(mini_repo):
     first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
     assert first["checked"] is False
     assert "no stored independent comparison" in " ".join(first["ineligibility"])
+
+
+def test_a_fabricated_stored_excerpt_reads_unverified(mini_repo):
+    """Second review, 2026-11-23: read-back re-verifies the excerpt on the page."""
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    assert _record(mini_repo, _base_record(binding), "record-before-edit").returncode == 0
+    path = mini_repo / "knowledge/practice-index.yaml"
+    data = yaml.safe_load(path.read_text())
+    row = data["items"][0]
+    fabricated = "This sentence was never printed in the book."
+    row["source_bindings"][0]["quote"] = fabricated
+    row["verifications"][0]["source_binding"]["quote"] = fabricated
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is False and first["status"] == "unverified"
+    assert "does not appear verbatim" in " ".join(first["ineligibility"])

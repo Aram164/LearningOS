@@ -7,8 +7,9 @@
 # this file says `status: active` and today lies between `granted` and
 # `expires`. Every keeper relation cites a verified quote from the course
 # materials, is stamped `origin: pilot`, and leaves a receipt recording the
-# system-task channel and its commit time; this file is Git-tracked, so that
-# identifies the delegation in force. The keeper never deletes, pins, vetoes
+# system-task channel and its commit time. This file is Git-tracked, so a
+# committed delegation can be matched to a write by time; an uncommitted edit
+# in force at write time is recorded nowhere. The keeper never deletes, pins, vetoes
 # or disputes, and never touches a relation Aram authored or pinned: he
 # vetoes or pins afterwards in the app.
 #

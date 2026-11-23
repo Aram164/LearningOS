@@ -177,3 +177,25 @@ def test_unverified_and_linked_roots_refuse(mini_repo, outside):
     checked = export(mini_repo, "--vault", str(unmarked), "--check",
                      "--item", ITEM, "--out", str(plan))
     assert checked.returncode == 2
+
+
+def test_a_fabricated_stored_excerpt_is_not_exported(mini_repo, outside):
+    """A hand-edited proof cannot carry an item into the practice vault."""
+    import yaml
+
+    _verify(mini_repo)
+    path = mini_repo / "knowledge/practice-index.yaml"
+    data = yaml.safe_load(path.read_text())
+    row = data["items"][0]
+    row["source_bindings"][0]["quote"] = "Invented, nowhere on the page."
+    row["verifications"][0]["source_binding"]["quote"] = "Invented, nowhere on the page."
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    vault = outside / "practice-vault"
+    plan = outside / "plan.json"
+    assert export(mini_repo, "--vault", str(vault), "--init").returncode == 0
+    assert export(mini_repo, "--vault", str(vault), "--check",
+                  "--item", ITEM, "--out", str(plan)).returncode == 0
+    [entry] = json.loads(plan.read_text())["items"]
+    assert entry["action"] == "refuse" and "not checked" in entry["reason"]
+    assert export(mini_repo, "--vault", str(vault), "--apply", str(plan)).returncode == 2
+    assert not (vault / "Cards").exists() or not list((vault / "Cards").glob("*.md"))

@@ -415,9 +415,10 @@ def _keeper_refused(reason: str, site: str) -> WriteRefused:
 def _keeper_delegation(root: Path) -> dict:
     """The active delegation, or a refusal naming why there is none.
 
-    The delegation is Git-tracked, and every keeper receipt records the
-    `system-task` channel and its commit time, so the delegation in force for
-    any keeper write is the file as committed at that time.
+    Every keeper receipt records the `system-task` channel and its commit
+    time. The delegation is Git-tracked, so a committed delegation can be
+    matched to a write by time; an uncommitted edit in force at write time is
+    not recorded (its digest waits for a receipt field in the next format).
     """
     path = root / KEEPER_DELEGATION
 

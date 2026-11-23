@@ -112,8 +112,14 @@ class EffectiveItem:
         return self.status in CHECKED_STATUSES and not self.reasons
 
 
-def _proof_ok(row: PracticeRow) -> str | None:
-    """Why the row's proofs do not support its status, or None."""
+def _proof_ok(repo: Repo, row: PracticeRow) -> str | None:
+    """Why the row's proofs do not support its status, or None.
+
+    Re-checked on every read, not only when recorded: a stored source binding
+    must still verify in full (registered source, current digest, page and
+    the excerpt verbatim on that page), so a hand-edited sidecar cannot keep
+    an item eligible.
+    """
     status = row["status"]
     if status in ("unverified", "disputed"):
         return None
@@ -130,6 +136,9 @@ def _proof_ok(row: PracticeRow) -> str | None:
             return "source-matched proof has no source binding"
         if not str(binding.get("quote") or "").strip():
             return "source-matched proof has no excerpt of the official answer"
+        problem = verified_binding(repo, binding)
+        if problem:
+            return f"source-matched proof no longer verifies: {problem}"
     if status == "cross-checked":
         # No stored independent comparison exists to check a digest against.
         return "cross-checked has no stored independent comparison"
@@ -145,10 +154,11 @@ def _effective_item(repo: Repo, data: PracticeIndex, item: PracticeItem) -> Effe
     if row["content_sha256"] != current:
         reasons.append("content changed since verification")
     for binding in row.get("source_bindings") or []:
-        if binding_file_state(repo.root, repo.materials_root, binding) != "ok":
-            reasons.append("source file missing or changed")
+        problem = verified_binding(repo, binding)
+        if problem:
+            reasons.append(f"source binding no longer verifies: {problem}")
             break
-    proof_problem = _proof_ok(row)
+    proof_problem = _proof_ok(repo, row)
     if proof_problem:
         reasons.append(proof_problem)
     status = row["status"]
@@ -196,6 +206,31 @@ def current_material_digest(repo: Repo, relative: object) -> str | None:
         return None
 
 
+#: Page counts and page text of pinned PDFs, keyed by path and the digest the
+#: caller has just confirmed is current. Read-back verification asks for the
+#: same page on every projection; extracting it once per file version keeps
+#: that cheap, and a changed file has a different digest.
+_PDF_PAGE_COUNTS: dict[tuple[str, str], int] = {}
+_PDF_PAGE_TEXT: dict[tuple[str, str, int], str] = {}
+
+
+def _pinned_page(path: Path, digest: str, page: int, *, with_text: bool) -> tuple[int, str]:
+    """(page count, text of ``page`` or "") for a PDF whose digest is current."""
+    key = (str(path), digest)
+    count = _PDF_PAGE_COUNTS.get(key)
+    text = _PDF_PAGE_TEXT.get((*key, page)) if with_text else ""
+    if count is None or text is None:
+        from learning_os.store.materials.pdf_text import pdf_page_text, pdf_reader
+
+        reader = pdf_reader(path.read_bytes())
+        count = len(reader.pages)
+        _PDF_PAGE_COUNTS[key] = count
+        if with_text and 1 <= page <= count:
+            text = pdf_page_text(reader, page)
+            _PDF_PAGE_TEXT[(*key, page)] = text
+    return count, text or ""
+
+
 def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
     """Why a proposed source binding cannot be admitted, or None.
 
@@ -223,14 +258,12 @@ def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
         return "binding needs a physical PDF page and a text excerpt"
     path = repo.materials_root / relative
     try:
-        from learning_os.store.materials.pdf_text import pdf_page_text, pdf_reader
-
-        reader = pdf_reader(path.read_bytes())
-        if page > len(reader.pages):
-            return "binding page is outside the pinned file"
-        page_text = pdf_page_text(reader, page) if quote else ""
+        page_count, page_text = _pinned_page(
+            path, str(binding.get("file_sha256")), page, with_text=bool(quote))
     except Exception as exc:  # extraction failure refuses, never passes
         return f"binding page could not be read: {exc}"
+    if page > page_count:
+        return "binding page is outside the pinned file"
     if quote and (not normalize_quote(quote) or normalize_quote(quote) not in normalize_quote(page_text)):
         return "quote does not appear verbatim on the pinned page"
     return None
