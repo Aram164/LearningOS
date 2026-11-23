@@ -130,6 +130,11 @@ Skills and projects use modules and units without false academic metadata.
 1. Never edit `generated/`; change authored input, validate, and regenerate.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
+   The one exception is the Atlas keeper (ADR-024 amendment): while Aram's
+   delegation `system/contracts/delegations/atlas-keeper.yaml` is active, an
+   agent running a bounded job writes cited concept relations through
+   `concept.relations.change` on the `system-task` channel, and Aram vetoes or
+   pins them afterwards in the app. Core refuses the keeper anything else.
    A plan change whose content you chose, such as which resource or which stage,
    is one of these: show the learner the exact `--check` result and apply it on
    their yes. A change the learner dictated exactly, such as moving one named

@@ -141,6 +141,16 @@ def _binding(root):
     }
 
 
+def _reviewed_digest(item_id, body=BANK_SOLUTION):
+    """The content hash practice.context shows for the item under review."""
+    from learning_os.domain.practice import content_sha256, extract_items
+
+    note_id = item_id.split("#")[0]
+    [item] = [i for i in extract_items(note_id, "exercise-bank", body).items
+              if i.item_id == item_id]
+    return content_sha256(item.item_id, item.prompt, item.solution)
+
+
 def _base_record(binding=None, **overrides):
     record = {
         "item_id": "note-practice-bank#A1",
@@ -148,12 +158,14 @@ def _base_record(binding=None, **overrides):
         "new_status": "source-matched",
         "method": "official-source",
         "concept_ids": ["concept-expected-value"],
-        "artifact_sha256": "c" * 64,
+        "artifact_sha256": None,
         "reviewer_id": "aram",
         "source_binding": binding,
         "comparison_sha256": None,
     }
     record.update(overrides)
+    if record["artifact_sha256"] is None:
+        record["artifact_sha256"] = _reviewed_digest(record["item_id"])
     return record
 
 
@@ -283,3 +295,58 @@ def test_no_direct_cli_bypass(mini_repo):
         json.dumps(_base_record(_binding(mini_repo))))
     assert result.returncode != 0
     assert not (mini_repo / "knowledge/practice-index.yaml").exists()
+
+
+def test_reviewed_digest_must_match_the_current_item(mini_repo):
+    """The proof binds what was reviewed; a person never types a digest."""
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    wrong = _record(mini_repo, _base_record(binding, artifact_sha256="c" * 64), "record-wrong")
+    assert wrong.returncode != 0
+    assert "reviewed item content differs" in wrong.stdout + wrong.stderr
+    assert not (mini_repo / "knowledge/practice-index.yaml").exists()
+    # A hand-edited sidecar whose proof names other content reads unverified.
+    assert _record(mini_repo, _base_record(binding), "record-right").returncode == 0
+    path = mini_repo / "knowledge/practice-index.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["items"][0]["verifications"][0]["artifact_sha256"] = "d" * 64
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is False
+    assert "different item content" in " ".join(first["ineligibility"])
+
+
+def test_core_pins_the_pdf_digest_when_the_binding_omits_it(mini_repo):
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    typed = {key: value for key, value in binding.items() if key != "file_sha256"}
+    result = _record(mini_repo, _base_record(typed), "record-no-digest")
+    assert result.returncode == 0, result.stdout + result.stderr
+    [row] = yaml.safe_load((mini_repo / "knowledge/practice-index.yaml").read_text())["items"]
+    assert row["source_bindings"] == [binding]
+    assert list(row["source_bindings"][0]) == list(binding)
+
+
+def test_one_problem_item_does_not_block_its_siblings(mini_repo):
+    """Gated per item: 27 of 57 real banks carry at least one diagnostic."""
+    body = BANK_SOLUTION + "\n**A3. Unanswered and not marked open**\n"
+    _note(mini_repo, "note-practice-bank", "exercise-bank", body)
+    binding = _binding(mini_repo)
+    ok = _record(mini_repo, _base_record(binding), "record-sibling")
+    assert ok.returncode == 0, ok.stdout + ok.stderr
+    blocked = _record(mini_repo, _base_record(
+        binding, item_id="note-practice-bank#A3", artifact_sha256="c" * 64),
+        "record-problem")
+    assert blocked.returncode != 0
+    assert "A3 is ambiguous or unsupported" in blocked.stdout + blocked.stderr
+    data = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)
+    assert [item["item_id"] for item in data["items"]] == [
+        "note-practice-bank#A1", "note-practice-bank#A2"]
+    assert data["items"][0]["checked"] is True
+    assert any("A3" in line for line in data["diagnostics"])
+
+    from learning_os.store.loading import load_repo
+    from learning_os.store.practice import checked_practice_by_note
+
+    checked = checked_practice_by_note(load_repo(mini_repo))
+    assert [e.item.item_id for e in checked["note-practice-bank"]] == ["note-practice-bank#A1"]

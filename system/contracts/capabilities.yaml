@@ -361,6 +361,8 @@ commands:
     - only explicitly supplied add, replace or remove operations; no inferred relations
     - exact previous rows, snapshot and registry revision guard changes
     - duplicates, unknown endpoints and prerequisite cycles fail atomically
+    - additions made in the app are stamped origin aram; a row is decorated by value (lifecycle, pin, evidence, dispute, reason or origin aram) and is retracted, never hard-deleted
+    - the Atlas keeper writes only on the system-task channel while system/contracts/delegations/atlas-keeper.yaml is active; every active keeper row cites a verified quote, its additions are stamped origin pilot, and it never deletes, pins, vetoes, disputes, changes an origin or touches a row Aram authored or pinned
     payload_records:
       change:
         description: >-
@@ -405,7 +407,8 @@ commands:
     writes:
     - knowledge/practice-index.yaml
     invariants:
-    - one explicitly reviewed verification per gesture; the item and its content hash are recomputed in the handler
+    - one explicitly reviewed verification per gesture; the item and its content hash are recomputed in the handler, and the reviewed artifact_sha256 must equal that hash
+    - eligibility is per item; Core pins a source PDF's digest itself when the binding omits it
     - the exact expected old sidecar row, the registry-practice-index revision and the canonical note revision guard the write
     - source-matched requires the official answer's verified binding; cross-checked requires an independently solved comparison digest; confirmed requires explicit review
     - historical verification entries are preserved; unverified and disputed items stay ineligible for export
@@ -414,8 +417,9 @@ commands:
         description: >-
           Exactly one verification record: the item id, the exact expected
           old sidecar row or null, the reviewed new status and method, the
-          canonical concepts, the review artifact digest and reviewer, and
-          the status-specific proof (source binding or comparison digest).
+          canonical concepts, the reviewed item's content_sha256 as
+          practice.context showed it, the reviewer, and the status-specific
+          proof (source binding or comparison digest).
         accepted:
         - item_id
         - expected_old

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
-from datetime import UTC
+from datetime import UTC, date
 from pathlib import Path
 
 import yaml
@@ -397,9 +397,100 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     )
 
 
+#: The Atlas keeper (ADR-024 §Amendment 2026-11-23): an agent running a
+#: bounded job writes relations on this channel, under Aram's standing
+#: delegation, and Aram vetoes or pins afterwards in the app.
+KEEPER_CHANNEL = "system-task"
+KEEPER_DELEGATION = "system/contracts/delegations/atlas-keeper.yaml"
+_DELEGATION_KEYS = frozenset({
+    "schema_version", "delegate", "granted_by", "granted", "expires",
+    "status", "capability", "channel", "max_operations",
+})
+
+
+def _keeper_refused(reason: str, site: str) -> WriteRefused:
+    return WriteRefused(reason, site=f"concept.relations.change.{site}")
+
+
+def _keeper_delegation(root: Path) -> dict:
+    """The active delegation, or a refusal naming why there is none.
+
+    The delegation is Git-tracked, and every keeper receipt records the
+    `system-task` channel and its commit time, so the delegation in force for
+    any keeper write is the file as committed at that time.
+    """
+    path = root / KEEPER_DELEGATION
+
+    def inactive(why: str) -> WriteRefused:
+        return _keeper_refused(
+            f"the Atlas keeper has no active delegation: {why}", "keeper-delegation")
+
+    if path.is_symlink() or not path.is_file():
+        raise inactive(f"{KEEPER_DELEGATION} is missing")
+    raw = path.read_bytes()
+    try:
+        data = yaml.load(raw.decode("utf-8"), Loader=UniqueKeySafeLoader)
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise inactive(f"{KEEPER_DELEGATION} is unreadable ({exc})") from exc
+    if (not isinstance(data, dict) or set(data) != _DELEGATION_KEYS
+            or data["schema_version"] != 1
+            or data["capability"] != "concept.relations.change"
+            or data["channel"] != KEEPER_CHANNEL
+            or type(data["max_operations"]) is not int
+            or not 1 <= data["max_operations"] <= 50
+            or not isinstance(data["expires"], date)
+            or not isinstance(data["granted"], date)):
+        raise inactive(f"{KEEPER_DELEGATION} does not have the declared shape")
+    if data["status"] != "active":
+        raise inactive(f"its status is {data['status']}")
+    today = observations.now().date()
+    if not data["granted"] <= today <= data["expires"]:
+        raise inactive(f"it covers {data['granted']} to {data['expires']}, not {today}")
+    return data
+
+
+def _keeper_scope(operations: list, delegation: dict) -> None:
+    """Refuse what the keeper may not do; Aram's decisions stay his."""
+    if len(operations) > delegation["max_operations"]:
+        raise _keeper_refused(
+            f"the keeper's delegation allows at most {delegation['max_operations']} "
+            "operations per batch", "keeper-scope")
+    for operation in operations:
+        kind = operation["action"]
+        old = operation.get("old") if isinstance(operation.get("old"), dict) else {}
+        new = operation.get("new") if isinstance(operation.get("new"), dict) else {}
+        if kind == "remove":
+            raise _keeper_refused(
+                "the keeper retracts a relation with a reason; it never deletes one",
+                "keeper-scope")
+        if old.get("pinned") is True or old.get("origin") == "aram":
+            raise _keeper_refused(
+                "relations Aram authored or pinned are his; the keeper may only "
+                "report a conflict with them", "keeper-scope")
+        if new.get("pinned") is True or new.get("status") == "vetoed" \
+                or new.get("evidence_disputed", False) != old.get("evidence_disputed", False):
+            raise _keeper_refused(
+                "pinning, vetoing and disputing evidence are Aram's decisions",
+                "keeper-scope")
+        if new.get("origin", "pilot") != old.get("origin", "pilot"):
+            raise _keeper_refused(
+                "the keeper writes relations as origin pilot and never changes "
+                "a relation's origin", "origin-mismatch")
+        if new.get("status", "active") == "active" and not new.get("evidence"):
+            raise _keeper_refused(
+                "an active keeper relation must cite at least one verified quote "
+                "from the course materials", "keeper-evidence")
+
+
 @register("concept.relations.change", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def concept_relations_change(ctx: OpContext, req: dict) -> Result:
-    """Apply only explicitly authored relation operations."""
+    """Apply only explicitly authored relation operations.
+
+    The app (`ui`) records Aram's own additions as origin `aram`. The Atlas
+    keeper (`system-task`) writes only under an active delegation, only with
+    verified evidence, never over a pinned or Aram-authored row, and its
+    additions are stamped origin `pilot`.
+    """
     root = ctx.root
     changes = req["change"]
     if not isinstance(changes, dict) or set(changes) != {"operations"}:
@@ -413,9 +504,29 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             "supply between 1 and 50 explicit operations",
             site="concept.relations.change.empty-operations",
         )
+    request = current_gateway_request()
+    channel = request.channel if request is not None else None
+    if channel == KEEPER_CHANNEL:
+        delegation = _keeper_delegation(root)
+        for operation in operations:
+            if not isinstance(operation, dict) or not isinstance(operation.get("action"), str):
+                break  # the per-operation checks below refuse it precisely
+        else:
+            _keeper_scope(operations, delegation)
     registries = _registries(root)
     repo = ctx.repo()
     from learning_os.domain.relations import is_decorated
+
+    def _stamped(new_row: dict) -> dict:
+        """An added row with its author recorded (who made it, not who kept it)."""
+        author = {"ui": "aram", KEEPER_CHANNEL: "pilot"}.get(channel)
+        if author is None:
+            return copy.deepcopy(new_row)
+        if new_row.get("origin", author) != author:
+            raise _keeper_refused(
+                f"a relation added through {channel} is recorded as origin {author}",
+                "origin-mismatch")
+        return {**copy.deepcopy(new_row), "origin": author}
 
     def _check_evidence(row: dict) -> None:
         # Known source + current digest + the quote verbatim on the pinned
@@ -507,7 +618,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             single = root / "knowledge/concept-relations.yaml"
             path = single if single in registries else root / "knowledge/concept-relations/atlas.yaml"
             _safe(root, path)
-            registries.setdefault(path, {"relations": []})["relations"].append(copy.deepcopy(operation["new"]))
+            registries.setdefault(path, {"relations": []})["relations"].append(_stamped(operation["new"]))
         changed.add(path)
     writes = {path: yaml.safe_dump(registries[path], sort_keys=False, allow_unicode=True)
               for path in changed}

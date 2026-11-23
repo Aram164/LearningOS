@@ -234,18 +234,19 @@ def build_plan(repo: Repo, item_ids: list[str], vault: Path, *,
         effective, diagnostics = by_note[note_id]
         entry = next((e for e in effective if e.item.item_id == item_id), None)
         if entry is None:
+            # Gated per item: an extracted item is clean by construction, so
+            # only this item's own (or the note's) diagnostics explain it.
+            label = item_id.partition("#")[2]
+            own = [d for d in diagnostics
+                   if d.startswith((f"{label}: ", f"{note_id}: "))]
             entries.append(CardPlanEntry(
                 item_id, path, "refuse",
-                "; ".join(diagnostics) or "unknown practice item", None))
+                ("ambiguous parse: " + "; ".join(own)) if own
+                else "unknown practice item", None))
             continue
         source_digest = content_sha256(
             entry.item.item_id, entry.item.prompt, entry.item.solution)
         row = entry.row
-        if diagnostics:
-            entries.append(CardPlanEntry(
-                item_id, path, "refuse",
-                "ambiguous parse: " + "; ".join(diagnostics), None))
-            continue
         if entry.item.kind != "flashcard":
             entries.append(CardPlanEntry(
                 item_id, path, "refuse", "item is not flashcard-shaped", None))

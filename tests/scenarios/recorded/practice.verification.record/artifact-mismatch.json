@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"practice.verification.record\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"note items are ambiguous or unsupported: duplicate label; duplicate label\",\"retryable\":false,\"details\":{}}}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"practice.verification.record\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"the reviewed item content differs from the current item; reload practice items and review it again\",\"retryable\":false,\"details\":{}}}\n",
   "stdout_json": {
     "capability": "practice.verification.record",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "note items are ambiguous or unsupported: duplicate label; duplicate label",
+      "message": "the reviewed item content differs from the current item; reload practice items and review it again",
       "retryable": false
     },
     "idempotency_key": "KEY2",

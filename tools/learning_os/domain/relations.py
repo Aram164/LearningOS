@@ -38,11 +38,6 @@ RelationRow = TypedDict("RelationRow", {
 })
 
 
-RELATION_DEFAULT_FIELDS = (
-    "origin", "status", "pinned", "evidence_disputed", "evidence",
-)
-
-
 def enriched_relation(row: RelationRow) -> RelationRow:
     """A copy of ``row`` with every optional P1 field present."""
     out = row.copy()
@@ -59,27 +54,67 @@ def is_active(row: Mapping[str, object]) -> bool:
 
 
 def is_decorated(row: Mapping[str, object]) -> bool:
-    """Whether a row carries P1 decoration that forbids hard deletion."""
-    return any(key in row for key in RELATION_DEFAULT_FIELDS) or "status_reason" in row
+    """Whether a row carries P1 decoration that forbids hard deletion.
+
+    Decided by value, not by key presence, so it matches the UI's
+    ``isDecorated`` exactly: a row that was pinned and then unpinned stores
+    ``pinned: false`` and is as removable as one that was never pinned.
+    """
+    return (row.get("status", "active") != "active"
+            or row.get("pinned") is True
+            or bool(row.get("evidence"))
+            or row.get("evidence_disputed") is True
+            or bool(str(row.get("status_reason") or "").strip())
+            or row.get("origin") == "aram")
 
 
 def normalize_quote(text: str) -> str:
     return " ".join(unicodedata.normalize("NFC", text).split())
 
 
-def binding_file_state(repo_root: Path, materials_root: Path, binding: Mapping[str, object]) -> str:
-    """``ok`` when the pinned file exists under materials with its digest."""
-    rel = str(binding.get("material_relpath", ""))
+#: SHA-256 of material files, keyed by (path, device, inode, size, mtime_ns).
+#: One publish asks for the same cited PDF once per board, concept card and
+#: manifest row that shows it; without this every ask re-read and re-hashed
+#: the whole file. Any change to the file changes its stat key, so a stale
+#: digest is never served; entries for replaced files are simply unused.
+_DIGESTS: dict[tuple[str, int, int, int, int], str] = {}
+
+
+def material_file(materials_root: Path, rel: object) -> Path | None:
+    """The regular, non-linked file ``rel`` names under materials, or None."""
+    rel = str(rel or "")
     if not rel or Path(rel).is_absolute() or ".." in Path(rel).parts:
-        return "stale"
+        return None
     candidate = materials_root / rel
     try:
         candidate.resolve().relative_to(materials_root.resolve())
     except (OSError, ValueError):
-        return "stale"
+        return None
     if candidate.is_symlink() or not candidate.is_file():
+        return None
+    return candidate
+
+
+def file_sha256(path: Path) -> str:
+    """The file's SHA-256, read once per unchanged file."""
+    stat = path.stat()
+    key = (str(path), stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+    digest = _DIGESTS.get(key)
+    if digest is None:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        _DIGESTS[key] = digest
+    return digest
+
+
+def binding_file_state(repo_root: Path, materials_root: Path, binding: Mapping[str, object]) -> str:
+    """``ok`` when the pinned file exists under materials with its digest."""
+    candidate = material_file(materials_root, binding.get("material_relpath"))
+    if candidate is None:
         return "stale"
-    digest = hashlib.sha256(candidate.read_bytes()).hexdigest()
+    try:
+        digest = file_sha256(candidate)
+    except OSError:
+        return "stale"
     return "ok" if digest == binding.get("file_sha256") else "stale"
 
 

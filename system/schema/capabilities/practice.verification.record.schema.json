@@ -52,7 +52,7 @@
         "new_status",
         "reviewer_id"
       ],
-      "description": "Exactly one verification record: the item id, the exact expected old sidecar row or null, the reviewed new status and method, the canonical concepts, the review artifact digest and reviewer, and the status-specific proof (source binding or comparison digest)."
+      "description": "Exactly one verification record: the item id, the exact expected old sidecar row or null, the reviewed new status and method, the canonical concepts, the reviewed item's content_sha256 as practice.context showed it, the reviewer, and the status-specific proof (source binding or comparison digest)."
     }
   }
 }

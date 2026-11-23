@@ -8,7 +8,8 @@ canonical delta, new receipts, ledger deltas and a derived outcome.
 Case-file fields beyond SPEC §5.2 (all documented in REPORT.md of the
 introducing session): ``artifact_ids`` (default: the capability's
 request-scoped id, else ``[]``), ``approval_kind`` (default
-``"operator-approval"``), ``replay_only``, ``same_envelope_as`` (a step index
+``"operator-approval"``), ``channel`` (default ``"operator"``; ``ui`` for
+Aram's click, ``system-task`` for the Atlas keeper), ``replay_only``, ``same_envelope_as`` (a step index
 whose envelope file is resubmitted verbatim), ``git``
 (``{failing_pre_commit, origin}`` fixture setup for session-end sequences),
 and ``fixture_mtime`` (a file-level ISO 8601 instant, default
@@ -589,6 +590,13 @@ def build_envelope(ctx: _CaseContext, operation: str, step: dict,
     if approval_kind != "operator-approval":
         # intent_sha256 covers no approval kind, so the binding survives.
         envelope["approval"]["kind"] = approval_kind
+    channel = step.get("channel")
+    if channel is not None:
+        # The channel is part of the intent, so the approval is re-bound.
+        from learning_os.store.contracts.gateway import intent_sha256
+
+        envelope["channel"] = channel
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     path.write_text(json.dumps(envelope, indent=2, sort_keys=True)
                     + "\n", encoding="utf-8")
     return path

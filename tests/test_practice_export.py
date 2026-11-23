@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from gateway_helpers import approved_v2_call
-from test_practice_verification import BANK_SOLUTION, _binding, _note
+from test_practice_verification import BANK_SOLUTION, _binding, _note, _reviewed_digest
 
 EXPORTER = Path(__file__).resolve().parent.parent / "tools" / "export_learnkit.py"
 ITEM = "note-practice-bank#A1"
@@ -24,7 +24,7 @@ def _verify(mini_repo):
         "item_id": ITEM, "expected_old": None,
         "new_status": "source-matched", "method": "official-source",
         "concept_ids": ["concept-expected-value"],
-        "artifact_sha256": "c" * 64, "reviewer_id": "aram",
+        "artifact_sha256": _reviewed_digest(ITEM), "reviewer_id": "aram",
         "source_binding": binding, "comparison_sha256": None,
     }
     result = approved_v2_call(
@@ -117,7 +117,9 @@ def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, tmp_path):
         "item_id": ITEM, "expected_old": old,
         "new_status": "confirmed", "method": "explicit-review",
         "concept_ids": ["concept-expected-value"],
-        "artifact_sha256": "d" * 64, "reviewer_id": "aram",
+        "artifact_sha256": _reviewed_digest(
+            ITEM, BANK_SOLUTION.replace("\n4\n", "\nFour\n")),
+        "reviewer_id": "aram",
         "source_binding": None, "comparison_sha256": None,
     }
     result = approved_v2_call(

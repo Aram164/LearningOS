@@ -23,7 +23,13 @@ from learning_os.domain.practice import (
     content_sha256,
     extract_items,
 )
-from learning_os.domain.relations import EvidenceBinding, binding_file_state, normalize_quote
+from learning_os.domain.relations import (
+    EvidenceBinding,
+    binding_file_state,
+    file_sha256,
+    material_file,
+    normalize_quote,
+)
 from learning_os.domain.snapshot import Note, Repo
 from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
@@ -116,6 +122,8 @@ def _proof_ok(row: PracticeRow) -> str | None:
     if not proofs:
         return "missing proof"
     proof = proofs[-1]
+    if proof.get("artifact_sha256") != row["content_sha256"]:
+        return "proof was recorded for different item content"
     if status == "source-matched" and not proof.get("source_binding"):
         return "source-matched proof has no source binding"
     if status == "cross-checked" and not proof.get("comparison_sha256"):
@@ -153,7 +161,12 @@ def note_items(repo: Repo, note: Note) -> tuple[list[EffectiveItem], list[str]]:
 
 
 def checked_practice_by_note(repo: Repo) -> dict[str, list[EffectiveItem]]:
-    """Current checked items for notes named by the verification sidecar."""
+    """Current checked items for notes named by the verification sidecar.
+
+    Gated per item: an item with its own problem is never extracted, and a
+    note-level problem extracts nothing, so a diagnostic about one item never
+    hides its checked siblings.
+    """
     data = load_sidecar(repo.root)
     note_ids = {row["item_id"].partition("#")[0] for row in data["items"]}
     checked: dict[str, list[EffectiveItem]] = {}
@@ -162,11 +175,20 @@ def checked_practice_by_note(repo: Repo) -> dict[str, list[EffectiveItem]]:
         if note is None:
             continue
         extraction = extract_items(note.id, note.meta.get("role"), note.body)
-        if extraction.diagnostics:
-            continue
         items = [_effective_item(repo, data, item) for item in extraction.items]
         checked[note_id] = [item for item in items if item.checked]
     return checked
+
+
+def current_material_digest(repo: Repo, relative: object) -> str | None:
+    """SHA-256 of the material file a binding names, or None if unusable."""
+    path = material_file(repo.materials_root, relative)
+    if path is None:
+        return None
+    try:
+        return file_sha256(path)
+    except OSError:
+        return None
 
 
 def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:

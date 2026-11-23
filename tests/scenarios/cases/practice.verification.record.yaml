@@ -23,12 +23,12 @@ cases:
     request: {record: {item_id: "note-practice-bank#Z9", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram}}
     artifact_ids: []
     expect: {site: practice.verification.record.unknown-item}
-  - id: ambiguous-note
+  - id: ambiguous-item
     kind: refusal
     transport: gateway
     request: {record: {item_id: "note-practice-dup#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram}}
     artifact_ids: []
-    expect: {site: practice.verification.record.ambiguous-note}
+    expect: {site: practice.verification.record.ambiguous-item}
   - id: unknown-concept
     kind: refusal
     transport: gateway
@@ -69,10 +69,10 @@ cases:
     kind: sequence
     steps:
     - transport: gateway
-      request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
+      request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: 5c7e3d546db2a0760da2ee747400853122b6be26481640eae0908fdb5079669f, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
       artifact_ids: [registry-practice-index, note-practice-bank]
     - transport: gateway
-      request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
+      request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: 5c7e3d546db2a0760da2ee747400853122b6be26481640eae0908fdb5079669f, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
       artifact_ids: [registry-practice-index, note-practice-bank]
     expect: {site: practice.verification.record.stale-row}
   - id: bad-proof
@@ -84,6 +84,12 @@ cases:
   - id: bad-expected-revision
     kind: refusal
     transport: gateway
-    request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
+    request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: 5c7e3d546db2a0760da2ee747400853122b6be26481640eae0908fdb5079669f, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
     artifact_ids: ['']
     expect: {site: practice.verification.record.bad-expected-revision}
+  - id: artifact-mismatch
+    kind: refusal
+    transport: gateway
+    request: {record: {item_id: "note-practice-bank#A1", expected_old: null, new_status: source-matched, method: official-source, concept_ids: [concept-expected-value], artifact_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, reviewer_id: aram, source_binding: {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, page: 1, quote: Fixture book for source-demo-book}}}
+    artifact_ids: []
+    expect: {site: practice.verification.record.artifact-mismatch}

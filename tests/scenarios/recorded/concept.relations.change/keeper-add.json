@@ -1,0 +1,128 @@
+{
+  "canonical_changed": {
+    "knowledge/concept-relations.yaml": "f1d07f6728a21006faf74a14fc3413e26c58f322cec059d3c676d2d955917329"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "concept.relations.change",
+          "channel": "system-task",
+          "intent_sha256": "INTENT1",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "registry-concept-relations": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "registry-concept-relations": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "concept.relations.change",
+            "declared_writes": [
+              "knowledge/concept-relations.yaml",
+              "knowledge/concept-relations/**"
+            ]
+          }
+        ]
+      },
+      "capability": "concept.relations.change",
+      "committed_at": "2026-12-01T09:00:00+01:00",
+      "expected_revisions": {
+        "registry-concept-relations": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:32cc3350f19cec40db25c3fcfac25f2f7ecf03e651b703146519e849ed2e60a3",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "INTENT1"
+        },
+        "channel": "system-task",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "INTENT1",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "<FIXTURE_SNAPSHOT>",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "knowledge/concept-relations.yaml",
+          "sha256_after": "f1d07f6728a21006faf74a14fc3413e26c58f322cec059d3c676d2d955917329",
+          "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "registry-concept-relations": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"concept.relations.change\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"operation_count\":1,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"registry-concept-relations\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
+  "stdout_json": {
+    "capability": "concept.relations.change",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "registry-concept-relations": 1
+      },
+      "ok": true,
+      "operation_count": 1,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

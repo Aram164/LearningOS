@@ -132,6 +132,17 @@ contracts:
     checker: learning_os.store.contracts.capability_catalog
     test: tests/test_capability_catalog.py
 
+  - declaration: system/contracts/delegations/atlas-keeper.yaml
+    governs: >-
+      Aram's standing delegation for the Atlas keeper: whether an agent's
+      system-task relation writes are admitted at all, until when, and how many
+      operations one batch may carry. Read by concept.relations.change on every
+      keeper write; a missing, malformed, suspended or expired delegation
+      refuses the write, and the receipt names the delegation's SHA-256.
+    enforced_by: runtime
+    checker: learning_os.app.handlers.atlas
+    test: tests/test_atlas_authoring.py
+
   - declaration: system/contracts/ai-adapters.yaml
     governs: >-
       The AI adapters an action may be routed through. Read by AdapterRegistry

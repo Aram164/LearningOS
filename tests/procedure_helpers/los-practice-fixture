@@ -15,7 +15,12 @@ repo = Path(os.environ["LOS_REPO"])
 sys.path[:0] = [str(repo / "tests"), str(repo / "tools")]
 
 from gateway_helpers import approved_v2_envelope  # noqa: E402
-from test_practice_verification import _base_record, _note, _pdf_bytes  # noqa: E402
+from test_practice_verification import (  # noqa: E402
+    _base_record,
+    _note,
+    _pdf_bytes,
+    _reviewed_digest,
+)
 
 NOTE_ID = "note-practice-bank"
 RELATIVE = "source-demo-book/book.pdf"
@@ -51,7 +56,9 @@ def attest(root: Path, number: int, changed: bool) -> None:
             "file_sha256": digest, "page": 1, "quote": f"A{number}: {2 * number}.",
         },
         item_id=item_id, expected_old=old, reviewer_id="synthetic-fixture",
-        artifact_sha256=hashlib.sha256(note_path.read_bytes()).hexdigest(),
+        # The reviewed artifact is the item as practice.context shows it.
+        artifact_sha256=_reviewed_digest(
+            item_id, note_path.read_text(encoding="utf-8").split("\n---\n", 1)[1]),
     )
     if changed:
         payload.update(new_status="confirmed", method="explicit-review", source_binding=None)

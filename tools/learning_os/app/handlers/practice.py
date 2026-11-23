@@ -31,6 +31,7 @@ from learning_os.store.practice import (
     dump_sidecar,
     load_sidecar,
     note_items,
+    current_material_digest,
     row_for,
     sidecar_path,
     verified_binding,
@@ -139,13 +140,17 @@ def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Resu
             "record names an unknown practice item",
             site="practice.verification.record.unknown-item")
     extraction = extract_items(note.id, note.meta.get("role"), note.body)
-    if extraction.diagnostics:
-        raise WriteRefused(
-            "note items are ambiguous or unsupported: "
-            + "; ".join(d.reason for d in extraction.diagnostics),
-            site="practice.verification.record.ambiguous-note")
     item = next((row for row in extraction.items if row.item_id == item_id), None)
     if item is None:
+        # Gated per item: a problem with one item (or the whole note's
+        # markup) blocks that item only; its clean siblings stay recordable.
+        problems = [d.reason for d in extraction.diagnostics
+                    if d.label in (None, label)]
+        if problems:
+            raise WriteRefused(
+                f"practice item {item_id} is ambiguous or unsupported: "
+                + "; ".join(problems),
+                site="practice.verification.record.ambiguous-item")
         raise WriteRefused(
             "record names an unknown practice item",
             site="practice.verification.record.unknown-item")
@@ -170,6 +175,16 @@ def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Resu
             raise WriteRefused(
                 "source-matched requires the official answer's source binding",
                 site="practice.verification.record.binding-required")
+        if "file_sha256" not in binding:
+            # Core pins the file it can read; a person never types a digest.
+            binding = {
+                "source_id": binding.get("source_id"),
+                "material_relpath": binding.get("material_relpath"),
+                "file_sha256": current_material_digest(
+                    repo, binding.get("material_relpath")) or "",
+                **{key: value for key, value in binding.items()
+                   if key not in ("source_id", "material_relpath")},
+            }
         problem = verified_binding(repo, binding)
         if problem:
             raise WriteRefused(
@@ -219,6 +234,13 @@ def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Resu
         raise WriteRefused(
             f"practice-index: {errors[0].message}",
             site="practice.verification.record.bad-proof")
+    if record["artifact_sha256"] != new_row["content_sha256"]:
+        # The proof binds what was reviewed: the item's content hash as
+        # practice.context showed it. Anything else reviewed other content.
+        raise WriteRefused(
+            "the reviewed item content differs from the current item; "
+            "reload practice items and review it again",
+            site="practice.verification.record.artifact-mismatch")
     path = sidecar_path(root)
     try:
         expected_revisions = parse_expected_revisions(cast(list[str] | None, req.get("expected_revision")))
