@@ -2,7 +2,7 @@
   "steps": [
     {
       "canonical_changed": {
-        "knowledge/practice-index.yaml": "5123fa598bd33b6542218b21f1771878e777493a49eb0a7be8fb5d25a3ef7eb3"
+        "knowledge/practice-index.yaml": "f2eabf7f1ea3f0bee15ad3c10508063ed09902e922187cc9e8bd0141bcf990f6"
       },
       "exit": 0,
       "idempotency_changed": {
@@ -62,7 +62,7 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:c8fcaa37736efdb935e2d69af2bffc3aca338cf7f96c0e88970d18f74eb11aeb",
+            "data_roots_sha256": "sha256:49b40be3a07f4cbad4362b9850cfc4d661b7d9395ef2a6233ea0266dfb24d5bc",
             "fingerprint_definition": 2
           },
           "request": {
@@ -84,7 +84,7 @@
             {
               "created": true,
               "path": "knowledge/practice-index.yaml",
-              "sha256_after": "5123fa598bd33b6542218b21f1771878e777493a49eb0a7be8fb5d25a3ef7eb3",
+              "sha256_after": "f2eabf7f1ea3f0bee15ad3c10508063ed09902e922187cc9e8bd0141bcf990f6",
               "sha256_before": null
             }
           ]
@@ -115,7 +115,7 @@
             "knowledge/practice-index.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5123fa598bd33b6542218b21f1771878e777493a49eb0a7be8fb5d25a3ef7eb3",
+              "sha256": "f2eabf7f1ea3f0bee15ad3c10508063ed09902e922187cc9e8bd0141bcf990f6",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
@@ -190,7 +190,7 @@
             "knowledge/practice-index.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5123fa598bd33b6542218b21f1771878e777493a49eb0a7be8fb5d25a3ef7eb3",
+              "sha256": "f2eabf7f1ea3f0bee15ad3c10508063ed09902e922187cc9e8bd0141bcf990f6",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
@@ -224,7 +224,7 @@
             "knowledge/practice-index.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5123fa598bd33b6542218b21f1771878e777493a49eb0a7be8fb5d25a3ef7eb3",
+              "sha256": "f2eabf7f1ea3f0bee15ad3c10508063ed09902e922187cc9e8bd0141bcf990f6",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
