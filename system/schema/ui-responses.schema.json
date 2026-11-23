@@ -45,9 +45,15 @@
     },
     {
       "$ref": "#/$defs/ProjectionSettlementWire"
+    },
+    {
+      "$ref": "#/$defs/PracticeContextWire"
     }
   ],
   "$defs": {
+    "PracticeContextWire": {
+      "$ref": "https://learningos.local/schema/practice-context-v1"
+    },
     "HealthReportV1": {
       "allOf": [
         {

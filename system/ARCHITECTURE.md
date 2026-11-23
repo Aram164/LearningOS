@@ -100,7 +100,17 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - backlinks;
 - health and validation reports.
 
-Generated artifacts must never become canonical inputs.
+Generated artifacts must never become canonical inputs. ADR-024 adds a
+digest-bound catalog of semester, module, lecture and exam templates under
+`generated/atlas/`. Obsidian owns editable copies and ownership sidecars
+under `boards/atlas/`. These copies preserve spatial edits through the
+managed-board refresh action and are included in layout backups.
+
+Practice notes own questions and solutions. `knowledge/practice-index.yaml`
+binds separate verification records to exact item content. The bounded
+`practice.context` response serves Atlas and note review. LearnKit receives
+selected eligible cards through the separate-vault exporter and owns their
+review history and schedules.
 
 ### 2.6 Agent-computed and disposable artifacts
 

@@ -137,7 +137,7 @@ documents:
 
   - path: system/WORKFLOWS.md
     audience: operator
-    applies_to: [log-a-line, record-stage-progress, record-a-reported-result, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, find-a-page-in-unit-materials, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, process-a-lecture, untranscribable-workflows]
+    applies_to: [log-a-line, record-stage-progress, record-a-reported-result, create-or-revise-a-durable-note, save-source-analyses, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, find-a-page-in-unit-materials, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, process-a-lecture, untranscribable-workflows, refresh-atlas-board, export-verified-practice]
     class: procedure
     status: current
     authority: binding
@@ -503,6 +503,26 @@ documents:
       Developer architecture documentation for validation.
 
   # ---- executable procedure transcripts ------------------------------------
+
+  - path: system/procedures/refresh-an-atlas-board.md
+    audience: operator
+    applies_to: []
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator
+    summary: >-
+      Open, edit, close and refresh a managed Atlas board.
+
+  - path: system/procedures/export-verified-practice.md
+    audience: operator
+    applies_to: []
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator
+    summary: >-
+      Review and deliver eligible practice cards to a separate vault.
 
   - path: system/procedures/end-a-session.md
     audience: operator

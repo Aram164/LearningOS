@@ -15,13 +15,16 @@ import hashlib
 import json
 import os
 import re
-import tempfile
+import stat
 import uuid
+from contextlib import ExitStack
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.practice import content_sha256
+from learning_os.store.fingerprint import snapshot
+from learning_os.store.loading import load_repo
 from learning_os.store.practice import note_items
 
 MARKER_NAME = ".learningos-practice-vault.json"
@@ -31,7 +34,8 @@ CHANGED_MESSAGE = (
     "Resolve it through a separate card-replacement workflow."
 )
 ANCHOR = re.compile(r"^\s*\^learnkit-[\w-]+\s*$")
-FORBIDDEN_FIELD = re.compile(r"[|\x00-\x1f\x7f]|^learnkit-|\]\(|://|obsidian:")
+FORBIDDEN_FIELD = re.compile(r"[|\x00-\x1f\x7f]|\^learnkit-|\]\(|://|obsidian:", re.IGNORECASE)
+DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
 
 
 def _symlink_components(path: Path) -> str | None:
@@ -56,13 +60,22 @@ def marker_payload(vault: Path) -> dict:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise WriteRefused(f"practice vault marker is unreadable: {exc}") from exc
+    return _validate_marker(payload)
+
+
+def _validate_marker(payload: object) -> dict:
     if (not isinstance(payload, dict)
-            or payload.get("schema_version") != 1
-            or payload.get("purpose") != "learnkit-practice"
-            or payload.get("experimental") is not True
-            or not isinstance(payload.get("vault_id"), str)
-            or not payload.get("vault_id")):
+            or set(payload) != {"schema_version", "purpose", "experimental", "vault_id"}
+            or type(payload["schema_version"]) is not int
+            or payload["schema_version"] != 1
+            or payload["purpose"] != "learnkit-practice"
+            or payload["experimental"] is not True):
         raise WriteRefused("practice vault marker is not the exact experimental marker")
+    try:
+        if str(uuid.UUID(payload["vault_id"])) != payload["vault_id"]:
+            raise ValueError("noncanonical UUID")
+    except (AttributeError, TypeError, ValueError):
+        raise WriteRefused("practice vault marker has an invalid vault ID") from None
     return payload
 
 
@@ -77,7 +90,10 @@ def validate_vault(vault: Path, root: Path, *, for_init: bool = False) -> dict |
         raise WriteRefused("practice vault intersects the Core repository")
     ancestor = resolved
     while True:
-        if (ancestor / ".git").exists():
+        if (ancestor / ".git").exists() or (
+            (ancestor / "LearningOS/repository/AGENTS.md").is_file()
+            and (ancestor / "LearningOS/obsidian-ui/AGENTS.md").is_file()
+        ):
             raise WriteRefused("practice vault intersects a Git checkout")
         if ancestor.parent == ancestor:
             break
@@ -90,6 +106,29 @@ def validate_vault(vault: Path, root: Path, *, for_init: bool = False) -> dict |
     if for_init:
         return None
     return marker_payload(vault)
+
+
+def write_plan(path: Path, document: dict, root: Path, vault: Path) -> None:
+    """Write the report to scratch outside the canonical and practice trees."""
+    problem = _symlink_components(path)
+    if problem:
+        raise WriteRefused(problem)
+    target = path.resolve()
+    for boundary in (root.resolve(), vault.resolve()):
+        if target == boundary or boundary in target.parents:
+            raise WriteRefused("export plan must be written outside Core and the practice vault")
+    with ExitStack() as stack:
+        directory = _open_vault(target.parent, stack)
+        for ancestor in target.parents:
+            if (ancestor / ".git").exists():
+                raise WriteRefused("export plan must be written outside Git checkouts")
+        fd = os.open(target.name, os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK,
+                     0o600, dir_fd=directory)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            if not stat.S_ISREG(os.fstat(fd).st_mode) or os.fstat(fd).st_nlink != 1:
+                raise WriteRefused("export plan destination is not an ordinary scratch file")
+            handle.truncate(0)
+            handle.write(json.dumps(document, indent=2) + "\n")
 
 
 def init_vault(vault: Path, root: Path) -> dict:
@@ -106,8 +145,8 @@ def init_vault(vault: Path, root: Path) -> dict:
         "experimental": True,
         "vault_id": str(uuid.uuid4()),
     }
-    (vault / MARKER_NAME).write_text(
-        json.dumps(marker, indent=2) + "\n", encoding="utf-8")
+    with (vault / MARKER_NAME).open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps(marker, indent=2) + "\n")
     return marker
 
 
@@ -116,10 +155,9 @@ def card_filename(item_id: str) -> str:
 
 
 def _field(text: str, limit: int, what: str) -> str | None:
-    value = " ".join(text.split())
-    if not value or len(value) > limit:
+    if not text or len(text) > limit:
         return f"{what} must be 1..{limit} single-line characters"
-    if FORBIDDEN_FIELD.search(value):
+    if FORBIDDEN_FIELD.search(text):
         return f"{what} carries forbidden characters or syntax"
     return None
 
@@ -158,7 +196,16 @@ def _strip_anchor(text: str) -> str | None:
     return "\n".join(kept) + "\n"
 
 
-def build_plan(repo, item_ids: list[str], vault: Path) -> list[CardPlanEntry]:
+def _read_regular(name: str | Path, *, directory: int | None = None) -> bytes:
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    with os.fdopen(fd, "rb") as handle:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise WriteRefused("export destination contains a non-regular file")
+        return handle.read()
+
+
+def build_plan(repo, item_ids: list[str], vault: Path, *,
+               directory: int | None = None) -> list[CardPlanEntry]:
     """One plan entry per selected item, in selection order."""
     by_note: dict[str, tuple[list, list[str]]] = {}
     entries: list[CardPlanEntry] = []
@@ -175,7 +222,7 @@ def build_plan(repo, item_ids: list[str], vault: Path) -> list[CardPlanEntry]:
                 item_id, path, "refuse",
                 "; ".join(diagnostics) or "unknown practice item", None))
             continue
-        entry.content_sha256 = content_sha256(
+        source_digest = content_sha256(
             entry.item.item_id, entry.item.prompt, entry.item.solution)
         row = entry.row
         if diagnostics:
@@ -203,8 +250,8 @@ def build_plan(repo, item_ids: list[str], vault: Path) -> list[CardPlanEntry]:
                 item_id, path, "refuse",
                 "item needs exactly one physical PDF anchor", None))
             continue
-        prompt = " ".join(entry.item.prompt.split())
-        solution = " ".join(entry.item.solution.split())
+        prompt = entry.item.prompt
+        solution = entry.item.solution
         problem = (_field(prompt, 200, "prompt")
                    or _field(solution, 300, "answer"))
         if problem:
@@ -213,46 +260,52 @@ def build_plan(repo, item_ids: list[str], vault: Path) -> list[CardPlanEntry]:
         body = card_body(prompt, solution, item_id,
                          bindings[0]["source_id"], int(bindings[0]["page"]), concepts)
         target = vault / path
-        if target.is_symlink():
-            entries.append(CardPlanEntry(
-                item_id, path, "refuse", "card path is a symlink", None))
-            continue
-        if not target.exists():
+        try:
+            existing = _read_regular(target if directory is None else target.name,
+                                     directory=directory)
+        except FileNotFoundError:
             entries.append(CardPlanEntry(
                 item_id, path, "create", None,
-                hashlib.sha256(body.encode("utf-8")).hexdigest(), body))
+                hashlib.sha256(body.encode("utf-8")).hexdigest(), body, source_digest))
             continue
-        existing = target.read_text(encoding="utf-8")
-        existing_sha = hashlib.sha256(existing.encode("utf-8")).hexdigest()
-        stripped = _strip_anchor(existing)
+        except (OSError, WriteRefused):
+            entries.append(CardPlanEntry(
+                item_id, path, "refuse", "card is linked or unreadable", None))
+            continue
+        existing_sha = hashlib.sha256(existing).hexdigest()
+        try:
+            stripped = _strip_anchor(existing.decode("utf-8"))
+        except UnicodeDecodeError:
+            stripped = None
         if stripped is None:
             entries.append(CardPlanEntry(
                 item_id, path, "refuse",
                 "existing card is malformed or carries extra blocks", None))
         elif stripped == body:
             entries.append(CardPlanEntry(
-                item_id, path, "keep", None, existing_sha, body))
-        elif f"I | {item_id} · " not in stripped:
+                item_id, path, "keep", None, existing_sha, body, source_digest))
+        elif not stripped.splitlines()[2].startswith(f"I | {item_id} · "):
             entries.append(CardPlanEntry(
                 item_id, path, "refuse",
                 "existing card names a different item", None))
         else:
             entries.append(CardPlanEntry(
                 item_id, path, "changed-existing", CHANGED_MESSAGE,
-                existing_sha, body))
+                existing_sha, body, source_digest))
     return entries
 
 
 def plan_document(repo, item_ids: list[str], vault: Path,
                   marker: dict) -> tuple[dict, list[CardPlanEntry]]:
-    from learning_os.store.fingerprint import snapshot as _snapshot
-
+    current = snapshot(repo.root)
     entries = build_plan(repo, item_ids, vault)
+    if snapshot(repo.root) != current:
+        raise WriteRefused("Core changed during export check; run check again")
     hashes = {entry.item_id: entry.content_sha256 for entry in entries}
     document = {
         "schema_version": 1,
         "vault_id": marker["vault_id"],
-        "snapshot_id": _snapshot(repo.root),
+        "snapshot_id": current,
         "selected_ids": list(item_ids),
         "source_content_hashes": hashes,
         "items": [{
@@ -266,71 +319,138 @@ def plan_document(repo, item_ids: list[str], vault: Path,
     return document, entries
 
 
-def apply_plan(repo, document: dict, vault: Path) -> dict:
-    """Publish a checked plan create-only; partial progress is reported."""
-    marker = marker_payload(vault)
-    if document.get("vault_id") != marker["vault_id"]:
-        raise WriteRefused("plan belongs to a different practice vault")
-    item_ids = list(document.get("selected_ids") or [])
-    _document, entries = plan_document(repo, item_ids, vault, marker)
-    planned = {entry["item_id"]: entry
-               for entry in document.get("items") or []}
-    for entry in entries:
-        current = (document.get("source_content_hashes") or {}).get(entry.item_id)
-        if entry.content_sha256 != current:
-            raise WriteRefused(f"stale plan: {entry.item_id} changed since check")
-        planned_entry = planned.get(entry.item_id)
-        if planned_entry is None or planned_entry.get("action") != entry.action:
-            raise WriteRefused(f"stale plan: {entry.item_id} action changed since check")
-    if any(entry.action == "refuse" for entry in entries):
-        reasons = "; ".join(
-            f"{e.item_id}: {e.reason}" for e in entries if e.action == "refuse")
-        raise WriteRefused(f"export blocked before writing: {reasons}")
+def _assert_exportable(entries: list[CardPlanEntry]) -> None:
+    refusals = [f"{entry.item_id}: {entry.reason}" for entry in entries
+                if entry.action == "refuse"]
+    if refusals:
+        raise WriteRefused(f"export blocked before writing: {'; '.join(refusals)}")
     if any(entry.action == "changed-existing" for entry in entries):
         raise WriteRefused(CHANGED_MESSAGE)
 
-    cards_dir = vault / "Cards"
-    cards_dir.mkdir(exist_ok=True)
-    lock_path = cards_dir / ".los-export.lock"
+
+def _check_plan(document: dict, entries: list[CardPlanEntry]) -> None:
+    raw_items = document.get("items")
+    digests = document.get("source_content_hashes")
+    if not isinstance(raw_items, list) or not isinstance(digests, dict):
+        raise WriteRefused("export plan is malformed")
+    if len(raw_items) != len(entries) or set(digests) != {e.item_id for e in entries}:
+        raise WriteRefused("export plan selection changed")
+    for expected, entry in zip(raw_items, entries, strict=True):
+        if (not isinstance(expected, dict) or expected.get("item_id") != entry.item_id
+                or expected.get("path") != entry.path
+                or digests[entry.item_id] != entry.content_sha256):
+            raise WriteRefused(f"stale plan: {entry.item_id} changed since check")
+        action = expected.get("action")
+        if action == "create" and entry.action in {"create", "keep"}:
+            digest = hashlib.sha256((entry.body or "").encode("utf-8")).hexdigest()
+        elif action == entry.action:
+            digest = entry.expected_file_sha256
+        else:
+            raise WriteRefused(f"stale plan: {entry.item_id} action changed since check")
+        if expected.get("expected_file_sha256") != digest:
+            raise WriteRefused(f"card changed since check: {entry.item_id}")
+
+
+def _open_vault(vault: Path, stack: ExitStack) -> int:
+    # macOS provides the approved /tmp, /var and /etc aliases. After resolving
+    # those names, open every component without following any substituted link.
+    absolute = Path(os.path.abspath(vault))
+    aliases = {"tmp", "var", "etc"}
+    parts = absolute.parts[1:]
+    if parts and parts[0] in aliases and Path("/", parts[0]).is_symlink():
+        parts = ("private", *parts)
+    fd = os.open(absolute.anchor, DIRECTORY_FLAGS)
+    stack.callback(os.close, fd)
+    for part in parts:
+        fd = os.open(part, DIRECTORY_FLAGS, dir_fd=fd)
+        stack.callback(os.close, fd)
+    return fd
+
+
+def _publish(directory: int, name: str, body: str) -> bool:
+    staged = f".los-stage-{uuid.uuid4().hex}"
+    fd = os.open(staged, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW,
+                 0o600, dir_fd=directory)
     try:
-        lock_fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError:
-        raise WriteRefused("another export holds the destination lock") from None
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(body.encode("utf-8"))
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(staged, name, src_dir_fd=directory, dst_dir_fd=directory,
+                    follow_symlinks=False)
+            return True
+        except FileExistsError:
+            existing = _read_regular(name, directory=directory).decode("utf-8")
+            if _strip_anchor(existing) != body:
+                raise WriteRefused("card appeared with different content") from None
+            return False
+    finally:
+        os.unlink(staged, dir_fd=directory)
+
+
+def apply_plan(repo, document: dict, vault: Path) -> dict:
+    """Recheck under the destination lock and publish approved cards create-only."""
+    marker = validate_vault(vault, repo.root)
+    if (not isinstance(document, dict) or document.get("schema_version") != 1
+            or marker is None or document.get("vault_id") != marker["vault_id"]):
+        raise WriteRefused("plan does not match this practice vault and export format")
+    item_ids = document.get("selected_ids")
+    if (not isinstance(item_ids, list) or not item_ids
+            or not all(isinstance(item, str) for item in item_ids)
+            or len(set(item_ids)) != len(item_ids)):
+        raise WriteRefused("export plan needs distinct selected item IDs")
+    expected_snapshot = document.get("snapshot_id")
+    if expected_snapshot != snapshot(repo.root):
+        raise WriteRefused("Core changed since export check; run check again")
+    initial = build_plan(repo, item_ids, vault)
+    _assert_exportable(initial)
+    _check_plan(document, initial)
+
     created: list[str] = []
     kept: list[str] = []
-    try:
+    with ExitStack() as stack:
+        vault_fd = _open_vault(vault, stack)
+        actual_marker = _validate_marker(json.loads(_read_regular(MARKER_NAME, directory=vault_fd)))
+        if actual_marker != marker:
+            raise WriteRefused("practice vault marker changed since check")
+        try:
+            os.mkdir("Cards", dir_fd=vault_fd)
+        except FileExistsError:
+            pass
+        directory = os.open("Cards", DIRECTORY_FLAGS, dir_fd=vault_fd)
+        stack.callback(os.close, directory)
+        lock = ".los-export.lock"
+        try:
+            lock_fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW,
+                              0o600, dir_fd=directory)
+        except FileExistsError:
+            raise WriteRefused("another export holds the destination lock") from None
+        stack.callback(os.unlink, lock, dir_fd=directory)
+        stack.callback(os.close, lock_fd)
+        if expected_snapshot != snapshot(repo.root):
+            raise WriteRefused("Core changed since export check; run check again")
+        entries = build_plan(load_repo(repo.root), item_ids, vault, directory=directory)
+        _assert_exportable(entries)
+        _check_plan(document, entries)
+        if expected_snapshot != snapshot(repo.root):
+            raise WriteRefused("Core changed during export; run check again")
         for entry in entries:
-            target = vault / entry.path
-            if entry.action == "keep":
-                if hashlib.sha256(target.read_bytes()).hexdigest() \
-                        != entry.expected_file_sha256:
-                    raise WriteRefused(
-                        f"card changed since check: {entry.item_id}")
-                kept.append(entry.item_id)
-                continue
-            # Create-only publish: stage in Cards, fsync, hardlink (no replace).
-            fd, staged = tempfile.mkstemp(dir=cards_dir, prefix=".los-stage-")
+            name = Path(entry.path).name
             try:
-                with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                    handle.write(entry.body or "")
-                    handle.flush()
-                    os.fsync(handle.fileno())
-                try:
-                    os.link(staged, target)
+                if entry.action == "keep":
+                    digest = hashlib.sha256(_read_regular(name, directory=directory)).hexdigest()
+                    if digest != entry.expected_file_sha256:
+                        raise WriteRefused("card changed since check")
+                    kept.append(entry.item_id)
+                elif _publish(directory, name, entry.body or ""):
                     created.append(entry.item_id)
-                except FileExistsError:
-                    existing = target.read_text(encoding="utf-8")
-                    if _strip_anchor(existing) == entry.body:
-                        kept.append(entry.item_id)
-                    else:
-                        raise WriteRefused(
-                            f"card appeared with different content: {entry.item_id}"
-                        ) from None
-            finally:
-                if os.path.exists(staged):
-                    os.unlink(staged)
-    finally:
-        os.close(lock_fd)
-        lock_path.unlink(missing_ok=True)
+                else:
+                    kept.append(entry.item_id)
+            except (OSError, UnicodeDecodeError, WriteRefused) as exc:
+                raise WriteRefused(
+                    f"export interrupted at {entry.item_id}: {exc}. "
+                    f"Already created: {', '.join(created) or 'none'}. Run check again."
+                ) from exc
     return {"created": created, "kept": kept,
             "counts": {"created": len(created), "kept": len(kept)}}

@@ -9,11 +9,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
+from urllib.parse import urlencode
 
 from learning_os.derive.projection.canvas import CANVAS_EDGE_COLORS, _concept_depths
 from learning_os.derive.projection.concepts import PREREQ_TYPES
 from learning_os.domain.relations import enriched_relation, relation_evidence_state
 from learning_os.domain.snapshot import Repo
+from learning_os.store.practice import checked_practice_by_note
 
 CARD_W, CARD_H, STEP_X, STEP_Y = 320, 160, 520, 200
 
@@ -31,7 +34,8 @@ def _active_relations(repo: Repo) -> list[dict]:
             if r.get("status", "active") == "active"]
 
 
-def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict) -> list[dict]:
+def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict,
+               exam_concepts: dict[str, set[str]]) -> list[dict]:
     """The four board scopes, in catalog order (semester, module, lecture, exam)."""
     scopes: list[dict] = []
     for pid in sorted(repo.programs):
@@ -46,16 +50,20 @@ def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict) -> 
                     "concept_ids": sorted({
                         c for mid, cs in module_to_concepts.items()
                         for c in cs
-                        if str(repo.modules.get(mid, {}).get("program_id", pid)) == pid
+                        if _semester_scope_id(repo.modules.get(mid, {})) == f"{pid}--{sid}"
                     }),
                 })
+    semester_ids = {s["id"] for s in scopes}
     for mid in sorted(set(repo.modules) | set(module_to_concepts)):
         module = repo.modules.get(mid, {})
+        parent = _semester_scope_id(module)
+        if parent not in semester_ids:
+            parent = None
         scopes.append({
             "kind": "module", "id": mid,
             "title": str(module.get("title") or mid),
-            "parent_kind": "semester",
-            "parent_id": _semester_scope_id(repo, module),
+            "parent_kind": "semester" if parent is not None else None,
+            "parent_id": parent,
             "concept_ids": sorted(module_to_concepts.get(mid, [])),
         })
     for uid in sorted(set(repo.units) | set(unit_to_concepts)):
@@ -67,28 +75,36 @@ def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict) -> 
             "parent_id": unit.module_id if unit else None,
             "concept_ids": sorted(unit_to_concepts.get(uid, [])),
         })
+    exam_modules: dict[str, set[str]] = {}
+    for unit in repo.units.values():
+        exam_id = (unit.data.get("artifacts") or {}).get("mock_exam")
+        if exam_id and unit.module_id in repo.modules:
+            exam_modules.setdefault(exam_id, set()).add(unit.module_id)
     for nid in sorted(repo.notes):
         note = repo.notes[nid]
         if note.meta.get("role") != "mock-exam":
             continue
+        parents = exam_modules.get(nid, set())
+        parent = next(iter(parents)) if len(parents) == 1 else None
         scopes.append({
             "kind": "exam", "id": nid,
             "title": str(note.meta.get("title") or nid),
-            "parent_kind": "module", "parent_id": None,
-            "concept_ids": sorted(note.meta.get("concepts") or []),
+            "parent_kind": "module" if parent is not None else None, "parent_id": parent,
+            "concept_ids": sorted(set(note.meta.get("concepts") or []) | exam_concepts.get(nid, set())),
         })
     return scopes
 
 
-def _semester_scope_id(repo: Repo, module: dict) -> str | None:
-    pid = module.get("program_id")
-    sid = module.get("semester_id")
-    if pid and sid:
-        return f"{pid}--{sid}"
+def _semester_scope_id(module: dict) -> str | None:
+    area = module.get("area_id")
+    semester = module.get("semester")
+    if area and semester:
+        return f"{area}--semester-{semester}"
     return None
 
 
-def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict]) -> dict:
+def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict],
+                         practice_counts: Counter[str]) -> dict:
     concepts = [c for c in scope["concept_ids"] if c in repo.concepts]
     relations = [r for r in _active_relations(repo)
                  if r["from"] in concepts and r["to"] in concepts]
@@ -108,23 +124,32 @@ def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict]) -> d
                 text += f"\n{rec['description']}"
             if rel_summary:
                 text += "\n" + rel_summary
-            text += f"\nEvidence: {state}"
+            text += f"\nEvidence: {state} · Verified practice: {practice_counts[cid]}"
+            text += f"\n[[{CARD_PREFIX}/{cid}|Concept details]]"
             nodes.append({
                 "id": f"los-concept-{cid}", "type": "text", "text": text,
                 "x": layer * STEP_X, "y": i * STEP_Y,
                 "width": CARD_W, "height": CARD_H,
             })
+    if not concepts:
+        nodes.append({
+            "id": "los-group-empty", "type": "text", "text": "No scoped concepts are recorded.",
+            "x": 0, "y": 0, "width": CARD_W, "height": CARD_H,
+        })
+    evidence_x = (max(depths.values(), default=0) + 1) * STEP_X
+    evidence_index = 0
     for rel in relations:
         for ordinal, binding in enumerate(rel.get("evidence") or []):
             key = f"{rel['from']}--{rel['type']}--{rel['to']}"
+            citation = f"{binding['source_id']} · pdf p. {binding['page']}"
+            url = "obsidian://learningos-atlas-evidence?" + urlencode({"relation": key, "ordinal": ordinal})
             nodes.append({
                 "id": f"los-evidence-{key}--{ordinal}", "type": "text",
-                "text": (f"\"{binding['quote']}\"\n"
-                         f"{binding['source_id']} · pdf p. {binding['page']}"),
-                "x": (depths.get(rel["from"], 0) + 1) * STEP_X,
-                "y": len(nodes) * 40 % (STEP_Y * 4),
+                "text": f"\"{binding['quote']}\"\n{citation}\n[Open evidence]({url})",
+                "x": evidence_x, "y": evidence_index * STEP_Y,
                 "width": CARD_W, "height": CARD_H,
             })
+            evidence_index += 1
     for child in child_scopes:
         nodes.append({
             "id": f"los-scope-{child['kind']}--{child['id']}", "type": "file",
@@ -170,10 +195,11 @@ def _concept_evidence_state(repo: Repo, cid: str, relations: list[dict]) -> str:
     return "missing"
 
 
-def build_concept_card(repo: Repo, cid: str, generated_at: str = "") -> str:
+def build_concept_card(repo: Repo, cid: str, practice_count: int = 0) -> str:
     from learning_os.derive.projection.common import md_header
     rec = repo.concepts[cid]
-    lines = md_header(f"Concept card — {rec.get('label', cid)}", generated_at)
+    lines = [line for line in md_header(f"Concept card — {rec.get('label', cid)}", "")
+             if not line.startswith("> Generated:")]
     lines += [f"`{cid}`", ""]
     if rec.get("description"):
         lines += [rec["description"], ""]
@@ -181,20 +207,31 @@ def build_concept_card(repo: Repo, cid: str, generated_at: str = "") -> str:
     summary = _relation_summary(cid, relations)
     if summary:
         lines += [summary, ""]
-    note_ids = sorted(n.id for n in repo.notes.values()
-                      if cid in (n.meta.get("concepts") or []))
-    if note_ids:
-        lines += ["Notes: " + ", ".join(note_ids), ""]
+    notes = sorted((note for note in repo.notes.values()
+                    if cid in (note.meta.get("concepts") or [])), key=lambda note: note.id)
+    if notes:
+        lines += ["Notes: " + ", ".join(note.id for note in notes), ""]
+    sources = {sid for note in notes for sid in note.meta.get("sources") or []}
+    sources.update(binding["source_id"] for binding in rec.get("description_evidence") or [])
+    if sources:
+        lines += ["Sources: " + ", ".join(sorted(sources)), ""]
     lines += [f"Evidence: {_concept_evidence_state(repo, cid, relations)}",
-              "Verified practice: 0", ""]
+              f"Verified practice: {practice_count}", ""]
     return "\n".join(lines)
 
 
-def build_atlas_boards(repo: Repo, indexes: dict, generated_at: str = "") -> tuple[list[dict], dict[str, str]]:
+def build_atlas_boards(repo: Repo, indexes: dict) -> tuple[list[dict], dict[str, str]]:
     """(catalog, {generated-relative path: text}) for templates and cards."""
     module_to_concepts = indexes.get("module_to_concepts", {})
     unit_to_concepts = indexes.get("unit_to_concepts", {})
-    scopes = scopes_for(repo, module_to_concepts, unit_to_concepts)
+    practice_counts: Counter[str] = Counter()
+    note_concepts: dict[str, set[str]] = {}
+    for note_id, items in checked_practice_by_note(repo).items():
+        for item in items:
+            concepts = set((item.row or {}).get("concept_ids") or [])
+            practice_counts.update(concepts)
+            note_concepts.setdefault(note_id, set()).update(concepts)
+    scopes = scopes_for(repo, module_to_concepts, unit_to_concepts, note_concepts)
     by_parent: dict[tuple, list[dict]] = {}
     for scope in scopes:
         if scope["parent_kind"]:
@@ -204,7 +241,7 @@ def build_atlas_boards(repo: Repo, indexes: dict, generated_at: str = "") -> tup
     files: dict[str, str] = {}
     for scope in scopes:
         children = by_parent.get((scope["kind"], scope["id"]), [])
-        template = build_board_template(repo, scope, children)
+        template = build_board_template(repo, scope, children, practice_counts)
         path = f"{TEMPLATE_PREFIX}/{scope['kind']}/{scope['id']}.canvas"
         files[path] = _canvas_bytes(template).decode("utf-8")
         concept_ids = [c for c in scope["concept_ids"] if c in repo.concepts]
@@ -221,6 +258,6 @@ def build_atlas_boards(repo: Repo, indexes: dict, generated_at: str = "") -> tup
             "relation_count": relation_count,
         })
     for cid in sorted(repo.concepts):
-        files[f"{CARD_PREFIX}/{cid}.md"] = build_concept_card(repo, cid, generated_at)
+        files[f"{CARD_PREFIX}/{cid}.md"] = build_concept_card(repo, cid, practice_counts[cid])
     catalog.sort(key=lambda e: (e["kind"], e["id"]))
     return catalog, files

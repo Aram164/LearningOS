@@ -15,7 +15,12 @@
         "item_id": {
           "type": "string"
         },
-        "expected_old": {},
+        "expected_old": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
         "new_status": {
           "type": "string"
         },
@@ -41,6 +46,7 @@
       "required": [
         "artifact_sha256",
         "concept_ids",
+        "expected_old",
         "item_id",
         "method",
         "new_status",

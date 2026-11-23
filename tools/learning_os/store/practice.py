@@ -11,7 +11,7 @@ regardless of what the row says.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import yaml
 
@@ -21,9 +21,10 @@ from learning_os.domain.practice import (
     content_sha256,
     extract_items,
 )
-from learning_os.domain.relations import binding_file_state
+from learning_os.domain.relations import binding_file_state, normalize_quote
 from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
+from learning_os.store.materials.resolution import parse_material_uri
 
 SIDECAR_REL = "knowledge/practice-index.yaml"
 ARTIFACT_ID = "registry-practice-index"
@@ -96,9 +97,7 @@ def _proof_ok(row: dict) -> str | None:
     return None
 
 
-def effective_item(repo, note, item: PracticeItem) -> EffectiveItem:
-    """One extracted item against its stored row, recomputed honestly."""
-    data = load_sidecar(repo.root)
+def _effective_item(repo, data: dict, item: PracticeItem) -> EffectiveItem:
     row = row_for(data, item.item_id)
     if row is None:
         return EffectiveItem(item=item, row=None, status="unverified")
@@ -123,7 +122,25 @@ def note_items(repo, note) -> tuple[list[EffectiveItem], list[str]]:
     """(effective items, diagnostic reasons) for one canonical note."""
     extraction = extract_items(note.id, note.meta.get("role"), note.body)
     diagnostics = [f"{d.label or note.id}: {d.reason}" for d in extraction.diagnostics]
-    return [effective_item(repo, note, item) for item in extraction.items], diagnostics
+    data = load_sidecar(repo.root)
+    return [_effective_item(repo, data, item) for item in extraction.items], diagnostics
+
+
+def checked_practice_by_note(repo) -> dict[str, list[EffectiveItem]]:
+    """Current checked items for notes named by the verification sidecar."""
+    data = load_sidecar(repo.root)
+    note_ids = {row["item_id"].partition("#")[0] for row in data["items"]}
+    checked: dict[str, list[EffectiveItem]] = {}
+    for note_id in sorted(note_ids):
+        note = repo.notes.get(note_id)
+        if note is None:
+            continue
+        extraction = extract_items(note.id, note.meta.get("role"), note.body)
+        if extraction.diagnostics:
+            continue
+        items = [_effective_item(repo, data, item) for item in extraction.items]
+        checked[note_id] = [item for item in items if item.checked]
+    return checked
 
 
 def verified_binding(repo, binding: dict) -> str | None:
@@ -133,26 +150,35 @@ def verified_binding(repo, binding: dict) -> str | None:
     quote is carried — the quote verbatim on that page (open item 2, via the
     existing span machinery: `pdf_page_text` over the pinned bytes).
     """
-    if binding.get("source_id") not in repo.sources:
+    source_id = binding.get("source_id")
+    source = repo.sources.get(source_id) if isinstance(source_id, str) else None
+    if source is None:
         return "binding names an unknown source"
+    relative = binding.get("material_relpath")
+    if not isinstance(relative, str) or PurePosixPath(relative).suffix.lower() != ".pdf":
+        return "binding must name a material PDF"
+    registered = parse_material_uri(source.get("material"))
+    if registered is not None and PurePosixPath(registered.path).suffix:
+        if relative != registered.path:
+            return "binding PDF does not match the registered source file"
+    elif not relative.startswith((registered.path if registered else source_id).rstrip("/") + "/"):
+        return "binding PDF is outside the registered source"
     if binding_file_state(repo.root, repo.materials_root, binding) != "ok":
         return "binding file is missing or its digest changed"
-    quote = (binding.get("quote") or "").strip()
-    if not quote:
-        return None
-    rel = str(binding.get("material_relpath", ""))
-    path = repo.materials_root / rel
+    page = binding.get("page")
+    quote = binding.get("quote", "")
+    if type(page) is not int or page < 1 or not isinstance(quote, str):
+        return "binding needs a physical PDF page and a text excerpt"
+    path = repo.materials_root / relative
     try:
         from learning_os.store.materials.pdf_text import pdf_page_text, pdf_reader
 
         reader = pdf_reader(path.read_bytes())
-        if not 1 <= int(binding["page"]) <= len(reader.pages):
+        if page > len(reader.pages):
             return "binding page is outside the pinned file"
-        page_text = pdf_page_text(reader, int(binding["page"]))
+        page_text = pdf_page_text(reader, page) if quote else ""
     except Exception as exc:  # extraction failure refuses, never passes
         return f"binding page could not be read: {exc}"
-    from learning_os.domain.relations import normalize_quote
-
-    if normalize_quote(quote) not in normalize_quote(page_text):
+    if quote and (not normalize_quote(quote) or normalize_quote(quote) not in normalize_quote(page_text)):
         return "quote does not appear verbatim on the pinned page"
     return None

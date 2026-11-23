@@ -428,6 +428,7 @@ commands:
         - comparison_sha256
         required:
         - item_id
+        - expected_old
         - new_status
         - method
         - concept_ids
@@ -436,6 +437,8 @@ commands:
         fields:
           item_id:
             type: string
+          expected_old:
+            type: [object, 'null']
           new_status:
             type: string
           method:

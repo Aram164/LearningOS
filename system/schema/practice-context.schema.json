@@ -4,8 +4,10 @@
   "title": "Practice context response",
   "x-governs": "artifact",
   "type": "object",
+  "additionalProperties": false,
   "required": [
-    "schema_version", "snapshot_id", "contract", "note_id", "items"
+    "schema_version", "snapshot_id", "contract", "note_id", "note_revision",
+    "practice_index_revision", "diagnostics", "items"
   ],
   "properties": {
     "schema_version": { "const": 1 },
@@ -23,9 +25,10 @@
   "$defs": {
     "item": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "item_id", "label", "kind", "prompt", "status", "checked",
-        "content_sha256", "concept_ids"
+        "content_sha256", "concept_ids", "ineligibility", "stored_row"
       ],
       "properties": {
         "item_id": { "type": "string" },

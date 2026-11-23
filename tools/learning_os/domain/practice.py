@@ -22,7 +22,7 @@ import unicodedata
 from dataclasses import dataclass, field
 
 PRACTICE_ROLES = ("exercise-bank", "mock-exam")
-LABEL = r"[A-Z]+\d+"
+LABEL = r"[A-Z]+[1-9][0-9]*"
 
 _BOLD = re.compile(rf"^\*\*({LABEL})(?=[.)\s])", re.MULTILINE)
 _AML_KEY = re.compile(rf"^(?:#{{2,4}}\s+|\*\*)({LABEL})(?=[.)\s])", re.MULTILINE)
@@ -137,12 +137,16 @@ def _details(note_id: str, text: str, out: Extraction) -> None:
     for label, block in sorted(blocks.items()):
         if counts.get(label, 0) > 1:
             continue
-        match = _DETAILS.search(block)
-        if not match:
+        matches = list(_DETAILS.finditer(block))
+        if not matches:
             if "[open]" not in block.splitlines()[0]:
                 out.diagnostics.append(PracticeDiagnostic(
                     note_id, label, "labeled item has no details answer"))
             continue
+        if len(matches) != 1:
+            out.diagnostics.append(PracticeDiagnostic(note_id, label, "multiple details answers"))
+            continue
+        match = matches[0]
         prompt = block[:match.start()].strip()
         solution = match.group(2).strip()
         if not prompt or not solution or "<details>" in prompt:
@@ -157,20 +161,34 @@ def _details(note_id: str, text: str, out: Extraction) -> None:
             kind=_kind(prompt, solution), dialect=dialect))
 
 
+def _unique_blocks(note_id: str, text: str, pattern: re.Pattern,
+                   out: Extraction, prefix: str = "") -> dict[str, str]:
+    blocks = _split_blocks(text, pattern, prefix)
+    for label, count in _label_counts(text, pattern).items():
+        if count > 1:
+            out.diagnostics.append(PracticeDiagnostic(note_id, prefix + label, "duplicate label"))
+            blocks.pop(prefix + label)
+    return blocks
+
+
 def _aml(note_id: str, text: str, out: Extraction) -> None:
     before, after = text.split("# ANSWER KEY", 1)
     _join_pairs(note_id, "mock-keyed",
-                _split_blocks(before, _AML_KEY), _split_blocks(after, _AML_KEY), out)
+                _unique_blocks(note_id, before, _AML_KEY, out),
+                _unique_blocks(note_id, after, _AML_KEY, out), out)
 
 
 def _icop(note_id: str, text: str, out: Extraction) -> None:
     before, after = text.split("## Solutions and marking guide", 1)
-    timed, follow = before.split("## Optional examiner follow-ups", 1)
-    scored, sketches = after.split("## Follow-up solution sketches", 1)
-    questions = {**_split_blocks(timed, _TIMED),
-                 **_split_blocks(follow, _FOLLOWUP_Q, "F")}
-    solutions = {**_split_blocks(scored, _TIMED),
-                 **_split_blocks(sketches, _FOLLOWUP_A, "F")}
+    timed, optional, follow = before.partition("## Optional examiner follow-ups")
+    scored, follow_key, sketches = after.partition("## Follow-up solution sketches")
+    if bool(optional) != bool(follow_key):
+        out.diagnostics.append(PracticeDiagnostic(note_id, None, "incomplete optional exam sections"))
+        return
+    questions = {**_unique_blocks(note_id, timed, _TIMED, out),
+                 **_unique_blocks(note_id, follow, _FOLLOWUP_Q, out, "F")}
+    solutions = {**_unique_blocks(note_id, scored, _TIMED, out),
+                 **_unique_blocks(note_id, sketches, _FOLLOWUP_A, out, "F")}
     _join_pairs(note_id, "timed-exam", questions, solutions, out)
 
 

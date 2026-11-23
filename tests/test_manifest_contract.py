@@ -328,7 +328,9 @@ def test_unit_without_scope_sources_stays_projectable(mini_repo):
 
 @pytest.mark.full_repo
 def test_live_manifest_contract_declares_schema_closure_digest(repo_root):
-    schema = repo_root / "system" / "contracts" / "manifest-v20.schema.json"
+    from learning_os.store.contracts.manifest_contract import load_contract
+
+    schema = repo_root / load_contract(repo_root)["schema_path"]
     expected = digest_of(build_bundle(schema, repo_root / "system" / "schema"))
     assert declared_closure_sha256(repo_root) == expected
 

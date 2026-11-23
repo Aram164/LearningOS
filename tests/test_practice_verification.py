@@ -127,10 +127,12 @@ def _record(root, record, key):
 def _binding(root):
     pdf = _pdf_bytes(QUOTE)
     materials = root.parent / "materials"
-    (materials / "book.pdf").write_bytes(pdf)
+    path = materials / "source-demo-book" / "book.pdf"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(pdf)
     return {
         "source_id": "source-demo-book",
-        "material_relpath": "book.pdf",
+        "material_relpath": "source-demo-book/book.pdf",
         "file_sha256": hashlib.sha256(pdf).hexdigest(),
         "page": 1,
         "quote": QUOTE,
@@ -154,7 +156,7 @@ def _base_record(binding=None, **overrides):
 
 
 def test_four_dialects_extract_deterministically(mini_repo):
-    from learning_os.derive.projection.practice_items import extract_items
+    from learning_os.domain.practice import extract_items
 
     cases = [
         ("note-a", "exercise-bank", BANK_SOLUTION, ["note-a#A1", "note-a#A2"]),
@@ -171,7 +173,7 @@ def test_four_dialects_extract_deterministically(mini_repo):
 
 
 def test_duplicate_orphan_and_unsupported_stay_ineligible(mini_repo):
-    from learning_os.derive.projection.practice_items import extract_items
+    from learning_os.domain.practice import extract_items
 
     dup = extract_items("note-a", "exercise-bank",
                         BANK_SOLUTION + "\n**A1. Again?**\n<details>\n"
@@ -180,6 +182,11 @@ def test_duplicate_orphan_and_unsupported_stay_ineligible(mini_repo):
     orphan = extract_items("note-c", "mock-exam",
                            MOCK.replace("**A2. Second keyed answer**",
                                         "**A3. Orphaned answer**"))
+    repeated_key = extract_items("note-c", "mock-exam", MOCK + "\n**A1. Duplicated key**")
+    assert any(d.reason == "duplicate label" for d in repeated_key.diagnostics)
+    incomplete_exam = extract_items("note-d", "mock-exam",
+                                    EXAM.replace("## Follow-up solution sketches", "## Other"))
+    assert incomplete_exam.diagnostics[0].reason == "incomplete optional exam sections"
     assert any(d.reason == "orphan answer with no question"
                for d in orphan.diagnostics)
     bad = extract_items("note-a", "exercise-bank", "Just prose, no items.")

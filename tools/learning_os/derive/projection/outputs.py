@@ -106,7 +106,7 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
             identity, separators=(",", ":"), sort_keys=True, ensure_ascii=False,
         ) + "\n"
     from learning_os.derive.projection.atlas_boards import build_atlas_boards
-    _catalog, board_files = build_atlas_boards(repo, manifest["indexes"], generated_at)
+    _catalog, board_files = build_atlas_boards(repo, manifest["indexes"])
     for rel_path, text in sorted(board_files.items()):
         outputs[rel_path.removeprefix("generated/")] = text
     for name in sorted(repo.collections):

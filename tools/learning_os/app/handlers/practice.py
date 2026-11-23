@@ -33,17 +33,12 @@ from learning_os.store.practice import (
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 
-CHECKED = ("cross-checked", "source-matched", "confirmed")
 METHOD_FOR_STATUS = {
     "source-matched": "official-source",
     "cross-checked": "independent-solve",
     "confirmed": "explicit-review",
     "disputed": "explicit-review",
     "unverified": "explicit-review",
-}
-RECORD_FIELDS = {
-    "item_id", "expected_old", "new_status", "method", "concept_ids",
-    "artifact_sha256", "reviewer_id", "source_binding", "comparison_sha256",
 }
 
 
@@ -110,16 +105,6 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
             site="practice.verification.record.gateway-required",
             prefixed=True, exit_code=2)
     record = req["record"]
-    if not isinstance(record, dict) or not set(record) <= RECORD_FIELDS:
-        raise WriteRefused(
-            "record carries unknown fields",
-            site="practice.verification.record.unknown-fields")
-    for required in ("item_id", "new_status", "method", "concept_ids",
-                     "artifact_sha256", "reviewer_id"):
-        if required not in record:
-            raise WriteRefused(
-                f"record is missing {required}",
-                site="practice.verification.record.missing-field")
     item_id = record["item_id"]
     note_id, _, label = item_id.partition("#")
     repo = ctx.repo()
@@ -171,7 +156,7 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
 
     data = load_sidecar(root)
     current = row_for(data, item_id)
-    if record.get("expected_old") != current:
+    if record["expected_old"] != current:
         raise WriteRefused(
             "the expected old verification row no longer matches; reload and review",
             site="practice.verification.record.stale-row")

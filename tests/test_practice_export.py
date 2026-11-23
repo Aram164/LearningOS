@@ -47,12 +47,20 @@ def test_init_check_apply_keep_cycle(mini_repo, tmp_path):
     marker = json.loads((vault / ".learningos-practice-vault.json").read_text())
     assert marker["purpose"] == "learnkit-practice" and marker["experimental"]
     assert export(mini_repo, "--vault", str(vault), "--init").returncode == 2
+    for target in (mini_repo / "knowledge/practice-index.yaml", vault / "plan.json"):
+        previous = target.read_bytes() if target.exists() else None
+        blocked = export(mini_repo, "--vault", str(vault), "--check",
+                         "--item", ITEM, "--out", str(target))
+        assert blocked.returncode == 2 and "outside Core and the practice vault" in blocked.stdout
+        assert (target.read_bytes() if target.exists() else None) == previous
+
 
     checked = export(mini_repo, "--vault", str(vault), "--check",
                      "--item", ITEM, "--out", str(plan))
     assert checked.returncode == 0, checked.stdout
     document = json.loads(plan.read_text())
     assert document["items"][0]["action"] == "create"
+    assert len(document["source_content_hashes"][ITEM]) == 64
     assert "What is 2+2" not in plan.read_text()  # no card text in the plan
 
     applied = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
@@ -67,13 +75,25 @@ def test_init_check_apply_keep_cycle(mini_repo, tmp_path):
     assert lines[3] == "G | concept-expected-value |"
     assert "^learnkit-" not in body  # no plugin anchor is supplied
 
+    # Model a plugin-owned leading anchor. The original create plan can be
+    # replayed after an equivalent file appears.
+    cards[0].write_text("^learnkit-12345\n" + body + "\n")
     before = cards[0].read_bytes()
+    replay = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
+    assert json.loads(replay.stdout) == {"status": "applied", "created": 0, "kept": 1}
+    assert cards[0].read_bytes() == before
     rechecked = export(mini_repo, "--vault", str(vault), "--check",
                        "--item", ITEM, "--out", str(plan))
     assert rechecked.returncode == 0
     assert json.loads(plan.read_text())["items"][0]["action"] == "keep"
     assert export(mini_repo, "--vault", str(vault), "--apply", str(plan)).returncode == 0
     assert cards[0].read_bytes() == before  # byte-identical replay
+    updated = before + b"\n"
+    cards[0].write_bytes(updated)
+    refused = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
+    assert refused.returncode == 2 and "card changed since check" in refused.stdout
+    assert cards[0].read_bytes() == updated
+
 
 
 def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, tmp_path):

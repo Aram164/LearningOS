@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Build or attest synthetic arithmetic in a Scrut practice fixture."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+repo = Path(os.environ["LOS_REPO"])
+sys.path[:0] = [str(repo / "tests"), str(repo / "tools")]
+
+from test_practice_verification import _base_record, _note, _pdf_bytes, _record  # noqa: E402
+
+NOTE_ID = "note-practice-bank"
+RELATIVE = "source-demo-book/book.pdf"
+
+
+def prepare(root: Path) -> None:
+    body = "\n".join(
+        f"**A{number}. What is {number}+{number}?**\n"
+        f"<details>\n<summary>Solution</summary>\n{number * 2}\n</details>\n"
+        for number in range(1, 5))
+    _note(root, NOTE_ID, "exercise-bank", body)
+    quote = "Synthetic official key. A1: 2. A2: 4. A3: 6. A4: 8."
+    (root.parent / "materials" / RELATIVE).write_bytes(_pdf_bytes(quote))
+    print("Prepared four synthetic arithmetic items.")
+
+
+def attest(root: Path, number: int, changed: bool) -> None:
+    item_id = f"{NOTE_ID}#A{number}"
+    note_path = root / "knowledge" / "notes" / "mathematics" / f"{NOTE_ID}.md"
+    pdf = root.parent / "materials" / RELATIVE
+    digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    old = None
+    if changed:
+        import yaml
+
+        sidecar = yaml.safe_load((root / "knowledge" / "practice-index.yaml").read_text())
+        old = next(row for row in sidecar["items"] if row["item_id"] == item_id)
+        text = note_path.read_text()
+        note_path.write_text(text.replace("\n2\n</details>", "\nTwo\n</details>", 1))
+    payload = _base_record(
+        {
+            "source_id": "source-demo-book", "material_relpath": RELATIVE,
+            "file_sha256": digest, "page": 1, "quote": f"A{number}: {2 * number}.",
+        },
+        item_id=item_id, expected_old=old, reviewer_id="synthetic-fixture",
+        artifact_sha256=hashlib.sha256(note_path.read_bytes()).hexdigest(),
+    )
+    if changed:
+        payload.update(new_status="confirmed", method="explicit-review", source_binding=None)
+    result = _record(root, payload, f"fixture-{number}-{'changed' if changed else 'initial'}")
+    if result.returncode:
+        raise SystemExit(result.stdout + result.stderr)
+    data = json.loads(result.stdout)
+    if not data.get("ok") or not data.get("receipt_path"):
+        raise SystemExit("Fixture verification failed to produce a commit receipt")
+    print(f"{item_id} {data['result']['status']}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=("prepare", "attest", "attest-changed"))
+    parser.add_argument("item", type=int, nargs="?", choices=range(1, 5))
+    args = parser.parse_args()
+    root = Path(os.environ["LOS_FX"]).resolve(strict=True)
+    if not (root.parent.parent.name.startswith("los-fx-") and root.parent.name == "LearningOS"):
+        raise SystemExit("Refusing a non-Scrut fixture")
+    if args.action == "prepare":
+        prepare(root)
+    else:
+        if args.item is None:
+            parser.error('attest requires an item number')
+        attest(root, args.item, args.action == "attest-changed")
+
+
+if __name__ == "__main__":
+    main()

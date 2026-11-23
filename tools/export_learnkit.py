@@ -30,6 +30,7 @@ from learning_os.store.practice_export import (  # noqa: E402
     init_vault,
     plan_document,
     validate_vault,
+    write_plan,
 )
 
 
@@ -71,8 +72,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise WriteRefused("--check needs an explicit --out plan path")
             document, _entries = plan_document(
                 repo, list(dict.fromkeys(args.item)), args.vault, marker)
-            args.out.write_text(
-                json.dumps(document, indent=2) + "\n", encoding="utf-8")
+            write_plan(args.out, document, root, args.vault)
             print(json.dumps({
                 "status": "planned",
                 "actions": [entry["action"] for entry in document["items"]],

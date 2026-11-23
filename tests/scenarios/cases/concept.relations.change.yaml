@@ -93,7 +93,7 @@ cases:
   - id: reason-required
     kind: refusal
     transport: gateway
-    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates, status: vetoed}}]}}
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates, status: vetoed, status_reason: " "}}]}}
     artifact_ids: []
     expect: {site: concept.relations.change.reason-required}
   - id: decorated-remove
@@ -139,6 +139,6 @@ cases:
             to: concept-variance
             type: motivates
             evidence:
-            - {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 0000000000000000000000000000000000000000000000000000000000000000, page: 1, quote: Fixture book for source-demo-book}
+            - {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: '0000000000000000000000000000000000000000000000000000000000000000', page: 1, quote: Fixture book for source-demo-book}
     artifact_ids: []
     expect: {site: concept.relations.change.evidence-refused}

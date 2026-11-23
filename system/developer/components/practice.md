@@ -16,7 +16,6 @@ delivery (ADR-024).
 - `tools/learning_os/domain/practice.py::extract_items`
 - `tools/learning_os/domain/practice.py::content_sha256`
 - `tools/learning_os/store/practice.py::note_items`
-- `tools/learning_os/store/practice.py::effective_item`
 - `tools/learning_os/store/practice.py::verified_binding`
 - `tools/learning_os/store/practice_export.py::init_vault`
 - `tools/learning_os/store/practice_export.py::build_plan`
@@ -27,7 +26,7 @@ delivery (ADR-024).
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `domain`, `loading`, `materials`, `transactions`.
 
-Used by: `operation-handlers`.
+Used by: `operation-handlers`, `projection`.
 <!-- system-map:end -->
 
 ## Invariants

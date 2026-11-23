@@ -1002,3 +1002,35 @@ protection. A backup carries three roots in full, exactly as
 - the materials tree in full.
 
 Cadence: back up before each exam period and after each materials import.
+
+## 32. Open and refresh a managed Atlas board
+
+Procedure: [open, close and refresh a fixture board](procedures/refresh-an-atlas-board.md).
+
+Open **Atlas → Concepts**, select a semester, module, lecture or exam, and
+choose **Open board**. Canvas saves edits to the working board. To update
+its generated content, save and close every managed Atlas board, including
+pop-outs. Review the refresh preview in Atlas and confirm. The merge retains
+working card positions and authored objects. If Atlas reports a missing,
+mixed or changed template, rebuild views and review the refreshed template
+before retrying. Keep the board and its ownership sidecar together on backup
+and restore.
+
+## 33. Verify and export a practice item
+
+Procedure: [check, apply and sync synthetic practice](procedures/export-verified-practice.md).
+
+In an exercise bank or mock exam, open **Practice → Load practice items**.
+Review the current answer in the original note and inspect the evidence for
+the selected method. In **Record verification**, preview the item, method,
+reviewer and proof, then confirm the exact record. Core binds the current
+snapshot, note revision and practice index revision to the write. Reload
+and review again if any guard conflicts.
+
+Choose the separate LearnKit practice vault explicitly. Initialize the
+destination once. Run the exporter's `--check` with only the reviewed item
+IDs and a scratch plan path. Inspect the actions, then use `--apply` with
+the same plan and vault. A changed existing card requires a separate
+decision. Open the practice vault and sync using LearnKit's pinned
+`simple-compat` mode. Record the exact refusal, item ID and snapshot when a
+step fails.

@@ -28,10 +28,9 @@ existing files byte-for-byte.
    verified, in that precedence. A label alone proves nothing.
 4. Editable-board refresh is explicit and guarded; portals (Advanced Canvas)
    are an optional view over the same working files, never a second board.
-5. Practice export, when it lands, is one-way and append-only into a
-   separate LearnKit vault; Core never writes plugin state, schedules or
-   review history. (P6, deferred at adoption time of this branch's first
-   phases.)
+5. Practice export is one-way and append-only into a separate LearnKit vault.
+   Core records reviewed item proofs. LearnKit owns its plugin state,
+   schedules and review history.
 
 ## Consequences
 
