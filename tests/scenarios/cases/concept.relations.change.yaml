@@ -90,3 +90,55 @@ cases:
     - ''
     expect:
       site: concept.relations.change.bad-expected-revision
+  - id: reason-required
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates, status: vetoed}}]}}
+    artifact_ids: []
+    expect: {site: concept.relations.change.reason-required}
+  - id: decorated-remove
+    kind: refusal
+    transport: gateway
+    request:
+      change:
+        operations:
+        - {action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates, status: retracted, status_reason: superseded by the direct route}}
+        - {action: remove, old: {from: concept-expected-value, to: concept-variance, type: motivates, status: retracted, status_reason: superseded by the direct route}}
+    artifact_ids: []
+    expect: {site: concept.relations.change.decorated-remove}
+  - id: pinned-row
+    kind: refusal
+    transport: gateway
+    request:
+      change:
+        operations:
+        - {action: add, new: {from: concept-variance, to: concept-expected-value, type: motivates, pinned: true}}
+        - {action: replace, old: {from: concept-variance, to: concept-expected-value, type: motivates, pinned: true}, new: {from: concept-variance, to: concept-expected-value, type: motivates, pinned: true, origin: aram}}
+    artifact_ids: []
+    expect: {site: concept.relations.change.pinned-row}
+  - id: restore-needs-fresh-evidence
+    kind: refusal
+    transport: gateway
+    request:
+      change:
+        operations:
+        - {action: add, new: {from: concept-expected-value, to: concept-variance, type: builds-on}}
+        - {action: replace, old: {from: concept-expected-value, to: concept-variance, type: builds-on}, new: {from: concept-expected-value, to: concept-variance, type: builds-on, status: vetoed, status_reason: contradicted by the mock exam}}
+        - {action: replace, old: {from: concept-expected-value, to: concept-variance, type: builds-on, status: vetoed, status_reason: contradicted by the mock exam}, new: {from: concept-expected-value, to: concept-variance, type: builds-on}}
+    artifact_ids: []
+    expect: {site: concept.relations.change.restore-needs-fresh-evidence}
+  - id: evidence-refused
+    kind: refusal
+    transport: gateway
+    request:
+      change:
+        operations:
+        - action: add
+          new:
+            from: concept-expected-value
+            to: concept-variance
+            type: motivates
+            evidence:
+            - {source_id: source-demo-book, material_relpath: source-demo-book/book.pdf, file_sha256: 0000000000000000000000000000000000000000000000000000000000000000, page: 1, quote: Fixture book for source-demo-book}
+    artifact_ids: []
+    expect: {site: concept.relations.change.evidence-refused}

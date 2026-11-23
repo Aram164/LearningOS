@@ -50,7 +50,8 @@ def _without_stage6_choice(actual: dict) -> dict:
         if isinstance(value, str) and ("usage: los" in value or "choose from" in value):
             for verb in ("study-sequence", "material-search", "material-study-span",
                          "material-card-settle", "material-card", "workspace-complete",
-                         "module-status-update"):
+                         "module-status-update", "practice-context",
+                         "practice-verification-record"):
                 actual["error"][key] = (
                     actual["error"][key]
                     .replace(f",{verb}", "")
@@ -506,7 +507,8 @@ def test_generated_parser_matches_baseline_structure():
     expected = _normalize_describe(baseline)
     for added in ("study-sequence", "material-search", "material-study-span",
                   "material-card-settle", "material-card", "workspace-complete",
-                  "module-status-update"):
+                  "module-status-update", "practice-context",
+                  "practice-verification-record"):
         assert added in live["subparsers"]
         live["order"].remove(added)
         live["subparsers"].pop(added)

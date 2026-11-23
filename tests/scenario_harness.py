@@ -153,7 +153,7 @@ def _template_root() -> Path:
 def _build_fixture(name: str, container: Path) -> Path:
     if name not in {
         "rich_world", "rich_world_warning_debt", "rich_world_structural",
-        "rich_world_duplicate_shelving",
+        "rich_world_duplicate_shelving", "rich_world_practice",
     }:
         raise ValueError(f"unknown scenario fixture: {name}")
     # The world spans the repository root and its sibling materials tree
@@ -161,6 +161,27 @@ def _build_fixture(name: str, container: Path) -> Path:
     template = _template_root()
     shutil.copytree(template.parent, Path(container) / "LearningOS")
     root = Path(container) / "LearningOS" / "repository"
+    if name == "rich_world_practice":
+        # Practice witnesses (ADR-024 P6): one clean exercise-bank note and one
+        # with a duplicate label (ambiguous extraction). The bank cites
+        # source-demo-book, whose fixture book.pdf is byte-deterministic, so
+        # cases bind its digest and quote directly.
+        meta = {
+            "type": "note", "role": "exercise-bank", "created": "2026-09-21",
+            "concepts": ["concept-expected-value"],
+            "sources": ["source-demo-book"],
+        }
+        body = ("**A1. What is 2+2?**\n<details>\n<summary>Solution</summary>\n4\n"
+                "</details>\n\n**A2. What is 3+3?**\n<details>\n"
+                "<summary>Solution</summary>\n6\n</details>\n")
+        clean = dict(meta, id="note-practice-bank", title="Practice bank")
+        path = root / "knowledge/notes/mathematics/note-practice-bank.md"
+        path.write_text("---\n" + yaml.safe_dump(clean, sort_keys=False).rstrip()
+                        + "\n---\n\n" + body, encoding="utf-8")
+        dup = dict(meta, id="note-practice-dup", title="Ambiguous practice bank")
+        path = root / "knowledge/notes/mathematics/note-practice-dup.md"
+        path.write_text("---\n" + yaml.safe_dump(dup, sort_keys=False).rstrip()
+                        + "\n---\n\n" + body + body, encoding="utf-8")
     if name == "rich_world_warning_debt":
         target = root / "projects/registry/project-scenario-new.yaml"
         target.parent.mkdir(parents=True, exist_ok=True)

@@ -17,6 +17,7 @@ from learning_os.app.handlers import (
     passthrough,  # noqa: F401  (registration side effect)
     plan,  # noqa: F401  (registration side effect)
     platform,  # noqa: F401  (registration side effect)
+    practice,  # noqa: F401  (registration side effect)
     reads,  # noqa: F401  (registration side effect)
     resume,  # noqa: F401  (registration side effect)
     routes,  # noqa: F401  (registration side effect)

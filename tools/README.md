@@ -37,6 +37,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
 | `build_material_search_index.py` | bounded materials maintenance | Builds the disposable, self-describing read-only SQLite FTS5 search index (`generated/material-search/index-<F[:16]>.sqlite3`) over `generated/.text-cache/` for `material.search`. |
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. Dry-run plan by default; acts only with `--apply`. |
+| `export_learnkit.py` | bounded delivery tool | Append-only LearnKit export into a separately marked practice vault: `--init` marks an absent/empty vault, `--check` writes an explicit plan, `--apply` publishes create-only and never edits an existing card. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
 | `material_outline.py` | bounded materials maintenance | Harvests PDF bookmarks into the digest-keyed outline-section cache (`generated/material-outlines/<sha256>.json`) that `material.search` groups hits by; `--check` reports, `--refresh` writes missing or invalid entries and prunes orphans. |

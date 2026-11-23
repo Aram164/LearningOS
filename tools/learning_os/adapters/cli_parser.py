@@ -92,6 +92,8 @@ _SUBCOMMAND_ORDER = (
     "atlas-context",
     "concept-relations-change",
     "atlas-question-save",
+    "practice-context",
+    "practice-verification-record",
     "note-analysis-save",
     "note-analysis-save-batch",
     "note-analysis-prepare",

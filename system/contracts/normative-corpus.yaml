@@ -432,6 +432,16 @@ documents:
     summary: >-
       Developer architecture documentation for plan-gate.
 
+  - path: system/developer/components/practice.md
+    audience: developer
+    applies_to: []
+    class: reference
+    status: current
+    authority: binding
+    owner: system-map
+    summary: >-
+      Developer architecture documentation for verified practice and export.
+
   - path: system/developer/components/projection.md
     audience: developer
     applies_to: []

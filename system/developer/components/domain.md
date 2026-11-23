@@ -18,7 +18,7 @@ Provide dependency-light semantic leaves, identifiers, refusals and record rules
 <!-- system-map:begin name=edges -->
 Depends on: none.
 
-Used by: `ai-action-store`, `ai-delivery`, `cli-adapter`, `contracts`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `loading`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
+Used by: `ai-action-store`, `ai-delivery`, `cli-adapter`, `contracts`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `loading`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `practice`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

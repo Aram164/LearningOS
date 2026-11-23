@@ -415,19 +415,19 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
         )
     registries = _registries(root)
     repo = ctx.repo()
-    from learning_os.domain.relations import binding_file_state, is_decorated
+    from learning_os.domain.relations import is_decorated
 
     def _check_evidence(row: dict) -> None:
+        # Known source + current digest + the quote verbatim on the pinned
+        # page, through the existing span machinery (plan step 6).
+        from learning_os.store.practice import verified_binding
+
         for binding in row.get("evidence") or []:
-            if binding.get("source_id") not in repo.sources:
+            problem = verified_binding(repo, binding)
+            if problem:
                 raise WriteRefused(
-                    "evidence binding names an unknown source",
-                    site="concept.relations.change.unknown-evidence-source",
-                )
-            if binding_file_state(root, repo.materials_root, binding) != "ok":
-                raise WriteRefused(
-                    "evidence binding file is missing or its digest changed",
-                    site="concept.relations.change.stale-evidence",
+                    problem,
+                    site="concept.relations.change.evidence-refused",
                 )
 
     changed = set()

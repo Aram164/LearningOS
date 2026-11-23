@@ -141,6 +141,8 @@ GROUPS: dict[str, list[str]] = {
         "test_read_session.py",
         "test_review_consolidation.py",
         "test_atlas_authoring.py",
+        "test_practice_verification.py",
+        "test_practice_export.py",
         "test_bounded_reads.py",
         "test_c1c_revise_voids_dedicated_guarantees.py",
         "test_c1d_same_second_file_capture.py",

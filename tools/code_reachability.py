@@ -39,6 +39,7 @@ ENTRYPOINTS = (
     "diagnostics_prune.py",
     "doc_blocks.py",
     "evaluate_operator_questions.py",
+    "export_learnkit.py",
     "generate.py",
     "generate_capability_schemas.py",
     "ingest_transcript.py",
