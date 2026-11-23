@@ -143,20 +143,19 @@ def _json_type(action: argparse.Action) -> dict:
 
 
 def _exclusive_choices(request_doc: dict) -> list[dict]:
-    """`oneOf` branches for each REQUIRED mutually exclusive argument group.
+    """`oneOf` branches for each mutually exclusive argument group.
 
-    Without this the generated schema would say both alternatives are optional
-    and stay silent about the fact that exactly one is needed — a contract that
-    accepts a payload the handler will refuse. The gateway is the deterministic
-    boundary around probabilistic agents, so its machine-readable contract has
-    to be the trustworthy part.
+    Required groups emit ``oneOf`` (exactly one alternative is present).
+    Optional groups emit ``oneOf`` with a ``not``/``anyOf`` zero-of branch
+    (at most one alternative is present) so mutually exclusive optional
+    selectors such as ``plan.edit-context``'s ``route_id`` / ``route_ids`` /
+    ``stage_id`` cannot be combined at the gateway when the CLI parser
+    refuses them.
     """
     out = []
     properties = request_doc.get("properties", {})
     cmd = request_doc.get("x-los-cli-command", {})
     for group in cmd.get("mutually_exclusive", []):
-        if not group.get("required"):
-            continue
         names = sorted(
             dest for dest in group.get("dests", [])
             if dest in properties
@@ -164,7 +163,16 @@ def _exclusive_choices(request_doc: dict) -> list[dict]:
             and not properties[dest].get("x-los-cli", {}).get("envelope_owned")
         )
         if len(names) > 1:
-            out.append({"oneOf": [{"required": [name]} for name in names]})
+            branches = [{"required": [name]} for name in names]
+            if group.get("required"):
+                out.append({"oneOf": branches})
+            else:
+                out.append({
+                    "oneOf": [
+                        {"not": {"anyOf": branches}},
+                        *branches,
+                    ]
+                })
     return out
 
 

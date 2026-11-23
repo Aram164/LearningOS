@@ -42,7 +42,10 @@
       "description": "return the field diff, affected files, snapshot and exact expected revisions without writing"
     },
     "claim_evidence": {
-      "type": "object",
+      "type": [
+        "object",
+        "null"
+      ],
       "properties": {
         "claim_id": {
           "type": "string"
@@ -62,19 +65,34 @@
                 "type": "string"
               },
               "page": {
-                "type": "integer"
+                "type": [
+                  "integer",
+                  "null"
+                ]
               },
               "page_end": {
-                "type": "integer"
+                "type": [
+                  "integer",
+                  "null"
+                ]
               },
               "window": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "line_start": {
-                "type": "integer"
+                "type": [
+                  "integer",
+                  "null"
+                ]
               },
               "line_end": {
-                "type": "integer"
+                "type": [
+                  "integer",
+                  "null"
+                ]
               },
               "node": {
                 "type": "string"
@@ -92,7 +110,10 @@
           "minItems": 1
         },
         "reads": {
-          "type": "object"
+          "type": [
+            "object",
+            "null"
+          ]
         }
       },
       "additionalProperties": false,

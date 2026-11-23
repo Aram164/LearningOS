@@ -4,6 +4,7 @@
   "title": "Ability context response",
   "x-governs": "artifact",
   "type": "object",
+  "additionalProperties": false,
   "required": ["schema_version", "snapshot_id", "contract"],
   "properties": {
     "schema_version": {"const": 1},
@@ -11,11 +12,11 @@
     "contract": {"const": "ability-context-v1"},
     "abilities": {"type": "array", "maxItems": 50, "items": {"$ref": "#/$defs/abilityRow"}},
     "ability": {"$ref": "#/$defs/abilityRow"},
-    "bridges": {"type": "array"},
-    "candidate_connections": {"type": "array", "maxItems": 20},
+    "bridges": {"type": "array", "items": {"$ref": "#/$defs/abilityBridge"}},
+    "candidate_connections": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/abilityCandidate"}},
     "candidate_connection_count": {"type": "integer", "minimum": 0},
     "focus": {"type": "string"},
-    "state": {"type": "string"},
+    "state": {"enum": ["supported", "nearby", "uncertain", "unmapped"]},
     "reason": {"type": "string"},
     "known_identity": {"type": "boolean"},
     "suggestions": {"type": "array", "items": {"type": "string"}, "maxItems": 5},
@@ -27,48 +28,295 @@
     "truncated": {"type": "boolean"},
     "brief": {"type": "boolean"},
     "section": {"type": "string"},
-    "observations": {"type": "array", "maxItems": 50},
-    "ability_sha256": {"type": "string"},
+    "observations": {"type": "array", "maxItems": 50, "items": {"$ref": "#/$defs/abilityEvidence"}},
+    "ability_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "evidence_summary": {
       "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total", "active", "superseded", "comparable", "valid", "state_basis",
+        "later_conflicts_total", "later_conflicts_returned", "later_conflicts_truncated",
+        "corrections", "corrections_total", "corrections_returned", "corrections_truncated"
+      ],
       "properties": {
         "total": {"type": "integer", "minimum": 0},
         "active": {"type": "integer", "minimum": 0},
         "superseded": {"type": "integer", "minimum": 0},
         "comparable": {"type": "integer", "minimum": 0},
         "valid": {"type": "integer", "minimum": 0},
-        "state_basis": {"type": "array", "maxItems": 21},
+        "state_basis": {"type": "array", "maxItems": 21, "items": {"$ref": "#/$defs/evidencePointer"}},
         "later_conflicts_total": {"type": "integer", "minimum": 0},
         "later_conflicts_returned": {"type": "integer", "minimum": 0},
         "later_conflicts_truncated": {"type": "boolean"},
-        "corrections": {"type": "array", "maxItems": 20},
+        "corrections": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/correctionPointer"}},
         "corrections_total": {"type": "integer", "minimum": 0},
         "corrections_returned": {"type": "integer", "minimum": 0},
         "corrections_truncated": {"type": "boolean"}
       }
     },
-    "encounters": {"type": "array"},
+    "encounters": {"type": "array", "items": {"$ref": "#/$defs/abilityEncounter"}},
     "encounters_total": {"type": "integer", "minimum": 0},
     "encounters_truncated": {"type": "boolean"},
-    "related_encounters": {"type": "array"},
+    "related_encounters": {"type": "array", "items": {"$ref": "#/$defs/abilityRelatedEncounter"}},
     "related_encounters_total": {"type": "integer", "minimum": 0},
-    "shared_concept_candidates": {"type": "array"},
+    "shared_concept_candidates": {"type": "array", "items": {"type": "string"}},
     "shared_concept_candidate_count": {"type": "integer", "minimum": 0},
     "shared_concept_candidates_truncated": {"type": "boolean"},
-    "expand": {},
-    "expansions": {"type": "object"},
-    "schema": {}
+    "expand": {
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["material", "stage"],
+          "properties": {
+            "material": {"type": "string"},
+            "stage": {"type": "string"},
+            "evidence": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "expansions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["next"],
+      "properties": {
+        "next": {"type": ["string", "null"]}
+      }
+    },
+    "schema": {"type": "object"}
   },
   "$defs": {
+    "observationOrigin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "workspace_id"],
+      "properties": {
+        "path": {"type": "string"},
+        "line": {"type": "integer", "minimum": 1},
+        "workspace_id": {"type": "string"}
+      }
+    },
+    "evidencePointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "id", "result", "work_ref", "origin"],
+      "properties": {
+        "role": {"enum": ["latest-comparable", "later-conflict"]},
+        "id": {"type": "string"},
+        "result": {"enum": ["correct", "incorrect", "partial", "abandoned"]},
+        "work_ref": {"type": "string"},
+        "origin": {"$ref": "#/$defs/observationOrigin"}
+      }
+    },
+    "correctionPointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "supersedes", "origin"],
+      "properties": {
+        "id": {"type": "string"},
+        "supersedes": {"type": "string"},
+        "origin": {"$ref": "#/$defs/observationOrigin"}
+      }
+    },
+    "abilityRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "supported", "missing_or_uncertain", "remaining_work"],
+      "properties": {
+        "reason": {"type": "string"},
+        "source": {"type": ["string", "null"]},
+        "supported": {"type": "array", "items": {"type": "string"}},
+        "missing_or_uncertain": {"type": "array", "items": {"type": "string"}},
+        "remaining_work": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "abilityTransfer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "source", "carries", "changes"],
+      "properties": {
+        "from": {"type": "string"},
+        "source": {"type": "string"},
+        "carries": {"type": "string"},
+        "changes": {"type": "string"}
+      }
+    },
+    "abilityEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "result", "work_ref"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "ability_id": {"type": "string"},
+        "ability_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "result": {"enum": ["correct", "incorrect", "partial", "abandoned"]},
+        "work_ref": {"type": "string", "minLength": 1},
+        "claim": {"type": ["string", "null"]},
+        "activity": {"type": ["string", "null"]},
+        "timestamp": {"type": ["string", "null"], "format": "date-time"},
+        "assistance": {"type": ["string", "null"]},
+        "conditions": {"type": "array", "items": {"type": "string"}},
+        "conditions_not_met": {"type": "array", "items": {"type": "string"}},
+        "evidence_tags": {"type": "array", "items": {"type": "string"}},
+        "confirmation_ref": {"type": ["string", "null"]},
+        "confirmed_by": {"const": "learner"},
+        "supersedes": {"type": ["string", "null"]},
+        "origin": {"$ref": "#/$defs/observationOrigin"}
+      }
+    },
+    "abilityReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["candidate", "reviewed"]},
+        "reviewed_by": {"type": "string"},
+        "reviewed_on": {"type": "string", "format": "date"}
+      }
+    },
     "abilityRow": {
       "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "state", "reasons", "concept_ids"],
       "properties": {
+        "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "title": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "state": {"enum": ["supported", "nearby", "uncertain", "unmapped"]},
+        "lifecycle": {"enum": ["active", "retired"]},
         "reasons": {"type": "array", "items": {"type": "string"}},
         "reason_codes": {
           "description": "Stable codes parallel to reasons. Consumers decide from these codes, never the prose. Optional for responses from older Cores.",
           "type": "array",
           "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+        },
+        "concept_ids": {"type": "array", "items": {"type": "string"}},
+        "module_ids": {"type": "array", "items": {"type": "string"}},
+        "preparation_routes": {"type": "array", "items": {"$ref": "#/$defs/abilityRoute"}},
+        "transfer": {"type": "array", "items": {"$ref": "#/$defs/abilityTransfer"}},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/abilityEvidence"}},
+        "off_page_bridge_count": {"type": "integer", "minimum": 0},
+        "off_page_candidate_count": {"type": "integer", "minimum": 0},
+        "claim": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "source": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "conditions": {"type": "array", "items": {"type": "string"}},
+        "evidence_spec": {"type": "array", "items": {"type": "string"}},
+        "review": {"$ref": "#/$defs/abilityReview"}
+      }
+    },
+    "abilityBridge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "kind", "carries", "changes", "source", "review"],
+      "properties": {
+        "from": {"type": "string", "pattern": "\\S"},
+        "to": {"type": "string", "pattern": "\\S"},
+        "kind": {"enum": ["equivalence", "extension", "connection"]},
+        "carries": {"type": "string", "pattern": "\\S"},
+        "changes": {"type": "string", "pattern": "\\S"},
+        "conditions": {"type": "array", "items": {"type": "string"}},
+        "source": {"type": "string", "pattern": "\\S"},
+        "source_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "review": {"$ref": "#/$defs/abilityReview"},
+        "source_freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": {"enum": ["current", "stale", "unavailable", "not-reviewed"]},
+            "observed_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+          }
         }
+      }
+    },
+    "abilityCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "kind", "carries", "changes", "conditions", "source_ref", "created_at"],
+      "properties": {
+        "id": {"type": "string", "pattern": "\\S"},
+        "from": {"type": "string", "pattern": "\\S"},
+        "to": {"type": "string", "pattern": "\\S"},
+        "kind": {"enum": ["equivalence", "extension", "connection"]},
+        "carries": {"type": "string", "pattern": "\\S"},
+        "changes": {"type": "string", "pattern": "\\S"},
+        "conditions": {"type": "array", "items": {"type": "string"}},
+        "source_ref": {"type": "string", "pattern": "\\S"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "state": {"const": "candidate"},
+        "origin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "line"],
+          "properties": {
+            "path": {"type": "string"},
+            "line": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "encounterMaterial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_id", "source_id", "locator", "match_state"],
+      "properties": {
+        "route_id": {"type": ["string", "null"]},
+        "source_id": {"type": ["string", "null"]},
+        "locator": {"type": ["string", "null"]},
+        "match_state": {"enum": ["exact", "unmapped"]}
+      }
+    },
+    "abilityEncounter": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["module_id", "unit_id", "study_map_id", "stage_id", "title", "objective", "status", "materials"],
+          "properties": {
+            "module_id": {"type": "string", "pattern": "\\S"},
+            "unit_id": {"type": "string", "pattern": "\\S"},
+            "study_map_id": {"type": "string", "pattern": "\\S"},
+            "stage_id": {"type": "string", "pattern": "\\S"},
+            "title": {"type": ["string", "null"]},
+            "objective": {"type": ["string", "null"]},
+            "status": {"type": ["string", "null"]},
+            "materials": {"type": "array", "items": {"$ref": "#/$defs/encounterMaterial"}}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["module_id", "unit_id", "study_map_id", "stage_id", "title", "status", "materials_total", "materials_exact", "materials_unmapped"],
+          "properties": {
+            "module_id": {"type": "string", "pattern": "\\S"},
+            "unit_id": {"type": "string", "pattern": "\\S"},
+            "study_map_id": {"type": "string", "pattern": "\\S"},
+            "stage_id": {"type": "string", "pattern": "\\S"},
+            "title": {"type": ["string", "null"]},
+            "status": {"type": ["string", "null"]},
+            "materials_total": {"type": "integer", "minimum": 0},
+            "materials_exact": {"type": "integer", "minimum": 0},
+            "materials_unmapped": {"type": "integer", "minimum": 0},
+            "expand": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "abilityRelatedEncounter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_id", "unit_id", "stage_id", "title", "objective", "ability_ids", "route_ids", "route_total", "routes_truncated"],
+      "properties": {
+        "module_id": {"type": "string", "pattern": "\\S"},
+        "unit_id": {"type": "string", "pattern": "\\S"},
+        "stage_id": {"type": "string", "pattern": "\\S"},
+        "title": {"type": ["string", "null"]},
+        "objective": {"type": ["string", "null"]},
+        "ability_ids": {"type": "array", "items": {"type": "string"}},
+        "route_ids": {"type": "array", "items": {"type": "string"}},
+        "route_total": {"type": "integer", "minimum": 0},
+        "routes_truncated": {"type": "boolean"}
       }
     }
   }

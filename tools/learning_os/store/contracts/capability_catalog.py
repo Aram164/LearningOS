@@ -22,6 +22,7 @@ class CapabilityCatalogError(Exception):
 #: its generated fragment and owns the deep validation.
 PAYLOAD_RECORD_KEYS = frozenset({
     "description",
+    "nullable",
     "accepted",
     "required",
     "types",

@@ -20,6 +20,7 @@ from learning_os.store.contracts.gateway import (
     intent_sha256,
     review_record_sha256,
 )
+from learning_os.store.contracts.json_schema import core_format_checker
 from learning_os.store.session_ledger import (
     DEFAULT_SESSION_CHANNEL,
     has_review_check,
@@ -195,8 +196,10 @@ def validate_payload(root: Path, name: str, payload: dict) -> None:
     if not path.is_file():
         raise WriteRefused(f"no declared payload schema for capability {name}")
     schema = json.loads(path.read_text(encoding="utf-8"))
-    errors = sorted(Draft202012Validator(schema).iter_errors(payload),
-                    key=lambda error: list(error.path))
+    errors = sorted(
+        Draft202012Validator(schema, format_checker=core_format_checker()).iter_errors(payload),
+        key=lambda error: list(error.path),
+    )
     if errors:
         detail = "; ".join(f"{'/'.join(str(p) for p in e.path) or '<payload>'}: {e.message}"
                            for e in errors[:4])
@@ -269,7 +272,7 @@ def validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> No
         "$ref": f"#/$defs/{kind}",
     }
     errors = sorted(
-        Draft202012Validator(directional_schema).iter_errors(envelope),
+        Draft202012Validator(directional_schema, format_checker=core_format_checker()).iter_errors(envelope),
         key=lambda error: list(error.path),
     )
     if errors:

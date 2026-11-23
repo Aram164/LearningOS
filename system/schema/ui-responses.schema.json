@@ -45,6 +45,27 @@
     },
     {
       "$ref": "#/$defs/ProjectionSettlementWire"
+    },
+    {
+      "$ref": "#/$defs/StudySequenceV1"
+    },
+    {
+      "$ref": "#/$defs/SessionEndV1"
+    },
+    {
+      "$ref": "#/$defs/StatusV1"
+    },
+    {
+      "$ref": "#/$defs/PlanTemplateV1"
+    },
+    {
+      "$ref": "#/$defs/AiActionPrepareV1"
+    },
+    {
+      "$ref": "#/$defs/AiActionStatusV1"
+    },
+    {
+      "$ref": "#/$defs/UnitMapImportCheckV1"
     }
   ],
   "$defs": {
@@ -1675,6 +1696,339 @@
         "reason": {
           "type": "string"
         }
+      }
+    },
+    "StudySequenceV1": {
+      "$ref": "https://learningos.local/schema/study-sequence.schema.json"
+    },
+    "PlanTemplateV1": {
+      "$ref": "https://learningos.local/schema/plan-template.schema.json"
+    },
+    "StatusCountsWire": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notes",
+        "concepts",
+        "concept_relations",
+        "sources",
+        "programs",
+        "programs_quarantined",
+        "modules",
+        "modules_compatibility_only",
+        "modules_enrolled",
+        "active_workspaces",
+        "standing_workspaces",
+        "archived_workspaces",
+        "inbox_items",
+        "inbox_files",
+        "garden_notes",
+        "units",
+        "study_maps"
+      ],
+      "properties": {
+        "notes": {"type": "integer", "minimum": 0},
+        "concepts": {"type": "integer", "minimum": 0},
+        "concept_relations": {"type": "integer", "minimum": 0},
+        "sources": {"type": "integer", "minimum": 0},
+        "programs": {"type": "integer", "minimum": 0},
+        "programs_quarantined": {"type": "integer", "minimum": 0},
+        "modules": {"type": "integer", "minimum": 0},
+        "modules_compatibility_only": {"type": "integer", "minimum": 0},
+        "modules_enrolled": {"type": "integer", "minimum": 0},
+        "active_workspaces": {"type": "integer", "minimum": 0},
+        "standing_workspaces": {"type": "integer", "minimum": 0},
+        "archived_workspaces": {"type": "integer", "minimum": 0},
+        "inbox_items": {"type": "integer", "minimum": 0},
+        "inbox_files": {"type": "integer", "minimum": 0},
+        "garden_notes": {"type": "integer", "minimum": 0},
+        "units": {"type": "integer", "minimum": 0},
+        "study_maps": {"type": "integer", "minimum": 0}
+      }
+    },
+    "StatusV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "learning_os",
+        "root",
+        "counts",
+        "adoption",
+        "exam_spine",
+        "validation"
+      ],
+      "properties": {
+        "learning_os": {"type": "string", "pattern": "\\S"},
+        "root": {"type": "string", "pattern": "\\S"},
+        "counts": {"$ref": "#/$defs/StatusCountsWire"},
+        "adoption": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["notes_reviewed", "notes_with_evidence"],
+          "properties": {
+            "notes_reviewed": {"type": "integer", "minimum": 0},
+            "notes_with_evidence": {"type": "integer", "minimum": 0}
+          }
+        },
+        "exam_spine": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["date", "module_id", "title", "termin"],
+            "properties": {
+              "date": {"type": "string", "pattern": "\\S"},
+              "module_id": {"type": "string", "pattern": "\\S"},
+              "title": {"type": "string"},
+              "termin": {"type": ["integer", "null"]}
+            }
+          }
+        },
+        "validation": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["skipped"],
+              "properties": {
+                "skipped": {"const": true}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["errors", "warnings", "ok"],
+              "properties": {
+                "errors": {"type": "integer", "minimum": 0},
+                "warnings": {"type": "integer", "minimum": 0},
+                "ok": {"type": "boolean"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "SessionEndOtherSessionWire": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paths", "stale_paths", "oldest_recorded_at", "age_hours"],
+      "properties": {
+        "paths": {"type": "array", "items": {"type": "string"}},
+        "stale_paths": {"type": "array", "items": {"type": "string"}},
+        "oldest_recorded_at": {"type": ["string", "null"]},
+        "age_hours": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "SessionEndV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "touched",
+        "owned_changes",
+        "unrelated_changes",
+        "committed",
+        "pushed",
+        "validation",
+        "ownership_conflicts",
+        "session_id",
+        "client",
+        "stale_paths",
+        "stale_hours",
+        "other_sessions",
+        "session_closed"
+      ],
+      "properties": {
+        "ok": {"const": true},
+        "touched": {"type": "array", "items": {"type": "string"}},
+        "owned_changes": {"type": "array", "items": {"type": "string"}},
+        "unrelated_changes": {"type": "array", "items": {"type": "string"}},
+        "committed": {"type": "boolean"},
+        "pushed": {"type": "boolean"},
+        "validation": {"type": "string"},
+        "ownership_conflicts": {"type": "array", "items": {"type": "string"}},
+        "session_id": {"type": "string", "pattern": "\\S"},
+        "client": {"type": ["string", "null"]},
+        "stale_paths": {"type": "array", "items": {"type": "string"}},
+        "stale_hours": {"type": "number", "minimum": 0},
+        "other_sessions": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/SessionEndOtherSessionWire"}
+        },
+        "session_closed": {"type": "boolean"}
+      }
+    },
+    "AiActionRequestStatusWire": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "action_id",
+        "target",
+        "provider",
+        "status",
+        "created_at",
+        "delivery_id",
+        "receipt_id",
+        "bundle_path"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "\\S"},
+        "action_id": {"type": "string", "pattern": "\\S"},
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": {"type": "string", "pattern": "\\S"},
+            "id": {"type": "string", "pattern": "\\S"}
+          }
+        },
+        "provider": {"type": "string", "pattern": "\\S"},
+        "status": {"enum": ["prepared", "delivery-ready", "completed"]},
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "delivery_id": {"type": ["string", "null"]},
+        "receipt_id": {"type": ["string", "null"]},
+        "bundle_path": {"type": "string", "pattern": "\\S"}
+      }
+    },
+    "AiActionPrepareV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "request", "bundle_path"],
+      "properties": {
+        "ok": {"const": true},
+        "request": {"$ref": "#/$defs/AiActionRequestStatusWire"},
+        "bundle_path": {"type": "string", "pattern": "\\S"}
+      }
+    },
+    "AiActionStatusV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "request"],
+      "properties": {
+        "ok": {"const": true},
+        "request": {"$ref": "#/$defs/AiActionRequestStatusWire"}
+      }
+    },
+    "UnitMapImportCheckDiffWire": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "replacement",
+        "unit_status",
+        "stages_after",
+        "content_changes",
+        "map_changes"
+      ],
+      "properties": {
+        "replacement": {"type": "boolean"},
+        "unit_status": {"type": "string", "pattern": "\\S"},
+        "stages_before": {"type": "array", "items": {"type": "string"}},
+        "stages_after": {"type": "array", "items": {"type": "string"}},
+        "stages_added": {"type": "array", "items": {"type": "string"}},
+        "stages_retired": {"type": "array", "items": {"type": "string"}},
+        "relative_order_changed": {"type": "boolean"},
+        "intentional_reorder_reason": {"type": ["string", "null"]},
+        "state_reset_reason": {"type": ["string", "null"]},
+        "retire_reason": {"type": ["string", "null"]},
+        "preserved_stage_state": {"type": "array", "items": {"type": "string"}},
+        "map_state_fields_preserved": {"type": "array", "items": {"type": "string"}},
+        "resume_stage": {"type": ["string", "null"]},
+        "retired_stage_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage_id", "status", "note_characters", "attachments", "source_feedback", "completed"],
+            "properties": {
+              "stage_id": {"type": ["string", "null"]},
+              "status": {"type": ["string", "null"]},
+              "note_characters": {"type": "integer"},
+              "attachments": {"type": "integer", "minimum": 0},
+              "source_feedback": {"type": "integer", "minimum": 0},
+              "completed": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "resource_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage_id", "before_count", "after_count", "added", "removed", "reordered"],
+            "properties": {
+              "stage_id": {"type": "string"},
+              "before_count": {"type": "integer", "minimum": 0},
+              "after_count": {"type": "integer", "minimum": 0},
+              "added": {"type": "array", "items": {"type": "object"}},
+              "removed": {"type": "array", "items": {"type": "object"}},
+              "reordered": {"type": "boolean"}
+            }
+          }
+        },
+        "structural_reason": {"type": "string", "pattern": "\\S"},
+        "content_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage_id", "field", "before", "after"],
+            "properties": {
+              "stage_id": {"type": "string"},
+              "field": {"type": "string"},
+              "before": {},
+              "after": {}
+            }
+          }
+        },
+        "map_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["field", "before", "after"],
+            "properties": {
+              "field": {"type": "string"},
+              "before": {},
+              "after": {}
+            }
+          }
+        }
+      }
+    },
+    "UnitMapImportCheckV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "mode",
+        "unit_id",
+        "study_map_id",
+        "files_checked",
+        "canonical_files_written",
+        "file_sha256",
+        "snapshot_id",
+        "expected_revisions",
+        "diff"
+      ],
+      "properties": {
+        "ok": {"const": true},
+        "mode": {"const": "check"},
+        "unit_id": {"type": "string", "pattern": "\\S"},
+        "study_map_id": {"type": ["string", "null"]},
+        "files_checked": {"type": "integer", "minimum": 0},
+        "canonical_files_written": {"const": 0},
+        "file_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "expected_revisions": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "diff": {"$ref": "#/$defs/UnitMapImportCheckDiffWire"}
       }
     }
   }

@@ -157,7 +157,7 @@ def transaction_receipt_errors(
     schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
     if not schema_path.is_file():
         return (False, [])
-    validator = load_standalone_validator(schema_path)
+    validator = load_standalone_validator(schema_path, format_checker=True)
     errors = sorted(
         validator.iter_errors(receipt),
         key=lambda error: list(error.path),

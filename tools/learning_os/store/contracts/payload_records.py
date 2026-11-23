@@ -251,17 +251,20 @@ def _record_shape(root: Path, path: str, *, where: str) -> tuple[list[str], list
 def _resolve_declaration(root: Path, capability: str, field: str,
                          decl: dict) -> dict:
     where = f"{capability}.{field}"
+    nullable = decl.get("nullable", False)
+    if not isinstance(nullable, bool):
+        _fail(where, "nullable must be a boolean")
     if decl.get("freeform") is True:
-        if set(decl) - {"freeform", "description"}:
+        if set(decl) - {"freeform", "description", "nullable"}:
             _fail(where, "freeform takes only a description")
-        fragment = {"type": "object"}
+        fragment = {"type": ["object", "null"] if nullable else "object"}
         if "description" in decl:
             fragment["description"] = _described(decl["description"], where=where)
         return fragment
     if decl.get("freeform") is not None:
         _fail(where, "freeform must be true")
     if "record_schema" in decl:
-        if set(decl) - {"record_schema", "required", "description"}:
+        if set(decl) - {"record_schema", "required", "description", "nullable"}:
             _fail(where, "record_schema takes only required and description")
         path = decl["record_schema"]
         if not isinstance(path, str) or not path.strip():
@@ -276,7 +279,7 @@ def _resolve_declaration(root: Path, capability: str, field: str,
         else:
             required = derived
         fragment = {
-            "type": "object",
+            "type": ["object", "null"] if nullable else "object",
             "properties": {name: {} for name in accepted},
             "additionalProperties": False,
         }
@@ -290,11 +293,14 @@ def _resolve_declaration(root: Path, capability: str, field: str,
         return fragment
     if "accepted" not in decl:
         _fail(where, "needs accepted, record_schema, or freeform")
-    return _object_fragment(
+    fragment = _object_fragment(
         {key: decl[key] for key in
          ("accepted", "required", "types", "fields", "min_properties",
           "description") if key in decl},
         where=where)
+    if nullable:
+        fragment["type"] = ["object", "null"]
+    return fragment
 
 
 def resolve_all(root: Path) -> dict[tuple[str, str], dict]:

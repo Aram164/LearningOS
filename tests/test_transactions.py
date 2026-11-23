@@ -785,6 +785,22 @@ def test_receipt_v2_allows_the_recorded_data_roots_digest(mini_repo: Path):
     )
 
 
+def test_transaction_receipt_errors_enforces_date_time_format(mini_repo: Path):
+    from learning_os.store.contracts.json_schema import transaction_receipt_errors
+
+    valid = _receipt_contract_fixture(schema_version=2, metadata={})
+    present, errors = transaction_receipt_errors(mini_repo, valid)
+    assert present and not errors
+    malformed = {**valid, "committed_at": "not-an-iso-datetime"}
+    present_bad, errors_bad = transaction_receipt_errors(mini_repo, malformed)
+    assert present_bad and errors_bad
+    leaf_errors = [err] + list(err.context or ()) if (err := errors_bad[0]) else []
+    assert any(
+        item.validator == "format" and item.validator_value == "date-time"
+        for item in leaf_errors
+    ), [item.message for item in leaf_errors]
+
+
 def test_failed_transaction_removes_new_binary_files(tmp_path: Path):
     root = tmp_path
     target = root / "curriculum/modules/module-demo/units/unit-demo/attachments/note.png"

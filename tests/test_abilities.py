@@ -264,17 +264,29 @@ def test_ability_query_schema_declares_codes_and_keeps_older_answers_readable():
     validator = Draft202012Validator(schema)
     base = {"schema_version": 1, "contract": "ability-context-v1",
             "snapshot_id": "sha256:" + "a" * 64}
+    base_row = {
+        "id": "ability-demo-row",
+        "title": "Demo ability",
+        "state": "uncertain",
+        "concept_ids": ["concept-demo"],
+        "reasons": ["display prose"],
+    }
     for key in ("abilities", "ability"):
         def result(row, key=key):
             return {**base, key: [row] if key == "abilities" else row}
 
-        validator.validate(result({"reasons": ["display prose"]}))
-        validator.validate(result({"reasons": ["display prose"],
+        validator.validate(result(dict(base_row)))
+        validator.validate(result({**base_row,
                                    "reason_codes": ["future-structured-fact"]}))
         assert list(validator.iter_errors(result({
-            "reasons": ["display prose"], "reason_codes": [""]})))
+            **base_row, "reason_codes": [""]})))
         assert list(validator.iter_errors(result({
-            "reasons": ["display prose"], "reason_codes": "conflicting-later-work"})))
+            **base_row, "reason_codes": "conflicting-later-work"})))
+        assert list(validator.iter_errors(result({
+            **base_row, "unexpected_extra_field": True})))
+        missing_id = dict(base_row)
+        missing_id.pop("id")
+        assert list(validator.iter_errors(result(missing_id)))
 
 
 def test_presentation_edits_do_not_invalidate_work(ability_root: Path):

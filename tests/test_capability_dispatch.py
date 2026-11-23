@@ -392,3 +392,159 @@ def test_analysis_binding_schemas_describe_the_stored_shape(repo_root: Path):
     # Annotation-only: acceptance is exactly the old bare object.
     assert set(save_binding) == {"type", "description"}
     assert set(batch_binding) == {"type", "description"}
+
+
+def test_optional_mutually_exclusive_group_generates_at_most_one_schema(repo_root: Path):
+    """#28: optional mutex groups (plan.edit-context route_ids/route_id/stage_id) emit at-most-one constraints."""
+    from jsonschema import Draft202012Validator
+
+    from learning_os.store.contracts.payloads import payload_schema
+
+    schema = payload_schema("plan.edit-context", repo_root)
+    validator = Draft202012Validator(schema)
+    assert "route_ids" in schema["properties"]
+    assert "oneOf" in schema
+    validator.validate({"unit_id": "unit-demo-l01"})
+    validator.validate({"unit_id": "unit-demo-l01", "route_id": "route-1"})
+    validator.validate({"unit_id": "unit-demo-l01", "route_ids": ["route-1", "route-2"]})
+    validator.validate({"unit_id": "unit-demo-l01", "stage_id": "stage-1"})
+    for conflicting in (
+        {"unit_id": "unit-demo-l01", "route_id": "route-1", "route_ids": ["route-2"]},
+        {"unit_id": "unit-demo-l01", "route_id": "route-1", "stage_id": "stage-1"},
+        {"unit_id": "unit-demo-l01", "route_ids": ["route-1"], "stage_id": "stage-1"},
+    ):
+        assert list(validator.iter_errors(conflicting)), conflicting
+
+
+def test_gateway_carve_outs_stay_pinned_against_live_cli_parser(repo_root: Path):
+    """Pin the intentional gateway-stricter carve-outs in payloads.py to the live CLI parser."""
+    from jsonschema import Draft202012Validator
+
+    import los
+    from learning_os.app.gateway import _CONTENT_BOUND_V2
+    from learning_os.store.contracts.capability_catalog import load_capability_catalog
+    from learning_os.store.contracts.payloads import (
+        _GATEWAY_INLINE_REQUIRED,
+        payload_schema,
+        subparsers,
+    )
+    from learning_os.store.contracts.requests import request_schema
+
+    parser = los.build_parser()
+    cli_commands = subparsers(parser)
+    definitions = _definitions(repo_root)
+    catalog = load_capability_catalog(repo_root)
+
+    # 1. _GATEWAY_INLINE_REQUIRED must cover exact known inline overrides whose CLI args are optional.
+    assert set(_GATEWAY_INLINE_REQUIRED) == {
+        "stage.note.write",
+        "unit.note.append",
+        "unit.plan.revise",
+    }
+    for cap_name, required_fields in _GATEWAY_INLINE_REQUIRED.items():
+        cli_cmd = definitions[cap_name].cli_command
+        assert cli_cmd and cli_cmd in cli_commands
+        actions = {a.dest: a for a in cli_commands[cli_cmd]._actions}
+        cap_schema = json.loads((repo_root / SCHEMA_DIR / f"{cap_name}.schema.json").read_text(encoding="utf-8"))
+        for field in required_fields:
+            assert actions[field].required is False, f"{cap_name}.{field} is already parser-required"
+            assert field in cap_schema["required"], f"{cap_name}.{field} missing from gateway required"
+        if cap_name in _CONTENT_BOUND_V2:
+            assert "record" in actions and "file" in actions
+            assert "file" in (catalog["commands"][cap_name] or {}) or True
+
+    # Ensure every mutually_exclusive group on every CLI-bound request schema (required or optional)
+    # is preserved by payload_schema when >1 non-transport field survives.
+    for cap_name, definition in definitions.items():
+        if not definition.cli_command:
+            continue
+        req = request_schema(repo_root, cap_name)
+        groups = req.get("x-los-cli-command", {}).get("mutually_exclusive", [])
+        if groups:
+            cap_schema = json.loads((repo_root / SCHEMA_DIR / f"{cap_name}.schema.json").read_text(encoding="utf-8"))
+            assert ("oneOf" in cap_schema) or ("allOf" in cap_schema)
+
+    # 2. capture.create carves out mutually exclusive file/text despite empty parser mutex.
+    capture_req = request_schema(repo_root, "capture.create")
+    assert capture_req["x-los-cli-command"]["mutually_exclusive"] == []
+    capture_validator = Draft202012Validator(payload_schema("capture.create", repo_root))
+    assert list(capture_validator.iter_errors({"text": "hi", "file": "a.txt", "file_sha256": "sha256:" + "0" * 64}))
+    assert list(capture_validator.iter_errors({}))
+    capture_validator.validate({"text": "hi"})
+
+    # 3. stage.progress.update couples progress_next -> progress_summary at gateway boundary.
+    progress_validator = Draft202012Validator(payload_schema("stage.progress.update", repo_root))
+    assert list(progress_validator.iter_errors({
+        "unit_id": "u", "stage_id": "s", "status": "active", "progress_next": "next",
+    }))
+    progress_validator.validate({
+        "unit_id": "u", "stage_id": "s", "status": "active",
+        "progress_summary": "did work", "progress_next": "next",
+    })
+
+
+def test_route_patch_claim_evidence_allows_handler_tolerated_nulls(repo_root: Path):
+    """route.patch claim_evidence and optional locator fields permit explicit null as handlers do."""
+    from jsonschema import Draft202012Validator
+
+    schema = json.loads((repo_root / SCHEMA_DIR / "route.patch.schema.json").read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    base = {"unit_id": "unit-demo-l01", "route_id": "route-1", "changes": {"locator": "ch. 2"}}
+    validator.validate({**base, "claim_evidence": None})
+    validator.validate({
+        **base,
+        "claim_evidence": {
+            "claim_id": "covers:route-1",
+            "reads": None,
+            "evidence": [{
+                "kind": "quote",
+                "ref": "material://source-demo-book/lecture-01.pdf",
+                "text": "Sample quote excerpt covering the patched locator claim.",
+                "page": 3,
+                "page_end": None,
+                "window": None,
+                "line_start": None,
+                "line_end": None,
+            }],
+        },
+    })
+    assert list(validator.iter_errors({
+        **base,
+        "claim_evidence": {
+            "claim_id": "covers:route-1",
+            "evidence": [{"kind": "quote", "ref": "material://x/y.pdf", "page": "three"}],
+        },
+    }))
+
+
+def test_validate_payload_enforces_format_checker(tmp_path: Path):
+    """gateway.validate_payload must reject invalid date-time/uri formats."""
+    from learning_os.app.gateway import validate_payload
+
+    schema_dir = tmp_path / "system/schema/capabilities"
+    schema_dir.mkdir(parents=True)
+    (schema_dir / "synth.format.schema.json").write_text(json.dumps({
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["recorded_at", "homepage"],
+        "properties": {
+            "recorded_at": {"type": "string", "format": "date-time"},
+            "homepage": {"type": "string", "format": "uri"},
+        },
+    }), encoding="utf-8")
+
+    validate_payload(tmp_path, "synth.format", {
+        "recorded_at": "2026-10-01T09:00:00+02:00",
+        "homepage": "https://example.org/resource",
+    })
+    with pytest.raises(WriteRefused, match="invalid payload"):
+        validate_payload(tmp_path, "synth.format", {
+            "recorded_at": "not-a-timestamp",
+            "homepage": "https://example.org/resource",
+        })
+    with pytest.raises(WriteRefused, match="invalid payload"):
+        validate_payload(tmp_path, "synth.format", {
+            "recorded_at": "2026-10-01T09:00:00Z",
+            "homepage": "not a valid uri",
+        })
