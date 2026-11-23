@@ -28,10 +28,10 @@ from learning_os.store.practice import (
     PracticeIndex,
     PracticeProof,
     PracticeRow,
+    current_material_digest,
     dump_sidecar,
     load_sidecar,
     note_items,
-    current_material_digest,
     row_for,
     sidecar_path,
     verified_binding,
@@ -189,9 +189,20 @@ def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Resu
         if problem:
             raise WriteRefused(
                 problem, site="practice.verification.record.binding-refused")
-    if status == "cross-checked" and not record.get("comparison_sha256"):
+        if not str(binding.get("quote") or "").strip():
+            # A page number alone proves only that the page exists; the
+            # official answer has to be quoted and found on it.
+            raise WriteRefused(
+                "source-matched needs an excerpt of the official answer, "
+                "found verbatim on the pinned page",
+                site="practice.verification.record.binding-refused")
+    if status == "cross-checked":
+        # Nothing stores an independent comparison yet, so a comparison
+        # digest could not be checked against anything: any caller could
+        # self-attest it. Refused until Core can resolve the comparison.
         raise WriteRefused(
-            "cross-checked requires an independently solved comparison digest",
+            "cross-checked cannot be recorded until Core stores the independent "
+            "comparison it names; record source-matched or confirmed instead",
             site="practice.verification.record.comparison-required")
 
     data = load_sidecar(root)

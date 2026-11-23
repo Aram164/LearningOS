@@ -138,7 +138,10 @@ contracts:
       system-task relation writes are admitted at all, until when, and how many
       operations one batch may carry. Read by concept.relations.change on every
       keeper write; a missing, malformed, suspended or expired delegation
-      refuses the write, and the receipt names the delegation's SHA-256.
+      refuses the write. The file is Git-tracked; a keeper receipt records the
+      system-task channel and its commit time, not the delegation's digest
+      (receipt metadata is a closed stored schema; adding the digest waits for
+      the next format version).
     enforced_by: runtime
     checker: learning_os.app.handlers.atlas
     test: tests/test_atlas_authoring.py

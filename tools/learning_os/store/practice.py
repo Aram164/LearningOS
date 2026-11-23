@@ -124,10 +124,15 @@ def _proof_ok(row: PracticeRow) -> str | None:
     proof = proofs[-1]
     if proof.get("artifact_sha256") != row["content_sha256"]:
         return "proof was recorded for different item content"
-    if status == "source-matched" and not proof.get("source_binding"):
-        return "source-matched proof has no source binding"
-    if status == "cross-checked" and not proof.get("comparison_sha256"):
-        return "cross-checked proof has no comparison digest"
+    if status == "source-matched":
+        binding = proof.get("source_binding")
+        if not binding:
+            return "source-matched proof has no source binding"
+        if not str(binding.get("quote") or "").strip():
+            return "source-matched proof has no excerpt of the official answer"
+    if status == "cross-checked":
+        # No stored independent comparison exists to check a digest against.
+        return "cross-checked has no stored independent comparison"
     return None
 
 

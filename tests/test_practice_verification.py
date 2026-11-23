@@ -350,3 +350,36 @@ def test_one_problem_item_does_not_block_its_siblings(mini_repo):
 
     checked = checked_practice_by_note(load_repo(mini_repo))
     assert [e.item.item_id for e in checked["note-practice-bank"]] == ["note-practice-bank#A1"]
+
+
+def test_cross_checked_and_unquoted_source_matched_are_refused(mini_repo):
+    """Review 2026-11-23 P2: no self-attested comparison, no page-only proof."""
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    crossed = _record(mini_repo, _base_record(
+        None, new_status="cross-checked", method="independent-solve",
+        comparison_sha256="e" * 64), "record-cross-checked")
+    assert crossed.returncode != 0
+    assert "cross-checked cannot be recorded" in crossed.stdout + crossed.stderr
+    unquoted = {key: value for key, value in binding.items() if key != "quote"}
+    paged = _record(mini_repo, _base_record(unquoted), "record-page-only")
+    assert paged.returncode != 0
+    assert "needs an excerpt of the official answer" in paged.stdout + paged.stderr
+    assert not (mini_repo / "knowledge/practice-index.yaml").exists()
+
+    # Rows written before these rules read unverified, never checked.
+    assert _record(mini_repo, _base_record(binding), "record-quoted").returncode == 0
+    path = mini_repo / "knowledge/practice-index.yaml"
+    data = yaml.safe_load(path.read_text())
+    row = data["items"][0]
+    del row["verifications"][0]["source_binding"]["quote"]
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is False and "no excerpt" in " ".join(first["ineligibility"])
+    row["status"] = "cross-checked"
+    row["verifications"].append({**row["verifications"][0], "method": "independent-solve",
+                                 "source_binding": None, "comparison_sha256": "e" * 64})
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is False
+    assert "no stored independent comparison" in " ".join(first["ineligibility"])

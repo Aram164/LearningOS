@@ -66,11 +66,15 @@ abilities keep every existing protection.
    The app shows who added each relation, beside Veto and Pin.
 9. **Practice proofs bind what was reviewed.** A recorded verification's
    `artifact_sha256` must equal the item's current content hash as
-   `practice.context` showed it; Core pins a source PDF's digest itself; and
-   eligibility is decided per item, so one ambiguous item never blocks its
-   siblings. `cross-checked` stays in the format but is not offered in the
-   app until a stored independent comparison exists to check it against.
+   `practice.context` showed it; Core pins a source PDF's digest itself; a
+   `source-matched` proof quotes the official answer, found verbatim on the
+   pinned page; and eligibility is decided per item, so one ambiguous item
+   never blocks its siblings. `cross-checked` stays in the stored format, but
+   Core refuses new records and reads existing ones as unverified until it
+   stores the independent comparison a digest would name.
 
 Not built here, and still to decide: the blind auditor and the automatic
-demotion on measured precision (proposal D5), and the triggers that start a
-keeper run (D6). Until then the delegation's `status` is the manual switch.
+demotion on measured precision (proposal D5), the triggers that start a
+keeper run (D6), and the delegation's SHA-256 in each keeper receipt, which
+needs a field in the closed v2 receipt metadata and so the next stored-format
+version. Until then the delegation's `status` is the manual switch.

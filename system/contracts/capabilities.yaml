@@ -410,7 +410,7 @@ commands:
     - one explicitly reviewed verification per gesture; the item and its content hash are recomputed in the handler, and the reviewed artifact_sha256 must equal that hash
     - eligibility is per item; Core pins a source PDF's digest itself when the binding omits it
     - the exact expected old sidecar row, the registry-practice-index revision and the canonical note revision guard the write
-    - source-matched requires the official answer's verified binding; cross-checked requires an independently solved comparison digest; confirmed requires explicit review
+    - source-matched requires the official answer's verified binding with an excerpt found verbatim on the pinned page; cross-checked is refused until Core stores the independent comparison it names; confirmed requires explicit review
     - historical verification entries are preserved; unverified and disputed items stay ineligible for export
     payload_records:
       record:
@@ -419,7 +419,7 @@ commands:
           old sidecar row or null, the reviewed new status and method, the
           canonical concepts, the reviewed item's content_sha256 as
           practice.context showed it, the reviewer, and the status-specific
-          proof (source binding or comparison digest).
+          proof (the official answer's source binding).
         accepted:
         - item_id
         - expected_old
