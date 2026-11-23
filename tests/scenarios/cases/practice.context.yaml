@@ -2,6 +2,10 @@ operation: practice.context
 fixture: rich_world_practice
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
+  - id: cli-focused-item
+    kind: success
+    transport: cli
+    argv: [practice-context, note-practice-bank, --item-id, "note-practice-bank#A1"]
   - id: cli-unknown-note
     kind: refusal
     transport: cli
@@ -10,7 +14,7 @@ cases:
   - id: cli-unknown-item
     kind: refusal
     transport: cli
-    argv: [practice-context, note-practice-bank, --item, "note-practice-bank#Z9"]
+    argv: [practice-context, note-practice-bank, --item-id, "note-practice-bank#Z9"]
     expect: {site: practice.context.unknown-item}
 untriggered:
 - site: practice.context.snapshot-changed

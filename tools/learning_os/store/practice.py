@@ -10,8 +10,10 @@ regardless of what the row says.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
+from typing import TypedDict, cast
 
 import yaml
 
@@ -21,7 +23,8 @@ from learning_os.domain.practice import (
     content_sha256,
     extract_items,
 )
-from learning_os.domain.relations import binding_file_state, normalize_quote
+from learning_os.domain.relations import EvidenceBinding, binding_file_state, normalize_quote
+from learning_os.domain.snapshot import Note, Repo
 from learning_os.store.contracts.json_schema import load_standalone_validator
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.materials.resolution import parse_material_uri
@@ -36,11 +39,34 @@ METHOD_FOR_STATUS = {
 }
 
 
+class PracticeProof(TypedDict):
+    method: str
+    verified_at: str
+    artifact_sha256: str
+    reviewer_id: str
+    source_binding: EvidenceBinding | None
+    comparison_sha256: str | None
+
+
+class PracticeRow(TypedDict):
+    item_id: str
+    concept_ids: list[str]
+    kind: str
+    status: str
+    content_sha256: str
+    source_bindings: list[EvidenceBinding]
+    verifications: list[PracticeProof]
+
+
+class PracticeIndex(TypedDict):
+    items: list[PracticeRow]
+
+
 def sidecar_path(root: Path) -> Path:
     return root / SIDECAR_REL
 
 
-def load_sidecar(root: Path) -> dict:
+def load_sidecar(root: Path) -> PracticeIndex:
     path = sidecar_path(root)
     if not path.exists():
         return {"items": []}
@@ -52,15 +78,15 @@ def load_sidecar(root: Path) -> dict:
     errors = sorted(validator.iter_errors(data), key=str)
     if errors:
         raise WriteRefused(f"practice-index: {errors[0].message}")
-    return data
+    return cast(PracticeIndex, data)
 
 
-def dump_sidecar(data: dict) -> str:
+def dump_sidecar(data: PracticeIndex) -> str:
     rows = sorted(data["items"], key=lambda row: row["item_id"].encode("utf-8"))
     return yaml.safe_dump({"items": rows}, sort_keys=False, allow_unicode=True)
 
 
-def row_for(data: dict, item_id: str) -> dict | None:
+def row_for(data: PracticeIndex, item_id: str) -> PracticeRow | None:
     for row in data["items"]:
         if row["item_id"] == item_id:
             return row
@@ -70,7 +96,7 @@ def row_for(data: dict, item_id: str) -> dict | None:
 @dataclass
 class EffectiveItem:
     item: PracticeItem
-    row: dict | None
+    row: PracticeRow | None
     status: str
     reasons: list[str] = field(default_factory=list)
 
@@ -80,7 +106,7 @@ class EffectiveItem:
         return self.status in CHECKED_STATUSES and not self.reasons
 
 
-def _proof_ok(row: dict) -> str | None:
+def _proof_ok(row: PracticeRow) -> str | None:
     """Why the row's proofs do not support its status, or None."""
     status = row["status"]
     if status in ("unverified", "disputed"):
@@ -97,7 +123,7 @@ def _proof_ok(row: dict) -> str | None:
     return None
 
 
-def _effective_item(repo, data: dict, item: PracticeItem) -> EffectiveItem:
+def _effective_item(repo: Repo, data: PracticeIndex, item: PracticeItem) -> EffectiveItem:
     row = row_for(data, item.item_id)
     if row is None:
         return EffectiveItem(item=item, row=None, status="unverified")
@@ -118,7 +144,7 @@ def _effective_item(repo, data: dict, item: PracticeItem) -> EffectiveItem:
     return EffectiveItem(item=item, row=row, status=status, reasons=reasons)
 
 
-def note_items(repo, note) -> tuple[list[EffectiveItem], list[str]]:
+def note_items(repo: Repo, note: Note) -> tuple[list[EffectiveItem], list[str]]:
     """(effective items, diagnostic reasons) for one canonical note."""
     extraction = extract_items(note.id, note.meta.get("role"), note.body)
     diagnostics = [f"{d.label or note.id}: {d.reason}" for d in extraction.diagnostics]
@@ -126,7 +152,7 @@ def note_items(repo, note) -> tuple[list[EffectiveItem], list[str]]:
     return [_effective_item(repo, data, item) for item in extraction.items], diagnostics
 
 
-def checked_practice_by_note(repo) -> dict[str, list[EffectiveItem]]:
+def checked_practice_by_note(repo: Repo) -> dict[str, list[EffectiveItem]]:
     """Current checked items for notes named by the verification sidecar."""
     data = load_sidecar(repo.root)
     note_ids = {row["item_id"].partition("#")[0] for row in data["items"]}
@@ -143,7 +169,7 @@ def checked_practice_by_note(repo) -> dict[str, list[EffectiveItem]]:
     return checked
 
 
-def verified_binding(repo, binding: dict) -> str | None:
+def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
     """Why a proposed source binding cannot be admitted, or None.
 
     Known source, current pinned digest, physical page bounds, and — when a
@@ -151,13 +177,12 @@ def verified_binding(repo, binding: dict) -> str | None:
     existing span machinery: `pdf_page_text` over the pinned bytes).
     """
     source_id = binding.get("source_id")
-    source = repo.sources.get(source_id) if isinstance(source_id, str) else None
-    if source is None:
+    if not isinstance(source_id, str) or source_id not in repo.sources:
         return "binding names an unknown source"
     relative = binding.get("material_relpath")
     if not isinstance(relative, str) or PurePosixPath(relative).suffix.lower() != ".pdf":
         return "binding must name a material PDF"
-    registered = parse_material_uri(source.get("material"))
+    registered = parse_material_uri(repo.sources[source_id].get("material"))
     if registered is not None and PurePosixPath(registered.path).suffix:
         if relative != registered.path:
             return "binding PDF does not match the registered source file"

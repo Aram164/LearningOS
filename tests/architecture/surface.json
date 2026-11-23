@@ -9914,7 +9914,7 @@
   "operator.bootstrap.schema.json": "6f5ed35c44eced52aa7234656b39a4bee0b3bfc1f85f84afff027690a89e05ec",
   "plan.edit-context.schema.json": "42e249f897c5b3cf2fad884c2260f5c37ba207e352079e6910321fc7fd020602",
   "plan.template.schema.json": "1c532b6ed114dbfd914a206019055da000eaf2d356d299fa28146d0c1dba5bf7",
-  "practice.context.schema.json": "acef0871333400b0d41c0dab8eddf309c77fd8aa9e9d27e26def411860851d46",
+  "practice.context.schema.json": "18027b42fcdbc7bd758307c08dfa9fb6e729775235db5aed14f2664fdf0449b3",
   "practice.verification.record.schema.json": "b9f732490e52dd38662833a9b2b57b7bc1b06e5c13c943ee3a976099d286fc01",
   "program.list.schema.json": "1c6989676b267ba1c4b5d70c58c5099a4a2af841211d8e01af6574c59c80b365",
   "program.semester.update.schema.json": "fc100aa9cbfce8c13ac5a4f288d22e4bdff17ee1237bfbd382b14db832857526",

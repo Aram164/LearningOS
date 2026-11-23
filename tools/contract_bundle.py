@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Bundle a manifest JSON Schema with its transitive closure.
 
-    python tools/contract_bundle.py build --schema system/contracts/manifest-v20.schema.json --out /tmp/cb
-    python tools/contract_bundle.py check --schema system/contracts/manifest-v20.schema.json --dir /tmp/cb
+    python tools/contract_bundle.py build --schema system/contracts/manifest-v21.schema.json --out /tmp/cb
+    python tools/contract_bundle.py check --schema system/contracts/manifest-v21.schema.json --dir /tmp/cb
 
 ``build`` writes ``<stem>.bundle.json`` (canonical bytes) plus ``<stem>.meta.json``
 (version, root hash, closure digest, resource inventory, generator identity).

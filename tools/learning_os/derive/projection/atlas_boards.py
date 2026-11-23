@@ -10,11 +10,13 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
+from collections.abc import Mapping
+from typing import TypedDict, cast
 from urllib.parse import urlencode
 
-from learning_os.derive.projection.canvas import CANVAS_EDGE_COLORS, _concept_depths
+from learning_os.derive.projection.canvas import CANVAS_EDGE_COLORS, concept_depths
 from learning_os.derive.projection.concepts import PREREQ_TYPES
-from learning_os.domain.relations import enriched_relation, relation_evidence_state
+from learning_os.domain.relations import RelationRow, enriched_relation, relation_evidence_state
 from learning_os.domain.snapshot import Repo
 from learning_os.store.practice import checked_practice_by_note
 
@@ -24,20 +26,42 @@ TEMPLATE_PREFIX = "generated/atlas/templates"
 CARD_PREFIX = "generated/atlas/cards"
 
 
-def _canvas_bytes(canvas: dict) -> bytes:
+class BoardScope(TypedDict):
+    kind: str
+    id: str
+    title: str
+    parent_kind: str | None
+    parent_id: str | None
+    concept_ids: list[str]
+
+
+class BoardCatalogEntry(TypedDict):
+    kind: str
+    id: str
+    title: str
+    parent_kind: str | None
+    parent_id: str | None
+    template_path: str
+    working_path: str
+    sha256: str
+    concept_count: int
+    relation_count: int
+
+
+def _canvas_bytes(canvas: Mapping[str, object]) -> bytes:
     return (json.dumps(canvas, separators=(",", ":"), sort_keys=True,
                        ensure_ascii=False) + "\n").encode("utf-8")
 
 
-def _active_relations(repo: Repo) -> list[dict]:
-    return [enriched_relation(r) for r in repo.relations
+def _active_relations(repo: Repo) -> list[RelationRow]:
+    return [enriched_relation(cast(RelationRow, r)) for r in repo.relations
             if r.get("status", "active") == "active"]
 
 
-def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict,
-               exam_concepts: dict[str, set[str]]) -> list[dict]:
+def scopes_for(repo: Repo, module_to_concepts: dict[str, list[str]], unit_to_concepts: dict[str, list[str]],
+               exam_concepts: dict[str, set[str]]) -> list[BoardScope]:
     """The four board scopes, in catalog order (semester, module, lecture, exam)."""
-    scopes: list[dict] = []
+    scopes: list[BoardScope] = []
     for pid in sorted(repo.programs):
         program = repo.programs[pid]
         for semester in program.data.get("semesters") or []:
@@ -95,7 +119,7 @@ def scopes_for(repo: Repo, module_to_concepts: dict, unit_to_concepts: dict,
     return scopes
 
 
-def _semester_scope_id(module: dict) -> str | None:
+def _semester_scope_id(module: Mapping[str, object]) -> str | None:
     area = module.get("area_id")
     semester = module.get("semester")
     if area and semester:
@@ -103,17 +127,17 @@ def _semester_scope_id(module: dict) -> str | None:
     return None
 
 
-def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict],
-                         practice_counts: Counter[str]) -> dict:
+def build_board_template(repo: Repo, scope: BoardScope, child_scopes: list[BoardScope],
+                         practice_counts: Counter[str]) -> dict[str, object]:
     concepts = [c for c in scope["concept_ids"] if c in repo.concepts]
     relations = [r for r in _active_relations(repo)
                  if r["from"] in concepts and r["to"] in concepts]
-    depths = _concept_depths(relations, set(concepts))
+    depths = concept_depths(relations, set(concepts))
     by_layer: dict[int, list[str]] = {}
     for cid in concepts:
         by_layer.setdefault(depths.get(cid, 0), []).append(cid)
 
-    nodes: list[dict] = []
+    nodes: list[dict[str, object]] = []
     for layer in sorted(by_layer):
         for i, cid in enumerate(sorted(by_layer[layer])):
             rec = repo.concepts[cid]
@@ -158,7 +182,7 @@ def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict],
             "width": CARD_W, "height": CARD_H,
         })
 
-    edges: list[dict] = []
+    edges: list[dict[str, object]] = []
     for rel in relations:
         strict = rel["type"] in PREREQ_TYPES
         edges.append({
@@ -171,12 +195,12 @@ def build_board_template(repo: Repo, scope: dict, child_scopes: list[dict],
                       else f"Semantic · {rel['type']}"),
             "color": CANVAS_EDGE_COLORS.get(rel["type"], "4"),
         })
-    edges.sort(key=lambda e: e["id"])
-    nodes.sort(key=lambda n: n["id"])
+    edges.sort(key=lambda e: str(e["id"]))
+    nodes.sort(key=lambda n: str(n["id"]))
     return {"nodes": nodes, "edges": edges}
 
 
-def _relation_summary(cid: str, relations: list[dict]) -> str:
+def _relation_summary(cid: str, relations: list[RelationRow]) -> str:
     bits = []
     for rel in sorted(relations, key=lambda r: (r["from"], r["type"], r["to"])):
         if rel["from"] == cid:
@@ -186,7 +210,7 @@ def _relation_summary(cid: str, relations: list[dict]) -> str:
     return " · ".join(bits)
 
 
-def _concept_evidence_state(repo: Repo, cid: str, relations: list[dict]) -> str:
+def _concept_evidence_state(repo: Repo, cid: str, relations: list[RelationRow]) -> str:
     states = [relation_evidence_state(repo, r) for r in relations
               if cid in (r["from"], r["to"])]
     for state in ("disputed", "stale", "missing", "verified"):
@@ -220,24 +244,26 @@ def build_concept_card(repo: Repo, cid: str, practice_count: int = 0) -> str:
     return "\n".join(lines)
 
 
-def build_atlas_boards(repo: Repo, indexes: dict) -> tuple[list[dict], dict[str, str]]:
+def build_atlas_boards(
+    repo: Repo, indexes: Mapping[str, object],
+) -> tuple[list[BoardCatalogEntry], dict[str, str]]:
     """(catalog, {generated-relative path: text}) for templates and cards."""
-    module_to_concepts = indexes.get("module_to_concepts", {})
-    unit_to_concepts = indexes.get("unit_to_concepts", {})
+    module_to_concepts = cast(dict[str, list[str]], indexes.get("module_to_concepts", {}))
+    unit_to_concepts = cast(dict[str, list[str]], indexes.get("unit_to_concepts", {}))
     practice_counts: Counter[str] = Counter()
     note_concepts: dict[str, set[str]] = {}
     for note_id, items in checked_practice_by_note(repo).items():
         for item in items:
-            concepts = set((item.row or {}).get("concept_ids") or [])
+            concepts = set(item.row["concept_ids"] if item.row is not None else [])
             practice_counts.update(concepts)
             note_concepts.setdefault(note_id, set()).update(concepts)
     scopes = scopes_for(repo, module_to_concepts, unit_to_concepts, note_concepts)
-    by_parent: dict[tuple, list[dict]] = {}
+    by_parent: dict[tuple[str | None, str | None], list[BoardScope]] = {}
     for scope in scopes:
         if scope["parent_kind"]:
             by_parent.setdefault((scope["parent_kind"], scope["parent_id"]), []).append(scope)
 
-    catalog: list[dict] = []
+    catalog: list[BoardCatalogEntry] = []
     files: dict[str, str] = {}
     for scope in scopes:
         children = by_parent.get((scope["kind"], scope["id"]), [])

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from learning_os.derive.projection.common import json_header as _json_header
 from learning_os.derive.projection.concepts import PREREQ_TYPES
 from learning_os.domain.snapshot import Repo
@@ -62,7 +64,7 @@ def canvas_edge(a: str, b: str, t: str) -> dict:
     }
 
 
-def _concept_depths(relations: list[dict], involved: set[str]) -> dict[str, int]:
+def concept_depths(relations: Sequence[Mapping[str, object]], involved: set[str]) -> dict[str, int]:
     """Longest-prerequisite-path depth over requires/builds-on edges (the same
     edge set as the Mermaid concept map). Cycles fall back to depth 0."""
     prereqs: dict[str, set[str]] = {c: set() for c in involved}
@@ -106,7 +108,7 @@ def build_concept_canvas(repo: Repo, generated_at: str) -> dict:
         involved.add(str(r.get("to")))
     involved &= set(repo.concepts)
 
-    depths = _concept_depths(repo.relations, involved)
+    depths = concept_depths(repo.relations, involved)
     by_layer: dict[int, list[str]] = {}
     for c in sorted(involved):
         by_layer.setdefault(depths[c], []).append(c)

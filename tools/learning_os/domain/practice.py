@@ -23,6 +23,10 @@ from dataclasses import dataclass, field
 
 PRACTICE_ROLES = ("exercise-bank", "mock-exam")
 LABEL = r"[A-Z]+[1-9][0-9]*"
+_KEY_DIALECTS = {
+    "# ANSWER KEY": "mock-keyed",
+    "## Solutions and marking guide": "timed-exam",
+}
 
 _BOLD = re.compile(rf"^\*\*({LABEL})(?=[.)\s])", re.MULTILINE)
 _AML_KEY = re.compile(rf"^(?:#{{2,4}}\s+|\*\*)({LABEL})(?=[.)\s])", re.MULTILINE)
@@ -85,7 +89,7 @@ def _kind(prompt: str, solution: str) -> str:
         and collapsed_prompt and collapsed_solution else "worked"
 
 
-def _split_blocks(text: str, pattern: re.Pattern, prefix: str = "") -> dict[str, str]:
+def _split_blocks(text: str, pattern: re.Pattern[str], prefix: str = "") -> dict[str, str]:
     matches = list(pattern.finditer(text))
     result: dict[str, str] = {}
     for i, match in enumerate(matches):
@@ -97,7 +101,7 @@ def _split_blocks(text: str, pattern: re.Pattern, prefix: str = "") -> dict[str,
     return result
 
 
-def _label_counts(text: str, pattern: re.Pattern) -> dict[str, int]:
+def _label_counts(text: str, pattern: re.Pattern[str]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for match in pattern.finditer(text):
         counts[match.group(1)] = counts.get(match.group(1), 0) + 1
@@ -161,7 +165,7 @@ def _details(note_id: str, text: str, out: Extraction) -> None:
             kind=_kind(prompt, solution), dialect=dialect))
 
 
-def _unique_blocks(note_id: str, text: str, pattern: re.Pattern,
+def _unique_blocks(note_id: str, text: str, pattern: re.Pattern[str],
                    out: Extraction, prefix: str = "") -> dict[str, str]:
     blocks = _split_blocks(text, pattern, prefix)
     for label, count in _label_counts(text, pattern).items():
@@ -198,9 +202,13 @@ def extract_items(note_id: str, role: str | None, body: str) -> Extraction:
     if role not in PRACTICE_ROLES:
         return out
     text = body or ""
-    if "# ANSWER KEY" in text:
+    key_dialects = {_KEY_DIALECTS[line] for line in text.splitlines()
+                    if line in _KEY_DIALECTS}
+    if len(key_dialects) > 1:
+        out.diagnostics.append(PracticeDiagnostic(note_id, None, "multiple key formats"))
+    elif key_dialects == {"mock-keyed"}:
         _aml(note_id, text, out)
-    elif "## Solutions and marking guide" in text:
+    elif key_dialects == {"timed-exam"}:
         _icop(note_id, text, out)
     elif _BOLD.search(text):
         _details(note_id, text, out)

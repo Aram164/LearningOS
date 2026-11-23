@@ -48,7 +48,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-kind": "practice-item",
+      "x-los-lookup": true
     },
     "expected_snapshot": {
       "type": "string",

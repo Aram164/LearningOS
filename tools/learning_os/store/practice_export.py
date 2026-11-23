@@ -20,12 +20,14 @@ import uuid
 from contextlib import ExitStack
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TypedDict, cast
 
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.practice import content_sha256
+from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import snapshot
 from learning_os.store.loading import load_repo
-from learning_os.store.practice import note_items
+from learning_os.store.practice import EffectiveItem, note_items
 
 MARKER_NAME = ".learningos-practice-vault.json"
 ATLAS_MARKER = ".los-atlas-fixture"
@@ -34,8 +36,21 @@ CHANGED_MESSAGE = (
     "Resolve it through a separate card-replacement workflow."
 )
 ANCHOR = re.compile(r"^\s*\^learnkit-[\w-]+\s*$")
-FORBIDDEN_FIELD = re.compile(r"[|\x00-\x1f\x7f]|\^learnkit-|\]\(|://|obsidian:", re.IGNORECASE)
+FORBIDDEN_FIELD_MARKUP = ("|", "^learnkit-", "](", "://", "obsidian:")
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+
+
+class VaultMarker(TypedDict):
+    schema_version: int
+    purpose: str
+    experimental: bool
+    vault_id: str
+
+
+class ExportResult(TypedDict):
+    created: list[str]
+    kept: list[str]
+    counts: dict[str, int]
 
 
 def _symlink_components(path: Path) -> str | None:
@@ -52,7 +67,7 @@ def _symlink_components(path: Path) -> str | None:
     return None
 
 
-def marker_payload(vault: Path) -> dict:
+def marker_payload(vault: Path) -> VaultMarker:
     path = vault / MARKER_NAME
     if path.is_symlink() or not path.is_file():
         raise WriteRefused("practice vault marker is missing")
@@ -63,7 +78,7 @@ def marker_payload(vault: Path) -> dict:
     return _validate_marker(payload)
 
 
-def _validate_marker(payload: object) -> dict:
+def _validate_marker(payload: object) -> VaultMarker:
     if (not isinstance(payload, dict)
             or set(payload) != {"schema_version", "purpose", "experimental", "vault_id"}
             or type(payload["schema_version"]) is not int
@@ -76,10 +91,10 @@ def _validate_marker(payload: object) -> dict:
             raise ValueError("noncanonical UUID")
     except (AttributeError, TypeError, ValueError):
         raise WriteRefused("practice vault marker has an invalid vault ID") from None
-    return payload
+    return cast(VaultMarker, payload)
 
 
-def validate_vault(vault: Path, root: Path, *, for_init: bool = False) -> dict | None:
+def validate_vault(vault: Path, root: Path, *, for_init: bool = False) -> VaultMarker | None:
     """Refuse linked, repo-intersecting or wrongly marked destinations."""
     problem = _symlink_components(vault)
     if problem:
@@ -108,7 +123,7 @@ def validate_vault(vault: Path, root: Path, *, for_init: bool = False) -> dict |
     return marker_payload(vault)
 
 
-def write_plan(path: Path, document: dict, root: Path, vault: Path) -> None:
+def write_plan(path: Path, document: dict[str, object], root: Path, vault: Path) -> None:
     """Write the report to scratch outside the canonical and practice trees."""
     problem = _symlink_components(path)
     if problem:
@@ -131,7 +146,7 @@ def write_plan(path: Path, document: dict, root: Path, vault: Path) -> None:
             handle.write(json.dumps(document, indent=2) + "\n")
 
 
-def init_vault(vault: Path, root: Path) -> dict:
+def init_vault(vault: Path, root: Path) -> VaultMarker:
     """Create the foreign-vault marker in an absent or empty destination."""
     if vault.is_symlink():
         raise WriteRefused("practice vault path is a symlink")
@@ -139,7 +154,7 @@ def init_vault(vault: Path, root: Path) -> dict:
         raise WriteRefused("init requires an absent or empty destination")
     validate_vault(vault, root, for_init=True)
     vault.mkdir(parents=True, exist_ok=True)
-    marker = {
+    marker: VaultMarker = {
         "schema_version": 1,
         "purpose": "learnkit-practice",
         "experimental": True,
@@ -157,7 +172,8 @@ def card_filename(item_id: str) -> str:
 def _field(text: str, limit: int, what: str) -> str | None:
     if not text or len(text) > limit:
         return f"{what} must be 1..{limit} single-line characters"
-    if FORBIDDEN_FIELD.search(text):
+    folded = text.casefold()
+    if not text.isprintable() or any(marker in folded for marker in FORBIDDEN_FIELD_MARKUP):
         return f"{what} carries forbidden characters or syntax"
     return None
 
@@ -204,10 +220,10 @@ def _read_regular(name: str | Path, *, directory: int | None = None) -> bytes:
         return handle.read()
 
 
-def build_plan(repo, item_ids: list[str], vault: Path, *,
+def build_plan(repo: Repo, item_ids: list[str], vault: Path, *,
                directory: int | None = None) -> list[CardPlanEntry]:
     """One plan entry per selected item, in selection order."""
-    by_note: dict[str, tuple[list, list[str]]] = {}
+    by_note: dict[str, tuple[list[EffectiveItem], list[str]]] = {}
     entries: list[CardPlanEntry] = []
     for item_id in item_ids:
         note_id = item_id.partition("#")[0]
@@ -239,12 +255,12 @@ def build_plan(repo, item_ids: list[str], vault: Path, *,
             entries.append(CardPlanEntry(
                 item_id, path, "refuse", f"item is not checked: {reason}", None))
             continue
-        concepts = list((row or {}).get("concept_ids") or [])
+        concepts = row["concept_ids"] if row is not None else []
         if not concepts or any(cid not in repo.concepts for cid in concepts):
             entries.append(CardPlanEntry(
                 item_id, path, "refuse", "item has no canonical concepts", None))
             continue
-        bindings = list((row or {}).get("source_bindings") or [])
+        bindings = row["source_bindings"] if row is not None else []
         if len(bindings) != 1:
             entries.append(CardPlanEntry(
                 item_id, path, "refuse",
@@ -295,14 +311,14 @@ def build_plan(repo, item_ids: list[str], vault: Path, *,
     return entries
 
 
-def plan_document(repo, item_ids: list[str], vault: Path,
-                  marker: dict) -> tuple[dict, list[CardPlanEntry]]:
+def plan_document(repo: Repo, item_ids: list[str], vault: Path,
+                  marker: VaultMarker) -> tuple[dict[str, object], list[CardPlanEntry]]:
     current = snapshot(repo.root)
     entries = build_plan(repo, item_ids, vault)
     if snapshot(repo.root) != current:
         raise WriteRefused("Core changed during export check; run check again")
     hashes = {entry.item_id: entry.content_sha256 for entry in entries}
-    document = {
+    document: dict[str, object] = {
         "schema_version": 1,
         "vault_id": marker["vault_id"],
         "snapshot_id": current,
@@ -328,7 +344,7 @@ def _assert_exportable(entries: list[CardPlanEntry]) -> None:
         raise WriteRefused(CHANGED_MESSAGE)
 
 
-def _check_plan(document: dict, entries: list[CardPlanEntry]) -> None:
+def _check_plan(document: dict[str, object], entries: list[CardPlanEntry]) -> None:
     raw_items = document.get("items")
     digests = document.get("source_content_hashes")
     if not isinstance(raw_items, list) or not isinstance(digests, dict):
@@ -341,6 +357,7 @@ def _check_plan(document: dict, entries: list[CardPlanEntry]) -> None:
                 or digests[entry.item_id] != entry.content_sha256):
             raise WriteRefused(f"stale plan: {entry.item_id} changed since check")
         action = expected.get("action")
+        digest: str | None
         if action == "create" and entry.action in {"create", "keep"}:
             digest = hashlib.sha256((entry.body or "").encode("utf-8")).hexdigest()
         elif action == entry.action:
@@ -389,7 +406,7 @@ def _publish(directory: int, name: str, body: str) -> bool:
         os.unlink(staged, dir_fd=directory)
 
 
-def apply_plan(repo, document: dict, vault: Path) -> dict:
+def apply_plan(repo: Repo, document: dict[str, object], vault: Path) -> ExportResult:
     """Recheck under the destination lock and publish approved cards create-only."""
     marker = validate_vault(vault, repo.root)
     if (not isinstance(document, dict) or document.get("schema_version") != 1

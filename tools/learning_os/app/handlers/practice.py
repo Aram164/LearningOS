@@ -11,18 +11,23 @@ from __future__ import annotations
 
 import copy
 from datetime import UTC
+from typing import NotRequired, TypedDict, cast
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.practice import content_sha256, extract_items
+from learning_os.domain.relations import EvidenceBinding
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.practice import (
     ARTIFACT_ID,
+    PracticeIndex,
+    PracticeProof,
+    PracticeRow,
     dump_sidecar,
     load_sidecar,
     note_items,
@@ -42,23 +47,42 @@ METHOD_FOR_STATUS = {
 }
 
 
+class PracticeContextRequest(TypedDict):
+    note_id: str
+    item_id: NotRequired[str]
+    expected_snapshot: NotRequired[str]
+
+
+class ReviewedVerification(TypedDict):
+    item_id: str
+    expected_old: object
+    new_status: str
+    method: str
+    concept_ids: list[str]
+    artifact_sha256: str
+    reviewer_id: str
+    source_binding: NotRequired[dict[str, object] | None]
+    comparison_sha256: NotRequired[str | None]
+
+
 @register("practice.context", kind="porcelain", effects=OperationEffects.READ)
-def practice_context(ctx: OpContext, req: dict) -> Result:
+def practice_context(ctx: OpContext, req: dict[str, object]) -> Result:
     """Prompt-safe practice summaries for one note, at one snapshot."""
     root = ctx.root
-    snapshot = _snapshot(root, req.get("expected_snapshot"))
+    request = cast(PracticeContextRequest, req)
+    snapshot = _snapshot(root, request.get("expected_snapshot"))
     repo = ctx.repo()
-    note = repo.notes.get(req["note_id"])
+    note = repo.notes.get(request["note_id"])
     if note is None:
         raise NotFound(
-            "note", req["note_id"], repo.notes,
+            "note", request["note_id"], repo.notes,
             site="practice.context.unknown-note")
     effective, diagnostics = note_items(repo, note)
-    if req.get("item_id"):
-        effective = [row for row in effective if row.item.item_id == req["item_id"]]
+    if request.get("item_id"):
+        effective = [row for row in effective if row.item.item_id == request["item_id"]]
         if not effective:
             raise NotFound(
-                "practice item", req["item_id"], [],
+                "practice item", request["item_id"], [],
                 site="practice.context.unknown-item")
     items = []
     for entry in effective:
@@ -73,15 +97,14 @@ def practice_context(ctx: OpContext, req: dict) -> Result:
             "ineligibility": list(entry.reasons),
             "content_sha256": content_sha256(
                 entry.item.item_id, entry.item.prompt, entry.item.solution),
-            "concept_ids": list((row or {}).get("concept_ids")
-                                or note.meta.get("concepts") or []),
+            "concept_ids": list((row["concept_ids"] if row else []) or note.meta.get("concepts") or []),
             "stored_row": copy.deepcopy(row),
         })
     if _snapshot(root) != snapshot:
         raise WriteRefused(
             "snapshot changed while reading practice context",
             site="practice.context.snapshot-changed")
-    result = {
+    result: dict[str, object] = {
         "schema_version": 1, "snapshot_id": snapshot,
         "contract": "practice-context-v1",
         "note_id": note.id,
@@ -96,7 +119,7 @@ def practice_context(ctx: OpContext, req: dict) -> Result:
 
 @register("practice.verification.record", kind="command",
           effects=OperationEffects.CANONICAL_WRITE)
-def practice_verification_record(ctx: OpContext, req: dict) -> Result:
+def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Result:
     """Record one reviewed verification in the practice sidecar."""
     root = ctx.root
     if current_gateway_request() is None:
@@ -104,7 +127,7 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
             "practice verification requires GatewayEnvelopeV2",
             site="practice.verification.record.gateway-required",
             prefixed=True, exit_code=2)
-    record = req["record"]
+    record = cast(ReviewedVerification, req["record"])
     item_id = record["item_id"]
     note_id, _, label = item_id.partition("#")
     repo = ctx.repo()
@@ -161,29 +184,30 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
             "the expected old verification row no longer matches; reload and review",
             site="practice.verification.record.stale-row")
 
-    proof = {
+    source_binding = cast(EvidenceBinding, copy.deepcopy(binding)) if status == "source-matched" else None
+    proof: PracticeProof = {
         "method": record["method"],
         "verified_at": observations.now().astimezone(UTC).isoformat(),
         "artifact_sha256": record["artifact_sha256"],
         "reviewer_id": record["reviewer_id"],
-        "source_binding": copy.deepcopy(binding) if status == "source-matched" else None,
+        "source_binding": source_binding,
         "comparison_sha256": record.get("comparison_sha256"),
     }
-    bindings = list((current or {}).get("source_bindings") or [])
-    if status == "source-matched" and binding not in bindings:
-        bindings.append(copy.deepcopy(binding))
-    new_row = {
+    bindings = list(current["source_bindings"]) if current else []
+    if source_binding is not None and source_binding not in bindings:
+        bindings.append(source_binding)
+    new_row: PracticeRow = {
         "item_id": item_id,
         "concept_ids": list(record["concept_ids"]),
         "kind": item.kind,
         "status": status,
         "content_sha256": content_sha256(item.item_id, item.prompt, item.solution),
         "source_bindings": bindings,
-        "verifications": [*((current or {}).get("verifications") or []), proof],
+        "verifications": [*(current["verifications"] if current else []), proof],
     }
     rows = [row for row in data["items"] if row["item_id"] != item_id]
     rows.append(new_row)
-    new_data = {"items": rows}
+    new_data: PracticeIndex = {"items": rows}
     from learning_os.store.contracts.json_schema import load_standalone_validator
 
     validator = load_standalone_validator(
@@ -195,7 +219,7 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
             site="practice.verification.record.bad-proof")
     path = sidecar_path(root)
     try:
-        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+        expected_revisions = parse_expected_revisions(cast(list[str] | None, req.get("expected_revision")))
     except ValueError as exc:
         raise WriteRefused(
             str(exc), site="practice.verification.record.bad-expected-revision",
@@ -205,7 +229,7 @@ def practice_verification_record(ctx: OpContext, req: dict) -> Result:
         proposal=TransactionProposal(
             capability="practice.verification.record",
             writes={path: dump_sidecar(new_data)},
-            artifact_ids=[ARTIFACT_ID, note.id],
+            artifact_ids=(ARTIFACT_ID, note.id),
             expected_revisions=expected_revisions,
         ),
     )
