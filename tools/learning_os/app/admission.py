@@ -90,6 +90,8 @@ GESTURE_ALLOWLIST = frozenset({
 UI_REVIEWED_ALLOWLIST = frozenset({
     # Connections Aram authored, applied from the exact-row preview (ADR-017).
     "concept.relations.change",
+    # One exact practice verification reviewed against its note and proof (ADR-024).
+    "practice.verification.record",
     # Preparing a shelving packet proposes; it applies nothing.
     "review.prepare",
     # Applying the selected items, after their proposed changes were shown.

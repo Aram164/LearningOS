@@ -14,6 +14,8 @@ from gateway_helpers import (
 )
 from repo_builders import run_los
 
+from learning_os.store.contracts.gateway import intent_sha256
+
 BANK_SOLUTION = """\
 **A1. What is 2+2?**
 <details>
@@ -204,6 +206,15 @@ def test_source_matched_record_and_context_round_trip(mini_repo):
         payload={"record": _base_record(binding)},
         artifact_ids=["registry-practice-index", "note-practice-bank"],
         idempotency_key="record-a1")
+    envelope["approval"]["kind"] = "direct-user-gesture"
+    envelope["channel"] = "codex"
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    machine = run_v2_capability(mini_repo, envelope)
+    assert machine.returncode == 2 and json.loads(machine.stdout)["error"]["code"] == "UNCONFIRMED"
+    assert not (mini_repo / "knowledge/practice-index.yaml").exists()
+
+    envelope["channel"] = "ui"
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     result = run_v2_capability(mini_repo, envelope)
     assert result.returncode == 0, result.stdout + result.stderr
 
