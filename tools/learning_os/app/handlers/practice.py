@@ -79,11 +79,13 @@ def practice_context(ctx: OpContext, req: dict[str, object]) -> Result:
             site="practice.context.unknown-note")
     effective, diagnostics = note_items(repo, note)
     if request.get("item_id"):
-        effective = [row for row in effective if row.item.item_id == request["item_id"]]
-        if not effective:
+        matched = [row for row in effective if row.item.item_id == request["item_id"]]
+        if not matched:
             raise NotFound(
-                "practice item", request["item_id"], [],
+                "practice item", request["item_id"],
+                [entry.item.item_id for entry in effective],
                 site="practice.context.unknown-item")
+        effective = matched
     items = []
     for entry in effective:
         row = entry.row
