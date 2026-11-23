@@ -16,9 +16,9 @@ from urllib.parse import urlencode
 
 from learning_os.derive.projection.canvas import CANVAS_EDGE_COLORS, concept_depths
 from learning_os.derive.projection.concepts import PREREQ_TYPES
-from learning_os.domain.relations import RelationRow, enriched_relation, relation_evidence_state
+from learning_os.domain.relations import RelationRow, enriched_relation
 from learning_os.domain.snapshot import Repo
-from learning_os.store.practice import checked_practice_by_note
+from learning_os.store.practice import checked_practice_by_note, relation_evidence_state
 
 CARD_W, CARD_H, STEP_X, STEP_Y = 320, 160, 520, 200
 

@@ -400,3 +400,37 @@ def test_a_fabricated_stored_excerpt_reads_unverified(mini_repo):
     first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
     assert first["checked"] is False and first["status"] == "unverified"
     assert "does not appear verbatim" in " ".join(first["ineligibility"])
+
+
+def test_bindings_resolve_through_the_flat_alias_tree(mini_repo, tmp_path):
+    """Live layout: materials/.flat/<source> is a symlink into the topic tree.
+
+    Requiring the resolved file to stay under .flat refused every real
+    material; Core's rule is that every hop stays inside materials/.
+    """
+    import os
+    import shutil
+
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    materials = mini_repo.parent / "materials"
+    topic = materials / "mathematics" / "demo-book"
+    topic.parent.mkdir(parents=True)
+    shutil.move(str(materials / "source-demo-book"), str(topic))
+    (materials / ".flat").mkdir()
+    os.symlink("../mathematics/demo-book", materials / ".flat" / "source-demo-book")
+    ok = _record(mini_repo, _base_record(binding), "record-through-flat")
+    assert ok.returncode == 0, ok.stdout + ok.stderr
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is True, first["ineligibility"]
+
+    # An alias that leaves materials/ is refused, on write and on read.
+    outside = tmp_path / "elsewhere"
+    shutil.copytree(topic, outside)
+    (materials / ".flat" / "source-demo-book").unlink()
+    os.symlink(str(outside), materials / ".flat" / "source-demo-book")
+    first = json.loads(run_los(mini_repo, "practice-context", "note-practice-bank").stdout)["items"][0]
+    assert first["checked"] is False
+    escaped = _record(mini_repo, _base_record(
+        binding, item_id="note-practice-bank#A2"), "record-escaping-alias")
+    assert escaped.returncode != 0

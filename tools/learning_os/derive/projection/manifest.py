@@ -184,7 +184,8 @@ def project_manifest_records(
 
 def build_manifest_relations(repo: Repo) -> list[dict]:
     """Concept relations in canonical sorted order with a fixed key shape."""
-    from learning_os.domain.relations import enriched_relation, relation_evidence_state
+    from learning_os.domain.relations import enriched_relation
+    from learning_os.store.practice import relation_evidence_state
 
     out = []
     for r in sorted(repo.relations,

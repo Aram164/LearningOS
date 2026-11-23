@@ -10,6 +10,7 @@ regardless of what the row says.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
@@ -25,13 +26,13 @@ from learning_os.domain.practice import (
 )
 from learning_os.domain.relations import (
     EvidenceBinding,
-    binding_file_state,
-    file_sha256,
-    material_file,
+    RelationRow,
+    evidence_state,
     normalize_quote,
 )
 from learning_os.domain.snapshot import Note, Repo
 from learning_os.store.contracts.json_schema import load_standalone_validator
+from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.materials.resolution import parse_material_uri
 
@@ -66,6 +67,65 @@ class PracticeRow(TypedDict):
 
 class PracticeIndex(TypedDict):
     items: list[PracticeRow]
+
+
+#: SHA-256 of material files, keyed by (path, device, inode, size, mtime_ns).
+#: One publish asks for the same cited PDF once per board, concept card and
+#: manifest row that shows it; without this every ask re-read and re-hashed
+#: the whole file. Any change to the file changes its stat key, so a stale
+#: digest is never served; entries for replaced files are simply unused.
+_DIGESTS: dict[tuple[str, int, int, int, int], str] = {}
+
+
+def material_file(repo: Repo, rel: object) -> Path | None:
+    """The regular file ``rel`` names under the materials resolution root.
+
+    Core's materials rule (``resolve_symlinks_inside``): the ``.flat`` id
+    aliases are symlinks into the topic tree, so links are followed, but every
+    hop must stay inside ``materials/``. Requiring the resolved path to stay
+    under ``.flat`` itself refused every real material, because every
+    ``.flat/<source>`` entry is such a link.
+    """
+    rel = str(rel or "")
+    if not rel or PurePosixPath(rel).is_absolute() or ".." in PurePosixPath(rel).parts:
+        return None
+    try:
+        resolved = resolve_symlinks_inside(
+            repo.learningos_root / "materials", repo.materials_root / rel, strict=False)
+    except (PathBoundaryError, OSError):
+        return None
+    return resolved if resolved.is_file() else None
+
+
+def file_sha256(path: Path) -> str:
+    """The file's SHA-256, read once per unchanged file."""
+    stat = path.stat()
+    key = (str(path), stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+    digest = _DIGESTS.get(key)
+    if digest is None:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        _DIGESTS[key] = digest
+    return digest
+
+
+def binding_file_state(repo: Repo, binding: Mapping[str, object]) -> str:
+    """``ok`` when the pinned file exists under materials with its digest."""
+    candidate = material_file(repo, binding.get("material_relpath"))
+    if candidate is None:
+        return "stale"
+    try:
+        digest = file_sha256(candidate)
+    except OSError:
+        return "stale"
+    return "ok" if digest == binding.get("file_sha256") else "stale"
+
+
+def relation_evidence_state(repo: Repo, row: RelationRow) -> str:
+    """A relation's derived evidence state (disputed > stale > missing > verified)."""
+    evidence = row.get("evidence") or []
+    if not evidence:
+        return "disputed" if row.get("evidence_disputed") else "missing"
+    return evidence_state(row, [binding_file_state(repo, binding) for binding in evidence])
 
 
 def sidecar_path(root: Path) -> Path:
@@ -197,7 +257,7 @@ def checked_practice_by_note(repo: Repo) -> dict[str, list[EffectiveItem]]:
 
 def current_material_digest(repo: Repo, relative: object) -> str | None:
     """SHA-256 of the material file a binding names, or None if unusable."""
-    path = material_file(repo.materials_root, relative)
+    path = material_file(repo, relative)
     if path is None:
         return None
     try:
@@ -250,13 +310,15 @@ def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
             return "binding PDF does not match the registered source file"
     elif not relative.startswith((registered.path if registered else source_id).rstrip("/") + "/"):
         return "binding PDF is outside the registered source"
-    if binding_file_state(repo.root, repo.materials_root, binding) != "ok":
+    if binding_file_state(repo, binding) != "ok":
         return "binding file is missing or its digest changed"
     page = binding.get("page")
     quote = binding.get("quote", "")
     if type(page) is not int or page < 1 or not isinstance(quote, str):
         return "binding needs a physical PDF page and a text excerpt"
-    path = repo.materials_root / relative
+    path = material_file(repo, relative)
+    if path is None:
+        return "binding file is missing or its digest changed"
     try:
         page_count, page_text = _pinned_page(
             path, str(binding.get("file_sha256")), page, with_text=bool(quote))
