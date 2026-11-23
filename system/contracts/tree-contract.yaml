@@ -176,6 +176,9 @@ directories:
       - path: generated/collections
         rebuildable: true
         purpose: collection-level derived views written by projection
+      - path: generated/atlas
+        rebuildable: true
+        purpose: JSON Canvas board templates and concept cards written by projection (P2)
       - path: generated/.text-cache
         rebuildable: false
         purpose: page-text caches owned by tools/material_text.py; a dot-folder, so Obsidian neither loads nor watches its page files
@@ -195,6 +198,10 @@ directories:
   - path: bases
     owner: interface
     purpose: installed Obsidian Bases shelves (ADR-006); gitignored
+
+  - path: boards
+    owner: interface
+    purpose: editable JSON Canvas working boards owned by the UI (P2/P3); gitignored like bases/, included in backups
 
   - path: tools
     owner: tools

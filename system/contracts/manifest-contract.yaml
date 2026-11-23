@@ -49,12 +49,13 @@
 # Historical adoption log. `mirrored_in_ui` records the lock name paired with each
 # version at adoption; only the active lock (`contracts/manifest-v20.lock.json`) is
 # retained on disk in LearningOS/obsidian-ui.
-contract_version: 20
+contract_version: 21
 top_level_keys:
 - _generated
 - academic_deadlines
 - ai_actions
 - artifact_revisions
+- atlas_boards
 - backlinks
 - counts
 - domains
@@ -103,9 +104,9 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v20.schema.json
-schema_sha256: sha256:e2169561904ad15b60c6956eb0f7b97d4f810589cd1684639808c4ef24ae3236
-closure_sha256: sha256:7250f565e3cfb16e583a1d22e2dbaa267a87274c8654977d6160afa638cf4253
+schema_path: system/contracts/manifest-v21.schema.json
+schema_sha256: sha256:3f7283aa5f85ebc0602f44132247c366c984f85aacbfe10303da8341c06fb1d1
+closure_sha256: sha256:c30fc2f18f391830a8a32107e4389d2dbabc25337aa09052952860f6dbde1543
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -225,3 +226,8 @@ history:
     and schema-pinned lifecycle verdicts (is_settled, is_retired, stages[].is_open,
     resources[].is_entry, workspaces[].is_open) (v20)
   mirrored_in_ui: contracts/manifest-v20.lock.json
+- version: 21
+  adopted: '2026-11-23'
+  note: 'Manifest 21: atlas_boards board catalog and enriched relation lifecycle/evidence
+    fields (experimental/native-atlas-practice)'
+  mirrored_in_ui: contracts/manifest-v21.lock.json

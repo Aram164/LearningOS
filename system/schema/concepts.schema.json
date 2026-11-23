@@ -3,25 +3,101 @@
   "$id": "learning-os/concepts.schema.json",
   "title": "Concept registry",
   "x-governs": "record",
-  "description": "Validates knowledge/concepts.yaml (or partitioned knowledge/concepts/*.yaml — partitioning must not change semantics). Labels are English; other-language terms are aliases. Records never contain full explanations; concept content lives in notes; backlinks are generated.",
+  "description": "Validates knowledge/concepts.yaml (or partitioned knowledge/concepts/*.yaml \u2014 partitioning must not change semantics). Labels are English; other-language terms are aliases. Records never contain full explanations; concept content lives in notes; backlinks are generated.",
   "type": "object",
-  "required": ["concepts"],
+  "required": [
+    "concepts"
+  ],
   "additionalProperties": false,
   "properties": {
     "concepts": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "label"],
+        "required": [
+          "id",
+          "label"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" },
-          "label": { "type": "string", "minLength": 1 },
-          "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
-          "description": { "type": "string", "maxLength": 300, "description": "Short disambiguation only — never an explanation." },
-          "domain_hints": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
-          "deprecated": { "type": "boolean" },
-          "replaced_by": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }
+          "id": {
+            "type": "string",
+            "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Short disambiguation only \u2014 never an explanation."
+          },
+          "domain_hints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "deprecated": {
+            "type": "boolean"
+          },
+          "replaced_by": {
+            "type": "string",
+            "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "description_evidence": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "$ref": "#/$defs/evidence_binding"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "evidence_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "material_relpath",
+        "file_sha256",
+        "page",
+        "quote"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "material_relpath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
         }
       }
     }

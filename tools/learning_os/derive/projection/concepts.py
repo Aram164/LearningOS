@@ -88,6 +88,8 @@ def build_backlinks_semantic(repo: Repo) -> dict:
                 if sid:
                     source_to_units.setdefault(sid, []).append(study_map.unit_id)
     for rel in repo.relations:
+        if rel.get("status", "active") != "active":
+            continue  # retracted/vetoed edges live in History, not traversal
         frm, to, rtype = rel.get("from"), rel.get("to"), rel.get("type")
         concept_relations.setdefault(frm, {"outgoing": [], "incoming": []})
         concept_relations.setdefault(to, {"outgoing": [], "incoming": []})
@@ -222,6 +224,8 @@ def build_dependency_report_body(repo: Repo, backlinks: dict) -> str:
     """
     prereqs: dict[str, set] = {}
     for rel in repo.relations:
+        if rel.get("status", "active") != "active":
+            continue
         if rel.get("type") in PREREQ_TYPES:
             prereqs.setdefault(str(rel["from"]), set()).add(str(rel["to"]))
 
@@ -332,7 +336,8 @@ def build_concept_map_body(repo: Repo) -> str:
 
     edges = sorted(
         (str(r["to"]), str(r["from"]), str(r["type"]))
-        for r in repo.relations if r.get("type") in PREREQ_TYPES)
+        for r in repo.relations
+        if r.get("type") in PREREQ_TYPES and r.get("status", "active") == "active")
     if not edges:
         lines.append("(no prerequisite edges in the relation registry)")
         lines.append("")

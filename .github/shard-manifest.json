@@ -193,6 +193,7 @@
    "tests/test_material_summaries.py",
    "tests/test_materials_manifest.py",
    "tests/test_model_question_scoring.py",
+   "tests/test_atlas_boards.py",
    "tests/test_module_concept_atlas.py",
    "tests/test_module_lifecycle.py",
    "tests/test_module_plan_warning_gate.py",

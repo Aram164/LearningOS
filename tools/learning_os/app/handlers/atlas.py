@@ -414,6 +414,22 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             site="concept.relations.change.empty-operations",
         )
     registries = _registries(root)
+    repo = ctx.repo()
+    from learning_os.domain.relations import binding_file_state, is_decorated
+
+    def _check_evidence(row: dict) -> None:
+        for binding in row.get("evidence") or []:
+            if binding.get("source_id") not in repo.sources:
+                raise WriteRefused(
+                    "evidence binding names an unknown source",
+                    site="concept.relations.change.unknown-evidence-source",
+                )
+            if binding_file_state(root, repo.materials_root, binding) != "ok":
+                raise WriteRefused(
+                    "evidence binding file is missing or its digest changed",
+                    site="concept.relations.change.stale-evidence",
+                )
+
     changed = set()
     for operation in operations:
         if not isinstance(operation, dict):
@@ -438,6 +454,16 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
                         str(exc),
                         site="concept.relations.change.bad-relation-row",
                     ) from exc
+        if "new" in operation:
+            _check_evidence(operation["new"])
+            new_row = operation["new"]
+            if new_row.get("status") in ("retracted", "vetoed"):
+                reason = str(new_row.get("status_reason", ""))
+                if not reason.strip() or len(reason.strip()) > 400:
+                    raise WriteRefused(
+                        "retract/veto requires a 1-400 character reason",
+                        site="concept.relations.change.reason-required",
+                    )
         if "old" in operation:
             matches = [(path, i) for path, data in registries.items()
                        for i, row in enumerate(data["relations"]) if row == operation["old"]]
@@ -447,6 +473,32 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
                     site="concept.relations.change.old-not-found",
                 )
             path, index = matches[0]
+            old_row = operation["old"]
+            if old_row.get("pinned"):
+                unpin = (kind == "replace"
+                         and {**operation["new"]} == {**old_row, "pinned": False})
+                if not unpin:
+                    raise WriteRefused(
+                        "a pinned relation only accepts an exact unpin toggle",
+                        site="concept.relations.change.pinned-row",
+                    )
+            if kind == "remove" and is_decorated(old_row):
+                raise WriteRefused(
+                    "decorated relations are retracted, not hard-deleted",
+                    site="concept.relations.change.decorated-remove",
+                )
+            if (kind == "replace" and old_row.get("status") == "vetoed"
+                    and operation["new"].get("status", "active") == "active"):
+                old_sources = {b.get("source_id")
+                               for b in old_row.get("evidence") or []}
+                fresh = [b for b in operation["new"].get("evidence") or []
+                         if b.get("source_id") not in old_sources]
+                if not fresh:
+                    raise WriteRefused(
+                        "restoring a vetoed relation requires fresh evidence "
+                        "from a previously unused registered source",
+                        site="concept.relations.change.restore-needs-fresh-evidence",
+                    )
             if kind == "remove":
                 registries[path]["relations"].pop(index)
             else:

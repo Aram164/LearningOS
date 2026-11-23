@@ -184,12 +184,22 @@ def project_manifest_records(
 
 def build_manifest_relations(repo: Repo) -> list[dict]:
     """Concept relations in canonical sorted order with a fixed key shape."""
-    return [
-        {"from": r.get("from"), "type": r.get("type"), "to": r.get("to"),
-         "context": r.get("context"), "source": r.get("source")}
-        for r in sorted(repo.relations,
-                        key=lambda r: (str(r.get("from")), str(r.get("type")), str(r.get("to"))))
-    ]
+    from learning_os.domain.relations import enriched_relation, relation_evidence_state
+
+    out = []
+    for r in sorted(repo.relations,
+                    key=lambda r: (str(r.get("from")), str(r.get("type")), str(r.get("to")))):
+        row = enriched_relation(r)
+        out.append({
+            "from": row.get("from"), "type": row.get("type"), "to": row.get("to"),
+            "context": row.get("context"), "source": row.get("source"),
+            "origin": row["origin"], "status": row["status"],
+            "pinned": row["pinned"], "status_reason": row.get("status_reason"),
+            "evidence_disputed": row["evidence_disputed"],
+            "evidence": row["evidence"],
+            "evidence_state": relation_evidence_state(repo, row),
+        })
+    return out
 
 
 def derive_manifest_collections(records: list[dict]) -> dict[str, list]:
@@ -289,6 +299,7 @@ def assemble_manifest_semantic_payload(
     academic_deadlines: list[dict],
 ) -> dict:
     """The complete semantic body: every payload key except ``_generated``."""
+    from learning_os.derive.projection.atlas_boards import build_atlas_boards
     return {
         "records": records,
         # The domain catalog (D5): ordered ids, labels and one-based positions,
@@ -329,6 +340,7 @@ def assemble_manifest_semantic_payload(
         "study_maps": collections["study_maps"],
         "stages": stages_v2,
         "module_concept_edges": module_concept_edges,
+        "atlas_boards": build_atlas_boards(repo, indexes)[0],
         "module_source_maps": collections["module_source_maps"],
         "unit_material_syntheses": unit_material_syntheses_v2,
         "resume_pointer": dict(resume_pointer or {}),

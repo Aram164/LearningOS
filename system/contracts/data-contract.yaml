@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 68
-schema_fingerprint: sha256:6233010f70f42069446bf020f9e586e9c8bd499a5a14e915810007a3bc693e05
+contract_version: 69
+schema_fingerprint: sha256:e2c888366109afec341014f615894a34c72766e51a4e4ec2308545174f25c8d8
 record_schemas: 38
 history:
 - version: 1
@@ -489,5 +489,11 @@ history:
   note: 'Additive: material-reading-card log outcome ''observed'' with recorded_source_digest
     and inspected_range for adopted reading entries; existing records remain valid
     without migration'
+  migration: null
+  fixture: tests/fixtures/formats/v68/
+- version: 69
+  adopted: '2026-11-23'
+  note: 'P1: optional relation lifecycle/evidence fields and concept description_evidence
+    (experimental/native-atlas-practice)'
   migration: null
   fixture: tests/fixtures/formats/v68/

@@ -67,6 +67,8 @@ def _concept_depths(relations: list[dict], involved: set[str]) -> dict[str, int]
     edge set as the Mermaid concept map). Cycles fall back to depth 0."""
     prereqs: dict[str, set[str]] = {c: set() for c in involved}
     for r in relations:
+        if r.get("status", "active") != "active":
+            continue
         if r.get("type") in PREREQ_TYPES:
             a, b = str(r.get("from")), str(r.get("to"))
             if a in involved and b in involved:
@@ -98,6 +100,8 @@ def build_concept_canvas(repo: Repo, generated_at: str) -> dict:
     file is disposable like every generated output."""
     involved = set()
     for r in repo.relations:
+        if r.get("status", "active") != "active":
+            continue
         involved.add(str(r.get("from")))
         involved.add(str(r.get("to")))
     involved &= set(repo.concepts)
@@ -135,6 +139,8 @@ def build_concept_canvas(repo: Repo, generated_at: str) -> dict:
 
     edges = []
     for r in repo.relations:
+        if r.get("status", "active") != "active":
+            continue
         a, b, t = str(r.get("from")), str(r.get("to")), str(r.get("type"))
         if a not in involved or b not in involved:
             continue

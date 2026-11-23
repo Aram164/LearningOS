@@ -1341,6 +1341,21 @@ documents:
 
   # ---- dated reviews (findings, not decisions) -----------------------------
 
+  - path: system/adr/ADR-024-native-atlas-and-practice-vault-2026-11-23.md
+    audience: developer
+    applies_to: []
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Native JSON Canvas is the one Atlas renderer: Core publishes
+      deterministic board templates and the Manifest 21 atlas_boards catalog,
+      the UI owns editable boards/ working copies with guarded refresh, and
+      relation lifecycle/evidence fields land in stored format 69. Practice
+      export stays one-way and append-only into a separate vault.
+    amends: []
+
   - path: system/adr/external-review-2026-07-16.md
     audience: developer
     applies_to: []

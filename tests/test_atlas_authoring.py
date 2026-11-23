@@ -87,6 +87,48 @@ def test_atlas_question_payload_schema_types_its_fields(repo_root: Path):
         validator.validate({"question": {"title": "no id"}})
 
 
+def test_pinned_row_only_unpins_and_decorated_remove_refused(mini_repo):
+    pinned = {**OLD, "pinned": True}
+    result = change(mini_repo, [{"action": "replace", "old": OLD, "new": pinned}], "pin")
+    assert result.returncode == 0, result.stdout + result.stderr
+    # Any other edit to a pinned row is refused.
+    result = change(mini_repo, [{"action": "replace", "old": pinned,
+                                 "new": {**pinned, "context": "sneaky"}}], "pinned-edit")
+    assert result.returncode != 0
+    # Hard deletion of a decorated row is refused.
+    result = change(mini_repo, [{"action": "remove", "old": pinned}], "pinned-remove")
+    assert result.returncode != 0
+    # The exact unpin toggle is the one allowed change.
+    result = change(mini_repo, [{"action": "replace", "old": pinned,
+                                 "new": {**pinned, "pinned": False}}], "unpin")
+    assert result.returncode == 0, result.stdout + result.stderr
+    data = yaml.safe_load((mini_repo / "knowledge/concept-relations.yaml").read_text())
+    assert data["relations"] == [{**OLD, "pinned": False}]
+
+
+def test_retract_requires_reason_and_keeps_history(mini_repo):
+    result = change(mini_repo, [{"action": "replace", "old": OLD,
+                                 "new": {**OLD, "status": "retracted"}}], "retract-noreason")
+    assert result.returncode != 0
+    retracted = {**OLD, "status": "retracted", "status_reason": "superseded by review"}
+    result = change(mini_repo, [{"action": "replace", "old": OLD, "new": retracted}], "retract")
+    assert result.returncode == 0, result.stdout + result.stderr
+    data = yaml.safe_load((mini_repo / "knowledge/concept-relations.yaml").read_text())
+    assert data["relations"] == [retracted]
+
+
+def test_evidence_state_precedence():
+    from learning_os.domain.relations import enriched_relation, evidence_state
+    assert evidence_state({}) == "missing"
+    assert evidence_state({"evidence": [{"source_id": "source-x"}]}) == "verified"
+    assert evidence_state({"evidence": [{"source_id": "source-x"}]}, ["stale"]) == "stale"
+    assert evidence_state({"evidence_disputed": True,
+                           "evidence": [{"source_id": "source-x"}]}, ["stale"]) == "disputed"
+    old = {"from": "concept-a", "type": "requires", "to": "concept-b"}
+    assert enriched_relation(old)["status"] == "active"
+    assert "status" not in old  # stored rows are not rewritten by projection
+
+
 def test_atlas_question_save_refuses_a_non_object_target(mini_repo):
     result = run_los(mini_repo, "atlas-question-save", "--question",
                      json.dumps({"id": "note-atlas-new", "title": "T",

@@ -217,12 +217,14 @@ repository/
 ├── generated/              gitignored, rebuildable; shape declared by manifest-contract.yaml
 │   ├── reports/            validation and health reports
 │   ├── collections/        collection-level derived views written by projection
+│   ├── atlas/              JSON Canvas board templates and concept cards written by projection (P2)
 │   ├── .text-cache/        page-text caches owned by tools/material_text.py; a dot-folder, so Obsidian neither loads nor watches its page files
 │   ├── dossiers/           semantic dossiers owned by los dossier
 │   ├── derived-state/      derived state caches owned by learning_os.store.derived
 │   ├── material-search/    SQLite FTS5 index owned by tools/material_search.py
 │   └── material-outlines/  PDF outline sections owned by tools/material_outline.py
 ├── bases/                  installed Obsidian Bases shelves (ADR-006); gitignored
+├── boards/                 editable JSON Canvas working boards owned by the UI (P2/P3); gitignored like bases/, included in backups
 ├── tools/                  the operator CLI and the learning_os package; see tools/README.md
 ├── tests/                  the test suite and its frozen format fixtures
 └── workbench/              published migration review documents and execution evidence; not learner data

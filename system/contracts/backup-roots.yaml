@@ -39,6 +39,7 @@ roots:
       # loader reads archive/workspaces/*/*/CONTEXT.md on every load. Omitted
       # here until #30.
       - archive/workspaces
+      - boards
       # Resolved inbox drops are the routing audit trail: each inbox.resolve
       # receipt names its archived bytes, so a restore without them breaks
       # the receipt-to-content linkage.

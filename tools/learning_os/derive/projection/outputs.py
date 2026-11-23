@@ -105,6 +105,10 @@ def generate_all(repo: Repo, generated_at: str | None = None, *,
         outputs[IDENTITY_FILENAME] = json.dumps(
             identity, separators=(",", ":"), sort_keys=True, ensure_ascii=False,
         ) + "\n"
+    from learning_os.derive.projection.atlas_boards import build_atlas_boards
+    _catalog, board_files = build_atlas_boards(repo, manifest["indexes"], generated_at)
+    for rel_path, text in sorted(board_files.items()):
+        outputs[rel_path.removeprefix("generated/")] = text
     for name in sorted(repo.collections):
         outputs[f"collections/{name}.md"] = build_collection_view(
             repo, name, repo.collections[name], generated_at) + "\n"
