@@ -1,14 +1,31 @@
 """Append-only LearnKit export: plan/apply, keeps, refusals (P6 steps 37-40)."""
 import json
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
+import pytest
 from gateway_helpers import approved_v2_call
 from test_practice_verification import BANK_SOLUTION, _binding, _note, _reviewed_digest
 
 EXPORTER = Path(__file__).resolve().parent.parent / "tools" / "export_learnkit.py"
 ITEM = "note-practice-bank#A1"
+
+
+@pytest.fixture
+def outside():
+    """A scratch root outside every checkout and the paired Core/UI workspace.
+
+    CI puts pytest's basetemp inside its paired workspace
+    (`<work>/LearningOS/{repository,obsidian-ui}`), which the exporter rightly
+    refuses as a practice-vault location; the pytest temp path passed locally
+    only because the local basetemp lies elsewhere.
+    """
+    root = Path(tempfile.mkdtemp(prefix="los-practice-export-")).resolve()
+    yield root
+    shutil.rmtree(root, ignore_errors=True)
 
 
 def export(root, *args):
@@ -35,10 +52,10 @@ def _verify(mini_repo):
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def test_init_check_apply_keep_cycle(mini_repo, tmp_path):
+def test_init_check_apply_keep_cycle(mini_repo, outside):
     _verify(mini_repo)
-    vault = tmp_path / "practice-vault"
-    plan = tmp_path / "plan.json"
+    vault = outside / "practice-vault"
+    plan = outside / "plan.json"
 
     refused = export(mini_repo, "--vault", str(mini_repo / "vault"), "--init")
     assert refused.returncode == 2  # intersects the Core repository
@@ -96,10 +113,10 @@ def test_init_check_apply_keep_cycle(mini_repo, tmp_path):
 
 
 
-def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, tmp_path):
+def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, outside):
     _verify(mini_repo)
-    vault = tmp_path / "practice-vault"
-    plan = tmp_path / "plan.json"
+    vault = outside / "practice-vault"
+    plan = outside / "plan.json"
     assert export(mini_repo, "--vault", str(vault), "--init").returncode == 0
     assert export(mini_repo, "--vault", str(vault), "--check",
                   "--item", ITEM, "--out", str(plan)).returncode == 0
@@ -139,10 +156,10 @@ def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, tmp_path):
     assert card.read_bytes() == before  # never rewritten
 
 
-def test_unverified_and_linked_roots_refuse(mini_repo, tmp_path):
+def test_unverified_and_linked_roots_refuse(mini_repo, outside):
     _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
-    vault = tmp_path / "practice-vault"
-    plan = tmp_path / "plan.json"
+    vault = outside / "practice-vault"
+    plan = outside / "plan.json"
     assert export(mini_repo, "--vault", str(vault), "--init").returncode == 0
     assert export(mini_repo, "--vault", str(vault), "--check",
                   "--item", ITEM, "--out", str(plan)).returncode == 0
@@ -151,11 +168,11 @@ def test_unverified_and_linked_roots_refuse(mini_repo, tmp_path):
     assert applied.returncode == 2
     assert not (vault / "Cards").exists() or not list((vault / "Cards").glob("*.md"))
 
-    linked = tmp_path / "linked"
+    linked = outside / "linked"
     linked.symlink_to(vault, target_is_directory=True)
     assert export(mini_repo, "--vault", str(linked), "--init").returncode == 2
 
-    unmarked = tmp_path / "unmarked"
+    unmarked = outside / "unmarked"
     unmarked.mkdir()
     checked = export(mini_repo, "--vault", str(unmarked), "--check",
                      "--item", ITEM, "--out", str(plan))
