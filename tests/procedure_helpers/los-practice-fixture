@@ -6,13 +6,16 @@ import argparse
 import hashlib
 import json
 import os
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 repo = Path(os.environ["LOS_REPO"])
 sys.path[:0] = [str(repo / "tests"), str(repo / "tools")]
 
-from test_practice_verification import _base_record, _note, _pdf_bytes, _record  # noqa: E402
+from gateway_helpers import approved_v2_envelope  # noqa: E402
+from test_practice_verification import _base_record, _note, _pdf_bytes  # noqa: E402
 
 NOTE_ID = "note-practice-bank"
 RELATIVE = "source-demo-book/book.pdf"
@@ -52,10 +55,28 @@ def attest(root: Path, number: int, changed: bool) -> None:
     )
     if changed:
         payload.update(new_status="confirmed", method="explicit-review", source_binding=None)
-    result = _record(root, payload, f"fixture-{number}-{'changed' if changed else 'initial'}")
+    capability = "practice.verification.record"
+    envelope = approved_v2_envelope(
+        root, capability=capability, payload={"record": payload},
+        artifact_ids=["registry-practice-index", NOTE_ID],
+        idempotency_key=f"fixture-{number}-{'changed' if changed else 'initial'}",
+    )
+    # Use named scratch files so the procedure's write audit can resolve
+    # every captured path, including the CLI input and output.
+    with tempfile.TemporaryDirectory(dir=root.parent.parent) as scratch:
+        request = Path(scratch) / "request.json"
+        response = Path(scratch) / "response.json"
+        request.write_text(json.dumps(envelope), encoding="utf-8")
+        with response.open("w", encoding="utf-8") as output:
+            result = subprocess.run(
+                [sys.executable, str(repo / "tools" / "los.py"), "--root", str(root),
+                 "capability", capability, "--payload-file", str(request)],
+                stdout=output, stderr=subprocess.STDOUT, timeout=120,
+            )
+        response_text = response.read_text(encoding="utf-8")
     if result.returncode:
-        raise SystemExit(result.stdout + result.stderr)
-    data = json.loads(result.stdout)
+        raise SystemExit(response_text)
+    data = json.loads(response_text)
     if not data.get("ok") or not data.get("receipt_path"):
         raise SystemExit("Fixture verification failed to produce a commit receipt")
     print(f"{item_id} {data['result']['status']}")

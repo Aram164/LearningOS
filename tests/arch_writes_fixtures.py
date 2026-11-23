@@ -305,6 +305,8 @@ def fixture_4_descriptor_and_dir_fd(tmp_path: Path) -> None:
                and not os.path.isabs(rec["paths"][0])
                for rec in dd_opens), (
         f"dir_fd open must carry a relative path: {dd_opens}")
+    assert any(rec.get("resolved_paths") == [str(inbox.resolve() / "dirfd-write.md")]
+               for rec in dd_opens), dd_opens
 
 
 def fixture_5_rename_into_canonical(tmp_path: Path) -> None:
