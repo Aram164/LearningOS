@@ -188,6 +188,7 @@ GROUPS: dict[str, list[str]] = {
         "test_transaction_faults.py",
         "test_architecture_hardening_adversarial.py",
         "test_ui_gateway_recovery.py",
+        "test_ui_phase3_live_writes.py",
         "test_validation_cache.py",
         "test_workspace_next_action.py",
         "test_workspace_complete.py",

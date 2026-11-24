@@ -302,6 +302,7 @@ _PAIRED_BOUNDARY = [
     "test_operations_gate.py",
     "test_trace_context.py",
     "test_ui_gateway_recovery.py",
+    "test_ui_phase3_live_writes.py",
     "test_vnext_boundaries.py",
 ]
 
