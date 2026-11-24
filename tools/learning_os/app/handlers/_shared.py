@@ -13,6 +13,7 @@ from learning_os.app.gateway import validate_capability_envelope as _validate_ca
 from learning_os.app.proposal import GatewayDispatch
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.revisions import artifact_revision
 
 NOTES_PREFIX = Path("knowledge/notes")
@@ -96,9 +97,7 @@ def inbox_search_rows(root: Path) -> list[dict]:
     if not inbox.is_dir():
         return []
     rows = []
-    for path in sorted(inbox.rglob("*")):
-        if not path.is_file():
-            continue
+    for path in iter_non_symlink_files(inbox):
         rel = path.relative_to(inbox).as_posix()
         if any(part.startswith(".") for part in rel.split("/")):
             continue

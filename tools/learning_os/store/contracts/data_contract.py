@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from learning_os.store import observations
+from learning_os.store.fs import atomic_write_text_exclusive, clean_git_env
 
 ROOT = Path(__file__).resolve().parents[4]
 CONTRACT = ROOT / "system" / "contracts" / "data-contract.yaml"
@@ -79,10 +80,10 @@ def load_contract(path: Path = CONTRACT) -> dict | None:
 
 
 def write_contract(data: dict, path: Path = CONTRACT) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    atomic_write_text_exclusive(
+        path,
         _HEADER + yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
+        error_factory=OSError,
     )
 
 
@@ -161,16 +162,17 @@ def base_contract_version(base: str, path: Path = CONTRACT) -> int | None:
     cannot be read there, is "unknown", never "zero".
     """
     repo_root = path.parent.parent.parent
+    git_env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
     resolved = subprocess.run(
         ["git", "-C", str(repo_root), "rev-parse", "--verify", "--quiet",
          f"{base}^{{commit}}"],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=30, env=git_env)
     if resolved.returncode != 0:
         return None
     shown = subprocess.run(
         ["git", "-C", str(repo_root), "show",
          f"{base}:{path.relative_to(repo_root)}"],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=30, env=git_env)
     if shown.returncode != 0:
         return None
     loaded = yaml.safe_load(shown.stdout) or {}

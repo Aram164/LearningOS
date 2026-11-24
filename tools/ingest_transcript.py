@@ -55,10 +55,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 MATERIALS = REPO.parent / "materials"
+
+VALID_VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
 CUE = re.compile(r"^(\d{2}):(\d{2}):(\d{2})\.\d{3}\s+-->")
 TAG = re.compile(r"<[^>]+>")
@@ -149,14 +152,33 @@ def video_sources(repo) -> dict[str, list[str]]:
     return out
 
 
+def _validate_video_id(raw: object) -> str:
+    if not isinstance(raw, str) or not VALID_VIDEO_ID.fullmatch(raw):
+        raise IngestError(f"invalid or unsafe video id from yt-dlp: {raw!r}")
+    return raw
+
+
 def source_folder(slug: str) -> Path | None:
     """The source's existing materials folder, or None when it has none."""
+    materials_real = MATERIALS.resolve()
     flat = MATERIALS / ".flat" / f"source-{slug}"
     if flat.is_symlink() or flat.is_dir():
-        return flat.resolve()
+        try:
+            resolved = flat.resolve()
+            resolved.relative_to(materials_real)
+        except (OSError, ValueError) as exc:
+            raise IngestError(f"source folder symlink escapes materials root: {flat}") from exc
+        if resolved.is_dir():
+            return resolved
+        return None
     for candidate in (MATERIALS / f"source-{slug}", MATERIALS / slug):
         if candidate.is_dir() and not candidate.is_symlink():
-            return candidate
+            try:
+                resolved = candidate.resolve()
+                resolved.relative_to(materials_real)
+            except (OSError, ValueError) as exc:
+                raise IngestError(f"source folder escapes materials root: {candidate}") from exc
+            return resolved
     return None
 
 
@@ -171,10 +193,11 @@ def target_folder(slug: str) -> tuple[Path, bool]:
             f"{slug} has no materials folder and no placement hint — add it to "
             "PLACEMENT_HINT here and to PLACEMENT in build_materials_tree.py")
     hinted = MATERIALS / parent / slug
-    # Already placed by an earlier run, just not yet linked into `.flat/`
-    # (that is `build_materials_tree.py`'s job, and it may not have run since).
-    # Reporting it as new a second time would ask for a PLACEMENT entry that
-    # is already there.
+    materials_real = MATERIALS.resolve()
+    try:
+        hinted.resolve().relative_to(materials_real)
+    except (OSError, ValueError) as exc:
+        raise IngestError(f"placement folder escapes materials root: {hinted}") from exc
     return hinted, not hinted.is_dir()
 
 
@@ -284,8 +307,14 @@ def listed_ids(url: str, *, limit: int | None) -> list[str]:
     if limit:
         argv += ["--playlist-items", f"1-{limit * 4}"]
     argv.append(url)
-    done = subprocess.run(argv, check=False, capture_output=True, text=True)
-    return [line.strip() for line in done.stdout.splitlines() if line.strip()]
+    try:
+        done = subprocess.run(argv, check=False, capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise IngestError(f"yt-dlp playlist inspection failed: {exc}") from exc
+    if done.returncode != 0:
+        detail = (done.stderr or done.stdout or "").strip() or f"exit {done.returncode}"
+        raise IngestError(f"yt-dlp listing exited {done.returncode}: {detail}")
+    return [_validate_video_id(line.strip()) for line in done.stdout.splitlines() if line.strip()]
 
 
 def pick_track(vid: str, into: Path, *, lang: str | None) -> Path | None:
@@ -310,6 +339,7 @@ def fetch(video_ids: list[str], into: Path, *,
     """Download captions for exactly these videos. Returns (meta, vtt) pairs."""
     if not video_ids:
         return []
+    safe_ids = [_validate_video_id(vid) for vid in video_ids]
     argv = [
         ytdlp(), "--skip-download", "--write-auto-subs", "--write-subs",
         "--sub-langs", "en.*,de.*", "--sub-format", "vtt",
@@ -317,18 +347,25 @@ def fetch(video_ids: list[str], into: Path, *,
         "--sleep-requests", "1",
         "-o", str(into / "%(id)s"),
     ]
-    argv += [f"https://www.youtube.com/watch?v={vid}" for vid in video_ids]
-    subprocess.run(argv, check=False, capture_output=True, text=True)
+    argv += [f"https://www.youtube.com/watch?v={vid}" for vid in safe_ids]
+    try:
+        done = subprocess.run(argv, check=False, capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise IngestError(f"yt-dlp fetch failed: {exc}") from exc
+    if done.returncode != 0:
+        detail = (done.stderr or done.stdout or "").strip() or f"exit {done.returncode}"
+        raise IngestError(f"yt-dlp fetch exited {done.returncode}: {detail}")
 
     pairs = []
     for info in sorted(into.glob("*.info.json")):
+        if info.is_symlink():
+            continue
         meta = json.loads(info.read_text(encoding="utf-8"))
-        vid = meta.get("id")
-        if not vid:
-            continue
+        vid = _validate_video_id(meta.get("id"))
         track = pick_track(vid, into, lang=lang)
-        if track is None:
+        if track is None or track.is_symlink():
             continue
+        meta["id"] = vid
         meta["_caption_kind"] = "manual" if meta.get("subtitles") else "auto"
         meta["_track_lang"] = track_lang(vid, track)
         pairs.append((meta, track))
@@ -372,12 +409,21 @@ def ingest(source_id: str, urls: list[str], *, window: int,
                 if not segments:
                     continue
                 text = render(meta, segments, source_id=source_id, window=window)
+                vid = _validate_video_id(meta.get("id"))
                 written += 1
-                have.add(meta["id"])
+                have.add(vid)
                 if dry_run:
                     continue
+                if out_dir.is_symlink():
+                    raise IngestError(f"transcript directory is a symlink: {out_dir}")
                 out_dir.mkdir(parents=True, exist_ok=True)
-                (out_dir / f"{meta['id']}.md").write_text(text, encoding="utf-8")
+                atomic_write_text_exclusive(
+                    out_dir / f"{vid}.md",
+                    text,
+                    boundary=MATERIALS.resolve(),
+                    durable=False,
+                    error_factory=IngestError,
+                )
     return written, skipped, (folder if is_new and written and not dry_run else None)
 
 

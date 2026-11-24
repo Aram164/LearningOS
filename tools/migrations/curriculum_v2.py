@@ -25,6 +25,7 @@ from learning_os.store.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.loader import load_repo, parse_frontmatter  # noqa: E402
 
 TODAY = "2026-08-03"
@@ -459,8 +460,9 @@ class Migration:
                 pass
         self.actions.append(f"write {rel}")
         if self.apply:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
+            atomic_write_text_exclusive(
+                path, content, boundary=self.root, error_factory=OSError
+            )
 
     def move(self, old: str, new: str) -> None:
         src, dst = self.root / old, self.root / new

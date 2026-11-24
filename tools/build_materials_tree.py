@@ -35,9 +35,16 @@ import argparse
 import os
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
+
 MATERIALS = REPO.parent / "materials"
 
 # slug (= source id without "source-") -> physical parent dir.
@@ -228,9 +235,19 @@ def find_current(slug: str, materials: Path):
     for cand in (materials / f"source-{slug}", materials / slug):
         if cand.is_dir() and not cand.is_symlink():
             return cand
-    for p in materials.rglob(slug):
-        if p.is_dir() and not p.is_symlink() and ".flat" not in p.parts:
-            return p
+    if not materials.is_dir() or materials.is_symlink():
+        return None
+    for dirpath, dirnames, _ in os.walk(materials, followlinks=False):
+        current = Path(dirpath)
+        next_dirs: list[str] = []
+        for name in sorted(dirnames):
+            candidate = current / name
+            if name == ".flat" or candidate.is_symlink():
+                continue
+            if name == slug:
+                return candidate
+            next_dirs.append(name)
+        dirnames[:] = next_dirs
     return None
 
 
@@ -292,7 +309,15 @@ def _run(materials: Path, *, apply: bool) -> int:
     if not apply:
         _print_plan(materials, moves, missing)
         return 0
-    # 1 — place folders
+    # 1 — preflight targets & place folders
+    flat = materials / ".flat"
+    if flat.is_symlink():
+        print(f"refusing .flat symlink: {flat}", file=sys.stderr)
+        return 1
+    for _slug, _cur, target in moves:
+        if target.exists() or target.is_symlink():
+            print(f"refusing move collision at {target} (already exists)", file=sys.stderr)
+            return 1
     for _slug, cur, target in moves:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(cur), str(target))
@@ -304,19 +329,21 @@ def _run(materials: Path, *, apply: bool) -> int:
     # that into a crash *after* step 1 has already moved folders, leaving the
     # tree re-homed but every material:// URI dangling. os.replace over an
     # existing symlink is atomic and needs no delete permission.
-    flat = materials / ".flat"
     flat.mkdir(exist_ok=True)
     wanted = set()
-    for slug, parent in PLACEMENT.items():
-        target = materials / parent / slug
-        if not target.is_dir():
-            continue
-        link = flat / f"source-{slug}"
-        wanted.add(link.name)
-        staged = flat / f".{link.name}.new"
-        staged.unlink(missing_ok=True) if staged.is_symlink() else None
-        staged.symlink_to(Path("..") / parent / slug)
-        os.replace(staged, link)
+    staging_dir = Path(tempfile.mkdtemp(prefix=".flat-tmp-", dir=flat))
+    try:
+        for slug, parent in PLACEMENT.items():
+            target = materials / parent / slug
+            if not target.is_dir() or target.is_symlink():
+                continue
+            link = flat / f"source-{slug}"
+            wanted.add(link.name)
+            staged = staging_dir / link.name
+            staged.symlink_to(Path("..") / parent / slug)
+            os.replace(staged, link)
+    finally:
+        shutil.rmtree(staging_dir, ignore_errors=True)
     stale = sorted(p.name for p in flat.iterdir()
                    if p.is_symlink() and p.name not in wanted)
     if stale:
@@ -350,7 +377,13 @@ def _run(materials: Path, *, apply: bool) -> int:
         for slug in present:
             title = titles.get(f"source-{slug}", "")
             lines.append(f"- `{slug}/`" + (f" — {title}" if title else ""))
-        (fdir / "SOURCES.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+        atomic_write_text_exclusive(
+            fdir / "SOURCES.md",
+            "\n".join(lines) + "\n",
+            boundary=materials.resolve(),
+            durable=False,
+            error_factory=OSError,
+        )
     # 4 — report
     print(f"placed: {len(PLACEMENT) - len(missing)}/{len(PLACEMENT)}; "
           f"flat links: {len(list(flat.iterdir()))}")

@@ -103,26 +103,57 @@ def test_the_pointer_commits_inside_the_same_transaction(repo: Path):
     )
 
 
-def test_a_failed_pointer_write_rolls_the_whole_change_back(repo: Path):
+def test_a_failed_pointer_write_rolls_the_whole_change_back(
+    repo: Path, monkeypatch: pytest.MonkeyPatch,
+):
     """The coupling holds in both directions.
 
     A destination that moved while the records did not would send him to a
     stage nothing activated; records that moved while the destination did not
-    is the F05 defect itself. Blocking the pointer's own atomic temp name must
-    therefore take the study map and the unit down with it.
+    is the F05 defect itself. Failing the pointer's atomic write mid-commit
+    must therefore take the study map and the unit down with it.
     """
+    from gateway_helpers import approved_v2_envelope
+
+    import learning_os.store.transactions as transaction_module
+    from learning_os.app.pipeline import run_gateway
+    from learning_os.domain.failures import TransactionFailure
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.diagnostics import tracer as diag_tracer
+
     before_map = (repo / UNIT_DIR / "study-map.yaml").read_text(encoding="utf-8")
     before_unit = (repo / UNIT_DIR / "unit.yaml").read_text(encoding="utf-8")
     before_pointer = (repo / POINTER).read_text(encoding="utf-8")
-    blocked = repo / "curriculum/.resume.yaml.tmp"
-    blocked.mkdir()
-    proc = _progress(repo, "active", "resume-rollback")
-    assert proc.returncode == 2
-    assert "Traceback" not in proc.stdout + proc.stderr
+    envelope = approved_v2_envelope(
+        repo,
+        capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "status": "active"},
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="resume-rollback",
+    )
+    pointer_target = (repo / POINTER).resolve()
+    real_write = transaction_module.atomic_write_bytes
+
+    def fail_pointer_write(path: Path, content: bytes) -> None:
+        if Path(path).resolve() == pointer_target:
+            raise TransactionFailure("injected resume pointer write failure")
+        real_write(path, content)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(transaction_module, "atomic_write_bytes", fail_pointer_write)
+        outcome = run_gateway(
+            repo,
+            envelope,
+            requested="stage.progress.update",
+            definitions=command_definitions(repo),
+            attempt=diag_tracer.begin_attempt({"capability": "stage.progress.update"}),
+            replay_only=False,
+        )
+    assert outcome.exit_code == 2
+    assert "Traceback" not in outcome.stdout + outcome.stderr
     assert (repo / POINTER).read_text(encoding="utf-8") == before_pointer
     assert (repo / UNIT_DIR / "study-map.yaml").read_text(encoding="utf-8") == before_map
     assert (repo / UNIT_DIR / "unit.yaml").read_text(encoding="utf-8") == before_unit
-    blocked.rmdir()
     assert _progress(repo, "active", "resume-rollback-retry").returncode == 0
     assert _pointer(repo)["stage_id"] == "stage-demo"
 

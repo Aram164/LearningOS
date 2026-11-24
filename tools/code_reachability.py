@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 from collections import deque
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
@@ -281,7 +282,16 @@ def analyse(
         if not package_dir.is_dir():
             configuration_errors.append(f"declared package root is missing: {relative}")
             continue
-        for path in sorted(package_dir.rglob("*.py")):
+        package_paths: list[Path] = []
+        if not package_dir.is_symlink():
+            for dirpath, dirnames, filenames in os.walk(package_dir, followlinks=False):
+                current = Path(dirpath)
+                dirnames[:] = sorted(name for name in dirnames if not (current / name).is_symlink())
+                for name in sorted(filenames):
+                    candidate = current / name
+                    if not candidate.is_symlink() and candidate.is_file() and candidate.suffix == ".py":
+                        package_paths.append(candidate)
+        for path in sorted(package_paths):
             module = _module_name(package, package_dir, path)
             prior = modules.get(module)
             if prior is not None and prior != path:

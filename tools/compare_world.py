@@ -26,6 +26,7 @@ if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
+from learning_os.store.fs import clean_git_env, iter_files_and_top_symlinks  # noqa: E402
 
 WORLD_DATA_ROOTS = tuple(DATA_ROOTS) + ("operations",)
 
@@ -54,20 +55,18 @@ def _fail(note: str) -> int:
 def _digest_tree(data_dir: Path) -> dict[str, str]:
     """The capture-time pin function, mirrored from capture_world.py."""
     found: dict[str, str] = {}
-    for path in sorted(data_dir.rglob("*")):
+    files, symlinks = iter_files_and_top_symlinks(data_dir)
+    for path in sorted([*files, *symlinks]):
+        rel = path.relative_to(data_dir).as_posix()
         if path.is_symlink():
-            rel = path.relative_to(data_dir).as_posix()
             found[rel] = hashlib.sha256(os.readlink(path).encode("utf-8")).hexdigest()
-        elif path.is_file():
-            rel = path.relative_to(data_dir).as_posix()
+        else:
             found[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
     return found
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    env = dict(os.environ)
-    env["LC_ALL"] = "C"
-    env["GIT_OPTIONAL_LOCKS"] = "0"
+    env = clean_git_env(extra={"LC_ALL": "C", "GIT_OPTIONAL_LOCKS": "0"})
     return subprocess.run(
         ["git", "-C", str(repo), *args],
         capture_output=True, text=True, timeout=300, env=env,
@@ -78,7 +77,7 @@ def _toplevel() -> Path | None:
     proc = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
         capture_output=True, text=True, timeout=60,
-        env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+        env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}),
     )
     if proc.returncode != 0:
         return None

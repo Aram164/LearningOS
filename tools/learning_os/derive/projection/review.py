@@ -11,6 +11,7 @@ import hashlib
 from pathlib import Path
 
 from learning_os.domain.snapshot import Repo
+from learning_os.store.fs import iter_non_symlink_files
 
 
 def _sha256(path: Path) -> str:
@@ -126,11 +127,10 @@ def build_review_items(
     inbox = repo.root / "work" / "inbox"
 
     if inbox.is_dir():
-        for path in sorted(
+        for path in (
             candidate
-            for candidate in inbox.rglob("*")
-            if candidate.is_file()
-            and not any(
+            for candidate in iter_non_symlink_files(inbox)
+            if not any(
                 part.startswith(".")
                 for part in candidate.relative_to(inbox).parts
             )

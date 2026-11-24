@@ -1575,6 +1575,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--observations-file",
+        default=None,
+        help=(
+            "explicit observations YAML/JSON forwarded only to the host broker "
+            "(never inherited from ambient LOS_OBSERVATIONS)"
+        ),
+    )
+    parser.add_argument(
         "target_args",
         nargs=argparse.REMAINDER,
         help="arguments forwarded to the runtime or --cmd command",
@@ -1595,6 +1603,7 @@ def launch_study(
     runtime: str | None = None,
     resume_runtime_id: str | None = None,
     runtime_binary: str | None = None,
+    observations_path: str | None = None,
 ) -> int:
     """Start the host study broker, execute ``command`` inside Seatbelt, and reap session state.
 
@@ -1753,7 +1762,7 @@ def launch_study(
             session_id,
             scratch_dir=scratch_dir,
             stage_root=stage_dir,
-            observations_path=os.environ.get("LOS_OBSERVATIONS"),
+            observations_path=observations_path,
         )
         server = BrokerServer(broker, sock_path)
         server.start()
@@ -1851,6 +1860,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         scratch_dir_override=scratch_override,
         runtime=args.runtime,
         resume_runtime_id=args.resume_runtime_id,
+        observations_path=args.observations_file,
     )
 
 

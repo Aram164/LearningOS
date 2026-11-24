@@ -27,6 +27,12 @@ if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
+from learning_os.store.fs import (  # noqa: E402
+    atomic_write_text_exclusive,
+    clean_git_env,
+    iter_files_and_top_symlinks,
+    iter_non_symlink_files,
+)
 
 WORLD_DATA_ROOTS = tuple(DATA_ROOTS) + ("operations",)
 
@@ -50,20 +56,18 @@ def _digest_tree(data_dir: Path) -> dict[str, str]:
     retargeting the link breaks the pin without reading outside the world.
     """
     found: dict[str, str] = {}
-    for path in sorted(data_dir.rglob("*")):
+    files, symlinks = iter_files_and_top_symlinks(data_dir)
+    for path in sorted([*files, *symlinks]):
+        rel = path.relative_to(data_dir).as_posix()
         if path.is_symlink():
-            rel = path.relative_to(data_dir).as_posix()
             found[rel] = hashlib.sha256(os.readlink(path).encode("utf-8")).hexdigest()
-        elif path.is_file():
-            rel = path.relative_to(data_dir).as_posix()
+        else:
             found[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
     return found
 
 
 def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    env = dict(os.environ)
-    env["LC_ALL"] = "C"
-    env["GIT_OPTIONAL_LOCKS"] = "0"
+    env = clean_git_env(extra={"LC_ALL": "C", "GIT_OPTIONAL_LOCKS": "0"})
     return subprocess.run(
         ["git", "-C", str(root), *args],
         capture_output=True, text=True, timeout=120, env=env,
@@ -215,9 +219,7 @@ def _capture_materials(root: Path, out: Path) -> tuple[list[dict] | None, str | 
             base = probe / rel_root
             if not base.is_dir():
                 continue
-            for path in sorted(base.rglob("*")):
-                if not path.is_file():
-                    continue
+            for path in iter_non_symlink_files(base):
                 blob = path.read_bytes().decode("utf-8", errors="replace")
                 if "material://" in blob:
                     payloads |= _uris_in(blob)
@@ -273,21 +275,26 @@ def main(argv: list[str] | None = None) -> int:
             continue
         shutil.copytree(base, data_dir / rel_root, symlinks=True,
                         copy_function=shutil.copy2)
-    (out / "data-digest.json").write_text(
+    atomic_write_text_exclusive(
+        out / "data-digest.json",
         json.dumps(_digest_tree(data_dir), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8")
-    (out / "observations.json").write_text(
+        boundary=out, error_factory=OSError)
+    atomic_write_text_exclusive(
+        out / "observations.json",
         json.dumps(_capture_observations(root), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8")
+        boundary=out, error_factory=OSError)
     entries, problem = _capture_materials(root, out)
     if problem is not None:
         return _fail(problem)
     assert entries is not None
-    (out / "materials.json").write_text(
-        json.dumps(entries, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    (out / "meta.json").write_text(
+    atomic_write_text_exclusive(
+        out / "materials.json",
+        json.dumps(entries, indent=2, sort_keys=True) + "\n",
+        boundary=out, error_factory=OSError)
+    atomic_write_text_exclusive(
+        out / "meta.json",
         json.dumps(_capture_meta(root), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8")
+        boundary=out, error_factory=OSError)
     print(f"captured world from {root} to {out}")
     return 0
 

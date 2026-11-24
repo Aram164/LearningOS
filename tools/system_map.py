@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import ast
 import fnmatch
+import os
 import re
 import tomllib
 from dataclasses import dataclass
@@ -116,7 +117,15 @@ def check(root: Path, *, write: bool = False) -> list[str]:
                           and c.get("containers") == ["learning_os"])
     layers = layer_contract["layers"]
     pkg = root / "tools/learning_os"
-    modules = {_module_name("learning_os", pkg, p): p for p in pkg.rglob("*.py")}
+    modules: dict[str, Path] = {}
+    if pkg.is_dir() and not pkg.is_symlink():
+        for dirpath, dirnames, filenames in os.walk(pkg, followlinks=False):
+            current = Path(dirpath)
+            dirnames[:] = sorted(name for name in dirnames if not (current / name).is_symlink())
+            for name in sorted(filenames):
+                candidate = current / name
+                if not candidate.is_symlink() and candidate.is_file() and candidate.suffix == ".py":
+                    modules[_module_name("learning_os", pkg, candidate)] = candidate
     owners: dict[str, str] = {}
     component_layers: dict[str, str] = {}
     for name, path in sorted(modules.items()):

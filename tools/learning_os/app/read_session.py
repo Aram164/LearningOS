@@ -18,6 +18,7 @@ from learning_os.store.derived.identity import (
     runtime_digest,
 )
 from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.loader import load_repo
 from learning_os.store.manifest_identity import materials_digest, operations_digest
 
@@ -36,7 +37,10 @@ def _dependency_state(root: Path) -> tuple[str, str]:
     for authority in sorted(authorities):
         if authority != root.resolve():
             inputs.extend([digest_tree(authority, "system/schema"), digest_tree(authority, "system/contracts")])
-        prose = sorted((authority / "system").rglob("*.md")) + [authority / "AGENTS.md", authority / "README.md"]
+        prose = [
+            p for p in iter_non_symlink_files(authority / "system")
+            if p.name.endswith(".md")
+        ] + [authority / "AGENTS.md", authority / "README.md"]
         inputs.append(digest_matching_files(authority, [p for p in prose if p.is_file()]))
     for name in ("generated/manifest.json", "generated/manifest.identity.json"):
         try:

@@ -379,11 +379,7 @@ class StudyBroker:
                     raise ValueError(
                         f"stage_root must sit outside study core and scratch: {self.stage_root}"
                     )
-        self.observations_path = (
-            observations_path
-            if observations_path is not None
-            else os.environ.get("LOS_OBSERVATIONS")
-        )
+        self.observations_path = observations_path
         if python_executable is not None:
             self.python_executable = Path(python_executable)
         else:
@@ -455,6 +451,8 @@ class StudyBroker:
         }
         env.pop(GATE_SOCK_ENV, None)
         env.pop(STUDY_STAGED_MANIFEST_ENV, None)
+        for obs_key in [k for k in env if k.startswith("LOS_OBSERVATIONS")]:
+            env.pop(obs_key, None)
         env["LOS_SESSION_ID"] = self.session_id
         env[STUDY_FENCE_CORE_ENV] = str(self.core_root)
         if self.scratch_dir is not None:
@@ -463,8 +461,6 @@ class StudyBroker:
             env.pop(STUDY_FENCE_SCRATCH_ENV, None)
         if self.observations_path is not None:
             env["LOS_OBSERVATIONS"] = self.observations_path
-        else:
-            env.pop("LOS_OBSERVATIONS", None)
         env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
         if extra:
             env.update(extra)

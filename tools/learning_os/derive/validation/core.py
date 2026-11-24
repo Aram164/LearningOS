@@ -40,6 +40,7 @@ from learning_os.store.contracts.json_schema import (
     core_format_checker,
     schema_registry,
 )
+from learning_os.store.fs import iter_non_symlink_files
 
 
 class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
@@ -150,9 +151,8 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
                 base = root / tree
                 if not base.is_dir():
                     continue
-                for path in sorted(base.rglob("*")):
-                    if path.suffix.lower() not in (".md", ".yaml", ".yml") \
-                            or not path.is_file():
+                for path in iter_non_symlink_files(base):
+                    if path.suffix.lower() not in (".md", ".yaml", ".yml"):
                         continue
                     if _in_garden(root, path) or _in_quarantine(root, path):
                         continue
@@ -300,8 +300,8 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         mig_dir = self.repo.root / "operations" / "migrations"
         if not mig_dir.is_dir():
             return
-        for path in sorted(mig_dir.rglob("*")):
-            if not path.is_file() or path.suffix.lower() not in {".yaml", ".yml"}:
+        for path in iter_non_symlink_files(mig_dir):
+            if path.suffix.lower() not in {".yaml", ".yml"}:
                 continue
             raw_bytes = path.read_bytes()
             if b"migration-provenance" not in raw_bytes:

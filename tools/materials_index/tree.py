@@ -51,7 +51,7 @@ def build_tree(sources, flatmap):
             "dirs": [], "files": [], "nfiles": 0, "nsupport": 0, "bytes": 0,
         }
         for e in sorted(path.iterdir(), key=lambda p: (p.is_file(), p.name.lower())):
-            if e.name.startswith(".") or e.name in SKIP_DIRS or e.name in SKIP_FILES:
+            if e.is_symlink() or e.name.startswith(".") or e.name in SKIP_DIRS or e.name in SKIP_FILES:
                 continue
             if e.is_dir():
                 child = node_for(e, ctx, own_archived, own_asset)

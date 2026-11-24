@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import os
 import re
 import subprocess
 import sys
@@ -61,10 +62,21 @@ class Move:
     new_dotted: str | None
 
 
+def _clean_git_env() -> dict[str, str]:
+    return {
+        k: v for k, v in os.environ.items()
+        if k not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR"}
+    }
+
+
 def _git(root: Path, *args: str) -> str:
-    proc = subprocess.run(
-        ["git", *args], cwd=root, capture_output=True, text=True, check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", *args], cwd=root, capture_output=True, text=True, check=False,
+            timeout=60, env=_clean_git_env(),
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise MoveError(f"git {' '.join(args)} failed: {exc}") from exc
     if proc.returncode != 0:
         detail = proc.stderr.strip() or f"exit {proc.returncode}"
         raise MoveError(f"git {' '.join(args)} failed: {detail}")
@@ -72,10 +84,14 @@ def _git(root: Path, *args: str) -> str:
 
 
 def _repo_root() -> Path:
-    proc = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        capture_output=True, text=True, check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True, check=False,
+            timeout=60, env=_clean_git_env(),
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise MoveError(f"cannot find repository root: {exc}") from exc
     if proc.returncode != 0:
         detail = proc.stderr.strip() or f"exit {proc.returncode}"
         raise MoveError(f"cannot find repository root: {detail}")
@@ -295,10 +311,14 @@ def _validate(root: Path, moves: list[Move],
         if move.is_dir:
             created.add(move.to_norm)
             base = root / move.from_norm
-            if base.is_dir():
-                for sub in sorted(base.rglob("*")):
-                    if sub.is_dir():
-                        rel = sub.relative_to(root).as_posix()
+            if base.is_dir() and not base.is_symlink():
+                for dirpath, dirnames, _ in os.walk(base, followlinks=False):
+                    current = Path(dirpath)
+                    dirnames[:] = sorted(
+                        name for name in dirnames if not (current / name).is_symlink()
+                    )
+                    for name in dirnames:
+                        rel = (current / name).relative_to(root).as_posix()
                         created.add(_mapped_path([move], rel))
 
 
@@ -671,20 +691,53 @@ def main(argv: list[str] | None = None) -> int:
         print(f"imports rewritten: {imports_rewritten}")
         print(f"strings rewritten: {strings_rewritten}")
         return 0
+    tools_dir = Path(__file__).resolve().parent
+    if str(tools_dir) not in sys.path:
+        sys.path.insert(0, str(tools_dir))
+    from learning_os.store.fs import atomic_write_bytes_exclusive, atomic_write_text_exclusive
+
+    root_real = root.resolve()
+    completed_moves: list[Move] = []
+    saved_files: list[tuple[Path, bytes | None]] = []
     try:
         for move in moves:
             _git(root, "mv", move.from_norm, move.to_norm)
+            completed_moves.append(move)
         for post, new_text in sorted(writes.items()):
-            (root / post).write_text(new_text, encoding="utf-8")
+            target = root / post
+            prior = target.read_bytes() if target.is_file() and not target.is_symlink() else None
+            saved_files.append((target, prior))
+            atomic_write_text_exclusive(
+                target, new_text, boundary=root_real, durable=False, error_factory=OSError,
+            )
         ledger = root / MOVE_LEDGER
-        recorded = (yaml.safe_load(ledger.read_text(encoding="utf-8")) or {}
-                    if ledger.is_file() else {})
+        prior_ledger = ledger.read_bytes() if ledger.is_file() and not ledger.is_symlink() else None
+        recorded = (yaml.safe_load(prior_ledger.decode("utf-8")) or {}
+                    if prior_ledger is not None else {})
         entries = list(recorded.get("moves") or [])
         entries += [{"from": m.from_raw, "to": m.to_raw} for m in moves]
         ledger.parent.mkdir(parents=True, exist_ok=True)
-        ledger.write_text(yaml.safe_dump({"moves": entries}, sort_keys=False),
-                          encoding="utf-8")
+        saved_files.append((ledger, prior_ledger))
+        atomic_write_text_exclusive(
+            ledger, yaml.safe_dump({"moves": entries}, sort_keys=False),
+            boundary=root_real, durable=False, error_factory=OSError,
+        )
     except (MoveError, OSError) as exc:
+        for target, prior in reversed(saved_files):
+            try:
+                if prior is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    atomic_write_bytes_exclusive(
+                        target, prior, boundary=root_real, durable=False, error_factory=OSError,
+                    )
+            except OSError:
+                pass
+        for move in reversed(completed_moves):
+            try:
+                _git(root, "mv", move.to_norm, move.from_norm)
+            except MoveError:
+                pass
         print(f"move_map: {exc}", file=sys.stderr)
         return 2
     for line in lines:

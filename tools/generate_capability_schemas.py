@@ -20,6 +20,7 @@ TOOLS = Path(__file__).resolve().parent
 from learning_os.store.contracts.capability_catalog import command_definitions  # noqa: E402
 from learning_os.store.contracts.payload_records import resolve_all  # noqa: E402
 from learning_os.store.contracts.payloads import all_payload_schemas  # noqa: E402
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 
 
 def _build_schemas(root: Path) -> dict:
@@ -156,7 +157,9 @@ def _write_envelope_fragment(root: Path) -> bool:
     new_text = text[:line_start] + _render_fragment_span(indent) + text[end:]
     if new_text == text:
         return False
-    path.write_text(new_text, encoding="utf-8")
+    atomic_write_text_exclusive(
+        path, new_text, boundary=root / "system", error_factory=OSError
+    )
     return True
 
 
@@ -225,8 +228,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     out.mkdir(parents=True, exist_ok=True)
     for name, schema in schemas.items():
-        (out / f"{name}.schema.json").write_text(
-            json.dumps(schema, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        atomic_write_text_exclusive(
+            out / f"{name}.schema.json",
+            json.dumps(schema, indent=2, ensure_ascii=False) + "\n",
+            boundary=out,
+            error_factory=OSError,
+        )
     print(f"wrote {len(schemas)} capability payload schemas -> {out.relative_to(root)}")
     if _write_envelope_fragment(root):
         print("wrote envelope error details fragment -> "

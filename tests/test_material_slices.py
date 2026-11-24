@@ -1456,3 +1456,171 @@ def test_overnight_compare_prepare_reuses_one_loaded_repo(mini_repo, monkeypatch
     monkeypatch.setattr(module, "load_repo", counted)
     _prepared_long_route(mini_repo)
     assert len(calls) == 1
+
+
+def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths(
+    mini_repo: Path, tmp_path: Path,
+):
+    """Finding 1: partial multi-file resolution must never trigger empty-memory bypass."""
+    import datetime as dt
+    import hashlib
+    import uuid
+
+    from learning_os.app._plan_gate import staged_synthesis_errors
+    from learning_os.app.check import staged_shadow
+    from learning_os.app.handlers import synthesis as synthesis_handler
+    from learning_os.domain.ai_errors import DeliveryValidationError
+    from learning_os.store.materials.reading_cards import Read, ReadingStore
+
+    locator = "part-a.pdf; part-b.pdf"
+    routes = [_route("route-demo-multi", locator)]
+    _add_sliced_unit(mini_repo, routes, {"part-a.pdf": ["alpha line 1"], "part-b.pdf": ["beta line 1"]})
+    pdf_a = mini_repo.parent / "materials/source-demo-book/part-a.pdf"
+    pdf_b = mini_repo.parent / "materials/source-demo-book/part-b.pdf"
+
+    # Prepare one ai-actions request while both files exist, then remove part-b.pdf
+    # and clear bundle slices so resolve_route_material_files returns [] cleanly.
+    app = AIActionService(mini_repo)
+    req = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-partial-multi",
+    )
+    slices_idx = mini_repo / "operations/ai-actions/requests" / req["id"] / "attachments/slices/index.json"
+    slices_idx.write_text("[]\n", encoding="utf-8")
+    pdf_b.unlink()
+    repo = load_repo(mini_repo)
+    assert resolve_route_material_files(repo, routes[0]) == []
+
+    basis = _basis(mini_repo)
+    checksum = basis["material_checksums"]["route-demo-multi"]
+    base_dossier = {
+        "schema_version": 1,
+        "id": "material-synthesis-demo-l01",
+        "type": "unit-material-synthesis",
+        "unit_id": "unit-demo-l01",
+        "status": "approved",
+        "basis": {
+            **basis,
+            "ai_provenance": {
+                "request_id": "ai-request-demo",
+                "delivery_id": "ai-delivery-demo",
+                "provider": "manual-bundle",
+            },
+        },
+        "route_assessments": [{
+            "route_id": "route-demo-multi",
+            "source_id": "source-demo-book",
+            "locator": locator,
+            "review_status": "deep-reviewed",
+            "concept_ids": ["concept-expected-value"],
+            "contribution": "Derives expectation on part-a.",
+            "assumptions": "Discrete outcomes.",
+            "notation": "Standard notation.",
+            "exercise_value": "Includes worked exercise.",
+            "best_for": "Checking core expectation derivation.",
+            "limitations": "Introductory only.",
+            "scope_of_absence": f"{locator}, PDF p. 1",
+            "evidence": [{"locator": "part-a.pdf p.1", "checksum": checksum}],
+        }],
+        "comparisons": [],
+        "concept_groups": [
+            {
+                "concept_id": "concept-variance",
+                "local_node_ids": ["knowledge-demo-outcomes"],
+                "related_unit_ids": [],
+                "bridge_note_ids": [],
+                "narrative": "Outcomes feed variance.",
+            },
+            {
+                "concept_id": "concept-expected-value",
+                "local_node_ids": ["knowledge-demo-expectation"],
+                "related_unit_ids": ["unit-demo-l01"],
+                "bridge_note_ids": ["note-demo"],
+                "narrative": "Expectation definition.",
+            },
+        ],
+    }
+
+    def _run_deliv(tag: str) -> str:
+        deliv_id = f"ai-delivery-{tag}"
+        deliv_dossier = copy.deepcopy(base_dossier)
+        deliv_dossier["basis"]["ai_provenance"] = {
+            "request_id": req["id"],
+            "delivery_id": deliv_id,
+            "provider": "manual-bundle",
+        }
+        src = tmp_path / f"src-{tag}"
+        (src / "artifacts").mkdir(parents=True)
+        write_yaml(src / "artifacts/material-synthesis.yaml", deliv_dossier)
+        write_yaml(src / "delivery.yaml", {
+            "schema_version": 1,
+            "id": deliv_id,
+            "type": "ai-action-delivery",
+            "request_id": req["id"],
+            "action_id": "unit.compare-materials",
+            "status": "ready",
+            "producer": {"provider": "manual", "adapter": "manual-bundle"},
+            "approval": {"user_approved": True, "approved_at": "2026-10-01T09:05:00+00:00"},
+            "operations": [{
+                "capability": "unit.material-synthesis.publish",
+                "target_id": "unit-demo-l01",
+                "artifact_ref": "artifacts/material-synthesis.yaml",
+            }],
+            "preconditions": req["preconditions"],
+        })
+        deliv = app.import_delivery(src)
+        try:
+            app.preview_delivery(deliv["id"])
+            return "ok"
+        except DeliveryValidationError as exc:
+            return str(exc)
+
+    # With ZERO reading memory on any candidate, legacy compatibility still passes.
+    synthesis_handler._validate_publication_synthesis(mini_repo, "unit-demo-l01", base_dossier)
+    with staged_shadow(mini_repo, {}) as shadow:
+        assert staged_synthesis_errors(
+            mini_repo, "module-demo", load_repo(mini_repo),
+            shadow, load_repo(shadow), [("unit-demo-l01", base_dossier)],
+        ) == []
+    assert _run_deliv("zero") == "ok"
+
+    # Adding reading cards on part-a.pdf (while part-b.pdf remains missing so
+    # resolve_route_material_files returns []) MUST fail closed on ALL 3 paths!
+    store = ReadingStore(mini_repo)
+    sess = str(uuid.UUID("aaaaaaaa-1111-4111-8111-111111111111"))
+    admission = store.admit(
+        sess,
+        [Read(
+            digest=hashlib.sha256(pdf_a.read_bytes()).hexdigest(),
+            material="source-demo-book/part-a.pdf",
+            start=1,
+            end=1,
+            text_sha256="0" * 64,
+        )],
+        now=dt.datetime(2026, 10, 1, 9, 0, tzinfo=dt.UTC),
+    )
+    store.save(
+        sess,
+        admission.opened[0]["entry"],
+        {
+            "paraphrase": "Covers the expectation formula on page one cleanly.",
+            "kinds": ["statement"],
+            "pointers": [{"page": 1, "kind": "statement", "label": "main claim"}],
+            "concepts": ["concept-expected-value"],
+        },
+        now=dt.datetime(2026, 10, 1, 9, 1, tzinfo=dt.UTC),
+    )
+
+    with pytest.raises(MaterialSynthesisError, match="partially resolved|unresolved"):
+        synthesis_handler._validate_publication_synthesis(mini_repo, "unit-demo-l01", base_dossier)
+    with staged_shadow(mini_repo, {}) as shadow:
+        errs = staged_synthesis_errors(
+            mini_repo, "module-demo", load_repo(mini_repo),
+            shadow, load_repo(shadow), [("unit-demo-l01", base_dossier)],
+        )
+        assert errs and any("partially resolved" in err or "unresolved" in err for err in errs)
+    deliv_err = _run_deliv("partial")
+    assert "partially resolved" in deliv_err or "unresolved" in deliv_err

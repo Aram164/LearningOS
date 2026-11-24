@@ -6,6 +6,7 @@ from pathlib import Path
 
 from learning_os.derive.projection.common import md_header as _md_header
 from learning_os.domain.snapshot import Repo
+from learning_os.store.fs import iter_non_symlink_files
 
 ATLAS_DOMAINS = [
     "mathematics", "machine-learning", "systems", "data-systems",
@@ -112,8 +113,8 @@ def _count_material_files(base: Path) -> int:
     if base.is_symlink() or not base.is_dir():
         return 0
     n = 0
-    for f in base.rglob("*"):
-        if f.is_symlink() or not f.is_file() or f.name in _ATLAS_SKIP_NAMES:
+    for f in iter_non_symlink_files(base):
+        if f.name in _ATLAS_SKIP_NAMES:
             continue
         rel = f.relative_to(base)
         if any(part.startswith(".") for part in rel.parts):

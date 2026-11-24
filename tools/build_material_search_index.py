@@ -36,6 +36,12 @@ if str(TOOLS_DIR) not in sys.path:
 from material_text import EXTRACTOR, _index_valid, cache_index  # noqa: E402
 from materials_manifest import load_manifest  # noqa: E402
 
+from learning_os.store.fs import (  # noqa: E402
+    exclusive_temp_path,
+    iter_non_symlink_files,
+    sync_directory,
+    sync_fd,
+)
 from learning_os.store.materials.resolution import sha256_file  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
     INDEX_TOKENIZER,
@@ -84,10 +90,11 @@ def _inventory_pdf_paths(repo_root: Path) -> list[tuple[str, Path]]:
             if abs_path.is_file() and not abs_path.is_symlink():
                 result.append((rel_str, abs_path))
     else:
-        for abs_path in sorted(materials_dir.rglob("*.pdf")):
-            if abs_path.is_file() and not abs_path.is_symlink():
-                rel_str = abs_path.relative_to(materials_dir).as_posix()
-                result.append((rel_str, abs_path))
+        for abs_path in iter_non_symlink_files(materials_dir, allow_root_symlink=True):
+            if abs_path.suffix.lower() != ".pdf":
+                continue
+            rel_str = abs_path.relative_to(materials_dir).as_posix()
+            result.append((rel_str, abs_path))
 
     return result
 
@@ -134,24 +141,18 @@ def _is_already_current(
 
 
 def _fsync_file(path: Path) -> None:
-    fd = os.open(str(path), os.O_RDONLY)
+    flags = os.O_RDONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(str(path), flags)
     try:
-        os.fsync(fd)
+        sync_fd(fd)
     finally:
         os.close(fd)
 
 
 def _fsync_dir(path: Path) -> None:
-    try:
-        fd = os.open(str(path), os.O_RDONLY)
-    except OSError:
-        return
-    try:
-        os.fsync(fd)
-    except OSError:
-        pass
-    finally:
-        os.close(fd)
+    sync_directory(path)
 
 
 def build_index_generation(
@@ -184,14 +185,15 @@ def build_index_generation(
             raise
 
         # Step 4.4 (2): Remove stale .build-* files now that we hold the lock
-        for stale_tmp in base_dir.glob(".build-*"):
-            try:
-                if stale_tmp.is_dir():
-                    shutil.rmtree(stale_tmp)
-                else:
-                    stale_tmp.unlink(missing_ok=True)
-            except OSError:
-                pass
+        for pattern in (".build-*", ".*.sqlite3.tmp-*"):
+            for stale_tmp in base_dir.glob(pattern):
+                try:
+                    if stale_tmp.is_symlink() or not stale_tmp.is_dir():
+                        stale_tmp.unlink(missing_ok=True)
+                    else:
+                        shutil.rmtree(stale_tmp)
+                except OSError:
+                    pass
 
         # Step 4.3: Validate each 64-hex cache entry and collect pages
         cache_stats: dict[str, tuple[int, int]] = {}
@@ -386,9 +388,10 @@ def build_index_generation(
             except OSError:
                 continue
 
-        tmp_path = base_dir / f".build-{os.getpid()}.sqlite3"
-        if tmp_path.exists():
-            tmp_path.unlink()
+        if target_path.is_symlink():
+            raise OSError(f"refusing symlink index target: {target_path}")
+        tmp_fd, tmp_path = exclusive_temp_path(base_dir / f"build-{os.getpid()}.sqlite3")
+        os.close(tmp_fd)
 
         con: sqlite3.Connection | None = None
         try:

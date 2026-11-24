@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from learning_os.domain.validation import NEGLECT_GIT_HISTORY_PREFIX, STALE_LOCK_AGE_S, Issue
 from learning_os.store import observations
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.session.githistory import GitHistoryError, last_commit_timestamp
 
 
@@ -56,9 +57,7 @@ def inbox_stale_issues(repo) -> list[Issue]:
     inbox = repo.root / "work" / "inbox"
     if inbox.is_dir():
         now = observations.epoch()
-        for path in sorted(inbox.rglob("*")):
-            if path.is_symlink() or not path.is_file():
-                continue
+        for path in iter_non_symlink_files(inbox):
             rel = path.relative_to(inbox).as_posix()
             if any(part.startswith(".") for part in rel.split("/")):
                 continue

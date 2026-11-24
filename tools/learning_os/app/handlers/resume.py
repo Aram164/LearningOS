@@ -74,9 +74,9 @@ def _live_sha256(path: Path) -> str | None:
 
 
 def _iter_material_files(directory: Path):
-    for path in sorted(directory.rglob("*")):
-        if path.is_symlink() or not path.is_file():
-            continue
+    from learning_os.store.fs import iter_non_symlink_files
+
+    for path in iter_non_symlink_files(directory):
         if path.name in SKIP_NAMES:
             continue
         yield path

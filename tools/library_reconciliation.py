@@ -47,6 +47,10 @@ import yaml
 
 TOOLS_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_ROOT.parent
+if str(TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TOOLS_ROOT))
+
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 
 INPUTS_SCHEMA = "library-reconciliation-inputs/v1"
 DISPOSITIONS_SCHEMA = "library-reconciliation-dispositions/v1"
@@ -1354,10 +1358,13 @@ def command_report(args: argparse.Namespace) -> int:
         print("refusing applied report: applied check has findings or stale origins")
         return 1
     target = workspace / (APPLIED_REPORT_FILE if args.applied else REPORT_FILE)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(render_applied_report(declared, dispositions, result)
-                      if args.applied else render_report(declared, dispositions, result, targets),
-                      encoding="utf-8")
+    atomic_write_text_exclusive(
+        target,
+        render_applied_report(declared, dispositions, result)
+        if args.applied else render_report(declared, dispositions, result, targets),
+        boundary=workspace,
+        error_factory=OSError,
+    )
     print(f"wrote {target.relative_to(workspace)} "
           f"({len(result.disposition)}/{len(result.occurrences)} dispositioned, "
           f"{len(result.findings)} finding(s), {len(result.stale)} stale)")
@@ -1369,8 +1376,12 @@ def command_suggest(args: argparse.Namespace) -> int:
     dispositions = load_dispositions(workspace / DISPOSITIONS_FILE)
     result, targets = evaluate(declared, dispositions)
     auto, worklist = suggest(result, targets)
-    Path(args.out).write_text(render_dispositions(auto, _order(declared)), encoding="utf-8")
-    Path(args.worklist).write_text(render_worklist(worklist, declared), encoding="utf-8")
+    atomic_write_text_exclusive(
+        Path(args.out), render_dispositions(auto, _order(declared)), error_factory=OSError
+    )
+    atomic_write_text_exclusive(
+        Path(args.worklist), render_worklist(worklist, declared), error_factory=OSError
+    )
     claimed = sum(len(o.occurrences) for o in auto.objects)
     print(f"suggested {claimed} mechanical disposition(s); {len(worklist)} left for review")
     return 0
@@ -1382,8 +1393,12 @@ def command_merge(args: argparse.Namespace) -> int:
     base = load_dispositions(target)
     others = [parse_dispositions(_load_yaml(Path(p)), p) for p in args.files]
     merged = merge_dispositions(base, others)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(render_dispositions(merged, _order(declared)), encoding="utf-8")
+    atomic_write_text_exclusive(
+        target,
+        render_dispositions(merged, _order(declared)),
+        boundary=workspace,
+        error_factory=OSError,
+    )
     print(f"merged {len(args.files)} file(s) into {target.relative_to(workspace)}: "
           f"{len(merged.objects)} object(s)")
     return 0
@@ -1398,7 +1413,12 @@ def command_freeze(args: argparse.Namespace) -> int:
         print(f"refusing to freeze: {len(result.findings)} finding(s) remain; run check")
         return 1
     dispositions.reviewed_input_hashes = dict(result.hashes)
-    target.write_text(render_dispositions(dispositions, _order(declared)), encoding="utf-8")
+    atomic_write_text_exclusive(
+        target,
+        render_dispositions(dispositions, _order(declared)),
+        boundary=workspace,
+        error_factory=OSError,
+    )
     print(f"froze {len(result.hashes)} input hash(es) into {target.relative_to(workspace)}")
     return 0
 

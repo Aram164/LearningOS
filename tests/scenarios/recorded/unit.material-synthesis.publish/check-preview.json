@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"unit.material-synthesis.publish\",\"ok\":true,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"check\":true,\"unit_id\":\"unit-demo-l01\",\"basis\":{\"unit_revision\":3,\"source_map_revision\":0,\"source_map_checksum\":\"sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9\",\"route_set_checksum\":\"sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39\",\"material_checksums\":{\"route-b2f1f80014860a929a3af0bc\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"policy\":\"tiered-v2\"},\"artifact_ids\":[\"file:operations/transactions/lineage.yaml\",\"material-synthesis-demo-l01\",\"unit-demo-l01\"],\"expected_revisions\":{\"file:operations/transactions/lineage.yaml\":0,\"material-synthesis-demo-l01\":0,\"unit-demo-l01\":3}},\"error\":null}\n",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"unit.material-synthesis.publish\",\"ok\":true,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{\"ok\":true,\"check\":true,\"mode\":\"check\",\"unit_id\":\"unit-demo-l01\",\"basis\":{\"unit_revision\":3,\"source_map_revision\":0,\"source_map_checksum\":\"sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9\",\"route_set_checksum\":\"sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39\",\"material_checksums\":{\"route-b2f1f80014860a929a3af0bc\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"policy\":\"tiered-v2\"},\"artifact_ids\":[\"file:operations/transactions/lineage.yaml\",\"material-synthesis-demo-l01\",\"unit-demo-l01\"],\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"file:operations/transactions/lineage.yaml\":0,\"material-synthesis-demo-l01\":0,\"unit-demo-l01\":3},\"reviewed_file_sha256\":\"sha256:1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a\",\"gateway_envelope\":{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"unit.material-synthesis.publish\",\"channel\":\"operator\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"file:operations/transactions/lineage.yaml\":0,\"material-synthesis-demo-l01\":0,\"unit-demo-l01\":3},\"payload\":{\"unit_id\":\"unit-demo-l01\",\"record\":{\"basis\":{\"ai_provenance\":{\"delivery_id\":\"ai-delivery-scenario\",\"provider\":\"manual-bundle\",\"request_id\":\"KEY5\"},\"material_checksums\":{\"route-b2f1f80014860a929a3af0bc\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"policy\":\"tiered-v2\",\"route_set_checksum\":\"sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39\",\"source_map_checksum\":\"sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9\",\"source_map_revision\":0,\"unit_revision\":3},\"comparisons\":[],\"concept_groups\":[{\"bridge_note_ids\":[],\"concept_id\":\"concept-variance\",\"local_node_ids\":[\"knowledge-demo-outcomes\"],\"narrative\":\"Outcome values feed later dispersion measures.\",\"related_unit_ids\":[]},{\"bridge_note_ids\":[\"note-demo\"],\"concept_id\":\"concept-expected-value\",\"local_node_ids\":[\"knowledge-demo-expectation\"],\"narrative\":\"The local derivation is the canonical expectation concept.\",\"related_unit_ids\":[\"unit-demo-l01\"]}],\"id\":\"material-synthesis-demo-l01\",\"route_assessments\":[{\"assumptions\":\"Finite discrete outcomes are assumed.\",\"best_for\":\"Checking the lecture core derivation.\",\"concept_ids\":[\"concept-expected-value\"],\"contribution\":\"A direct derivation of the weighted sum.\",\"evidence\":[{\"checksum\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"locator\":\"lecture-01.pdf p.1\"}],\"exercise_value\":\"Includes a small worked calculation.\",\"limitations\":\"Does not cover continuous variables.\",\"locator\":\"lecture-01.pdf\",\"notation\":\"Uses uppercase X and lowercase outcome values.\",\"review_status\":\"deep-reviewed\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"scope_of_absence\":\"lecture-01.pdf, PDF pp. 1-20\",\"source_id\":\"source-demo-book\"}],\"schema_version\":1,\"status\":\"approved\",\"type\":\"unit-material-synthesis\",\"unit_id\":\"unit-demo-l01\"}},\"approval\":{\"kind\":\"operator-approval\",\"subject_sha256\":\"INTENT1\"},\"review\":{\"record_sha256\":\"INTENT2\"}}},\"error\":null}\n",
   "stdout_json": {
     "capability": "unit.material-synthesis.publish",
     "error": null,
@@ -38,7 +38,104 @@
         "material-synthesis-demo-l01": 0,
         "unit-demo-l01": 3
       },
+      "expected_snapshot": "<FIXTURE_SNAPSHOT>",
+      "gateway_envelope": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "INTENT1"
+        },
+        "capability": "unit.material-synthesis.publish",
+        "channel": "operator",
+        "expected_revisions": {
+          "file:operations/transactions/lineage.yaml": 0,
+          "material-synthesis-demo-l01": 0,
+          "unit-demo-l01": 3
+        },
+        "expected_snapshot": "<FIXTURE_SNAPSHOT>",
+        "idempotency_key": "KEY4",
+        "payload": {
+          "record": {
+            "basis": {
+              "ai_provenance": {
+                "delivery_id": "ai-delivery-scenario",
+                "provider": "manual-bundle",
+                "request_id": "KEY5"
+              },
+              "material_checksums": {
+                "route-b2f1f80014860a929a3af0bc": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5"
+              },
+              "policy": "tiered-v2",
+              "route_set_checksum": "sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39",
+              "source_map_checksum": "sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9",
+              "source_map_revision": 0,
+              "unit_revision": 3
+            },
+            "comparisons": [],
+            "concept_groups": [
+              {
+                "bridge_note_ids": [],
+                "concept_id": "concept-variance",
+                "local_node_ids": [
+                  "knowledge-demo-outcomes"
+                ],
+                "narrative": "Outcome values feed later dispersion measures.",
+                "related_unit_ids": []
+              },
+              {
+                "bridge_note_ids": [
+                  "note-demo"
+                ],
+                "concept_id": "concept-expected-value",
+                "local_node_ids": [
+                  "knowledge-demo-expectation"
+                ],
+                "narrative": "The local derivation is the canonical expectation concept.",
+                "related_unit_ids": [
+                  "unit-demo-l01"
+                ]
+              }
+            ],
+            "id": "material-synthesis-demo-l01",
+            "route_assessments": [
+              {
+                "assumptions": "Finite discrete outcomes are assumed.",
+                "best_for": "Checking the lecture core derivation.",
+                "concept_ids": [
+                  "concept-expected-value"
+                ],
+                "contribution": "A direct derivation of the weighted sum.",
+                "evidence": [
+                  {
+                    "checksum": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+                    "locator": "lecture-01.pdf p.1"
+                  }
+                ],
+                "exercise_value": "Includes a small worked calculation.",
+                "limitations": "Does not cover continuous variables.",
+                "locator": "lecture-01.pdf",
+                "notation": "Uses uppercase X and lowercase outcome values.",
+                "review_status": "deep-reviewed",
+                "route_id": "route-b2f1f80014860a929a3af0bc",
+                "scope_of_absence": "lecture-01.pdf, PDF pp. 1-20",
+                "source_id": "source-demo-book"
+              }
+            ],
+            "schema_version": 1,
+            "status": "approved",
+            "type": "unit-material-synthesis",
+            "unit_id": "unit-demo-l01"
+          },
+          "unit_id": "unit-demo-l01"
+        },
+        "request_id": "KEY3",
+        "review": {
+          "record_sha256": "INTENT2"
+        },
+        "schema_version": 2
+      },
+      "mode": "check",
       "ok": true,
+      "reviewed_file_sha256": "sha256:1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a",
       "unit_id": "unit-demo-l01"
     },
     "schema_version": 2,

@@ -42,6 +42,8 @@ def _stat_identity(path: Path) -> tuple[int, int, int, int, int]:
     the restored bytes.
     """
     st = path.lstat()
+    if stat.S_ISLNK(st.st_mode) or not stat.S_ISREG(st.st_mode):
+        raise BackupManifestError(f"backup path is not a regular file: {path}")
     return st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns
 
 
@@ -76,11 +78,26 @@ def _changed_during_inventory(label: str, detail: str) -> BackupManifestError:
 
 
 def _sha256_file(path: Path) -> str:
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    digest = hashlib.sha256()
     try:
-        data = path.read_bytes()
+        fd = os.open(path, flags)
     except OSError as exc:
         raise BackupManifestError(f"backup path is unreadable: {path}") from exc
-    return "sha256:" + hashlib.sha256(data).hexdigest()
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode):
+            raise BackupManifestError(f"backup path is not a regular file: {path}")
+        with os.fdopen(fd, "rb") as handle:
+            fd = -1
+            for chunk in iter(lambda: handle.read(1 << 20), b""):
+                digest.update(chunk)
+    except OSError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+    finally:
+        if fd >= 0:
+            os.close(fd)
+    return "sha256:" + digest.hexdigest()
 
 
 def _installer_declares_option(installer: Path, flag: str) -> bool:

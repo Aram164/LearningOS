@@ -26,6 +26,7 @@ The on-disk receipt count describes the current working tree separately.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -45,10 +46,19 @@ RECEIPT_PATH = "operations/transactions"
 
 
 def git(*args: str) -> str:
-    result = subprocess.run(
-        ["git", "-C", str(REPO), *args],
-        capture_output=True, text=True, check=False,
-    )
+    env = {
+        k: v for k, v in os.environ.items()
+        if k not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR"}
+    }
+    env["LC_ALL"] = "C"
+    env["GIT_OPTIONAL_LOCKS"] = "0"
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(REPO), *args],
+            capture_output=True, text=True, check=False, timeout=60, env=env,
+        )
+    except subprocess.TimeoutExpired as exc:
+        sys.exit(f"history inspection timed out after {exc.timeout}s")
     if result.returncode != 0:
         sys.exit(f"history could not be inspected\n{result.stderr.strip()}")
     return result.stdout.strip()

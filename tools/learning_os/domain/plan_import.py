@@ -241,8 +241,16 @@ def apply_material_synthesis_patch(current_dossier: dict[str, Any], patch: Any,
     remove = patch.get("route_assessments_remove") or []
     if not isinstance(remove, list) or any(not isinstance(r, str) for r in remove):
         return None, [f"{where}.route_assessments_remove must be a list of route ids"]
+    by_route_before = {row.get("route_id"): row for row in assessments if isinstance(row, dict)}
+    seen_remove: set[str] = set()
+    for rid in remove:
+        if rid in seen_remove:
+            return None, [f"{where}.route_assessments_remove repeats route: {rid}"]
+        seen_remove.add(rid)
+        if rid not in by_route_before:
+            return None, [f"{where}.route_assessments_remove names an unassessed route: {rid}"]
     assessments = [row for row in assessments
-                   if not (isinstance(row, dict) and row.get("route_id") in remove)]
+                   if not (isinstance(row, dict) and row.get("route_id") in seen_remove)]
     dossier["route_assessments"] = assessments
     by_route = {row.get("route_id"): row for row in assessments if isinstance(row, dict)}
 

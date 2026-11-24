@@ -6,6 +6,7 @@ from pathlib import Path
 
 from learning_os.domain.snapshot import Coordination, Repo, Workspace
 from learning_os.domain.snapshot import register as _register
+from learning_os.store.fs import iter_files_and_top_symlinks
 from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
 from learning_os.store.loading.yamlio import read_text as _read_text
 from learning_os.store.loading.yamlio import record_id as _record_id
@@ -24,7 +25,11 @@ def load_workspaces(repo: Repo, root: Path) -> None:
                            (root / "archive" / "workspaces", True)):
         if not base.is_dir():
             continue
-        found = base.rglob("CONTEXT.md") if archived else base.glob("*/CONTEXT.md")
+        if archived:
+            files, symlinks = iter_files_and_top_symlinks(base)
+            found = [f for f in (*files, *symlinks) if f.name == "CONTEXT.md"]
+        else:
+            found = list(base.glob("*/CONTEXT.md"))
         for f in sorted(found):
             try:
                 meta, body = parse_frontmatter(_read_text(f, root), f)

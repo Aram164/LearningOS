@@ -45,12 +45,14 @@ def _validate_publication_synthesis(root, unit_id: str, value: dict) -> dict:
     SPEC (cq) 5: the validator's own schema, dossier/request binding,
     then repository lookup order is unchanged; only the structured
     unknown-unit subclass becomes a typed ``NotFound`` with the
-    byte-identical complaint. Every other ``MaterialSynthesisError``
-    propagates exactly as before, with no prose matching and no new
-    repository read.
+    byte-identical complaint. Also enforces reading-memory provenance for
+    every deep-reviewed route that has reading memory on disk (legacy
+    compatibility exemption applies only when zero reading memory exists).
     """
     try:
-        return validate_unit_material_synthesis(root, unit_id, value)
+        return validate_unit_material_synthesis(
+            root, unit_id, value, check_provenance=True,
+        )
     except MaterialSynthesisUnitNotFound as exc:
         raise NotFound(
             "unit", exc.unit_id, exc.candidates,
@@ -73,11 +75,31 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     basis = current_unit_material_basis(root, req["unit_id"])
     artifacts = lineage_artifacts((req["unit_id"], value["id"]))
     if req.get("check") is True:
+        snapshot = ctx.snapshot_id()
+        revisions = {aid: load_revisions(root).get(aid, 0) for aid in artifacts}
+        record_sha256 = "sha256:" + hashlib.sha256(
+            _dump_yaml(value).encode("utf-8")
+        ).hexdigest()
+        review_payload = {"unit_id": req["unit_id"], "record": value}
         return Result(
-            {"ok": True, "check": True, "unit_id": req["unit_id"],
-             "basis": basis, "artifact_ids": artifacts,
-             "expected_revisions": {aid: load_revisions(root).get(aid, 0) for aid in artifacts}},
-
+            {
+                "ok": True,
+                "check": True,
+                "mode": "check",
+                "unit_id": req["unit_id"],
+                "basis": basis,
+                "artifact_ids": artifacts,
+                "expected_snapshot": snapshot,
+                "expected_revisions": revisions,
+                "reviewed_file_sha256": record_sha256,
+                "gateway_envelope": prepare_review_envelope(
+                    "unit.material-synthesis.publish",
+                    review_payload,
+                    snapshot,
+                    revisions,
+                    checked_root=root,
+                ),
+            }
         )
     if not req.get("approve"):
         message = "unit material synthesis publication requires explicit approval"

@@ -26,6 +26,7 @@ learning_os.derive.validation.materials for the same reasoning.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -119,11 +120,17 @@ def main() -> int:
     total, unmapped_all, touched = 0, [], []
     for tree in CANONICAL_TREES:
         base = ROOT / tree
-        if not base.is_dir():
+        if not base.is_dir() or base.is_symlink():
             continue
-        for path in sorted(base.rglob("*")):
-            if path.suffix.lower() not in TEXT_SUFFIXES or not path.is_file():
-                continue
+        paths: list[Path] = []
+        for dirpath, dirnames, filenames in os.walk(base, followlinks=False):
+            current = Path(dirpath)
+            dirnames[:] = sorted(name for name in dirnames if not (current / name).is_symlink())
+            for name in sorted(filenames):
+                candidate = current / name
+                if not candidate.is_symlink() and candidate.is_file() and candidate.suffix.lower() in TEXT_SUFFIXES:
+                    paths.append(candidate)
+        for path in sorted(paths):
             text = path.read_text(encoding="utf-8")
             if "material://" not in text:
                 continue

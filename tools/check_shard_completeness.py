@@ -38,7 +38,7 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
 
     out = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-        capture_output=True, text=True, check=True)
+        capture_output=True, text=True, check=True, timeout=120)
     collected_ids = [line.strip() for line in out.stdout.splitlines()
                      if "::" in line and not line.startswith(" ")]
     expected_ids = Counter(collected_ids)

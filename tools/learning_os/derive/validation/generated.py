@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 from learning_os.domain import generated_reads
 from learning_os.domain.validation import (
@@ -12,6 +14,27 @@ from learning_os.domain.validation import (
     GENERATED_REPORT_PREFIXES,
     markdown_link_targets,
 )
+
+
+def _generated_candidates(gen: Path, suffix: str) -> list[Path]:
+    """Enumerate matching files, symlinks, and dir-shaped paths without following dir links."""
+    found: list[Path] = []
+    if not gen.is_dir() or gen.is_symlink():
+        return found
+    for dirpath, dirnames, filenames in os.walk(gen, followlinks=False):
+        current = Path(dirpath)
+        next_dirs: list[str] = []
+        for name in sorted(dirnames):
+            candidate = current / name
+            if name.endswith(suffix):
+                found.append(candidate)
+            if not candidate.is_symlink():
+                next_dirs.append(name)
+        dirnames[:] = next_dirs
+        for name in sorted(filenames):
+            if name.endswith(suffix):
+                found.append(current / name)
+    return sorted(found)
 
 
 def _collect_http_urls(value, urls: set[str] | None = None) -> set[str]:
@@ -130,10 +153,10 @@ class ChecksGenerated:
         # Per-file findings come from the one shared read in
         # `generated_reads`, so the validator and the validation-cache
         # pin cannot drift apart.
-        for f in sorted(gen.rglob("*.md")):
+        for f in _generated_candidates(gen, ".md"):
             for code, message in generated_reads.generated_file_findings(f):
                 self.err(code, message, self._rel(f))
-        for f in sorted(gen.rglob("*.json")):
+        for f in _generated_candidates(gen, ".json"):
             for code, message in generated_reads.generated_file_findings(f):
                 self.err(code, message, self._rel(f))
         # Archived workspaces excluded from generated indexes

@@ -18,7 +18,6 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import datetime as dt
-import fcntl
 import hashlib
 import inspect
 import json
@@ -88,6 +87,12 @@ from learning_os.store.fingerprint import (
     changed_canonical_paths,
     data_roots_fingerprint,
 )
+from learning_os.store.fs import (
+    create_ancestors_and_track as _create_ancestors_and_track,
+)
+from learning_os.store.fs import exclusive_temp_path as _exclusive_temp_path
+from learning_os.store.fs import sync_directory as _fs_sync_directory
+from learning_os.store.fs import sync_fd as _fs_sync_fd
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.revisions import artifact_revision, load_revisions
 
@@ -222,22 +227,12 @@ def _sync_fd(fd: int) -> None:
     returns. Its failure is the barrier's failure — never silently
     downgraded to the weaker guarantee.
     """
-    os.fsync(fd)
-    fullfsync = getattr(fcntl, "F_FULLFSYNC", None)
-    if fullfsync is not None:
-        fcntl.fcntl(fd, fullfsync)
+    _fs_sync_fd(fd)
 
 
 def _sync_directory(path: Path) -> None:
     """Make one directory's entries durable; a missing directory is done."""
-    try:
-        fd = os.open(path, os.O_RDONLY)
-    except FileNotFoundError:
-        return
-    try:
-        _sync_fd(fd)
-    finally:
-        os.close(fd)
+    _fs_sync_directory(path)
 
 
 def atomic_write_bytes(path: Path, content: bytes) -> None:
@@ -250,32 +245,42 @@ def atomic_write_bytes(path: Path, content: bytes) -> None:
     directory's entry lives in its parent, so every created level is
     synchronized after the replacement, deepest first.
     """
-    # Preserve the gateway's established atomic sibling name. Existing red-team
-    # checks deliberately block this path to verify rollback.
-    tmp = path.with_name(f".{path.name}.tmp")
+    if path.is_symlink():
+        raise TransactionFailure(f"cannot write through symlink {path}")
+    tmp: Path | None = None
+    created: list[Path] = []
     try:
-        created: list[Path] = []
-        cursor = path.parent
-        while not cursor.exists():
-            created.append(cursor)
-            if cursor.parent == cursor:
-                break
-            cursor = cursor.parent
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with tmp.open("wb") as handle:
-            handle.write(content)
+        created = _create_ancestors_and_track(path.parent)
+        fd, tmp = _exclusive_temp_path(path, mode=0o666)
+        try:
+            handle = os.fdopen(fd, "wb")
+        except BaseException:
+            os.close(fd)
+            raise
+        with handle:
+            view = memoryview(content)
+            written = 0
+            while written < len(view):
+                written += handle.write(view[written:])
             handle.flush()
             _sync_fd(handle.fileno())
         os.replace(tmp, path)
+        tmp = None
         _sync_directory(path.parent)
         for ancestor in created:
             _sync_directory(ancestor.parent)
     except OSError as exc:
-        with contextlib.suppress(OSError):
-            tmp.unlink(missing_ok=True)
+        if tmp is not None:
+            with contextlib.suppress(OSError):
+                tmp.unlink(missing_ok=True)
         raise TransactionFailure(
             f"cannot write {path}: {exc.strerror or exc}"
         ) from exc
+    except BaseException:
+        if tmp is not None:
+            with contextlib.suppress(OSError):
+                tmp.unlink(missing_ok=True)
+        raise
 
 
 def _next_transaction_identity(root: Path, now: dt.datetime) -> tuple[str, Path]:

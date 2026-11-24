@@ -1379,28 +1379,52 @@ def test_unwritable_note_target_refuses_cleanly_without_debris(mini_repo):
     assert not list(note.parent.glob(".*.tmp")), "a temp file was left behind"
 
 
-def test_a_failed_write_rolls_the_whole_transaction_back(mini_repo):
+def test_a_failed_write_rolls_the_whole_transaction_back(mini_repo, monkeypatch):
     """stage-progress writes the study map AND the unit.
 
     When the second write failed the first stayed applied, and `validate` saw
     nothing wrong — a silent cross-file split-brain.
     """
+    import learning_os.store.transactions as transaction_module
+    from learning_os.app.pipeline import run_gateway
+    from learning_os.domain.failures import TransactionFailure
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.diagnostics import tracer as diag_tracer
+
     add_curriculum(mini_repo)
     unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
     study_map, unit = unit_dir / "study-map.yaml", unit_dir / "unit.yaml"
     before_map = study_map.read_text(encoding="utf-8")
     before_unit = unit.read_text(encoding="utf-8")
-    (unit_dir / ".unit.yaml.tmp").mkdir()  # block the atomic temp name
-    proc = approved_v2_cli(
-        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+
+    envelope = approved_v2_envelope(
+        mini_repo,
+        capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "status": "complete"},
         artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
         idempotency_key="curriculum-rollback-failure",
     )
-    assert proc.returncode == 2
-    assert "Traceback" not in proc.stdout + proc.stderr
+    real_write = transaction_module.atomic_write_bytes
+
+    def fail_unit_write(path: Path, content: bytes) -> None:
+        if Path(path).resolve() == unit.resolve():
+            raise TransactionFailure("injected unit write failure")
+        real_write(path, content)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(transaction_module, "atomic_write_bytes", fail_unit_write)
+        outcome = run_gateway(
+            mini_repo,
+            envelope,
+            requested="stage.progress.update",
+            definitions=command_definitions(mini_repo),
+            attempt=diag_tracer.begin_attempt({"capability": "stage.progress.update"}),
+            replay_only=False,
+        )
+    assert outcome.exit_code == 2
+    assert "Traceback" not in outcome.stdout + outcome.stderr
     assert study_map.read_text(encoding="utf-8") == before_map
     assert unit.read_text(encoding="utf-8") == before_unit
-    (unit_dir / ".unit.yaml.tmp").rmdir()
     retry = approved_v2_cli(
         mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
         artifact_ids=["unit-demo-l01", "study-map-demo-l01"],

@@ -9,6 +9,7 @@ of ``genout`` already imports.
 from __future__ import annotations
 
 from learning_os.domain.snapshot import Repo
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.materials.resolution import (
     MATERIAL_RESOURCE_SUFFIXES as _MATERIAL_RESOURCE_SUFFIXES,
 )
@@ -51,8 +52,7 @@ def materials_queue_rows(repo: Repo) -> list[str]:
     for qname in ("_unsorted", "_duplicates-for-review"):
         qdir = materials / qname
         if not qdir.is_symlink() and qdir.is_dir():
-            n = sum(1 for f in qdir.rglob("*")
-                    if not f.is_symlink() and f.is_file() and f.name != ".DS_Store")
+            n = sum(1 for f in iter_non_symlink_files(qdir) if f.name != ".DS_Store")
             if n:
                 rows.append(f"- `materials/{qname}/` — **{n} files** "
                             "awaiting a register-or-discard decision")

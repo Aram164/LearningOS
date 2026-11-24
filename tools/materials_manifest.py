@@ -61,6 +61,18 @@ GENERATED_AT_ROOT = frozenset({"README.md", "FILES.txt", "INDEX.html"})
 GENERATED_ANYWHERE = frozenset({"SOURCES.md"})
 SKIP_NAMES = frozenset({".DS_Store"})
 
+
+def _iter_non_symlink_files(base: Path):
+    """Yield sorted regular non-symlink files under ``base`` (Python 3.12+ safe)."""
+    for dirpath, dirnames, filenames in os.walk(base, followlinks=False):
+        current = Path(dirpath)
+        dirnames[:] = sorted(name for name in dirnames if not (current / name).is_symlink())
+        for name in sorted(filenames):
+            candidate = current / name
+            if not candidate.is_symlink() and candidate.is_file():
+                yield candidate
+
+
 def materials_root(root: Path = ROOT) -> Path:
     """``materials/`` sits beside the repository, under the LearningOS root."""
     return root.parent / "materials"
@@ -68,11 +80,9 @@ def materials_root(root: Path = ROOT) -> Path:
 
 def iter_material_files(base: Path):
     """Yield (relative_posix_path, absolute_path) for every durable file."""
-    if not base.is_dir():
+    if base.is_symlink() or not base.is_dir():
         return
-    for path in sorted(base.rglob("*")):
-        if path.is_symlink() or not path.is_file():
-            continue
+    for path in _iter_non_symlink_files(base):
         if path.name in SKIP_NAMES or path.name in GENERATED_ANYWHERE:
             continue
         rel = path.relative_to(base)

@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 from pathlib import Path
 
 from learning_os.derive.validation.advisories import stale_index_lock_issues
 from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.fs import clean_git_env, iter_non_symlink_files
 from learning_os.store.session.githistory import (
     GitHistoryError,
     last_commit_timestamp,
@@ -83,8 +83,9 @@ class ChecksHygiene:
             if p.name != "COORDINATION.md":
                 flag(p, "work/ root holds only COORDINATION.md")
         for tree in ("records", "sources"):
-            for p in (root / tree).rglob("*.md"):
-                flag(p, f"{tree}/ holds registries (YAML), not Markdown")
+            for p in iter_non_symlink_files(root / tree):
+                if p.name.endswith(".md"):
+                    flag(p, f"{tree}/ holds registries (YAML), not Markdown")
         active = root / "work" / "active"
         if active.is_dir():
             for ws in active.iterdir():
@@ -99,7 +100,7 @@ class ChecksHygiene:
         try:
             out = subprocess.run(["git", *args], cwd=self.repo.root, capture_output=True,
                                  text=True, timeout=30,
-                                 env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"})
+                                 env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}))
             return out.stdout
         except Exception:  # noqa: BLE001
             return ""

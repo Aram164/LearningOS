@@ -31,9 +31,25 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
 
 
 #: Environment override for the operator-lock wait. `los --lock-timeout`
-#: sets this for the process; in-process callers set it directly. Unset or
-#: malformed means wait as long as the holder needs, announced on stderr.
+#: sets this for the process; in-process callers prefer :func:`scoped_lock_timeout`.
+#: Unset or malformed means wait as long as the holder needs, announced on stderr.
 LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
+
+_SCOPED_LOCK_TIMEOUT: contextvars.ContextVar[float | None] = (
+    contextvars.ContextVar("learningos_scoped_lock_timeout", default=None)
+)
+
+
+@contextlib.contextmanager
+def scoped_lock_timeout(seconds: float | None):
+    """Scoped lock-timeout override without mutating process-wide ``os.environ``."""
+    token = _SCOPED_LOCK_TIMEOUT.set(
+        max(0.0, float(seconds)) if seconds is not None and math.isfinite(float(seconds)) else None
+    )
+    try:
+        yield
+    finally:
+        _SCOPED_LOCK_TIMEOUT.reset(token)
 
 #: Cancellable read workers set this so they defer canonical recovery (D09):
 #: they must report recovery-required instead of reconciling transactions.
@@ -51,6 +67,9 @@ _LOCK_POLL_INTERVAL_S = 0.05
 
 def _lock_timeout_seconds() -> float | None:
     """The configured lock wait bound, or None for an unbounded announced wait."""
+    scoped = _SCOPED_LOCK_TIMEOUT.get()
+    if scoped is not None:
+        return scoped
     raw = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
     if raw is None or not raw.strip():
         return None

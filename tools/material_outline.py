@@ -30,7 +30,6 @@ import argparse
 import hashlib
 import json
 import logging
-import os
 import re
 import sys
 from pathlib import Path, PurePosixPath
@@ -41,6 +40,7 @@ if str(TOOLS) not in sys.path:
 
 from material_toc import outline_rows  # noqa: E402
 
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.materials.pdf_text import PDFTextError, pdf_reader  # noqa: E402
 from learning_os.store.materials.search_index import (  # noqa: E402
     OUTLINE_TOP_DIR,
@@ -115,9 +115,9 @@ def _harvest(path: Path, sha256: str, material: str) -> tuple[str, dict[str, obj
 
 def _write_atomic(target: Path, payload: dict[str, object]) -> None:
     text = json.dumps(payload, ensure_ascii=False, indent=1, sort_keys=True) + "\n"
-    tmp = target.with_name(f".{target.name}.{os.getpid()}.tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, target)
+    atomic_write_text_exclusive(
+        target, text, boundary=target.parent, error_factory=OSError
+    )
 
 
 def run(*, text_cache: Path, outline_dir: Path, materials_root: Path,

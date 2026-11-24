@@ -21,6 +21,7 @@ from pathlib import Path
 from learning_os.derive.validation import Validator, render_report  # noqa: E402
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 from learning_os.store.fingerprint import seed_source_fingerprint  # noqa: E402
+from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 from learning_os.store.validation_cache import (  # noqa: E402
     discard_unreadable_cache,
@@ -104,9 +105,12 @@ def main() -> int:
         generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
         report_dir = root / "generated" / "reports"
         try:
-            report_dir.mkdir(parents=True, exist_ok=True)
-            (report_dir / "validation-report.md").write_text(
-                render_report(issues, generated_at), encoding="utf-8")
+            atomic_write_text_exclusive(
+                report_dir / "validation-report.md",
+                render_report(issues, generated_at),
+                boundary=root / "generated",
+                error_factory=OSError,
+            )
         except PermissionError as exc:
             study_note = (
                 " Inside study mode, pass --no-report (materials/ is unmounted "

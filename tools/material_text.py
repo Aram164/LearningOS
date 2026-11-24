@@ -54,6 +54,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
@@ -77,6 +78,7 @@ from learning_os.store.derived.model import (  # noqa: E402
 )
 from learning_os.store.derived.store import invalidate, read_state  # noqa: E402
 from learning_os.store.derived.store import lookup as recorded_node  # noqa: E402
+from learning_os.store.fs import atomic_write_bytes_exclusive, atomic_write_text_exclusive  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 CACHE_DIR = REPO / "generated" / TEXT_CACHE_TOP_DIR
@@ -112,11 +114,76 @@ def _page_count(path: Path) -> int:
 
 
 def _page_text(path: Path, page: int) -> str | None:
-    proc = subprocess.run(
-        ["pdftotext", "-f", str(page), "-l", str(page), str(path), "-"],
-        capture_output=True, text=True, errors="replace",
-    )
+    try:
+        proc = subprocess.run(
+            ["pdftotext", "-f", str(page), "-l", str(page), str(path), "-"],
+            capture_output=True, text=True, errors="replace", timeout=60,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
     return proc.stdout if proc.returncode == 0 else None
+
+
+def _stage_extracted_entry(
+    cache: Path,
+    digest: str,
+    rel: str,
+    pages: int,
+    texts: list[str],
+    *,
+    source_path: Path,
+) -> tuple[bool, str | None]:
+    """Write extracted pages into an exclusive staging dir and swap atomically."""
+    legacy_staging = cache / f".{digest}.staging"
+    if legacy_staging.is_symlink() or legacy_staging.is_file():
+        legacy_staging.unlink()
+    elif legacy_staging.is_dir():
+        shutil.rmtree(legacy_staging)
+    cache.mkdir(parents=True, exist_ok=True)
+    cache_real = cache.resolve()
+    staging = Path(tempfile.mkdtemp(prefix=f".{digest}.staging-", dir=cache_real))
+    try:
+        hashes = []
+        for page, text in enumerate(texts, start=1):
+            data = text.encode("utf-8")
+            atomic_write_bytes_exclusive(
+                staging / f"pp-{page:04d}.txt",
+                data,
+                boundary=cache_real,
+                durable=False,
+                error_factory=OSError,
+            )
+            hashes.append(hashlib.sha256(data).hexdigest())
+        index = {
+            "_generated": _generated_header("tools/material_text.py"),
+            "material": rel,
+            "sha256": digest,
+            "pages": pages,
+            "extractor": EXTRACTOR,
+            "pages_sha256": hashes,
+            "built": _dt.date.today().isoformat(),
+        }
+        atomic_write_text_exclusive(
+            staging / "index.json",
+            json.dumps(index, indent=2, sort_keys=True) + "\n",
+            boundary=cache_real,
+            durable=False,
+            error_factory=OSError,
+        )
+        if sha256(source_path) != digest:
+            return False, "source-changed"
+        target = cache / digest
+        if target.is_symlink() or target.is_file():
+            target.unlink()
+        elif target.is_dir():
+            shutil.rmtree(target)
+        staging.rename(target)
+        return True, None
+    finally:
+        if staging.is_symlink() or staging.is_file():
+            staging.unlink(missing_ok=True)
+        elif staging.is_dir():
+            shutil.rmtree(staging, ignore_errors=True)
 
 
 def _index_path(cache: Path, digest: str) -> Path:
@@ -425,51 +492,13 @@ def _project_views(path: Path, digest: str, rel: str, cache: Path,
     """
     if len(texts) != pages or sha256(path) != digest:
         return False
-    staging = cache / f".{digest}.staging"
     try:
-        if staging.is_symlink() or staging.is_file():
-            staging.unlink()
-        elif staging.is_dir():
-            shutil.rmtree(staging)
-        staging.mkdir(parents=True)
-        hashes = []
-        for page, text in enumerate(texts, start=1):
-            data = text.encode("utf-8")
-            (staging / f"pp-{page:04d}.txt").write_bytes(data)
-            hashes.append(hashlib.sha256(data).hexdigest())
-        index = {
-            "_generated": _generated_header("tools/material_text.py"),
-            "material": rel,
-            "sha256": digest,
-            "pages": pages,
-            "extractor": EXTRACTOR,
-            "pages_sha256": hashes,
-            "built": _dt.date.today().isoformat(),
-        }
-        (staging / "index.json").write_text(
-            json.dumps(index, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8")
-        # Admit only text for the bytes the digest names: a source that
-        # changed during projection publishes nothing under this digest.
-        if sha256(path) != digest:
-            return False
-        target = cache / digest
-        if target.is_symlink() or target.is_file():
-            target.unlink()
-        elif target.is_dir():
-            shutil.rmtree(target)
-        staging.rename(target)
+        published, _ = _stage_extracted_entry(
+            cache, digest, rel, pages, texts, source_path=path,
+        )
+        return published
     except OSError:
         return False
-    finally:
-        if staging.is_symlink() or staging.is_file():
-            try:
-                staging.unlink()
-            except OSError:
-                pass
-        elif staging.is_dir():
-            shutil.rmtree(staging, ignore_errors=True)
-    return True
 
 
 def _extract(path: Path, digest: str, rel: str, cache: Path, pages: int) -> dict:
@@ -481,45 +510,11 @@ def _extract(path: Path, digest: str, rel: str, cache: Path, pages: int) -> dict
         texts.append(text)
     if sha256(path) != digest:
         return {"material": rel, "reason": "source-changed"}
-    staging = cache / f".{digest}.staging"
-    if staging.is_symlink() or staging.is_file():
-        staging.unlink()
-    elif staging.is_dir():
-        shutil.rmtree(staging)
-    staging.mkdir(parents=True)
-    hashes = []
-    try:
-        for page, text in enumerate(texts, start=1):
-            data = text.encode("utf-8")
-            (staging / f"pp-{page:04d}.txt").write_bytes(data)
-            hashes.append(hashlib.sha256(data).hexdigest())
-        index = {
-            "_generated": _generated_header("tools/material_text.py"),
-            "material": rel,
-            "sha256": digest,
-            "pages": pages,
-            "extractor": EXTRACTOR,
-            "pages_sha256": hashes,
-            "built": _dt.date.today().isoformat(),
-        }
-        (staging / "index.json").write_text(
-            json.dumps(index, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8")
-        # Admit only text extracted from the bytes the digest names: a source
-        # that changed during extraction publishes nothing under this digest.
-        if sha256(path) != digest:
-            return {"material": rel, "reason": "source-changed"}
-        target = cache / digest
-        if target.is_symlink() or target.is_file():
-            target.unlink()
-        elif target.is_dir():
-            shutil.rmtree(target)
-        staging.rename(target)
-    finally:
-        if staging.is_symlink() or staging.is_file():
-            staging.unlink()
-        elif staging.is_dir():
-            shutil.rmtree(staging, ignore_errors=True)
+    published, reason = _stage_extracted_entry(
+        cache, digest, rel, pages, texts, source_path=path,
+    )
+    if not published:
+        return {"material": rel, "reason": reason or "source-changed"}
     return {"material": rel, "pages": pages}
 
 
@@ -552,16 +547,26 @@ def _heal_index(cache: Path, digest: str, pages: int) -> bool:
     record.setdefault("_generated", _generated_header("tools/material_text.py"))
     record.setdefault("extractor", EXTRACTOR)
     record.setdefault("pages_sha256", hashes)
-    path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n",
-                    encoding="utf-8")
+    try:
+        atomic_write_text_exclusive(
+            path,
+            json.dumps(record, indent=2, sort_keys=True) + "\n",
+            boundary=cache.resolve(),
+            durable=False,
+            error_factory=OSError,
+        )
+    except OSError:
+        return False
     return True
 
 
 def _prune(cache: Path, live: set[str]) -> int:
     pruned = 0
-    if not cache.is_dir():
+    if cache.is_symlink() or not cache.is_dir():
         return pruned
     for child in sorted(cache.iterdir()):
+        if child.is_symlink():
+            continue
         name = child.name
         if not child.is_dir() or len(name) != 64:
             continue

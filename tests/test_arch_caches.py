@@ -1130,7 +1130,7 @@ def test_text_stale_key_never_adopts_views_the_node_did_not_record(
 
 
 #: Pinned with EXTRACTOR: see the test below before changing either.
-EXTRACTION_FINGERPRINT = "bf43fc7f4e7e82993d8ae5e487a85c4c13a4b12c7e7e11bbb9485e3b65ac1c04"
+EXTRACTION_FINGERPRINT = "257545b3c40b2c960adde1d58584f93801348e3da3e4af012be595bd83778ad5"
 
 
 def test_text_extraction_code_is_pinned_to_its_extractor_name():

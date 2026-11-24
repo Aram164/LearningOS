@@ -432,6 +432,40 @@ def _resolve_regular_path(
     return path if (path.is_file() and not path.is_symlink()) else None
 
 
+def route_candidate_material_uris(
+    repo: Repo,
+    route: dict[str, Any],
+) -> list[str]:
+    """Return every exact local ``material://`` URI candidate named by ``route``.
+
+    Unlike :func:`resolve_route_material_files`, this does not require every
+    candidate file to exist on disk so provenance checks can detect when one
+    missing or unresolvable file causes partial route resolution.
+    """
+    vault_path = route.get("vault_path")
+    if isinstance(vault_path, str) and vault_path:
+        if vault_path.startswith(MATERIAL_SCHEME) and material_uri_authority(vault_path):
+            return [vault_path]
+        return []
+    locator = route.get("locator")
+    source = repo.sources.get(route.get("source_id"))
+    source_material = source.get("material") if isinstance(source, dict) else None
+    authority = material_uri_authority(source_material)
+    if not authority:
+        return []
+    single = safe_material_locator(locator)
+    if single is None and (not isinstance(locator, str) or ";" not in locator):
+        single = leading_material_locator(locator)
+    if single:
+        return [f"material://{authority}/{single}"]
+    if isinstance(locator, str) and ";" in locator:
+        candidates = material_locator_parts(locator)
+        if candidates:
+            return [f"material://{authority}/{candidate}" for candidate in candidates]
+    sole = single_file_material(source_material)
+    return [sole] if sole else []
+
+
 def resolve_route_material_files(
     repo: Repo,
     route: dict[str, Any],

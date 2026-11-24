@@ -203,6 +203,7 @@
    "tests/test_observations.py",
    "tests/test_operator_lock.py",
    "tests/test_perimeter.py",
+   "tests/test_phase4_hardening.py",
    "tests/test_plan_resume.py",
    "tests/test_plan_rigor.py",
    "tests/test_projects.py",

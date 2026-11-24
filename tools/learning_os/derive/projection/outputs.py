@@ -216,7 +216,19 @@ def _publisher_entries(gen: Path) -> list[Path]:
         entries.append(child)
         if child.name in _KEEP_TOP_DIRS or child.is_symlink() or not child.is_dir():
             continue
-        entries.extend(sorted(child.rglob("*")))
+        subentries: list[Path] = []
+        for dirpath, dirnames, filenames in os.walk(child, followlinks=False):
+            current = Path(dirpath)
+            next_dirs: list[str] = []
+            for name in sorted(dirnames):
+                candidate = current / name
+                subentries.append(candidate)
+                if not candidate.is_symlink():
+                    next_dirs.append(name)
+            dirnames[:] = next_dirs
+            for name in sorted(filenames):
+                subentries.append(current / name)
+        entries.extend(sorted(subentries))
     return entries
 
 

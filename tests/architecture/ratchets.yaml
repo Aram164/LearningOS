@@ -17,10 +17,6 @@ baselined:
 - A19-owners
 checks:
   A2-static:
-  - signature: tools/learning_os/store/contracts/data_contract.py::write_contract::write_text
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/manifest_contract.py::bump::write_text
     count: 1
     since: approved
@@ -33,18 +29,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
-  - signature: tools/learning_os/store/fs.py::atomic_text::os.replace
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
-  - signature: tools/learning_os/store/fs.py::atomic_text::unlink
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
-  - signature: tools/learning_os/store/fs.py::atomic_text::write_text
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
   - signature: tools/learning_os/app/handlers/note_analysis.py::_prepare_out_dir::shutil.rmtree
     count: 1
     since: approved
@@ -57,10 +41,6 @@ checks:
     count: 1
     since: approved
     approved_by: 'Aram 2026-10-10: you take open desicions'
-  - signature: tools/learning_os/derive/semantics/dossiers.py::store_dossier::write_text
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/app/handlers/plan.py::_save_check_report_and_compact::unlink
     count: 1
     since: approved

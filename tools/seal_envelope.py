@@ -51,6 +51,7 @@ from learning_os.store.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.fs import atomic_write_text_exclusive
 from learning_os.store.study_fence import (
     MAX_STUDY_JSON_BYTES,
     STUDY_FENCE_CORE_ENV,
@@ -942,8 +943,9 @@ def main(argv: list[str] | None = None) -> int:
     }
     text = json.dumps(envelope, indent=2, sort_keys=True, ensure_ascii=False)
     if args.out:
-        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.out).write_text(text + "\n", encoding="utf-8")
+        atomic_write_text_exclusive(
+            Path(args.out), text + "\n", error_factory=OSError
+        )
     else:
         print(text)
     return 0

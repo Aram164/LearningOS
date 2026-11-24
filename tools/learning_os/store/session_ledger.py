@@ -8,7 +8,6 @@ of the ledger sink; every importer was updated in the same commit.
 
 from __future__ import annotations
 
-import contextlib
 import datetime as _dt
 import hashlib
 import json
@@ -20,6 +19,7 @@ from pathlib import Path
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.fs import atomic_write_text_exclusive, clean_git_env
 
 #: Positive-only cache of repository roots to their git directories. A root
 #: that gains a `.git` mid-process (tests do) must be re-probed, so misses
@@ -50,13 +50,12 @@ def _git_dir(root: Path) -> Path | None:
     hit = _GIT_DIR_CACHE.get(root_key)
     if hit is not None and hit[0] == anchor_key and hit[1].is_dir():
         return hit[1]
-    env = {key: value for key, value in os.environ.items()
-           if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}}
+    env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
     try:
         proc = subprocess.run(
             ["git", "-C", root_key, "rev-parse", "--git-dir"],
             capture_output=True, text=True, timeout=30,
-            env={**env, "GIT_OPTIONAL_LOCKS": "0"},
+            env=env,
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
@@ -444,15 +443,7 @@ def _atomic_text(path: Path, content: str) -> None:
     actionable refusal instead of a traceback that leaves a stray `.tmp`
     sibling behind.
     """
-    tmp = path.with_name(f".{path.name}.tmp")
-    try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, path)
-    except OSError as exc:
-        with contextlib.suppress(OSError):
-            tmp.unlink(missing_ok=True)
-        raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
+    atomic_write_text_exclusive(path, content, error_factory=WriteRefused)
 
 
 def write_session_ledger(root: Path, paths: dict[str, dict[str, str]],

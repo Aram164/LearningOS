@@ -21,10 +21,12 @@ from learning_os.app.context import OpContext
 from learning_os.app.proposal import TransactionProposal
 from learning_os.derive.validation import validate
 from learning_os.domain.validation import Issue
-from learning_os.store.fs import atomic_text as _atomic_text
+from learning_os.store.fs import (
+    atomic_write_bytes_exclusive,
+    atomic_write_text_exclusive,
+)
 from learning_os.store.loader import load_repo
 from learning_os.store.revisions import load_revisions
-from learning_os.store.transactions import atomic_write_bytes as _atomic_write_bytes
 from learning_os.store.transactions import transaction_artifacts
 from learning_os.store.warning_baseline import (
     delta,
@@ -95,13 +97,31 @@ def staged_shadow(root: Path, writes: Mapping[Path, str | bytes],
                 (shadow.parent / external_name).symlink_to(external, target_is_directory=True)
         for path, content in writes.items():
             try:
+                lexical_rel = path.relative_to(root)
+            except ValueError:
+                lexical_rel = None
+            if lexical_rel is not None:
+                cursor = root
+                for part in lexical_rel.parts:
+                    cursor = cursor / part
+                    if cursor.is_symlink():
+                        raise ValueError(f"planned write traverses symlink: {path}")
+            try:
                 rel = path.resolve().relative_to(root.resolve())
             except ValueError:
                 raise ValueError(f"planned write escapes repository: {path}") from None
+            rel_posix = rel.as_posix()
+            if rel_posix == "knowledge/attachments" or rel_posix.startswith("knowledge/attachments/"):
+                raise ValueError(f"planned write targets read-only attachments link: {path}")
+            target = shadow / rel
             if isinstance(content, bytes):
-                _atomic_write_bytes(shadow / rel, content)
+                atomic_write_bytes_exclusive(
+                    target, content, boundary=shadow, durable=False, error_factory=ValueError
+                )
             else:
-                _atomic_text(shadow / rel, content)
+                atomic_write_text_exclusive(
+                    target, content, boundary=shadow, durable=False, error_factory=ValueError
+                )
         yield shadow
 
 

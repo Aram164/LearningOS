@@ -22,7 +22,10 @@ from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.app.claim_admission import claim_evidence_scaffolds
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
+    resolve_route_provenance,
     synthesis_destination,
+    synthesis_route_ids,
+    validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
 from learning_os.derive.semantics.claim_status import claim_impacts, observe_claims
@@ -41,6 +44,7 @@ from learning_os.domain.route_identity import route_with_identity
 from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.loader import load_repo
 from learning_os.store.material_analysis import observe_local_material
 from learning_os.store.materials.resolution import evidential_route_projection, sha256_file
@@ -143,6 +147,13 @@ def staged_synthesis_errors(root: Path, module_id: str, live_repo,
             errors.append(f"material_syntheses {unit_id}: destination is not a YAML record")
         try:
             validate_unit_material_synthesis(shadow, unit_id, dossier, repo=shadow_repo)
+            inspected = resolve_route_provenance(
+                live_repo,
+                shadow_repo,
+                unit_id,
+                synthesis_route_ids(dossier),
+            )
+            validate_synthesis_page_provenance(inspected, dossier)
         except MaterialSynthesisError as exc:
             errors.append(f"material_syntheses {unit_id}: replacement dossier invalid: {exc}")
     for unit_id, unit in sorted(live_repo.units.items()):
@@ -683,9 +694,7 @@ def enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, s
         if not target.is_dir():
             problems.append(f"material inventory root is not observable: {entry}")
             continue
-        for path in sorted(target.rglob("*")):
-            if not path.is_file() or path.is_symlink():
-                continue
+        for path in iter_non_symlink_files(target):
             if any(part.startswith(".") for part in path.relative_to(target).parts):
                 continue
             rel = path.relative_to(boundary).as_posix()

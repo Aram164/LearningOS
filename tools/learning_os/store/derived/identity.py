@@ -19,6 +19,7 @@ from pathlib import Path, PurePosixPath
 import learning_os
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.digests import file_content
+from learning_os.store.fs import iter_files_and_top_symlinks
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 from learning_os.store.session.githistory import GitSnapshot, fresh_git_snapshot
 
@@ -77,7 +78,8 @@ def digest_tree(root: Path, relative_root: str) -> str:
     if base.is_file() or base.is_symlink():
         entries = [base]
     else:
-        entries = sorted(path for path in base.rglob("*") if path.is_file() or path.is_symlink())
+        files, symlinks = iter_files_and_top_symlinks(base)
+        entries = sorted([*files, *symlinks])
     for path in entries:
         rel = path.relative_to(root)
         if any(part.startswith(".") for part in rel.parts):
@@ -177,10 +179,8 @@ def digest_code_tree(root: Path) -> str:
     if not base.is_dir() or base.is_symlink():
         digest.update(b"<no-code-tree>\0")
         return digest.hexdigest()
-    members = sorted(
-        path for path in base.rglob("*.py")
-        if path.is_file() or path.is_symlink()
-    )
+    files, symlinks = iter_files_and_top_symlinks(base)
+    members = sorted(path for path in (*files, *symlinks) if path.suffix == ".py")
     for path in members:
         rel = path.relative_to(root)
         if any(part.startswith(".") or part == "__pycache__" for part in rel.parts):
@@ -209,10 +209,8 @@ def digest_executing_code_tree() -> str:
     if base is None or not base.is_dir() or base.is_symlink():
         raise DerivedError("derived executing code tree is not resolvable")
     digest = hashlib.sha256()
-    members = sorted(
-        path for path in base.rglob("*.py")
-        if path.is_file() or path.is_symlink()
-    )
+    files, symlinks = iter_files_and_top_symlinks(base)
+    members = sorted(path for path in (*files, *symlinks) if path.suffix == ".py")
     for path in members:
         rel = path.relative_to(base)
         if any(part.startswith(".") or part == "__pycache__" for part in rel.parts):
@@ -362,10 +360,8 @@ def canonical_snapshot_digest(root: Path, git: GitSnapshot | None = None) -> str
     writes ``.pyc`` files, which must not read as an input change.
     """
     digest = hashlib.sha256()
-    members = sorted(
-        path for path in root.rglob("*")
-        if path.is_file() or path.is_symlink()
-    )
+    files, symlinks = iter_files_and_top_symlinks(root, allow_root_symlink=True)
+    members = sorted([*files, *symlinks])
     for path in members:
         rel = path.relative_to(root)
         if any(part.startswith(".") or part == "__pycache__" for part in rel.parts):

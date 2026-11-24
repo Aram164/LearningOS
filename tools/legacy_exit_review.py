@@ -21,6 +21,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -77,13 +78,46 @@ def _is_ignored(path: Path) -> bool:
     return path.name in IGNORED_NAMES or path.name.startswith(IGNORED_PREFIXES)
 
 
+def _iter_files_and_symlinks(
+    base: Path, *, repository: bool = False,
+) -> tuple[list[Path], list[Path]]:
+    """Walk ``base`` without following symlinks (Python 3.12+ safe)."""
+    if base.is_symlink():
+        return [], [] if _is_ignored(base) else [base]
+    if not base.is_dir():
+        return [], []
+    files: list[Path] = []
+    symlinks: list[Path] = []
+    for dirpath, dirnames, filenames in os.walk(base, followlinks=False):
+        current = Path(dirpath)
+        next_dirs: list[str] = []
+        for name in sorted(dirnames):
+            if repository and name in REPOSITORY_SKIP_PARTS:
+                continue
+            candidate = current / name
+            if _is_ignored(candidate):
+                continue
+            if candidate.is_symlink():
+                symlinks.append(candidate)
+            else:
+                next_dirs.append(name)
+        dirnames[:] = next_dirs
+        for name in sorted(filenames):
+            candidate = current / name
+            if _is_ignored(candidate):
+                continue
+            if candidate.is_symlink():
+                symlinks.append(candidate)
+            elif candidate.is_file():
+                files.append(candidate)
+    files.sort()
+    symlinks.sort()
+    return files, symlinks
+
+
 def _iter_files(base: Path, *, repository: bool = False):
-    for path in sorted(base.rglob("*")):
-        if path.is_symlink() or not path.is_file() or _is_ignored(path):
-            continue
-        if repository and any(part in REPOSITORY_SKIP_PARTS for part in path.parts):
-            continue
-        yield path
+    files, _ = _iter_files_and_symlinks(base, repository=repository)
+    return iter(files)
 
 
 def _load_csv(path: Path) -> list[dict[str, str]]:
@@ -149,12 +183,27 @@ def _copy_index(legacy_files: list[Path]) -> dict[tuple[int, str], list[str]]:
 
 
 def review(legacy_root: Path) -> list[ReviewItem]:
-    legacy_files = list(_iter_files(legacy_root))
+    legacy_files, legacy_symlinks = _iter_files_and_symlinks(legacy_root)
     copies = _copy_index(legacy_files)
     path_map = _load_csv(ROOT / "migration" / "path-map.csv")
     material_map = _load_csv(ROOT / "migration" / "material-moves.csv")
 
     results: list[ReviewItem] = []
+    for link in legacy_symlinks:
+        rel = link.relative_to(legacy_root).as_posix()
+        try:
+            target = os.readlink(link)
+        except OSError as exc:
+            target = f"<unreadable: {exc}>"
+        results.append(
+            ReviewItem(
+                rel,
+                0,
+                "",
+                "symlink",
+                f"symbolic link (not followed) -> {target}",
+            )
+        )
     for source in legacy_files:
         rel = source.relative_to(legacy_root).as_posix()
         size = source.stat().st_size
@@ -201,7 +250,7 @@ def _markdown(items: list[ReviewItem], legacy_root: Path, *, details: bool) -> s
     total_bytes = sum(item.size for item in items)
     needs_attention = [
         item for item in items
-        if item.disposition == "manual-review"
+        if item.disposition in {"manual-review", "symlink"}
     ]
     lines = [
         "# Legacy exit review",

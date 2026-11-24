@@ -11,6 +11,7 @@ from learning_os.domain.vocabulary import (
     UNIT_ID_RE,
 )
 from learning_os.store.contracts import local_attachments
+from learning_os.store.fs import iter_non_symlink_files
 
 
 class ChecksStructure:
@@ -156,9 +157,7 @@ class ChecksStructure:
         knowledge = r.root / "knowledge"
         summaries_root = knowledge / "summaries"
         if knowledge.is_dir():
-            for f in sorted(knowledge.rglob("*")):
-                if not f.is_file():
-                    continue
+            for f in iter_non_symlink_files(knowledge):
                 if attach_root in f.parents:
                     continue
                 if summaries_root in f.parents and f.name == "meta.json":

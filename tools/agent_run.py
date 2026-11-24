@@ -51,6 +51,7 @@ import time
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from pathlib import Path
 
+from learning_os.adapters.process_group import terminate_process_group
 from learning_os.app.projection_readiness import observe as _observe_projection
 from learning_os.domain.codes import (
     DISCOVERY_FAILED,
@@ -61,11 +62,14 @@ from learning_os.domain.codes import (
     ROOT_MISMATCH,
     SESSION_MISMATCH,
     SESSION_REQUIRED,
+    STEP_FAILED,
     VALIDATION_FAILED,
 )
 from learning_os.store.contracts.agent_plans import parse_controls
+from learning_os.store.fs import atomic_write_bytes_exclusive, clean_git_env
 
 TOOLS = Path(__file__).resolve().parent
+_ORIGINAL_SUBPROCESS_RUN = subprocess.run
 
 
 class AgentRunError(Exception):
@@ -402,7 +406,13 @@ def _session_bound_envelope(namespace, session_id):
     previous = namespace.payload_file
     with tempfile.TemporaryDirectory(prefix="agent-run-envelope-") as directory:
         target = Path(directory) / "envelope.json"
-        target.write_bytes(content)
+        atomic_write_bytes_exclusive(
+            target,
+            content,
+            boundary=Path(directory),
+            durable=False,
+            error_factory=AgentRunError,
+        )
         namespace.payload_file = str(target)
         try:
             yield
@@ -410,10 +420,36 @@ def _session_bound_envelope(namespace, session_id):
             namespace.payload_file = previous
 
 
+def _run_subprocess_bounded(
+    argv: list[str], *, cwd: Path, timeout_s: float | None,
+) -> tuple[int, str, str]:
+    wait_s = None if timeout_s is None else max(0.01, float(timeout_s))
+    env = clean_git_env()
+    if subprocess.run is not _ORIGINAL_SUBPROCESS_RUN:
+        try:
+            proc = subprocess.run(
+                argv, capture_output=True, text=True, cwd=cwd, timeout=wait_s, env=env,
+            )
+            return proc.returncode, proc.stdout, proc.stderr
+        except subprocess.TimeoutExpired as exc:
+            raise AgentRunError(f"step subprocess timed out after {wait_s:.2f}s", STEP_FAILED) from exc
+    child = subprocess.Popen(
+        argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        cwd=cwd, start_new_session=True, env=env,
+    )
+    try:
+        out, err = child.communicate(timeout=wait_s)
+    except subprocess.TimeoutExpired as exc:
+        terminate_process_group(child, grace_s=2.0)
+        child.communicate()
+        raise AgentRunError(f"step subprocess timed out after {wait_s:.2f}s", STEP_FAILED) from exc
+    return child.returncode, out, err
+
+
 def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
     from learning_os.adapters.cli import invoke_outcome
     from learning_os.adapters.cli_parser import build_parser
-    from learning_os.app.lock import LOS_LOCK_TIMEOUT_ENV
+    from learning_os.app.lock import scoped_lock_timeout
 
     parser = build_parser()
     writers = write_commands if write_commands is not None else {"capability"}
@@ -436,21 +472,24 @@ def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
             raise AgentRunError("parsed write command requires a plan session_id", SESSION_REQUIRED)
         return namespace
 
-    def executor(argv, selected_root):
+    def executor(argv, selected_root, *, timeout_s: float | None = None):
         if selected_root.resolve() != root:
             raise AgentRunError("executor root differs from plan", ROOT_MISMATCH)
         if argv[:1] == ["__seal_submit__"]:
             _, capability, payload, key, *session_args = argv
-            proc = subprocess.run(
+            return _run_subprocess_bounded(
                 [sys.executable, str(TOOLS / "seal_envelope.py"), "--root", str(root),
                  "--capability", capability, "--payload=" + payload, "--key=" + key,
-                 "--submit", *session_args], capture_output=True, text=True, cwd=root)
-            return proc.returncode, proc.stdout, proc.stderr
+                 "--submit", *session_args],
+                cwd=root, timeout_s=timeout_s,
+            )
         namespace = validate(argv)
-        previous = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
-        try:
-            if namespace.lock_timeout is not None:
-                os.environ[LOS_LOCK_TIMEOUT_ENV] = str(namespace.lock_timeout)
+        lock_timeout = (
+            min(float(namespace.lock_timeout), float(timeout_s))
+            if namespace.lock_timeout is not None and timeout_s is not None
+            else (namespace.lock_timeout if namespace.lock_timeout is not None else timeout_s)
+        )
+        with scoped_lock_timeout(lock_timeout):
             with _session_bound_envelope(namespace, session_id):
                 expected = admitted_envelopes.get(tuple(argv))
                 if expected is not None and Path(namespace.payload_file).read_bytes() != expected:
@@ -458,15 +497,10 @@ def _cli_executor_factory(root: Path, *, session_id=None, write_commands=None):
                 if hasattr(namespace, "_operation"):
                     outcome = invoke_outcome(namespace)
                     return outcome.exit_code, outcome.stdout, outcome.stderr
-                proc = subprocess.run(
+                return _run_subprocess_bounded(
                     [sys.executable, str(TOOLS / "los.py"), "--root", str(root), *argv],
-                    capture_output=True, text=True, cwd=root)
-                return proc.returncode, proc.stdout, proc.stderr
-        finally:
-            if previous is None:
-                os.environ.pop(LOS_LOCK_TIMEOUT_ENV, None)
-            else:
-                os.environ[LOS_LOCK_TIMEOUT_ENV] = previous
+                    cwd=root, timeout_s=timeout_s,
+                )
 
     executor.validate = validate
     executor.parser = parser
@@ -666,7 +700,11 @@ def run_plan(plan: dict, root: Path, *, executor=None, poll_s: float = 0.1,
                 self.resource_info = {}
 
             def execute(self, step, remaining):
-                code, out, err = actual(list(step.argv), root)
+                code, out, err = (
+                    actual(list(step.argv), root)
+                    if injected
+                    else actual(list(step.argv), root, timeout_s=remaining)
+                )
                 count = int(not injected and step.submitting and step.argv[0] == "__seal_submit__")
                 return RawOutcome(code, out, err, count)
 

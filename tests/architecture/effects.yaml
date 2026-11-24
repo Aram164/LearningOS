@@ -8,6 +8,7 @@
 "tools/learning_os/derive/projection/**": projection
 "tools/learning_os/store/contracts/doc_blocks.py": projection
 "tools/learning_os/store/ai_actions/storage.py": operational
+"tools/learning_os/store/fs.py": operational
 "tools/learning_os/app/backup_manifest.py": operational
 "tools/learning_os/store/session_ledger.py": operational
 "tools/learning_os/store/materials/reading_cards.py": operational

@@ -10,7 +10,9 @@ AI state may enrich a Garden row, but it never owns the row itself.
 from __future__ import annotations
 
 import hashlib
+import os
 import re
+import stat
 from pathlib import Path
 
 import yaml
@@ -41,26 +43,41 @@ def garden_id(garden_root: Path, path: Path) -> str:
 def _state(root: Path, target_id: str) -> dict:
     """Best-effort optional AI enrichment.
 
-    A broken optional sidecar must not make the underlying Garden artifact
-    disappear from the Core projection.
+    A broken or symlinked optional sidecar must not make the underlying Garden
+    artifact disappear from the Core projection or read outside ``garden-state``.
     """
-    path = (
-        root
-        / "operations"
-        / "ai-actions"
-        / "garden-state"
-        / f"{target_id}.yaml"
-    )
-
-    if not path.is_file():
+    if not target_id or "/" in target_id or "\\" in target_id or target_id in {".", ".."}:
         return {}
-
+    state_dir = root / "operations" / "ai-actions" / "garden-state"
+    if state_dir.is_symlink() or not state_dir.is_dir():
+        return {}
+    path = state_dir / f"{target_id}.yaml"
+    if path.is_symlink():
+        return {}
     try:
-        value = yaml.safe_load(
-            path.read_text(encoding="utf-8")
-        ) or {}
-    except (OSError, yaml.YAMLError):
+        resolved_dir = state_dir.resolve(strict=True)
+        resolved = path.resolve(strict=True)
+        resolved.relative_to(resolved_dir)
+    except (OSError, ValueError):
         return {}
+
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(resolved, flags)
+    except OSError:
+        return {}
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode):
+            return {}
+        with os.fdopen(fd, "r", encoding="utf-8") as handle:
+            fd = -1
+            value = yaml.safe_load(handle.read()) or {}
+    except (OSError, UnicodeDecodeError, yaml.YAMLError):
+        return {}
+    finally:
+        if fd >= 0:
+            os.close(fd)
 
     return value if isinstance(value, dict) else {}
 

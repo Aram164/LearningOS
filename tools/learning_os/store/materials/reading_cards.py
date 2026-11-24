@@ -47,6 +47,7 @@ from pathlib import Path
 from typing import TypeGuard, cast
 
 from learning_os.store import observations
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.study_fence import READING_MEMORY_DIRNAME as STORE_DIRNAME
 
 #: The stored-data schema every record validates against before it is written (C6).
@@ -497,18 +498,21 @@ class ReadingStore:
         for tree in (directory, *(self.root / name for name in data_trees)):
             if not tree.is_dir():
                 continue
-            for stale in sorted(tree.rglob(".*.tmp-*")):
+            for stale in iter_non_symlink_files(tree):
+                if not (stale.name.startswith(".") and ".tmp-" in stale.name):
+                    continue
                 try:
-                    if not stale.is_symlink() and stale.is_file():
-                        stale.unlink()
+                    stale.unlink()
                 except OSError as exc:
                     raise ReadingStoreError(
                         f"cannot clean stale reading-store temp file {stale.name}: {exc}") from exc
 
     def _load(self, path: Path) -> dict[str, object]:
+        if path.is_symlink():
+            raise ReadingStoreError(f"reading-store record is a symlink: {path}")
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
+        except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ReadingStoreError(f"unreadable reading-store record {path}: {exc}") from exc
         if not isinstance(value, dict):
             raise ReadingStoreError(f"reading-store record is not an object: {path}")
@@ -551,10 +555,14 @@ class ReadingStore:
     def cards(self, digest: str) -> list[dict[str, object]]:
         """The newest version of every card for one digest."""
         directory = self.root / "cards" / digest
+        if directory.is_symlink():
+            raise ReadingStoreError(f"reading-store card directory is a symlink: {directory}")
         if DIGEST_RE.fullmatch(digest) is None or not directory.is_dir():
             return []
         found: list[dict[str, object]] = []
         for range_dir in sorted(directory.iterdir()):
+            if range_dir.is_symlink():
+                raise ReadingStoreError(f"reading-store range directory is a symlink: {range_dir}")
             if _RANGE_DIR_RE.fullmatch(range_dir.name) is None or not range_dir.is_dir():
                 continue
             versions = sorted((int(match.group(1)), path) for path in range_dir.iterdir()
@@ -565,10 +573,14 @@ class ReadingStore:
 
     def all_cards(self) -> list[dict[str, object]]:
         directory = self.root / "cards"
+        if directory.is_symlink():
+            raise ReadingStoreError(f"reading-store cards root is a symlink: {directory}")
         if not directory.is_dir():
             return []
         rows: list[dict[str, object]] = []
         for digest_dir in sorted(directory.iterdir()):
+            if digest_dir.is_symlink():
+                raise ReadingStoreError(f"reading-store digest directory is a symlink: {digest_dir}")
             rows.extend(self.cards(digest_dir.name))
         return rows
 

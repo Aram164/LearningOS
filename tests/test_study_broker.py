@@ -460,11 +460,30 @@ def test_root_pinning_and_host_observations_isolation(
     host_obs.write_text("fixed_now: '2026-11-12T12:00:00+01:00'\n", encoding="utf-8")
 
     monkeypatch.setenv("LOS_OBSERVATIONS", str(host_obs))
+    monkeypatch.setenv("LOS_OBSERVATIONS_RECORD", str(tmp_path / "record.jsonl"))
     monkeypatch.setenv("LOS_GATE_SOCK", "/tmp/should-be-stripped.sock")
     runner = RecordingRunner()
-    broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+    ambient_broker = StudyBroker(core, SESSION, scratch_dir=scratch, runner=runner)
+    ok_ambient = ambient_broker.handle_request({
+        "tool": "los",
+        "argv": ["--root", str(core), "status", "--json"],
+        "cwd": str(core),
+    })
+    assert ok_ambient.exit_code == 0, ok_ambient.stderr
+    _, _, ambient_env, _ = runner.calls[-1]
+    assert "LOS_OBSERVATIONS" not in ambient_env
+    assert "LOS_OBSERVATIONS_RECORD" not in ambient_env
+    assert "LOS_GATE_SOCK" not in ambient_env
 
-    # Even if process env changes later, broker pins host observations captured at creation.
+    broker = StudyBroker(
+        core,
+        SESSION,
+        scratch_dir=scratch,
+        observations_path=str(host_obs),
+        runner=runner,
+    )
+
+    # Even if process env changes later, broker pins explicit observations captured at creation.
     monkeypatch.setenv("LOS_OBSERVATIONS", str(tmp_path / "spoofed.yaml"))
 
     for bad_root in (str(other_root), "../other-repo"):

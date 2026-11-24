@@ -26,6 +26,7 @@ import os
 from pathlib import Path
 
 from learning_os.store.diagnostics import conventions
+from learning_os.store.fs import atomic_write_text_exclusive
 
 STORE_DIRNAME = "diagnostics"
 TRACES_FILENAME = "traces.jsonl"
@@ -262,10 +263,12 @@ def prune_store(root: Path, *, keep_last: int = DEFAULT_KEEP_LAST,
                   if data is not None and data.get("trace_id") in keep]
     evicted_ops = len(ops) - len(keep)
     if not dry_run:
-        tmp = path.with_name(f".{TRACES_FILENAME}.tmp")
-        tmp.write_text(
-            "".join(f"{line}\n" for line in kept_lines), encoding="utf-8")
-        os.replace(tmp, path)
+        atomic_write_text_exclusive(
+            path,
+            "".join(f"{line}\n" for line in kept_lines),
+            boundary=path.parent,
+            error_factory=OSError,
+        )
     return {"kept_operations": len(keep),
             "evicted_operations": max(evicted_ops, 0),
             "kept_records": len(kept_lines),

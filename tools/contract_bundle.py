@@ -27,6 +27,7 @@ from learning_os.store.contracts.bundle import (  # noqa: E402
     resolve_closure,
 )
 from learning_os.store.contracts.manifest_contract import load_contract  # noqa: E402
+from learning_os.store.fs import atomic_write_bytes_exclusive  # noqa: E402
 
 
 def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> list[Path]:
@@ -44,8 +45,12 @@ def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> li
     stem = schema_path.stem.replace(".schema", "")
     bundle_path = out_dir / f"{stem}.bundle.json"
     meta_path = out_dir / f"{stem}.meta.json"
-    bundle_path.write_bytes(bundle)
-    meta_path.write_bytes(canonical_bytes(meta))
+    atomic_write_bytes_exclusive(
+        bundle_path, bundle, boundary=out_dir, error_factory=OSError
+    )
+    atomic_write_bytes_exclusive(
+        meta_path, canonical_bytes(meta), boundary=out_dir, error_factory=OSError
+    )
     return [bundle_path, meta_path]
 
 

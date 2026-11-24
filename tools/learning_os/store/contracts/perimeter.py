@@ -32,6 +32,8 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.store.fs import iter_non_symlink_files
+
 PERIMETER_RELATIVE = "system/contracts/perimeter.yaml"
 
 #: Read in 1 MiB blocks; the candidates are books, and the whole point of the
@@ -180,11 +182,10 @@ def _managed_sizes(managed_roots: list[Path]) -> dict[int, list[Path]]:
     for managed in managed_roots:
         if not managed.is_dir():
             continue
-        for path in managed.rglob("*"):
-            if path.is_file():
-                size = _size_or_none(path)
-                if size is not None:
-                    sizes.setdefault(size, []).append(path)
+        for path in iter_non_symlink_files(managed):
+            size = _size_or_none(path)
+            if size is not None:
+                sizes.setdefault(size, []).append(path)
     return sizes
 
 

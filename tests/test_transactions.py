@@ -1441,3 +1441,18 @@ def test_rollback_keeps_a_projection_that_still_matches(mini_repo: Path):
     transaction_module.reconcile_inflight_transactions(mini_repo)
     assert target.read_bytes() == original
     assert manifest.exists(), "a projection matching canonical state must survive"
+
+
+def test_stale_tmp_siblings_do_not_block_subsequent_atomic_write(tmp_path: Path):
+    """Finding 2: interrupted temp siblings must never wedge later atomic writes."""
+    target = tmp_path / "canonical" / "record.yaml"
+    target.parent.mkdir(parents=True)
+    stale_fixed = target.with_name(f".{target.name}.tmp")
+    stale_fixed.mkdir()
+    stale_pid = target.with_name(f".{target.name}.tmp-99999000000001")
+    stale_pid.write_bytes(b"abandoned-crash-temp")
+
+    transaction_module.atomic_write_bytes(target, b"updated: true\n")
+    assert target.read_bytes() == b"updated: true\n"
+    assert stale_fixed.is_dir()
+    assert stale_pid.read_bytes() == b"abandoned-crash-temp"

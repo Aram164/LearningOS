@@ -13,6 +13,7 @@ from learning_os.domain.snapshot import GardenNote, Note, Repo
 from learning_os.domain.snapshot import register as _register
 from learning_os.domain.vocabulary import GARDEN_TAG_RE
 from learning_os.domain.vocabulary import strip_code as _strip_code
+from learning_os.store.fs import iter_files_and_top_symlinks
 from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
 from learning_os.store.loading.yamlio import load_registry as _load_registry
 from learning_os.store.loading.yamlio import read_text as _read_text
@@ -92,7 +93,10 @@ def load_notes(repo: Repo, root: Path) -> None:
     notes_dir = root / "knowledge" / "notes"
     if not notes_dir.is_dir():
         return
-    for f in sorted(notes_dir.rglob("*.md")):
+    files, symlinks = iter_files_and_top_symlinks(notes_dir)
+    for f in sorted([*files, *symlinks]):
+        if f.suffix != ".md":
+            continue
         try:
             meta, body = parse_frontmatter(_read_text(f, root), f)
         except LoaderError as exc:
@@ -119,7 +123,10 @@ def load_garden(repo: Repo, root: Path) -> None:
     garden_dir = root / "knowledge" / "garden"
     if not garden_dir.is_dir():
         return
-    for f in sorted(garden_dir.rglob("*.md")):
+    files, symlinks = iter_files_and_top_symlinks(garden_dir)
+    for f in sorted([*files, *symlinks]):
+        if f.suffix != ".md":
+            continue
         rel_parts = f.relative_to(garden_dir).parts
         if (f.name.startswith((".", "_")) or f.stem.lower() == "readme"
                 or any(part in {"transcriptions", "syntheses"}

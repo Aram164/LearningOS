@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import contextlib
 import os
 import re
 import shutil
@@ -23,17 +22,17 @@ from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, Request
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import read_yaml as _read_yaml
+from learning_os.store.fs import (
+    atomic_write_bytes_exclusive,
+    atomic_write_text_exclusive,
+    sync_directory,
+)
 
 
 def atomic_text(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
-    try:
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, path)
-    finally:
-        with contextlib.suppress(OSError):
-            tmp.unlink(missing_ok=True)
+    atomic_write_text_exclusive(
+        path, content, error_factory=DeliveryValidationError
+    )
 
 
 class FilesystemAIActionRepository:
@@ -70,12 +69,22 @@ class FilesystemAIActionRepository:
         destination.parent.mkdir(parents=True, exist_ok=True)
         temp = Path(tempfile.mkdtemp(prefix=f".{destination.name}-", dir=destination.parent))
         try:
-            atomic_text(temp / "request.yaml", _dump_yaml(request))
+            atomic_write_text_exclusive(
+                temp / "request.yaml",
+                _dump_yaml(request),
+                boundary=temp,
+                error_factory=DeliveryValidationError,
+            )
             for rel, content in bundle_files.items():
                 target = _inside(temp, rel)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(content)
+                atomic_write_bytes_exclusive(
+                    target,
+                    content,
+                    boundary=temp,
+                    error_factory=DeliveryValidationError,
+                )
             os.replace(temp, destination)
+            sync_directory(destination.parent)
         except Exception:
             shutil.rmtree(temp, ignore_errors=True)
             raise
@@ -96,6 +105,39 @@ class FilesystemAIActionRepository:
     def update_request(self, request: AIActionRequest) -> None:
         atomic_text(self.request_path(str(request["id"])), _dump_yaml(request))
 
+    def _scan_delivery_tree(self, root: Path) -> None:
+        entries = 0
+        total_bytes = 0
+        for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+            current = Path(dirpath)
+            for name in sorted(dirnames):
+                entries += 1
+                if entries > MAX_DELIVERY_ENTRIES:
+                    raise DeliveryValidationError(
+                        f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries"
+                    )
+                if (current / name).is_symlink():
+                    raise DeliveryValidationError(
+                        "delivery bundles may not contain symbolic links"
+                    )
+            for name in sorted(filenames):
+                entries += 1
+                if entries > MAX_DELIVERY_ENTRIES:
+                    raise DeliveryValidationError(
+                        f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries"
+                    )
+                candidate = current / name
+                if candidate.is_symlink():
+                    raise DeliveryValidationError(
+                        "delivery bundles may not contain symbolic links"
+                    )
+                if candidate.is_file():
+                    total_bytes += candidate.stat().st_size
+                    if total_bytes > MAX_DELIVERY_BYTES:
+                        raise DeliveryValidationError(
+                            f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes"
+                        )
+
     def stage_delivery_directory(self, source: Path) -> tuple[DeliveryRecord, Path]:
         """Copy untrusted provider output into a quarantine directory.
 
@@ -103,22 +145,14 @@ class FilesystemAIActionRepository:
         rejected delivery never occupies a canonical-looking location even
         momentarily.
         """
-        source = source.expanduser().resolve()
+        expanded = source.expanduser()
+        if expanded.is_symlink():
+            raise DeliveryValidationError("delivery bundles may not contain symbolic links")
+        source = expanded.resolve()
         if not source.is_dir() or not (source / "delivery.yaml").is_file():
             raise DeliveryValidationError(
                 "delivery import requires a directory containing delivery.yaml")
-        total_bytes = 0
-        for entries, path in enumerate(source.rglob("*"), start=1):
-            if path.is_symlink():
-                raise DeliveryValidationError("delivery bundles may not contain symbolic links")
-            if entries > MAX_DELIVERY_ENTRIES:
-                raise DeliveryValidationError(
-                    f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries")
-            if path.is_file():
-                total_bytes += path.stat().st_size
-                if total_bytes > MAX_DELIVERY_BYTES:
-                    raise DeliveryValidationError(
-                        f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes")
+        self._scan_delivery_tree(source)
         try:
             delivery = _read_yaml(source / "delivery.yaml")
         except yaml.YAMLError as exc:
@@ -140,22 +174,7 @@ class FilesystemAIActionRepository:
             # Preserve links as links so the post-copy admission pass can see
             # and reject a source that changed during the copy window.
             shutil.copytree(source, staged, symlinks=True)
-            staged_bytes = 0
-            for entries, path in enumerate(staged.rglob("*"), start=1):
-                if path.is_symlink():
-                    raise DeliveryValidationError(
-                        "delivery bundles may not contain symbolic links"
-                    )
-                if entries > MAX_DELIVERY_ENTRIES:
-                    raise DeliveryValidationError(
-                        f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries"
-                    )
-                if path.is_file():
-                    staged_bytes += path.stat().st_size
-                    if staged_bytes > MAX_DELIVERY_BYTES:
-                        raise DeliveryValidationError(
-                            f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes"
-                        )
+            self._scan_delivery_tree(staged)
             delivery = _read_yaml(staged / "delivery.yaml")
             if not isinstance(delivery, dict):
                 raise DeliveryValidationError("delivery.yaml must contain a mapping")
@@ -256,9 +275,11 @@ class FilesystemAIActionRepository:
 
 
     def write_bundle_slice(self, request_id: str, relative: str, body: bytes) -> None:
-        target = self.request_dir(request_id) / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(body)
+        req_dir = self.request_dir(request_id)
+        target = _inside(req_dir, relative)
+        atomic_write_bytes_exclusive(
+            target, body, boundary=req_dir, error_factory=DeliveryValidationError
+        )
 
     def discard_staged_delivery(self, staged: Path) -> None:
         shutil.rmtree(staged.parent, ignore_errors=True)

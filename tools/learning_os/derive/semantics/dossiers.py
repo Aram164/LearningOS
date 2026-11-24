@@ -40,6 +40,7 @@ from learning_os.domain.failures import TransactionFailure
 from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
 from learning_os.store.derived.store import invalidate
+from learning_os.store.fs import atomic_write_text_exclusive
 
 
 class DossierError(ValueError):
@@ -327,15 +328,13 @@ def store_dossier(root: Path, dossier: Dossier) -> Path:
             raise DossierError(
                 f"cannot store dossier {dossier.key!r}: {exc}") from exc
     path = cache_path(root, dossier)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        path.write_text(
-            json.dumps(_cache_document(dossier), ensure_ascii=False,
-                       sort_keys=True, indent=2) + "\n",
-            encoding="utf-8",
-        )
-    except OSError as exc:
-        raise DossierError(f"cannot store dossier {dossier.key!r}: {exc}") from exc
+    atomic_write_text_exclusive(
+        path,
+        json.dumps(_cache_document(dossier), ensure_ascii=False,
+                   sort_keys=True, indent=2) + "\n",
+        boundary=root / "generated",
+        error_factory=DossierError,
+    )
     return path
 
 

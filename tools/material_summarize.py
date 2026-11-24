@@ -52,6 +52,10 @@ from material_text import cache_index  # noqa: E402
 from materials_manifest import materials_root, sha256  # noqa: E402
 
 from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
+from learning_os.store.fs import (  # noqa: E402
+    atomic_write_bytes_exclusive,
+    atomic_write_text_exclusive,
+)
 
 REPO = Path(__file__).resolve().parents[1]
 TEXT_CACHE = REPO / "generated" / TEXT_CACHE_TOP_DIR
@@ -360,7 +364,9 @@ def main(argv: list[str] | None = None) -> int:
     summary = (
         "<!-- GENERATED file - do not edit; promoted by "
         "tools/material_summarize.py --promote -->\n\n" + draft).encode("utf-8")
-    (target / "summary.md").write_bytes(summary)
+    atomic_write_bytes_exclusive(
+        target / "summary.md", summary, boundary=target, error_factory=OSError
+    )
     meta = {"_generated": {
                 "warning": "GENERATED file - do not edit; rebuilt by "
                            "python tools/material_summarize.py --promote",
@@ -369,8 +375,12 @@ def main(argv: list[str] | None = None) -> int:
             "page_range": [start, end], "model": args.model,
             "summary_sha256": hashlib.sha256(summary).hexdigest(),
             "built": _dt.date.today().isoformat(), "scope": "chapter"}
-    (target / "meta.json").write_text(
-        json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    atomic_write_text_exclusive(
+        target / "meta.json",
+        json.dumps(meta, indent=2, sort_keys=True) + "\n",
+        boundary=target,
+        error_factory=OSError,
+    )
     print(json.dumps({"promoted": str(target / "summary.md"), "digest": args.digest,
                       "page_range": [start, end]},
                      ensure_ascii=False, separators=(",", ":")))

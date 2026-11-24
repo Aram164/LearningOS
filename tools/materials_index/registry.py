@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import yaml
 
@@ -75,7 +76,16 @@ def load_sources() -> dict[str, dict]:
             for v in node:
                 walk(v)
 
-    for yf in SOURCES.rglob("*.yaml"):
+    yaml_files: list[Path] = []
+    if SOURCES.is_dir() and not SOURCES.is_symlink():
+        for dirpath, dirnames, filenames in os.walk(SOURCES, followlinks=False):
+            current = Path(dirpath)
+            dirnames[:] = sorted(name for name in dirnames if not (current / name).is_symlink())
+            for name in sorted(filenames):
+                candidate = current / name
+                if not candidate.is_symlink() and candidate.is_file() and candidate.suffix == ".yaml":
+                    yaml_files.append(candidate)
+    for yf in sorted(yaml_files):
         if yf.parent.name == "collections":
             continue
         try:

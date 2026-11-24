@@ -36,6 +36,7 @@ from learning_os.domain.validation import CANONICAL_TREES
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 from learning_os.store.materials.resolution import (
     canonical_material_uri,
@@ -521,9 +522,8 @@ def _cited_elsewhere(root: Path, url: str, exclude: set[Path]) -> str | None:
         base = root / tree
         if not base.is_dir():
             continue
-        for path in sorted(base.rglob("*")):
-            if path.suffix.lower() not in (".md", ".yaml", ".yml") \
-                    or not path.is_file():
+        for path in iter_non_symlink_files(base):
+            if path.suffix.lower() not in (".md", ".yaml", ".yml"):
                 continue
             try:
                 relative = path.resolve().relative_to(root.resolve())
@@ -989,17 +989,23 @@ def _resolve_revise_material(root: Path, repo, uri: str,
         raise WriteRefused(
             f"{sid}: '{uri}' does not resolve to a file in the materials tree"
         ) from None
-    if resolved.is_dir():
+    try:
+        if resolved.is_dir():
+            raise WriteRefused(
+                f"{sid}: '{uri}' must resolve to one file, not a directory"
+            )
+        if not resolved.is_file():
+            raise WriteRefused(
+                f"{sid}: '{uri}' does not resolve to a file in the materials tree"
+            )
+        digest = sha256_file(resolved)
+        size = resolved.stat().st_size
+    except OSError as exc:
         raise WriteRefused(
-            f"{sid}: '{uri}' must resolve to one file, not a directory"
-        )
-    if not resolved.is_file():
-        raise WriteRefused(
-            f"{sid}: '{uri}' does not resolve to a file in the materials tree"
-        )
-    digest = sha256_file(resolved)
+            f"{sid}: '{uri}' could not be inspected in the materials tree: {exc}"
+        ) from exc
     live = digest[len("sha256:"):] if digest.startswith("sha256:") else digest
-    return relative.as_posix(), live, resolved.stat().st_size
+    return relative.as_posix(), live, size
 
 def _read_unit_dossier(path: Path, sid: str, uid: str) -> dict:
     try:

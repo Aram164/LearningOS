@@ -16,7 +16,9 @@ from learning_os.derive.material_synthesis import (
     current_unit_material_basis,
     inspected_material_by_route,
     publication_lineage,
+    resolve_route_provenance,
     synthesis_destination,
+    synthesis_route_ids,
     validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
@@ -906,12 +908,17 @@ class AIActionService:
                     raise DeliveryValidationError(str(exc)) from exc
                 bundle_dir = self.repository.request_dir(str(request["id"]))
                 index_records = read_bundle_slice_index(bundle_dir)
-                if index_records:
-                    try:
-                        validate_synthesis_page_provenance(
-                            inspected_material_by_route(index_records), synthesis)
-                    except ValueError as exc:
-                        raise DeliveryValidationError(str(exc)) from exc
+                try:
+                    inspected = resolve_route_provenance(
+                        repo,
+                        repo,
+                        target_id,
+                        synthesis_route_ids(synthesis),
+                        extra_inspected=inspected_material_by_route(index_records),
+                    )
+                    validate_synthesis_page_provenance(inspected, synthesis)
+                except ValueError as exc:
+                    raise DeliveryValidationError(str(exc)) from exc
                 provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
                 expected_provider = (request.get("provider") or {}).get("preferred")
                 if provenance != {

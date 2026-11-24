@@ -14,7 +14,10 @@ import hashlib
 import os
 import re
 import subprocess
+import tempfile
 from pathlib import Path
+
+import yaml
 
 from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.app.projection import publish as _publish
@@ -25,6 +28,7 @@ from learning_os.domain.transaction import TransactionResult
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.store.evidence import shared_ledgers_canonical, shared_ledgers_proven_since
+from learning_os.store.fs import clean_git_env
 from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
 from learning_os.store.session_ledger import close_session_ledger as _close_session_ledger
 from learning_os.store.session_ledger import current_session_id as _current_session_id
@@ -210,10 +214,316 @@ def _current_head(root: Path) -> str | None:
     """HEAD's SHA, or None when the checkout no longer resolves one."""
     proc = subprocess.run(
         ["git", "rev-parse", "HEAD"],
-        cwd=root, capture_output=True, text=True, timeout=30)
+        cwd=root, capture_output=True, text=True, timeout=30,
+        env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}))
     if proc.returncode != 0:
         return None
     return proc.stdout.strip() or None
+
+
+def _git_status_changes(root: Path) -> list[tuple[str, str, str | None]]:
+    """Return ``(xy, path, source)`` tuples from ``git status --porcelain=v1 -z``."""
+    try:
+        proc = subprocess.run(
+            ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", "."],
+            cwd=root, capture_output=True, timeout=30,
+            env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}),
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SessionLedgerError(f"git status could not be inspected: {exc}") from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout).decode("utf-8", "replace").strip() or "no output"
+        raise SessionLedgerError(f"git status exited {proc.returncode}: {detail}")
+    raw = proc.stdout
+    if raw.endswith(b"\0"):
+        raw = raw[:-1]
+    records = raw.split(b"\0") if raw else []
+
+    def _decode(token: bytes) -> str:
+        try:
+            return token.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise SessionLedgerError(
+                f"git status produced an undecodable path: {token!r}"
+            ) from exc
+
+    parsed: list[tuple[str, str, str | None]] = []
+    index = 0
+    while index < len(records):
+        entry = _decode(records[index])
+        index += 1
+        if len(entry) < 4 or entry[2] != " ":
+            raise SessionLedgerError(
+                f"git status produced an unexpected record: {entry!r}"
+            )
+        xy, path = entry[:2], entry[3:]
+        if not path:
+            raise SessionLedgerError(
+                f"git status produced an empty path record: {entry!r}"
+            )
+        source: str | None = None
+        if "R" in xy or "C" in xy:
+            if index >= len(records):
+                raise SessionLedgerError(
+                    f"git status truncated rename/copy source for {entry!r}"
+                )
+            source = _decode(records[index])
+            index += 1
+            if not source:
+                raise SessionLedgerError(
+                    f"git status produced an empty rename/copy source for {entry!r}"
+                )
+        parsed.append((xy, path, source))
+    return parsed
+
+
+def _git_cached_paths(root: Path) -> list[str]:
+    """Return NUL-decoded staged paths currently in the Git index."""
+    try:
+        proc = subprocess.run(
+            ["git", "diff", "--cached", "--name-only", "-z"],
+            cwd=root, capture_output=True, timeout=30,
+            env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}),
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SessionLedgerError(f"git index could not be inspected: {exc}") from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout).decode("utf-8", "replace").strip() or "no output"
+        raise SessionLedgerError(f"git diff --cached exited {proc.returncode}: {detail}")
+    paths: list[str] = []
+    for token in proc.stdout.split(b"\0"):
+        if not token:
+            continue
+        try:
+            paths.append(token.decode("utf-8"))
+        except UnicodeDecodeError as exc:
+            raise SessionLedgerError(
+                f"git diff --cached produced an undecodable path: {token!r}"
+            ) from exc
+    return sorted(paths)
+
+
+def _git_tree_blob(root: Path, rev: str, relative: str) -> bytes | None:
+    """Read a regular blob from ``rev:relative``; return None for missing or symlinks."""
+    env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
+    try:
+        tree_proc = subprocess.run(
+            ["git", "-C", str(root), "ls-tree", "-z", rev, "--", relative],
+            capture_output=True, timeout=10, env=env,
+        )
+        if tree_proc.returncode != 0 or not tree_proc.stdout:
+            return None
+        entry = tree_proc.stdout.split(b"\0", 1)[0]
+        meta = entry.split(b"\t", 1)[0].split()
+        if len(meta) < 3 or meta[1] != b"blob" or meta[0] not in {b"100644", b"100755"}:
+            return None
+        cat_proc = subprocess.run(
+            ["git", "-C", str(root), "cat-file", "-p", f"{rev}:{relative}"],
+            capture_output=True, timeout=10, env=env,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if cat_proc.returncode != 0:
+        return None
+    return cat_proc.stdout
+
+
+def _git_commit_changed_paths(root: Path, rev: str = "HEAD") -> set[str] | None:
+    env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "diff-tree", "--root", "--no-commit-id",
+             "--name-only", "-r", "-z", rev],
+            capture_output=True, timeout=10, env=env,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    paths: set[str] = set()
+    for token in proc.stdout.split(b"\0"):
+        if not token:
+            continue
+        try:
+            paths.add(token.decode("utf-8"))
+        except UnicodeDecodeError:
+            return None
+    return paths
+
+
+def _head_already_committed_session(
+    root: Path,
+    recorded: dict[str, dict],
+    touched: list[str],
+    commit_message: str,
+) -> str | None:
+    """Detect whether a crash left HEAD committed for this session before ledger close."""
+    if not touched:
+        return None
+    # Verify working tree on disk matches the proven post-transaction state for all
+    # touched paths before checking HEAD (covers a crash after an isolated commit
+    # before shared .git/index entries were refreshed).
+    for path in touched:
+        proven = _row_proven_state(recorded[path])
+        target = root / path
+        if proven.get("state") == "file":
+            if not target.is_file() or target.is_symlink():
+                return None
+            if hashlib.sha256(target.read_bytes()).hexdigest() != proven.get("sha256"):
+                return None
+        elif proven.get("state") == "absent":
+            if target.exists() or target.is_symlink():
+                return None
+        else:
+            return None
+    head_sha = _current_head(root)
+    if head_sha is None:
+        return None
+    env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
+    try:
+        subject_proc = subprocess.run(
+            ["git", "-C", str(root), "show", "-s", "--format=%s", "HEAD"],
+            capture_output=True, text=True, timeout=10, env=env,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if subject_proc.returncode != 0:
+        return None
+    expected_subject = commit_message.splitlines()[0] if commit_message else ""
+    if subject_proc.stdout.strip() != expected_subject.strip():
+        return None
+    head_changed = _git_commit_changed_paths(root, "HEAD")
+    if not head_changed or not (set(touched) & head_changed):
+        return None
+    receipt_paths = [
+        p for p in touched
+        if p.startswith("operations/transactions/") and p.endswith(("/receipt.json", "/receipt.yaml"))
+        and (root / p).is_file()
+    ]
+    if any(p not in head_changed for p in receipt_paths):
+        return None
+    for path in touched:
+        if path not in head_changed:
+            continue
+        proven = _row_proven_state(recorded[path])
+        if proven.get("state") == "file":
+            blob = _git_tree_blob(root, "HEAD", path)
+            if blob is None or hashlib.sha256(blob).hexdigest() != proven.get("sha256"):
+                return None
+        elif proven.get("state") == "absent":
+            if _git_tree_blob(root, "HEAD", path) is not None:
+                return None
+    return head_sha
+
+
+def _refresh_shared_index_paths(root: Path, stage_paths: list[str]) -> None:
+    """Refresh committed ``stage_paths`` in shared index without touching unrelated entries."""
+    if not stage_paths or _current_head(root) is None:
+        return
+    subprocess.run(
+        ["git", "reset", "-q", "HEAD", "--", *stage_paths],
+        cwd=root,
+        capture_output=True,
+        timeout=30,
+        env=clean_git_env(),
+    )
+
+
+def _commit_with_isolated_index(
+    root: Path,
+    *,
+    stage_paths: list[str],
+    touched_set: set[str],
+    commit_message: str,
+) -> None:
+    """Commit ``stage_paths`` via an isolated GIT_INDEX_FILE so shared index races cannot leak."""
+    head_sha = _current_head(root)
+    with tempfile.TemporaryDirectory(prefix="learningos-session-index-") as tmp_dir:
+        temp_index = Path(tmp_dir) / "index"
+        iso_env = clean_git_env(extra={
+            "GIT_INDEX_FILE": str(temp_index),
+            "GIT_OPTIONAL_LOCKS": "0",
+        })
+        if head_sha is not None:
+            seeded = subprocess.run(
+                ["git", "read-tree", head_sha],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                env=iso_env,
+            )
+            if seeded.returncode != 0:
+                raise ToolFailure(
+                    stdout=seeded.stdout,
+                    stderr=seeded.stderr,
+                    exit_code=seeded.returncode,
+                )
+        if stage_paths:
+            added = subprocess.run(
+                ["git", "add", "-A", "--", *stage_paths],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                env=iso_env,
+            )
+            if added.returncode != 0:
+                raise ToolFailure(
+                    stdout=added.stdout,
+                    stderr=added.stderr,
+                    exit_code=added.returncode,
+                )
+        if head_sha is not None:
+            diff_proc = subprocess.run(
+                ["git", "diff-index", "--cached", "--name-only", "-z", head_sha, "--"],
+                cwd=root,
+                capture_output=True,
+                timeout=30,
+                env=iso_env,
+            )
+        else:
+            diff_proc = subprocess.run(
+                ["git", "ls-files", "--cached", "-z"],
+                cwd=root,
+                capture_output=True,
+                timeout=30,
+                env=iso_env,
+            )
+        if diff_proc.returncode != 0:
+            raise ToolFailure(
+                stdout=diff_proc.stdout.decode("utf-8", "replace"),
+                stderr=diff_proc.stderr.decode("utf-8", "replace"),
+                exit_code=diff_proc.returncode,
+            )
+        isolated_paths = [
+            token.decode("utf-8")
+            for token in diff_proc.stdout.split(b"\0")
+            if token
+        ]
+        extra_staged = sorted(
+            path for path in isolated_paths if path not in touched_set
+        )
+        if extra_staged:
+            raise SessionConflictError(
+                "refusing to commit unrelated staged paths: "
+                + ", ".join(extra_staged)
+            )
+        commit = subprocess.run(
+            ["git", "commit", "-m", commit_message],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=180,
+            env=clean_git_env(extra={"GIT_INDEX_FILE": str(temp_index)}),
+        )
+        if commit.returncode != 0:
+            raise ToolFailure(
+                stdout=commit.stdout,
+                stderr=commit.stderr,
+                exit_code=commit.returncode,
+            )
+    _refresh_shared_index_paths(root, stage_paths)
 
 
 def _push_destination(root: Path) -> tuple[str, str]:
@@ -225,7 +535,8 @@ def _push_destination(root: Path) -> tuple[str, str]:
     """
     branch_proc = subprocess.run(
         ["git", "branch", "--show-current"],
-        cwd=root, capture_output=True, text=True, timeout=30)
+        cwd=root, capture_output=True, text=True, timeout=30,
+        env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}))
     branch = branch_proc.stdout.strip() if branch_proc.returncode == 0 else ""
     if not branch:
         raise SessionLedgerError(
@@ -234,7 +545,8 @@ def _push_destination(root: Path) -> tuple[str, str]:
     upstream_proc = subprocess.run(
         ["git", "rev-parse", "--abbrev-ref", "--symbolic-full-name",
          f"{branch}@{{upstream}}"],
-        cwd=root, capture_output=True, text=True, timeout=30)
+        cwd=root, capture_output=True, text=True, timeout=30,
+        env=clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"}))
     upstream = upstream_proc.stdout.strip() if upstream_proc.returncode == 0 else ""
     if "/" in upstream:
         remote, _, remote_branch = upstream.partition("/")
@@ -322,12 +634,23 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         validation_line = (f"0 error(s), {validation['warnings']} warning(s) — OK"
                            "; warning list: generated/reports/validation-report.md")
         _publish(root)
-        all_changed = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
-            cwd=root, capture_output=True, text=True, timeout=30,
-            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"}).stdout.splitlines()
-        owned = [line for line in all_changed if line[3:] in touched]
-        unrelated = [line for line in all_changed if line[3:] not in touched]
+        status_records = _git_status_changes(root)
+        touched_set = set(touched)
+        owned = [
+            (f"{xy} {source} -> {path}" if source is not None else f"{xy} {path}")
+            for xy, path, source in status_records
+            if path in touched_set and (source is None or source in touched_set)
+        ]
+        unrelated = [
+            (f"{xy} {source} -> {path}" if source is not None else f"{xy} {path}")
+            for xy, path, source in status_records
+            if not (path in touched_set and (source is None or source in touched_set))
+        ]
+        changed_paths = {
+            item
+            for _, path, source in status_records
+            for item in ((path, source) if source is not None else (path,))
+        }
         payload = {"ok": True, "touched": touched, "owned_changes": owned,
                    "unrelated_changes": unrelated, "committed": bool(unpushed), "pushed": False,
                    "validation": validation_line,
@@ -370,37 +693,36 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
                     "refusing to stage files changed after their recorded LearningOS "
                     "transaction: " + ", ".join(ownership_conflicts))
             _verify_witness(root, envelope, touched)
-            changed_paths = {line[3:] for line in all_changed}
+            pre_staged = sorted(
+                path for path in _git_cached_paths(root) if path not in touched_set
+            )
+            if pre_staged:
+                raise SessionConflictError(
+                    "refusing to commit while unrelated paths are already staged in the git index: "
+                    + ", ".join(pre_staged)
+                )
             stage_paths = [
                 path for path in touched
                 if (root / path).exists() or path in changed_paths
             ]
-            if stage_paths:
-                added = subprocess.run(
-                    ["git", "add", "--", *stage_paths],
-                    cwd=root,
-                    capture_output=True,
-                    text=True,
-                    timeout=30,
+            recovered_sha = _head_already_committed_session(
+                root, recorded, touched, commit_message,
+            )
+            if recovered_sha is None:
+                _commit_with_isolated_index(
+                    root,
+                    stage_paths=stage_paths,
+                    touched_set=touched_set,
+                    commit_message=commit_message,
                 )
-                if added.returncode != 0:
-                    raise ToolFailure(
-                        stdout=added.stdout,
-                        stderr=added.stderr,
-                        exit_code=added.returncode,
-                    )
-            commit = subprocess.run(["git", "commit", "-m", commit_message], cwd=root,
-                                    capture_output=True, text=True, timeout=180)
-            if commit.returncode != 0:
-                raise ToolFailure(
-                    stdout=commit.stdout, stderr=commit.stderr,
-                    exit_code=commit.returncode)
+            else:
+                _refresh_shared_index_paths(root, stage_paths)
             payload["committed"] = True
             if not push:
                 _delete_session_ledger(root, own_session)
                 payload["session_closed"] = True
                 return payload
-            sha = _current_head(root)
+            sha = recovered_sha or _current_head(root)
             if sha is None:  # pragma: no cover - the commit just succeeded
                 raise SessionLedgerError(
                     "cannot record the unpushed commit: HEAD is unresolvable")
@@ -422,7 +744,8 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     pushed = subprocess.run(
         ["git", "push", push_target[0],
          f"{push_sha}:refs/heads/{push_target[1]}"],
-        cwd=root, capture_output=True, text=True, timeout=180)
+        cwd=root, capture_output=True, text=True, timeout=180,
+        env=clean_git_env())
     if pushed.returncode != 0:
         raise ToolFailure(
             stdout=pushed.stdout, stderr=pushed.stderr,
@@ -442,23 +765,51 @@ UNPROVABLE_AGGREGATE_LEDGERS = (
 )
 
 
-def _is_receipt_committed_in_head(root: Path, receipt_relative: str,
-                                  receipt_bytes: bytes) -> bool:
+def _is_receipt_committed_in_head(
+    root: Path,
+    receipt_relative: str,
+    receipt_bytes: bytes,
+    *,
+    receipt: dict | None = None,
+) -> bool:
     if not (root / ".git").exists():
         return False
-    env = {
-        key: value for key, value in os.environ.items()
-        if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}
-    }
+    blob = _git_tree_blob(root, "HEAD", receipt_relative)
+    if blob is None or blob != receipt_bytes:
+        return False
+    env = clean_git_env(extra={"GIT_OPTIONAL_LOCKS": "0"})
     try:
-        proc = subprocess.run(
-            ["git", "-C", str(root), "cat-file", "-p", f"HEAD:{receipt_relative}"],
-            capture_output=True, timeout=10,
-            env={**env, "GIT_OPTIONAL_LOCKS": "0"},
+        intro_proc = subprocess.run(
+            ["git", "-C", str(root), "log", "-n", "1", "--diff-filter=A",
+             "--format=%H", "--", receipt_relative],
+            capture_output=True, text=True, timeout=10, env=env,
         )
     except (OSError, subprocess.SubprocessError):
         return False
-    return proc.returncode == 0 and proc.stdout == receipt_bytes
+    commit_sha = intro_proc.stdout.strip() if intro_proc.returncode == 0 else ""
+    if not commit_sha:
+        return False
+    changed = _git_commit_changed_paths(root, commit_sha)
+    if changed is None or receipt_relative not in changed:
+        return False
+    tx_id = receipt.get("transaction_id") if isinstance(receipt, dict) else None
+    if isinstance(tx_id, str) and tx_id:
+        idem_blob = _git_tree_blob(root, commit_sha, "operations/transactions/idempotency.yaml")
+        if idem_blob is None:
+            return False
+        try:
+            idem_doc = yaml.safe_load(idem_blob.decode("utf-8"))
+        except (UnicodeDecodeError, yaml.YAMLError):
+            return False
+        entries = idem_doc.get("entries") if isinstance(idem_doc, dict) else None
+        if not isinstance(entries, dict) or not any(
+            isinstance(row, dict)
+            and row.get("transaction_id") == tx_id
+            and row.get("receipt_path") == receipt_relative
+            for row in entries.values()
+        ):
+            return False
+    return True
 
 
 def repair_replayed_session_ownership(root: Path,
@@ -552,7 +903,9 @@ def repair_replayed_session_ownership(root: Path,
     # or moved any path it wrote since, so the live tree proves nothing here,
     # and nothing is written.
     receipt_sha256 = authored[receipt_relative]["sha256"]
-    in_head = _is_receipt_committed_in_head(root, receipt_relative, receipt_bytes)
+    in_head = _is_receipt_committed_in_head(
+        root, receipt_relative, receipt_bytes, receipt=receipt,
+    )
     if not _session_ledger(root, session).is_file():
         if in_head:
             if not shared_ledgers_canonical(root):

@@ -161,6 +161,7 @@ REVIEWED_SEALING_CAPABILITIES: frozenset[str] = frozenset({
     "concept.relations.change",
     "review.apply",
     "garden.update",
+    "unit.material-synthesis.publish",
 })
 
 #: Capabilities that replace an existing record only in one mode. When the

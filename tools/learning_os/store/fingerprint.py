@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING
 from learning_os.domain.failures import StaleSnapshot
 from learning_os.store import digests
 from learning_os.store.contracts.local_attachments import local_paths
+from learning_os.store.fs import iter_files_and_top_symlinks
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 
 
@@ -125,6 +126,14 @@ def _check_definition(definition: int) -> None:
         raise ValueError(f"unknown fingerprint definition: {definition!r}")
 
 
+def _root_entries(base: Path) -> list[Path]:
+    """Sorted files and top-level symlinks under ``base`` without following dir symlinks."""
+    if base.is_file() or base.is_symlink():
+        return [base]
+    files, symlinks = iter_files_and_top_symlinks(base)
+    return sorted([*files, *symlinks])
+
+
 def _fingerprint_roots(
     root: Path, rel_roots, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
 ) -> str:
@@ -138,10 +147,7 @@ def _fingerprint_roots(
         base = root / rel_root
         if not base.exists():
             continue
-        files = [base] if base.is_file() or base.is_symlink() else sorted(
-            path for path in base.rglob("*")
-            if path.is_file() or path.is_symlink()
-        )
+        files = _root_entries(base)
         for path in files:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):
@@ -215,10 +221,7 @@ def canonical_data_and_stat_fingerprints(
         base = root / rel_root
         if not base.exists():
             continue
-        files = [base] if base.is_file() or base.is_symlink() else sorted(
-            path for path in base.rglob("*")
-            if path.is_file() or path.is_symlink()
-        )
+        files = _root_entries(base)
         for path in files:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):
@@ -275,10 +278,7 @@ def canonical_stat_digest(
         base = root / rel_root
         if not base.exists():
             continue
-        files = [base] if base.is_file() or base.is_symlink() else sorted(
-            path for path in base.rglob("*")
-            if path.is_file() or path.is_symlink()
-        )
+        files = _root_entries(base)
         for path in files:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):

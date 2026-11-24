@@ -24,13 +24,13 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 from pathlib import Path
 from typing import Any
 
 from learning_os.domain.failures import TransactionFailure
 from learning_os.store.derived.model import DerivedError, NodeState
+from learning_os.store.fs import atomic_write_bytes_exclusive
 
 #: Top-level generated/ directory owned by this store. genout/outputs.py
 #: must keep it out of stale-file garbage collection (single source of
@@ -208,11 +208,7 @@ def _checked_store_dir(root: Path, *parts: str) -> Path:
 def _atomic_write(target: Path, content: bytes) -> None:
     if target.is_symlink():
         raise TransactionFailure(f"derived-state path is a symbolic link: {target.name}")
-    tmp = target.with_name(f".{target.name}.tmp")
-    if tmp.is_symlink():
-        raise TransactionFailure(f"derived-state path is a symbolic link: {tmp.name}")
-    tmp.write_bytes(content)
-    os.replace(tmp, target)
+    atomic_write_bytes_exclusive(target, content, error_factory=TransactionFailure)
 
 
 def stage_node_blob(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeState:

@@ -25,7 +25,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import sys
 from pathlib import Path
@@ -40,6 +39,7 @@ from learning_os.store.contracts import (
     require_current_template,
     validate_contract,
 )
+from learning_os.store.fs import atomic_write_text_exclusive
 from learning_os.store.loader import load_repo
 
 REPO = Path(__file__).resolve().parents[1]
@@ -622,13 +622,9 @@ def unit_routes(source_map: dict, unit_id: str) -> list[dict]:
 
 
 def _atomic_draft(path: Path, content: str) -> None:
-    tmp = path.with_name(f".{path.name}.tmp")
-    try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, path)
-    finally:
-        tmp.unlink(missing_ok=True)
+    atomic_write_text_exclusive(
+        path, content, boundary=path.parent, error_factory=OSError
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:

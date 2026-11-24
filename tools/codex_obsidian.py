@@ -97,7 +97,10 @@ def dirty_paths() -> set[str]:
         proc = subprocess.run(
             ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", "."],
             cwd=ROOT, capture_output=True, timeout=30,
-            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"})
+            env={
+                k: v for k, v in os.environ.items()
+                if k not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR"}
+            } | {"GIT_OPTIONAL_LOCKS": "0"})
     except subprocess.TimeoutExpired as exc:
         raise GitStatusError(f"git status timed out: {exc}") from exc
     except OSError as exc:
@@ -209,7 +212,11 @@ def main(argv: list[str] | None = None) -> int:
                            + ". Do not write any other path.")
     cmd.append(guarded_prompt)
 
-    result = subprocess.run(cmd, cwd=ROOT)
+    try:
+        result = subprocess.run(cmd, cwd=ROOT, timeout=600)
+    except subprocess.TimeoutExpired as exc:
+        print(f"learningos-codex: Codex timed out after {exc.timeout}s", file=sys.stderr)
+        return 124
     if result.returncode != 0 or not approved_write:
         return result.returncode
 
@@ -227,14 +234,24 @@ def main(argv: list[str] | None = None) -> int:
               + ", ".join(sorted(escaped)), file=sys.stderr)
         return 1
 
-    validate = subprocess.run(
-        [python_binary(), str(ROOT / "tools" / "los.py"), "validate"], cwd=ROOT)
+    try:
+        validate = subprocess.run(
+            [python_binary(), str(ROOT / "tools" / "los.py"), "validate"],
+            cwd=ROOT, timeout=300)
+    except subprocess.TimeoutExpired as exc:
+        print(f"learningos-codex: validation timed out after {exc.timeout}s", file=sys.stderr)
+        return 124
     if validate.returncode != 0:
         print("learningos-codex: authored changes remain for review; validation failed",
               file=sys.stderr)
         return validate.returncode
-    return subprocess.run(
-        [python_binary(), str(ROOT / "tools" / "los.py"), "generate"], cwd=ROOT).returncode
+    try:
+        return subprocess.run(
+            [python_binary(), str(ROOT / "tools" / "los.py"), "generate"],
+            cwd=ROOT, timeout=300).returncode
+    except subprocess.TimeoutExpired as exc:
+        print(f"learningos-codex: generation timed out after {exc.timeout}s", file=sys.stderr)
+        return 124
 
 
 if __name__ == "__main__":

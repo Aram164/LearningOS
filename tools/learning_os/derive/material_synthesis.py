@@ -25,11 +25,16 @@ from learning_os.store.material_observations import (
     LiveMaterialObservations,
     MaterialObservations,
 )
+from learning_os.store.materials.reading_cards import ReadingStore, ReadingStoreError
 from learning_os.store.materials.resolution import (
     MATERIAL_SUFFIX_TOKEN,
     evidential_route_projection,
     evidential_source_map_projection,
+    material_location,
     parse_material_uri,
+    resolve_route_material_files,
+    route_candidate_material_uris,
+    sha256_file,
     stable_checksum,
 )
 from learning_os.store.materials.slices import parse_locator_page_ranges
@@ -273,6 +278,9 @@ def validate_unit_material_synthesis(
     value: dict[str, Any],
     *,
     repo=None,
+    check_provenance: bool = False,
+    live_repo=None,
+    extra_inspected: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Validate one dossier against the repository at ``root``.
 
@@ -402,6 +410,15 @@ def validate_unit_material_synthesis(
                 raise MaterialSynthesisError(
                     f"comparison {side} evidence checksum does not match {route_id}"
                 )
+    if check_provenance:
+        inspected = resolve_route_provenance(
+            live_repo if live_repo is not None else repo,
+            repo,
+            unit_id,
+            synthesis_route_ids(value),
+            extra_inspected=extra_inspected,
+        )
+        validate_synthesis_page_provenance(inspected, value)
     return value
 
 
@@ -556,17 +573,243 @@ def _check_material_evidence(materials: dict[str, dict[str, Any]], locator: Any,
             f"which has no page model; got {locator!r}")
 
 
+def synthesis_route_ids(synthesis: dict[str, Any]) -> list[str]:
+    """Every cited deep-reviewed route id (assessments plus comparison endpoints)."""
+    route_ids: set[str] = set()
+    for row in synthesis.get("route_assessments", []) or []:
+        if isinstance(row, dict) and row.get("review_status") == "deep-reviewed":
+            rid = row.get("route_id")
+            if isinstance(rid, str) and rid:
+                route_ids.add(rid)
+    for comparison in synthesis.get("comparisons", []) or []:
+        if not isinstance(comparison, dict):
+            continue
+        for key in ("left_route_id", "right_route_id"):
+            rid = comparison.get(key)
+            if isinstance(rid, str) and rid:
+                route_ids.add(rid)
+    return sorted(route_ids)
+
+
+def resolve_route_provenance(
+    live_repo,
+    target_repo,
+    unit_id: str,
+    route_ids: list[str] | tuple[str, ...] | set[str],
+    *,
+    extra_inspected: dict[str, dict[str, dict[str, Any]]] | None = None,
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Build per-route/per-material page provenance from live reading memory and slices.
+
+    Reads reading cards exclusively from ``ReadingStore(live_repo.root)`` even
+    when ``target_repo`` is a temporary shadow tree during staged plan validation
+    — reading cards from a shadow directory would falsely observe empty reading
+    memory and apply the legacy exemption to every route.
+
+    Legacy compatibility policy (NEVER grounding proof):
+    A cited route is omitted from the returned map ONLY when ZERO reading memory
+    exists for any resolved file on that route (neither matching live/stale
+    cards in ``reading-memory`` nor attached bundle slices). Whenever ANY reading
+    memory exists for a route on disk, every resolved file on that route receives
+    an explicit entry (with ``pages: []`` when uncovered), and unreadable/malformed
+    cards, stale-digest mismatches, and citations into uncovered files fail closed
+    with :class:`MaterialSynthesisError`.
+    """
+    ordered_route_ids = sorted({rid for rid in route_ids if isinstance(rid, str) and rid})
+    if not ordered_route_ids:
+        return {}
+
+    extra_map = dict(extra_inspected or {})
+    reading_store = ReadingStore(live_repo.root)
+    try:
+        store_exists = reading_store.exists()
+        raw_cards = reading_store.all_cards() if store_exists else []
+    except ReadingStoreError as exc:
+        raise MaterialSynthesisError(f"reading memory is unreadable: {exc}") from exc
+
+    cards_by_digest: dict[str, list[tuple[int, int]]] = {}
+    cards_by_material: dict[str, set[str]] = {}
+    for card in raw_cards:
+        digest = card.get("recorded_source_digest")
+        mat = card.get("material")
+        rng = card.get("inspected_range")
+        if (
+            not isinstance(digest, str)
+            or len(digest) != 64
+            or any(c not in "0123456789abcdef" for c in digest)
+            or not isinstance(mat, str)
+            or not mat
+            or not isinstance(rng, dict)
+        ):
+            raise MaterialSynthesisError("reading-memory card has malformed provenance metadata")
+        start = rng.get("start")
+        end = rng.get("end")
+        if (
+            isinstance(start, bool)
+            or isinstance(end, bool)
+            or not isinstance(start, int)
+            or not isinstance(end, int)
+            or start < 1
+            or end < start
+        ):
+            raise MaterialSynthesisError("reading-memory card has an invalid inspected_range")
+        cards_by_digest.setdefault(digest, []).append((start, end))
+        cards_by_material.setdefault(mat, set()).add(digest)
+
+    materials_bases: list[Path] = []
+    for candidate_repo in (live_repo, target_repo):
+        try:
+            base = (candidate_repo.learningos_root / "materials").resolve()
+        except OSError:
+            continue
+        if base not in materials_bases:
+            materials_bases.append(base)
+
+    def _materials_relative(file_path: Path) -> str | None:
+        try:
+            resolved = file_path.resolve()
+        except OSError:
+            return None
+        for base in materials_bases:
+            try:
+                return resolved.relative_to(base).as_posix()
+            except ValueError:
+                continue
+        return None
+
+    routes_by_id = {
+        str(route.get("id")): route
+        for route in _rich_routes(target_repo, unit_id)
+        if route.get("id")
+    }
+    location_cache: dict[str, Any] = {}
+    hash_cache: dict[Path, str] = {}
+
+    provenance: dict[str, dict[str, dict[str, Any]]] = {}
+    for route_id in ordered_route_ids:
+        route = routes_by_id.get(route_id)
+        resolved_files = (
+            resolve_route_material_files(target_repo, route, location_cache=location_cache)
+            if route is not None
+            else []
+        )
+        route_extra = dict(extra_map.get(route_id) or {})
+        if not resolved_files:
+            candidate_uris = (
+                route_candidate_material_uris(target_repo, route)
+                if route is not None
+                else []
+            )
+            has_candidate_memory = bool(route_extra)
+            for uri in candidate_uris:
+                location = material_location(
+                    target_repo, uri, location_cache=location_cache,
+                )
+                mat_path = location.get("material_path")
+                if isinstance(mat_path, str) and mat_path.startswith("materials/"):
+                    mat_rel_cand = mat_path.removeprefix("materials/")
+                    if cards_by_material.get(mat_rel_cand):
+                        has_candidate_memory = True
+                        break
+                    if location.get("material_exists"):
+                        for base in (target_repo.learningos_root, live_repo.learningos_root):
+                            cand_file = base / mat_path
+                            if cand_file.is_file() and not cand_file.is_symlink():
+                                try:
+                                    cand_hex = sha256_file(cand_file, hash_cache).removeprefix("sha256:")
+                                except OSError:
+                                    has_candidate_memory = True
+                                    break
+                                if cards_by_digest.get(cand_hex):
+                                    has_candidate_memory = True
+                                break
+                        if has_candidate_memory:
+                            break
+                else:
+                    parsed_cand = parse_material_uri(uri)
+                    if parsed_cand is not None:
+                        fallback_key = f"{parsed_cand.authority}/{parsed_cand.path}"
+                        if cards_by_material.get(fallback_key) or cards_by_material.get(parsed_cand.path):
+                            has_candidate_memory = True
+                            break
+            if has_candidate_memory:
+                names = ", ".join(candidate_uris) if candidate_uris else route_id
+                raise MaterialSynthesisError(
+                    f"{route_id} has reading memory for unresolved or partially resolved route material(s): {names}"
+                )
+            continue
+
+        route_entries: dict[str, dict[str, Any]] = {}
+        route_has_memory = bool(route_extra)
+        for resolved_file in resolved_files:
+            try:
+                live_checksum = sha256_file(resolved_file.path, hash_cache)
+            except OSError as exc:
+                raise MaterialSynthesisError(
+                    f"{route_id} material file is unreadable: {resolved_file.material_uri}: {exc}"
+                ) from exc
+            live_hex = live_checksum.removeprefix("sha256:")
+            kind = "pdf" if resolved_file.path.suffix.lower() == ".pdf" else "text"
+            mat_rel = _materials_relative(resolved_file.path)
+            live_ranges = cards_by_digest.get(live_hex, [])
+            if not live_ranges and mat_rel is not None and cards_by_material.get(mat_rel):
+                raise MaterialSynthesisError(
+                    f"{route_id} reading memory for {mat_rel} is stale (recorded digest differs from live bytes)"
+                )
+            extra_entry = route_extra.get(resolved_file.material_uri)
+            if isinstance(extra_entry, dict):
+                extra_sha = extra_entry.get("file_sha256")
+                if isinstance(extra_sha, str) and extra_sha != live_checksum:
+                    raise MaterialSynthesisError(
+                        f"{route_id} attached slice for {mat_rel or resolved_file.material_uri} is stale (digest mismatch)"
+                    )
+            pages: set[int] = set()
+            if live_ranges:
+                route_has_memory = True
+                for start, end in live_ranges:
+                    pages.update(range(start, min(end, start + _MAX_CITED_SPAN) + 1))
+            if isinstance(extra_entry, dict):
+                for p in extra_entry.get("pages") or []:
+                    if isinstance(p, int) and not isinstance(p, bool) and p >= 1:
+                        pages.add(p)
+            route_entries[resolved_file.material_uri] = {
+                "kind": kind,
+                "pages": sorted(pages),
+                "file_sha256": live_checksum,
+            }
+
+        if route_has_memory:
+            # Include any remaining slice URIs recorded on the bundle if not already listed.
+            for extra_uri, extra_entry in route_extra.items():
+                if extra_uri not in route_entries and isinstance(extra_entry, dict):
+                    route_entries[extra_uri] = {
+                        "kind": extra_entry.get("kind"),
+                        "pages": sorted(
+                            p for p in (extra_entry.get("pages") or [])
+                            if isinstance(p, int) and not isinstance(p, bool) and p >= 1
+                        ),
+                        "file_sha256": extra_entry.get("file_sha256"),
+                    }
+            provenance[route_id] = route_entries
+    return provenance
+
+
 def validate_synthesis_page_provenance(
     inspected: dict[str, dict[str, dict[str, Any]]],
     synthesis: dict[str, Any],
 ) -> None:
-    """Refuse evidence that is not grounded in the attached slices.
+    """Refuse evidence that is not grounded in the resolved route reading memory or slices.
 
     Provenance is per material, not per route: part-a p.22 and part-b p.22
     are different claims and checked against their own inspected sets.
-    Routes without a reading record keep their legacy behavior, so bundles
-    prepared without slices stay valid. Applies to assessments and both
-    comparison sides alike.
+
+    Legacy compatibility policy (NEVER grounding proof):
+    When a cited route has ZERO reading memory on disk (neither cards in
+    ``reading-memory`` nor bundle slices), ``inspected`` omits ``route_id`` and
+    that route retains legacy passage without page-grounding proof. Whenever ANY
+    reading memory exists for a route, all resolved materials on that route must
+    be present in ``inspected[route_id]``, and every cited file/page is strictly
+    verified across both assessments and comparison endpoints.
     """
     for row in synthesis.get("route_assessments", []) or []:
         if not isinstance(row, dict) or row.get("review_status") != "deep-reviewed":
@@ -574,6 +817,7 @@ def validate_synthesis_page_provenance(
         route_id = str(row.get("route_id"))
         materials = inspected.get(route_id)
         if not materials:
+            # Legacy compatibility policy only (zero reading memory on disk for this route).
             continue
         for evidence in row.get("evidence", []) or []:
             if not isinstance(evidence, dict):

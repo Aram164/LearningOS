@@ -28,6 +28,7 @@ from learning_os.store.contracts.gateway import (
 )
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.fs import bytes_inside_owner as _bytes_inside_owner
+from learning_os.store.fs import iter_files_and_top_symlinks
 from learning_os.store.transactions import parse_expected_revisions
 
 
@@ -664,11 +665,10 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     if not target.is_dir() or target.is_symlink():
         raise ValueError(f"inbox item is not a regular file or folder: {target.name}")
     files: dict[str, bytes] = {}
-    for path in sorted(target.rglob("*")):
-        if path.is_symlink():
-            raise ValueError("inbox resolve refuses symlinks")
-        if not path.is_file():
-            continue
+    regular_files, symlinks = iter_files_and_top_symlinks(target)
+    if symlinks:
+        raise ValueError("inbox resolve refuses symlinks")
+    for path in regular_files:
         files[path.relative_to(inbox).as_posix()] = path.read_bytes()
     if not files:
         raise ValueError(f"inbox item has no files to archive: {target.name}")
