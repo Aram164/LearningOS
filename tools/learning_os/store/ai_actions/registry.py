@@ -17,7 +17,6 @@ class ActionDefinition:
     description: str
     target_kinds: tuple[str, ...]
     interaction_mode: str
-    approval_required: bool
     context_selection: str
     status: str
     supported_providers: tuple[str, ...]
@@ -27,13 +26,19 @@ class ActionDefinition:
 
     @classmethod
     def from_mapping(cls, value: dict[str, Any]) -> ActionDefinition:
+        # Approved-delivery gating is unconditional across every AI action;
+        # refusing anything except omission / True prevents silent downgrade.
+        if "approval_required" in value and value["approval_required"] is not True:
+            raise ActionPolicyError(
+                f"action {value.get('id', '<unknown>')} cannot disable "
+                "approval_required; approved-delivery gating is unconditional"
+            )
         return cls(
             id=str(value["id"]),
             title=str(value["title"]),
             description=str(value.get("description", "")),
             target_kinds=tuple(str(v) for v in value.get("target_kinds", [])),
             interaction_mode=str(value.get("interaction_mode", "discussion")),
-            approval_required=bool(value.get("approval_required", True)),
             context_selection=str(value.get("context_selection", "exact")),
             # Implementation status is contract data, not a literal in the
             # service: the registry stays independently updatable (feature

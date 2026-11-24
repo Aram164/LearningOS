@@ -536,7 +536,7 @@ def test_registry_drives_implementation_status(ai_repo: Path):
     write_yaml(ai_repo / "system/contracts/ai-actions/resource.place.yaml", {
         "schema_version": 1, "id": "resource.place", "title": "Place with AI",
         "target_kinds": ["garden-note"], "interaction_mode": "discussion",
-        "approval_required": True, "context_selection": "exact", "status": "planned",
+        "context_selection": "exact", "status": "planned",
         "supported_providers": ["manual-bundle"],
         "allowed_capabilities": ["relationship.create"], "forbidden_capabilities": [],
     })
@@ -725,12 +725,12 @@ def test_approved_delivery_stages_only_hash_verified_artifact_bytes(
 
 def test_garden_update_fields_are_enforced_from_the_catalogue(
         ai_repo: Path, tmp_path: Path):
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
     contract = ai_repo / "system/contracts/capabilities.yaml"
     value = yaml.safe_load(contract.read_text(encoding="utf-8"))
     value["domain_capabilities"]["garden.update"]["allowed_fields"] = ["title"]
     write_yaml(contract, value)
-    app, _request, source = make_delivery(ai_repo, tmp_path)
-    delivery = app.import_delivery(source)
     with pytest.raises(DeliveryValidationError, match="forbidden fields.*state"):
         apply_approved_delivery(app, delivery["id"])
 
@@ -1079,3 +1079,81 @@ def test_preview_delivery_writes_zero_bytes_and_matches_apply_contract(
 
     missing = run_los(ai_repo, "ai-action-apply-preview", "ai-delivery-nope", "--json")
     assert missing.returncode != 0
+
+
+def test_action_contracts_allowed_capabilities_subset_of_catalog():
+    """Settled Decision 2: every AI action's allowed_capabilities must exist in capabilities.yaml."""
+    from learning_os.store.ai_actions.registry import ActionRegistry
+    from learning_os.store.contracts.capability_catalog import load_capability_catalog
+
+    catalog = load_capability_catalog(ROOT)
+    known = set()
+    for section in ("domain_capabilities", "queries", "commands", "internal_commands"):
+        rows = catalog.get(section)
+        if isinstance(rows, dict):
+            known.update(rows)
+    actions = ActionRegistry(ROOT / "system/contracts/ai-actions").list()
+    assert actions
+    for action in actions:
+        assert not hasattr(action, "approval_required")
+        missing = set(action.allowed_capabilities) - known
+        assert not missing, f"{action.id} allows unknown capabilities: {sorted(missing)}"
+
+
+def test_action_contract_refuses_disabling_approval_required():
+    """#37: approval_required=False fails closed instead of silently claiming bypass."""
+    from learning_os.store.ai_actions.registry import ActionDefinition
+
+    with pytest.raises(ActionPolicyError, match="cannot disable approval_required"):
+        ActionDefinition.from_mapping({
+            "id": "garden.unapproved",
+            "title": "Bad",
+            "approval_required": False,
+        })
+
+
+def test_import_delivery_refuses_non_prepared_request_state(ai_repo: Path, tmp_path: Path):
+    """#32: import_delivery refuses overwriting a request no longer in 'prepared' state."""
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    first_delivery = app.import_delivery(source)
+    assert app.request_status(request["id"])["status"] == "delivery-ready"
+
+    second = tmp_path / "second-delivery-overwrite"
+    shutil.copytree(source, second)
+    body = yaml.safe_load((second / "delivery.yaml").read_text(encoding="utf-8"))
+    body["id"] = "ai-delivery-overwrite-002"
+    write_yaml(second / "delivery.yaml", body)
+
+    with pytest.raises(DeliveryValidationError, match="delivery-ready"):
+        app.import_delivery(second)
+    assert app.request_status(request["id"])["delivery_id"] == first_delivery["id"]
+    assert not app.repository.delivery_dir("ai-delivery-overwrite-002").exists()
+
+    apply_approved_delivery(app, first_delivery["id"])
+    assert app.request_status(request["id"])["status"] == "completed"
+    with pytest.raises(DeliveryValidationError, match="completed"):
+        app.import_delivery(second)
+
+
+def test_import_and_validate_enforce_apply_operation_preconditions(ai_repo: Path, tmp_path: Path):
+    """#37: validate/import refuse the same forbidden fields and malformed relations as apply."""
+    contract = ai_repo / "system/contracts/capabilities.yaml"
+    value = yaml.safe_load(contract.read_text(encoding="utf-8"))
+    value["domain_capabilities"]["garden.update"]["allowed_fields"] = ["title"]
+    write_yaml(contract, value)
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    with pytest.raises(DeliveryValidationError, match="forbidden fields.*state"):
+        app.import_delivery(source)
+    assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
+
+    # Reset catalogue so import checks malformed relationship endpoints too.
+    copy_real_contracts(ROOT, ai_repo)
+    bad_rel = tmp_path / "bad-rel"
+    shutil.copytree(source, bad_rel)
+    rel_body = yaml.safe_load((bad_rel / "delivery.yaml").read_text(encoding="utf-8"))
+    rel_body["id"] = "ai-delivery-bad-rel"
+    rel_body["operations"][2]["payload"].pop("id")
+    write_yaml(bad_rel / "delivery.yaml", rel_body)
+    with pytest.raises(DeliveryValidationError, match="requires a stable id"):
+        app.import_delivery(bad_rel)
+

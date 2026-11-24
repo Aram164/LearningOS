@@ -1105,7 +1105,7 @@ def main() -> int:
     if args.apply:
         print(
             "refusing direct --apply: use the approval-bound "
-            "route.identity.migrate GatewayEnvelopeV2 capability"
+            "route.patch or module.plan.import GatewayEnvelopeV2 capability"
         )
         return 2
     return 1 if plan.changes or plan.problems else 0

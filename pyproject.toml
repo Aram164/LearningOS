@@ -42,6 +42,7 @@ markers = [
   "generation: generation, projections, views, derived state, search",
   "contracts: contracts, manifest, normative corpus, UI contract mirror",
   "gateway: gateways, CLI, capabilities, transactions, recovery, operations",
+  "population: session-wide scenario refusal-site and operational-owner population checks",
   "validation: validation, hygiene, perimeter, audits, architecture guards",
   "migrations: migrations and multi-year format compatibility",
 ]

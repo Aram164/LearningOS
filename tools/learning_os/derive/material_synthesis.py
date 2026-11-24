@@ -45,6 +45,15 @@ from learning_os.store.materials.slices import parse_locator_page_ranges
 _MAX_CITED_SPAN = 100_000
 
 
+def _cited_page_range(start: int, end: int) -> range:
+    """Expand an inclusive page range, refusing unbounded spans instead of truncating."""
+    if end - start > _MAX_CITED_SPAN:
+        raise MaterialSynthesisError(
+            f"cited page span pp. {start}-{end} exceeds maximum {_MAX_CITED_SPAN} pages"
+        )
+    return range(start, end + 1)
+
+
 class MaterialSynthesisError(ValueError):
     """A dossier is invalid or stale; callers must leave canonical state unchanged."""
 
@@ -556,7 +565,7 @@ def _check_material_evidence(materials: dict[str, dict[str, Any]], locator: Any,
         seen = set(info.get("pages", []))
         beyond: list[int] = []
         for start, end in ranges:
-            for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
+            for page in _cited_page_range(start, end):
                 if page not in seen:
                     beyond.append(page)
                     if len(beyond) >= 5:
@@ -767,7 +776,7 @@ def resolve_route_provenance(
             if live_ranges:
                 route_has_memory = True
                 for start, end in live_ranges:
-                    pages.update(range(start, min(end, start + _MAX_CITED_SPAN) + 1))
+                    pages.update(_cited_page_range(start, end))
             if isinstance(extra_entry, dict):
                 for p in extra_entry.get("pages") or []:
                     if isinstance(p, int) and not isinstance(p, bool) and p >= 1:

@@ -69,14 +69,16 @@ other `test_normalize_*` tests in `test_scenarios_effects.py`.
   both zz aggregators, one session) ran 1,770 passed, 1 skipped in
   20m15s.
 - Limitation: the 48m03s serial figure is the whole suite serially,
-  while the parallel figure excludes the two zz aggregators and
-  deselects `live_install`; they are not a perfectly controlled
-  benchmark pair. The honest claim is that parallel feedback is several
-  times faster while the serial gate remains authoritative.
+  while the Oct 19 parallel benchmark excluded the two zz aggregators and
+  predated retirement of the old `live_install` marker; they are not a
+  perfectly controlled benchmark pair. Today `make test-parallel` excludes
+  only the two `test_scenarios_zz_*` population files (see `tests/GROUPS.md`).
+  The honest claim is that parallel feedback is several times faster while
+  the serial gate remains authoritative.
 
-## Integrated verification (hardened pair, 2026-10-19)
+## Historical integrated verification (hardened pair, 2026-10-19)
 
-Branch `test-suite/integration-hardened-2026-10-19`: hardened Core
+Branch `test-suite/integration-hardened-2026-10-19` (historical snapshot): hardened Core
 `aab5f24e` plus the test-suite commits, against UI `60214f0b`.
 
 - All 20 `test_normalize_*` tests pass, including the five new negative
@@ -85,18 +87,15 @@ Branch `test-suite/integration-hardened-2026-10-19`: hardened Core
 - Serial scenario population: 1,787 passed, 1 skipped in 20m58s.
 - `make test-parallel` (4 workers): 7,309 passed, 4 skipped, 2 xfailed
   in 12m25s.
-- `make system-check`: 7,933 passed, 5 skipped, 2 xfailed, and one
-  failure in 51m06s — `test_perimeter.py::
-  test_every_pending_disposition_entry_is_still_on_disk`. That test
-  resolves the wrapper root as the repository's grandparent and
-  expects `HANDOFF.md`/`original_research.txt` there; in a workbench
-  worktree layout they are absent. It fails identically on the older
-  published test-suite branch in the same layout and passes in the
-  main checkout layout, so it is a pre-existing layout limitation, not
-  an integration regression. The UI check then ran separately and
-  passed (12,750 differential cases; deterministic build). The
-  verified-pair stamp was not taken, because the serial gate did not
-  complete green in this layout.
+- `make system-check`: 7,933 passed, 5 skipped, 2 xfailed, and one historical
+  failure in 51m06s from a since-removed layout-coupled pending-disposition check
+  (current `tests/test_perimeter.py` checks pending dispositions via
+  `test_stale_pending_disposition_entry_is_an_error` and
+  `test_every_pending_entry_states_a_disposition`, without assuming
+  `HANDOFF.md`/`original_research.txt` at the grandparent directory). The UI check
+  then ran separately at that checkpoint and passed (`build`, contract parity,
+  dashboard suites). The verified-pair stamp was not taken at that Oct 19 run
+  because the serial gate did not complete green under that old layout check.
 - Real-Obsidian and raw-vault restoration obligations (C3) remain open
   and are not certified by any of these runs.
 

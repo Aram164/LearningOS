@@ -313,6 +313,12 @@ def verify(receipt: dict, artifact_dir: Path,
     """
     validate_receipt(receipt)
     if core_root is not None:
+        data_version = _data_contract_version(core_root)
+        if receipt["data_contract_version"] != data_version:
+            raise ReleasePairReceiptError(
+                f"receipt data_contract_version ({receipt['data_contract_version']!r}) "
+                f"does not match the Core declared contract version ({data_version!r})"
+            )
         try:
             declared = {
                 "manifest_contract_version": declared_version(core_root),

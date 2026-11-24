@@ -5,7 +5,6 @@ description: Prepare a bounded Garden seed for discussion, then apply only an ap
 target_kinds:
   - garden-note
 interaction_mode: discussion
-approval_required: true
 context_selection: exact
 # implemented | planned — the service refuses anything not yet built instead of
 # hard-coding the pilot's id, so the registry stays independently updatable.
@@ -18,6 +17,9 @@ allowed_capabilities:
   - garden.add-transcription
   - garden.update
   - relationship.create
+# Intentional forward-defense exclusions (Decision 2): keep these forbidden at the
+# action-contract boundary even where no current capabilities.yaml entry owns them
+# yet (`artifact.overwrite-original`).
 forbidden_capabilities:
   - artifact.delete
   - artifact.overwrite-original

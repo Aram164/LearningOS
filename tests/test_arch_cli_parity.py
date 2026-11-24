@@ -117,6 +117,54 @@ def test_cli_operations_lists_every_cli_primary():
         assert entry.get("kind") in {"query", "command", "porcelain", "tool"}, name
 
 
+def test_load_cli_operations_rejects_invalid_and_unknown_capabilities(tmp_path: Path):
+    """#39b: load_cli_operations rejects non-string and undeclared capabilities."""
+    import shutil
+
+    from repo_builders import copy_real_contracts
+
+    from learning_os.store.contracts.cli_operations import (
+        CliOperationsError,
+        load_cli_operations,
+    )
+
+    copy_real_contracts(ROOT, tmp_path)
+    shutil.copytree(ROOT / "system/schema", tmp_path / "system/schema", dirs_exist_ok=True)
+    contracts = tmp_path / "system/contracts"
+
+    bad_type = {
+        "schema": 1,
+        "operations": {
+            "goal.decide": {
+                "cli_command": "goal",
+                "kind": "command",
+                "capability": ["goal.decision.record"],
+            }
+        },
+    }
+    (contracts / "cli-operations.yaml").write_text(
+        yaml.safe_dump(bad_type, sort_keys=False), encoding="utf-8"
+    )
+    with pytest.raises(CliOperationsError, match="invalid capability"):
+        load_cli_operations(tmp_path)
+
+    unknown = {
+        "schema": 1,
+        "operations": {
+            "goal.decide": {
+                "cli_command": "goal",
+                "kind": "command",
+                "capability": "capability.does.not.exist",
+            }
+        },
+    }
+    (contracts / "cli-operations.yaml").write_text(
+        yaml.safe_dump(unknown, sort_keys=False), encoding="utf-8"
+    )
+    with pytest.raises(CliOperationsError, match="unknown capability"):
+        load_cli_operations(tmp_path)
+
+
 def _handler_for_subcommand(subcommand: str) -> str | None:
     for path in REQUESTS_DIR.glob("*.schema.json"):
         try:

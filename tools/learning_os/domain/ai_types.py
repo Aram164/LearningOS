@@ -123,7 +123,9 @@ class GardenTarget(TypedDict):
     path: str
     state: str
     tags: list[str]
-    revision: str
+    # Unit targets carry integer ledger revisions (`artifact_revision()`);
+    # garden-note targets carry content digests ("sha256:...") from derive/garden.py.
+    revision: int | str
 
 
 @dataclass(frozen=True)

@@ -22,6 +22,11 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.store.contracts.capability_catalog import (
+    CapabilityCatalogError,
+    load_capability_catalog,
+)
+
 #: The kinds the runtime lock path understands. ``query`` takes the shared
 #: operator lock, ``tool`` takes none, and ``command`` and ``porcelain`` take
 #: the exclusive lock.
@@ -62,6 +67,7 @@ def load_cli_operations(root: Path) -> dict[str, CliOperation]:
         raise CliOperationsError(
             "CLI operation contract must declare a non-empty operations mapping")
     declared: dict[str, CliOperation] = {}
+    known_capabilities: set[str] | None = None
     for name, row in operations.items():
         if not isinstance(name, str) or not name.strip() or not isinstance(row, dict):
             raise CliOperationsError("invalid CLI operation declaration")
@@ -77,10 +83,34 @@ def load_cli_operations(root: Path) -> dict[str, CliOperation]:
         if command in (op.cli_command for op in declared.values()):
             raise CliOperationsError(
                 f"CLI command {command!r} is declared twice")
+        raw_capability = row.get("capability")
+        capability: str | None = None
+        if raw_capability is not None:
+            if not isinstance(raw_capability, str) or not raw_capability.strip():
+                raise CliOperationsError(
+                    f"CLI operation {name} declares invalid capability {raw_capability!r}"
+                )
+            if known_capabilities is None:
+                try:
+                    catalog = load_capability_catalog(root)
+                except CapabilityCatalogError as exc:
+                    raise CliOperationsError(
+                        f"cannot validate CLI operation capability references: {exc}"
+                    ) from exc
+                known_capabilities = set()
+                for section in ("queries", "commands", "internal_commands"):
+                    section_rows = catalog.get(section)
+                    if isinstance(section_rows, dict):
+                        known_capabilities.update(section_rows)
+            capability = raw_capability.strip()
+            if capability not in known_capabilities:
+                raise CliOperationsError(
+                    f"CLI operation {name} declares unknown capability {capability!r}"
+                )
         declared[name] = CliOperation(
             name=name,
             cli_command=command.strip(),
             kind=kind,
-            capability=row.get("capability"),
+            capability=capability,
         )
     return declared

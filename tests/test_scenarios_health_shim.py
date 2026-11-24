@@ -1,11 +1,11 @@
-"""Control for the health scenarios' external Time Machine input (SPEC (bm)).
+"""Control for the health scenario's external Time Machine input (SPEC (bm)).
 
-Disposition 3 scopes a controlled `tmutil` to exactly the two
-health-report operations: scenario observations must not depend on whether
-the host carries macOS backup tooling or a configured backup. These tests
-prove, with real launched children, that a health child observes the scoped
-fake producing the recorded no-destination input, and that an unrelated
-operation's PATH is byte-identical to the host's.
+Disposition 3 scopes a controlled `tmutil` to the ``health.report``
+operation: scenario observations must not depend on whether the host carries
+macOS backup tooling or a configured backup. These tests prove, with real
+launched children, that a health child observes the scoped fake producing the
+recorded no-destination input, and that an unrelated operation's PATH is
+byte-identical to the host's.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ def _ctx(tmp_path: Path, operation: str) -> scenario_harness._CaseContext:
         operation=operation, case_id="shim-control")
 
 
-@pytest.mark.parametrize("operation", ["health.report", "health.report"])
+@pytest.mark.parametrize("operation", ["health.report"])
 def test_health_child_observes_the_scoped_tmutil(tmp_path: Path, operation: str):
     """A real health child runs the case-scoped fake, not the host tool."""
     ctx = _ctx(tmp_path, operation)

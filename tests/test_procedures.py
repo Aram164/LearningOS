@@ -69,6 +69,14 @@ def _load_index() -> list[dict]:
     return sections
 
 
+def _load_linked_transcripts() -> list[dict]:
+    data = yaml.safe_load(INDEX_PATH.read_text(encoding="utf-8"))
+    linked = data.get("linked_transcripts", [])
+    assert isinstance(linked, list), (
+        f"A8 {INDEX_PATH.relative_to(ROOT)}:1: linked_transcripts must be a list — {FIX}")
+    return linked
+
+
 def test_index_lists_every_heading():
     sections = _load_index()
     indexed: dict[tuple[str, str], dict] = {}
@@ -148,6 +156,49 @@ def test_every_procedure_has_a_transcript():
             failures.append(
                 f"A8 {signature}: no longer occurs — "
                 f"remove the fixed exception from ratchets.yaml")
+    assert not failures, "\n".join(failures)
+
+
+def test_every_transcript_on_disk_is_indexed():
+    """Every executable transcript in system/procedures/*.md must appear in INDEX.yaml."""
+    indexed: set[str] = {
+        entry["transcript"]
+        for entry in _load_index()
+        if isinstance(entry, dict) and entry.get("transcript")
+    }
+    failures: list[str] = []
+    for position, entry in enumerate(_load_linked_transcripts()):
+        if not isinstance(entry, dict):
+            failures.append(
+                f"A8 linked_transcripts[{position}] must be a mapping — {FIX}")
+            continue
+        doc = entry.get("doc")
+        transcript = entry.get("transcript")
+        if not isinstance(doc, str) or not (ROOT / doc).is_file():
+            failures.append(
+                f"A8 linked_transcripts[{position}]: missing doc {doc!r} — {FIX}")
+            continue
+        if not isinstance(transcript, str) or not (ROOT / transcript).is_file():
+            failures.append(
+                f"A8 linked_transcripts[{position}]: missing transcript {transcript!r} — {FIX}")
+            continue
+        link_name = Path(transcript).name
+        if link_name not in (ROOT / doc).read_text(encoding="utf-8"):
+            failures.append(
+                f"A8 {doc}: linked transcript {link_name!r} is not linked there — {FIX}")
+        if transcript in indexed:
+            failures.append(
+                f"A8 {transcript}: listed more than once in {INDEX_PATH.name} — {FIX}")
+        indexed.add(transcript)
+    on_disk = {
+        path.relative_to(ROOT).as_posix()
+        for path in PROCEDURES.glob("*.md")
+        if path.is_file()
+    }
+    unindexed = sorted(on_disk - indexed)
+    if unindexed:
+        failures.append(
+            f"A8 unindexed procedure transcript(s) on disk: {unindexed} — {FIX}")
     assert not failures, "\n".join(failures)
 
 

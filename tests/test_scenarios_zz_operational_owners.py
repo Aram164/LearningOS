@@ -301,6 +301,9 @@ def test_operational_owners_population():
         for row in index.get("sections", []):
             if row.get("class") == "procedure" and row.get("transcript"):
                 expected.add(f"procedure__{Path(row['transcript']).stem}")
+        for row in index.get("linked_transcripts", []):
+            if row.get("transcript"):
+                expected.add(f"procedure__{Path(row['transcript']).stem}")
         # cases.txt is an index, never proof that the corresponding log exists.
         captured = set()
         for log in logs:

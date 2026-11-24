@@ -275,6 +275,7 @@ def test_generate_carries_the_full_contract_identity(clean_pair, tmp_path):
 
 
 @pytest.mark.parametrize("field", [
+    "data_contract_version",
     "manifest_contract_version",
     "manifest_contract_schema_sha256",
     "manifest_contract_closure_sha256",
@@ -286,6 +287,29 @@ def test_mismatched_contract_identity_is_refused_against_core(
     receipt[field] = 999 if field.endswith("version") else "sha256:" + "e" * 64
     with pytest.raises(rpr.ReleasePairReceiptError, match=field):
         rpr.verify(receipt, artifact, core_root=clean_pair["core"])
+
+
+def test_verify_cli_refuses_tampered_data_contract_version(clean_pair, tmp_path):
+    """#32 negative + positive audit: CLI verify must accept valid receipts and
+    fail closed on tampered data_contract_version against core_root."""
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    receipt_path = artifact / "pair-receipt.json"
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    command = [
+        sys.executable, rpr.__file__, "verify",
+        "--receipt", str(receipt_path),
+        "--artifact-dir", str(artifact),
+        "--core-root", str(clean_pair["core"]),
+    ]
+    valid = subprocess.run(command, capture_output=True, text=True, timeout=30)
+    assert valid.returncode == 0, valid.stderr
+
+    receipt["data_contract_version"] = receipt["data_contract_version"] + 1
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    tampered = subprocess.run(command, capture_output=True, text=True, timeout=30)
+    assert tampered.returncode == 1
+    assert "data_contract_version" in tampered.stderr
 
 
 def test_historical_receipt_without_closure_verifies_against_core(

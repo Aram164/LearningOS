@@ -21,6 +21,7 @@ from pathlib import Path
 
 from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.projection.atlas import build_domain_catalog
+from learning_os.derive.projection.common import count_inbox_items as count_inbox_items
 from learning_os.derive.projection.common import git_state as _git_state
 from learning_os.derive.projection.common import json_header as _json_header
 from learning_os.derive.projection.coordination import adoption_counts
@@ -220,13 +221,6 @@ def build_manifest_semesters(programs: list[dict]) -> list[dict]:
         {**semester, "program_id": program["id"]}
         for program in programs for semester in program.get("semesters", []) or []
     ]
-
-
-def count_inbox_items(root: Path) -> int:
-    inbox_dir = root / "work" / "inbox"
-    return len([
-        item for item in inbox_dir.iterdir() if not item.name.startswith(".")
-    ]) if inbox_dir.is_dir() else 0
 
 
 def project_manifest_ai_actions(repo: Repo) -> dict:

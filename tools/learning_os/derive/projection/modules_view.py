@@ -59,7 +59,7 @@ def _safe_int(value: object, *, field: str) -> int:
     return int(value)
 
 
-def academic_deadlines(repo: Repo) -> list[dict]:
+def academic_deadlines(repo: Repo, *, reference_date: str | None = None) -> list[dict]:
     """Project structured exam sittings and registration windows for interfaces.
 
     Attempts remain the authority for what the learner actually registered,
@@ -71,11 +71,15 @@ def academic_deadlines(repo: Repo) -> list[dict]:
     choice: it stays visible as ``unrecorded`` until an attempt settles it.
     Retired (archived/dropped) modules and closed registration windows
     contribute nothing — the list is for work ahead.
+
+    Live callers leave ``reference_date=None`` to evaluate windows against
+    ``observations.today()``. Deterministic static views (Reading Room) pass
+    a Git-derived ``reference_date`` explicitly.
     """
     deadlines: list[dict] = []
     represented_attempts: set[tuple[str, int, str]] = set()
     grouped_windows: dict[tuple[str, str, str], dict] = {}
-    today = observations.today().isoformat()
+    today = reference_date if reference_date is not None else observations.today().isoformat()
 
     for mid in sorted(repo.modules):
         module = repo.modules[mid]

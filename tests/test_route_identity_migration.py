@@ -131,7 +131,7 @@ def test_route_migration_direct_apply_is_disabled(tmp_path):
         timeout=30,
     )
     assert applied.returncode == 2
-    assert "route.identity.migrate GatewayEnvelopeV2" in applied.stdout
+    assert "route.patch or module.plan.import GatewayEnvelopeV2" in applied.stdout
     source_text = (
         root / "curriculum/modules/module-demo/source-map.yaml"
     ).read_text(encoding="utf-8")

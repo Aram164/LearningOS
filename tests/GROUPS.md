@@ -18,6 +18,7 @@ recorded with each run instead of maintained as a second inventory here.
 | `generation` | generation, projections, views, derived state, search index, Garden |
 | `contracts` | contracts, manifest, normative corpus, tree contract, UI contract mirror |
 | `gateway` | gateways, CLI, capabilities, transactions, recovery, operations, diagnostics |
+| `population` | session-wide A9 refusal-site and A19 operational-owner population aggregators |
 | `validation` | validation, hygiene, perimeter, audits, architecture guards |
 | `migrations` | migrations and multi-year format compatibility |
 

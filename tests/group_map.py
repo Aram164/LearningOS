@@ -202,13 +202,18 @@ GROUPS: dict[str, list[str]] = {
         "test_scenarios_health_shim.py",
         "test_scenarios_recovery.py",
         "test_scenarios_session.py",
-        "test_scenarios_zz_operational_owners.py",
-        "test_scenarios_zz_refusal_sites.py",
         "test_reviewed_gateway_enforcement.py",
         "test_seal_guards_auto.py",
         "test_study_broker.py",
         "test_write_payload_clarity.py",
         "test_session_ledger.py",
+    ],
+    # Session-wide A9/A19 witness & audit population aggregators (must run after
+    # scenarios + procedures in full/CI runs; separated from `gateway` so partial
+    # gateway runs never report vacuous skips as green coverage).
+    "population": [
+        "test_scenarios_zz_operational_owners.py",
+        "test_scenarios_zz_refusal_sites.py",
     ],
     # Validation, hygiene, perimeter, audits, and architecture guards.
     "validation": [

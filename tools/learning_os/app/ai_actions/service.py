@@ -672,6 +672,16 @@ class AIActionService:
         delivery, staged = self.repository.stage_delivery_directory(source)
         delivery_id = str(delivery.get("id", ""))
         try:
+            request_id = str(delivery.get("request_id", ""))
+            if not request_id:
+                raise DeliveryValidationError("delivery must name its request_id")
+            request = self.repository.get_request(request_id)
+            prior_status = request.get("status")
+            if prior_status != "prepared":
+                raise DeliveryValidationError(
+                    f"request {request_id!r} has status {prior_status!r}; "
+                    "only prepared requests accept delivery import"
+                )
             self._validate(delivery, staged)
         except Exception:
             self.repository.discard_staged_delivery(staged)
@@ -688,7 +698,133 @@ class AIActionService:
         return {"ok": True, "delivery_id": outcome.delivery_id,
                 "request_id": outcome.request_id}
 
-    def _validate(self, delivery: DeliveryRecord, directory: Path, *, repo=None) -> ValidatedDelivery:
+    def _validate_garden_transcription_op(
+        self,
+        target_id: str,
+        operation: dict[str, Any],
+    ) -> tuple[str, Path]:
+        transcription_id = f"transcription-{target_id}"
+        destination = (
+            self.root / "knowledge" / "garden" / "transcriptions" / f"{target_id}.md"
+        )
+        # Re-shelving must not quietly discard an earlier AI reading of the
+        # same seed: superseding is an explicit, receipted act.
+        if destination.is_file() and operation.get("supersedes") != transcription_id:
+            previous = parse_frontmatter_request_id(destination)
+            raise DeliveryValidationError(
+                f"a transcription for {target_id} already exists"
+                + (f" (from request {previous})" if previous else "")
+                + f"; set supersedes: {transcription_id} to replace it"
+            )
+        return transcription_id, destination
+
+    def _validate_garden_update_op(
+        self,
+        operation: dict[str, Any],
+        capability_definitions: dict[str, Any],
+    ) -> dict[str, Any]:
+        patch = operation.get("patch") or {}
+        if not isinstance(patch, dict):
+            raise DeliveryValidationError("garden.update patch must be a mapping")
+        allowed_fields = set(capability_definitions["garden.update"].allowed_fields)
+        illegal = set(patch) - allowed_fields
+        if illegal:
+            raise DeliveryValidationError(
+                f"garden.update contains forbidden fields: {sorted(illegal)}"
+            )
+        return patch
+
+    @staticmethod
+    def _validate_relationship_create_op(
+        delivery_id: str,
+        request: AIActionRequest,
+        operation: dict[str, Any],
+    ) -> dict[str, Any]:
+        payload = operation.get("payload") or {}
+        if not isinstance(payload, dict) or not payload.get("id"):
+            raise DeliveryValidationError(
+                "relationship.create in an approved delivery requires a stable id"
+            )
+        relation_id = str(payload["id"])
+        relation = {
+            "id": relation_id,
+            "from": payload.get("from"),
+            "relation": payload.get("relation"),
+            "to": payload.get("to"),
+            "provenance": {
+                "source": "ai-action",
+                "request_id": request["id"],
+                "delivery_id": delivery_id,
+            },
+        }
+        if not isinstance(relation["from"], dict) or not isinstance(relation["to"], dict):
+            raise DeliveryValidationError("relationship endpoints must be mappings")
+        if not relation["relation"] or not relation["from"].get("id") or not relation["to"].get("id"):
+            raise DeliveryValidationError(
+                "relationship requires from, relation, and to identifiers"
+            )
+        return relation
+
+    def _validate_synthesis_publish_op(
+        self,
+        *,
+        target_id: str,
+        delivery_id: str,
+        request: AIActionRequest,
+        operation: dict[str, Any],
+        raw_bytes: bytes,
+        repo: Any,
+    ) -> tuple[dict[str, Any], Path]:
+        try:
+            synthesis = yaml.safe_load(raw_bytes.decode("utf-8", errors="strict"))
+        except (UnicodeError, yaml.YAMLError) as exc:
+            raise DeliveryValidationError(
+                f"material synthesis artifact is unreadable: {exc}"
+            ) from exc
+        if not isinstance(synthesis, dict):
+            raise DeliveryValidationError("material synthesis artifact must be an object")
+        try:
+            validate_unit_material_synthesis(self.root, target_id, synthesis, repo=repo)
+        except ValueError as exc:
+            raise DeliveryValidationError(str(exc)) from exc
+        bundle_dir = self.repository.request_dir(str(request["id"]))
+        index_records = read_bundle_slice_index(bundle_dir)
+        try:
+            inspected = resolve_route_provenance(
+                repo,
+                repo,
+                target_id,
+                synthesis_route_ids(synthesis),
+                extra_inspected=inspected_material_by_route(index_records),
+            )
+            validate_synthesis_page_provenance(inspected, synthesis)
+        except ValueError as exc:
+            raise DeliveryValidationError(str(exc)) from exc
+        provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
+        expected_provider = (request.get("provider") or {}).get("preferred")
+        if provenance != {
+            "request_id": request["id"],
+            "delivery_id": delivery_id,
+            "provider": expected_provider,
+        }:
+            raise DeliveryValidationError(
+                "material synthesis provenance does not match its approved delivery"
+            )
+        destination = synthesis_destination(self.root, target_id, repo=repo)
+        if destination.is_file() and operation.get("supersedes") != synthesis.get("id"):
+            raise DeliveryValidationError(
+                f"a dossier for {target_id} already exists; explicit supersedes is required"
+            )
+        return synthesis, destination
+
+    def _validate(
+        self,
+        delivery: DeliveryRecord,
+        directory: Path,
+        *,
+        repo=None,
+        check_operations: bool = True,
+    ) -> ValidatedDelivery:
         delivery_id = str(delivery.get("id", ""))
         if not str(delivery.get("request_id", "")):
             raise DeliveryValidationError("delivery must name its request_id")
@@ -755,7 +891,39 @@ class AIActionService:
         # delivery because an unrelated note moved (feature specification §20.4
         # scopes staleness to *the target*) makes the workflow unusable in a
         # live repository and tempts users to re-prepare blindly.
+        if repo is None:
+            repo = load_repo(self.root)
         target = self._assert_target_unchanged(request, repo=repo)
+        if check_operations:
+            capability_definitions = self.capability_definitions()
+            target_id = str(request["target"]["id"])
+            for operation in delivery["operations"]:
+                capability = operation["capability"]
+                if capability == "garden.add-transcription":
+                    self._validate_garden_transcription_op(target_id, operation)
+                elif capability == "garden.update":
+                    self._validate_garden_update_op(operation, capability_definitions)
+                elif capability == "relationship.create":
+                    self._validate_relationship_create_op(delivery_id, request, operation)
+                elif capability == "unit.material-synthesis.publish":
+                    artifact_ref = str(operation.get("artifact_ref", ""))
+                    if not artifact_ref:
+                        raise DeliveryValidationError(
+                            "unit.material-synthesis.publish requires artifact_ref"
+                        )
+                    raw_bytes = _inside(directory, artifact_ref).read_bytes()
+                    self._validate_synthesis_publish_op(
+                        target_id=target_id,
+                        delivery_id=delivery_id,
+                        request=request,
+                        operation=operation,
+                        raw_bytes=raw_bytes,
+                        repo=repo,
+                    )
+                else:
+                    raise DeliveryValidationError(
+                        f"unsupported pilot capability: {capability}"
+                    )
         return ValidatedDelivery(
             delivery_id=delivery_id,
             request_id=request["id"],
@@ -795,7 +963,7 @@ class AIActionService:
         """Compute exact writes and artifact ids without writing any bytes."""
         if repo is None:
             repo = load_repo(self.root)
-        outcome = self._validate(delivery, directory, repo=repo)
+        outcome = self._validate(delivery, directory, repo=repo, check_operations=False)
         request = outcome.request
         target = outcome.target
         capability_definitions = self.capability_definitions()
@@ -824,18 +992,10 @@ class AIActionService:
             if capability == "garden.add-transcription":
                 artifact_ref = str(operation["artifact_ref"])
                 body = bound_artifacts[artifact_ref].decode("utf-8", errors="replace")
-                transcription_id = f"transcription-{target_id}"
-                destination = self.root / "knowledge" / "garden" / "transcriptions" / f"{target_id}.md"
-                # Re-shelving must not quietly discard an earlier AI reading of
-                # the same seed: superseding is an explicit, receipted act.
+                transcription_id, destination = self._validate_garden_transcription_op(
+                    target_id, operation,
+                )
                 if destination.is_file():
-                    previous = parse_frontmatter_request_id(destination)
-                    if operation.get("supersedes") != transcription_id:
-                        raise DeliveryValidationError(
-                            f"a transcription for {target_id} already exists"
-                            + (f" (from request {previous})" if previous else "")
-                            + f"; set supersedes: {transcription_id} to replace it"
-                        )
                     superseded_ids.append(transcription_id)
                 staged[destination] = ((
                     "---\n"
@@ -850,38 +1010,13 @@ class AIActionService:
                 state["transcription_path"] = destination.relative_to(self.root).as_posix()
                 created_ids.append(transcription_id)
             elif capability == "garden.update":
-                patch = operation.get("patch") or {}
-                if not isinstance(patch, dict):
-                    raise DeliveryValidationError("garden.update patch must be a mapping")
-                allowed_fields = set(capability_definitions[capability].allowed_fields)
-                illegal = set(patch) - allowed_fields
-                if illegal:
-                    raise DeliveryValidationError(
-                        f"garden.update contains forbidden fields: {sorted(illegal)}"
-                    )
+                patch = self._validate_garden_update_op(operation, capability_definitions)
                 state.update(patch)
             elif capability == "relationship.create":
-                payload = operation.get("payload") or {}
-                if not payload.get("id"):
-                    raise DeliveryValidationError(
-                        "relationship.create in an approved delivery requires a stable id"
-                    )
-                relation_id = str(payload["id"])
-                relation = {
-                    "id": relation_id,
-                    "from": payload.get("from"),
-                    "relation": payload.get("relation"),
-                    "to": payload.get("to"),
-                    "provenance": {
-                        "source": "ai-action",
-                        "request_id": request["id"],
-                        "delivery_id": delivery_id,
-                    },
-                }
-                if not isinstance(relation["from"], dict) or not isinstance(relation["to"], dict):
-                    raise DeliveryValidationError("relationship endpoints must be mappings")
-                if not relation["relation"] or not relation["from"].get("id") or not relation["to"].get("id"):
-                    raise DeliveryValidationError("relationship requires from, relation, and to identifiers")
+                relation = self._validate_relationship_create_op(
+                    delivery_id, request, operation,
+                )
+                relation_id = str(relation["id"])
                 if not any(isinstance(row, dict) and row.get("id") == relation_id for row in rows):
                     rows.append(relation)
                     created_ids.append(relation_id)
@@ -892,48 +1027,14 @@ class AIActionService:
                     raise DeliveryValidationError(
                         "unit.material-synthesis.publish requires artifact_ref"
                     )
-                try:
-                    synthesis = yaml.safe_load(
-                        bound_artifacts[artifact_ref].decode("utf-8", errors="strict")
-                    )
-                except (UnicodeError, yaml.YAMLError) as exc:
-                    raise DeliveryValidationError(
-                        f"material synthesis artifact is unreadable: {exc}"
-                    ) from exc
-                if not isinstance(synthesis, dict):
-                    raise DeliveryValidationError("material synthesis artifact must be an object")
-                try:
-                    validate_unit_material_synthesis(self.root, target_id, synthesis, repo=repo)
-                except ValueError as exc:
-                    raise DeliveryValidationError(str(exc)) from exc
-                bundle_dir = self.repository.request_dir(str(request["id"]))
-                index_records = read_bundle_slice_index(bundle_dir)
-                try:
-                    inspected = resolve_route_provenance(
-                        repo,
-                        repo,
-                        target_id,
-                        synthesis_route_ids(synthesis),
-                        extra_inspected=inspected_material_by_route(index_records),
-                    )
-                    validate_synthesis_page_provenance(inspected, synthesis)
-                except ValueError as exc:
-                    raise DeliveryValidationError(str(exc)) from exc
-                provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
-                expected_provider = (request.get("provider") or {}).get("preferred")
-                if provenance != {
-                    "request_id": request["id"],
-                    "delivery_id": delivery_id,
-                    "provider": expected_provider,
-                }:
-                    raise DeliveryValidationError(
-                        "material synthesis provenance does not match its approved delivery"
-                    )
-                destination = synthesis_destination(self.root, target_id, repo=repo)
-                if destination.is_file() and operation.get("supersedes") != synthesis.get("id"):
-                    raise DeliveryValidationError(
-                        f"a dossier for {target_id} already exists; explicit supersedes is required"
-                    )
+                synthesis, destination = self._validate_synthesis_publish_op(
+                    target_id=target_id,
+                    delivery_id=delivery_id,
+                    request=request,
+                    operation=operation,
+                    raw_bytes=bound_artifacts[artifact_ref],
+                    repo=repo,
+                )
                 content = _dump_yaml(synthesis)
                 staged[destination] = (content, capability)
                 ledger_content = (

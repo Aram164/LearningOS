@@ -5,13 +5,15 @@ description: Prepare the complete local material menu for qualitative comparison
 target_kinds:
   - unit
 interaction_mode: discussion
-approval_required: true
 context_selection: exact
 status: implemented
 supported_providers:
   - manual-bundle
 allowed_capabilities:
   - unit.material-synthesis.publish
+# Intentional forward-defense exclusions (Decision 2): keep `source.create` and
+# `concept.create` forbidden at the action-contract boundary even while not registered
+# in capabilities.yaml.
 forbidden_capabilities:
   - artifact.delete
   - repository.read-external

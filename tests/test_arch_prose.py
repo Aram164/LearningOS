@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import os
 import re
 from collections import Counter
 from dataclasses import dataclass
@@ -436,6 +437,8 @@ def test_current_exceptions_are_recorded():
 @pytest.mark.paired
 def test_ts_sources_have_no_prose_matches():
     if not UI_SRC.is_dir():
+        if os.environ.get("CI"):
+            pytest.fail("CI requires sibling obsidian-ui checkout for paired prose check")
         pytest.skip("no sibling obsidian-ui checkout")
     failures = [f"A3 {rel}:{lineno}: {line} — {FIX}"
                 for rel, lineno, line in scan_ts(UI_SRC)]

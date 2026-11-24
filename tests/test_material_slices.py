@@ -1478,18 +1478,26 @@ def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths
     pdf_a = mini_repo.parent / "materials/source-demo-book/part-a.pdf"
     pdf_b = mini_repo.parent / "materials/source-demo-book/part-b.pdf"
 
-    # Prepare one ai-actions request while both files exist, then remove part-b.pdf
+    # Prepare ai-actions requests while both files exist, then remove part-b.pdf
     # and clear bundle slices so resolve_route_material_files returns [] cleanly.
     app = AIActionService(mini_repo)
-    req = app.prepare(
-        action_id="unit.compare-materials",
-        target_kind="unit",
-        target_id="unit-demo-l01",
-        provider="manual-bundle",
-        request_id="ai-request-partial-multi",
-    )
-    slices_idx = mini_repo / "operations/ai-actions/requests" / req["id"] / "attachments/slices/index.json"
-    slices_idx.write_text("[]\n", encoding="utf-8")
+    reqs = {}
+    for tag in ("zero", "partial"):
+        r = app.prepare(
+            action_id="unit.compare-materials",
+            target_kind="unit",
+            target_id="unit-demo-l01",
+            provider="manual-bundle",
+            request_id=f"ai-request-partial-multi-{tag}",
+        )
+        slices_idx = (
+            mini_repo
+            / "operations/ai-actions/requests"
+            / r["id"]
+            / "attachments/slices/index.json"
+        )
+        slices_idx.write_text("[]\n", encoding="utf-8")
+        reqs[tag] = r
     pdf_b.unlink()
     repo = load_repo(mini_repo)
     assert resolve_route_material_files(repo, routes[0]) == []
@@ -1545,10 +1553,11 @@ def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths
     }
 
     def _run_deliv(tag: str) -> str:
+        tag_req = reqs[tag]
         deliv_id = f"ai-delivery-{tag}"
         deliv_dossier = copy.deepcopy(base_dossier)
         deliv_dossier["basis"]["ai_provenance"] = {
-            "request_id": req["id"],
+            "request_id": tag_req["id"],
             "delivery_id": deliv_id,
             "provider": "manual-bundle",
         }
@@ -1559,7 +1568,7 @@ def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths
             "schema_version": 1,
             "id": deliv_id,
             "type": "ai-action-delivery",
-            "request_id": req["id"],
+            "request_id": tag_req["id"],
             "action_id": "unit.compare-materials",
             "status": "ready",
             "producer": {"provider": "manual", "adapter": "manual-bundle"},
@@ -1569,10 +1578,10 @@ def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths
                 "target_id": "unit-demo-l01",
                 "artifact_ref": "artifacts/material-synthesis.yaml",
             }],
-            "preconditions": req["preconditions"],
+            "preconditions": tag_req["preconditions"],
         })
-        deliv = app.import_delivery(src)
         try:
+            deliv = app.import_delivery(src)
             app.preview_delivery(deliv["id"])
             return "ok"
         except DeliveryValidationError as exc:
@@ -1624,3 +1633,74 @@ def test_multi_file_route_missing_file_with_reading_cards_fails_closed_all_paths
         assert errs and any("partially resolved" in err or "unresolved" in err for err in errs)
     deliv_err = _run_deliv("partial")
     assert "partially resolved" in deliv_err or "unresolved" in deliv_err
+
+
+def test_cited_span_exceeding_max_refuses_explicitly(mini_repo, tmp_path):
+    """#35: oversized page ranges refuse with MaterialSynthesisError instead of sampling."""
+    import datetime as dt
+    import hashlib
+    import uuid
+
+    from learning_os.derive.material_synthesis import _MAX_CITED_SPAN, resolve_route_provenance
+    from learning_os.store.materials.reading_cards import Read, ReadingStore
+
+    widest = _MAX_CITED_SPAN + 2
+    _add_sliced_unit(
+        mini_repo,
+        [_route("route-demo-oversized", "part-a.pdf, PDF pp. 1-5")],
+        {"part-a.pdf": ["page 1"]},
+    )
+    pdf_a = mini_repo.parent / "materials/source-demo-book/part-a.pdf"
+    checksum = f"sha256:{hashlib.sha256(pdf_a.read_bytes()).hexdigest()}"
+    inspected = {
+        "route-demo-oversized": {
+            "source-demo-book/part-a.pdf": {"kind": "pdf", "pages": [1]},
+        }
+    }
+    synthesis = {
+        "route_assessments": [
+            {
+                "route_id": "route-demo-oversized",
+                "review_status": "deep-reviewed",
+                "scope_of_absence": "part-a.pdf, PDF p. 1",
+                "evidence": [
+                    {
+                        "locator": f"part-a.pdf, PDF pp. 1-{widest}",
+                        "checksum": checksum,
+                    }
+                ],
+            }
+        ],
+        "comparisons": [],
+    }
+    with pytest.raises(MaterialSynthesisError, match="exceeds maximum"):
+        validate_synthesis_page_provenance(inspected, synthesis)
+
+    store = ReadingStore(mini_repo)
+    sess = str(uuid.UUID("bbbbbbbb-1111-4111-8111-111111111111"))
+    admission = store.admit(
+        sess,
+        [Read(
+            digest=hashlib.sha256(pdf_a.read_bytes()).hexdigest(),
+            material="source-demo-book/part-a.pdf",
+            start=1,
+            end=widest,
+            text_sha256="0" * 64,
+        )],
+        now=dt.datetime(2026, 10, 1, 9, 0, tzinfo=dt.UTC),
+    )
+    store.save(
+        sess,
+        admission.opened[0]["entry"],
+        {
+            "paraphrase": "Covers oversized span.",
+            "kinds": ["statement"],
+            "pointers": [{"page": 1, "kind": "statement", "label": "main claim"}],
+            "concepts": ["concept-expected-value"],
+        },
+        now=dt.datetime(2026, 10, 1, 9, 1, tzinfo=dt.UTC),
+    )
+    repo = load_repo(mini_repo)
+    with pytest.raises(MaterialSynthesisError, match="exceeds maximum"):
+        resolve_route_provenance(repo, repo, "unit-demo-l01", ["route-demo-oversized"])
+

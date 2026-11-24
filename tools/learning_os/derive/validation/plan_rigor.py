@@ -765,10 +765,12 @@ class ChecksPlanRigor:
         at the same locator. Module adoption, unit disposition and a matching
         route are distinct facts, so the diagnostic names what is missing.
 
-        A `reference` row is a pointer, and pointing outside the module's map
-        is what it is for. `kind` is the row's meaning rather than a triage
-        flag, so the exemption rests on it and not on `scope_triage` — a
-        triage flag is one the writer of the row also sets.
+        A `reference` row is an intentional free-text pointer (which may point
+        outside the module's source map or carry only a label with no source,
+        route, or URL) and stays non-fatal without emitting warning bloat.
+        `kind` is the row's meaning rather than a triage flag, so the
+        exemption rests on it and not on `scope_triage` — a triage flag is
+        one the writer of the row also sets.
         """
         if resource.get("kind") == "reference":
             return

@@ -590,3 +590,157 @@ def test_a_material_moving_after_the_rebuild_is_not_published(
     served = plumbing.fresh_manifest(mini_repo)
     assert _stored_pair(mini_repo) == before
     assert _without_generated(served) == _without_generated(_stored_manifest(mini_repo))
+
+
+def test_ai_action_and_adapter_contract_edits_invalidate_manifest_identity(
+        mini_repo, monkeypatch):
+    """#27 reproduction check: editing ai-actions/*.yaml or ai-adapters.yaml must
+    invalidate check_identity() and force fresh_manifest() to rebuild."""
+    actions_dir = mini_repo / "system/contracts/ai-actions"
+    actions_dir.mkdir(parents=True, exist_ok=True)
+    action_path = actions_dir / "garden.shelve.yaml"
+    action_path.write_text(
+        "schema_version: 1\n"
+        "id: garden.shelve\n"
+        "title: Shelve v1\n"
+        "target_kinds: [garden-note]\n"
+        "status: implemented\n"
+        "supported_providers: [manual-bundle]\n"
+        "allowed_capabilities: [garden.add-transcription]\n"
+        "forbidden_capabilities: []\n",
+        encoding="utf-8",
+    )
+    adapters_path = mini_repo / "system/contracts/ai-adapters.yaml"
+    adapters_path.write_text(
+        "schema_version: 1\n"
+        "adapters:\n"
+        "  - id: manual-bundle\n"
+        "    provider: manual-bundle\n"
+        "    available: true\n"
+        "    supported_modes: [discussion]\n"
+        "    supports_direct_delivery: false\n"
+        "    supports_attachments: true\n",
+        encoding="utf-8",
+    )
+    first = _generate(mini_repo)
+    assert check_identity(
+        mini_repo, first, _stored_identity(mini_repo),
+        live_snapshot=_live_snapshot(mini_repo),
+    ) == (True, "current")
+    assert first["ai_actions"]["available"][0]["title"] == "Shelve v1"
+
+    # Mutate an ai-actions action YAML: check_identity must detect stale cache.
+    action_path.write_text(
+        action_path.read_text(encoding="utf-8").replace("Shelve v1", "Shelve v2"),
+        encoding="utf-8",
+    )
+    ok_action, reason_action = check_identity(
+        mini_repo, first, _stored_identity(mini_repo),
+        live_snapshot=_live_snapshot(mini_repo),
+    )
+    assert ok_action is False, reason_action
+    builds = _counted(monkeypatch, "build_manifest")
+    rebuilt_action = plumbing.fresh_manifest(mini_repo)
+    assert len(builds) == 1
+    assert rebuilt_action["ai_actions"]["available"][0]["title"] == "Shelve v2"
+
+    # Mutate ai-adapters.yaml as well: check_identity must detect stale cache.
+    second = _generate(mini_repo)
+    assert check_identity(
+        mini_repo, second, _stored_identity(mini_repo),
+        live_snapshot=_live_snapshot(mini_repo),
+    ) == (True, "current")
+    adapters_path.write_text(
+        adapters_path.read_text(encoding="utf-8").replace(
+            "supports_direct_delivery: false",
+            "supports_direct_delivery: true",
+        ),
+        encoding="utf-8",
+    )
+    ok_adapter, reason_adapter = check_identity(
+        mini_repo, second, _stored_identity(mini_repo),
+        live_snapshot=_live_snapshot(mini_repo),
+    )
+    assert ok_adapter is False, reason_adapter
+    rebuilt_adapter = plumbing.fresh_manifest(mini_repo)
+    adapters = {a["adapter"]: a for a in rebuilt_adapter["ai_actions"]["provider_adapters"]}
+    assert adapters["manual-bundle"]["supports_direct_delivery"] is True
+
+
+def test_academic_deadlines_stays_live_while_reading_room_stays_git_deterministic(
+        mini_repo, monkeypatch):
+    """#18e: academic_deadlines() reacts to observations.today(), while
+    build_reading_room stays deterministic to Git/generated_at."""
+    from learning_os.derive.projection.modules_view import academic_deadlines
+    from learning_os.derive.projection.reading_room import build_reading_room
+    from learning_os.store import observations
+
+    add_curriculum(mini_repo)
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module.setdefault("examination", {})["registration_windows"] = [{
+        "opens": "2026-10-01",
+        "closes": "2026-10-05",
+        "label": "Autumn window",
+        "termins": [2],
+    }]
+    write_yaml(module_path, module)
+
+    repo = load_repo(mini_repo)
+    monkeypatch.setattr(observations, "today", lambda: datetime.date(2026, 10, 4))
+    open_rows = academic_deadlines(repo)
+    assert any(row["kind"] == "registration-window" for row in open_rows)
+    room_day1 = build_reading_room(repo, "2026-10-04T12:00:00+00:00 (last commit)")
+    assert "Autumn window" in room_day1
+
+    # Advancing live wall-clock date closes the live registration window,
+    # while Reading Room stamped at the same Git date remains byte-identical.
+    monkeypatch.setattr(observations, "today", lambda: datetime.date(2026, 10, 20))
+    closed_rows = academic_deadlines(repo)
+    assert not any(row["kind"] == "registration-window" for row in closed_rows)
+    assert build_reading_room(repo, "2026-10-04T12:00:00+00:00 (last commit)") == room_day1
+
+    # Non-ISO generated_at still falls back to Git HEAD commit date, not wall clock.
+    monkeypatch.setattr(
+        "learning_os.derive.projection.common.read_history",
+        lambda _root, *_args: "2026-10-04T09:30:00+00:00\n",
+    )
+    assert "Autumn window" in build_reading_room(repo, "T1")
+
+
+def test_inbox_counts_skip_symlinks_and_dots_consistently(mini_repo):
+    """#18e: manifest, Reading Room, and review agree on recursive non-symlink count."""
+    from learning_os.derive.projection.concepts import build_backlinks
+    from learning_os.derive.projection.manifest import build_manifest, count_inbox_items
+    from learning_os.derive.projection.reading_room import build_reading_room
+    from learning_os.derive.projection.review import build_review_items
+
+    inbox = mini_repo / "work/inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    top = inbox / "top.md"
+    top.write_text("# Top\n", encoding="utf-8")
+    sub = inbox / "pack"
+    sub.mkdir()
+    (sub / "one.md").write_text("# One\n", encoding="utf-8")
+    (sub / "two.md").write_text("# Two\n", encoding="utf-8")
+    (inbox / ".hidden.md").write_text("# Hidden\n", encoding="utf-8")
+    hidden_dir = inbox / ".hidden-dir"
+    hidden_dir.mkdir()
+    (hidden_dir / "nested.md").write_text("# Hidden nested\n", encoding="utf-8")
+    (inbox / "link.md").symlink_to(top)
+    (inbox / "dirlink").symlink_to(sub)
+
+    repo = load_repo(mini_repo)
+    review_inbox = [
+        item for item in build_review_items(repo, [], [])
+        if item["category"] == "inbox"
+    ]
+    manifest = build_manifest(repo, "T1", build_backlinks(repo, "T1"))
+    room = build_reading_room(repo, "T1")
+
+    assert count_inbox_items(mini_repo) == 3
+    assert len(review_inbox) == 3
+    assert manifest["counts"]["inbox_items"] == 3
+    assert "- inbox: 3 item(s) in `work/inbox/`" in room
+
+

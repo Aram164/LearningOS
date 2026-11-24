@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from learning_os.derive.projection.common import count_inbox_items as _count_inbox_items
 from learning_os.derive.projection.common import first_para as _first_para
 from learning_os.derive.projection.common import git_last_commit as _git_last_commit
+from learning_os.derive.projection.common import git_reference_date as _git_reference_date
 from learning_os.derive.projection.common import md_header as _md_header
 from learning_os.derive.projection.coordination import adoption_counts
 from learning_os.derive.projection.materials import materials_queue_rows as _materials_queue_rows
@@ -29,7 +31,9 @@ def build_reading_room(repo: Repo, generated_at: str) -> str:
     # windows that gate them; all facts still live in the owning module.
     lines.append("## Academic dates")
     lines.append("")
-    deadlines = _academic_deadlines(repo)
+    deadlines = _academic_deadlines(
+        repo, reference_date=_git_reference_date(repo.root, generated_at),
+    )
     if deadlines:
         for row in deadlines:
             date = row["start_date"]
@@ -90,9 +94,7 @@ def build_reading_room(repo: Repo, generated_at: str) -> str:
     # Queues that want a decision or a harvest.
     lines.append("## Queues")
     lines.append("")
-    inbox = repo.root / "work" / "inbox"
-    n_inbox = len([f for f in inbox.iterdir()
-                   if not f.name.startswith(".")]) if inbox.is_dir() else 0
+    n_inbox = _count_inbox_items(repo.root)
     lines.append(f"- inbox: {n_inbox} item(s) in `work/inbox/` "
                  "(the operator routes; trend toward empty)")
     lines.append(f"- garden: {len(repo.garden_notes)} idea(s) gestating — "

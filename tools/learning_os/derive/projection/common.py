@@ -10,6 +10,7 @@ from pathlib import Path
 from learning_os import __version__
 from learning_os.domain.failures import TransactionFailure
 from learning_os.store.fingerprint import CANONICAL_ROOTS
+from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.session.githistory import GitHistoryError, last_commit_date, read_history
 from learning_os.store.session.githistory import lookup as _lookup
 
@@ -270,3 +271,34 @@ def excerpt(text: str, limit: int) -> str:
                  if match.end() >= limit // 2]
     return (prefix[:sentences[-1]].rstrip() if sentences else
             prefix.rsplit(" ", 1)[0]) + "…"
+
+
+def count_inbox_items(root: Path) -> int:
+    """Count non-hidden regular files under ``work/inbox/``, skipping symlinks."""
+    inbox_dir = root / "work" / "inbox"
+    if not inbox_dir.is_dir():
+        return 0
+    return sum(
+        1
+        for candidate in iter_non_symlink_files(inbox_dir)
+        if not any(part.startswith(".") for part in candidate.relative_to(inbox_dir).parts)
+    )
+
+
+def git_reference_date(root: Path, generated_at: str) -> str:
+    """Return a deterministic YYYY-MM-DD date from ``generated_at`` or Git HEAD.
+
+    Never falls back to ``observations.today()`` or wall-clock time so
+    static Git-deterministic views remain reproducible without committing to
+    wall-clock drift across midnights or test environments.
+    """
+    match = re.match(r"^(\d{4}-\d{2}-\d{2})(?:$|[T ])", generated_at)
+    if match:
+        return match.group(1)
+    try:
+        ts = read_history(root, "-1", "--format=%cI").strip()
+    except GitHistoryError as exc:
+        raise TransactionFailure(f"failed to read git history: {exc}") from exc
+    if len(ts) >= 10 and re.match(r"^\d{4}-\d{2}-\d{2}$", ts[:10]):
+        return ts[:10]
+    return "1970-01-01"
