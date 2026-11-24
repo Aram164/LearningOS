@@ -23,7 +23,7 @@ Resolve and observe registered material bytes, exact spans and evidence bindings
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `domain`, `loading`, `transactions`.
 
-Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `contracts`, `derived-store`, `learner-derivations`, `legacy-archive`, `masters-planning`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
+Used by: `ai-action-store`, `ai-delivery`, `backup`, `cli-adapter`, `contracts`, `derived-store`, `learner-derivations`, `legacy-archive`, `masters-planning`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `practice`, `projection`, `semantics`, `session-ledger`, `transactions`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

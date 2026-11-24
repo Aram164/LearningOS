@@ -66,6 +66,8 @@ KINDS: Mapping[str, IdKind] = {
         prefix: IdKind(prefix, _generic_pattern(prefix))
         for prefix in _GENERIC_PREFIXES
     },
+    "practice-item": IdKind(
+        "practice-item", re.compile(r"^note-[a-z0-9]+(?:-[a-z0-9]+)*#[A-Z]+[1-9][0-9]*$")),
     "transaction": IdKind(
         "transaction", re.compile(r"^transaction-\d{8}-\d{6}-\d{3}$")),
     "goal": IdKind(

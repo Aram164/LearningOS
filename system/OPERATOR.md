@@ -90,6 +90,8 @@ always names its file. Fix the defect; do not route around the guard.
 | Governance question | `semantic --list`, then `semantic PREDICATE --input k=v` | [Ask the semantic surface](procedures/start-here.md#ask-a-governance-question-through-the-semantic-surface) |
 | Process a lecture (23) | `capabilities module.plan.import --json`, then `plan-edit-context UNIT_ID --brief` | [Process a lecture end to end](procedures/process-a-lecture.md#materials-in-the-deck-lands-in-the-materials-tree), [Package, preflight and apply the lecture unit](procedures/process-a-lecture.md#package-and-preflight-the-lecture-unit) |
 | Turn the semester (24), promote a Master's module (27) | none — stop and ask | none: these two have no executable transcript, and the scope authority they need does not exist in a checkout (boundary 18) |
+| Open and refresh a managed Atlas board | `capabilities atlas.context --json` | [Refresh a working board](procedures/refresh-an-atlas-board.md#open-close-and-refresh-the-board) |
+| Verify and export a practice item | `capabilities practice.context --json`, then `capabilities practice.verification.record --json` | [Inspect and deliver the reviewed item](procedures/export-verified-practice.md#check-apply-and-sync) |
 
 `capabilities NAME --json` takes a capability, a CLI command, or a task.
 `capabilities resume --json` and `capabilities resume.read --json` answer the
@@ -128,6 +130,11 @@ Skills and projects use modules and units without false academic metadata.
 1. Never edit `generated/`; change authored input, validate, and regenerate.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
+   The one exception is the Atlas keeper (ADR-024 amendment): while Aram's
+   delegation `system/contracts/delegations/atlas-keeper.yaml` is active, an
+   agent running a bounded job writes cited concept relations through
+   `concept.relations.change` on the `system-task` channel, and Aram vetoes or
+   pins them afterwards in the app. Core refuses the keeper anything else.
    A plan change whose content you chose, such as which resource or which stage,
    is one of these: show the learner the exact `--check` result and apply it on
    their yes. A change the learner dictated exactly, such as moving one named
@@ -287,6 +294,8 @@ Skills and projects use modules and units without false academic metadata.
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 29. Review a stage's material angle | [Transcript](procedures/review-a-stage-material-angle.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 30. Review exact goal decisions together | [Transcript](procedures/review-exact-goal-decisions-together.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 31. Back up and restore | [Transcript](procedures/back-up-and-restore.md) |
+| [system/WORKFLOWS.md](WORKFLOWS.md) | 32. Open and refresh a managed Atlas board | [Transcript](procedures/refresh-an-atlas-board.md) |
+| [system/WORKFLOWS.md](WORKFLOWS.md) | 33. Verify and export a practice item | [Transcript](procedures/export-verified-practice.md) |
 | [system/CLAUDE.md](CLAUDE.md) | 2. Bootstrap order | [Transcript](procedures/bootstrap-order.md) |
 | [system/CLAUDE.md](CLAUDE.md) | 7. Retrieval behavior | [Transcript](procedures/retrieval-behavior.md) |
 <!-- /los:generated -->

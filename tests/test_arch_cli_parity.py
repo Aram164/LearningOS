@@ -51,7 +51,8 @@ def _without_stage6_choice(actual: dict) -> dict:
             for verb in ("study-sequence", "material-search", "material-study-span",
                          "material-card-settle", "material-card", "workspace-complete",
                          "module-status-update", "ai-action-apply-preview",
-                         "unit-map-import-preview"):
+                         "unit-map-import-preview", "practice-context",
+                         "practice-verification-record"):
                 actual["error"][key] = (
                     actual["error"][key]
                     .replace(f",{verb}", "")
@@ -556,7 +557,8 @@ def test_generated_parser_matches_baseline_structure():
     for added in ("study-sequence", "material-search", "material-study-span",
                   "material-card-settle", "material-card", "workspace-complete",
                   "module-status-update", "ai-action-apply-preview",
-                  "unit-map-import-preview"):
+                  "unit-map-import-preview", "practice-context",
+                  "practice-verification-record"):
         assert added in live["subparsers"]
         live["order"].remove(added)
         live["subparsers"].pop(added)

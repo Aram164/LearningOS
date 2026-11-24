@@ -37,6 +37,9 @@ compatibility surfaces.
 - `operation-pipeline` — Admit, lock, dispatch and settle one operation through the shared application boundary.
 - `package-root` — Expose package metadata from the declared project version.
 - `plan-gate` — Preflight reviewed plan packages and bind proposed learning changes to their evidence.
+- `practice` — The practice verification sidecar and its one-way LearnKit export: loading
+`knowledge/practice-index.yaml`, item eligibility, and append-only card
+delivery (ADR-024).
 - `projection` — Publish deterministic views and the producer-owned manifest from loaded state.
 - `search` — Build bounded searchable views over already-loaded knowledge; full-text PDF material page search lives in `materials`.
 - `semantics` — Interpret evidence through predicates, policy, lineage, dossiers and proposals.

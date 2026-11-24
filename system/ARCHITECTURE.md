@@ -100,7 +100,17 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - backlinks;
 - health and validation reports.
 
-Generated artifacts must never become canonical inputs.
+Generated artifacts must never become canonical inputs. ADR-024 adds a
+digest-bound catalog of semester, module, lecture and exam templates under
+`generated/atlas/`. Obsidian owns editable copies and ownership sidecars
+under `boards/atlas/`. These copies preserve spatial edits through the
+managed-board refresh action and are included in layout backups.
+
+Practice notes own questions and solutions. `knowledge/practice-index.yaml`
+binds separate verification records to exact item content. The bounded
+`practice.context` response serves Atlas and note review. LearnKit receives
+selected eligible cards through the separate-vault exporter and owns their
+review history and schedules.
 
 ### 2.6 Agent-computed and disposable artifacts
 
@@ -217,12 +227,14 @@ repository/
 ├── generated/              gitignored, rebuildable; shape declared by manifest-contract.yaml
 │   ├── reports/            validation and health reports
 │   ├── collections/        collection-level derived views written by projection
+│   ├── atlas/              JSON Canvas board templates and concept cards written by projection (P2)
 │   ├── .text-cache/        page-text caches owned by tools/material_text.py; a dot-folder, so Obsidian neither loads nor watches its page files
 │   ├── dossiers/           semantic dossiers owned by los dossier
 │   ├── derived-state/      derived state caches owned by learning_os.store.derived
 │   ├── material-search/    SQLite FTS5 index owned by tools/material_search.py
 │   └── material-outlines/  PDF outline sections owned by tools/material_outline.py
 ├── bases/                  installed Obsidian Bases shelves (ADR-006); gitignored
+├── boards/                 editable JSON Canvas working boards owned by the UI (P2/P3); gitignored like bases/, included in backups
 ├── tools/                  the operator CLI and the learning_os package; see tools/README.md
 ├── tests/                  the test suite and its frozen format fixtures
 └── workbench/              published migration review documents and execution evidence; not learner data

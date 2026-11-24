@@ -1,0 +1,12 @@
+modules:
+- attempts:
+  - date: '2026-07-27'
+    result: withdrawn
+    termin: 1
+  - date: '2026-10-09'
+    result: registered
+    termin: 2
+  id: module-demo
+  institution: HU Berlin
+  status: enrolled
+  title: Demo Module

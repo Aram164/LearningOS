@@ -128,13 +128,13 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\"ok\":true,\"delivery_id\":\"ai-delivery-preview-ok\",\"request_id\":\"KEY1\",\"delivery_sha256\":\"sha256:67725cb5244265aa93432b1b46891043da24572a376a8c56e3c9255e7119768c\",\"artifact_sha256\":{\"artifacts/transcription.md\":\"sha256:5700bb9b40be03741137ce512c8712158ea636e2c73bca45f3b367725697738e\"},\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"garden-note-seed\":0,\"relationship-garden-module-demo\":0,\"transcription-garden-note-seed\":0}}\n",
+      "stdout": "{\"ok\":true,\"delivery_id\":\"ai-delivery-preview-ok\",\"request_id\":\"KEY1\",\"delivery_sha256\":\"sha256:8184bccf97447cbd786aa75ce77da6fd2433c1548d836a7478197a3cada54539\",\"artifact_sha256\":{\"artifacts/transcription.md\":\"sha256:5700bb9b40be03741137ce512c8712158ea636e2c73bca45f3b367725697738e\"},\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"garden-note-seed\":0,\"relationship-garden-module-demo\":0,\"transcription-garden-note-seed\":0}}\n",
       "stdout_json": {
         "artifact_sha256": {
           "artifacts/transcription.md": "sha256:5700bb9b40be03741137ce512c8712158ea636e2c73bca45f3b367725697738e"
         },
         "delivery_id": "ai-delivery-preview-ok",
-        "delivery_sha256": "sha256:67725cb5244265aa93432b1b46891043da24572a376a8c56e3c9255e7119768c",
+        "delivery_sha256": "sha256:8184bccf97447cbd786aa75ce77da6fd2433c1548d836a7478197a3cada54539",
         "expected_revisions": {
           "garden-note-seed": 0,
           "relationship-garden-module-demo": 0,

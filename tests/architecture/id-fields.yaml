@@ -38,6 +38,14 @@ fields:
   pointer: /properties/concept_id
   kind: concept
   lookup: true
+- operation: practice.context
+  pointer: /properties/note_id
+  kind: note
+  lookup: true
+- operation: practice.context
+  pointer: /properties/item_id
+  kind: practice-item
+  lookup: true
 - operation: capture.create
   pointer: /properties/file_sha256
   kind: digest

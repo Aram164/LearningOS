@@ -96,7 +96,7 @@ def test_required_and_defaults_preserved_through_alias():
                 subschema["x-los-cli"]["default"], f"{alias}::{prop}"
 
 
-def test_exactly_91_cli_bindings_and_union():
+def test_cli_binding_count_and_inventory_agree():
     import los
     from learning_os.store.contracts.payloads import subparsers
 
@@ -104,7 +104,7 @@ def test_exactly_91_cli_bindings_and_union():
     aliases = _aliases()
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
-    assert len(with_cli) == 98, len(with_cli)  # 96 prior + ai-action.delivery.preview + unit.map.import.preview
+    assert len(with_cli) == 100, len(with_cli)  # 96 prior + 2 preview + 2 practice
     assert len(with_cli) == len(primaries), (len(with_cli), len(primaries))
     assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)

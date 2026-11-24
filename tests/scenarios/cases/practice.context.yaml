@@ -1,0 +1,22 @@
+operation: practice.context
+fixture: rich_world_practice
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: cli-focused-item
+    kind: success
+    a5_base: true
+    transport: cli
+    argv: [practice-context, note-practice-bank, --item-id, "note-practice-bank#A1"]
+  - id: cli-unknown-note
+    kind: refusal
+    transport: cli
+    argv: [practice-context, note-nope]
+    expect: {site: practice.context.unknown-note}
+  - id: cli-unknown-item
+    kind: refusal
+    transport: cli
+    argv: [practice-context, note-practice-bank, --item-id, "note-practice-bank#Z9"]
+    expect: {site: practice.context.unknown-item}
+untriggered:
+- site: practice.context.snapshot-changed
+  reason: race-only

@@ -1,0 +1,28 @@
+# Aram's standing delegation for the Atlas keeper (ADR-024, amendment of
+# 2026-11-23, on his decision of 2026-11-22 that the Atlas is an
+# agent-operated domain).
+#
+# The keeper is an agent running a bounded job. It writes concept relations
+# through concept.relations.change on the `system-task` channel, only while
+# this file says `status: active` and today lies between `granted` and
+# `expires`. Every keeper relation cites a verified quote from the course
+# materials, is stamped `origin: pilot`, and leaves a receipt recording the
+# system-task channel and its commit time. This file is Git-tracked, so a
+# committed delegation can be matched to a write by time; an uncommitted edit
+# in force at write time is recorded nowhere. The keeper never deletes, pins, vetoes
+# or disputes, and never touches a relation Aram authored or pinned: he
+# vetoes or pins afterwards in the app.
+#
+# To stop every keeper write at once, set `status: suspended`. To end the
+# delegation, let it expire or change `expires`. The capability enforces this
+# file at dispatch (learning_os.app.handlers.atlas); tests/test_atlas_authoring.py
+# proves it.
+schema_version: 1
+delegate: atlas-keeper
+granted_by: aram
+granted: 2026-11-23
+expires: 2027-03-31
+status: active
+capability: concept.relations.change
+channel: system-task
+max_operations: 50

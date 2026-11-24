@@ -7,6 +7,7 @@ import os
 import sys
 import threading
 from collections.abc import Mapping
+from functools import wraps
 from pathlib import Path
 
 import yaml
@@ -16,6 +17,7 @@ _ACTIVE_LOG: str | None = None
 _STATE = threading.local()
 _EVENTS: dict | None = None
 _RENDER_FN = None
+_OS_OPEN = os.open
 
 # Only these mechanical frames may delegate, and only to their immediate
 # production caller. An engine frame further out cannot authorize a callback.
@@ -85,6 +87,19 @@ def _events_for_version() -> dict:
     return data[key]
 
 
+@wraps(_OS_OPEN)
+def _open_with_audit_dir_fd(path, flags, mode=0o777, *, dir_fd=None):
+    """Keep the actual directory handle available during Python's open audit."""
+    if dir_fd is None or _ACTIVE_LOG is None:
+        return _OS_OPEN(path, flags, mode, dir_fd=dir_fd)
+    previous = getattr(_STATE, "open_dir_fd", None)
+    _STATE.open_dir_fd = (_coerce_path(os.fspath(path)), dir_fd)
+    try:
+        return _OS_OPEN(path, flags, mode, dir_fd=dir_fd)
+    finally:
+        _STATE.open_dir_fd = previous
+
+
 def install(log_path: str, *, reads: bool = False) -> None:
     """Validate ``log_path``, register the hook once, and activate the path.
 
@@ -112,6 +127,7 @@ def install(log_path: str, *, reads: bool = False) -> None:
     if not _INSTALLED:
         _EVENTS = _events_for_version()
         sys.addaudithook(_hook)
+        os.open = _open_with_audit_dir_fd
         _INSTALLED = True
     with _CAPTURE_LOCK:
         global _CAPTURE_ERROR
@@ -211,9 +227,9 @@ def _resolve_relative(event: str, args, path: str) -> str:
 def _operational_paths(event: str, args, paths: list, mode=None) -> list:
     """Supplemental resolved destinations for A19; original A2 paths stay exact.
 
-    Python's open audit omits os.open's dir_fd. A relative descriptor-open
-    therefore remains unresolved. Other pinned events expose dir_fd, which
-    can be resolved live through F_GETPATH on Darwin or /proc on Linux.
+    Python omits os.open's dir_fd from its audit event. Use the live
+    handle captured by the wrapper for that call. Other pinned events
+    carry their handles directly. Missing destinations remain unresolved.
     """
     resolved = []
     indexes = _DIR_FD_INDEX.get(event, ())
@@ -228,8 +244,11 @@ def _operational_paths(event: str, args, paths: list, mode=None) -> list:
             resolved.append(path)
             continue
         elif event == "open" and mode is None:
-            resolved.append(None)
-            continue
+            context = getattr(_STATE, "open_dir_fd", None)
+            if context is None or context[0] != path:
+                resolved.append(None)
+                continue
+            fd = context[1]
         else:
             fd_index = indexes[index] if index < len(indexes) else None
             if event == "os.symlink":

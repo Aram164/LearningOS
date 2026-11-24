@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Build or attest synthetic arithmetic in a Scrut practice fixture."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+repo = Path(os.environ["LOS_REPO"])
+sys.path[:0] = [str(repo / "tests"), str(repo / "tools")]
+
+from gateway_helpers import approved_v2_envelope  # noqa: E402
+from test_practice_verification import (  # noqa: E402
+    _base_record,
+    _note,
+    _pdf_bytes,
+    _reviewed_digest,
+)
+
+NOTE_ID = "note-practice-bank"
+RELATIVE = "source-demo-book/book.pdf"
+
+
+def prepare(root: Path) -> None:
+    body = "\n".join(
+        f"**A{number}. What is {number}+{number}?**\n"
+        f"<details>\n<summary>Solution</summary>\n{number * 2}\n</details>\n"
+        for number in range(1, 5))
+    _note(root, NOTE_ID, "exercise-bank", body)
+    quote = "Synthetic official key. A1: 2. A2: 4. A3: 6. A4: 8."
+    (root.parent / "materials" / RELATIVE).write_bytes(_pdf_bytes(quote))
+    print("Prepared four synthetic arithmetic items.")
+
+
+def attest(root: Path, number: int, changed: bool) -> None:
+    item_id = f"{NOTE_ID}#A{number}"
+    note_path = root / "knowledge" / "notes" / "mathematics" / f"{NOTE_ID}.md"
+    pdf = root.parent / "materials" / RELATIVE
+    digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    old = None
+    if changed:
+        context_run = subprocess.run(
+            [sys.executable, str(repo / "tools" / "los.py"), "--root", str(root),
+             "practice-context", NOTE_ID, "--item-id", item_id],
+            capture_output=True, text=True, timeout=120, check=True,
+        )
+        old = json.loads(context_run.stdout)["items"][0]["stored_row"]
+        text = note_path.read_text()
+        note_path.write_text(text.replace("\n2\n</details>", "\nTwo\n</details>", 1))
+    payload = _base_record(
+        {
+            "source_id": "source-demo-book", "material_relpath": RELATIVE,
+            "file_sha256": digest, "page": 1, "quote": f"A{number}: {2 * number}.",
+        },
+        item_id=item_id, expected_old=old, reviewer_id="synthetic-fixture",
+        # The reviewed artifact is the item as practice.context shows it.
+        artifact_sha256=_reviewed_digest(
+            item_id, note_path.read_text(encoding="utf-8").split("\n---\n", 1)[1]),
+    )
+    if changed:
+        payload.update(new_status="confirmed", method="explicit-review", source_binding=None)
+    capability = "practice.verification.record"
+    envelope = approved_v2_envelope(
+        root, capability=capability, payload={"record": payload},
+        artifact_ids=["registry-practice-index", NOTE_ID],
+        idempotency_key=f"fixture-{number}-{'changed' if changed else 'initial'}",
+    )
+    # Use named scratch files so the procedure's write audit can resolve
+    # every captured path, including the CLI input and output.
+    with tempfile.TemporaryDirectory(dir=root.parent.parent) as scratch:
+        request = Path(scratch) / "request.json"
+        response = Path(scratch) / "response.json"
+        request.write_text(json.dumps(envelope), encoding="utf-8")
+        with response.open("w", encoding="utf-8") as output:
+            result = subprocess.run(
+                [sys.executable, str(repo / "tools" / "los.py"), "--root", str(root),
+                 "capability", capability, "--payload-file", str(request)],
+                stdout=output, stderr=subprocess.STDOUT, timeout=120,
+            )
+        response_text = response.read_text(encoding="utf-8")
+    if result.returncode:
+        raise SystemExit(response_text)
+    data = json.loads(response_text)
+    if not data.get("ok") or not data.get("receipt_path"):
+        raise SystemExit("Fixture verification failed to produce a commit receipt")
+    print(f"{item_id} {data['result']['status']}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=("prepare", "attest", "attest-changed"))
+    parser.add_argument("item", type=int, nargs="?", choices=range(1, 5))
+    args = parser.parse_args()
+    root = Path(os.environ["LOS_FX"]).resolve(strict=True)
+    if not (root.parent.parent.name.startswith("los-fx-") and root.parent.name == "LearningOS"):
+        raise SystemExit("Refusing a non-Scrut fixture")
+    if args.action == "prepare":
+        prepare(root)
+    else:
+        if args.item is None:
+            parser.error('attest requires an item number')
+        attest(root, args.item, args.action == "attest-changed")
+
+
+if __name__ == "__main__":
+    main()

@@ -8,7 +8,8 @@ canonical delta, new receipts, ledger deltas and a derived outcome.
 Case-file fields beyond SPEC §5.2 (all documented in REPORT.md of the
 introducing session): ``artifact_ids`` (default: the capability's
 request-scoped id, else ``[]``), ``approval_kind`` (default
-``"operator-approval"``), ``replay_only``, ``same_envelope_as`` (a step index
+``"operator-approval"``), ``channel`` (default ``"operator"``; ``ui`` for
+Aram's click, ``system-task`` for the Atlas keeper), ``replay_only``, ``same_envelope_as`` (a step index
 whose envelope file is resubmitted verbatim), ``git``
 (``{failing_pre_commit, origin}`` fixture setup for session-end sequences),
 and ``fixture_mtime`` (a file-level ISO 8601 instant, default
@@ -153,7 +154,7 @@ def _template_root() -> Path:
 def _build_fixture(name: str, container: Path) -> Path:
     if name not in {
         "rich_world", "rich_world_warning_debt", "rich_world_structural",
-        "rich_world_duplicate_shelving",
+        "rich_world_duplicate_shelving", "rich_world_practice",
     }:
         raise ValueError(f"unknown scenario fixture: {name}")
     # The world spans the repository root and its sibling materials tree
@@ -161,6 +162,27 @@ def _build_fixture(name: str, container: Path) -> Path:
     template = _template_root()
     shutil.copytree(template.parent, Path(container) / "LearningOS")
     root = Path(container) / "LearningOS" / "repository"
+    if name == "rich_world_practice":
+        # Practice witnesses (ADR-024 P6): one clean exercise-bank note and one
+        # with a duplicate label (ambiguous extraction). The bank cites
+        # source-demo-book, whose fixture book.pdf is byte-deterministic, so
+        # cases bind its digest and quote directly.
+        meta = {
+            "type": "note", "role": "exercise-bank", "created": "2026-09-21",
+            "concepts": ["concept-expected-value"],
+            "sources": ["source-demo-book"],
+        }
+        body = ("**A1. What is 2+2?**\n<details>\n<summary>Solution</summary>\n4\n"
+                "</details>\n\n**A2. What is 3+3?**\n<details>\n"
+                "<summary>Solution</summary>\n6\n</details>\n")
+        clean = dict(meta, id="note-practice-bank", title="Practice bank")
+        path = root / "knowledge/notes/mathematics/note-practice-bank.md"
+        path.write_text("---\n" + yaml.safe_dump(clean, sort_keys=False).rstrip()
+                        + "\n---\n\n" + body, encoding="utf-8")
+        dup = dict(meta, id="note-practice-dup", title="Ambiguous practice bank")
+        path = root / "knowledge/notes/mathematics/note-practice-dup.md"
+        path.write_text("---\n" + yaml.safe_dump(dup, sort_keys=False).rstrip()
+                        + "\n---\n\n" + body + body, encoding="utf-8")
     if name == "rich_world_warning_debt":
         target = root / "projects/registry/project-scenario-new.yaml"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -568,6 +590,13 @@ def build_envelope(ctx: _CaseContext, operation: str, step: dict,
     if approval_kind != "operator-approval":
         # intent_sha256 covers no approval kind, so the binding survives.
         envelope["approval"]["kind"] = approval_kind
+    channel = step.get("channel")
+    if channel is not None:
+        # The channel is part of the intent, so the approval is re-bound.
+        from learning_os.store.contracts.gateway import intent_sha256
+
+        envelope["channel"] = channel
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     path.write_text(json.dumps(envelope, indent=2, sort_keys=True)
                     + "\n", encoding="utf-8")
     return path

@@ -23,7 +23,7 @@ Own atomic canonical commits, artifact revisions, before-images and receipts.
 <!-- system-map:begin name=edges -->
 Depends on: `contracts`, `derived-store`, `diagnostics`, `domain`, `evidence`, `loading`, `materials`, `package-root`.
 
-Used by: `ai-action-store`, `ai-delivery`, `contracts`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `projection`, `semantics`, `validation`.
+Used by: `ai-action-store`, `ai-delivery`, `contracts`, `derived-store`, `diagnostics`, `evidence`, `learner-derivations`, `masters-planning`, `materials`, `operation-handlers`, `operation-pipeline`, `plan-gate`, `practice`, `projection`, `semantics`, `validation`.
 <!-- system-map:end -->
 
 ## Invariants

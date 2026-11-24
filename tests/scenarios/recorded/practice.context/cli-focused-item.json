@@ -1,0 +1,36 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"practice-context-v1\",\"note_id\":\"note-practice-bank\",\"note_revision\":0,\"practice_index_revision\":0,\"diagnostics\":[],\"items\":[{\"item_id\":\"note-practice-bank#A1\",\"label\":\"A1\",\"kind\":\"flashcard\",\"prompt\":\"**A1. What is 2+2?**\",\"status\":\"unverified\",\"checked\":false,\"ineligibility\":[],\"content_sha256\":\"5c7e3d546db2a0760da2ee747400853122b6be26481640eae0908fdb5079669f\",\"concept_ids\":[\"concept-expected-value\"],\"stored_row\":null}]}\n",
+  "stdout_json": {
+    "contract": "practice-context-v1",
+    "diagnostics": [],
+    "items": [
+      {
+        "checked": false,
+        "concept_ids": [
+          "concept-expected-value"
+        ],
+        "content_sha256": "5c7e3d546db2a0760da2ee747400853122b6be26481640eae0908fdb5079669f",
+        "ineligibility": [],
+        "item_id": "note-practice-bank#A1",
+        "kind": "flashcard",
+        "label": "A1",
+        "prompt": "**A1. What is 2+2?**",
+        "status": "unverified",
+        "stored_row": null
+      }
+    ],
+    "note_id": "note-practice-bank",
+    "note_revision": 0,
+    "practice_index_revision": 0,
+    "schema_version": 1,
+    "snapshot_id": "<FIXTURE_SNAPSHOT>"
+  }
+}

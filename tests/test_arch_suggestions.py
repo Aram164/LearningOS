@@ -743,6 +743,13 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = [*repo.notes,
                    *[stable_id for stable_id, _ in seeds]]
         return ordered, set(ordered)
+    if kind == "practice-item":
+        from learning_os.store.practice import note_items
+
+        repo = load_repo(ctx.root)
+        items, _diagnostics = note_items(repo, repo.notes[request["note_id"]])
+        ordered = [entry.item.item_id for entry in items]
+        return ordered, set(ordered)
     if kind == "note":
         repo = load_repo(ctx.root)
         ordered = list(repo.notes)
@@ -1081,6 +1088,10 @@ def _check_tolerant_success(result: dict, *, real_value: str) -> None:
 #: operation with such a case, including the two append-slices misses
 #: whose (bi) item 8 cases are now recorded (SPEC (bv) item 3).
 POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
+    ("practice.context", "/properties/item_id"):
+        ("practice.context.unknown-item", "cli-unknown-item"),
+    ("practice.context", "/properties/note_id"):
+        ("practice.context.unknown-note", "cli-unknown-note"),
     ("module.plan.import", "/properties/module_id"):
         ("module.plan.import.unknown-module", "unknown-module"),
     ("unit.plan.revise", "/properties/unit_id"):
@@ -1245,6 +1256,9 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
 #:   (SPEC (bz) item 1).
 #: No branch on an operation name remains in ``_canonical_message``.
 MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
+    ("practice.context", "/properties/item_id"):
+        ("template", "practice item"),
+    ("practice.context", "/properties/note_id"): ("template", "note"),
     ("module.plan.import", "/properties/module_id"): ("prefixed", "module"),
     ("unit.plan.revise", "/properties/unit_id"): ("prefixed", "unit"),
     ("route.patch", "/properties/unit_id"): ("template", "unit"),
@@ -1404,6 +1418,8 @@ _CLI_SEQUENCE_POINTERS = frozenset({
 #: same (cd) oracle as the sequence anchors; the anchor's own argv
 #: is the last step and there are no prerequisites to replay.
 _CLI_REFUSED_POINTERS = frozenset({
+    ("practice.context", "/properties/item_id"),
+    ("practice.context", "/properties/note_id"),
     ("study.sequence", "/properties/unit_id"),
     ("dossier.read", "/properties/unit_id"),
     ("note.content", "/properties/note_id"),

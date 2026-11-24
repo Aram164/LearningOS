@@ -132,6 +132,21 @@ contracts:
     checker: learning_os.store.contracts.capability_catalog
     test: tests/test_capability_catalog.py
 
+  - declaration: system/contracts/delegations/atlas-keeper.yaml
+    governs: >-
+      Aram's standing delegation for the Atlas keeper: whether an agent's
+      system-task relation writes are admitted at all, until when, and how many
+      operations one batch may carry. Read by concept.relations.change on every
+      keeper write; a missing, malformed, suspended or expired delegation
+      refuses the write. A keeper receipt records the system-task channel and
+      its commit time, not the delegation's digest (receipt metadata is a
+      closed stored schema; the digest waits for the next format version). The
+      file is Git-tracked, so a committed delegation can be matched to a write
+      by time; an uncommitted edit in force at write time is recorded nowhere.
+    enforced_by: runtime
+    checker: learning_os.app.handlers.atlas
+    test: tests/test_atlas_authoring.py
+
   - declaration: system/contracts/ai-adapters.yaml
     governs: >-
       The AI adapters an action may be routed through. Read by AdapterRegistry
@@ -221,9 +236,9 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v20.schema.json
+  - path: system/contracts/manifest-v21.schema.json
     reason: >-
-      The current projection schema (system/contracts/manifest-v20.schema.json
+      The current projection schema (system/contracts/manifest-v21.schema.json
       per manifest-contract.yaml schema_path). Enforced through
       manifest-contract.yaml at build time, so it is not separately registered.
       Superseded versioned schemas are not retained; their history lives in

@@ -255,3 +255,23 @@ tasks:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#24-turn-the-semester
       - system/WORKFLOWS.md#27-promote-a-future-masters-module
+
+  - id: refresh-atlas-board
+    task: Open and refresh a managed Atlas board
+    entry_read: '`capabilities atlas.context --json`'
+    procedures:
+      - label: Refresh a working board
+        target: system/procedures/refresh-an-atlas-board.md#open-close-and-refresh-the-board
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#32-open-and-refresh-a-managed-atlas-board
+
+  - id: export-verified-practice
+    task: Verify and export a practice item
+    entry_read: '`capabilities practice.context --json`, then `capabilities practice.verification.record --json`'
+    procedures:
+      - label: Inspect and deliver the reviewed item
+        target: system/procedures/export-verified-practice.md#check-apply-and-sync
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#33-verify-and-export-a-practice-item

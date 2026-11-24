@@ -226,6 +226,7 @@ def test_allowlist_matches_the_capability_contract(repo_root: Path):
                 if row.get("admission_channels") == ["ui"]}
     assert reviewed == set(UI_REVIEWED_ALLOWLIST) == {
         "concept.relations.change", "review.prepare", "review.apply",
+        "practice.verification.record",
         "unit.map.import",
         # Aram's own ability claim and a tentative connection he noticed,
         # each recorded from Review after the exact record is on screen

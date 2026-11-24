@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"concept.relations.change\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"the keeper retracts a relation with a reason; it never deletes one\",\"retryable\":false,\"details\":{}}}\n",
+  "stdout_json": {
+    "capability": "concept.relations.change",
+    "error": {
+      "code": "INVALID_REQUEST",
+      "details": {},
+      "message": "the keeper retracts a relation with a reason; it never deletes one",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

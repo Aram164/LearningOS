@@ -2855,6 +2855,37 @@ def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
                       "class": "WriteRefused", "exit_code": None}]
     assert exit_for(WriteRefused("a9-proof"), "cli") == 2
 
+def _prove_practice_snapshot_changed(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """A mid-read change fires the site (race-only proof).
+
+    A single-threaded read cannot race itself, so no case input
+    reaches the gate; the proof injects the mid-read change and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.app.handlers.practice as practice
+    from learning_os.app.outcomes import exit_for
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = _a9_world("practice.context", "cli-unknown-note", tmp_path)
+    root = ctx.root
+    calls = []
+
+    def racing(root, expected=None):
+        calls.append(expected)
+        return f"a9-proof-snapshot-{len(calls)}"
+
+    monkeypatch.setattr(practice, "_snapshot", racing)
+    outcome, lines = _a9_run_cli(root, "practice.context",
+                                 ["practice-context", "note-practice-bank"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "practice.context", "kind": "failure",
+                      "site": "practice.context.snapshot-changed",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "cli") == 2
+
 def _prove_edit_empty_batch_guarded(mini_repo: Path, tmp_path: Path,
                                     monkeypatch) -> None:
     """The batch guard refuses zero ids first (R-A9-3)."""
@@ -3076,6 +3107,7 @@ _PROOF_FNS.update({
     'ability.context.unreadable-records': _prove_ability_unreadable_records,
     'ability.context.reasons-not-parallel': _prove_ability_reasons_not_parallel,
     'atlas.context.snapshot-changed': _prove_atlas_snapshot_changed,
+    'practice.context.snapshot-changed': _prove_practice_snapshot_changed,
     'plan.edit-context.empty-batch': _prove_edit_empty_batch_guarded,
     'plan.edit-context.one-selector': _prove_edit_one_selector_guarded,
     'plan.edit-context.bad-stage-results': _prove_edit_bad_stage_results,

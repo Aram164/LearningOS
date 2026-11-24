@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/practice.verification.record.schema.json",
+  "title": "payload for capability practice.verification.record",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record"
+  ],
+  "properties": {
+    "record": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string"
+        },
+        "expected_old": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "new_status": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "concept_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifact_sha256": {
+          "type": "string"
+        },
+        "reviewer_id": {
+          "type": "string"
+        },
+        "source_binding": {},
+        "comparison_sha256": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_sha256",
+        "concept_ids",
+        "expected_old",
+        "item_id",
+        "method",
+        "new_status",
+        "reviewer_id"
+      ],
+      "description": "Exactly one verification record: the item id, the exact expected old sidecar row or null, the reviewed new status and method, the canonical concepts, the reviewed item's content_sha256 as practice.context showed it, the reviewer, and the status-specific proof (the official answer's source binding)."
+    }
+  }
+}

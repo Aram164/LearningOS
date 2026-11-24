@@ -69,6 +69,17 @@ class ChecksRegistries:
             if edge in seen_edges:
                 self.err("REL-DUP", f"duplicate relation edge {edge}", "knowledge/concept-relations.yaml")
             seen_edges.add(edge)
+            for binding in rel.get("evidence") or []:
+                if isinstance(binding, dict) and binding.get("source_id") not in r.sources:
+                    self.err("REL-EVIDENCE-SOURCE",
+                             f"relation[{i}] evidence names unknown source '{binding.get('source_id')}'",
+                             "knowledge/concept-relations.yaml")
+            reason = rel.get("status_reason")
+            if reason is not None and (not str(reason).strip()
+                                       or len(str(reason).strip()) > 400):
+                self.err("REL-STATUS-REASON",
+                         f"relation[{i}] status_reason must be 1-400 trimmed characters",
+                         "knowledge/concept-relations.yaml")
         self._prerequisite_cycle()
         # Alias collisions. Normalize with strip().casefold() so that stray
         # whitespace or case ('Erwartungswert', ' erwartungswert ') still
@@ -125,6 +136,8 @@ class ChecksRegistries:
         r = self.repo
         prereqs: dict[str, set[str]] = {}
         for rel in r.relations:
+            if rel.get("status", "active") != "active":
+                continue  # only active edges define learning order (§P1 step 7)
             if str(rel.get("type")) not in PREREQUISITE_RELATIONS:
                 continue
             frm, to = str(rel.get("from", "")), str(rel.get("to", ""))

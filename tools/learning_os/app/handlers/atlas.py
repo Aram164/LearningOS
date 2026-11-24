@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
-from datetime import UTC
+from datetime import UTC, date
 from pathlib import Path
 
 import yaml
@@ -397,9 +397,105 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     )
 
 
+#: The Atlas keeper (ADR-024 §Amendment 2026-11-23): an agent running a
+#: bounded job writes relations on this channel, under Aram's standing
+#: delegation, and Aram vetoes or pins afterwards in the app.
+KEEPER_CHANNEL = "system-task"
+KEEPER_DELEGATION = "system/contracts/delegations/atlas-keeper.yaml"
+_DELEGATION_KEYS = frozenset({
+    "schema_version", "delegate", "granted_by", "granted", "expires",
+    "status", "capability", "channel", "max_operations",
+})
+
+
+def _keeper_refused(reason: str, site: str) -> WriteRefused:
+    return WriteRefused(reason, site=f"concept.relations.change.{site}")
+
+
+def _keeper_delegation(root: Path) -> dict:
+    """The active delegation, or a refusal naming why there is none.
+
+    Every keeper receipt records the `system-task` channel and its commit
+    time. The delegation is Git-tracked, so a committed delegation can be
+    matched to a write by time; an uncommitted edit in force at write time is
+    not recorded (its digest waits for a receipt field in the next format).
+    """
+    path = root / KEEPER_DELEGATION
+
+    def inactive(why: str) -> WriteRefused:
+        return _keeper_refused(
+            f"the Atlas keeper has no active delegation: {why}", "keeper-delegation")
+
+    if path.is_symlink() or not path.is_file():
+        raise inactive(f"{KEEPER_DELEGATION} is missing")
+    raw = path.read_bytes()
+    try:
+        data = yaml.load(raw.decode("utf-8"), Loader=UniqueKeySafeLoader)
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise inactive(f"{KEEPER_DELEGATION} is unreadable ({exc})") from exc
+    if (not isinstance(data, dict) or set(data) != _DELEGATION_KEYS
+            or data["schema_version"] != 1
+            or data["capability"] != "concept.relations.change"
+            or data["channel"] != KEEPER_CHANNEL
+            or type(data["max_operations"]) is not int
+            or not 1 <= data["max_operations"] <= 50
+            or type(data["expires"]) is not date
+            or type(data["granted"]) is not date):
+        raise inactive(f"{KEEPER_DELEGATION} does not have the declared shape")
+    if data["status"] != "active":
+        raise inactive(f"its status is {data['status']}")
+    today = observations.now().date()
+    if not data["granted"] <= today <= data["expires"]:
+        raise inactive(f"it covers {data['granted']} to {data['expires']}, not {today}")
+    return data
+
+
+def _keeper_scope(operations: list, delegation: dict) -> None:
+    """Refuse what the keeper may not do; Aram's decisions stay his."""
+    if len(operations) > delegation["max_operations"]:
+        raise _keeper_refused(
+            f"the keeper's delegation allows at most {delegation['max_operations']} "
+            "operations per batch", "keeper-scope")
+    for operation in operations:
+        kind = operation["action"]
+        old = operation.get("old") if isinstance(operation.get("old"), dict) else {}
+        new = operation.get("new") if isinstance(operation.get("new"), dict) else {}
+        if kind == "remove":
+            raise _keeper_refused(
+                "the keeper retracts a relation with a reason; it never deletes one",
+                "keeper-scope")
+        if old.get("pinned") is True or old.get("origin") == "aram":
+            raise _keeper_refused(
+                "relations Aram authored or pinned are his; the keeper may only "
+                "report a conflict with them", "keeper-scope")
+        if old.get("status") == "vetoed":
+            raise _keeper_refused(
+                "vetoed relations are Aram's decision; the keeper never revives "
+                "or modifies them", "keeper-scope")
+        if new.get("pinned") is True or new.get("status") == "vetoed" \
+                or new.get("evidence_disputed", False) != old.get("evidence_disputed", False):
+            raise _keeper_refused(
+                "pinning, vetoing and disputing evidence are Aram's decisions",
+                "keeper-scope")
+        if new.get("origin", "pilot") != old.get("origin", "pilot"):
+            raise _keeper_refused(
+                "the keeper writes relations as origin pilot and never changes "
+                "a relation's origin", "origin-mismatch")
+        if new.get("status", "active") == "active" and not new.get("evidence"):
+            raise _keeper_refused(
+                "an active keeper relation must cite at least one verified quote "
+                "from the course materials", "keeper-evidence")
+
+
 @register("concept.relations.change", kind="command", effects=OperationEffects.CANONICAL_WRITE)
 def concept_relations_change(ctx: OpContext, req: dict) -> Result:
-    """Apply only explicitly authored relation operations."""
+    """Apply only explicitly authored relation operations.
+
+    The app (`ui`) records Aram's own additions as origin `aram`. The Atlas
+    keeper (`system-task`) writes only under an active delegation, only with
+    verified evidence, never over a pinned or Aram-authored row, and its
+    additions are stamped origin `pilot`.
+    """
     root = ctx.root
     changes = req["change"]
     if not isinstance(changes, dict) or set(changes) != {"operations"}:
@@ -413,7 +509,51 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             "supply between 1 and 50 explicit operations",
             site="concept.relations.change.empty-operations",
         )
+    request = current_gateway_request()
+    channel = request.channel if request is not None else None
+    if channel == KEEPER_CHANNEL:
+        delegation = _keeper_delegation(root)
+        for operation in operations:
+            if not isinstance(operation, dict) or not isinstance(operation.get("action"), str):
+                break  # the per-operation checks below refuse it precisely
+        else:
+            _keeper_scope(operations, delegation)
     registries = _registries(root)
+    repo = ctx.repo()
+    from learning_os.domain.relations import is_decorated
+
+    def _stamped(new_row: dict) -> dict:
+        """An added row with its author recorded (who made it, not who kept it)."""
+        author = {"ui": "aram", KEEPER_CHANNEL: "pilot"}.get(channel)
+        if author is None:
+            return copy.deepcopy(new_row)
+        if new_row.get("origin", author) != author:
+            raise _keeper_refused(
+                f"a relation added through {channel} is recorded as origin {author}",
+                "origin-mismatch")
+        return {**copy.deepcopy(new_row), "origin": author}
+
+    def _check_evidence(row: dict) -> None:
+        # Known source + current digest + the quote verbatim on the pinned
+        # page, through the existing span machinery (plan step 6).
+        from learning_os.store.practice import verified_binding
+
+        for binding in row.get("evidence") or []:
+            problem = verified_binding(repo, binding)
+            if problem:
+                raise WriteRefused(
+                    problem,
+                    site="concept.relations.change.evidence-refused",
+                )
+
+    def _expected_revisions() -> dict[str, int]:
+        try:
+            return parse_expected_revisions(req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(
+                str(exc), site="concept.relations.change.bad-expected-revision",
+            ) from exc
+
     changed = set()
     for operation in operations:
         if not isinstance(operation, dict):
@@ -438,6 +578,16 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
                         str(exc),
                         site="concept.relations.change.bad-relation-row",
                     ) from exc
+        if "new" in operation:
+            _check_evidence(operation["new"])
+            new_row = operation["new"]
+            if new_row.get("status") in ("retracted", "vetoed"):
+                reason = str(new_row.get("status_reason", ""))
+                if not reason.strip() or len(reason.strip()) > 400:
+                    raise WriteRefused(
+                        "retract/veto requires a 1-400 character reason",
+                        site="concept.relations.change.reason-required",
+                    )
         if "old" in operation:
             matches = [(path, i) for path, data in registries.items()
                        for i, row in enumerate(data["relations"]) if row == operation["old"]]
@@ -447,25 +597,67 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
                     site="concept.relations.change.old-not-found",
                 )
             path, index = matches[0]
+            old_row = operation["old"]
+            if old_row.get("pinned"):
+                unpin = (kind == "replace"
+                         and {**operation["new"]} == {**old_row, "pinned": False})
+                if not unpin:
+                    raise WriteRefused(
+                        "a pinned relation only accepts an exact unpin toggle",
+                        site="concept.relations.change.pinned-row",
+                    )
+            if kind == "remove" and is_decorated(old_row):
+                raise WriteRefused(
+                    "decorated relations are retracted, not hard-deleted",
+                    site="concept.relations.change.decorated-remove",
+                )
+            if (kind == "replace" and old_row.get("status") == "vetoed"
+                    and operation["new"].get("status", "active") == "active"):
+                old_sources = {b.get("source_id")
+                               for b in old_row.get("evidence") or []}
+                fresh = [b for b in operation["new"].get("evidence") or []
+                         if b.get("source_id") not in old_sources]
+                if not fresh:
+                    raise WriteRefused(
+                        "restoring a vetoed relation requires fresh evidence "
+                        "from a previously unused registered source",
+                        site="concept.relations.change.restore-needs-fresh-evidence",
+                    )
             if kind == "remove":
                 registries[path]["relations"].pop(index)
             else:
                 registries[path]["relations"][index] = copy.deepcopy(operation["new"])
         else:
+            stamped = _stamped(operation["new"])
+            identity = (stamped.get("from"), stamped.get("type"), stamped.get("to"))
+            existing = next(
+                (row for data in registries.values() for row in data["relations"]
+                 if (row.get("from"), row.get("type"), row.get("to")) == identity),
+                None,
+            )
+            if existing is not None:
+                _expected_revisions()
+                status = existing.get("status", "active")
+                if status == "vetoed":
+                    hint = "restore it with fresh evidence from an unused registered source via replace"
+                elif status == "retracted":
+                    hint = "restore or update it via replace"
+                else:
+                    hint = "update it via replace"
+                raise WriteRefused(
+                    f"relation ({identity[0]}, {identity[1]}, {identity[2]}) already exists "
+                    f"with status {status}; {hint} instead of add",
+                    site="concept.relations.change.identity-exists",
+                )
             single = root / "knowledge/concept-relations.yaml"
             path = single if single in registries else root / "knowledge/concept-relations/atlas.yaml"
             _safe(root, path)
-            registries.setdefault(path, {"relations": []})["relations"].append(copy.deepcopy(operation["new"]))
+            registries.setdefault(path, {"relations": []})["relations"].append(stamped)
         changed.add(path)
     writes = {path: yaml.safe_dump(registries[path], sort_keys=False, allow_unicode=True)
               for path in changed}
     # Existing validator rejects duplicates, unknown endpoints/sources and prerequisite cycles.
-    try:
-        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
-    except ValueError as exc:
-        raise WriteRefused(
-            str(exc), site="concept.relations.change.bad-expected-revision",
-        ) from exc
+    expected_revisions = _expected_revisions()
     return Result(
         {"ok": True, "operation_count": len(operations)},
         proposal=TransactionProposal(

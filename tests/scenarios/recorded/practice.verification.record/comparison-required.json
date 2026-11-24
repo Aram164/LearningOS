@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"practice.verification.record\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"cross-checked cannot be recorded until Core stores the independent comparison it names; record source-matched or confirmed instead\",\"retryable\":false,\"details\":{}}}\n",
+  "stdout_json": {
+    "capability": "practice.verification.record",
+    "error": {
+      "code": "INVALID_REQUEST",
+      "details": {},
+      "message": "cross-checked cannot be recorded until Core stores the independent comparison it names; record source-matched or confirmed instead",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

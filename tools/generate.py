@@ -18,7 +18,7 @@ from pathlib import Path
 
 from learning_os.app.projection import publish_with_paths  # noqa: E402
 from learning_os.derive.learning_runtime import RuntimeInputError  # noqa: E402
-from learning_os.domain.failures import WriteRefused  # noqa: E402
+from learning_os.domain.failures import PracticeSidecarUnreadable, WriteRefused  # noqa: E402
 from learning_os.store.transactions import TransactionFailure  # noqa: E402
 
 
@@ -37,7 +37,7 @@ def main() -> int:
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     try:
         written = publish_with_paths(root)
-    except (TransactionFailure, WriteRefused) as exc:
+    except (TransactionFailure, WriteRefused, PracticeSidecarUnreadable) as exc:
         print(f"generation refused: {exc}")
         return 2
     except RuntimeInputError as exc:

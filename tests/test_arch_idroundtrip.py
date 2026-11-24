@@ -70,6 +70,7 @@ GENERIC_KINDS: tuple[str, ...] = (
 )
 
 SPECIAL_KINDS: tuple[str, ...] = (
+    "practice-item",
     "transaction",
     "goal",
     "digest",

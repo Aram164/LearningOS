@@ -18,6 +18,15 @@ queries:
     - only reviewed equivalence with a current source digest can transfer confirmed evidence under stated conditions
     - contradictory and corrected work remains inspectable; stage completion grants nothing
     - ability rows carry reason_codes parallel to reasons; decisions consume the structured codes, never the display prose
+  practice.context:
+    handler: practice_context
+    cli_command: practice-context
+    kind: porcelain
+    result: practice-context-v1
+    schema: system/schema/practice-context.schema.json
+    invariants:
+    - snapshot-bound prompt-safe summaries for one exercise-bank or mock-exam note; solution text never leaves the canonical note
+    - effective status is recomputed from current item bytes, pinned source files and recorded proofs; a stale or unproven row reads unverified
   material.span:
     handler: material_span
     cli_command: material-span
@@ -373,6 +382,8 @@ commands:
     - only explicitly supplied add, replace or remove operations; no inferred relations
     - exact previous rows, snapshot and registry revision guard changes
     - duplicates, unknown endpoints and prerequisite cycles fail atomically
+    - additions made in the app are stamped origin aram; a row is decorated by value (lifecycle, pin, evidence, dispute, reason or origin aram) and is retracted, never hard-deleted
+    - the Atlas keeper writes only on the system-task channel while system/contracts/delegations/atlas-keeper.yaml is active; every active keeper row cites a verified quote, its additions are stamped origin pilot, and it never deletes, pins, vetoes, disputes, changes an origin or touches a row Aram authored or pinned
     payload_records:
       change:
         description: >-
@@ -407,6 +418,64 @@ commands:
     invariants:
     - learner wording and original target are preserved
     - open and resolved describe a personal question, never mastery or task completion
+  practice.verification.record:
+    handler: practice_verification_record
+    cli_command: practice-verification-record
+    kind: command
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
+    writes:
+    - knowledge/practice-index.yaml
+    invariants:
+    - one explicitly reviewed verification per gesture; the item and its content hash are recomputed in the handler, and the reviewed artifact_sha256 must equal that hash
+    - eligibility is per item; Core pins a source PDF's digest itself when the binding omits it
+    - the exact expected old sidecar row, the registry-practice-index revision and the canonical note revision guard the write
+    - source-matched requires the official answer's verified binding with an excerpt found verbatim on the pinned page; cross-checked is refused until Core stores the independent comparison it names; confirmed requires explicit review
+    - historical verification entries are preserved; unverified and disputed items stay ineligible for export
+    payload_records:
+      record:
+        description: >-
+          Exactly one verification record: the item id, the exact expected
+          old sidecar row or null, the reviewed new status and method, the
+          canonical concepts, the reviewed item's content_sha256 as
+          practice.context showed it, the reviewer, and the status-specific
+          proof (the official answer's source binding).
+        accepted:
+        - item_id
+        - expected_old
+        - new_status
+        - method
+        - concept_ids
+        - artifact_sha256
+        - reviewer_id
+        - source_binding
+        - comparison_sha256
+        required:
+        - item_id
+        - expected_old
+        - new_status
+        - method
+        - concept_ids
+        - artifact_sha256
+        - reviewer_id
+        fields:
+          item_id:
+            type: string
+          expected_old:
+            type: [object, 'null']
+          new_status:
+            type: string
+          method:
+            type: string
+          concept_ids:
+            type: array
+            items:
+              type: string
+          artifact_sha256:
+            type: string
+          reviewer_id:
+            type: string
   capture.create:
     handler: capture
     cli_command: capture

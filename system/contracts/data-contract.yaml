@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 68
-schema_fingerprint: sha256:6233010f70f42069446bf020f9e586e9c8bd499a5a14e915810007a3bc693e05
-record_schemas: 38
+contract_version: 69
+schema_fingerprint: sha256:fae540c455e093060595ab28f3483805263b9e5946f386d5c25fa2dbc454658d
+record_schemas: 39
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -491,3 +491,9 @@ history:
     without migration'
   migration: null
   fixture: tests/fixtures/formats/v68/
+- version: 69
+  adopted: '2026-11-23'
+  note: 'P6: practice-index sidecar schema (record) and practice.context (artifact)
+    join the fingerprint; folded into the branch''s single v69 bump in place'
+  migration: null
+  fixture: tests/fixtures/formats/v69/

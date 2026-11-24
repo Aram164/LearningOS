@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Literal
+from typing import Literal, TypeVar
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result
@@ -47,6 +47,7 @@ class Operation:
 
 
 REGISTRY: dict[str, Operation] = {}
+_Handler = TypeVar("_Handler", bound=Callable[[OpContext, dict[str, object]], Result])
 
 
 def register(
@@ -60,10 +61,10 @@ def register(
     read_session_profile: str = "none",
     effects: OperationEffects = OperationEffects.UNKNOWN,
     lock: Literal["shared", "exclusive", "none"] | None = None,
-):
+) -> Callable[[_Handler], _Handler]:
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""
 
-    def decorator(fn):
+    def decorator(fn: _Handler) -> _Handler:
         REGISTRY[name] = Operation(
             name=name, kind=kind, handler=fn,
             human=human, render_check=render_check,

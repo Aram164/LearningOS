@@ -5,6 +5,7 @@ generated/*
 # install.py); /.trash/ = Obsidian's recoverable local trash.
 .obsidian/
 /bases/
+/boards/
 /.trash/
 .DS_Store
 **/__pycache__/

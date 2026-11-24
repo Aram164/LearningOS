@@ -138,7 +138,7 @@ $ $H/los-assert-receipt --last --capability coordination.section.revise
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/generate.py --root "$LOS_FX" | grep -c "^wrote"
-21
+27
 ```
 
 ```scrut

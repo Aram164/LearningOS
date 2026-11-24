@@ -1,0 +1,27 @@
+{
+ "adopted_from": [],
+ "entry": "rd-1ff50659da6950c5",
+ "inspected_range": {
+  "end": 5,
+  "start": 5
+ },
+ "material": "source-demo-book/book.pdf",
+ "opened_at": "2026-11-12T10:00:00+01:00",
+ "overdue_at": null,
+ "record": "entry",
+ "recorded_source_digest": "939260683c5957ea177021cd1277520c30ee37c69a8d60768a5060a4147f3f7f",
+ "schema_version": 1,
+ "session": "0f1e2d3c-4b5a-4968-8776-655443322110",
+ "settlement": {
+  "at": "2026-11-12T10:00:00+01:00",
+  "card": null,
+  "covering_card": null,
+  "observed_sha256": null,
+  "outcome": "dismissed-irrelevant",
+  "reason": "a publisher's index page; nothing to study",
+  "request_sha256": "2055132e6dabd252748e2739ed7eff0e2c9582707eae249088cd746f05919f40",
+  "session": "0f1e2d3c-4b5a-4968-8776-655443322110"
+ },
+ "state": "settled",
+ "text_sha256": "1e0b7f526749b0755313d0ff10b45b5de56c66191568230703a335004b36d1ab"
+}

@@ -373,6 +373,10 @@ class ReplayRecoveryError(Exception):
     """The committed receipt cannot prove what the original call wrote."""
 
 
+class PracticeSidecarUnreadable(Exception):
+    """The practice verification sidecar cannot be read or validated safely."""
+
+
 class TransactionConflict(Exception):
     """One or more expected artifact revisions are stale."""
 
