@@ -219,6 +219,7 @@
    "tests/test_synthesis_analysis_refs.py",
    "tests/test_tree_contract.py",
    "tests/test_ui_gateway_recovery.py",
+   "tests/test_ui_phase3_live_writes.py",
    "tests/test_unit_plan_revision.py",
    "tests/test_validation.py",
    "tests/test_validation_cache.py",
