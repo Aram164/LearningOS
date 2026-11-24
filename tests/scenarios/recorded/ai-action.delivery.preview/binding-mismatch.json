@@ -1,0 +1,113 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "KEY1"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/KEY1",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "KEY1",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"delivery\":{\"schema_version\":1,\"id\":999,\"type\":\"ai-action-delivery\",\"request_id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"status\":\"ready\",\"producer\":{\"provider\":\"manual\",\"adapter\":\"manual-bundle\"},\"approval\":{\"user_approved\":true,\"approved_at\":\"2026-10-01T09:00:00+02:00\"},\"operations\":[{\"capability\":\"garden.add-transcription\",\"target_id\":\"garden-note-seed\",\"artifact_ref\":\"artifacts/transcription.md\"}],\"preconditions\":{\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"artifact_revisions\":{\"garden-note-seed\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"}}}}\n",
+      "stdout_json": {
+        "delivery": {
+          "action_id": "garden.shelve",
+          "approval": {
+            "approved_at": "2026-10-01T09:00:00+02:00",
+            "user_approved": true
+          },
+          "id": 999,
+          "operations": [
+            {
+              "artifact_ref": "artifacts/transcription.md",
+              "capability": "garden.add-transcription",
+              "target_id": "garden-note-seed"
+            }
+          ],
+          "preconditions": {
+            "artifact_revisions": {
+              "garden-note-seed": "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"
+            },
+            "snapshot_id": "<FIXTURE_SNAPSHOT>"
+          },
+          "producer": {
+            "adapter": "manual-bundle",
+            "provider": "manual"
+          },
+          "request_id": "KEY1",
+          "schema_version": 1,
+          "status": "ready",
+          "type": "ai-action-delivery"
+        },
+        "ok": true
+      },
+      "step": 1,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-apply-preview",
+        "999"
+      ],
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: approved delivery id does not match its imported directory\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 2,
+      "transport": "cli"
+    }
+  ]
+}

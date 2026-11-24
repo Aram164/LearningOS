@@ -27,4 +27,14 @@ cases:
     transport: cli
     argv: [ai-action-apply-preview, ai-delivery-nope]
     expect: {site: null}
+  - id: binding-mismatch
+    kind: sequence
+    expect: {site: ai-action.delivery.preview.binding}
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-preview-binding]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+      - transport: cli
+        argv: [ai-action-apply-preview, "999"]
 untriggered: []

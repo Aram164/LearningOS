@@ -1,0 +1,11 @@
+schema_version: 1
+id: 999
+type: ai-action-delivery
+request_id: ai-request-preview-binding
+action_id: garden.shelve
+status: ready
+producer: {provider: manual, adapter: manual-bundle}
+approval: {user_approved: true, approved_at: "2026-10-01T09:00:00+02:00"}
+operations:
+  - {capability: garden.add-transcription, target_id: garden-note-seed, artifact_ref: artifacts/transcription.md}
+preconditions: {snapshot_id: "<FIXTURE_SNAPSHOT>", artifact_revisions: {garden-note-seed: "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"}}
