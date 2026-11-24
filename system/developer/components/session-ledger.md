@@ -17,7 +17,7 @@ Track session-owned touched files and closure boundaries separately from learner
 ## Depends on and used by
 
 <!-- system-map:begin name=edges -->
-Depends on: `contracts`, `domain`, `materials`.
+Depends on: `contracts`, `domain`, `loading`, `materials`.
 
 Used by: `derived-store`, `operation-handlers`, `operation-pipeline`, `projection`, `semantics`, `validation`.
 <!-- system-map:end -->

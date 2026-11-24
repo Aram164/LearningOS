@@ -33,6 +33,7 @@ from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
 from learning_os.store.session_ledger import close_session_ledger as _close_session_ledger
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import delete_session_ledger as _delete_session_ledger
+from learning_os.store.session_ledger import is_anchored as _is_anchored
 from learning_os.store.session_ledger import (
     load_other_session_ledgers as _load_other_session_ledgers,
 )
@@ -634,7 +635,18 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         validation_line = (f"0 error(s), {validation['warnings']} warning(s) — OK"
                            "; warning list: generated/reports/validation-report.md")
         _publish(root)
-        status_records = _git_status_changes(root)
+        git_required = bool(retry or commit_message or push)
+        try:
+            anchored = _is_anchored(root)
+        except WriteRefused as exc:
+            raise SessionLedgerError(str(exc)) from exc
+        if git_required and not anchored:
+            raise SessionLedgerError(
+                "cannot commit or push: checkout has no git repository"
+            )
+        status_records = (
+            _git_status_changes(root) if (git_required or anchored) else []
+        )
         touched_set = set(touched)
         owned = [
             (f"{xy} {source} -> {path}" if source is not None else f"{xy} {path}")

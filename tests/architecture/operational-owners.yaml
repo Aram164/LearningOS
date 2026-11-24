@@ -5,6 +5,7 @@ io_helpers:
     callers:
       - learning_os.store.ai_actions.storage
       - learning_os.store.session_ledger
+      - learning_os.store.transactions
 excluded:
   - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
   - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}

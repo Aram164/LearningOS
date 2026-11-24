@@ -23,6 +23,7 @@ MECHANICAL_HELPERS: dict[str, frozenset[str]] = {
     "learning_os.store.fs": frozenset({
         "learning_os.store.ai_actions.storage",
         "learning_os.store.session_ledger",
+        "learning_os.store.transactions",
     }),
 }
 

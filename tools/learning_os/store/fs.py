@@ -158,6 +158,8 @@ def atomic_write_bytes_exclusive(
         created = create_ancestors_and_track(path.parent)
         fd, tmp = exclusive_temp_path(path, mode=mode)
     except OSError as exc:
+        if error_factory is OSError:
+            raise
         raise error_factory(f"cannot write {path}: {exc.strerror or exc}") from exc
 
     handle = None
@@ -181,6 +183,8 @@ def atomic_write_bytes_exclusive(
     except OSError as exc:
         with contextlib.suppress(OSError):
             tmp.unlink(missing_ok=True)
+        if error_factory is OSError:
+            raise
         raise error_factory(f"cannot write {path}: {exc.strerror or exc}") from exc
     except BaseException:
         with contextlib.suppress(OSError):

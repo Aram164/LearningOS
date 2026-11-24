@@ -664,19 +664,20 @@ def test_compact_mode_without_report_keeps_warning_details(mini_repo, repo_root)
 
 
 def test_validate_permission_error_on_report_gives_clean_hint(mini_repo, monkeypatch, capsys):
+    import os
     import sys
     from pathlib import Path
 
     import validate as validate_tool
 
-    real_write_text = Path.write_text
+    real_open = os.open
 
-    def deny_report(self: Path, *args, **kwargs):
-        if self.name == "validation-report.md":
+    def deny_report(path, *args, **kwargs):
+        if Path(os.fsdecode(path)).name.startswith(".validation-report.md.tmp-"):
             raise PermissionError(1, "Operation not permitted")
-        return real_write_text(self, *args, **kwargs)
+        return real_open(path, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "write_text", deny_report)
+    monkeypatch.setattr(os, "open", deny_report)
     monkeypatch.delenv("LOS_GATE_SOCK", raising=False)
     monkeypatch.setattr(sys, "argv", ["validate.py", "--compact", "--root", str(mini_repo)])
     rc = validate_tool.main()

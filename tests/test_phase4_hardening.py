@@ -1027,3 +1027,104 @@ def test_unit_material_synthesis_publish_review_binding_parity(
     assert json.loads(applied.stdout)["ok"] is True
     dest = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
     assert dest.is_file()
+
+
+def test_session_end_no_git_allows_review_and_close_but_refuses_commit(
+    mini_repo: Path,
+) -> None:
+    review = session_end(
+        mini_repo,
+        channel=None,
+        session_id="cli",
+        include_stale=False,
+        close=False,
+        commit_message=None,
+        push=False,
+    )
+    assert review["committed"] is False
+    assert review["session_closed"] is False
+    assert review["owned_changes"] == []
+
+    closed = session_end(
+        mini_repo,
+        channel=None,
+        session_id="cli",
+        include_stale=False,
+        close=True,
+        commit_message=None,
+        push=False,
+    )
+    assert closed["committed"] is False
+    assert closed["session_closed"] is True
+
+    with pytest.raises(SessionLedgerError, match="no git repository"):
+        session_end(
+            mini_repo,
+            channel=None,
+            session_id="cli",
+            include_stale=False,
+            close=False,
+            commit_message="phase4: cannot commit without git",
+            push=False,
+        )
+
+
+def test_session_end_with_git_still_refuses_nonzero_git_status(
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _init_git_repo(mini_repo)
+    real_run = subprocess.run
+
+    def fail_status(cmd: object, *args: object, **kwargs: object) -> object:
+        if isinstance(cmd, list) and cmd[:4] == ["git", "status", "--porcelain=v1", "-z"]:
+            return subprocess.CompletedProcess(cmd, 128, b"", b"fatal: corrupt index")
+        return real_run(cmd, *args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(subprocess, "run", fail_status)
+    with pytest.raises(SessionLedgerError, match="git status exited 128"):
+        session_end(
+            mini_repo,
+            channel=None,
+            session_id="cli",
+            include_stale=False,
+            close=False,
+            commit_message=None,
+            push=False,
+        )
+
+
+def test_atomic_write_text_exclusive_preserves_permission_error_for_oserror_factory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import os
+
+    real_open = os.open
+
+    def deny_open(path: object, *args: object, **kwargs: object) -> int:
+        if Path(os.fsdecode(path)).name.startswith(".denied.txt.tmp-"):  # type: ignore[arg-type]
+            raise PermissionError(1, "Permission denied")
+        return real_open(path, *args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(os, "open", deny_open)
+    with pytest.raises(PermissionError):
+        atomic_write_text_exclusive(
+            tmp_path / "denied.txt", "blocked", boundary=tmp_path, error_factory=OSError,
+        )
+    monkeypatch.undo()
+
+    real_replace = os.replace
+
+    def deny_replace(src: object, dst: object) -> None:
+        if Path(os.fsdecode(dst)).name == "replace-denied.txt":  # type: ignore[arg-type]
+            raise PermissionError(1, "Permission denied")
+        real_replace(src, dst)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(os, "replace", deny_replace)
+    with pytest.raises(PermissionError):
+        atomic_write_text_exclusive(
+            tmp_path / "replace-denied.txt",
+            "blocked-replace",
+            boundary=tmp_path,
+            error_factory=OSError,
+        )
+    assert list(tmp_path.glob(".replace-denied.txt.tmp-*")) == []
