@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -199,13 +199,14 @@ def _plan_map_replacement(
     reset_reason: str | None,
     retire_stage_ids: list[str],
     retire_reason: str | None,
-) -> tuple[dict, dict, list[str]]:
+) -> tuple[dict, dict, list[str], dict[str, object]]:
     """Merge a reviewed revision onto the map it replaces.
 
-    Returns ``(merged_map, diff, problems)``. ``problems`` being non-empty
-    means nothing may be written: a replacement that silently reorders stages,
-    resets lifecycle state, or drops a stage carrying recorded work is refused
-    rather than applied and reported afterwards.
+    Returns ``(merged_map, diff, problems, required_decisions)``.
+    ``problems`` being non-empty means nothing may be written: a replacement
+    that silently reorders stages, resets lifecycle state, or drops a stage
+    carrying recorded work is refused rather than applied and reported
+    afterwards.
     """
     problems: list[str] = []
     before = _stage_id_list(current)
@@ -246,6 +247,21 @@ def _plan_map_replacement(
             "--intentional-reorder was declared, but this revision does not reorder "
             "existing stages"
         )
+
+    preserved_dangling = sorted({
+        str(detour.get(field))
+        for detour in (current.get("detours") or [])
+        if isinstance(detour, dict)
+        for field in ("spawned_by_stage", "return_to_stage")
+        if isinstance(detour.get(field), str) and detour.get(field) not in set(after)
+    })
+    incoming_dangling = sorted({
+        str(detour.get(field))
+        for detour in (incoming.get("detours") or [])
+        if isinstance(detour, dict)
+        for field in ("spawned_by_stage", "return_to_stage")
+        if isinstance(detour.get(field), str) and detour.get(field) not in set(after)
+    })
 
     reset = bool((reset_reason or "").strip())
     merged = dict(incoming)
@@ -324,37 +340,78 @@ def _plan_map_replacement(
             if stage_id in current_stages
         ],
     }
-    return merged, diff, problems
+    required_decisions = {
+        "reorder_required": bool(reordered and not (reorder_reason or "").strip()),
+        "state_reset_required": bool(
+            preserved_dangling and not incoming_dangling and not reset
+        ),
+        "state_reset_optional": bool(
+            not reset and (
+                diff["preserved_stage_state"]
+                or diff["map_state_fields_preserved"]
+                or current.get("status") not in (None, "ready")
+                or bool(current.get("detours"))
+                or (isinstance(current.get("shelving"), dict)
+                    and current["shelving"].get("state", "none") != "none")
+            )
+        ),
+        "missing_retire_stages": undeclared,
+        "retire_reason_required": bool(retired and not (retire_reason or "").strip()),
+    }
+    return merged, diff, problems, required_decisions
 
 
+@dataclass(frozen=True)
+class _PreparedUnitMapImport:
+    """Shared validation, merge, diff, and proposal for map import & preview."""
+
+    data: dict
+    map_bytes: bytes
+    diff: dict
+    writes: dict[Path, str]
+    proposal: TransactionProposal | None
+    replacement_problems: list[str]
+    required_decisions: dict[str, object]
+    structural: bool
+    structural_reason: str | None
 
 
-@register("unit.map.import", kind="command", effects=OperationEffects.CANONICAL_WRITE)
-def unit_map_import(ctx: OpContext, req: dict) -> Result:
-    """Create, or revise under preservation rules, the one current study map.
-
-    A first import writes the reviewed draft as given. A ``--replace`` revision
-    is a *merge*: the plan content comes from the draft, and the learner's
-    recorded work — stage lifecycle, notes, attachments, source feedback, open
-    detours, the resume pointer and the shelving packet — is carried forward
-    from the map being replaced. Reordering surviving stages, resetting that
-    state, and dropping a stage each require their own reviewed declaration,
-    so an authorized request can no longer discard operational intent by
-    accident. ``--check`` prints the concrete diff and writes nothing.
-    """
-    root = ctx.root
+def _validate_study_map_contract(
+    root: Path, repo, unit, data: dict, operation: str,
+) -> dict:
+    """Validate an incoming or merged study map against template, schema, and routes."""
     try:
-        _source, map_bytes = _read_content_bound_file(
-            req["file"],
-            req.get("file_sha256"),
-            label="study-map file",
+        require_current_template(data, "curriculum")
+        validate_contract(
+            root,
+            "study-map.schema.json",
+            data,
+            label="curriculum plan template v1",
         )
-    except WriteRefused as exc:
-        exc.site = f"{ctx.operation}.bad-file"
-        exc.gateway_message = f"los: {exc}"
-        exc.exit_code = 2
-        raise
-    check_only = req.get("check") is True
+        effective = expand_map(
+            data,
+            repo.module_source_maps.get(unit.module_id, {}),
+            unit.module_id,
+            unit.id,
+        )
+        if effective != data:
+            validate_contract(root, "study-map.schema.json", effective)
+        return effective
+    except (PlanTemplateError, ContractValidationError, MaterialReferenceError) as exc:
+        message = f"study map creation contract failed: {exc}"
+        raise WriteRefused(
+            message,
+            site=f"{operation}.contract-failed",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+
+def _prepare_unit_map_import(
+    ctx: OpContext, req: dict, map_bytes: bytes, *, allow_preflight_problems: bool,
+) -> _PreparedUnitMapImport:
+    """Validate, merge, and stage a unit study-map import without writing."""
+    root = ctx.root
     repo = ctx.repo()
     unit = repo.units.get(req["unit_id"])
     if unit is None:
@@ -402,6 +459,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     retire_ids = list(req.get("retire_stage") or [])
     retire_reason = req.get("retire_reason")
     structural = "structural_edit" in data
+    edit: dict = {}
     if structural:
         try:
             if set(data) != {"unit_id", "structural_edit"} or current_map is None:
@@ -424,6 +482,14 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                                unit.module_id, unit.id)
     data = _bind_runtime_reviews(data)
     diff: dict = {"replacement": current_data is not None}
+    replacement_problems: list[str] = []
+    required_decisions: dict[str, object] = {
+        "reorder_required": False,
+        "state_reset_required": False,
+        "state_reset_optional": False,
+        "missing_retire_stages": [],
+        "retire_reason_required": False,
+    }
 
     if current_data is None:
         for flag, value in (("--intentional-reorder", reorder_reason),
@@ -448,7 +514,11 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             )
-        data, replacement_diff, problems = _plan_map_replacement(
+        if allow_preflight_problems:
+            _validate_study_map_contract(
+                root, repo, unit, data, ctx.operation,
+            )
+        merged_data, replacement_diff, replacement_problems, required_decisions = _plan_map_replacement(
             root, current_data, data,
             reorder_reason=reorder_reason,
             reset_reason=reset_reason,
@@ -456,38 +526,21 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             retire_reason=retire_reason,
         )
         diff.update(replacement_diff)
-        if problems:
-            message = ("study map replacement preflight failed; "
-                       "no canonical files were written")
-            extra = tuple(f"- {problem}" for problem in problems)
-            raise WriteRefused(
-                message,
-                site=f"{ctx.operation}.preflight-failed",
-                extra_stderr=extra,
-                gateway_message="los: " + message + "".join(f"\n{line}" for line in extra),
-                exit_code=1,
+        if not allow_preflight_problems and replacement_problems:
+            return _PreparedUnitMapImport(
+                data=merged_data,
+                map_bytes=map_bytes,
+                diff=diff,
+                writes={},
+                proposal=None,
+                replacement_problems=replacement_problems,
+                required_decisions=required_decisions,
+                structural=structural,
+                structural_reason=edit.get("reason") if structural else None,
             )
+        data = merged_data
+    effective = _validate_study_map_contract(root, repo, unit, data, ctx.operation)
 
-    try:
-        require_current_template(data, "curriculum")
-        validate_contract(
-            root,
-            "study-map.schema.json",
-            data,
-            label="curriculum plan template v1",
-        )
-        effective = expand_map(data, repo.module_source_maps.get(unit.module_id, {}),
-                               unit.module_id, unit.id)
-        if effective != data:
-            validate_contract(root, "study-map.schema.json", effective)
-    except (PlanTemplateError, ContractValidationError, MaterialReferenceError) as exc:
-        message = f"study map creation contract failed: {exc}"
-        raise WriteRefused(
-            message,
-            site=f"{ctx.operation}.contract-failed",
-            prefixed=True,
-            exit_code=2,
-        ) from exc
     unit_data = dict(unit.data)
     unit_data["current_study_map"] = data.get("id")
     # A first map makes the unit ready to start. A revision must not
@@ -548,12 +601,109 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         artifact_ids=[req["unit_id"], str(data.get("id") or f"study-map:{req['unit_id']}")],
         validate_extra=validate_extra,
     )
-    if check_only:
+    return _PreparedUnitMapImport(
+        data=data,
+        map_bytes=map_bytes,
+        diff=diff,
+        writes=writes,
+        proposal=proposal,
+        replacement_problems=replacement_problems,
+        required_decisions=required_decisions,
+        structural=structural,
+        structural_reason=edit.get("reason") if structural else None,
+    )
+
+
+@register("unit.map.import.preview", kind="query", effects=OperationEffects.READ)
+def unit_map_import_preview(ctx: OpContext, req: dict) -> Result:
+    """Preview a unit study map import and report required override decisions."""
+    try:
+        _source, map_bytes = _read_content_bound_file(
+            req["file"],
+            req.get("file_sha256"),
+            label="study-map file",
+        )
+    except WriteRefused as exc:
+        exc.site = f"{ctx.operation}.bad-file"
+        exc.gateway_message = f"los: {exc}"
+        exc.exit_code = 2
+        raise
+    prepared = _prepare_unit_map_import(
+        ctx, req, map_bytes, allow_preflight_problems=True,
+    )
+    assert prepared.proposal is not None
+    checked = check_proposal(ctx, prepared.proposal)
+    problems = [*prepared.replacement_problems, *checked["errors"]]
+    return Result({
+        "ok": True,
+        "mode": "preview",
+        "can_apply": not problems,
+        "unit_id": req["unit_id"],
+        "study_map_id": prepared.data.get("id"),
+        "files_checked": len(prepared.writes),
+        "canonical_files_written": 0,
+        "file_sha256": "sha256:" + hashlib.sha256(prepared.map_bytes).hexdigest(),
+        "snapshot_id": ctx.snapshot_id(),
+        "expected_revisions": {
+            key: artifact_revision(ctx.root, key)
+            for key in [req["unit_id"], str(prepared.data["id"])]
+        },
+        "problems": problems,
+        "required_decisions": prepared.required_decisions,
+        "diff": prepared.diff,
+    })
+
+
+@register("unit.map.import", kind="command", effects=OperationEffects.CANONICAL_WRITE)
+def unit_map_import(ctx: OpContext, req: dict) -> Result:
+    """Create, or revise under preservation rules, the one current study map.
+
+    A first import writes the reviewed draft as given. A ``--replace`` revision
+    is a *merge*: the plan content comes from the draft, and the learner's
+    recorded work — stage lifecycle, notes, attachments, source feedback, open
+    detours, the resume pointer and the shelving packet — is carried forward
+    from the map being replaced. Reordering surviving stages, resetting that
+    state, and dropping a stage each require their own reviewed declaration,
+    so an authorized request can no longer discard operational intent by
+    accident. ``--check`` prints the concrete diff and writes nothing.
+    """
+    root = ctx.root
+    try:
+        _source, map_bytes = _read_content_bound_file(
+            req["file"],
+            req.get("file_sha256"),
+            label="study-map file",
+        )
+    except WriteRefused as exc:
+        exc.site = f"{ctx.operation}.bad-file"
+        exc.gateway_message = f"los: {exc}"
+        exc.exit_code = 2
+        raise
+    prepared = _prepare_unit_map_import(
+        ctx, req, map_bytes, allow_preflight_problems=False,
+    )
+    if prepared.replacement_problems:
+        message = ("study map replacement preflight failed; "
+                   "no canonical files were written")
+        extra = tuple(f"- {problem}" for problem in prepared.replacement_problems)
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.preflight-failed",
+            extra_stderr=extra,
+            gateway_message="los: " + message + "".join(f"\n{line}" for line in extra),
+            exit_code=1,
+        )
+    data = prepared.data
+    diff = prepared.diff
+    writes = prepared.writes
+    proposal = prepared.proposal
+    assert proposal is not None
+    if req.get("check") is True:
         # This validates only a disposable shadow, never canonical files.
         checked = check_proposal(ctx, proposal)
         if checked["errors"]:
             problems = "; ".join(checked["errors"])
-            if structural:
+            if prepared.structural:
                 if "RUNTIME-REVIEW-STALE" in problems:
                     problems += ("; a new row changes what this stage's runtime review covered: "
                                  "re-review the stage, then add runtime_review with reviewed_by "
@@ -575,7 +725,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
              "study_map_id": data.get("id"),
              "files_checked": len(writes),
              "canonical_files_written": 0,
-             "file_sha256": "sha256:" + hashlib.sha256(map_bytes).hexdigest(),
+             "file_sha256": "sha256:" + hashlib.sha256(prepared.map_bytes).hexdigest(),
              "snapshot_id": ctx.snapshot_id(),
              "expected_revisions": {
                  key: artifact_revision(root, key)

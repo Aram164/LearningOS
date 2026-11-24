@@ -506,6 +506,8 @@ SUPPORTED_OWNER_ROWS: dict[tuple[str, str], tuple[str, str]] = {
         ("ai-request-store", "scalar"),
     ("ai-action.delivery.validate", "/properties/delivery_id"):
         ("ai-delivery-store", "scalar"),
+    ("ai-action.delivery.preview", "/properties/delivery_id"):
+        ("ai-delivery-store", "scalar"),
     ("ai-action.prepare", "/properties/action_id"):
         ("ai-action-registry", "scalar"),
     ("ai-action.prepare", "/properties/target_id"):
@@ -699,7 +701,7 @@ def test_owner_table_matches_the_inventory_exactly():
     rows = yaml.safe_load(
         (ROOT / "tests/architecture/id-fields.yaml").read_text(
             encoding="utf-8"))["fields"]
-    assert len(SUPPORTED_OWNER_ROWS) == 12
+    assert len(SUPPORTED_OWNER_ROWS) == 13
     tabled = set(SUPPORTED_OWNER_ROWS)
     inventory = {}
     for row in rows:

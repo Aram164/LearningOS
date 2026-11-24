@@ -1,0 +1,192 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"mode\":\"preview\",\"can_apply\":false,\"unit_id\":\"unit-demo-l01\",\"study_map_id\":\"study-map-demo-l01\",\"files_checked\":2,\"canonical_files_written\":0,\"file_sha256\":\"sha256:41bc18e6a98404dc1bd7bee1540f94e9b5125581ec52e7f1781c07585f8ded6d\",\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"unit-demo-l01\":3,\"study-map-demo-l01\":0},\"problems\":[\"this revision removes existing stages and their recorded evidence: stage-demo-pending — declare each with --retire-stage and give --retire-reason\"],\"required_decisions\":{\"reorder_required\":false,\"state_reset_required\":false,\"state_reset_optional\":true,\"missing_retire_stages\":[\"stage-demo-pending\"],\"retire_reason_required\":true},\"diff\":{\"replacement\":true,\"stages_before\":[\"stage-demo\",\"stage-demo-pending\"],\"stages_after\":[\"stage-demo\"],\"stages_added\":[],\"stages_retired\":[\"stage-demo-pending\"],\"relative_order_changed\":false,\"intentional_reorder_reason\":null,\"state_reset_reason\":null,\"retire_reason\":null,\"preserved_stage_state\":[\"stage-demo\"],\"map_state_fields_preserved\":[],\"resume_stage\":\"stage-demo\",\"retired_stage_evidence\":[{\"stage_id\":\"stage-demo-pending\",\"status\":\"pending\",\"note_characters\":0,\"attachments\":0,\"source_feedback\":0,\"completed\":null}],\"unit_status\":\"active\",\"resource_changes\":[{\"stage_id\":\"stage-demo\",\"before_count\":4,\"after_count\":3,\"added\":[],\"removed\":[{\"id\":\"resource-demo-route-mirror\",\"kind\":\"read\",\"label\":\"Demo book — expected-value derivation\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-01.pdf\",\"angle\":\"Derives the weighted sum and works a discrete example.\"}],\"reordered\":false}],\"content_changes\":[{\"stage_id\":\"stage-demo\",\"field\":\"concepts\",\"before\":null,\"after\":[]},{\"stage_id\":\"stage-demo\",\"field\":\"exam_critical\",\"before\":null,\"after\":false},{\"stage_id\":\"stage-demo\",\"field\":\"number\",\"before\":null,\"after\":1},{\"stage_id\":\"stage-demo\",\"field\":\"resources\",\"before\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"},{\"id\":\"resource-demo-route-mirror\",\"kind\":\"read\",\"label\":\"Demo book — expected-value derivation\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-01.pdf\",\"angle\":\"Derives the weighted sum and works a discrete example.\"}],\"after\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"}]},{\"stage_id\":\"stage-demo\",\"field\":\"runtime_target\",\"before\":{\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"]},\"after\":null}],\"map_changes\":[{\"field\":\"plan_template_version\",\"before\":null,\"after\":1}]}}\n",
+  "stdout_json": {
+    "can_apply": false,
+    "canonical_files_written": 0,
+    "diff": {
+      "content_changes": [
+        {
+          "after": [],
+          "before": null,
+          "field": "concepts",
+          "stage_id": "stage-demo"
+        },
+        {
+          "after": false,
+          "before": null,
+          "field": "exam_critical",
+          "stage_id": "stage-demo"
+        },
+        {
+          "after": 1,
+          "before": null,
+          "field": "number",
+          "stage_id": "stage-demo"
+        },
+        {
+          "after": [
+            {
+              "id": "resource-demo-book-ch01",
+              "kind": "read",
+              "label": "Demo Book §1",
+              "locator": "§1",
+              "source_id": "source-demo-book"
+            },
+            {
+              "id": "resource-demo-book-appendix",
+              "kind": "read",
+              "label": "Demo Book Appendix",
+              "locator": "Appendix A",
+              "source_id": "source-demo-book"
+            },
+            {
+              "kind": "watch",
+              "label": "Demo companion video",
+              "source_id": "source-demo-book"
+            }
+          ],
+          "before": [
+            {
+              "id": "resource-demo-book-ch01",
+              "kind": "read",
+              "label": "Demo Book §1",
+              "locator": "§1",
+              "source_id": "source-demo-book"
+            },
+            {
+              "id": "resource-demo-book-appendix",
+              "kind": "read",
+              "label": "Demo Book Appendix",
+              "locator": "Appendix A",
+              "source_id": "source-demo-book"
+            },
+            {
+              "kind": "watch",
+              "label": "Demo companion video",
+              "source_id": "source-demo-book"
+            },
+            {
+              "angle": "Derives the weighted sum and works a discrete example.",
+              "id": "resource-demo-route-mirror",
+              "kind": "read",
+              "label": "Demo book — expected-value derivation",
+              "locator": "lecture-01.pdf",
+              "source_id": "source-demo-book"
+            }
+          ],
+          "field": "resources",
+          "stage_id": "stage-demo"
+        },
+        {
+          "after": null,
+          "before": {
+            "capability": {
+              "kind": "explain",
+              "operands": [
+                "expectation"
+              ]
+            },
+            "concept": "knowledge-demo-expectation",
+            "conditions": [
+              "unfamiliar-example"
+            ],
+            "evidence_spec": [
+              "explain-reason"
+            ]
+          },
+          "field": "runtime_target",
+          "stage_id": "stage-demo"
+        }
+      ],
+      "intentional_reorder_reason": null,
+      "map_changes": [
+        {
+          "after": 1,
+          "before": null,
+          "field": "plan_template_version"
+        }
+      ],
+      "map_state_fields_preserved": [],
+      "preserved_stage_state": [
+        "stage-demo"
+      ],
+      "relative_order_changed": false,
+      "replacement": true,
+      "resource_changes": [
+        {
+          "added": [],
+          "after_count": 3,
+          "before_count": 4,
+          "removed": [
+            {
+              "angle": "Derives the weighted sum and works a discrete example.",
+              "id": "resource-demo-route-mirror",
+              "kind": "read",
+              "label": "Demo book — expected-value derivation",
+              "locator": "lecture-01.pdf",
+              "source_id": "source-demo-book"
+            }
+          ],
+          "reordered": false,
+          "stage_id": "stage-demo"
+        }
+      ],
+      "resume_stage": "stage-demo",
+      "retire_reason": null,
+      "retired_stage_evidence": [
+        {
+          "attachments": 0,
+          "completed": null,
+          "note_characters": 0,
+          "source_feedback": 0,
+          "stage_id": "stage-demo-pending",
+          "status": "pending"
+        }
+      ],
+      "stages_added": [],
+      "stages_after": [
+        "stage-demo"
+      ],
+      "stages_before": [
+        "stage-demo",
+        "stage-demo-pending"
+      ],
+      "stages_retired": [
+        "stage-demo-pending"
+      ],
+      "state_reset_reason": null,
+      "unit_status": "active"
+    },
+    "expected_revisions": {
+      "study-map-demo-l01": 0,
+      "unit-demo-l01": 3
+    },
+    "file_sha256": "sha256:41bc18e6a98404dc1bd7bee1540f94e9b5125581ec52e7f1781c07585f8ded6d",
+    "files_checked": 2,
+    "mode": "preview",
+    "ok": true,
+    "problems": [
+      "this revision removes existing stages and their recorded evidence: stage-demo-pending — declare each with --retire-stage and give --retire-reason"
+    ],
+    "required_decisions": {
+      "missing_retire_stages": [
+        "stage-demo-pending"
+      ],
+      "reorder_required": false,
+      "retire_reason_required": true,
+      "state_reset_optional": true,
+      "state_reset_required": false
+    },
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
+    "study_map_id": "study-map-demo-l01",
+    "unit_id": "unit-demo-l01"
+  }
+}

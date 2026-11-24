@@ -65,7 +65,13 @@
       "$ref": "#/$defs/AiActionStatusV1"
     },
     {
+      "$ref": "#/$defs/AiActionDeliveryPreviewV1"
+    },
+    {
       "$ref": "#/$defs/UnitMapImportCheckV1"
+    },
+    {
+      "$ref": "#/$defs/UnitMapImportPreviewV1"
     }
   ],
   "$defs": {
@@ -2027,6 +2033,88 @@
         "expected_revisions": {
           "type": "object",
           "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "diff": {"$ref": "#/$defs/UnitMapImportCheckDiffWire"}
+      }
+    },
+    "AiActionDeliveryPreviewV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "delivery_id",
+        "request_id",
+        "delivery_sha256",
+        "artifact_sha256",
+        "expected_snapshot",
+        "expected_revisions"
+      ],
+      "properties": {
+        "ok": {"const": true},
+        "delivery_id": {"type": "string", "pattern": "\\S"},
+        "request_id": {"type": "string", "pattern": "\\S"},
+        "delivery_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "artifact_sha256": {
+          "type": "object",
+          "additionalProperties": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+        },
+        "expected_snapshot": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "expected_revisions": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "UnitMapImportPreviewV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "mode",
+        "can_apply",
+        "unit_id",
+        "study_map_id",
+        "files_checked",
+        "canonical_files_written",
+        "file_sha256",
+        "snapshot_id",
+        "expected_revisions",
+        "problems",
+        "required_decisions",
+        "diff"
+      ],
+      "properties": {
+        "ok": {"const": true},
+        "mode": {"const": "preview"},
+        "can_apply": {"type": "boolean"},
+        "unit_id": {"type": "string", "pattern": "\\S"},
+        "study_map_id": {"type": ["string", "null"]},
+        "files_checked": {"type": "integer", "minimum": 0},
+        "canonical_files_written": {"const": 0},
+        "file_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "expected_revisions": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "problems": {"type": "array", "items": {"type": "string"}},
+        "required_decisions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reorder_required",
+            "state_reset_required",
+            "state_reset_optional",
+            "missing_retire_stages",
+            "retire_reason_required"
+          ],
+          "properties": {
+            "reorder_required": {"type": "boolean"},
+            "state_reset_required": {"type": "boolean"},
+            "state_reset_optional": {"type": "boolean"},
+            "missing_retire_stages": {"type": "array", "items": {"type": "string"}},
+            "retire_reason_required": {"type": "boolean"}
+          }
         },
         "diff": {"$ref": "#/$defs/UnitMapImportCheckDiffWire"}
       }

@@ -283,11 +283,15 @@ def project_module_source_maps(repo: Repo, revision: Revision) -> list[dict]:
                 for route in entry.get("unit_routes", []) or []
             ]
             projected_sources.append(projected_entry)
-        records.append({
+        projected_record = {
             "id": source_map_id,
+            "module_id": mid,
             **{k: v for k, v in source_map.items() if k != "sources"},
             "sources": projected_sources,
             "revision": revision(source_map_id, source_map),
             "path": str(repo.module_source_map_origins[mid].relative_to(repo.root)),
-        })
+        }
+        if not isinstance(projected_record.get("module_id"), str) or not projected_record["module_id"].strip():
+            projected_record["module_id"] = mid
+        records.append(projected_record)
     return records

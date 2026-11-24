@@ -416,6 +416,10 @@
     "cli_command": "ability-context",
     "handler": "ability_context"
    },
+   "ai-action.delivery.preview": {
+    "cli_command": "ai-action-apply-preview",
+    "handler": "ai_action_apply_preview"
+   },
    "atlas.context": {
     "cli_command": null,
     "handler": "atlas_context"
@@ -503,6 +507,10 @@
    "study.sequence": {
     "cli_command": "study-sequence",
     "handler": "study_sequence"
+   },
+   "unit.map.import.preview": {
+    "cli_command": "unit-map-import-preview",
+    "handler": "unit_map_import_preview"
    }
   }
  },
@@ -1230,6 +1238,46 @@
      "--expected-snapshot"
     ],
     "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ai-action-apply-preview": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "delivery_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
     "type": null
    },
    {
@@ -8968,6 +9016,137 @@
     "type": null
    }
   ],
+  "unit-map-import-preview": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "intentional_reorder",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--intentional-reorder"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "intentional_state_reset",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--intentional-state-reset"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replace",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replace"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "retire_reason",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--retire-reason"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "retire_stage",
+    "metavar": "STAGE_ID",
+    "nargs": null,
+    "option_strings": [
+     "--retire-stage"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "unit-material-synthesis-publish": [
    {
     "action": "store",
@@ -9706,6 +9885,7 @@
   "ai-action.append-slices.schema.json": "84efed13c9d2e41bd53b25de7d0c72c7a035e94dedfb59667386c188426cb0c5",
   "ai-action.delivery.apply.schema.json": "47a8e09bd766ca37cc1fe07727bc58839265ad97c8902ca1ee49ce3936c5c2e2",
   "ai-action.delivery.import.schema.json": "926bea2b93f2cdc4fa2d28768da9d7929422ea0fbf9a39b524b9670255e18565",
+  "ai-action.delivery.preview.schema.json": "8593cd5214b8f9c4d7ec22490bcbef59adca5da82693b4862bb7a590931810c2",
   "ai-action.delivery.validate.schema.json": "ea6fc0fbe53f5d8fccc4c6a668d46638e9b83ba4ddd193f650e6e70eb20795a6",
   "ai-action.list.schema.json": "437deb2672d1b197430a84df0a4c6f271465bb2cf0c82be13c21fbfb1fe64560",
   "ai-action.prepare.schema.json": "a1e26f8561bb1e6e31638e00747ab6d55da98b4b37d686a06d8a9ed36e4d134b",
@@ -9790,6 +9970,7 @@
   "status.read.schema.json": "3583d0fb76db5a39f2c7818a9844eb5b8ac1471ad409788db38fb4e6590d3ff2",
   "study.sequence.schema.json": "0b704bc9aff10f2f2d2453208d96f780bd62d7eeeca157675140cc5566443a05",
   "unit.list.schema.json": "28ed9af83321e0b9e995e9964b7bafeb83dd173fd54dac9b6cbfee6268745478",
+  "unit.map.import.preview.schema.json": "a5283542913d5b117697e453614bae20403c456c4bcac051238ad5a359b039b1",
   "unit.map.import.schema.json": "3420133d42337c0de70c49e5a0a67fe94623b1ae214fd050147d9adaf1a9a697",
   "unit.material-synthesis.publish.schema.json": "7a48b189959f817278122775987799e65751f6f39b120351d1017000ab01a247",
   "unit.note.append.schema.json": "2af772166fcb0b33744c84b4e24cbb5890115dcfa89a7f0c10f868d54034fc52",

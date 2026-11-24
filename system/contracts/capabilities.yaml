@@ -226,6 +226,26 @@ queries:
     - requires an explicit planning access gesture
     - reads only the sanitized catalog and approved comparisons
     - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
+  ai-action.delivery.preview:
+    handler: ai_action_apply_preview
+    cli_command: ai-action-apply-preview
+    kind: query
+    result: ai-action-delivery-preview-v1
+    schema: system/schema/ui-responses.schema.json
+    invariants:
+    - read-only; writes zero repository, delivery, or receipt bytes
+    - measures exact imported delivery and artifact SHA-256 digests and validates target preconditions without applying
+    - returns expected_snapshot and exact expected_revisions covering created, updated, and superseded artifacts
+  unit.map.import.preview:
+    handler: unit_map_import_preview
+    cli_command: unit-map-import-preview
+    kind: query
+    result: unit-map-import-preview-v1
+    schema: system/schema/ui-responses.schema.json
+    invariants:
+    - read-only; writes zero canonical repository files
+    - reports replacement problems, shadow validation errors, required override decisions, expected_revisions, and diff without aborting replacement discovery
+    - unit.map.import --check and apply remain fail-closed when preflight or shadow checks fail
 commands:
   ability.candidate.append:
     handler: ability_candidate_append

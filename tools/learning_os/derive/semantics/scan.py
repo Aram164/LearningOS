@@ -275,10 +275,14 @@ def collect_observations(root: Path | str, *,
         module_id = str(getattr(unit, "module_id", "") or "")
         if module_id:
             unit_counts[module_id] = unit_counts.get(module_id, 0) + 1
+        unit_data = getattr(unit, "data", None)
+        unit_status = unit_data.get("status") if isinstance(unit_data, dict) else None
+        raw_module_status = module.get("status") if isinstance(module, dict) else None
         if needs_study_map(
-            unit_status=getattr(unit, "data", {}).get("status"),
-            module_status=module.get("status")
-            if isinstance(module, dict) else None,
+            unit_status=unit_status if isinstance(unit_status, str) else None,
+            module_status=(
+                raw_module_status if isinstance(raw_module_status, str) else None
+            ),
             has_study_map=unit_id in study_map_units,
         ):
             obligations.append(unit_id)
@@ -296,9 +300,11 @@ def collect_observations(root: Path | str, *,
                 owner_path = str(Path(origin).relative_to(repo.root).as_posix())
             except (OSError, ValueError):
                 owner_path = None
+        raw_kind = module.get("kind", "academic")
+        raw_status = module.get("status")
         if needs_scope(
-            module_kind=module.get("kind", "academic"),
-            module_status=module.get("status"),
+            module_kind=raw_kind if isinstance(raw_kind, str) else None,
+            module_status=raw_status if isinstance(raw_status, str) else None,
             unit_count=unit_counts.get(module_id, 0),
             owned=module_record_is_owned(owner_path),
         ):

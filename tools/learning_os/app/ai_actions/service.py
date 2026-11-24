@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, cast
@@ -57,7 +58,11 @@ from learning_os.domain.failures import (
     TransactionSnapshotConflict,
 )
 from learning_os.store import observations
-from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
+from learning_os.store.ai_actions.binding import (
+    read_bound_delivery,
+    read_delivery_for_preview,
+    validated_sha256,
+)
 from learning_os.store.ai_actions.registry import ActionRegistry, AdapterRegistry
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 from learning_os.store.ai_actions.storage import atomic_text as _atomic_text
@@ -85,6 +90,7 @@ from learning_os.store.contracts.gateway import (
 from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.store.evidence import replay_for_request
+from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.materials.slices import (
     MAX_SLICE_BYTES_TOTAL,
@@ -99,10 +105,28 @@ from learning_os.store.materials.slices import (
     slice_index_entry,
 )
 from learning_os.store.revisions import artifact_revision
+from learning_os.store.transactions import transaction_artifacts
+
 
 #: Bundle name for the unit-scoped source-map read view. Deliberately not
 #: the canonical filename: the view is a filtered projection for one unit,
 #: never the module file.
+@dataclass(frozen=True)
+class _PlannedDeliveryApplication:
+    """Side-effect-free staging plan shared by delivery preview and apply."""
+
+    delivery_id: str
+    request: AIActionRequest
+    target: GardenTarget
+    staged: dict[Path, tuple[str, str]]
+    created_ids: list[str]
+    updated_ids: list[str]
+    superseded_ids: list[str]
+    artifact_ids: list[str]
+    request_path: Path
+    touched_base: list[Path]
+
+
 UNIT_SOURCE_MAP_VIEW_PATH = "attachments/unit-source-map.yaml"
 
 
@@ -756,62 +780,19 @@ class AIActionService:
                 raise DeliveryValidationError("original artifact changed after request preparation")
         return target
 
-    def apply_delivery_proposal(
+    def _plan_delivery_application(
         self,
         delivery_id: str,
+        delivery: DeliveryRecord,
+        bound_artifacts: dict[str, bytes],
+        directory: Path,
         *,
-        delivery_sha256: str,
-        artifact_sha256: dict[str, Any],
-        expected_snapshot: str,
-        expected_revisions: dict[str, int],
-    ) -> tuple[TransactionProposal | None, ApplyDeliveryResult | None, list[Path]]:
-        """The approved-delivery application up to its commit (SPEC §12 R5, (be)).
-
-        Returns ``(proposal, None, touched_base)``: the proposal carries every
-        argument the commit call took, with this service's except chain as
-        ``translate``, and ``touched_base`` the staged and request paths the
-        command records after a successful commit. A request that already
-        committed returns ``(None, replay_result, [])`` without a proposal.
-        """
-        authority = current_gateway_request()
-        if authority is None or authority.capability != "ai-action.delivery.apply" \
-                or authority.approval_kind != "approved-delivery":
-            raise DeliveryValidationError(
-                "approved delivery application requires GatewayEnvelopeV2 "
-                "approved-delivery authority"
-            )
-        directory = self.repository.delivery_dir(delivery_id)
-        delivery, bound_artifacts = self._bound_delivery_content(
-            directory,
-            delivery_sha256=delivery_sha256,
-            artifact_sha256=artifact_sha256,
-        )
-        if delivery.get("id") != delivery_id:
-            raise DeliveryBindingError(
-                "approved delivery id does not match its imported directory"
-            )
-        try:
-            replay = replay_for_request(self.root, authority)
-        except TransactionIdempotencyConflict as exc:
-            raise DeliveryIdempotencyConflict(f"delivery idempotency conflict: {exc}") from exc
-        except TransactionFailure as exc:
-            raise DeliveryValidationError(f"delivery replay failed: {exc}") from exc
-        if replay is not None:
-            return None, self._apply_result(replay, touched_paths=[]), []
-
-        expected_snapshot = validated_sha256(
-            expected_snapshot, label="expected_snapshot"
-        )
-        if not gateway_snapshot_is_verified(self.root, expected_snapshot):
-            actual_snapshot = _snapshot(self.root)
-            if expected_snapshot != actual_snapshot:
-                raise StaleDeliveryError(
-                    "approved delivery snapshot conflict "
-                    f"(expected {expected_snapshot}, actual {actual_snapshot})"
-                )
-        # Validation already read the delivery, the request and the target; reuse
-        # them rather than parsing the same three files a second time.
-        repo = load_repo(self.root)
+        repo: Any = None,
+        authority: Any = None,
+    ) -> _PlannedDeliveryApplication:
+        """Compute exact writes and artifact ids without writing any bytes."""
+        if repo is None:
+            repo = load_repo(self.root)
         outcome = self._validate(delivery, directory, repo=repo)
         request = outcome.request
         target = outcome.target
@@ -948,8 +929,14 @@ class AIActionService:
                     )
                 content = _dump_yaml(synthesis)
                 staged[destination] = (content, capability)
-                staged[self.root / LEDGER_RELATIVE] = (
-                    publication_lineage(self.root, target_id, synthesis, content, authority, repo=repo), capability)
+                ledger_content = (
+                    publication_lineage(
+                        self.root, target_id, synthesis, content, authority, repo=repo
+                    )
+                    if authority is not None
+                    else ""
+                )
+                staged[self.root / LEDGER_RELATIVE] = (ledger_content, capability)
                 (updated_ids if destination.is_file() else created_ids).append(synthesis["id"])
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")
@@ -983,6 +970,123 @@ class AIActionService:
             self._assert_in_scope(capability, path, scopes)
 
         request_path = self.repository.request_path(str(request["id"]))
+        artifact_ids = transaction_artifacts(
+            self.root,
+            {*created_ids, *updated_ids, *superseded_ids},
+            staged,
+        )
+        return _PlannedDeliveryApplication(
+            delivery_id=delivery_id,
+            request=request,
+            target=target,
+            staged=staged,
+            created_ids=created_ids,
+            updated_ids=updated_ids,
+            superseded_ids=superseded_ids,
+            artifact_ids=artifact_ids,
+            request_path=request_path,
+            touched_base=[*staged, request_path],
+        )
+
+    def preview_delivery(self, delivery_id: str) -> dict[str, Any]:
+        """Measure digests, snapshot, and exact artifact revisions without writing."""
+        directory = self.repository.delivery_dir(delivery_id)
+        delivery_file = directory / "delivery.yaml"
+        if not delivery_file.exists() and not delivery_file.is_symlink():
+            self.repository.get_delivery(delivery_id)
+        delivery, bound_artifacts, delivery_sha256, artifact_sha256 = (
+            read_delivery_for_preview(directory)
+        )
+        if delivery.get("id") != delivery_id:
+            raise DeliveryBindingError(
+                "approved delivery id does not match its imported directory"
+            )
+        repo = load_repo(self.root)
+        plan = self._plan_delivery_application(
+            delivery_id,
+            delivery,
+            bound_artifacts,
+            directory,
+            repo=repo,
+            authority=None,
+        )
+        return {
+            "ok": True,
+            "delivery_id": delivery_id,
+            "request_id": plan.request["id"],
+            "delivery_sha256": delivery_sha256,
+            "artifact_sha256": artifact_sha256,
+            "expected_snapshot": f"sha256:{source_fingerprint(repo)}",
+            "expected_revisions": {
+                artifact_id: artifact_revision(self.root, artifact_id)
+                for artifact_id in plan.artifact_ids
+            },
+        }
+
+    def apply_delivery_proposal(
+        self,
+        delivery_id: str,
+        *,
+        delivery_sha256: str,
+        artifact_sha256: dict[str, Any],
+        expected_snapshot: str,
+        expected_revisions: dict[str, int],
+    ) -> tuple[TransactionProposal | None, ApplyDeliveryResult | None, list[Path]]:
+        """The approved-delivery application up to its commit (SPEC §12 R5, (be)).
+
+        Returns ``(proposal, None, touched_base)``: the proposal carries every
+        argument the commit call took, with this service's except chain as
+        ``translate``, and ``touched_base`` the staged and request paths the
+        command records after a successful commit. A request that already
+        committed returns ``(None, replay_result, [])`` without a proposal.
+        """
+        authority = current_gateway_request()
+        if authority is None or authority.capability != "ai-action.delivery.apply" \
+                or authority.approval_kind != "approved-delivery":
+            raise DeliveryValidationError(
+                "approved delivery application requires GatewayEnvelopeV2 "
+                "approved-delivery authority"
+            )
+        directory = self.repository.delivery_dir(delivery_id)
+        delivery, bound_artifacts = self._bound_delivery_content(
+            directory,
+            delivery_sha256=delivery_sha256,
+            artifact_sha256=artifact_sha256,
+        )
+        if delivery.get("id") != delivery_id:
+            raise DeliveryBindingError(
+                "approved delivery id does not match its imported directory"
+            )
+        try:
+            replay = replay_for_request(self.root, authority)
+        except TransactionIdempotencyConflict as exc:
+            raise DeliveryIdempotencyConflict(f"delivery idempotency conflict: {exc}") from exc
+        except TransactionFailure as exc:
+            raise DeliveryValidationError(f"delivery replay failed: {exc}") from exc
+        if replay is not None:
+            return None, self._apply_result(replay, touched_paths=[]), []
+
+        expected_snapshot = validated_sha256(
+            expected_snapshot, label="expected_snapshot"
+        )
+        if not gateway_snapshot_is_verified(self.root, expected_snapshot):
+            actual_snapshot = _snapshot(self.root)
+            if expected_snapshot != actual_snapshot:
+                raise StaleDeliveryError(
+                    "approved delivery snapshot conflict "
+                    f"(expected {expected_snapshot}, actual {actual_snapshot})"
+                )
+        repo = load_repo(self.root)
+        plan = self._plan_delivery_application(
+            delivery_id,
+            delivery,
+            bound_artifacts,
+            directory,
+            repo=repo,
+            authority=authority,
+        )
+        request = plan.request
+        request_path = plan.request_path
         # Re-check the *target*, not the whole repository, immediately before the
         # write window; unrelated concurrent edits are not this delivery's
         # business, a changed target is.
@@ -1000,6 +1104,7 @@ class AIActionService:
             raise DeliveryBindingError(
                 "approved delivery bytes changed while application was being prepared"
             )
+
         def request_write(transaction_id: str) -> dict[Path, str]:
             completed = dict(request)
             completed["status"] = "completed"
@@ -1016,10 +1121,10 @@ class AIActionService:
                     key: artifact_sha256[key] for key in sorted(artifact_sha256)
                 },
             },
-            "created_ids": created_ids,
-            "updated_ids": updated_ids,
+            "created_ids": plan.created_ids,
+            "updated_ids": plan.updated_ids,
             "deleted_ids": [],
-            "superseded_ids": superseded_ids,
+            "superseded_ids": plan.superseded_ids,
             "validation": {
                 "schemas": "passed",
                 "references": "passed",
@@ -1029,8 +1134,8 @@ class AIActionService:
         }
         proposal = TransactionProposal(
             capability="ai-action.delivery.apply",
-            writes={path: content for path, (content, _capability) in staged.items()},
-            artifact_ids={*created_ids, *updated_ids, *superseded_ids},
+            writes={path: content for path, (content, _capability) in plan.staged.items()},
+            artifact_ids=set(plan.artifact_ids),
             deletes=None,
             expected_revisions=expected_revisions,
             touched="STANDARD",
@@ -1040,14 +1145,14 @@ class AIActionService:
             write_authorities={
                 **{
                     path: domain_capability
-                    for path, (_content, domain_capability) in staged.items()
+                    for path, (_content, domain_capability) in plan.staged.items()
                 },
                 request_path: "ai-action.delivery.apply",
             },
             clock=self.clock,
             translate=self._translate_commit_failure,
         )
-        return proposal, None, [*staged, request_path]
+        return proposal, None, plan.touched_base
 
     @staticmethod
     def _translate_commit_failure(exc: BaseException) -> AIActionError | None:

@@ -52,6 +52,13 @@ def _withdrawal_deadline_row(module_id: str, module: dict, sitting: dict,
     }
 
 
+def _safe_int(value: object, *, field: str) -> int:
+    """Coerce an authored integer without accepting bools or containers as TypeError."""
+    if isinstance(value, bool) or not isinstance(value, (int, str)):
+        raise ValueError(f"invalid integer for {field}: {value!r}")
+    return int(value)
+
+
 def academic_deadlines(repo: Repo) -> list[dict]:
     """Project structured exam sittings and registration windows for interfaces.
 
@@ -82,10 +89,10 @@ def academic_deadlines(repo: Repo) -> list[dict]:
             if not start:
                 continue
             end = str(sitting.get("end_date") or start)
-            termin = int(sitting.get("termin", 1))
+            termin = _safe_int(sitting.get("termin", 1), field="sitting.termin")
             matching = [
                 attempt for attempt in attempts
-                if int(attempt.get("termin", 0)) == termin
+                if _safe_int(attempt.get("termin", 0), field="attempt.termin") == termin
                 and start <= str(attempt.get("date", "")) <= end
             ]
             state = "unregistered"
@@ -145,7 +152,7 @@ def academic_deadlines(repo: Repo) -> list[dict]:
     for date, mid, module, attempt in exam_spine(repo):
         if is_retired(module):
             continue
-        key = (mid, int(attempt.get("termin", 1)), date)
+        key = (mid, _safe_int(attempt.get("termin", 1), field="attempt.termin"), date)
         if key in represented_attempts:
             continue
         deadlines.append({

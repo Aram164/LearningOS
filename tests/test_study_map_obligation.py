@@ -14,7 +14,11 @@ working as the curriculum moves.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
+import yaml
 
 from learning_os.derive.projection.projection.records_curriculum import _needs_study_map
 
@@ -93,3 +97,42 @@ def test_the_count_the_badge_and_the_queue_read_one_answer(real_manifest):
     for unit in units.values():
         assert isinstance(unit.get("needs_study_map"), bool)
         assert "status" in unit and "module_id" in unit
+
+
+def test_review_planning_queue_follows_needs_study_map_not_legacy_status(
+    mini_repo: Path,
+):
+    from repo_builders import add_curriculum, write_yaml
+
+    from learning_os.derive.projection import generate_all
+    from learning_os.store.loader import load_repo
+
+    add_curriculum(mini_repo)
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    # Remove study map while unit has status "not-started" (not legacy "needs-map"):
+    # review planning queue must still include it because needs_study_map is True.
+    (unit_path.parent / "study-map.yaml").unlink()
+    unit.pop("current_study_map", None)
+    unit["status"] = "not-started"
+    write_yaml(unit_path, unit)
+
+    manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
+    planning_ids = [
+        item["id"] for item in manifest["review_items"] if item["category"] == "planning"
+    ]
+    assert "review-planning-unit-demo-l01" in planning_ids
+
+    # Conversely, legacy status "needs-map" on a dropped module must NOT enter planning.
+    mod_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(mod_path.read_text(encoding="utf-8"))
+    module["status"] = "dropped"
+    write_yaml(mod_path, module)
+    unit["status"] = "needs-map"
+    write_yaml(unit_path, unit)
+
+    manifest_dropped = json.loads(generate_all(load_repo(mini_repo), "T2")["manifest.json"])
+    assert not [
+        item for item in manifest_dropped["review_items"] if item["category"] == "planning"
+    ]
+

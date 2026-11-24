@@ -1,0 +1,27 @@
+id: study-map-demo-l02
+type: study-map
+plan_template_version: 1
+unit_id: unit-demo-l02
+status: ready
+current_stage: stage-variance
+source_plan:
+  path: work/active/workspace-demo/CONTEXT.md
+  provenance: operator
+detours: []
+stages:
+- id: stage-variance
+  number: 1
+  title: Variance
+  status: pending
+  objective: Build working fluency in Variance.
+  done_when:
+  - Explain and apply Variance without notes.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources: []
+  working_note: curriculum/modules/module-demo/units/unit-demo-l02/stages/stage-variance/notes.md
+  attachments: []
+  source_feedback: []
+shelving:
+  state: none

@@ -1141,6 +1141,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         (None, "unknown-request"),
     ("ai-action.delivery.validate", "/properties/delivery_id"):
         (None, "unknown-delivery"),
+    ("ai-action.delivery.preview", "/properties/delivery_id"):
+        (None, "unknown-delivery"),
     ("ai-action.prepare", "/properties/action_id"):
         (None, "unknown-action"),
     ("ai-action.prepare", "/properties/target_id"):
@@ -1206,6 +1208,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     # SPEC (cq) items 3-6: the repaired lookup anchors.
     ("unit.map.import", "/properties/unit_id"):
         ("unit.map.import.unknown-unit", "unknown-unit"),
+    ("unit.map.import.preview", "/properties/unit_id"):
+        ("unit.map.import.preview.unknown-unit", "unknown-unit"),
     ("unit.material-synthesis.publish", "/properties/unit_id"):
         ("unit.material-synthesis.publish.unknown-unit",
          "unknown-unit-coordinated"),
@@ -1296,6 +1300,8 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("legacy-verbatim", "AI action request not found: {miss}"),
     ("ai-action.delivery.validate", "/properties/delivery_id"):
         ("legacy-verbatim", "AI delivery not found: {miss}"),
+    ("ai-action.delivery.preview", "/properties/delivery_id"):
+        ("legacy-verbatim", "AI delivery not found: {miss}"),
     ("ai-action.prepare", "/properties/action_id"):
         ("legacy-verbatim", "unknown AI action: {miss}"),
     ("ai-action.prepare", "/properties/target_id"):
@@ -1357,6 +1363,7 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
          "(re-read it with `inbox-read note-drop.md` and re-seal)"),
     # SPEC (cq) items 3-6: the repaired lookup complaints.
     ("unit.map.import", "/properties/unit_id"): ("prefixed", "unit"),
+    ("unit.map.import.preview", "/properties/unit_id"): ("template", "unit"),
     ("unit.material-synthesis.publish", "/properties/unit_id"):
         ("legacy-verbatim", "unit not found: {miss}"),
     ("goal.decide", "/properties/goal_id/items"): ("template", "goal"),
@@ -1423,6 +1430,8 @@ _CLI_REFUSED_POINTERS = frozenset({
     ("material.study-span", "/properties/stage_id"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): single-case CLI anchors.
     ("ai-action.status", "/properties/request_id"),
+    ("ai-action.delivery.preview", "/properties/delivery_id"),
+    ("unit.map.import.preview", "/properties/unit_id"),
     ("ai-action.prepare", "/properties/action_id"),
     ("ai-action.prepare", "/properties/target_id"),
     ("operations.read", "/properties/request_id"),

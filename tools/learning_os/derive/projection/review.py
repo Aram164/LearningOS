@@ -165,7 +165,7 @@ def build_review_items(
         units,
         key=lambda row: str(row.get("id", "")),
     ):
-        if unit.get("status") != "needs-map":
+        if not unit.get("needs_study_map"):
             continue
 
         rows.append(

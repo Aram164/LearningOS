@@ -48,6 +48,19 @@ def load_abilities(repo: Repo, root: Path) -> None:
         if ability_id is None:
             repo.parse_failures.append((origin, "ability record with missing or empty id"))
             continue
+        review = record.get("review")
+        if (
+            not isinstance(record.get("title"), str) or not record["title"].strip()
+            or not isinstance(record.get("claim"), str) or not record["claim"].strip()
+            or not isinstance(record.get("conditions"), list)
+            or not isinstance(record.get("evidence_spec"), list)
+            or not isinstance(record.get("concept_ids"), list)
+            or not isinstance(review, dict)
+            or not isinstance(review.get("state"), str)
+        ):
+            repo.parse_failures.append(
+                (origin, f"{origin}: ability record {ability_id} is missing required fields — skipped"))
+            continue
         _register(repo, repo.abilities, ability_id, record, origin, "ability")
         repo.ability_origins.setdefault(ability_id, origin)
     # Candidate edges remain visible but cannot affect readiness or transfer.

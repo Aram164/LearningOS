@@ -24,16 +24,13 @@ def validated_sha256(value: Any, *, label: str) -> str:
     return value
 
 
-def read_bound_delivery(
+def _read_delivery_bundle(
     directory: Path,
     *,
-    delivery_sha256: str,
-    artifact_sha256: dict[str, Any],
-) -> tuple[DeliveryRecord, dict[str, bytes]]:
-    """Read the exact delivery and artifact bytes approved by V2."""
-    expected_delivery = validated_sha256(
-        delivery_sha256, label="delivery_sha256"
-    )
+    expected_delivery: str | None = None,
+    expected_artifacts: dict[str, Any] | None = None,
+) -> tuple[DeliveryRecord, dict[str, bytes], str, dict[str, str]]:
+    """Read a regular-file delivery record and every referenced artifact once."""
     delivery_path = directory / "delivery.yaml"
     if not delivery_path.is_file() or delivery_path.is_symlink():
         raise DeliveryBindingError(
@@ -45,7 +42,8 @@ def read_bound_delivery(
         raise DeliveryBindingError(
             f"approved delivery record is unreadable: {exc}"
         ) from exc
-    if _sha256_bytes(delivery_bytes) != expected_delivery:
+    actual_delivery = _sha256_bytes(delivery_bytes)
+    if expected_delivery is not None and actual_delivery != expected_delivery:
         raise DeliveryBindingError(
             "approved delivery content hash does not match the imported delivery record"
         )
@@ -72,23 +70,29 @@ def read_bound_delivery(
                     "delivery artifact_ref must be a non-empty relative path"
                 )
             refs.add(artifact_ref)
-    if not isinstance(artifact_sha256, dict):
-        raise DeliveryValidationError("artifact_sha256 must be an object")
-    if any(not isinstance(key, str) or not key for key in artifact_sha256):
-        raise DeliveryValidationError(
-            "artifact_sha256 keys must be non-empty artifact_ref strings"
-        )
-    supplied = set(artifact_sha256)
-    if supplied != refs:
-        raise DeliveryBindingError(
-            "approved delivery artifact hashes must bind exactly every artifact_ref "
-            f"(missing={sorted(refs - supplied)}, unexpected={sorted(supplied - refs)})"
-        )
+    if expected_artifacts is not None:
+        if not isinstance(expected_artifacts, dict):
+            raise DeliveryValidationError("artifact_sha256 must be an object")
+        if any(not isinstance(key, str) or not key for key in expected_artifacts):
+            raise DeliveryValidationError(
+                "artifact_sha256 keys must be non-empty artifact_ref strings"
+            )
+        supplied = set(expected_artifacts)
+        if supplied != refs:
+            raise DeliveryBindingError(
+                "approved delivery artifact hashes must bind exactly every artifact_ref "
+                f"(missing={sorted(refs - supplied)}, unexpected={sorted(supplied - refs)})"
+            )
     artifacts: dict[str, bytes] = {}
+    artifact_hashes: dict[str, str] = {}
     for artifact_ref in sorted(refs):
-        expected = validated_sha256(
-            artifact_sha256[artifact_ref],
-            label=f"artifact_sha256[{artifact_ref}]",
+        expected = (
+            validated_sha256(
+                expected_artifacts[artifact_ref],
+                label=f"artifact_sha256[{artifact_ref}]",
+            )
+            if expected_artifacts is not None
+            else None
         )
         artifact = _inside(directory, artifact_ref)
         if not artifact.is_file() or artifact.is_symlink():
@@ -102,10 +106,37 @@ def read_bound_delivery(
             raise DeliveryBindingError(
                 f"approved delivery artifact is unreadable: {artifact_ref}: {exc}"
             ) from exc
-        if _sha256_bytes(content) != expected:
+        actual = _sha256_bytes(content)
+        if expected is not None and actual != expected:
             raise DeliveryBindingError(
                 "approved delivery artifact content hash does not match "
                 f"the imported bytes: {artifact_ref}"
             )
         artifacts[artifact_ref] = content
-    return cast(DeliveryRecord, delivery), artifacts
+        artifact_hashes[artifact_ref] = actual
+    return cast(DeliveryRecord, delivery), artifacts, actual_delivery, artifact_hashes
+
+
+def read_bound_delivery(
+    directory: Path,
+    *,
+    delivery_sha256: str,
+    artifact_sha256: dict[str, Any],
+) -> tuple[DeliveryRecord, dict[str, bytes]]:
+    """Read the exact delivery and artifact bytes approved by V2."""
+    expected_delivery = validated_sha256(
+        delivery_sha256, label="delivery_sha256"
+    )
+    delivery, artifacts, _delivery_sha, _artifact_shas = _read_delivery_bundle(
+        directory,
+        expected_delivery=expected_delivery,
+        expected_artifacts=artifact_sha256,
+    )
+    return delivery, artifacts
+
+
+def read_delivery_for_preview(
+    directory: Path,
+) -> tuple[DeliveryRecord, dict[str, bytes], str, dict[str, str]]:
+    """Read a delivery and measure exact byte digests without pre-bound hashes."""
+    return _read_delivery_bundle(directory)

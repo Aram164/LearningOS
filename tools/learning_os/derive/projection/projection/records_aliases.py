@@ -9,11 +9,16 @@ def project_project_aliases(repo: Repo) -> list[dict[str, str]]:
     types = {**dict.fromkeys(repo.modules, "module"),
              **dict.fromkeys(repo.units, "unit"),
              **dict.fromkeys(repo.workspaces, "workspace")}
-    return [
-        {
-            "id": old_id, "type": "compatibility-alias",
-            "target_id": target_id, "target_type": types[target_id],
+    records: list[dict[str, str]] = []
+    for old_id, target_id in sorted(repo.project_aliases.items()):
+        target_type = types.get(target_id)
+        if target_type is None:
+            continue
+        records.append({
+            "id": old_id,
+            "type": "compatibility-alias",
+            "target_id": target_id,
+            "target_type": target_type,
             "path": "projects/aliases.yaml",
-        }
-        for old_id, target_id in sorted(repo.project_aliases.items())
-    ]
+        })
+    return records

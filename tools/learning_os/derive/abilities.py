@@ -24,7 +24,23 @@ from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts.json_schema import core_format_checker
 
 
+def _has_evidence_definition(ability: dict) -> bool:
+    """Whether an ability carries every field bound by its evidence hash."""
+    return (
+        isinstance(ability, dict)
+        and isinstance(ability.get("id"), str) and bool(ability["id"])
+        and isinstance(ability.get("claim"), str)
+        and isinstance(ability.get("conditions"), list)
+        and isinstance(ability.get("evidence_spec"), list)
+    )
+
+
 def ability_fingerprint(ability: dict) -> str:
+    if not _has_evidence_definition(ability):
+        aid = ability.get("id", "<unknown>") if isinstance(ability, dict) else "<unknown>"
+        raise ValueError(
+            f"ability {aid} is missing required fields (id, claim, conditions, evidence_spec)"
+        )
     # Evidence is bound to what the learner was asked to show. Display labels,
     # review metadata, and preparation routes may change without changing that
     # claim. Condition and criterion order does not change their meaning.
@@ -64,15 +80,20 @@ def validate_ability_registry(repo: Repo) -> list[str]:
     issues: list[str] = []
     known = set(repo.abilities)
     for ability in repo.abilities.values():
-        aid = ability["id"]
+        aid = ability.get("id", "<unknown>") if isinstance(ability, dict) else "<unknown>"
+        if not isinstance(ability, dict) or not _has_evidence_definition(ability) or not isinstance(ability.get("title"), str) or not isinstance(ability.get("concept_ids"), list):
+            issues.append(f"{aid}: incomplete ability definition")
+            continue
         for concept in ability.get("concept_ids", []):
             if concept not in repo.concepts:
                 issues.append(f"{aid}: unknown concept {concept}")
         for module in ability.get("module_ids", []):
             if module not in repo.modules:
                 issues.append(f"{aid}: unknown module {module}")
-        review = ability.get("review", {})
-        if review.get("state") == "reviewed" and not (review.get("reviewed_by") and review.get("reviewed_on")):
+        review = ability.get("review")
+        if not isinstance(review, dict) or not isinstance(review.get("state"), str):
+            issues.append(f"{aid}: ability review metadata must be a mapping with state")
+        elif review.get("state") == "reviewed" and not (review.get("reviewed_by") and review.get("reviewed_on")):
             issues.append(f"{aid}: reviewed ability needs reviewer and date")
         for route in ability.get("preparation_routes", []):
             for prerequisite in route.get("all_of", []):
@@ -86,14 +107,17 @@ def validate_ability_registry(repo: Repo) -> list[str]:
         if left not in known or right not in known or left == right:
             issues.append(f"invalid ability bridge {left} -> {right}")
             continue
-        review = bridge.get("review", {})
-        if review.get("state") == "reviewed" and not (review.get("reviewed_by") and review.get("reviewed_on")):
+        bridge_review = bridge.get("review")
+        if not isinstance(bridge_review, dict):
+            issues.append(f"{left} -> {right}: bridge review metadata must be a mapping")
+            continue
+        if bridge_review.get("state") == "reviewed" and not (bridge_review.get("reviewed_by") and bridge_review.get("reviewed_on")):
             issues.append(f"{left} -> {right}: reviewed bridge needs reviewer and date")
-        if review.get("state") == "reviewed" and not bridge.get("source_sha256"):
+        if bridge_review.get("state") == "reviewed" and not bridge.get("source_sha256"):
             issues.append(f"{left} -> {right}: reviewed bridge needs a source digest")
-        if bridge.get("kind") == "equivalence" and review.get("state") == "reviewed":
-            required = set(repo.abilities[left]["conditions"]) | set(repo.abilities[right]["conditions"])
-            if not required.issubset(bridge.get("conditions", [])):
+        if bridge.get("kind") == "equivalence" and bridge_review.get("state") == "reviewed":
+            required = set(repo.abilities[left].get("conditions") or []) | set(repo.abilities[right].get("conditions") or [])
+            if not required.issubset(bridge.get("conditions") or []):
                 issues.append(f"{left} -> {right}: equivalence omits an ability condition")
     # A preparation cycle would make every ability in it unreachable from
     # direct evidence. Alternatives do not license cycles either.
@@ -248,6 +272,13 @@ def _direct_status(ability: dict, observations: list[dict]
     only. The two lists are parallel: ``reasons[i]`` is explained by
     ``reason_codes[i]``.
     """
+    if not _has_evidence_definition(ability):
+        return (
+            "unmapped",
+            [],
+            ["ability definition is incomplete"],
+            ["incomplete-definition"],
+        )
     history, active, comparable, valid, current_hash, _corrections = _evidence_sets(
         ability, observations)
     tagged: list[tuple[str, str]] = []
@@ -333,8 +364,14 @@ def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
     require returning the entire graph for each state query.
     """
     ability = repo.abilities[focus]
-    history, active, comparable, valid, _current_hash, _corrections = _evidence_sets(
-        ability, observations)
+    if _has_evidence_definition(ability):
+        history, active, comparable, valid, _current_hash, _corrections = _evidence_sets(
+            ability, observations)
+        ability_hash: str | None = ability_fingerprint(ability)
+    else:
+        history = [row for row in observations if row.get("ability_id") == focus]
+        active, comparable, valid = [], [], []
+        ability_hash = None
     latest, conflicts = _latest_and_conflicts(valid, comparable)
     ordered_conflicts = sorted(conflicts, key=timestamp_sort_key)
     conflict_preview = ordered_conflicts[:_BRIEF_LIST_LIMIT]
@@ -374,7 +411,7 @@ def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
         "ability": {**ability,
                     **{key: value for key, value in item.items()
                        if key != "evidence"}},
-        "ability_sha256": ability_fingerprint(ability),
+        **({"ability_sha256": ability_hash} if ability_hash is not None else {}),
         "evidence_summary": {
             "total": len(history),
             "active": len(active),
@@ -443,29 +480,46 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
         building.add(aid)
         ability = repo.abilities[aid]
         retired = ability.get("lifecycle") == "retired"
-        reviewed = ability["review"]["state"] == "reviewed" and not retired
+        review = ability.get("review")
+        review_state = review.get("state") if isinstance(review, dict) else None
+        reviewed = review_state == "reviewed" and not retired
         status, history, reasons, reason_codes = direct[aid]
         if retired:
             status, reasons = "unmapped", ["ability identity retired; historical work retained"]
             reason_codes = ["identity-retired"]
+        elif not _has_evidence_definition(ability):
+            status, reasons = "unmapped", ["ability definition is incomplete"]
+            reason_codes = ["incomplete-definition"]
+        elif review_state is None:
+            status, reasons = "unmapped", ["ability review metadata is missing"]
+            reason_codes = ["missing-review"]
         elif not reviewed:
             status, reasons = "unmapped", ["ability is a tentative candidate"]
             reason_codes = ["tentative-candidate"]
         transfer = []
         if reviewed and status != "supported" and not history:
             for bridge in repo.ability_bridges:
-                if (not isinstance(bridge, dict) or bridge["kind"] != "equivalence"
-                        or bridge["review"]["state"] != "reviewed"
-                        or aid not in (bridge["from"], bridge["to"])):
+                bridge_review = bridge.get("review") if isinstance(bridge, dict) else None
+                bridge_conditions_list = bridge.get("conditions") if isinstance(bridge, dict) else None
+                if (not isinstance(bridge, dict) or bridge.get("kind") != "equivalence"
+                        or not isinstance(bridge_review, dict)
+                        or bridge_review.get("state") != "reviewed"
+                        or not isinstance(bridge_conditions_list, list)
+                        or aid not in (bridge.get("from"), bridge.get("to"))):
                     continue
                 if bridge_freshness[id(bridge)]["status"] != "current":
                     continue
-                other = bridge["to"] if bridge["from"] == aid else bridge["from"]
-                if (other not in direct or repo.abilities[other]["review"]["state"] != "reviewed"
-                        or repo.abilities[other].get("lifecycle") == "retired"):
+                other = bridge["to"] if bridge.get("from") == aid else bridge.get("from")
+                other_ability = repo.abilities.get(other)
+                if not isinstance(other_ability, dict) or not _has_evidence_definition(other_ability):
                     continue
-                bridge_conditions = set(bridge["conditions"])
-                if not (set(ability["conditions"]) | set(repo.abilities[other]["conditions"])) <= bridge_conditions:
+                other_review = other_ability.get("review")
+                if (other not in direct or not isinstance(other_review, dict)
+                        or other_review.get("state") != "reviewed"
+                        or other_ability.get("lifecycle") == "retired"):
+                    continue
+                bridge_conditions = set(bridge_conditions_list)
+                if not (set(ability["conditions"]) | set(other_ability["conditions"])) <= bridge_conditions:
                     continue
                 if direct[other][0] != "supported":
                     continue
@@ -475,12 +529,12 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
                                and row["id"] not in corrections
                                and row["assistance"].strip().lower() == "none"
                                and row["confirmed_by"] == "learner"
-                               and set(repo.abilities[other]["evidence_spec"]).issubset(row["evidence_tags"])
-                               and row["ability_sha256"] == ability_fingerprint(repo.abilities[other])]
-                if any(set(bridge["conditions"]).issubset(row.get("conditions", [])) for row in source_rows):
+                               and set(other_ability["evidence_spec"]).issubset(row["evidence_tags"])
+                               and row["ability_sha256"] == ability_fingerprint(other_ability)]
+                if any(bridge_conditions.issubset(row.get("conditions", [])) for row in source_rows):
                     status = "supported"
-                    transfer.append({"from": other, "source": bridge["source"],
-                                     "carries": bridge["carries"], "changes": bridge["changes"]})
+                    transfer.append({"from": other, "source": bridge.get("source"),
+                                     "carries": bridge.get("carries"), "changes": bridge.get("changes")})
                     reasons = [f"reviewed equivalence from {other}"]
                     reason_codes = ["reviewed-equivalence"]
         routes = []
@@ -496,10 +550,14 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
                 status = "nearby"
                 reasons.append("reviewed preparation route has named remaining work")
                 reason_codes.append("named-remaining-work")
-        result = {"id": aid, "title": ability["title"], "state": status,
+        concept_ids = ability.get("concept_ids")
+        safe_concepts = concept_ids if isinstance(concept_ids, list) else []
+        title = ability.get("title")
+        safe_title = title if isinstance(title, str) and title.strip() else aid
+        result = {"id": aid, "title": safe_title, "state": status,
                   "lifecycle": ability.get("lifecycle", "active"),
                   "reasons": reasons, "reason_codes": reason_codes,
-                  "concept_ids": ability["concept_ids"],
+                  "concept_ids": safe_concepts,
                   "module_ids": ability.get("module_ids", []), "preparation_routes": routes,
                   "transfer": transfer,
                   "evidence": history if focus == aid else [{"id": row["id"], "result": row["result"],
@@ -567,9 +625,10 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
                         "route_total": len(route_ids),
                         "routes_truncated": len(route_ids) > 12,
                     })
+        focus_concepts = set(repo.abilities[focus].get("concept_ids") or [])
         shared_tags = sorted(other_id for other_id, other in repo.abilities.items()
                              if other_id != focus and
-                             set(other["concept_ids"]) & set(repo.abilities[focus]["concept_ids"]))
+                             set(other.get("concept_ids") or []) & focus_concepts)
         if brief:
             return _focused_brief(
                 repo, focus, item, observations, encounters,

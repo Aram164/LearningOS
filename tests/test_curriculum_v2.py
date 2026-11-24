@@ -2774,6 +2774,9 @@ def test_review_queue_projects_needs_map_as_planning_decision(mini_repo):
     unit["status"] = "needs-map"
     unit.pop("current_study_map", None)
     write_yaml(path, unit)
+    study_map_path = path.parent / "study-map.yaml"
+    if study_map_path.exists():
+        study_map_path.unlink()
 
     manifest = json.loads(
         generate_all(
@@ -2829,3 +2832,184 @@ def test_overnight_attachment_without_working_note_is_a_clear_refusal(mini_repo,
     ctx = SimpleNamespace(root=mini_repo, operation="stage.attachment.add", repo=lambda: repo, require_snapshot=lambda _: None)
     with pytest.raises(WriteRefused, match="no working_note"):
         stage_attach(ctx, {"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "file": str(file)})
+
+
+def test_unit_map_import_preview_reports_reorder_retire_and_reset_before_check(
+    mini_repo: Path, tmp_path: Path,
+):
+    from scenario_fixtures import rich_world
+
+    rich_world(mini_repo)
+    map_path = (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    )
+    current = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    stage1 = copy.deepcopy(current["stages"][0])
+    stage2 = copy.deepcopy(current["stages"][1])
+    stage3 = copy.deepcopy(stage2)
+    stage3["id"] = "stage-retired"
+    stage3["number"] = 3
+    stage3["working_note"] = (
+        "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-retired/notes.md"
+    )
+    current["stages"] = [stage1, stage2, stage3]
+    current["status"] = "active"
+    current["current_stage"] = stage1["id"]
+    current["detours"] = [{
+        "id": "detour-retired",
+        "title": "Old detour",
+        "spawned_by_stage": "stage-retired",
+        "classification": "helpful-now",
+        "status": "open",
+        "return_to_stage": stage1["id"],
+    }]
+    write_yaml(map_path, current)
+
+    # Reorder surviving stages (stage-demo-pending before stage-demo) and drop stage-retired.
+    incoming = yaml.safe_load(
+        (ROOT / "tests/scenarios/files/unit.map.import/reorder/map.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    incoming["status"] = "ready"
+    incoming["current_stage"] = stage2["id"]
+    incoming["detours"] = []
+    incoming["stages"][0]["status"] = "pending"
+    incoming["stages"][1]["status"] = "pending"
+    for target_stage, orig_stage in ((incoming["stages"][0], stage2), (incoming["stages"][1], stage1)):
+        for opt_key in ("knowledge_node_id", "runtime_target", "runtime_review"):
+            if opt_key in orig_stage:
+                target_stage[opt_key] = copy.deepcopy(orig_stage[opt_key])
+    s2 = incoming["stages"][0]
+    s1 = incoming["stages"][1]
+    draft = tmp_path / "reorder-retire-reset.yaml"
+    write_yaml(draft, incoming)
+
+    before_tree = {
+        p.relative_to(mini_repo): p.read_bytes()
+        for p in sorted(mini_repo.rglob("*"))
+        if p.is_file()
+    }
+    preview_proc = run_los(
+        mini_repo, "unit-map-import-preview", "unit-demo-l01",
+        "--file", str(draft), "--replace", "--json",
+    )
+    assert preview_proc.returncode == 0, preview_proc.stderr
+    assert {
+        p.relative_to(mini_repo): p.read_bytes()
+        for p in sorted(mini_repo.rglob("*"))
+        if p.is_file()
+    } == before_tree
+    preview = json.loads(preview_proc.stdout)
+    assert preview["ok"] is True
+    assert preview["mode"] == "preview"
+    assert preview["can_apply"] is False
+    assert preview["canonical_files_written"] == 0
+    assert preview["required_decisions"] == {
+        "reorder_required": True,
+        "state_reset_required": True,
+        "state_reset_optional": True,
+        "missing_retire_stages": ["stage-retired"],
+        "retire_reason_required": True,
+    }
+    assert preview["diff"]["stages_retired"] == ["stage-retired"]
+    assert preview["diff"]["relative_order_changed"] is True
+
+    # unit-map-import --check remains fail-closed until all override reasons are given.
+    fail_check = run_los(
+        mini_repo, "unit-map-import", "unit-demo-l01",
+        "--file", str(draft), "--replace", "--check",
+    )
+    assert fail_check.returncode == 1
+    assert "preflight failed" in fail_check.stderr
+
+    # With reviewed reasons supplied, both preview and check pass, and apply succeeds.
+    args = [
+        "unit-demo-l01", "--file", str(draft), "--file-sha256", file_sha256(draft),
+        "--replace",
+        "--retire-stage", "stage-retired",
+        "--retire-reason", "Merged into surviving stages after review.",
+        "--intentional-reorder", "Teach second concept before derivation.",
+        "--intentional-state-reset", "Clear stale open detour tied to retired stage.",
+    ]
+    clean_preview = run_los(mini_repo, "unit-map-import-preview", *args, "--json")
+    assert clean_preview.returncode == 0, clean_preview.stderr
+    clean_data = json.loads(clean_preview.stdout)
+    assert clean_data["problems"] == []
+    assert clean_data["can_apply"] is True
+
+    checked = run_los(mini_repo, "unit-map-import", *args, "--check", "--json")
+    assert checked.returncode == 0, checked.stderr
+
+    applied = approved_v2_cli(
+        mini_repo, "unit-map-import", *args,
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="p3-simultaneous-reorder-retire-reset",
+    )
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    after = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    assert [st["id"] for st in after["stages"]] == [s2["id"], s1["id"]]
+    assert after["current_stage"] == s2["id"]
+    assert after["detours"] == []
+
+
+def test_academic_deadlines_safe_int_rejects_bool_and_containers_with_value_error(
+    mini_repo: Path,
+):
+    from learning_os.derive.projection import modules_view
+
+    add_curriculum(mini_repo)
+    for bad in (True, {"bad": 1}, [1], "not-an-int"):
+        mod_path = _demo_module_path(mini_repo)
+        module = _read_demo_module(mini_repo)
+        module["examination"]["sittings"][0]["termin"] = bad
+        write_yaml(mod_path, module)
+        with pytest.raises(ValueError) as caught:
+            modules_view.academic_deadlines(load_repo(mini_repo))
+        assert type(caught.value) is ValueError
+
+
+def test_source_map_missing_module_id_recorded_as_parse_failure_and_guarded(
+    mini_repo: Path,
+):
+    from learning_os.derive.projection.projection.indexes import build_indexes
+    from learning_os.derive.projection.projection.records_curriculum import (
+        project_module_source_maps,
+    )
+
+    add_curriculum(mini_repo)
+    sm_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    sm = yaml.safe_load(sm_path.read_text(encoding="utf-8"))
+    sm.pop("module_id", None)
+    write_yaml(sm_path, sm)
+
+    loaded = load_repo(mini_repo)
+    assert any(path == sm_path and "module_id" in msg for path, msg in loaded.parse_failures)
+    val_proc = run_los(mini_repo, "validate")
+    assert val_proc.returncode != 0
+
+    # Even if build_indexes sees a raw source-map without module_id, it never TypeErrors.
+    raw_idx = build_indexes(
+        loaded, [],
+        modules_v2=[], units_v2=[], study_maps_v2=[],
+        source_maps_v2=[sm],
+        unit_material_syntheses_v2=[],
+        module_concept_edges=[],
+    )
+    assert "source-demo-book" not in raw_idx["source_to_modules"]
+
+    # When in-memory repo maps the owner key, projection preserves the owner module_id.
+    loaded.module_source_maps["module-demo"] = sm
+    loaded.module_source_map_origins["module-demo"] = sm_path
+    projected = project_module_source_maps(loaded, lambda aid, data: 0)
+    assert projected[0]["module_id"] == "module-demo"
+    idx = build_indexes(
+        loaded, [],
+        modules_v2=[], units_v2=[], study_maps_v2=[],
+        source_maps_v2=projected,
+        unit_material_syntheses_v2=[],
+        module_concept_edges=[],
+    )
+    assert idx["source_to_modules"]["source-demo-book"] == ["module-demo"]
+

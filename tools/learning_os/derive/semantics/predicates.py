@@ -123,11 +123,11 @@ def needs_study_map(
     """
     if has_study_map:
         return False
-    if module_status not in STUDIED_MODULE_STATUSES:
+    if not isinstance(module_status, str) or module_status not in STUDIED_MODULE_STATUSES:
         return False
     if unit_status is None:
         return True
-    return unit_status in LIVE_UNIT_STATUSES
+    return isinstance(unit_status, str) and unit_status in LIVE_UNIT_STATUSES
 
 
 def module_record_is_owned(owner_path: str | None) -> bool:
@@ -169,11 +169,13 @@ def needs_scope(
     """
     if not owned:
         return False
-    if str(module_kind or "") not in ACADEMIC_MODULE_KINDS:
+    if not isinstance(module_kind, str) or module_kind not in ACADEMIC_MODULE_KINDS:
         return False
-    if module_status not in STUDIED_MODULE_STATUSES:
+    if not isinstance(module_status, str) or module_status not in STUDIED_MODULE_STATUSES:
         return False
-    return int(unit_count or 0) <= 0
+    if isinstance(unit_count, bool) or not isinstance(unit_count, int):
+        return False
+    return unit_count <= 0
 
 
 #: Which record owns each fact kind: (location template, required id fields).
@@ -207,8 +209,8 @@ FACT_OWNERS: Mapping[str, tuple[str, tuple[str, ...]]] = {
     "concept_definition": ("knowledge/notes/{note_id}.md", ("note_id",)),
     "note_body": ("knowledge/notes/{note_id}.md", ("note_id",)),
     "concept_relation": ("knowledge/concept-relations.yaml", ()),
-    "source_record": ("sources/registry/ ({source_id})", ("source_id",)),
-    "material_identity": ("sources/registry/ ({source_id})", ("source_id",)),
+    "source_record": ("sources/registry/{source_id}.yaml", ("source_id",)),
+    "material_identity": ("sources/registry/{source_id}.yaml", ("source_id",)),
     "program_status": ("curriculum/programs/{program_id}.yaml", ("program_id",)),
     "transaction_receipt": ("operations/transactions/", ()),
 }
@@ -304,6 +306,8 @@ def critique_point_actionable(
     appending evidence never needs it. Fallback: an unrecognized status
     defers rather than authorizes.
     """
+    if not isinstance(status, str):
+        return "deferred"
     if status == "open":
         return "actionable" if authorized_in_session else "deferred"
     if status in {"resolved", "withdrawn"}:
@@ -318,6 +322,8 @@ def mastery_declared(*, statement_kind: str) -> bool:
     personal question recorded as resolved is still not mastery. Fallback:
     an unrecognized kind is treated as declaring — suspicion, not trust.
     """
+    if not isinstance(statement_kind, str):
+        return True
     if statement_kind in MASTERY_DECLARING_KINDS:
         return True
     if statement_kind in NON_MASTERY_KINDS:
@@ -332,6 +338,8 @@ def note_change_needs_review(*, change_kind: str) -> bool:
     pedagogical judgments never land silently. Fallback: unknown kinds
     require review.
     """
+    if not isinstance(change_kind, str):
+        return True
     if change_kind in REVIEW_REQUIRED_CHANGES:
         return True
     if change_kind in REVIEW_FREE_CHANGES:
@@ -451,6 +459,8 @@ def route_evaluated(*, scope: str) -> bool:
     visible so it can be chosen or dismissed deliberately. Anything outside
     the schema's scope vocabulary is not an assessment either.
     """
+    if not isinstance(scope, str):
+        return False
     return scope in ROUTE_SCOPE_VALUES and scope != "unevaluated"
 
 
@@ -524,6 +534,8 @@ def canonical_write_path(*, channel: str) -> bool:
     migrations are the one exception. A hand edit is never a faster version
     of this path. Fallback: unknown channels are hand edits.
     """
+    if not isinstance(channel, str):
+        return False
     return channel in CANONICAL_WRITE_CHANNELS
 
 
@@ -533,6 +545,8 @@ def workspace_may_coordinate(*, claim_kind: str) -> bool:
     Workspaces coordinate efforts through explicit id lists; they do not own
     the curriculum hierarchy. Fallback: unknown kinds do not coordinate.
     """
+    if not isinstance(claim_kind, str):
+        return False
     if claim_kind in WORKSPACE_COORDINATION_KINDS:
         return True
     if claim_kind in WORKSPACE_OWNERSHIP_KINDS:

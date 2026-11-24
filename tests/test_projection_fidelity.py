@@ -13,6 +13,7 @@ is exactly how the gap appeared. These compare the two sets instead.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -145,3 +146,35 @@ def test_published_lifecycle_verdicts_cover_modules_stages_resources_and_workspa
     open_ids = {ws["id"] for ws in workspaces if ws["is_open"]}
     assert set(manifest["indexes"]["workspace_to_modules"]) <= open_ids
     assert set(manifest["indexes"]["workspace_to_units"]) <= open_ids
+
+
+def test_project_project_aliases_ignores_dangling_target_without_keyerror(
+    mini_repo: Path,
+):
+    from repo_builders import add_curriculum, write_yaml
+
+    from learning_os.derive.projection import generate_all
+    from learning_os.derive.projection.projection.records_aliases import (
+        project_project_aliases,
+    )
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    add_curriculum(mini_repo)
+    write_yaml(mini_repo / "projects/aliases.yaml", {
+        "schema_version": 1,
+        "aliases": {
+            "project-old-valid": "module-demo",
+            "project-dangling": "unit-does-not-exist",
+        },
+    })
+    repo = load_repo(mini_repo)
+    rows = project_project_aliases(repo)
+    assert [row["id"] for row in rows] == ["project-old-valid"]
+    manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
+    assert manifest["indexes"]["project_aliases"]["project-dangling"] == "unit-does-not-exist"
+    assert any(
+        issue.code == "REF-PROJECT" and issue.severity == "E"
+        for issue in validate(repo)
+    )
+

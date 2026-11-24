@@ -988,3 +988,94 @@ def test_approved_delivery_failed_exposure_stays_committed_and_replays_once(
         (ai_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
     assert artifact_revision(ai_repo, tid) == 1, (
         "exact replay must not bump revisions or write again")
+
+
+def test_preview_delivery_writes_zero_bytes_and_matches_apply_contract(
+    ai_repo: Path, tmp_path: Path,
+):
+    from repo_builders import run_los
+
+    from learning_os.domain.ai_errors import DeliveryBindingError
+
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+
+    def _snapshot_files(root: Path) -> dict[Path, bytes]:
+        return {
+            p.relative_to(root): p.read_bytes()
+            for p in sorted(root.rglob("*"))
+            if p.is_file()
+        }
+
+    before_tree = _snapshot_files(ai_repo)
+    before_receipts = sorted(
+        (ai_repo / "operations/transactions").glob("transaction-*.yaml")
+    )
+    proc = run_los(
+        ai_repo, "ai-action-apply-preview", delivery["id"], "--json",
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert _snapshot_files(ai_repo) == before_tree
+    assert sorted(
+        (ai_repo / "operations/transactions").glob("transaction-*.yaml")
+    ) == before_receipts
+
+    preview = json.loads(proc.stdout)
+    assert preview["ok"] is True
+    assert preview["delivery_id"] == delivery["id"]
+    assert preview["request_id"] == request["id"]
+    assert preview["delivery_sha256"].startswith("sha256:")
+    assert preview["artifact_sha256"] == {
+        "artifacts/transcription.md": (
+            "sha256:"
+            + hashlib.sha256(
+                (source / "artifacts/transcription.md").read_bytes()
+            ).hexdigest()
+        ),
+    }
+    assert preview["expected_snapshot"] == f"sha256:{canonical_fingerprint(ai_repo)}"
+    assert preview["expected_revisions"] == {
+        target_id(ai_repo): artifact_revision(ai_repo, target_id(ai_repo)),
+        f"transcription-{target_id(ai_repo)}": artifact_revision(
+            ai_repo, f"transcription-{target_id(ai_repo)}"
+        ),
+        "relationship-garden-module-demo": artifact_revision(
+            ai_repo, "relationship-garden-module-demo"
+        ),
+    }
+
+    # Tampered artifact bytes before apply reflect in updated digest without writing.
+    _, directory = app.repository.get_delivery(delivery["id"])
+    artifact = directory / "artifacts/transcription.md"
+    orig_bytes = artifact.read_bytes()
+    artifact.write_text("tampered\n", encoding="utf-8")
+    tampered = app.preview_delivery(delivery["id"])
+    assert tampered["artifact_sha256"]["artifacts/transcription.md"] != (
+        preview["artifact_sha256"]["artifacts/transcription.md"]
+    )
+    artifact.write_bytes(orig_bytes)
+
+    applied = apply_approved_delivery(
+        app,
+        delivery["id"],
+        expected_snapshot=preview["expected_snapshot"],
+        expected_revisions=preview["expected_revisions"],
+    )
+    assert applied["replayed"] is False
+
+    delivery_yaml = directory / "delivery.yaml"
+    delivery_yaml.write_text("id: wrong-id\noperations: []\n", encoding="utf-8")
+    with pytest.raises(DeliveryBindingError):
+        app.preview_delivery(delivery["id"])
+
+    refused_cli = run_los(
+        ai_repo, "ai-action-apply-preview", delivery["id"], "--json",
+    )
+    assert refused_cli.returncode == 2, (refused_cli.returncode, refused_cli.stdout, refused_cli.stderr)
+    err_json = json.loads(refused_cli.stderr)
+    assert err_json["error"]["code"] == "UNCONFIRMED"
+    assert err_json["error"]["retryable"] is False
+    assert "does not match its imported directory" in err_json["error"]["message"]
+
+    missing = run_los(ai_repo, "ai-action-apply-preview", "ai-delivery-nope", "--json")
+    assert missing.returncode != 0

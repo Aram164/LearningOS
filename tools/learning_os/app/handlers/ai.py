@@ -23,6 +23,7 @@ from learning_os.domain.ai_errors import (
 from learning_os.domain.codes import IDEMPOTENCY_CONFLICT, OUT_OF_SCOPE, UNCONFIRMED
 from learning_os.domain.failures import (
     IdempotencyConflict,
+    NotFound,
     OutOfScope,
     RevisionConflict,
     StaleSnapshot,
@@ -205,6 +206,18 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
 def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
     """Validate one imported delivery without applying it."""
     result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
+    return Result(result)
+
+
+@register("ai-action.delivery.preview", kind="query", effects=OperationEffects.READ)
+def ai_action_apply_preview(ctx: OpContext, req: dict) -> Result:
+    """Preview the digests, snapshot, and revisions needed to apply a delivery."""
+    try:
+        result = AIActionService(ctx.root).preview_delivery(req["delivery_id"])
+    except NotFound:
+        raise
+    except AIActionError as exc:
+        raise _refusal(exc, ctx.operation) from exc
     return Result(result)
 
 

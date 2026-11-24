@@ -26,6 +26,14 @@ fields:
   lookup: true
   decision: 'Codex conductor 2026-10-08: ai_actions/binding.py:35-53 verifies existing
     delivery.yaml bytes'
+- operation: ai-action.delivery.preview
+  pointer: /properties/delivery_id
+  kind: null
+  lookup: true
+  owner: ai-delivery-store
+  owner_shape: scalar
+  decision: 'Phase 3 Track A (#2): read-only delivery preview; miss-only same-store
+    delivery inventory matching ai-action.delivery.validate'
 - operation: atlas.context
   pointer: /properties/concept_id
   kind: concept
@@ -445,6 +453,14 @@ fields:
   kind: digest
   lookup: false
 - operation: unit.map.import
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.map.import.preview
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: unit.map.import.preview
   pointer: /properties/unit_id
   kind: unit
   lookup: true

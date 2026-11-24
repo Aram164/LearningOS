@@ -166,6 +166,12 @@ def _load_module_source_map(repo: Repo, module_file: Path, module_id: str) -> No
     except LoaderError as exc:
         repo.parse_failures.append((source_map_file, str(exc)))
         return
+    declared_mid = source_map.get("module_id") if isinstance(source_map, dict) else None
+    if not isinstance(declared_mid, str) or not declared_mid.strip():
+        repo.parse_failures.append(
+            (source_map_file,
+             f"{source_map_file}: source-map with missing or empty module_id — skipped"))
+        return
     repo.module_source_maps[module_id] = source_map
     repo.module_source_map_origins[module_id] = source_map_file
 

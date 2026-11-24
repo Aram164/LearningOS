@@ -1038,3 +1038,36 @@ def test_invalid_and_naive_ability_timestamps_fail_closed(ability_root: Path):
             read_ability_observations(load_repo(ability_root))
         refused = run_los(ability_root, "ability-context", "ability-sad-ols")
         assert refused.returncode != 0
+
+
+def test_malformed_ability_missing_review_or_evidence_keys_never_raises_keyerror(
+    ability_root: Path,
+):
+    repo = load_repo(ability_root)
+    repo.abilities["ability-incomplete"] = {
+        "id": "ability-incomplete",
+        "title": "Incomplete ability",
+    }
+    horizon = ability_context(repo)
+    row = next(r for r in horizon["abilities"] if r["id"] == "ability-incomplete")
+    assert row["state"] == "unmapped"
+    assert row["reason_codes"] == ["incomplete-definition"]
+
+    focused = ability_context(repo, focus="ability-incomplete")
+    assert focused["ability"]["state"] == "unmapped"
+    assert any("ability-incomplete" in issue for issue in validate_ability_registry(repo))
+
+    with pytest.raises(ValueError, match="missing required fields"):
+        ability_fingerprint(repo.abilities["ability-incomplete"])
+
+    # On-disk incomplete ability records surface cleanly in parse_failures and refuse on CLI.
+    path = ability_root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["abilities"][0].pop("review", None)
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    loaded = load_repo(ability_root)
+    assert loaded.parse_failures
+    refused = run_los(ability_root, "ability-context")
+    assert refused.returncode == 2
+    assert "unreadable canonical records" in refused.stderr
+

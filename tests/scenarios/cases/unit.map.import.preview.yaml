@@ -1,0 +1,61 @@
+operation: unit.map.import.preview
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: preview-first
+    kind: success
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l02, --file, "<CASEDATA>/map.yaml"]
+    a5_base: true
+    expect: {site: null}
+  - id: preview-first-json
+    kind: success
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l02, --file, "<CASEDATA>/map.yaml", --json]
+    expect: {site: null}
+  - id: preview-replace-reorder
+    kind: success
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --json]
+    expect: {site: null}
+  - id: preview-replace-retire
+    kind: success
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --json]
+    expect: {site: null}
+  - id: missing-file
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l02, --file, "work/inbox/nope.yaml", --json]
+    expect: {site: unit.map.import.preview.bad-file}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-nope, --file, "<CASEDATA>/map.yaml"]
+    expect: {site: unit.map.import.preview.unknown-unit}
+  - id: no-replace
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --json]
+    expect: {site: unit.map.import.preview.has-map}
+  - id: bad-yaml
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --json]
+    expect: {site: unit.map.import.preview.bad-map}
+  - id: reorder-flag-on-first
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l02, --file, "<CASEDATA>/map.yaml", --intentional-reorder, "reviewed reason", --json]
+    expect: {site: unit.map.import.preview.bad-flags}
+  - id: structural-invalid
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --json]
+    expect: {site: unit.map.import.preview.structural-edit-invalid}
+  - id: schema-invalid
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import-preview, unit-demo-l01, --file, "<CASEDATA>/map.yaml", --replace, --json]
+    expect: {site: unit.map.import.preview.contract-failed}
+untriggered: []

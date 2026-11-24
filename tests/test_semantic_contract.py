@@ -9,7 +9,10 @@ adding a second opinion.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+import yaml
 
 from learning_os.derive.projection.projection.records_curriculum import _needs_study_map
 from learning_os.derive.semantics import (
@@ -373,3 +376,58 @@ def test_the_producer_and_the_evaluator_cannot_disagree():
                     module_status=module_status,
                     has_study_map=has_map,
                 )
+
+
+def test_source_record_and_material_identity_fact_owners_render_valid_paths():
+    from learning_os.derive.semantics.predicates import FACT_OWNERS
+
+    assert evaluate(
+        "ScopeAuthority", fact_kind="source_record", source_id="source-demo-book"
+    ) == "sources/registry/source-demo-book.yaml"
+    assert evaluate(
+        "ScopeAuthority", fact_kind="material_identity", source_id="source-demo-book"
+    ) == "sources/registry/source-demo-book.yaml"
+    assert evaluate("ScopeAuthority", fact_kind="source_record") == "unknown"
+    for kind, (template, _req) in FACT_OWNERS.items():
+        assert " " not in template and "(" not in template, kind
+
+
+def test_predicates_and_scan_fail_closed_on_non_string_and_unhashable_inputs(
+    mini_repo: Path,
+):
+    from repo_builders import add_curriculum, write_yaml
+
+    from learning_os.derive.semantics.scan import collect_observations
+    from learning_os.store.loader import load_repo
+
+    for bad in (["enrolled"], {"status": "enrolled"}, 123, True):
+        assert evaluate(
+            "NeedsStudyMap",
+            unit_status=bad,
+            module_status=bad,
+            has_study_map=False,
+        ) is False
+        assert evaluate(
+            "NeedsScope",
+            module_kind=bad,
+            module_status=bad,
+            unit_count=0,
+            owned=True,
+        ) is False
+        assert evaluate("MasteryDeclared", statement_kind=bad) is True
+        assert evaluate("NoteChangeNeedsReview", change_kind=bad) is True
+        assert evaluate(
+            "CritiquePointActionable", status=bad, authorized_in_session=True,
+        ) == "deferred"
+        assert evaluate("RouteEvaluated", scope=bad) is False
+        assert evaluate("CanonicalWritePath", channel=bad) is False
+        assert evaluate("WorkspaceMayCoordinate", claim_kind=bad) is False
+
+    add_curriculum(mini_repo)
+    mod_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    mod_data = yaml.safe_load(mod_path.read_text(encoding="utf-8"))
+    mod_data["status"] = ["enrolled"]
+    write_yaml(mod_path, mod_data)
+    obs = collect_observations(mini_repo, repo=load_repo(mini_repo))
+    assert "module-demo" not in obs.scope_obligations
+
