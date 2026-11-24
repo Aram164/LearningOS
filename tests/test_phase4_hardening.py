@@ -9,6 +9,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import uuid
@@ -767,6 +768,7 @@ def _seed_provenance_world(
     basis = current_unit_material_basis(root, "unit-demo-l01")
     checksum = basis["material_checksums"]["route-demo-l01-book"]
     cited = "part-b.pdf p.1" if two_file else "lecture-01.pdf p.1"
+    scope_of_absence = "lecture-01.pdf, PDF p. 1" if two_file else f"{locator}, PDF p. 1"
     dossier = {
         "schema_version": 1,
         "id": "material-synthesis-demo-l01",
@@ -793,7 +795,7 @@ def _seed_provenance_world(
             "exercise_value": "Includes worked calculation.",
             "best_for": "Checking core derivation.",
             "limitations": "Finite only.",
-            "scope_of_absence": f"{locator}, PDF p. 1",
+            "scope_of_absence": scope_of_absence,
             "evidence": [{"locator": cited, "checksum": checksum}],
         }],
         "comparisons": [],
@@ -847,13 +849,21 @@ def _record_card_for_pdf(root: Path, pdf_path: Path, rel_material: str) -> Path:
 
 
 def _check_all_three_paths(
-    mini_repo: Path, dossier: dict, tmp_path: Path, case_tag: str,
+    mini_repo: Path,
+    dossier: dict,
+    tmp_path: Path,
+    case_tag: str,
+    *,
+    expected_error: str | None = None,
+    clear_attached_slices: bool = False,
 ) -> tuple[bool, bool, bool]:
     # 1. Direct publication handler path
     pub_ok = True
     try:
         synthesis_handler._validate_publication_synthesis(mini_repo, "unit-demo-l01", dossier)
-    except MaterialSynthesisError:
+    except MaterialSynthesisError as exc:
+        if expected_error is not None:
+            assert re.search(expected_error, str(exc)), f"pub error mismatch: {exc}"
         pub_ok = False
 
     # 2. Staged module plan gate path (shadow repo under tmp_path -> empty shadow reading-memory!)
@@ -864,8 +874,12 @@ def _check_all_three_paths(
             mini_repo, "module-demo", live_repo, shadow, shadow_repo, [("unit-demo-l01", dossier)],
         )
     gate_ok = plan_errs == []
+    if not gate_ok and expected_error is not None:
+        assert any(re.search(expected_error, err) for err in plan_errs), (
+            f"gate error mismatch: {plan_errs}"
+        )
 
-    # 3. AI delivery bundle path (no bundle slices attached!)
+    # 3. AI delivery bundle path
     app = AIActionService(mini_repo)
     req = app.prepare(
         action_id="unit.compare-materials",
@@ -874,6 +888,14 @@ def _check_all_three_paths(
         provider="manual-bundle",
         request_id=f"ai-request-{case_tag}",
     )
+    if clear_attached_slices:
+        slices_idx = (
+            mini_repo
+            / "operations/ai-actions/requests"
+            / req["id"]
+            / "attachments/slices/index.json"
+        )
+        slices_idx.write_text("[]\n", encoding="utf-8")
     deliv_id = f"ai-deliv-{case_tag}"
     bundle_dossier = {
         **dossier,
@@ -905,11 +927,19 @@ def _check_all_three_paths(
         }],
         "preconditions": req["preconditions"],
     })
-    delivery = app.import_delivery(src)
     deliv_ok = True
     try:
+        delivery = app.import_delivery(src)
         app.preview_delivery(delivery["id"])
-    except DeliveryValidationError:
+    except DeliveryValidationError as exc:
+        if expected_error is not None:
+            assert re.search(expected_error, str(exc)), f"deliv error mismatch: {exc}"
+        assert not app.repository.delivery_dir(deliv_id).exists()
+        assert app.repository.get_request(req["id"])["status"] == "prepared"
+        assert not (
+            mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+        ).exists()
+        assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
         deliv_ok = False
     return pub_ok, gate_ok, deliv_ok
 
@@ -929,32 +959,78 @@ def test_synthesis_provenance_matrix_across_all_three_paths(
     live_checksum = live_basis["material_checksums"]["route-demo-l01-book"]
     dossier_stale = {
         **dossier_zero,
-        "basis": live_basis,
+        "basis": {
+            **live_basis,
+            "ai_provenance": dossier_zero["basis"]["ai_provenance"],
+        },
         "route_assessments": [{
             **dossier_zero["route_assessments"][0],
             "evidence": [{"locator": "lecture-01.pdf p.1", "checksum": live_checksum}],
         }],
     }
-    assert _check_all_three_paths(mini_repo, dossier_stale, tmp_path, "stale") == (False, False, False)
+    assert _check_all_three_paths(
+        mini_repo,
+        dossier_stale,
+        tmp_path,
+        "stale",
+        expected_error=r"reading memory for source-demo-book/lecture-01\.pdf is stale",
+    ) == (False, False, False)
 
     # Scenario C: unreadable / malformed / symlinked reading card -> fails closed on all 3 paths.
     raw_card = card_path.read_text(encoding="utf-8")
     card_path.write_text("{not valid json", encoding="utf-8")
-    assert _check_all_three_paths(mini_repo, dossier_stale, tmp_path, "malformed") == (False, False, False)
+    assert _check_all_three_paths(
+        mini_repo,
+        dossier_stale,
+        tmp_path,
+        "malformed",
+        expected_error=r"reading memory is unreadable",
+    ) == (False, False, False)
     card_path.unlink()
     outside_card = tmp_path / "outside-card.json"
     outside_card.write_text(raw_card, encoding="utf-8")
     card_path.symlink_to(outside_card)
-    assert _check_all_three_paths(mini_repo, dossier_stale, tmp_path, "symlink") == (False, False, False)
+    assert _check_all_three_paths(
+        mini_repo,
+        dossier_stale,
+        tmp_path,
+        "symlink",
+        expected_error=r"reading memory is unreadable",
+    ) == (False, False, False)
 
 
 def test_synthesis_provenance_two_file_route_fails_uncovered_second_file(
     mini_repo: Path, tmp_path: Path,
 ) -> None:
-    dossier_two, _, pdf1 = _seed_provenance_world(mini_repo, two_file=True)
-    # Only lecture-01.pdf has a valid live card; part-b.pdf has none, while evidence cites part-b.pdf!
+    dossier_two, checksum, pdf1 = _seed_provenance_world(mini_repo, two_file=True)
+    # Only lecture-01.pdf has a valid live card; part-b.pdf has none (and prepared
+    # bundle slices are cleared) so citing part-b.pdf fails closed on all 3 paths.
     _record_card_for_pdf(mini_repo, pdf1, "source-demo-book/lecture-01.pdf")
-    assert _check_all_three_paths(mini_repo, dossier_two, tmp_path, "twofile") == (False, False, False)
+    assert _check_all_three_paths(
+        mini_repo,
+        dossier_two,
+        tmp_path,
+        "twofile",
+        expected_error=r"part-b\.pdf pages never inspected",
+        clear_attached_slices=True,
+    ) == (False, False, False)
+
+    # Positive control: citing only the inspected first PDF with bounded scope_of_absence passes.
+    dossier_first_only = {
+        **dossier_two,
+        "route_assessments": [{
+            **dossier_two["route_assessments"][0],
+            "scope_of_absence": "lecture-01.pdf, PDF p. 1",
+            "evidence": [{"locator": "lecture-01.pdf p.1", "checksum": checksum}],
+        }],
+    }
+    assert _check_all_three_paths(
+        mini_repo,
+        dossier_first_only,
+        tmp_path,
+        "twofile-firstonly",
+        clear_attached_slices=True,
+    ) == (True, True, True)
 
 
 def test_unit_material_synthesis_publish_review_binding_parity(

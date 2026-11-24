@@ -35,6 +35,7 @@ from learning_os.derive.material_synthesis import (
     material_synthesis_freshness,
     validate_unit_material_synthesis,
 )
+from learning_os.domain.ai_errors import DeliveryValidationError
 from learning_os.store.contracts.gateway import intent_sha256
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.legacy_archive import LegacyArchiveError, inspect_legacy_archive
@@ -472,17 +473,18 @@ def test_publish_refuses_cross_file_page_confusion(
         }],
         "preconditions": request["preconditions"],
     })
-    delivery = app.import_delivery(source)
-    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
-    refused = _run_delivery_apply(
-        repo_root, mini_repo, tmp_path / "apply-crossfile.json", envelope,
-    )
-    assert refused.returncode != 0
-    assert "lecture-01.pdf pages never inspected" in (refused.stdout + refused.stderr)
+    with pytest.raises(
+        DeliveryValidationError,
+        match=r"lecture-01\.pdf pages never inspected",
+    ):
+        app.import_delivery(source)
     assert not (
         mini_repo
         / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
     ).exists()
+    assert not app.repository.delivery_dir("ai-delivery-crossfile").exists()
+    assert app.repository.get_request(request["id"])["status"] == "prepared"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
 
 
 def test_publish_refuses_evidence_citing_uninspected_pages(
@@ -524,17 +526,129 @@ def test_publish_refuses_evidence_citing_uninspected_pages(
         }],
         "preconditions": request["preconditions"],
     })
-    delivery = app.import_delivery(source)
-    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
-    refused = _run_delivery_apply(
-        repo_root, mini_repo, tmp_path / "apply-unread.json", envelope,
-    )
-    assert refused.returncode != 0
-    assert "never inspected" in (refused.stdout + refused.stderr)
+    with pytest.raises(
+        DeliveryValidationError,
+        match=r"lecture-01\.pdf pages never inspected",
+    ):
+        app.import_delivery(source)
     assert not (
         mini_repo
         / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
     ).exists()
+    assert not app.repository.delivery_dir("ai-delivery-unread").exists()
+    assert app.repository.get_request(request["id"])["status"] == "prepared"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_preview_and_apply_refuse_when_valid_import_loses_provenance_after_import(
+    mini_repo, repo_root, tmp_path,
+):
+    """Application-time provenance guard stays enforced when provenance degrades after import."""
+    import datetime as dt
+    import uuid
+
+    from learning_os.store.materials.reading_cards import Read, ReadingStore
+
+    _add_routed_unit(mini_repo)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-postimport-prov",
+    )
+    source = tmp_path / "valid-at-import-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf p.2",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    synthesis["route_assessments"][0]["scope_of_absence"] = "lecture-01.pdf, PDF p. 2"
+    synthesis["basis"]["ai_provenance"] = {
+        "request_id": request["id"],
+        "delivery_id": "ai-delivery-postimport-prov",
+        "provider": "manual-bundle",
+    }
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-postimport-prov",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    # Prepared bundle slices cover pages 1-2, so import succeeds cleanly.
+    delivery = app.import_delivery(source)
+    assert app.repository.get_request(request["id"])["status"] == "delivery-ready"
+
+    # Drop bundle slices and leave live reading memory covering only page 1 so
+    # snapshot, digests, and target revisions still match at apply time, isolating
+    # the application-time provenance check on p.2.
+    slices_idx = (
+        mini_repo
+        / "operations/ai-actions/requests"
+        / request["id"]
+        / "attachments/slices/index.json"
+    )
+    slices_idx.write_text("[]\n", encoding="utf-8")
+    pdf1 = mini_repo.parent / "materials/source-demo-book/lecture-01.pdf"
+    store = ReadingStore(mini_repo)
+    sess = str(uuid.UUID("bbbbbbbb-2222-4222-8222-222222222222"))
+    admission = store.admit(
+        sess,
+        [Read(
+            digest=hashlib.sha256(pdf1.read_bytes()).hexdigest(),
+            material="source-demo-book/lecture-01.pdf",
+            start=1,
+            end=1,
+            text_sha256="0" * 64,
+        )],
+        now=dt.datetime(2026, 10, 1, 9, 0, tzinfo=dt.UTC),
+    )
+    store.save(
+        sess,
+        admission.opened[0]["entry"],
+        {
+            "paraphrase": "Covers only page one.",
+            "kinds": ["statement"],
+            "pointers": [{"page": 1, "kind": "statement", "label": "page one"}],
+            "concepts": ["concept-expected-value"],
+        },
+        now=dt.datetime(2026, 10, 1, 9, 1, tzinfo=dt.UTC),
+    )
+
+    with pytest.raises(
+        DeliveryValidationError,
+        match=r"lecture-01\.pdf pages never inspected",
+    ):
+        app.preview_delivery(delivery["id"])
+
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"], key="apply-postimport-prov")
+    refused = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-postimport-prov.json", envelope,
+    )
+    assert refused.returncode != 0
+    assert "lecture-01.pdf pages never inspected" in (refused.stdout + refused.stderr)
+    assert not (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    ).exists()
+    assert app.repository.get_request(request["id"])["status"] == "delivery-ready"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
 
 
 def _import_unit_synthesis_delivery(root: Path, tmp_path: Path):

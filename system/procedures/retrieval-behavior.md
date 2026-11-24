@@ -251,7 +251,7 @@ module-demo Demo Module sose-2026
 $ los bootstrap --brief | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"]); print(d["pointer_state"], d["resume_pointer"]["unit_id"]); print(d["counts"]["inbox_items"], d["owed_study_maps"])'
 bootstrap-brief
 confirmed unit-demo-l01
-2 ['unit-demo-l02']
+3 ['unit-demo-l02']
 ```
 
 ## Read coordination when priorities matter
