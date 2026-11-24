@@ -189,3 +189,23 @@ cases:
     request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates, origin: pilot}}]}}
     artifact_ids: []
     expect: {site: concept.relations.change.origin-mismatch}
+  - id: identity-exists
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: add, new: {from: concept-variance, to: concept-expected-value, type: builds-on}}]}}
+    artifact_ids: []
+    expect: {site: concept.relations.change.identity-exists}
+  - id: keeper-vetoed
+    kind: sequence
+    observations: {now: "2026-12-01T09:00:00+01:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+    steps:
+      - transport: gateway
+        channel: ui
+        approval_kind: direct-user-gesture
+        request: {change: {operations: [{action: replace, old: {from: concept-variance, to: concept-expected-value, type: builds-on}, new: {from: concept-variance, to: concept-expected-value, type: builds-on, status: vetoed, status_reason: contradicted by mock exam}}]}}
+        artifact_ids: [registry-concept-relations]
+      - transport: gateway
+        channel: system-task
+        request: {change: {operations: [{action: replace, old: {from: concept-variance, to: concept-expected-value, type: builds-on, status: vetoed, status_reason: contradicted by mock exam}, new: {from: concept-variance, to: concept-expected-value, type: builds-on, status: retracted, status_reason: superseded by source}}]}}
+        artifact_ids: []
+    expect: {site: concept.relations.change.keeper-scope}

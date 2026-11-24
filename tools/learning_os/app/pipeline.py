@@ -52,6 +52,7 @@ from learning_os.domain.codes import (
 )
 from learning_os.domain.failures import (
     PostCommitFailure,
+    PracticeSidecarUnreadable,
     ProjectionFailure,
     Refusal,
     ReplayEvidenceError,
@@ -1094,7 +1095,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             stdout=stdout, stderr=stderr,
             **kwargs,  # type: ignore[arg-type]
         )
-    except (TransactionFailure, ValueError) as exc:
+    except (TransactionFailure, PracticeSidecarUnreadable, ValueError) as exc:
         _audit_failure(envelope.get("capability"), exc)
         code, result = 2, {"error": str(exc)}
         failure = exc

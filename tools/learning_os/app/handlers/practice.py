@@ -10,13 +10,17 @@ exact expected old row plus both artifact revisions.
 from __future__ import annotations
 
 import copy
+from collections.abc import Mapping
 from datetime import UTC
 from typing import NotRequired, TypedDict, cast
 
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
-from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.failures import (
+    NotFound,
+    WriteRefused,
+)
 from learning_os.domain.practice import content_sha256, extract_items
 from learning_os.domain.relations import EvidenceBinding
 from learning_os.store import observations
@@ -66,6 +70,25 @@ class ReviewedVerification(TypedDict):
     comparison_sha256: NotRequired[str | None]
 
 
+def _strip_quotes(value: object) -> object:
+    if isinstance(value, Mapping):
+        stripped: dict[str, object] = {}
+        for key, item in value.items():
+            if key != "quote":
+                stripped[str(key)] = _strip_quotes(item)
+        return stripped
+    if isinstance(value, list):
+        return [_strip_quotes(item) for item in value]
+    return copy.deepcopy(value)
+
+
+def _redact_verification_row(row: PracticeRow | None) -> dict[str, object] | None:
+    """Return a deep-copied sidecar row without official-answer `quote` text."""
+    if row is None:
+        return None
+    return cast(dict[str, object], _strip_quotes(row))
+
+
 @register("practice.context", kind="porcelain", effects=OperationEffects.READ)
 def practice_context(ctx: OpContext, req: dict[str, object]) -> Result:
     """Prompt-safe practice summaries for one note, at one snapshot."""
@@ -101,7 +124,7 @@ def practice_context(ctx: OpContext, req: dict[str, object]) -> Result:
             "content_sha256": content_sha256(
                 entry.item.item_id, entry.item.prompt, entry.item.solution),
             "concept_ids": list((row["concept_ids"] if row else []) or note.meta.get("concepts") or []),
-            "stored_row": copy.deepcopy(row),
+            "stored_row": _redact_verification_row(row),
         })
     if _snapshot(root) != snapshot:
         raise WriteRefused(
@@ -207,7 +230,9 @@ def practice_verification_record(ctx: OpContext, req: dict[str, object]) -> Resu
 
     data = load_sidecar(root)
     current = row_for(data, item_id)
-    if record["expected_old"] != current:
+    redacted_current = _redact_verification_row(current)
+    expected_old = record["expected_old"]
+    if expected_old != current and expected_old != redacted_current:
         raise WriteRefused(
             "the expected old verification row no longer matches; reload and review",
             site="practice.verification.record.stale-row")

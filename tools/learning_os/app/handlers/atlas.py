@@ -439,8 +439,8 @@ def _keeper_delegation(root: Path) -> dict:
             or data["channel"] != KEEPER_CHANNEL
             or type(data["max_operations"]) is not int
             or not 1 <= data["max_operations"] <= 50
-            or not isinstance(data["expires"], date)
-            or not isinstance(data["granted"], date)):
+            or type(data["expires"]) is not date
+            or type(data["granted"]) is not date):
         raise inactive(f"{KEEPER_DELEGATION} does not have the declared shape")
     if data["status"] != "active":
         raise inactive(f"its status is {data['status']}")
@@ -468,6 +468,10 @@ def _keeper_scope(operations: list, delegation: dict) -> None:
             raise _keeper_refused(
                 "relations Aram authored or pinned are his; the keeper may only "
                 "report a conflict with them", "keeper-scope")
+        if old.get("status") == "vetoed":
+            raise _keeper_refused(
+                "vetoed relations are Aram's decision; the keeper never revives "
+                "or modifies them", "keeper-scope")
         if new.get("pinned") is True or new.get("status") == "vetoed" \
                 or new.get("evidence_disputed", False) != old.get("evidence_disputed", False):
             raise _keeper_refused(
@@ -541,6 +545,14 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
                     problem,
                     site="concept.relations.change.evidence-refused",
                 )
+
+    def _expected_revisions() -> dict[str, int]:
+        try:
+            return parse_expected_revisions(req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(
+                str(exc), site="concept.relations.change.bad-expected-revision",
+            ) from exc
 
     changed = set()
     for operation in operations:
@@ -616,20 +628,36 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             else:
                 registries[path]["relations"][index] = copy.deepcopy(operation["new"])
         else:
+            stamped = _stamped(operation["new"])
+            identity = (stamped.get("from"), stamped.get("type"), stamped.get("to"))
+            existing = next(
+                (row for data in registries.values() for row in data["relations"]
+                 if (row.get("from"), row.get("type"), row.get("to")) == identity),
+                None,
+            )
+            if existing is not None:
+                _expected_revisions()
+                status = existing.get("status", "active")
+                if status == "vetoed":
+                    hint = "restore it with fresh evidence from an unused registered source via replace"
+                elif status == "retracted":
+                    hint = "restore or update it via replace"
+                else:
+                    hint = "update it via replace"
+                raise WriteRefused(
+                    f"relation ({identity[0]}, {identity[1]}, {identity[2]}) already exists "
+                    f"with status {status}; {hint} instead of add",
+                    site="concept.relations.change.identity-exists",
+                )
             single = root / "knowledge/concept-relations.yaml"
             path = single if single in registries else root / "knowledge/concept-relations/atlas.yaml"
             _safe(root, path)
-            registries.setdefault(path, {"relations": []})["relations"].append(_stamped(operation["new"]))
+            registries.setdefault(path, {"relations": []})["relations"].append(stamped)
         changed.add(path)
     writes = {path: yaml.safe_dump(registries[path], sort_keys=False, allow_unicode=True)
               for path in changed}
     # Existing validator rejects duplicates, unknown endpoints/sources and prerequisite cycles.
-    try:
-        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
-    except ValueError as exc:
-        raise WriteRefused(
-            str(exc), site="concept.relations.change.bad-expected-revision",
-        ) from exc
+    expected_revisions = _expected_revisions()
     return Result(
         {"ok": True, "operation_count": len(operations)},
         proposal=TransactionProposal(

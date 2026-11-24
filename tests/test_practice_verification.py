@@ -434,3 +434,176 @@ def test_bindings_resolve_through_the_flat_alias_tree(mini_repo, tmp_path):
     escaped = _record(mini_repo, _base_record(
         binding, item_id="note-practice-bank#A2"), "record-escaping-alias")
     assert escaped.returncode != 0
+
+
+def test_practice_context_omits_stored_quote_and_round_trips_expected_old(mini_repo, tmp_path):
+    import shutil
+
+    path = _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    assert _record(mini_repo, _base_record(binding), "record-redact-init").returncode == 0
+    raw_row = yaml.safe_load((mini_repo / "knowledge/practice-index.yaml").read_text())["items"][0]
+    assert raw_row["source_bindings"][0]["quote"] == binding["quote"]
+
+    ctx_out = run_los(
+        mini_repo, "practice-context", "note-practice-bank",
+        "--item-id", "note-practice-bank#A1")
+    assert ctx_out.returncode == 0, ctx_out.stdout + ctx_out.stderr
+    stored_row = json.loads(ctx_out.stdout)["items"][0]["stored_row"]
+    assert stored_row is not None
+    assert "quote" not in stored_row["source_bindings"][0]
+    assert "quote" not in stored_row["verifications"][0]["source_binding"]
+
+    path.write_text(path.read_text().replace("\n4\n", "\nFour\n"), encoding="utf-8")
+    digest_after = _reviewed_digest("note-practice-bank#A1", path.read_text().split("\n---\n", 1)[1])
+
+    # Clone identical starting state (including sibling materials/) so both accepted
+    # forms of expected_old are proven against the exact same starting revision.
+    clone_base = tmp_path / "same-start"
+    shutil.copytree(mini_repo.parent, clone_base)
+    clone_repo = clone_base / "repository"
+
+    # A raw row with a different quote must still be rejected.
+    wrong_quote_row = json.loads(json.dumps(raw_row))
+    wrong_quote_row["source_bindings"][0]["quote"] = "tampered quote"
+    wrong_quote = _record(
+        mini_repo,
+        _base_record(
+            None, expected_old=wrong_quote_row, new_status="confirmed", method="explicit-review",
+            artifact_sha256=digest_after),
+        "record-wrong-quote-old",
+    )
+    assert wrong_quote.returncode != 0
+    assert "expected old verification row no longer matches" in wrong_quote.stdout + wrong_quote.stderr
+
+    # Accepted form 1: redacted stored_row from practice.context.
+    redacted_ok = _record(
+        mini_repo,
+        _base_record(
+            None, expected_old=stored_row, new_status="confirmed", method="explicit-review",
+            artifact_sha256=digest_after),
+        "record-redacted-old",
+    )
+    assert redacted_ok.returncode == 0, redacted_ok.stdout + redacted_ok.stderr
+
+    # Accepted form 2: exact raw row straight from knowledge/practice-index.yaml.
+    raw_ok = _record(
+        clone_repo,
+        _base_record(
+            None, expected_old=raw_row, new_status="confirmed", method="explicit-review",
+            artifact_sha256=digest_after),
+        "record-raw-old",
+    )
+    assert raw_ok.returncode == 0, raw_ok.stdout + raw_ok.stderr
+
+
+def test_unreadable_or_symlinked_sidecar_fails_cleanly(mini_repo, tmp_path):
+    import os
+
+    import pytest
+
+    from learning_os.app.outcomes import classify, exit_for, refusal_from_failure
+    from learning_os.derive.projection.atlas_boards import build_atlas_boards
+    from learning_os.domain.failures import PracticeSidecarUnreadable, TransactionFailure
+    from learning_os.store.loading import load_repo
+
+    assert not issubclass(PracticeSidecarUnreadable, ValueError)
+    assert not issubclass(PracticeSidecarUnreadable, TransactionFailure)
+    assert classify(PracticeSidecarUnreadable("bad"), "cli") is not None
+    assert exit_for(PracticeSidecarUnreadable("bad"), "cli") == 2
+    assert refusal_from_failure(PracticeSidecarUnreadable("bad")) == ("VALIDATION_FAILED", False)
+
+    _note(mini_repo, "note-practice-bank", "exercise-bank", BANK_SOLUTION)
+    binding = _binding(mini_repo)
+    assert _record(mini_repo, _base_record(binding), "record-before-corrupt").returncode == 0
+
+    sidecar = mini_repo / "knowledge/practice-index.yaml"
+    data = yaml.safe_load(sidecar.read_text(encoding="utf-8"))
+
+    # Overlong quote violates maxLength schema: field & safe reason appear, secret excerpt never leaks.
+    secret = "SECRET_EXCERPT_LEAK_GUARD_" + ("x" * 240)
+    data["items"][0]["source_bindings"][0]["quote"] = secret
+    data["items"][0]["verifications"][0]["source_binding"]["quote"] = secret
+    sidecar.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+    cli_res = run_los(mini_repo, "practice-context", "note-practice-bank")
+    assert cli_res.returncode == 2
+    assert "VALIDATION_FAILED" in cli_res.stderr
+    assert "items.0.source_bindings.0.quote" in cli_res.stderr
+    assert "exceeds maximum length" in cli_res.stderr
+    assert "SECRET_EXCERPT_LEAK_GUARD" not in cli_res.stdout + cli_res.stderr
+
+    gw_res = _record(
+        mini_repo,
+        _base_record(None, new_status="confirmed", method="explicit-review",
+                     item_id="note-practice-bank#A2"),
+        "gw-corrupt-sidecar",
+    )
+    assert gw_res.returncode == 2
+    gw_json = json.loads(gw_res.stdout)
+    assert gw_json["error"]["code"] == "VALIDATION_FAILED"
+    assert gw_json["error"]["retryable"] is False
+    assert "items.0.source_bindings.0.quote" in gw_json["error"]["message"]
+    assert "exceeds maximum length" in gw_json["error"]["message"]
+    assert "SECRET_EXCERPT_LEAK_GUARD" not in gw_res.stdout + gw_res.stderr
+
+    with pytest.raises(PracticeSidecarUnreadable) as exc_info:
+        build_atlas_boards(load_repo(mini_repo), {})
+    assert "SECRET_EXCERPT_LEAK_GUARD" not in str(exc_info.value)
+
+    # Malformed YAML near an excerpt also fails via PracticeSidecarUnreadable cleanly.
+    sidecar.write_text(f"items: [\n  quote: {secret}\n", encoding="utf-8")
+    malformed = run_los(mini_repo, "practice-context", "note-practice-bank")
+    assert malformed.returncode == 2
+    assert "practice-index unreadable" in malformed.stderr
+    assert "SECRET_EXCERPT_LEAK_GUARD" not in malformed.stdout + malformed.stderr
+
+    sidecar.unlink()
+    outside = tmp_path / "external-sidecar.yaml"
+    outside.write_text("items: []\n", encoding="utf-8")
+    os.symlink(str(outside), sidecar)
+    sym = run_los(mini_repo, "practice-context", "note-practice-bank")
+    assert sym.returncode == 2
+    assert "practice-index cannot be a symlink" in sym.stderr
+
+
+def test_verified_binding_handles_dotted_dir_and_mismatched_file(mini_repo):
+    from learning_os.store.loading import load_repo
+    from learning_os.store.practice import verified_binding
+
+    pdf = _pdf_bytes(QUOTE)
+    materials = mini_repo.parent / "materials"
+    dotted_dir = materials / "source-demo-book.v2"
+    dotted_dir.mkdir(parents=True, exist_ok=True)
+    dotted_pdf = dotted_dir / "book.pdf"
+    dotted_pdf.write_bytes(pdf)
+    binding = {
+        "source_id": "source-demo-book",
+        "material_relpath": "source-demo-book.v2/book.pdf",
+        "file_sha256": hashlib.sha256(pdf).hexdigest(),
+        "page": 1,
+        "quote": QUOTE,
+    }
+    sources_path = mini_repo / "sources/sources.yaml"
+    sources_data = yaml.safe_load(sources_path.read_text(encoding="utf-8"))
+    sources_data["sources"][0]["material"] = "material://source-demo-book.v2"
+    sources_path.write_text(yaml.safe_dump(sources_data, sort_keys=False), encoding="utf-8")
+    assert verified_binding(load_repo(mini_repo), binding) is None
+
+    # A registered source directory literally named packet.pdf resolves as a directory,
+    # so bindings like packet.pdf/chapter.pdf remain accepted.
+    packet_dir = materials / "packet.pdf"
+    packet_dir.mkdir(parents=True, exist_ok=True)
+    (packet_dir / "chapter.pdf").write_bytes(pdf)
+    packet_binding = {
+        **binding,
+        "material_relpath": "packet.pdf/chapter.pdf",
+    }
+    sources_data["sources"][0]["material"] = "material://packet.pdf"
+    sources_path.write_text(yaml.safe_dump(sources_data, sort_keys=False), encoding="utf-8")
+    assert verified_binding(load_repo(mini_repo), packet_binding) is None
+
+    (dotted_dir / "other.pdf").write_bytes(pdf)
+    sources_data["sources"][0]["material"] = "material://source-demo-book.v2/other.pdf"
+    sources_path.write_text(yaml.safe_dump(sources_data, sort_keys=False), encoding="utf-8")
+    assert verified_binding(load_repo(mini_repo), binding) == "binding PDF does not match the registered source file"

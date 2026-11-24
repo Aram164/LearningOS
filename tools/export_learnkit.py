@@ -23,7 +23,7 @@ from pathlib import Path
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
 
-from learning_os.domain.failures import WriteRefused  # noqa: E402
+from learning_os.domain.failures import PracticeSidecarUnreadable, WriteRefused  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 from learning_os.store.practice_export import (  # noqa: E402
     apply_plan,
@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         result = apply_plan(repo, document, args.vault)
         print(json.dumps({"status": "applied", **result["counts"]}))
         return 0
-    except WriteRefused as exc:
+    except (WriteRefused, PracticeSidecarUnreadable) as exc:
         print(json.dumps({"status": "refused", "reason": str(exc)}))
         return 2
     except (OSError, json.JSONDecodeError) as exc:

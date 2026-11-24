@@ -29,6 +29,7 @@ from learning_os.domain.codes import (
 )
 from learning_os.domain.failures import (
     PostCommitFailure,
+    PracticeSidecarUnreadable,
     ProjectionFailure,
     Refusal,
     ReplayEvidenceError,
@@ -218,7 +219,7 @@ TABLE: tuple[Row, ...] = (
         code=INTERNAL_FAILURE, retryable=False),
     Row("gateway.refusal", (TransactionScopeError,),
         code=OUT_OF_SCOPE, retryable=False),
-    Row("gateway.refusal", (TransactionValidationFailure,),
+    Row("gateway.refusal", (TransactionValidationFailure, PracticeSidecarUnreadable),
         code=VALIDATION_FAILED, retryable=False),
     Row("gateway.refusal", (TransactionRollbackIncomplete,),
         code=INTERNAL_FAILURE, retryable=True),
@@ -271,7 +272,7 @@ TABLE: tuple[Row, ...] = (
     Row("gateway.dispatch", (TransactionRecoveryConflict,),
         code=INTERNAL_FAILURE, retryable=False,
         details=_recovery_details, close={"code": INTERNAL_FAILURE}),
-    Row("gateway.dispatch", (WriteRefused, TransactionFailure, ValueError),
+    Row("gateway.dispatch", (WriteRefused, TransactionFailure, PracticeSidecarUnreadable, ValueError),
         code=_deferred_code, retryable=_deferred_retryable,
         exit=_deferred_exit, details=_empty_details, close={}),
     Row("gateway.dispatch", (Exception,),
@@ -286,7 +287,7 @@ TABLE: tuple[Row, ...] = (
     Row("cli", (TransactionFailure,), exit=2),
     Row("cli", (MaterialSynthesisError, LegacyArchiveError,
                 MastersPlanningError, BackupManifestError,
-                HealthReportError), exit=2),
+                HealthReportError, PracticeSidecarUnreadable), exit=2),
     Row("cli", (ManifestContractError,), exit=2),
 )
 

@@ -44,10 +44,12 @@ def attest(root: Path, number: int, changed: bool) -> None:
     digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
     old = None
     if changed:
-        import yaml
-
-        sidecar = yaml.safe_load((root / "knowledge" / "practice-index.yaml").read_text())
-        old = next(row for row in sidecar["items"] if row["item_id"] == item_id)
+        context_run = subprocess.run(
+            [sys.executable, str(repo / "tools" / "los.py"), "--root", str(root),
+             "practice-context", NOTE_ID, "--item-id", item_id],
+            capture_output=True, text=True, timeout=120, check=True,
+        )
+        old = json.loads(context_run.stdout)["items"][0]["stored_row"]
         text = note_path.read_text()
         note_path.write_text(text.replace("\n2\n</details>", "\nTwo\n</details>", 1))
     payload = _base_record(

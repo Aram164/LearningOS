@@ -1,5 +1,6 @@
 """Append-only LearnKit export: plan/apply, keeps, refusals (P6 steps 37-40)."""
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -8,6 +9,7 @@ from pathlib import Path
 
 import pytest
 from gateway_helpers import approved_v2_call
+from repo_builders import run_los
 from test_practice_verification import BANK_SOLUTION, _binding, _note, _reviewed_digest
 
 EXPORTER = Path(__file__).resolve().parent.parent / "tools" / "export_learnkit.py"
@@ -128,8 +130,9 @@ def test_changed_reviewed_card_refuses_with_exact_message(mini_repo, outside):
     # under a new content hash, so the existing card now differs.
     path = mini_repo / "knowledge/notes/mathematics/note-practice-bank.md"
     path.write_text(path.read_text().replace("\n4\n", "\nFour\n"), encoding="utf-8")
-    import yaml
-    old = yaml.safe_load((mini_repo / "knowledge/practice-index.yaml").read_text())["items"][0]
+    context = run_los(mini_repo, "practice-context", "note-practice-bank", "--item-id", ITEM)
+    assert context.returncode == 0, context.stdout + context.stderr
+    old = json.loads(context.stdout)["items"][0]["stored_row"]
     record = {
         "item_id": ITEM, "expected_old": old,
         "new_status": "confirmed", "method": "explicit-review",
@@ -199,3 +202,81 @@ def test_a_fabricated_stored_excerpt_is_not_exported(mini_repo, outside):
     assert entry["action"] == "refuse" and "not checked" in entry["reason"]
     assert export(mini_repo, "--vault", str(vault), "--apply", str(plan)).returncode == 2
     assert not (vault / "Cards").exists() or not list((vault / "Cards").glob("*.md"))
+
+
+def test_export_flock_busy_refusal_release_and_corrupt_sidecar(mini_repo, outside):
+    _verify(mini_repo)
+    vault = outside / "practice-vault"
+    plan = outside / "plan.json"
+    assert export(mini_repo, "--vault", str(vault), "--init").returncode == 0
+    assert export(mini_repo, "--vault", str(vault), "--check",
+                  "--item", ITEM, "--out", str(plan)).returncode == 0
+
+    sidecar = mini_repo / "knowledge/practice-index.yaml"
+    saved_sidecar = sidecar.read_text(encoding="utf-8")
+    sidecar.write_text("items: [\n", encoding="utf-8")
+    bad_sidecar = export(mini_repo, "--vault", str(vault), "--check",
+                         "--item", ITEM, "--out", str(outside / "bad.json"))
+    assert bad_sidecar.returncode == 2
+    assert "practice-index unreadable" in bad_sidecar.stdout + bad_sidecar.stderr
+    import yaml
+    leaked_data = yaml.safe_load(saved_sidecar)
+    secret = "EXPORT_SECRET_LEAK_" + ("x" * 240)
+    leaked_data["items"][0]["source_bindings"][0]["quote"] = secret
+    leaked_data["items"][0]["verifications"][0]["source_binding"]["quote"] = secret
+    sidecar.write_text(yaml.safe_dump(leaked_data, sort_keys=False), encoding="utf-8")
+    overlong_sidecar = export(mini_repo, "--vault", str(vault), "--check",
+                              "--item", ITEM, "--out", str(outside / "bad2.json"))
+    assert overlong_sidecar.returncode == 2
+    overlong_out = overlong_sidecar.stdout + overlong_sidecar.stderr
+    assert "items.0.source_bindings.0.quote" in overlong_out
+    assert "EXPORT_SECRET_LEAK_" not in overlong_out
+    sidecar.write_text(saved_sidecar, encoding="utf-8")
+
+    cards_dir = vault / "Cards"
+    cards_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = cards_dir / ".los-export.lock"
+
+    # Symlink lock refuses cleanly without unlinking the target.
+    target = outside / "sym-target"
+    target.write_text("keep", encoding="utf-8")
+    os.symlink(str(target), lock_path)
+    sym_refused = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
+    assert sym_refused.returncode == 2
+    assert str(lock_path) in sym_refused.stdout + sym_refused.stderr
+    assert target.read_text(encoding="utf-8") == "keep"
+    lock_path.unlink()
+
+    # Subprocess takes a kernel flock on the persistent lock file and signals readiness;
+    # concurrent export refuses, and a later export acquires the same inode after exit.
+    holder_script = (
+        "import fcntl, os, sys; "
+        "fd = os.open(sys.argv[1], os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600); "
+        "fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB); "
+        "print('LOCKED', flush=True); "
+        "sys.stdin.read()"
+    )
+    holder = subprocess.Popen(
+        [sys.executable, "-c", holder_script, str(lock_path)],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert holder.stdout is not None
+        assert holder.stdout.readline().strip() == "LOCKED"
+        lock_inode = lock_path.stat().st_ino
+        busy_refused = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
+        assert busy_refused.returncode == 2
+        assert str(lock_path) in busy_refused.stdout + busy_refused.stderr
+    finally:
+        if holder.stdin is not None:
+            holder.stdin.close()
+        _, holder_err = holder.communicate(timeout=10)
+    assert holder.returncode == 0, holder_err
+    assert lock_path.exists() and lock_path.stat().st_ino == lock_inode
+
+    after_release = export(mini_repo, "--vault", str(vault), "--apply", str(plan))
+    assert after_release.returncode == 0, after_release.stdout + after_release.stderr
+    assert lock_path.exists() and lock_path.stat().st_ino == lock_inode

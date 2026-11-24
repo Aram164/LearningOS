@@ -265,3 +265,56 @@ def test_keeper_may_ground_and_retract_unpinned_pilot_rows(mini_repo):
                        [{"action": "replace", "old": grounded, "new": retracted}], "keeper-retract")
     assert result.returncode == 0, result.stdout + result.stderr
     assert _relations(mini_repo) == [retracted]
+
+
+def test_keeper_rejects_datetime_delegation_fields(mini_repo):
+    for field in ("expires", "granted"):
+        _delegate(mini_repo, **{field: "2099-12-31T00:00:00+00:00"})
+        result = change_as(
+            mini_repo, "system-task", [{"action": "add", "new": _cited(mini_repo)}],
+            f"keeper-dt-{field}")
+        assert result.returncode != 0
+        assert "does not have the declared shape" in result.stdout + result.stderr
+
+
+def test_keeper_cannot_revive_or_retract_vetoed_rows(mini_repo):
+    _delegate(mini_repo)
+    vetoed = {**OLD, "status": "vetoed", "status_reason": "contradicted by exam"}
+    assert change_as(
+        mini_repo, "ui", [{"action": "replace", "old": OLD, "new": vetoed}],
+        "aram-veto").returncode == 0
+    revive = change_as(
+        mini_repo, "system-task",
+        [{"action": "replace", "old": vetoed, "new": _cited(mini_repo, OLD)}],
+        "keeper-revive-vetoed")
+    assert revive.returncode != 0
+    assert "vetoed relations are Aram's decision" in revive.stdout + revive.stderr
+    retract = change_as(
+        mini_repo, "system-task",
+        [{"action": "replace", "old": vetoed,
+          "new": {**_cited(mini_repo, OLD), "status": "retracted", "status_reason": "retry"}}],
+        "keeper-retract-vetoed")
+    assert retract.returncode != 0
+    assert "vetoed relations are Aram's decision" in retract.stdout + retract.stderr
+    assert _relations(mini_repo) == [vetoed]
+
+
+def test_add_refuses_duplicate_identity_across_statuses(mini_repo):
+    dup_active = change(mini_repo, [{"action": "add", "new": OLD}], "dup-active")
+    assert dup_active.returncode != 0
+    assert "already exists with status active" in dup_active.stdout + dup_active.stderr
+
+    retracted = {**OLD, "status": "retracted", "status_reason": "superseded"}
+    assert change(mini_repo, [{"action": "replace", "old": OLD, "new": retracted}],
+                  "to-retracted").returncode == 0
+    dup_retracted = change(mini_repo, [{"action": "add", "new": OLD}], "dup-retracted")
+    assert dup_retracted.returncode != 0
+    assert "already exists with status retracted" in dup_retracted.stdout + dup_retracted.stderr
+
+    vetoed = {**OLD, "status": "vetoed", "status_reason": "contradicted by exam"}
+    assert change(mini_repo, [{"action": "replace", "old": retracted, "new": vetoed}],
+                  "to-vetoed").returncode == 0
+    dup_vetoed = change(mini_repo, [{"action": "add", "new": OLD}], "dup-vetoed")
+    assert dup_vetoed.returncode != 0
+    out = dup_vetoed.stdout + dup_vetoed.stderr
+    assert "already exists with status vetoed" in out and "fresh evidence" in out

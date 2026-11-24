@@ -18,7 +18,10 @@ from learning_os.derive.projection.canvas import CANVAS_EDGE_COLORS, concept_dep
 from learning_os.derive.projection.concepts import PREREQ_TYPES
 from learning_os.domain.relations import RelationRow, enriched_relation
 from learning_os.domain.snapshot import Repo
-from learning_os.store.practice import checked_practice_by_note, relation_evidence_state
+from learning_os.store.practice import (
+    checked_practice_by_note,
+    relation_evidence_state,
+)
 
 CARD_W, CARD_H, STEP_X, STEP_Y = 320, 160, 520, 200
 
@@ -252,7 +255,8 @@ def build_atlas_boards(
     unit_to_concepts = cast(dict[str, list[str]], indexes.get("unit_to_concepts", {}))
     practice_counts: Counter[str] = Counter()
     note_concepts: dict[str, set[str]] = {}
-    for note_id, items in checked_practice_by_note(repo).items():
+    by_note = checked_practice_by_note(repo)
+    for note_id, items in by_note.items():
         for item in items:
             concepts = set(item.row["concept_ids"] if item.row is not None else [])
             practice_counts.update(concepts)

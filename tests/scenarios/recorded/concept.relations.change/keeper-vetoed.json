@@ -1,0 +1,167 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "knowledge/concept-relations.yaml": "b868e4a9efcbc3694dbb9c46fc753438ad30885d86a64bb5ee37829b6adf7ea6"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "concept.relations.change",
+              "channel": "ui",
+              "intent_sha256": "INTENT1",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "registry-concept-relations": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "concept.relations.change",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "registry-concept-relations": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "concept.relations.change",
+                "declared_writes": [
+                  "knowledge/concept-relations.yaml",
+                  "knowledge/concept-relations/**"
+                ]
+              }
+            ]
+          },
+          "capability": "concept.relations.change",
+          "committed_at": "2026-12-01T09:00:00+01:00",
+          "expected_revisions": {
+            "registry-concept-relations": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:c758d216ef16c0ccdb87e7dae4594355a46194dbd2d6a6412dd2afa6850bee93",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "direct-user-gesture",
+              "subject_sha256": "INTENT1"
+            },
+            "channel": "ui",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "INTENT1",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": false,
+              "path": "knowledge/concept-relations.yaml",
+              "sha256_after": "b868e4a9efcbc3694dbb9c46fc753438ad30885d86a64bb5ee37829b6adf7ea6",
+              "sha256_before": "931f4d1265651f884a6c0d6e2a57f7246ba676ab68326277fad6aa6dbb67298d"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "registry-concept-relations": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"concept.relations.change\",\"ok\":true,\"replayed\":false,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"snapshot_after\":\"SNAP1\",\"result\":{\"ok\":true,\"operation_count\":1,\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"registry-concept-relations\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false},\"error\":null}\n",
+      "stdout_json": {
+        "capability": "concept.relations.change",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "registry-concept-relations": 1
+          },
+          "ok": true,
+          "operation_count": 1,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "operation": "concept.relations.change",
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"schema_version\":2,\"request_id\":\"KEY3\",\"idempotency_key\":\"KEY4\",\"capability\":\"concept.relations.change\",\"ok\":false,\"replayed\":false,\"transaction_id\":null,\"receipt_path\":null,\"snapshot_after\":null,\"result\":{},\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"vetoed relations are Aram's decision; the keeper never revives or modifies them\",\"retryable\":false,\"details\":{}}}\n",
+      "stdout_json": {
+        "capability": "concept.relations.change",
+        "error": {
+          "code": "INVALID_REQUEST",
+          "details": {},
+          "message": "vetoed relations are Aram's decision; the keeper never revives or modifies them",
+          "retryable": false
+        },
+        "idempotency_key": "KEY4",
+        "ok": false,
+        "receipt_path": null,
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {},
+        "schema_version": 2,
+        "snapshot_after": null,
+        "transaction_id": null
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

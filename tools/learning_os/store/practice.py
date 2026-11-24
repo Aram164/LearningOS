@@ -18,7 +18,7 @@ from typing import TypedDict, cast
 
 import yaml
 
-from learning_os.domain.failures import WriteRefused
+from learning_os.domain.failures import PracticeSidecarUnreadable
 from learning_os.domain.practice import (
     PracticeItem,
     content_sha256,
@@ -128,22 +128,87 @@ def relation_evidence_state(repo: Repo, row: RelationRow) -> str:
     return evidence_state(row, [binding_file_state(repo, binding) for binding in evidence])
 
 
+_MATERIAL_FILE_SUFFIXES = frozenset({
+    ".pdf", ".md", ".markdown", ".txt", ".html", ".ipynb", ".csv", ".json",
+})
+
+
+def _safe_schema_reason(err: object) -> tuple[str, str]:
+    """Field path and value-free reason; never echoes excerpts or instance bytes."""
+    path = getattr(err, "absolute_path", ()) or ()
+    field = ".".join(str(part) for part in path) or "<root>"
+    validator = str(getattr(err, "validator", ""))
+    limit = getattr(err, "validator_value", None)
+    if validator == "maxLength":
+        return field, f"exceeds maximum length ({limit})"
+    if validator == "minLength":
+        return field, f"shorter than minimum length ({limit})"
+    if validator == "maxItems":
+        return field, f"exceeds maximum item count ({limit})"
+    if validator == "minItems":
+        return field, f"fewer than minimum item count ({limit})"
+    if validator in ("minimum", "exclusiveMinimum"):
+        return field, f"below minimum ({limit})"
+    if validator in ("maximum", "exclusiveMaximum"):
+        return field, f"above maximum ({limit})"
+    if validator == "type":
+        return field, f"expected type {limit}"
+    if validator == "required":
+        instance = getattr(err, "instance", None)
+        if isinstance(limit, list) and isinstance(instance, dict):
+            missing = [str(key) for key in limit if key not in instance]
+            if missing:
+                return field, f"missing required property {missing[0]!r}"
+        return field, "missing required property"
+    if validator == "additionalProperties":
+        return field, "contains an unexpected property"
+    if validator == "pattern":
+        return field, "does not match the required pattern"
+    if validator == "format":
+        return field, f"invalid format ({limit})"
+    if validator == "enum":
+        return field, "not one of the allowed values"
+    return field, f"failed schema constraint ({validator})"
+
+
 def sidecar_path(root: Path) -> Path:
     return root / SIDECAR_REL
 
 
 def load_sidecar(root: Path) -> PracticeIndex:
     path = sidecar_path(root)
+    if path.is_symlink():
+        raise PracticeSidecarUnreadable(f"practice-index cannot be a symlink: {path}")
     if not path.exists():
         return {"items": []}
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader)
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise PracticeSidecarUnreadable(
+            f"practice-index unreadable ({path}): invalid UTF-8 at byte {exc.start}"
+        ) from exc
+    except OSError as exc:
+        detail = exc.strerror or type(exc).__name__
+        raise PracticeSidecarUnreadable(f"practice-index unreadable ({path}): {detail}") from exc
+    try:
+        data = yaml.load(raw, Loader=UniqueKeySafeLoader)
+    except yaml.YAMLError as exc:
+        mark = getattr(exc, "problem_mark", None)
+        loc = f"line {mark.line + 1}, column {mark.column + 1}" if mark is not None else "parse error"
+        raise PracticeSidecarUnreadable(
+            f"practice-index unreadable ({path}): invalid YAML ({loc})"
+        ) from exc
     if not isinstance(data, dict) or not isinstance(data.get("items"), list):
-        raise WriteRefused("practice index must be a mapping with an items list")
+        raise PracticeSidecarUnreadable("practice-index invalid at <root>: must be a mapping with an items list")
     validator = load_standalone_validator(
         root / "system/schema/practice-index.schema.json", format_checker=True)
-    errors = sorted(validator.iter_errors(data), key=str)
+    errors = sorted(
+        validator.iter_errors(data),
+        key=lambda err: (tuple(str(part) for part in err.absolute_path), str(err.validator)),
+    )
     if errors:
-        raise WriteRefused(f"practice-index: {errors[0].message}")
+        field, reason = _safe_schema_reason(errors[0])
+        raise PracticeSidecarUnreadable(f"practice-index invalid at {field}: {reason}")
     return cast(PracticeIndex, data)
 
 
@@ -291,6 +356,26 @@ def _pinned_page(path: Path, digest: str, page: int, *, with_text: bool) -> tupl
     return count, text or ""
 
 
+def _registered_is_file(repo: Repo, registered_path: str) -> bool:
+    """Whether a registered material path denotes a single file rather than a directory."""
+    if not registered_path or registered_path.endswith("/"):
+        return False
+    try:
+        resolved = resolve_symlinks_inside(
+            repo.learningos_root / "materials",
+            repo.materials_root / registered_path,
+            strict=False,
+        )
+    except (PathBoundaryError, OSError):
+        resolved = None
+    if resolved is not None:
+        if resolved.is_dir():
+            return False
+        if resolved.is_file():
+            return True
+    return PurePosixPath(registered_path).suffix.lower() in _MATERIAL_FILE_SUFFIXES
+
+
 def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
     """Why a proposed source binding cannot be admitted, or None.
 
@@ -305,7 +390,7 @@ def verified_binding(repo: Repo, binding: Mapping[str, object]) -> str | None:
     if not isinstance(relative, str) or PurePosixPath(relative).suffix.lower() != ".pdf":
         return "binding must name a material PDF"
     registered = parse_material_uri(repo.sources[source_id].get("material"))
-    if registered is not None and PurePosixPath(registered.path).suffix:
+    if registered is not None and _registered_is_file(repo, registered.path):
         if relative != registered.path:
             return "binding PDF does not match the registered source file"
     elif not relative.startswith((registered.path if registered else source_id).rstrip("/") + "/"):

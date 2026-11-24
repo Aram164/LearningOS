@@ -88,7 +88,7 @@ captured 2
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability concept.relations.change --payload '{"change": {"operations": [{"action": "add", "new": {"from": "concept-variance", "type": "requires", "to": "concept-expected-value"}}]}}' --key relation-duplicate --request-id request-relation-duplicate --guards auto --out "$TMPDIR/relation-duplicate.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-seal_envelope: E REL-DUP: duplicate relation edge ('concept-variance', 'requires', 'concept-expected-value') [knowledge/concept-relations.yaml]; fix the payload and seal again
+seal_envelope: relation (concept-variance, requires, concept-expected-value) already exists with status active; update it via replace instead of add; fix the payload and seal again
 [2]
 ```
 

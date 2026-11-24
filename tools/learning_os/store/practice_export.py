@@ -11,6 +11,7 @@ card-replacement message, and nothing is ever deleted or rewritten.
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
@@ -407,6 +408,32 @@ def _publish(directory: int, name: str, body: str) -> bool:
         os.unlink(staged, dir_fd=directory)
 
 
+_EXPORT_LOCK_NAME = ".los-export.lock"
+
+
+def _acquire_export_lock(directory: int, lock_path: Path, stack: ExitStack) -> None:
+    """Acquire a persistent non-blocking kernel flock on `Vault/Cards/.los-export.lock`."""
+    lock_name = lock_path.name
+    flags = os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | getattr(os, "O_NONBLOCK", 0)
+    try:
+        lock_fd = os.open(lock_name, flags, 0o600, dir_fd=directory)
+    except OSError as exc:
+        raise WriteRefused(f"destination lock is unusable ({lock_path}): {exc}") from exc
+    stack.callback(os.close, lock_fd)
+    try:
+        st = os.fstat(lock_fd)
+    except OSError as exc:
+        raise WriteRefused(f"destination lock cannot be inspected ({lock_path}): {exc}") from exc
+    if not stat.S_ISREG(st.st_mode):
+        raise WriteRefused(f"destination lock is not a regular file ({lock_path})")
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        raise WriteRefused(f"another export holds the destination lock ({lock_path})") from None
+    except OSError as exc:
+        raise WriteRefused(f"destination lock could not be acquired ({lock_path}): {exc}") from exc
+
+
 def apply_plan(repo: Repo, document: dict[str, object], vault: Path) -> ExportResult:
     """Recheck under the destination lock and publish approved cards create-only."""
     marker = validate_vault(vault, repo.root)
@@ -438,14 +465,7 @@ def apply_plan(repo: Repo, document: dict[str, object], vault: Path) -> ExportRe
             pass
         directory = os.open("Cards", DIRECTORY_FLAGS, dir_fd=vault_fd)
         stack.callback(os.close, directory)
-        lock = ".los-export.lock"
-        try:
-            lock_fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW,
-                              0o600, dir_fd=directory)
-        except FileExistsError:
-            raise WriteRefused("another export holds the destination lock") from None
-        stack.callback(os.unlink, lock, dir_fd=directory)
-        stack.callback(os.close, lock_fd)
+        _acquire_export_lock(directory, vault / "Cards" / _EXPORT_LOCK_NAME, stack)
         if expected_snapshot != snapshot(repo.root):
             raise WriteRefused("Core changed since export check; run check again")
         entries = build_plan(load_repo(repo.root), item_ids, vault, directory=directory)
