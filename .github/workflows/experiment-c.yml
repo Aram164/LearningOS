@@ -1,0 +1,71 @@
+name: Experiment C baseline
+on:
+  push:
+    branches: ['experiment-c/baseline-20261125']
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      EXPECTED_CORE: fa65166f8a429d3f0b16e5c85669bd8bc96903cb
+      EXPECTED_UI: 3c7858da805a494d1fe1b8a8c9acfa6175cda683
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: probe
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: fa65166f8a429d3f0b16e5c85669bd8bc96903cb
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          path: obsidian-ui
+          ref: 3c7858da805a494d1fe1b8a8c9acfa6175cda683
+          persist-credentials: false
+      - name: Verify source and workflow identities
+        run: |
+          set -euo pipefail
+          mkdir evidence
+          for checkout in probe repository obsidian-ui; do
+            printf '%s %s\n' "$checkout" "$(git -C "$checkout" rev-parse HEAD)"
+            test -z "$(git -C "$checkout" status --porcelain)"
+          done | tee evidence/checkouts.txt
+          test "$(git -C repository rev-parse HEAD)" = "$EXPECTED_CORE"
+          test "$(git -C obsidian-ui rev-parse HEAD)" = "$EXPECTED_UI"
+          test "$(git -C probe rev-parse HEAD)" = "$GITHUB_SHA"
+          git -C probe ls-tree -r HEAD | tee evidence/probe-tree.txt
+          printf '%s\n' "$GITHUB_WORKFLOW_REF" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$RUNNER_NAME" "${ImageVersion:-unknown}" > evidence/runner.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.4'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install test dependencies
+        run: |
+          python -m venv repository/.venv
+          repository/.venv/bin/python -m pip install -e './repository[dev]'
+          npm --prefix obsidian-ui ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45486471935
+          pattern: junit-*
+          merge-multiple: true
+          path: historical-junit
+      - name: Run focused cases
+        run: repository/.venv/bin/python probe/experiment_c.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: experiment-c-baseline-attempt-${{ github.run_attempt }}
+          path: evidence/
+          if-no-files-found: error
