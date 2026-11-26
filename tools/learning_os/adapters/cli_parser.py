@@ -139,6 +139,7 @@ _SUBCOMMAND_ORDER = (
     "coordination-section-revise",
     "workspace-next-action",
     "workspace-complete",
+    "materials-manifest-sync",
     "operations",
 )
 

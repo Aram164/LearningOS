@@ -31,7 +31,7 @@ from learning_os.app.proposal import (
     Result,
     TransactionProposal,
 )
-from learning_os.app.registry import REGISTRY, register
+from learning_os.app.registry import REGISTRY, OperationEffects, register
 from learning_os.app.render import RenderPurityError, call_renderer, current_render
 from learning_os.domain.failures import (
     StaleSnapshot,
@@ -64,7 +64,8 @@ def pipe(mini_repo):
 
     _write_test_schema(mini_repo)
 
-    def make(kind="query", handler=None, human=None, render_check=None, lock=None):
+    def make(kind="query", handler=None, human=None, render_check=None, lock=None,
+             effects=OperationEffects.UNKNOWN):
         calls = []
 
         def default_handler(ctx, req):
@@ -72,7 +73,8 @@ def pipe(mini_repo):
             return Result({'echo': req.get('alpha'), 'n': req.get('beta')})
 
         register(TEST_OP, kind=kind, human=human,
-                 render_check=render_check, lock=lock)(handler or default_handler)
+                 render_check=render_check, lock=lock,
+                 effects=effects)(handler or default_handler)
         return calls
 
     yield make
@@ -2273,3 +2275,66 @@ def test_cx_command_malformed_tuple_is_not_a_line():
     """A short raw tuple is not a refusal line (D-9)."""
     with pytest.raises(ValueError):
         arch_audit_hook._refusal_line(("command-edge", "command-failure"))
+
+
+def test_operational_write_handlers_declare_operational_effect():
+    """Non-canonical porcelain writers must declare OPERATIONAL_WRITE, not CANONICAL_WRITE."""
+    expected = {
+        "ai-action.prepare",
+        "ai-action.append-slices",
+        "ai-action.delivery.import",
+        "session.end",
+    }
+    for op in expected:
+        assert REGISTRY[op].effects == OperationEffects.OPERATIONAL_WRITE, op
+    actual_operational = {
+        name for name, entry in REGISTRY.items()
+        if entry.effects == OperationEffects.OPERATIONAL_WRITE
+    }
+    assert actual_operational == expected
+
+
+def test_canonical_write_without_proposal_or_dispatch_fails_closed(pipe, mini_repo):
+    """CL-01: a CANONICAL_WRITE handler returning neither proposal nor dispatch raises."""
+    _write_gateway_wiring(mini_repo)
+
+    def rogue_handler(ctx, req):
+        return Result({"ok": True})
+
+    pipe("command", handler=rogue_handler, effects=OperationEffects.CANONICAL_WRITE)
+
+    with pytest.raises(AssertionError, match="CANONICAL_WRITE"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    outcome = _run_test_gateway(mini_repo, None, key="k1-canon-no-proposal-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code != 0
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INTERNAL_FAILURE"
+    assert "CANONICAL_WRITE" in body["error"]["message"]
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_canonical_write_allows_explicit_replay_and_check_without_proposal(pipe, mini_repo):
+    """Idempotent replay and check paths on CANONICAL_WRITE remain permitted."""
+    schema_path = mini_repo / "system/schema/requests" / f"{TEST_OP}.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    schema["properties"]["check"] = {"type": "boolean"}
+    schema_path.write_text(json.dumps(schema), encoding="utf-8")
+
+    def handler(ctx, req):
+        if req.get("check"):
+            return Result({"ok": True, "check": True})
+        return Result({"ok": True, "replayed": True})
+
+    pipe("command", handler=handler, effects=OperationEffects.CANONICAL_WRITE)
+
+    ns_check = _ns(mini_repo)
+    ns_check.check = True
+    check_out = pipeline_module.run_cli(mini_repo, TEST_OP, ns_check)
+    assert check_out.exit_code == 0 and check_out.ok is True
+
+    replay_out = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert replay_out.exit_code == 0 and replay_out.ok is True
+    assert json.loads(replay_out.stdout) == {"ok": True, "replayed": True}

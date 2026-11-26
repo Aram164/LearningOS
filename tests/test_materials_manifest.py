@@ -108,77 +108,77 @@ def test_verify_proves_a_restored_copy_is_complete(tmp_path):
     assert mm.verify(manifest, truncated, deep=True)["missing"] == ["x/a.pdf"]
 
 
-def test_main_documented_proof_catches_corruption(tmp_path, monkeypatch, capsys):
+def test_main_documented_proof_catches_corruption(mini_repo, tmp_path, monkeypatch, capsys):
     """1. Size-preserving corruption is caught by the documented command."""
-    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
-    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    original = make_tree(mini_repo.parent / "materials", {"a.pdf": "alpha"})
+    manifest_file = mini_repo / "records" / "materials-manifest.yaml"
     monkeypatch.setattr(mm, "MANIFEST", manifest_file)
     monkeypatch.setattr(mm, "materials_root", lambda: original)
-    
+
     def mock_load_manifest(path=None):
         path = path or mm.MANIFEST
         if not path.exists():
             return None
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
         assert mm.main() == 0
 
     copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy)]):
         assert mm.main() != 0
-        
+
     out, err = capsys.readouterr()
     assert "a.pdf" in out
 
 
-def test_main_fast_answers_weaker_question(tmp_path, monkeypatch, capsys):
+def test_main_fast_answers_weaker_question(mini_repo, tmp_path, monkeypatch, capsys):
     """2. --against --fast still answers the weaker question."""
-    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
-    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    original = make_tree(mini_repo.parent / "materials", {"a.pdf": "alpha"})
+    manifest_file = mini_repo / "records" / "materials-manifest.yaml"
     monkeypatch.setattr(mm, "MANIFEST", manifest_file)
     monkeypatch.setattr(mm, "materials_root", lambda: original)
-    
+
     def mock_load_manifest(path=None):
         path = path or mm.MANIFEST
         if not path.exists():
             return None
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
         assert mm.main() == 0
 
     copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy), "--fast"]):
         assert mm.main() == 0
-        
+
     out, err = capsys.readouterr()
     assert "size + presence" in out
 
 
-def test_main_local_default_did_not_change(tmp_path, monkeypatch, capsys):
+def test_main_local_default_did_not_change(mini_repo, monkeypatch, capsys):
     """3. The local default did not change (size-preserving corruption returns 0)."""
-    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
-    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    original = make_tree(mini_repo.parent / "materials", {"a.pdf": "alpha"})
+    manifest_file = mini_repo / "records" / "materials-manifest.yaml"
     monkeypatch.setattr(mm, "MANIFEST", manifest_file)
     monkeypatch.setattr(mm, "materials_root", lambda: original)
-    
+
     def mock_load_manifest(path=None):
         path = path or mm.MANIFEST
         if not path.exists():
             return None
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
         assert mm.main() == 0
 
     (original / "a.pdf").write_text("ALPHA", encoding="utf-8")
-    
+
     with patch.object(sys, "argv", ["materials_manifest.py"]):
         assert mm.main() == 0
 
@@ -187,24 +187,24 @@ def test_main_deep_and_fast_refused(monkeypatch, capsys):
     """4. --deep --fast is refused."""
     with patch.object(sys, "argv", ["materials_manifest.py", "--deep", "--fast"]):
         assert mm.main() == 2
-        
+
     out, err = capsys.readouterr()
     assert "--deep" in err
     assert "--fast" in err
 
 
-def test_main_build_serializes_under_operator_lock_and_writes_atomically(
-    tmp_path, monkeypatch, capsys
+def test_main_build_commits_through_gateway_under_operator_lock(
+    mini_repo, monkeypatch, capsys
 ):
-    """D-07: --build serializes under operator_lock and replaces atomically."""
+    """CL-05: --build acquires operator_lock and commits via materials.manifest.sync."""
     import contextlib
 
     import learning_os.app.lock as lock_mod
+    from learning_os.store.revisions import artifact_revision
 
-    repo_tmp = tmp_path / "repo"
-    base = make_tree(tmp_path / "materials", {"Books/a.pdf": "alpha"})
-    manifest_path = repo_tmp / "records" / "materials-manifest.yaml"
-    entered: list[object] = []
+    base = make_tree(mini_repo.parent / "materials", {"Books/a.pdf": "alpha"})
+    manifest_path = mini_repo / "records" / "materials-manifest.yaml"
+    entered: list[tuple[object, bool]] = []
 
     @contextlib.contextmanager
     def spy_lock(root, *, shared=False):
@@ -216,33 +216,38 @@ def test_main_build_serializes_under_operator_lock_and_writes_atomically(
     monkeypatch.setattr(mm, "materials_root", lambda: base)
     monkeypatch.setattr(sys, "argv", ["materials_manifest.py", "--build"])
 
-    rc = mm.main()
-    assert rc == 0
-    assert entered == [(repo_tmp, False)]
+    assert mm.main() == 0
+    assert entered and entered[0] == (mini_repo.resolve(), False)
     assert manifest_path.is_file()
     leftovers = [p for p in manifest_path.parent.iterdir() if ".tmp" in p.name]
     assert leftovers == []
     loaded = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     assert loaded["files"]["Books/a.pdf"]["size"] == 5
+    receipts = sorted((mini_repo / "operations" / "transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    receipt = yaml.safe_load(receipts[0].read_text(encoding="utf-8"))
+    assert receipt["capability"] == "materials.manifest.sync"
+    assert artifact_revision(mini_repo, "file:records/materials-manifest.yaml") == 1
     out, _ = capsys.readouterr()
     assert "wrote " in out
 
 
-def test_atomic_write_cleans_temp_file_on_replace_failure(tmp_path, monkeypatch):
-    """Crash safety: failed replace leaves prior manifest intact and removes .tmp."""
-    manifest_path = tmp_path / "records" / "materials-manifest.yaml"
-    manifest_path.parent.mkdir(parents=True)
-    manifest_path.write_text("prior: true\n", encoding="utf-8")
+def test_main_build_refuses_outside_initialized_repository(tmp_path, monkeypatch, capsys):
+    """CL-05: --build fails closed without direct writes when gateway/contracts are absent."""
+    assert not hasattr(mm, "_write_manifest_atomic")
+    bare_repo = tmp_path / "bare"
+    (bare_repo / "records").mkdir(parents=True)
+    base = make_tree(tmp_path / "materials", {"Books/a.pdf": "alpha"})
+    manifest_path = bare_repo / "records" / "materials-manifest.yaml"
 
-    def boom(src, dst):
-        raise OSError("simulated crash before rename")
+    monkeypatch.setattr(mm, "MANIFEST", manifest_path)
+    monkeypatch.setattr(mm, "materials_root", lambda: base)
+    monkeypatch.setattr(sys, "argv", ["materials_manifest.py", "--build"])
 
-    monkeypatch.setattr("os.replace", boom)
-    with pytest.raises(OSError, match="simulated crash"):
-        mm._write_manifest_atomic(manifest_path, "prior: false\n")
-
-    assert manifest_path.read_text(encoding="utf-8") == "prior: true\n"
-    assert list(manifest_path.parent.iterdir()) == [manifest_path]
+    assert mm.main() == 2
+    assert not manifest_path.exists()
+    _, err = capsys.readouterr()
+    assert "refused:" in err
 
 
 def test_normalise_material_uris_apply_is_retired_fails_closed(

@@ -35,18 +35,17 @@ is reproducible and would drift the manifest on every ``make materials``.
 from __future__ import annotations
 
 import argparse
-import contextlib
 import datetime as _dt
-import errno
 import hashlib
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 import yaml
 
-from learning_os.domain.material_inventory import render_manifest
+from learning_os.domain.material_inventory import (
+    render_manifest as render_manifest,  # public re-export
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "records" / "materials-manifest.yaml"
@@ -208,83 +207,96 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-@contextlib.contextmanager
-def _build_lock(lock_root: Path):
-    """Serialize manifest builds under operator_lock when available.
+class _ManifestSyncRefused(RuntimeError):
+    """Raised when ``--build`` cannot dispatch through the admitted gateway."""
 
-    The isolated 5-file ``los-anchored-copy`` fixture omits ``learning_os``;
-    when that import is absent, fall back to a dedicated advisory lock in
-    the temp directory so canonical directories never gain scratch files.
+
+def _commit_manifest_via_gateway(base: Path, *, manifest_path: Path | None = None) -> dict:
+    """Collect the manifest from ``base`` and commit via GatewayEnvelopeV2.
+
+    ``materials_manifest.py`` contains no direct write primitives; persistence
+    runs exclusively through ``materials.manifest.sync`` -> ``TransactionService``.
     """
+    target = (manifest_path or MANIFEST).resolve()
+    if len(target.parents) < 2 or target.parent.name != "records" or target.name != "materials-manifest.yaml":
+        raise _ManifestSyncRefused(
+            f"manifest target must be <repo>/records/materials-manifest.yaml, got {target}"
+        )
+    repo_root = target.parents[1]
+    if not (repo_root / "system" / "contracts" / "capabilities.yaml").is_file():
+        raise _ManifestSyncRefused(
+            f"cannot commit manifest outside an initialized LearningOS repository ({repo_root})"
+        )
+    if target.is_symlink():
+        raise _ManifestSyncRefused(f"refusing symlink manifest target: {target}")
+
     try:
+        import uuid
+
         from learning_os.app.lock import operator_lock
-    except ModuleNotFoundError:
-        import fcntl
+        from learning_os.app.pipeline import close_attempt, run_gateway
+        from learning_os.domain.failures import WriteRefused
+        from learning_os.store.contracts.capability_catalog import command_definitions
+        from learning_os.store.contracts.gateway import intent_sha256
+        from learning_os.store.diagnostics import tracer as diag_tracer
+        from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
+        from learning_os.store.fingerprint import snapshot as _snapshot
+        from learning_os.store.revisions import artifact_revision
+    except ModuleNotFoundError as exc:
+        raise _ManifestSyncRefused(
+            f"materials.manifest.sync gateway runtime is unavailable ({exc.name})"
+        ) from exc
 
-        digest = hashlib.sha256(str(lock_root.resolve()).encode("utf-8")).hexdigest()[:12]
-        lock_path = Path(tempfile.gettempdir()) / f"learningos-manifest-{digest}.lock"
-        with open(lock_path, "a+", encoding="utf-8") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-            try:
-                yield
-            finally:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-        return
+    definitions = command_definitions(repo_root)
+    if "materials.manifest.sync" not in definitions:
+        raise _ManifestSyncRefused(
+            "capabilities catalog does not declare materials.manifest.sync"
+        )
 
-    with operator_lock(lock_root):
-        yield
-
-
-def _sync_fd(fd: int) -> None:
+    _bind_diag_store(repo_root)
+    attempt = diag_tracer.begin_attempt({"capability": "materials.manifest.sync"})
     try:
-        import fcntl
-    except ImportError:  # pragma: no cover - POSIX hosts provide fcntl
-        fcntl = None
-
-    if fcntl is not None and hasattr(fcntl, "F_FULLFSYNC"):
-        try:
-            fcntl.fcntl(fd, fcntl.F_FULLFSYNC)
-            return
-        except OSError as exc:
-            if exc.errno not in {errno.ENOTTY, errno.EINVAL, errno.ENOTSUP}:
-                raise
-    os.fsync(fd)
-
-
-def _sync_directory(directory: Path) -> None:
-    try:
-        fd = os.open(directory, os.O_RDONLY)
-    except OSError:
-        return
-    try:
-        os.fsync(fd)
-    except OSError as exc:
-        if exc.errno not in {errno.ENOTTY, errno.EINVAL, errno.ENOTSUP, errno.EBADF}:
-            raise
-    finally:
-        os.close(fd)
-
-
-def _write_manifest_atomic(path: Path, content: str) -> None:
-    """Write ``content`` to a sibling temp file, fsync, and atomically replace."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_name = tempfile.mkstemp(
-        prefix=f".{path.name}.",
-        suffix=".tmp",
-        dir=path.parent,
-    )
-    tmp_path = Path(tmp_name)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write(content)
-            handle.flush()
-            _sync_fd(handle.fileno())
-        os.chmod(tmp_path, 0o644)
-        os.replace(tmp_path, path)
-    except BaseException:
-        tmp_path.unlink(missing_ok=True)
+        with operator_lock(repo_root):
+            manifest = build(base)
+            expected_snapshot = _snapshot(repo_root)
+            artifact = "file:records/materials-manifest.yaml"
+            expected_revisions = {artifact: artifact_revision(repo_root, artifact)}
+            envelope = {
+                "schema_version": 2,
+                "request_id": f"manifest-sync-{uuid.uuid4().hex}",
+                "idempotency_key": f"manifest-sync-{uuid.uuid4().hex}",
+                "capability": "materials.manifest.sync",
+                "channel": "operator",
+                "expected_snapshot": expected_snapshot,
+                "expected_revisions": expected_revisions,
+                "approval": {
+                    "kind": "operator-approval",
+                    "subject_sha256": "sha256:" + "0" * 64,
+                },
+                "payload": {
+                    "record": manifest,
+                },
+            }
+            envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+            outcome = run_gateway(
+                repo_root,
+                envelope,
+                requested="materials.manifest.sync",
+                definitions=definitions,
+                attempt=attempt,
+                replay_only=False,
+            )
+    except WriteRefused as exc:
+        close_attempt(attempt, 2, "error", {"stage": "core.admission"})
+        raise _ManifestSyncRefused(str(exc)) from exc
+    except Exception:
+        close_attempt(attempt, 1, "error", {"stage": "core.materials_manifest"})
         raise
-    _sync_directory(path.parent)
+
+    if outcome.exit_code != 0:
+        detail = outcome.stderr.strip() or outcome.stdout.strip() or f"exit {outcome.exit_code}"
+        raise _ManifestSyncRefused(detail)
+    return manifest
 
 
 def main() -> int:
@@ -308,14 +320,11 @@ def main() -> int:
         if not base.is_dir():
             print(f"materials tree not found: {base}", file=sys.stderr)
             return 2
-        lock_root = (
-            MANIFEST.parents[1]
-            if len(MANIFEST.parents) >= 2 and MANIFEST.parent.name == "records"
-            else MANIFEST.parent
-        )
-        with _build_lock(lock_root):
-            manifest = build(base)
-            _write_manifest_atomic(MANIFEST, render_manifest(manifest))
+        try:
+            manifest = _commit_manifest_via_gateway(base)
+        except _ManifestSyncRefused as exc:
+            print(f"refused: {exc}", file=sys.stderr)
+            return 2
         gb = manifest["totals"]["bytes"] / 1024**3
         print(f"wrote {_manifest_label()}: "
               f"{manifest['totals']['files']} files, {gb:.2f} GB")

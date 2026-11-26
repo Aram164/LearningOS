@@ -96,7 +96,7 @@ def test_identical_canonical_write_preserves_inode_but_checks_revisions(tmp_path
     target.parent.mkdir(parents=True)
     target.write_bytes(b"unchanged\n")
     before = target.stat()
-    service = TransactionService(tmp_path)
+    service = TransactionService(tmp_path, _unmediated_test_only=True)
     validated = []
     result = service.commit(
         capability="project.update", writes={target: b"unchanged\n"},

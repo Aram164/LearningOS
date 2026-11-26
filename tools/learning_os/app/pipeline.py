@@ -35,7 +35,7 @@ from learning_os.app.proposal import (
     Presentation,
     ResponsePayload,
 )
-from learning_os.app.registry import REGISTRY
+from learning_os.app.registry import REGISTRY, OperationEffects
 from learning_os.app.render import call_renderer
 from learning_os.app.session import (
     UNPROVABLE_AGGREGATE_LEDGERS,
@@ -222,6 +222,18 @@ def _commit_with_gesture(ctx, operation: str, result):
     return CommitOutcome(code, errors, confirmation, refusal=outcome.refusal)
 
 
+def _require_canonical_write_proposal(operation: str, entry, result, *, checking: bool) -> None:
+    """Fail closed when a CANONICAL_WRITE handler omits a commit proposal or dispatch."""
+    if entry.effects != OperationEffects.CANONICAL_WRITE or checking or result.proposal is not None:
+        return
+    if isinstance(result.payload, dict) and result.payload.get("replayed") is True:
+        return
+    raise AssertionError(
+        f"{operation}: CANONICAL_WRITE operation returned neither a "
+        "TransactionProposal nor a GatewayDispatch"
+    )
+
+
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
@@ -269,6 +281,7 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             return run_gateway(root, envelope, requested=envelope["capability"],
                 definitions=command_definitions(root), attempt=attempt,
                 replay_only=False, parser_factory=args._parser_factory)
+        _require_canonical_write_proposal(operation, entry, result, checking=checking)
         if checking and result.proposal is not None:
             record = check_proposal(ctx, result.proposal)
             payload = (call_renderer(operation, "render_check", entry.render_check,
@@ -770,6 +783,7 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
         raise WriteRefused("external-tool failure results are CLI-only", exit_code=2) from exc
     if isinstance(res.payload, GatewayDispatch):
         raise WriteRefused(f"{operation}: reviewed dispatch is CLI-only", exit_code=2)
+    _require_canonical_write_proposal(operation, entry, res, checking=checking)
     if checking and res.proposal is not None:
         record = check_proposal(ctx, res.proposal)
         if entry.render_check is not None:

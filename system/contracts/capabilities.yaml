@@ -579,6 +579,37 @@ commands:
     - "the destination must not exist: an existing canonical identity or file is refused, because an absent revision entry cannot prove absence"
     - the reviewed file bytes are bound to their exact SHA-256 before use
     - one transaction and one receipt cover the creation; the collection's artifact revision is registered from birth
+  materials.manifest.sync:
+    handler: materials_manifest_sync
+    cli_command: materials-manifest-sync
+    kind: command
+    writes:
+    - records/materials-manifest.yaml
+    invariants:
+    - syncs the durable materials inventory solely to records/materials-manifest.yaml
+    - GatewayEnvelopeV2 carries the inline manifest mapping so approval binds exact inventory entries
+    - commits atomically through TransactionService under snapshot and revision guards with one V2 receipt
+    payload_records:
+      record:
+        description: >-
+          Accepted external materials inventory mapping
+          (schema_version, captured, totals, files).
+        accepted: [schema_version, captured, totals, files]
+        required: [schema_version, captured, totals, files]
+        types:
+          schema_version: integer
+          captured: string
+        fields:
+          totals:
+            type: object
+            accepted: [files, bytes]
+            required: [files, bytes]
+            types:
+              files: integer
+              bytes: integer
+          files:
+            type: object
+            description: "Normalized material-relative POSIX file paths mapped to {size, sha256}."
   program.semester.update:
     handler: program_semester_update
     cli_command: program-semester-update

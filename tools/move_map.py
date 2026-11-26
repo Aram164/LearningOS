@@ -668,6 +668,22 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _check_target_no_symlinks(target: Path, root_real: Path) -> None:
+    """Refuse any symlink at or above ``target`` inside ``root_real`` before mutating."""
+    try:
+        rel = target.relative_to(root_real)
+    except ValueError:
+        try:
+            rel = target.resolve(strict=False).relative_to(root_real)
+        except ValueError as exc:
+            raise MoveError(f"write target escapes repository: {target}") from exc
+    cursor = root_real
+    for part in rel.parts:
+        cursor = cursor / part
+        if cursor.is_symlink():
+            raise MoveError(f"refusing symlink target or component: {cursor.relative_to(root_real)}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -700,18 +716,25 @@ def main(argv: list[str] | None = None) -> int:
     completed_moves: list[Move] = []
     saved_files: list[tuple[Path, bytes | None]] = []
     try:
+        ledger = root / MOVE_LEDGER
+        for post in sorted(writes):
+            _check_target_no_symlinks(root / post, root_real)
+        _check_target_no_symlinks(ledger, root_real)
         for move in moves:
             _git(root, "mv", move.from_norm, move.to_norm)
             completed_moves.append(move)
         for post, new_text in sorted(writes.items()):
             target = root / post
-            prior = target.read_bytes() if target.is_file() and not target.is_symlink() else None
+            if target.is_symlink():
+                raise MoveError(f"refusing symlink write target: {post}")
+            prior = target.read_bytes() if target.is_file() else None
             saved_files.append((target, prior))
             atomic_write_text_exclusive(
                 target, new_text, boundary=root_real, durable=False, error_factory=OSError,
             )
-        ledger = root / MOVE_LEDGER
-        prior_ledger = ledger.read_bytes() if ledger.is_file() and not ledger.is_symlink() else None
+        if ledger.is_symlink():
+            raise MoveError(f"refusing symlink ledger target: {MOVE_LEDGER}")
+        prior_ledger = ledger.read_bytes() if ledger.is_file() else None
         recorded = (yaml.safe_load(prior_ledger.decode("utf-8")) or {}
                     if prior_ledger is not None else {})
         entries = list(recorded.get("moves") or [])
@@ -722,23 +745,30 @@ def main(argv: list[str] | None = None) -> int:
             ledger, yaml.safe_dump({"moves": entries}, sort_keys=False),
             boundary=root_real, durable=False, error_factory=OSError,
         )
-    except (MoveError, OSError) as exc:
+    except (MoveError, OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        rollback_errors: list[str] = []
         for target, prior in reversed(saved_files):
             try:
+                if target.is_symlink():
+                    rollback_errors.append(f"refusing symlink rollback target {target}")
+                    continue
                 if prior is None:
-                    target.unlink(missing_ok=True)
+                    if not target.is_symlink():
+                        target.unlink(missing_ok=True)
                 else:
                     atomic_write_bytes_exclusive(
                         target, prior, boundary=root_real, durable=False, error_factory=OSError,
                     )
-            except OSError:
-                pass
+            except OSError as rb_exc:
+                rollback_errors.append(f"restore {target}: {rb_exc}")
         for move in reversed(completed_moves):
             try:
                 _git(root, "mv", move.to_norm, move.from_norm)
-            except MoveError:
-                pass
+            except MoveError as rb_exc:
+                rollback_errors.append(f"revert git mv {move.to_norm}: {rb_exc}")
         print(f"move_map: {exc}", file=sys.stderr)
+        for rb_err in rollback_errors:
+            print(f"move_map: rollback error: {rb_err}", file=sys.stderr)
         return 2
     for line in lines:
         print(line)

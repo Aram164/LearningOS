@@ -2,21 +2,25 @@
 
 from __future__ import annotations
 
+import datetime as _dt
 import errno
 import hashlib
 import json
 import os
 import re
 import stat
+import sys
 from pathlib import Path, PurePosixPath
 
 import yaml
 
 from learning_os.app.context import OpContext
+from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
+from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.handlers._shared import window_values as _window_values
-from learning_os.app.proposal import Result
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import OperationEffects, register
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
@@ -28,6 +32,7 @@ from learning_os.derive.semantics.claim_status import claims_summary, observe_cl
 from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
 from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
+from learning_os.domain.material_inventory import render_manifest
 from learning_os.domain.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
@@ -43,6 +48,7 @@ from learning_os.domain.suggest import (
     with_suggestions,
 )
 from learning_os.domain.vocabulary import FRONTMATTER_RE
+from learning_os.store.contracts.write_scopes import WriteScopeError, normalize_relative_path
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.fs import note_bytes as _note_bytes
 from learning_os.store.material_analysis import observe_local_material
@@ -76,6 +82,8 @@ from learning_os.store.materials.slices import read_part as _read_part
 from learning_os.store.materials.slices import route_material_files as _route_material_files
 from learning_os.store.materials.slices import unit_card_scope as _unit_card_scope
 from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
+from learning_os.store.revisions import artifact_revision
+from learning_os.store.transactions import parse_expected_revisions
 
 MAX_STAGE_RESULTS = 5
 
@@ -2387,4 +2395,220 @@ def material_search(ctx: OpContext, req: dict) -> Result:
         _study_hit_cards(ctx, repo, session, payload, query_terms=terms)
 
     return Result(payload)
+
+
+_MANIFEST_TOP_KEYS = frozenset({"schema_version", "captured", "totals", "files"})
+_MANIFEST_ENTRY_KEYS = frozenset({"size", "sha256"})
+_MANIFEST_TOTAL_KEYS = frozenset({"files", "bytes"})
+_HEX_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _load_manifest_input(ctx: OpContext, req: dict) -> dict:
+    record = req.get("record")
+    if record is not None:
+        if not isinstance(record, dict):
+            raise WriteRefused(
+                "materials manifest record must be a mapping",
+                site="materials.manifest.sync.bad-record",
+                prefixed=True,
+                exit_code=2,
+            )
+        return record
+    file_name = req.get("file")
+    if not isinstance(file_name, str) or not file_name:
+        raise WriteRefused(
+            "materials manifest --file or --record is required",
+            site="materials.manifest.sync.bad-file",
+            prefixed=True,
+            exit_code=2,
+        )
+    if file_name == "-":
+        raw_text = sys.stdin.read()
+    else:
+        path = Path(file_name).expanduser()
+        if path.is_symlink() or not path.is_file():
+            raise WriteRefused(
+                f"materials manifest file not found: {file_name}",
+                site="materials.manifest.sync.bad-file",
+                prefixed=True,
+                exit_code=2,
+            )
+        try:
+            raw_text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            raise WriteRefused(
+                f"cannot read materials manifest file {file_name}: {exc}",
+                site="materials.manifest.sync.bad-file",
+                prefixed=True,
+                exit_code=2,
+            ) from exc
+    try:
+        parsed = yaml.safe_load(raw_text)
+    except yaml.YAMLError as exc:
+        raise WriteRefused(
+            f"invalid materials manifest YAML: {exc}",
+            site="materials.manifest.sync.bad-yaml",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    if not isinstance(parsed, dict):
+        raise WriteRefused(
+            "materials manifest record must be a mapping",
+            site="materials.manifest.sync.bad-record",
+            prefixed=True,
+            exit_code=2,
+        )
+    return parsed
+
+
+def _validated_manifest_record(ctx: OpContext, record: dict) -> dict:
+    def _bad(message: str) -> WriteRefused:
+        return WriteRefused(
+            message,
+            site="materials.manifest.sync.bad-record",
+            prefixed=True,
+            exit_code=2,
+        )
+
+    unknown = sorted(set(record) - _MANIFEST_TOP_KEYS)
+    missing = sorted(_MANIFEST_TOP_KEYS - set(record))
+    if unknown or missing:
+        parts = []
+        if unknown:
+            parts.append(f"unknown keys: {', '.join(unknown)}")
+        if missing:
+            parts.append(f"missing keys: {', '.join(missing)}")
+        raise _bad("materials manifest has invalid fields: " + "; ".join(parts))
+
+    version = record["schema_version"]
+    if isinstance(version, bool) or version != 1:
+        raise _bad("materials manifest schema_version must equal 1")
+
+    captured = record["captured"]
+    if isinstance(captured, _dt.date) and not isinstance(captured, _dt.datetime):
+        captured = captured.isoformat()
+    elif not isinstance(captured, str) or len(captured) != 10:
+        raise _bad("materials manifest captured must be a YYYY-MM-DD date string")
+    try:
+        _dt.date.fromisoformat(captured)
+    except ValueError as exc:
+        raise _bad(f"materials manifest captured is not a valid date: {captured!r}") from exc
+
+    totals = record["totals"]
+    if not isinstance(totals, dict) or set(totals) != _MANIFEST_TOTAL_KEYS:
+        raise _bad("materials manifest totals must map exactly files and bytes")
+    total_files = totals["files"]
+    total_bytes = totals["bytes"]
+    if isinstance(total_files, bool) or not isinstance(total_files, int) or total_files < 0:
+        raise _bad("materials manifest totals.files must be a non-negative integer")
+    if isinstance(total_bytes, bool) or not isinstance(total_bytes, int) or total_bytes < 0:
+        raise _bad("materials manifest totals.bytes must be a non-negative integer")
+
+    files = record["files"]
+    if not isinstance(files, dict):
+        raise _bad("materials manifest files must be a mapping")
+    normalized_files: dict[str, dict[str, object]] = {}
+    measured_bytes = 0
+    for rel, row in files.items():
+        if not isinstance(rel, str):
+            raise _bad("materials manifest file keys must be strings")
+        try:
+            normalized_rel = normalize_relative_path(rel)
+        except WriteScopeError as exc:
+            raise _bad(f"invalid materials manifest path {rel!r}: {exc}") from exc
+        if normalized_rel != rel:
+            raise _bad(f"materials manifest path must be normalized POSIX relative: {rel!r}")
+        if not isinstance(row, dict) or set(row) != _MANIFEST_ENTRY_KEYS:
+            raise _bad(f"materials manifest entry {rel!r} must carry size and sha256")
+        size = row["size"]
+        digest = row["sha256"]
+        if isinstance(size, bool) or not isinstance(size, int) or size < 0:
+            raise _bad(f"materials manifest entry {rel!r} size must be a non-negative integer")
+        if not isinstance(digest, str) or not _HEX_SHA256.match(digest):
+            raise _bad(f"materials manifest entry {rel!r} sha256 must be 64 lowercase hex")
+        normalized_files[normalized_rel] = {"size": size, "sha256": digest}
+        measured_bytes += size
+
+    if total_files != len(normalized_files) or total_bytes != measured_bytes:
+        raise _bad(
+            "materials manifest totals disagree with files entries "
+            f"(declared {total_files}/{total_bytes}, measured {len(normalized_files)}/{measured_bytes})"
+        )
+    return {
+        "schema_version": 1,
+        "captured": captured,
+        "totals": {"files": total_files, "bytes": total_bytes},
+        "files": normalized_files,
+    }
+
+
+@register(
+    "materials.manifest.sync",
+    kind="command",
+    render_check=_render_creation_check,
+    effects=OperationEffects.CANONICAL_WRITE,
+)
+def materials_manifest_sync(ctx: OpContext, req: dict) -> Result:
+    """Commit the external materials inventory atomically to records/materials-manifest.yaml."""
+    root = ctx.root
+    normalized = _validated_manifest_record(ctx, _load_manifest_input(ctx, req))
+    target = root / "records" / "materials-manifest.yaml"
+    rendered = render_manifest(normalized)
+    artifact = "file:records/materials-manifest.yaml"
+
+    if req.get("check"):
+        expected_revisions = {artifact: artifact_revision(root, artifact)}
+        prepared = {
+            "ok": True,
+            "check": True,
+            "mode": "check",
+            "capability": "materials.manifest.sync",
+            "manifest_path": "records/materials-manifest.yaml",
+            "files": normalized["totals"]["files"],
+            "bytes": normalized["totals"]["bytes"],
+            "captured": normalized["captured"],
+            "gateway_envelope": prepare_review_envelope(
+                "materials.manifest.sync",
+                {"record": normalized},
+                ctx.snapshot_id(),
+                expected_revisions,
+            ),
+        }
+        return Result(
+            prepared,
+            proposal=TransactionProposal(
+                capability="materials.manifest.sync",
+                writes={target: rendered},
+                artifact_ids=[artifact],
+                expected_revisions=expected_revisions,
+            ),
+        )
+
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="materials.manifest.sync.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+    applied_payload = {
+        "ok": True,
+        "mode": "apply",
+        "manifest_path": "records/materials-manifest.yaml",
+        "files": normalized["totals"]["files"],
+        "bytes": normalized["totals"]["bytes"],
+        "captured": normalized["captured"],
+    }
+    return Result(
+        ResponsePayload({"ok": True}, applied_payload, confirmation="merge"),
+        proposal=TransactionProposal(
+            capability="materials.manifest.sync",
+            writes={target: rendered},
+            artifact_ids=[artifact],
+            expected_revisions=expected_revisions,
+        ),
+    )
 

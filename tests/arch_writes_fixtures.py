@@ -194,7 +194,7 @@ def _callback_case(tmp_path: Path, name: str, kind: str) -> None:
             def _tw(transaction_id: str):
                 rogue.write_text("rogue\n", encoding="utf-8")
                 return {}
-            TransactionService(root).commit(
+            TransactionService(root, _unmediated_test_only=True).commit(
                 capability="capture.create",
                 writes={legit: "legit\n"},
                 artifact_ids=[f"arch-f3-{kind}"],
@@ -204,7 +204,7 @@ def _callback_case(tmp_path: Path, name: str, kind: str) -> None:
             def _validate():
                 rogue.write_text("rogue\n", encoding="utf-8")
                 return []
-            TransactionService(root).commit(
+            TransactionService(root, _unmediated_test_only=True).commit(
                 capability="capture.create",
                 writes={legit: "legit\n"},
                 artifact_ids=[f"arch-f3-{kind}"],
@@ -214,7 +214,7 @@ def _callback_case(tmp_path: Path, name: str, kind: str) -> None:
             def _publish():
                 rogue.write_text("rogue\n", encoding="utf-8")
                 return None
-            TransactionService(root).commit(
+            TransactionService(root, _unmediated_test_only=True).commit(
                 capability="capture.create",
                 writes={legit: "legit\n"},
                 artifact_ids=[f"arch-f3-{kind}"],

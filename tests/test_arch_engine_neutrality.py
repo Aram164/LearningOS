@@ -141,7 +141,7 @@ def test_callbacks_see_no_phase(tmp_path: Path):
     root = _mini_root(tmp_path / "callbacks-ok")
     target = root / "work" / "inbox" / "callback-ok.md"
     with cases._pinned_tz():
-        TransactionService(root, clock=cases._clock).commit(
+        TransactionService(root, clock=cases._clock, _unmediated_test_only=True).commit(
             capability="capture.create",
             writes={target: "ok\n"},
             artifact_ids=["arch-callbacks"],
@@ -178,7 +178,7 @@ def test_rollback_publish_sees_no_phase(tmp_path: Path):
     target = root / "work" / "inbox" / "callback-rollback.md"
     with cases._pinned_tz():
         with pytest.raises(TransactionFailure):
-            TransactionService(root, clock=cases._clock).commit(
+            TransactionService(root, clock=cases._clock, _unmediated_test_only=True).commit(
                 capability="capture.create",
                 writes={target: "will roll back\n"},
                 artifact_ids=["arch-callbacks-rollback"],

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/materials.manifest.sync.schema.json",
+  "title": "payload for capability materials.manifest.sync",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "validate and report the manifest update without writing"
+    },
+    "file": {
+      "type": "string",
+      "description": "YAML or JSON file holding the materials inventory record ('-' for stdin)"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "integer"
+        },
+        "captured": {
+          "type": "string"
+        },
+        "totals": {
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "integer"
+            },
+            "bytes": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "bytes",
+            "files"
+          ]
+        },
+        "files": {
+          "type": "object",
+          "description": "Normalized material-relative POSIX file paths mapped to {size, sha256}."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "captured",
+        "files",
+        "schema_version",
+        "totals"
+      ],
+      "description": "Accepted external materials inventory mapping (schema_version, captured, totals, files)."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

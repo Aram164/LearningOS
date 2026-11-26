@@ -422,7 +422,7 @@ def test_ai_apply_with_the_wrong_approval_kind_is_unconfirmed(mini_repo: Path):
 def test_failed_canonical_validation_is_typed(mini_repo: Path):
     """The commit's validation gate raises typed, not prose to match."""
     target = mini_repo / "work/inbox/typed-validation.md"
-    service = TransactionService(mini_repo)
+    service = TransactionService(mini_repo, _unmediated_test_only=True)
     with pytest.raises(TransactionValidationFailure, match="canonical validation"):
         service.commit(
             capability="capture.create",

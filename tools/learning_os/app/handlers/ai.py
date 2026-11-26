@@ -160,7 +160,7 @@ def ai_action_status(ctx: OpContext, req: dict) -> Result:
     return Result({"ok": True, "request": request})
 
 
-@register("ai-action.prepare", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
+@register("ai-action.prepare", kind="porcelain", effects=OperationEffects.OPERATIONAL_WRITE)
 def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     """Persist a bounded AI request bundle."""
     root = ctx.root
@@ -179,7 +179,7 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     })
 
 
-@register("ai-action.append-slices", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
+@register("ai-action.append-slices", kind="porcelain", effects=OperationEffects.OPERATIONAL_WRITE)
 def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     """Attach one targeted follow-up slice pass to a prepared request."""
     root = ctx.root
@@ -221,7 +221,7 @@ def ai_action_apply_preview(ctx: OpContext, req: dict) -> Result:
     return Result(result)
 
 
-@register("ai-action.delivery.import", kind="porcelain", effects=OperationEffects.CANONICAL_WRITE)
+@register("ai-action.delivery.import", kind="porcelain", effects=OperationEffects.OPERATIONAL_WRITE)
 def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     """Import and validate an approved delivery directory."""
     root = ctx.root

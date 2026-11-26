@@ -173,6 +173,7 @@ _CONTENT_BOUND_V2 = frozenset({
     "legacy.archive.lock.publish",
     "masters-planning.catalog.update",
     "masters-planning.comparison.publish",
+    "materials.manifest.sync",
     "collection.entry.revise",
     "source.intake.record",
     "source.record.revise",

@@ -1512,6 +1512,7 @@ class TransactionService:
         clock: Callable[[], dt.datetime] | None = None,
         authority_root: Path | None = None,
         scope_prefix: str | None = None,
+        _unmediated_test_only: bool = False,
     ):
         self.root = root.resolve()
         self.clock = clock or observations.now
@@ -1522,6 +1523,7 @@ class TransactionService:
             else (self.root if implicit_catalogue.is_file() else None)
         )
         self.scope_prefix = str(scope_prefix or "").strip("/")
+        self._unmediated_test_only = bool(_unmediated_test_only)
 
     def commit(
         self,
@@ -1586,6 +1588,10 @@ class TransactionService:
             diag_conventions.EVENT_TRANSACTION_STARTED,
             attrs={"capability": capability})
         request = gateway_request or current_gateway_request()
+        if request is None and not self._unmediated_test_only:
+            raise TransactionFailure(
+                "TransactionService.commit requires an admitted GatewayRequestContext"
+            )
         if request is not None:
             if request.capability != capability:
                 raise TransactionFailure(

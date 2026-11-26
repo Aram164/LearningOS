@@ -1,0 +1,68 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"check\":true,\"mode\":\"check\",\"capability\":\"materials.manifest.sync\",\"manifest_path\":\"records/materials-manifest.yaml\",\"files\":3,\"bytes\":11407,\"captured\":\"2026-10-01\",\"gateway_envelope\":{\"schema_version\":2,\"request_id\":\"KEY1\",\"idempotency_key\":\"KEY2\",\"capability\":\"materials.manifest.sync\",\"channel\":\"operator\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"file:records/materials-manifest.yaml\":0},\"payload\":{\"record\":{\"schema_version\":1,\"captured\":\"2026-10-01\",\"totals\":{\"files\":3,\"bytes\":11407},\"files\":{\"source-demo-book/book.pdf\":{\"size\":608,\"sha256\":\"61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6\"},\"source-demo-book/lecture-01.pdf\":{\"size\":10191,\"sha256\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"},\"source-scenario-bare/attached.pdf\":{\"size\":608,\"sha256\":\"61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6\"}}}},\"approval\":{\"kind\":\"operator-approval\",\"subject_sha256\":\"INTENT1\"}},\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"file:records/materials-manifest.yaml\":0},\"expected_write_paths\":[\"records/materials-manifest.yaml\"],\"warnings_delta\":[]}\n",
+  "stdout_json": {
+    "bytes": 11407,
+    "capability": "materials.manifest.sync",
+    "captured": "2026-10-01",
+    "check": true,
+    "expected_revisions": {
+      "file:records/materials-manifest.yaml": 0
+    },
+    "expected_snapshot": "<FIXTURE_SNAPSHOT>",
+    "expected_write_paths": [
+      "records/materials-manifest.yaml"
+    ],
+    "files": 3,
+    "gateway_envelope": {
+      "approval": {
+        "kind": "operator-approval",
+        "subject_sha256": "INTENT1"
+      },
+      "capability": "materials.manifest.sync",
+      "channel": "operator",
+      "expected_revisions": {
+        "file:records/materials-manifest.yaml": 0
+      },
+      "expected_snapshot": "<FIXTURE_SNAPSHOT>",
+      "idempotency_key": "KEY2",
+      "payload": {
+        "record": {
+          "captured": "2026-10-01",
+          "files": {
+            "source-demo-book/book.pdf": {
+              "sha256": "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6",
+              "size": 608
+            },
+            "source-demo-book/lecture-01.pdf": {
+              "sha256": "395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5",
+              "size": 10191
+            },
+            "source-scenario-bare/attached.pdf": {
+              "sha256": "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6",
+              "size": 608
+            }
+          },
+          "schema_version": 1,
+          "totals": {
+            "bytes": 11407,
+            "files": 3
+          }
+        }
+      },
+      "request_id": "KEY1",
+      "schema_version": 2
+    },
+    "manifest_path": "records/materials-manifest.yaml",
+    "mode": "check",
+    "ok": true,
+    "warnings_delta": []
+  }
+}

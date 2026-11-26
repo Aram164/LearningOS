@@ -494,7 +494,7 @@ def test_no_validation_body_reaches_the_store(tmp_path: Path):
     target = root / "projects/registry/project-demo.yaml"
     target.parent.mkdir(parents=True)
     target.write_text("old\n", encoding="utf-8")
-    service = TransactionService(root)
+    service = TransactionService(root, _unmediated_test_only=True)
     with pytest.raises(TransactionFailure, match=canary):
         service.commit(
             capability="project.update", writes={target: "new\n"},

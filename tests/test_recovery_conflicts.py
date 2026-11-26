@@ -622,7 +622,7 @@ def test_live_rollback_preserves_foreign_bytes_written_during_validation(
         return ["forced validation failure"]
 
     with pytest.raises(TransactionFailure, match="rollback incomplete for: work/mod.md"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -652,7 +652,7 @@ def test_live_rollback_never_deletes_a_receipt_it_did_not_write(tmp_path: Path):
         raise OSError("forced projection failure")
 
     with pytest.raises(TransactionFailure, match="rollback incomplete for: operations/transactions/transaction-"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -692,7 +692,7 @@ def test_successful_commit_leaves_no_staging_behind(tmp_path: Path):
     target.parent.mkdir(parents=True)
     target.write_bytes(b"old\n")
 
-    TransactionService(root).commit(
+    TransactionService(root, _unmediated_test_only=True).commit(
         capability="project.update",
         writes={target: "new\n"},
         artifact_ids=["project-demo"],
@@ -1052,7 +1052,7 @@ def test_live_rollback_drops_projection_when_unwind_is_ambiguous(
         return ["forced validation failure"]
 
     with pytest.raises(TransactionFailure, match="rollback incomplete"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1079,7 +1079,7 @@ def test_live_rollback_still_republishes_after_clean_unwind(tmp_path: Path):
         raise OSError("forced projection failure")
 
     with pytest.raises(ProjectionFailure):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1110,7 +1110,7 @@ def test_live_rollback_drops_projection_when_republish_fails(
         raise OSError("forced rollback publication failure")
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],

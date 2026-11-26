@@ -21,7 +21,7 @@ from learning_os.app.session import session_end
 from learning_os.domain.failures import WriteRefused
 
 
-@register("session.end", kind="porcelain", lock="none", effects=OperationEffects.CANONICAL_WRITE)
+@register("session.end", kind="porcelain", lock="none", effects=OperationEffects.OPERATIONAL_WRITE)
 def session_end_command(ctx: OpContext, req: dict) -> Result:
     """Validate, show exact session-owned files, optionally commit/push."""
     try:

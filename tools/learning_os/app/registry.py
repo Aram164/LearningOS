@@ -15,6 +15,7 @@ class OperationEffects(StrEnum):
     READ = "read"
     DERIVED_WRITE = "derived-write"
     CANONICAL_WRITE = "canonical-write"
+    OPERATIONAL_WRITE = "operational-write"
     UNKNOWN = "unknown"
 
 

@@ -128,7 +128,7 @@ def test_each_actual_handler_invalidates_a_prepared_lineage_replacement(mini_rep
 
     # A fresh canonical snapshot cannot compensate for an obsolete ledger
     # observation: isolate the file guard with no snapshot/owner guard at all.
-    service = TransactionService(root)
+    service = TransactionService(root, _unmediated_test_only=True)
     with pytest.raises(TransactionConflict):
         service.commit(capability="unit.plan.revise", writes={path: prepared}, artifact_ids=[ARTIFACT],
                        expected_revisions={ARTIFACT: observed_revision})

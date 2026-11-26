@@ -178,6 +178,7 @@ EXPECTED_JSON_FORMATS = {
     "masters-planning.comparison.publish": ('indented',),
     "masters-planning.dashboard": ('indented',),
     "material.context": ('compact',),
+    "materials.manifest.sync": ('unescaped',),
     "material.span": ('compact',),
     "module.attempt.record": ('unescaped',),
     "module.materials.compact": ('compact',),

@@ -96,7 +96,7 @@ def test_transaction_service_enforces_the_catalogue_before_writing(mini_repo: Pa
     target = mini_repo / "sources/registry/out-of-scope.yaml"
 
     with pytest.raises(TransactionScopeError, match="capture.create may not write"):
-        TransactionService(mini_repo).commit(
+        TransactionService(mini_repo, _unmediated_test_only=True).commit(
             capability="capture.create",
             writes={target: "sources: []\n"},
             artifact_ids=["capture:out-of-scope"],
@@ -110,7 +110,7 @@ def test_transaction_service_enforces_the_catalogue_before_writing(mini_repo: Pa
 def test_module_import_authority_includes_the_source_registry(mini_repo: Path):
     target = mini_repo / "sources/registry/imported.yaml"
 
-    result = TransactionService(mini_repo).commit(
+    result = TransactionService(mini_repo, _unmediated_test_only=True).commit(
         capability="module.plan.import",
         writes={target: "sources: []\n"},
         artifact_ids=["source-registry:imported"],

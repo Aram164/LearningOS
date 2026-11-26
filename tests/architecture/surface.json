@@ -155,6 +155,14 @@
      "curriculum/quarantine/masters-planning/comparisons/**"
     ]
    },
+   "materials.manifest.sync": {
+    "admission": null,
+    "cli_command": "materials-manifest-sync",
+    "handler": "materials_manifest_sync",
+    "writes": [
+     "records/materials-manifest.yaml"
+    ]
+   },
    "module.attempt.record": {
     "admission": null,
     "cli_command": "module-attempt",
@@ -4785,6 +4793,100 @@
     ],
     "required": false,
     "type": null
+   }
+  ],
+  "materials-manifest-sync": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
    }
   ],
   "module-attempt": [
@@ -10075,6 +10177,7 @@
   "material.search.schema.json": "95dbf07ff72eca23b3e5ef20ace16e952a513b9577617b1767184d622eaf9ba2",
   "material.span.schema.json": "51270a6d490bc9751f1702c0e2c8d063db3b028f1024322b522403730bb43b44",
   "material.study-span.schema.json": "1319ccf1d553611eb5435fcf06c6984806dd495e4d2729e61e1674973311f262",
+  "materials.manifest.sync.schema.json": "f5cba91ed7a56864e39e05579fd8f673a0d30814fda61d32248eb6a9e6fd4d80",
   "module.attempt.record.schema.json": "def44a95750a94e5fa986aa5eda0922daccf56be5e41651b6cbc29d0a1af0c56",
   "module.create.schema.json": "02b73b8c4600f234426dfb360dd9d3a2676a71d6c7ee55a7f6c8cbceb6b6b18f",
   "module.list.schema.json": "e0bdb5628bffe00d0d37b004de890566a5faf8616aae657fd0421631731fddd8",

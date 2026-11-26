@@ -222,6 +222,33 @@ def atomic_text(path: Path, content: str) -> None:
     atomic_write_text_exclusive(path, content, error_factory=WriteRefused)
 
 
+def write_file_create_only(
+    target: Path,
+    content: bytes,
+    *,
+    mode: int = 0o666,
+) -> None:
+    """Write ``content`` to ``target`` only if ``target`` does not yet exist.
+
+    Allocates an exclusive sibling temp file and hardlinks it into ``target``
+    so existing files (including symlinks) fail atomically with ``FileExistsError``.
+    """
+    if target.is_symlink():
+        raise OSError(f"refusing symlink target: {target}")
+    fd, tmp = exclusive_temp_path(target, mode=mode)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            view = memoryview(content)
+            written = 0
+            while written < len(view):
+                written += handle.write(view[written:])
+            handle.flush()
+        os.link(tmp, target)
+    finally:
+        with contextlib.suppress(OSError):
+            tmp.unlink()
+
+
 def iter_non_symlink_files(
     base: Path,
     *,

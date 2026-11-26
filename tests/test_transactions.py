@@ -440,7 +440,7 @@ def test_transaction_rechecks_approved_snapshot_before_writing(tmp_path: Path):
     target = tmp_path / "projects/registry/project-demo.yaml"
 
     with pytest.raises(TransactionSnapshotConflict) as refusal:
-        TransactionService(tmp_path).commit(
+        TransactionService(tmp_path, _unmediated_test_only=True).commit(
             capability="project.create",
             writes={target: "id: project-demo\n"},
             artifact_ids=["project-demo"],
@@ -468,7 +468,7 @@ def test_snapshot_conflict_precedes_a_revision_conflict(tmp_path: Path):
     )
 
     with pytest.raises(TransactionSnapshotConflict):
-        TransactionService(tmp_path).commit(
+        TransactionService(tmp_path, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={tmp_path / "projects/registry/project-demo.yaml": "id: project-demo\n"},
             artifact_ids=["project-demo"],
@@ -544,7 +544,7 @@ def test_failed_transaction_restores_canonical_state(tmp_path: Path):
     target.parent.mkdir(parents=True)
     target.write_text("old\n", encoding="utf-8")
     before = canonical_fingerprint(root)
-    service = TransactionService(root)
+    service = TransactionService(root, _unmediated_test_only=True)
     with pytest.raises(TransactionFailure):
         service.commit(
             capability="project.update", writes={target: "new\n"},
@@ -572,7 +572,7 @@ def test_artifact_revision_conflicts_are_scoped(tmp_path: Path):
     a = root / "projects/registry/project-a.yaml"
     b = root / "projects/registry/project-b.yaml"
     a.parent.mkdir(parents=True)
-    service = TransactionService(root)
+    service = TransactionService(root, _unmediated_test_only=True)
     first = service.commit(capability="project.create", writes={a: "a\n"}, artifact_ids=["project-a"])
     assert first.revisions == {"project-a": 1}
     # A write to another artifact does not conflict with project-a changing.
@@ -592,7 +592,7 @@ def test_artifact_revision_conflicts_are_scoped(tmp_path: Path):
 def test_each_commit_has_exactly_one_append_only_receipt(tmp_path: Path):
     root = tmp_path
     target = root / "projects/registry/project-demo.yaml"
-    result = TransactionService(root).commit(
+    result = TransactionService(root, _unmediated_test_only=True).commit(
         capability="project.create", writes={target: "demo\n"}, artifact_ids=["project-demo"]
     )
     receipts = list((root / "operations/transactions").glob("transaction-*.yaml"))
@@ -608,7 +608,7 @@ def test_each_commit_records_the_post_commit_data_roots_digest(tmp_path: Path):
 
     root = tmp_path
     target = root / "projects/registry/project-demo.yaml"
-    result = TransactionService(root).commit(
+    result = TransactionService(root, _unmediated_test_only=True).commit(
         capability="project.create", writes={target: "demo\n"}, artifact_ids=["project-demo"]
     )
     receipt = yaml.safe_load(result.receipt_path.read_text(encoding="utf-8"))
@@ -804,7 +804,7 @@ def test_transaction_receipt_errors_enforces_date_time_format(mini_repo: Path):
 def test_failed_transaction_removes_new_binary_files(tmp_path: Path):
     root = tmp_path
     target = root / "curriculum/modules/module-demo/units/unit-demo/attachments/note.png"
-    service = TransactionService(root)
+    service = TransactionService(root, _unmediated_test_only=True)
     with pytest.raises(TransactionFailure):
         service.commit(
             capability="unit.note.append",
@@ -827,7 +827,7 @@ def test_post_commit_bookkeeping_failure_preserves_commit_and_raises(tmp_path: P
         raise RuntimeError("forced touched-ledger failure")
 
     with pytest.raises(TransactionFailure, match="transaction committed but post-commit hooks failed: forced touched-ledger failure"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -849,7 +849,7 @@ def test_post_commit_failure_carries_receipt_facts_for_retry(tmp_path: Path):
         raise RuntimeError("forced touched-ledger failure")
 
     with pytest.raises(PostCommitFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -875,7 +875,7 @@ def test_projection_failure_with_complete_rollback_is_typed(tmp_path: Path):
                       str(root / "generated" / "manifest.json"))
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -901,7 +901,7 @@ def test_seeded_publisher_type_error_fails_once_not_republished(tmp_path: Path):
         raise TypeError("bug inside the projection")
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -938,7 +938,7 @@ def test_projection_input_change_names_the_foreign_path_and_rolls_back(
         return snapshot_after_id
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update", writes={target: "new\n"},
             artifact_ids=["project-demo"], publish=publish,
             rollback_publish=lambda: None,
@@ -980,7 +980,7 @@ def test_projection_input_change_bounds_paths_and_keeps_the_total(tmp_path: Path
         return snapshot_after_id
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update", writes={target: "new\n"},
             artifact_ids=["project-demo"], publish=publish,
             rollback_publish=lambda: None,
@@ -1002,7 +1002,7 @@ def test_projection_input_change_survives_incomplete_rollback(tmp_path: Path):
         return snapshot_after_id
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update", writes={target: "new\n"},
             artifact_ids=["project-demo"], publish=publish,
             rollback_publish=lambda: None,
@@ -1024,7 +1024,7 @@ def test_projection_stamp_mismatch_does_not_invent_changed_paths(tmp_path: Path)
     root = tmp_path.resolve()
     target = root / "projects/registry/project-demo.yaml"
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update", writes={target: "new\n"},
             artifact_ids=["project-demo"],
             publish=lambda: "sha256:" + "0" * 64,
@@ -1048,7 +1048,7 @@ def test_projection_input_change_with_a_caller_supplied_fingerprint(tmp_path: Pa
         return "sha256:" + "b" * 64
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update", writes={target: "new\n"},
             artifact_ids=["project-demo"], publish=publish,
             fingerprint=lambda: "a" * 64, rollback_publish=lambda: None,
@@ -1074,7 +1074,7 @@ def test_projection_failure_with_broken_rollback_is_typed_incomplete(
                       str(root / "generated" / "manifest.json"))
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1100,7 +1100,7 @@ def test_validation_failure_with_unpublishable_prestate_leaves_no_orphan(tmp_pat
         raise TransactionFailure("cannot publish the manifest: 1 file(s) could not be read")
 
     with pytest.raises(TransactionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1131,7 +1131,7 @@ def test_projection_failure_over_unpublishable_prestate_is_typed_pre_existing(
         raise TransactionFailure("the published manifest no longer matches (drifted shape)")
 
     with pytest.raises(ProjectionFailure) as caught:
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1171,7 +1171,7 @@ def test_republication_failure_with_concurrent_change_stays_unknown(
             "the published manifest no longer matches (drifted shape)")
 
     with pytest.raises(TransactionFailure, match="rollback incomplete"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1193,7 +1193,7 @@ def test_transaction_owned_writes_share_the_receipt_identity(tmp_path: Path):
         observed.append(transaction_id)
         return {request: f"status: completed\nreceipt_id: {transaction_id}\n"}
 
-    result = TransactionService(root).commit(
+    result = TransactionService(root, _unmediated_test_only=True).commit(
         capability="ai-action.demo",
         writes={target: "demo\n"},
         artifact_ids=["project-demo"],
@@ -1224,7 +1224,7 @@ def test_incomplete_rollback_is_reported_with_the_unrestored_path(
 
     monkeypatch.setattr(transaction_module, "atomic_write_bytes", fail_only_when_restoring)
     with pytest.raises(TransactionFailure, match="rollback incomplete for: projects/registry/project-demo.yaml"):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={target: "new\n"},
             artifact_ids=["project-demo"],
@@ -1456,3 +1456,16 @@ def test_stale_tmp_siblings_do_not_block_subsequent_atomic_write(tmp_path: Path)
     assert target.read_bytes() == b"updated: true\n"
     assert stale_fixed.is_dir()
     assert stale_pid.read_bytes() == b"abandoned-crash-temp"
+
+
+def test_transaction_service_refuses_unmediated_commit_by_default(mini_repo: Path):
+    """CL-18 / CL-50: default TransactionService refuses commit(request=None)."""
+    target = mini_repo / "work/inbox/unmediated.md"
+    with pytest.raises(TransactionFailure, match="requires an admitted GatewayRequestContext"):
+        TransactionService(mini_repo).commit(
+            capability="capture.create",
+            writes={target: "smuggled\n"},
+            artifact_ids=["capture:unmediated"],
+        )
+    assert not target.exists()
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))

@@ -401,7 +401,7 @@ def test_pre_apply_guard_disabled_control_overwrites_the_foreign_edit(
     monkeypatch.setattr(
         TransactionService, "_guard_apply", lambda self, run, path, intended: None
     )
-    TransactionService(root).commit(
+    TransactionService(root, _unmediated_test_only=True).commit(
         capability="project.update",
         writes={first: "new-a\n", second: "new-b\n"},
         artifact_ids=["project-demo"],
@@ -528,7 +528,7 @@ def test_foreign_edit_between_capture_and_apply_is_preserved(
 
     monkeypatch.setattr(transaction_module, "atomic_write_bytes", interpose)
     with pytest.raises(TransactionFailure):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={first: "new-a\n", second: "new-b\n"},
             artifact_ids=["project-demo"],
@@ -562,7 +562,7 @@ def test_foreign_edit_of_a_delete_target_is_preserved(
 
     monkeypatch.setattr(transaction_module, "atomic_write_bytes", interpose)
     with pytest.raises(TransactionFailure):
-        TransactionService(root).commit(
+        TransactionService(root, _unmediated_test_only=True).commit(
             capability="project.update",
             writes={written: "new-a\n"},
             deletes=[victim],
@@ -604,7 +604,7 @@ if mode in ("kill-after-apply", "kill-new-directory", "kill-created-directory",
     kwargs["validate_state"] = kill_validate
 elif mode == "kill-after-receipt":
     kwargs["touched"] = kill_touched
-TransactionService(root).commit(
+TransactionService(root, _unmediated_test_only=True).commit(
     capability="project.update", writes={target: "forward\\n"},
     artifact_ids=["project-demo"], **kwargs)
 """

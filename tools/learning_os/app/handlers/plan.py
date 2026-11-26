@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import contextlib
 import copy
 import difflib
 import hashlib
 import json
-import os
 import re
-import tempfile
 from pathlib import Path
 
 import yaml
@@ -226,27 +223,16 @@ def _save_check_report_and_compact(
     problem = _report_out_target_problem(root, target_text, draft=draft)
     if problem is not None:
         return None, (2, problem)
+    from learning_os.store.fs import write_file_create_only
+
     target = _report_out_target(target_text)
     payload = (json.dumps(result, ensure_ascii=False) + "\n").encode("utf-8")
     try:
-        fd, tmp_name = tempfile.mkstemp(prefix=".check-report-", suffix=".tmp",
-                                        dir=str(target.parent))
+        write_file_create_only(target, payload)
+    except FileExistsError:
+        return None, (2, f"--report-out target already exists; refusing to overwrite: {target_text}")
     except OSError as exc:
         return None, (1, f"could not save --report-out report: {exc}")
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(payload)
-        try:
-            os.link(tmp_name, target)
-        except FileExistsError:
-            return None, (2, f"--report-out target already exists; refusing to overwrite: {target_text}")
-        except OSError as exc:
-            return None, (1, f"could not save --report-out report: {exc}")
-    except OSError as exc:
-        return None, (1, f"could not save --report-out report: {exc}")
-    finally:
-        with contextlib.suppress(OSError):
-            Path(tmp_name).unlink()
     digest = "sha256:" + hashlib.sha256(payload).hexdigest()
     compact = {key: value for key, value in result.items() if key != "gateway_envelope"}
     compact["saved_report"] = {

@@ -281,3 +281,76 @@ def test_translate_maps_paths_and_dotted_names(tmp_path):
     assert module.translate(entries, "learning_os.oldpkg.x") == (
         "learning_os.bar.newpkg.x")
     assert module.translate(entries, "learning_os.other") == "learning_os.other"
+
+
+def test_apply_refuses_symlink_ledger_before_git_mv(tmp_path):
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    outside = tmp_path / "outside.yaml"
+    outside.write_text("moves: []\n", encoding="utf-8")
+    ledger = root / "tests/architecture/moves.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.symlink_to(outside)
+    _commit(root)
+    result = _run(root, "moves:\n"
+                  "  - from: tools/learning_os/oldmod.py\n"
+                  "    to: tools/learning_os/bar/oldmod.py\n", "--apply")
+    assert result.returncode == 2
+    assert "symlink" in result.stderr
+    assert (root / "tools/learning_os/oldmod.py").is_file()
+    assert not (root / "tools/learning_os/bar/oldmod.py").exists()
+
+
+def test_apply_corrupt_ledger_rolls_back_git_mv_and_writes(tmp_path):
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    original_use = "from learning_os.oldmod import VALUE\n"
+    _write(root, "tools/learning_os/use.py", original_use)
+    _commit(root)
+    corrupt = "moves: [unterminated\n"
+    _write(root, "tests/architecture/moves.yaml", corrupt)
+    result = _run(root, "moves:\n"
+                  "  - from: tools/learning_os/oldmod.py\n"
+                  "    to: tools/learning_os/bar/oldmod.py\n", "--apply")
+    assert result.returncode == 2
+    assert (root / "tools/learning_os/oldmod.py").is_file()
+    assert not (root / "tools/learning_os/bar/oldmod.py").exists()
+    assert (root / "tools/learning_os/use.py").read_text(encoding="utf-8") == original_use
+
+
+def test_apply_reports_rollback_errors_instead_of_suppressing(tmp_path, monkeypatch, capsys):
+    import importlib.util
+
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    _write(root, "tools/learning_os/use.py", "from learning_os.oldmod import VALUE\n")
+    _commit(root)
+    _write(root, "tests/architecture/moves.yaml", "moves: [unterminated\n")
+    map_path = root / "MAP.yaml"
+    map_path.write_text(
+        "moves:\n  - from: tools/learning_os/oldmod.py\n    to: tools/learning_os/bar/oldmod.py\n",
+        encoding="utf-8",
+    )
+
+    spec = importlib.util.spec_from_file_location("move_map_rb", TOOL)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    orig_git = module._git
+
+    def flaky_git(repo_root: Path, *args: str) -> str:
+        if args[:1] == ("mv",) and "bar/oldmod.py" in args[1]:
+            raise module.MoveError("simulated git mv rollback failure")
+        return orig_git(repo_root, *args)
+
+    monkeypatch.setattr(module, "_git", flaky_git)
+    monkeypatch.chdir(root)
+    rc = module.main(["--map", str(map_path), "--apply"])
+    assert rc == 2
+    _, err = capsys.readouterr()
+    assert "rollback error:" in err
+    assert "simulated git mv rollback failure" in err

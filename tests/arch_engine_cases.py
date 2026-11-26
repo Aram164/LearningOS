@@ -283,7 +283,7 @@ def case_apply_writes_and_deletes(tmp_path: Path) -> dict:
         exc: BaseException | None = None
         try:
             result = TransactionService(
-                root, clock=_clock).commit(
+                root, clock=_clock, _unmediated_test_only=True).commit(
                     capability="capture.create",
                     writes={to_write: "new inbox note\n"},
                     deletes=[to_delete],
@@ -310,7 +310,7 @@ def case_rollback_complete(tmp_path: Path) -> dict:
         exc: BaseException | None = None
         try:
             result = TransactionService(
-                root, clock=_clock).commit(
+                root, clock=_clock, _unmediated_test_only=True).commit(
                     capability="capture.create",
                     writes={target: "will roll back\n"},
                     artifact_ids=["arch-rollback-complete"],
@@ -353,7 +353,7 @@ def case_rollback_incomplete(tmp_path: Path) -> dict:
         try:
             try:
                 result = TransactionService(
-                    root, clock=_clock).commit(
+                    root, clock=_clock, _unmediated_test_only=True).commit(
                         capability="capture.create",
                         writes={target: "new\n"},
                         artifact_ids=["arch-rollback-incomplete"],
@@ -393,7 +393,7 @@ tx.atomic_write_bytes = crashing_write
 
 root = Path(sys.argv[2])
 clock_dt = datetime(2026, 10, 1, 9, 0, tzinfo=ZoneInfo("Europe/Berlin"))
-TransactionService(root, clock=lambda: clock_dt).commit(
+TransactionService(root, clock=lambda: clock_dt, _unmediated_test_only=True).commit(
     capability="capture.create",
     writes={root / "work/inbox/crash.md": "crashed\\n"},
     artifact_ids=["arch-crash"],
@@ -461,7 +461,7 @@ def case_sink_exception(tmp_path: Path) -> dict:
         try:
             try:
                 result = TransactionService(
-                    root, clock=_clock).commit(
+                    root, clock=_clock, _unmediated_test_only=True).commit(
                         capability="capture.create",
                         writes={target: "sink\n"},
                         artifact_ids=["arch-sink"])
@@ -493,7 +493,7 @@ def case_post_receipt_callback_failure(tmp_path: Path) -> dict:
         exc: BaseException | None = None
         try:
             result = TransactionService(
-                root, clock=_clock).commit(
+                root, clock=_clock, _unmediated_test_only=True).commit(
                     capability="capture.create",
                     writes={target: "committed\n"},
                     artifact_ids=["arch-post-receipt"],

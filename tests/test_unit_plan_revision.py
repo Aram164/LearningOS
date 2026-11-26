@@ -1155,7 +1155,7 @@ def test_reviewed_ledger_only_repair_refuses_each_interposed_lineage_writer(mini
     _, _, args = _ledger_only_fixture(mini_repo, tmp_path)
     path = mini_repo / "operations/transactions/lineage.yaml"
     # Exercise the shared artifact using each existing writer's actual grant.
-    TransactionService(mini_repo).commit(capability=capability,
+    TransactionService(mini_repo, _unmediated_test_only=True).commit(capability=capability,
         writes={path: path.read_bytes()}, artifact_ids=["file:operations/transactions/lineage.yaml"])
     before = path.read_bytes()
     refused = run_los(mini_repo, *args)

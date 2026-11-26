@@ -203,30 +203,21 @@ $ mkdir -p "$INV_REPO/records" && cp -R "$(dirname "$LOS_FX")/materials" "$INV_P
 <PAIR>/materials/source-scenario-bare/attached.pdf
 ```
 
-## Rebuild the inventory from the copied materials
+## Rebuild fails closed outside a full repository, while verify anchors to the pair
+
+The isolated 5-file copy has no gateway or canonical contracts, so `--build`
+refuses without writing anything; verifying against a copied manifest still
+binds to `$INV_PAIR/materials`.
 
 ```scrut
-$ (cd "$INV_REPO" && make --silent inventory PY="$LOS_REPO/.venv/bin/python")
-wrote records/materials-manifest.yaml: 3 files, 0.00 GB
+$ ENTRY=$INV_REPO/tools/materials_manifest.py && (cd "$INV_REPO" && "$LOS_REPO/.venv/bin/python" "$ENTRY" --build > /dev/null 2>"$TMPDIR/inv-refused.txt"; status=$?; test "$status" -eq 2 && test ! -e "$INV_REPO/records/materials-manifest.yaml" && grep -q "refused:" "$TMPDIR/inv-refused.txt" && echo "bare copy build refused")
+bare copy build refused
 ```
 
-## Verify the copied tree against the rebuilt manifest
-
-The date and the pair path are redacted; both vary per run.
-
 ```scrut
-$ (cd "$INV_REPO" && make --silent verify-materials PY="$LOS_REPO/.venv/bin/python") | sed -e "s|$INV_PAIR|<PAIR>|g" -e "s/captured [0-9-]*/captured <today>/"
+$ cp records/materials-manifest.yaml "$INV_REPO/records/materials-manifest.yaml" && (cd "$INV_REPO" && make --silent verify-materials PY="$LOS_REPO/.venv/bin/python") | sed -e "s|$INV_PAIR|<PAIR>|g" -e "s/captured [0-9-]*/captured <today>/"
 manifest captured <today> — 3 files
 OK — <PAIR>/materials matches the manifest (sha256 verified)
-```
-
-## The isolated rebuild matches the fixture manifest
-
-Only the `captured` day differs, so it is excluded from the compare.
-
-```scrut
-$ [ "$(grep -v '^captured:' records/materials-manifest.yaml | sha256sum)" = "$(grep -v '^captured:' "$INV_REPO/records/materials-manifest.yaml" | sha256sum)" ] && echo "isolated rebuild matches the fixture manifest"
-isolated rebuild matches the fixture manifest
 ```
 
 ```scrut
@@ -432,4 +423,26 @@ $ grep -n "Bare Essay" generated/source-index.md | head -n 3
 ```scrut
 $ grep -n "examined" generated/collections/probe-essays.md
 9:  - The bare essay, examined.
+```
+
+## Rebuild the repository inventory through the gateway
+
+Updating `records/materials-manifest.yaml` in an initialized repository runs
+through `materials.manifest.sync` (`TransactionService`), emitting a receipt and
+bumping the artifact revision.
+
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability materials.manifest.sync --payload '{"record":{"schema_version":1,"captured":"2026-10-01","totals":{"files":3,"bytes":11407},"files":{"source-demo-book/book.pdf":{"size":608,"sha256":"61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6"},"source-demo-book/lecture-01.pdf":{"size":10191,"sha256":"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5"},"source-scenario-bare/attached.pdf":{"size":608,"sha256":"61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6"}}}}' --key s06-inv --request-id request-s06-inv --guards auto --out "$TMPDIR/s06-inv.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: file:records/materials-manifest.yaml=0
+```
+
+```scrut {interpolated: true}
+$ los capability materials.manifest.sync --payload-file "$TMPDIR/s06-inv.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":2,"request_id":"request-s06-inv","idempotency_key":"s06-inv","capability":"materials.manifest.sync","ok":true,"replayed":false,"transaction_id":"transaction-20261001-090000-006","receipt_path":"operations/transactions/transaction-20261001-090000-006.yaml","snapshot_after":"$LOS_FIXTURE_SNAPSHOT_7","result":{"ok":true,"mode":"apply","manifest_path":"records/materials-manifest.yaml","files":3,"bytes":11407,"captured":"2026-10-01","transaction_id":"transaction-20261001-090000-006","receipt_path":"operations/transactions/transaction-20261001-090000-006.yaml","artifact_revisions":{"file:records/materials-manifest.yaml":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_7","replayed":false},"error":null}
+```
+
+```scrut
+$ $H/los-assert-receipt --last --capability materials.manifest.sync
 ```
