@@ -179,6 +179,8 @@ def test_allow_skip_permits_only_named_mandatory_witness(suite, monkeypatch):
 
 @pytest.mark.parametrize("name", ["validate.yml", "release-pair.yml"])
 def test_both_workflows_use_the_shared_identity_and_collision_checks(name):
+    import check_shard_completeness as checker
+
     root = Path(__file__).resolve().parents[1]
     workflow = yaml.safe_load((root / ".github/workflows" / name).read_text())
     runs = [step.get("run", "") for job in workflow["jobs"].values() for step in job["steps"]]
@@ -187,15 +189,96 @@ def test_both_workflows_use_the_shared_identity_and_collision_checks(name):
         "--zero-skip-junit ../seatbelt-in/seatbelt.xml" in run
         for run in runs
     )
-    for prefix in (
-        "tests/test_ui_phase3_live_writes.py::",
-        "tests/test_ui_gateway_recovery.py::",
-        "tests/test_operations_gate.py::",
-        "tests/test_contract_differential.py::",
-    ):
+    for prefix in checker.MANDATORY_PAIRED_WITNESS_PREFIXES:
         assert any(
             f"--require-passed-prefix {prefix}" in run
             and "tools/check_shard_completeness.py" in run
             for run in runs
         ), f"{name} missing --require-passed-prefix {prefix}"
     assert any("copy_audit_logs(parts[leg][2], audit)" in run for run in runs)
+
+
+def test_mandatory_paired_prefixes_match_workflows_and_system_check(tmp_path, monkeypatch):
+    import check_shard_completeness as checker
+
+    root = Path(__file__).resolve().parents[1]
+    assert set(checker.MANDATORY_PAIRED_WITNESS_PREFIXES) == {
+        "tests/test_ui_phase3_live_writes.py::",
+        "tests/test_ui_gateway_recovery.py::",
+        "tests/test_operations_gate.py::",
+        "tests/test_contract_differential.py::",
+    }
+    makefile = (root / "Makefile").read_text(encoding="utf-8")
+    section = makefile.split("system-check:", 1)[1]
+    assert "tools/generate.py" in section
+    assert "tools/check_shard_completeness.py" in section
+    assert "--require-mandatory-paired" in section
+
+    for rel in (
+        "tests/test_ui_phase3_live_writes.py",
+        "tests/test_ui_gateway_recovery.py",
+        "tests/test_operations_gate.py",
+        "tests/test_contract_differential.py",
+    ):
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text("# stub\n", encoding="utf-8")
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({
+        "legs": {"all": [
+            "tests/test_ui_phase3_live_writes.py",
+            "tests/test_ui_gateway_recovery.py",
+            "tests/test_operations_gate.py",
+            "tests/test_contract_differential.py",
+        ]},
+        "node_shards": {},
+    }), encoding="utf-8")
+    ids = [
+        "tests/test_ui_phase3_live_writes.py::test_live",
+        "tests/test_ui_gateway_recovery.py::test_gw",
+        "tests/test_operations_gate.py::test_ops",
+        "tests/test_contract_differential.py::test_diff",
+    ]
+    collected = "\n".join(ids)
+    junit = tmp_path / "junit"
+    junit.mkdir()
+    (junit / "junit-system-check.xml").write_text(
+        "<testsuite>"
+        '<testcase classname="tests.test_ui_phase3_live_writes" name="test_live"/>'
+        '<testcase classname="tests.test_ui_gateway_recovery" name="test_gw"/>'
+        '<testcase classname="tests.test_operations_gate" name="test_ops"/>'
+        '<testcase classname="tests.test_contract_differential" name="test_diff"><skipped/></testcase>'
+        "</testsuite>",
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        checker.subprocess,
+        "run",
+        lambda *a, **kw: subprocess.CompletedProcess(a, 0, collected, ""),
+    )
+    monkeypatch.setattr(
+        checker.sys,
+        "argv",
+        [
+            "check_shard_completeness.py",
+            "--junit-dir", str(junit),
+            "--manifest", str(manifest),
+            "--require-mandatory-paired",
+        ],
+    )
+    with pytest.raises(
+        SystemExit,
+        match="mandatory witness skipped: tests/test_contract_differential.py::test_diff",
+    ):
+        checker.main()
+
+    (junit / "junit-system-check.xml").write_text(
+        "<testsuite>"
+        '<testcase classname="tests.test_ui_phase3_live_writes" name="test_live"/>'
+        '<testcase classname="tests.test_ui_gateway_recovery" name="test_gw"/>'
+        '<testcase classname="tests.test_operations_gate" name="test_ops"/>'
+        '<testcase classname="tests.test_contract_differential" name="test_diff"/>'
+        "</testsuite>",
+        encoding="utf-8",
+    )
+    assert checker.main() == 0

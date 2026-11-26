@@ -181,7 +181,14 @@ system-check:
 	@test -f tests/test_operations_gate.py || { echo "system-check: tests/test_operations_gate.py is missing — the paired operations gate driver cannot run" >&2; exit 1; }
 	@test -f ../obsidian-ui/tests/operations-gate-harness.js || { echo "system-check: ../obsidian-ui/tests/operations-gate-harness.js is missing — the paired operations gate test cannot run" >&2; exit 1; }
 	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
-	$(PY) -m pytest -q
+	$(PY) tools/generate.py
+	tmp=$$(mktemp -d); \
+	rc=0; \
+	trap 'rm -rf "$$tmp"' EXIT HUP INT TERM; \
+	$(PY) -m pytest -q --junitxml="$$tmp/junit-system-check.xml" && \
+	$(PY) tools/check_shard_completeness.py --junit-dir "$$tmp" --require-mandatory-paired || rc=$$?; \
+	rm -rf "$$tmp"; \
+	exit $$rc
 	npm --prefix ../obsidian-ui run check
 
 # Deliberate deep audit. Routine work stays on `make check`; release work uses
