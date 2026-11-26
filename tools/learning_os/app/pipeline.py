@@ -209,7 +209,7 @@ def _commit_with_gesture(ctx, operation: str, result):
                 record_touched(ctx.root, touched)
             confirmation = {**confirmation, "delivery_receipt": receipt}
         elif isinstance(completion, InboxCompletion):
-            from learning_os.app.handlers.capture import prune_empty_dirs
+            from learning_os.store.fs import prune_empty_dirs
             prune_empty_dirs(completion.inbox, completion.target)
         elif completion is not None:
             raise TypeError(f"unknown application completion: {completion!r}")
@@ -222,11 +222,23 @@ def _commit_with_gesture(ctx, operation: str, result):
     return CommitOutcome(code, errors, confirmation, refusal=outcome.refusal)
 
 
+_CONTENT_ADDRESSED_REPLAY_OPERATIONS = frozenset({
+    "ai-action.delivery.apply",
+    "goal.decide",
+    "note.analysis.save",
+    "note.analysis.save_batch",
+})
+
+
 def _require_canonical_write_proposal(operation: str, entry, result, *, checking: bool) -> None:
     """Fail closed when a CANONICAL_WRITE handler omits a commit proposal or dispatch."""
     if entry.effects != OperationEffects.CANONICAL_WRITE or checking or result.proposal is not None:
         return
-    if isinstance(result.payload, dict) and result.payload.get("replayed") is True:
+    if (
+        operation in _CONTENT_ADDRESSED_REPLAY_OPERATIONS
+        and isinstance(result.payload, dict)
+        and result.payload.get("replayed") is True
+    ):
         return
     raise AssertionError(
         f"{operation}: CANONICAL_WRITE operation returned neither a "
@@ -794,6 +806,10 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             rendered = record
         _take_gateway_refusal()
         return 0, rendered
+    review_error = review_evidence_error(root, envelope)
+    if review_error is not None:
+        _audit_direct_refused(operation, 2)
+        return 2, {"error": review_error, "error_code": UNCONFIRMED}
     if res.proposal is None:
         final = _success_payload(res.payload, {})
         _take_gateway_refusal()
@@ -802,10 +818,6 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             _audit_diagnostic_failed(operation)
             return 1, {"error": error_text}
         return 0, final
-    review_error = review_evidence_error(root, envelope)
-    if review_error is not None:
-        _audit_direct_refused(operation, 2)
-        return 2, {"error": review_error, "error_code": UNCONFIRMED}
     committed = _commit_with_gesture(ctx, operation, res)
     code, commit_errors, confirmation = (
         committed.code, committed.issues, committed.confirmation)

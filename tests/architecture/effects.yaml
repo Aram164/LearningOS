@@ -96,8 +96,8 @@
 
 "tools/move_map.py":
   effect: tooling
-  destinations: ["tools/**", "tests/**", "tests/architecture/moves.yaml", "knowledge/**", "curriculum/**"]
-  reason: "Mechanical module/path move tool updating imports via git mv and recording moves in tests/architecture/moves.yaml (--apply only; leaves canonical prose frozen)."
+  destinations: ["tools/**", "tests/**", "tests/architecture/moves.yaml", "system/**", "pyproject.toml", "Makefile"]
+  reason: "Mechanical module/path move tool updating imports/references across tools/, tests/, system/, pyproject.toml, Makefile via git mv (--apply only; leaves all DATA_ROOTS forbidden)."
   contract: "tools/README.md (OD9 maintenance move tool; --apply only)"
 
 "tools/refresh_amls_fixture.py":
@@ -160,6 +160,11 @@
   destinations: ["<TMPDIR>/learningos-plan-check-*/**"]
   reason: "Populates ephemeral shadow copies in TMPDIR during --check preflights."
 
+"tools/learning_os/app/handlers/note_analysis.py":
+  effect: operational
+  destinations: ["<EXPLICIT_OUT_DIR>/**"]
+  reason: "Stages reviewed note-analysis bodies and envelope in an explicit caller staging directory outside the repository."
+
 "tools/learning_os/app/handlers/platform.py":
   effect: operational
   destinations: ["<EXPLICIT_OUT_FILE>"]
@@ -209,6 +214,11 @@
   effect: projection
   destinations: ["system/OPERATOR.md", "system/WORKFLOWS.md"]
   reason: "Updates generated command-reference documentation blocks in normative prose."
+
+"tools/learning_os/store/contracts/manifest_contract.py":
+  effect: projection
+  destinations: ["system/contracts/manifest-contract.yaml"]
+  reason: "Updates the projection manifest contract file on explicit bump."
 
 "tools/learning_os/store/derived/store.py":
   effect: cache

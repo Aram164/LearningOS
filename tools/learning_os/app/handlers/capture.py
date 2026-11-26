@@ -89,7 +89,6 @@ def capture(ctx: OpContext, req: dict) -> Result:
     """Judgment-free capture into work/inbox/ with a transaction receipt."""
     root = ctx.root
     inbox = root / "work" / "inbox"
-    inbox.mkdir(parents=True, exist_ok=True)
     stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
 
     if req.get("file"):
@@ -605,25 +604,6 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
 
 def _file_digest(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
-
-
-def prune_empty_dirs(inbox: Path, target: Path) -> None:
-    """Remove directories the move just emptied, up to (not incl.) the inbox.
-
-    Best-effort structural cleanup after a committed move: empty
-    directories carry no canonical content (Git does not track them, the
-    fingerprint walks files), so a redir that fills again concurrently
-    simply stops the prune. Never touches the inbox itself.
-    """
-    cursor = target if target.is_dir() else target.parent
-    while cursor != inbox and inbox in cursor.parents:
-        try:
-            if any(cursor.iterdir()):
-                return
-            cursor.rmdir()
-        except OSError:
-            return
-        cursor = cursor.parent
 
 
 def _folder_digest(files: dict[str, bytes]) -> str:

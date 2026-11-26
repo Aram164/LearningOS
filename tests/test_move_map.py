@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 TOOL = Path(__file__).resolve().parents[1] / "tools" / "move_map.py"
 
 
@@ -354,3 +356,49 @@ def test_apply_reports_rollback_errors_instead_of_suppressing(tmp_path, monkeypa
     _, err = capsys.readouterr()
     assert "rollback error:" in err
     assert "simulated git mv rollback failure" in err
+
+
+def test_apply_refuses_projects_tree_and_symlink_destination_parent(tmp_path):
+    root = _repo(tmp_path)
+    _write(root, "projects/demo/note.md", "# Demo\n")
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    outside = tmp_path / "outside-dir"
+    outside.mkdir()
+    (outside / "__init__.py").write_text("", encoding="utf-8")
+    (root / "tools/learning_os/linked_pkg").symlink_to(outside)
+    _commit(root)
+
+    proj_refused = _run(root, "moves:\n  - from: projects/demo/note.md\n    to: tools/note.md\n", "--check")
+    assert proj_refused.returncode == 2
+    assert "forbidden" in proj_refused.stderr
+
+    sym_refused = _run(
+        root,
+        "moves:\n  - from: tools/learning_os/oldmod.py\n    to: tools/learning_os/linked_pkg/oldmod.py\n",
+        "--apply",
+    )
+    assert sym_refused.returncode == 2
+    assert "symlink" in sym_refused.stderr
+    assert (root / "tools/learning_os/oldmod.py").is_file()
+
+
+@pytest.mark.parametrize("bad_ledger", ["[]\n", "\"text\"\n", "moves: 123\n"])
+def test_apply_non_mapping_ledger_rolls_back_cleanly(tmp_path, bad_ledger):
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    original_use = "from learning_os.oldmod import VALUE\n"
+    _write(root, "tools/learning_os/use.py", original_use)
+    _write(root, "tests/architecture/moves.yaml", bad_ledger)
+    _commit(root)
+
+    result = _run(
+        root,
+        "moves:\n  - from: tools/learning_os/oldmod.py\n    to: tools/learning_os/bar/oldmod.py\n",
+        "--apply",
+    )
+    assert result.returncode == 2
+    assert (root / "tools/learning_os/oldmod.py").is_file()
+    assert not (root / "tools/learning_os/bar/oldmod.py").exists()
+    assert (root / "tools/learning_os/use.py").read_text(encoding="utf-8") == original_use
+    assert (root / "tests/architecture/moves.yaml").read_text(encoding="utf-8") == bad_ledger

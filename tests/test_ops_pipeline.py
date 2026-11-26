@@ -2316,8 +2316,10 @@ def test_canonical_write_without_proposal_or_dispatch_fails_closed(pipe, mini_re
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
 
 
-def test_canonical_write_allows_explicit_replay_and_check_without_proposal(pipe, mini_repo):
-    """Idempotent replay and check paths on CANONICAL_WRITE remain permitted."""
+def test_canonical_write_allows_explicit_replay_and_check_without_proposal(
+    pipe, mini_repo, monkeypatch
+):
+    """Idempotent replay (for declared ops) and check paths on CANONICAL_WRITE remain permitted."""
     schema_path = mini_repo / "system/schema/requests" / f"{TEST_OP}.schema.json"
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     schema["properties"]["check"] = {"type": "boolean"}
@@ -2335,6 +2337,15 @@ def test_canonical_write_allows_explicit_replay_and_check_without_proposal(pipe,
     check_out = pipeline_module.run_cli(mini_repo, TEST_OP, ns_check)
     assert check_out.exit_code == 0 and check_out.ok is True
 
+    # Self-attested replayed=True on an unlisted CANONICAL_WRITE op fails closed.
+    with pytest.raises(AssertionError, match="CANONICAL_WRITE"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+
+    monkeypatch.setattr(
+        pipeline_module,
+        "_CONTENT_ADDRESSED_REPLAY_OPERATIONS",
+        pipeline_module._CONTENT_ADDRESSED_REPLAY_OPERATIONS | {TEST_OP},
+    )
     replay_out = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert replay_out.exit_code == 0 and replay_out.ok is True
     assert json.loads(replay_out.stdout) == {"ok": True, "replayed": True}

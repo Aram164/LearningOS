@@ -331,3 +331,21 @@ def note_bytes(root, note):
         root, note.path, root / "knowledge" / "notes",
         escape="note path escapes its knowledge owner",
         symlink="note read refuses symlinks")
+
+
+def prune_empty_dirs(inbox: Path, target: Path) -> None:
+    """Remove directories a move emptied, up to (not including) ``inbox``.
+
+    Best-effort post-commit cleanup after a committed inbox move: empty
+    directories carry no canonical content (Git does not track them and
+    the canonical fingerprint walks files only). Never touches ``inbox`` itself.
+    """
+    cursor = target if target.is_dir() else target.parent
+    while cursor != inbox and inbox in cursor.parents:
+        try:
+            if any(cursor.iterdir()):
+                return
+            cursor.rmdir()
+        except OSError:
+            return
+        cursor = cursor.parent

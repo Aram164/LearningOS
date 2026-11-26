@@ -17,10 +17,6 @@ baselined:
 - A19-owners
 checks:
   A2-static:
-  - signature: tools/learning_os/store/contracts/manifest_contract.py::bump::write_text
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/perimeter.py::write_block::write_text
     count: 1
     since: approved
@@ -29,18 +25,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
-  - signature: tools/learning_os/app/handlers/note_analysis.py::_prepare_out_dir::shutil.rmtree
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-10: you take open desicions'
-  - signature: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare::write_bytes
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-10: you take open desicions'
-  - signature: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare::write_text
-    count: 1
-    since: approved
-    approved_by: 'Aram 2026-10-10: you take open desicions'
   A3-prose:
   - signature: tools/learning_os/domain/plan_import.py::inventory_block::method::```
     count: 1

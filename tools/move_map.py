@@ -31,6 +31,7 @@ FORBIDDEN_PREFIXES = (
     "knowledge/",
     "records/",
     "work/",
+    "projects/",
     "operations/",
     "generated/",
 )
@@ -716,9 +717,11 @@ def main(argv: list[str] | None = None) -> int:
     completed_moves: list[Move] = []
     saved_files: list[tuple[Path, bytes | None]] = []
     try:
-        ledger = root / MOVE_LEDGER
+        ledger = root_real / MOVE_LEDGER
+        for move in moves:
+            _check_target_no_symlinks(root_real / move.to_norm, root_real)
         for post in sorted(writes):
-            _check_target_no_symlinks(root / post, root_real)
+            _check_target_no_symlinks(root_real / post, root_real)
         _check_target_no_symlinks(ledger, root_real)
         for move in moves:
             _git(root, "mv", move.from_norm, move.to_norm)
@@ -735,9 +738,19 @@ def main(argv: list[str] | None = None) -> int:
         if ledger.is_symlink():
             raise MoveError(f"refusing symlink ledger target: {MOVE_LEDGER}")
         prior_ledger = ledger.read_bytes() if ledger.is_file() else None
-        recorded = (yaml.safe_load(prior_ledger.decode("utf-8")) or {}
+        recorded = (yaml.safe_load(prior_ledger.decode("utf-8"))
                     if prior_ledger is not None else {})
-        entries = list(recorded.get("moves") or [])
+        if recorded is None:
+            recorded = {}
+        if not isinstance(recorded, dict):
+            raise MoveError(f"{MOVE_LEDGER} must contain a YAML mapping")
+        raw_entries = recorded.get("moves")
+        if raw_entries is None:
+            entries = []
+        elif isinstance(raw_entries, list):
+            entries = list(raw_entries)
+        else:
+            raise MoveError(f"{MOVE_LEDGER} field 'moves' must be a list")
         entries += [{"from": m.from_raw, "to": m.to_raw} for m in moves]
         ledger.parent.mkdir(parents=True, exist_ok=True)
         saved_files.append((ledger, prior_ledger))

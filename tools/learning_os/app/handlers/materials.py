@@ -2401,6 +2401,7 @@ _MANIFEST_TOP_KEYS = frozenset({"schema_version", "captured", "totals", "files"}
 _MANIFEST_ENTRY_KEYS = frozenset({"size", "sha256"})
 _MANIFEST_TOTAL_KEYS = frozenset({"files", "bytes"})
 _HEX_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_YYYY_MM_DD = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def _load_manifest_input(ctx: OpContext, req: dict) -> dict:
@@ -2487,7 +2488,7 @@ def _validated_manifest_record(ctx: OpContext, record: dict) -> dict:
     captured = record["captured"]
     if isinstance(captured, _dt.date) and not isinstance(captured, _dt.datetime):
         captured = captured.isoformat()
-    elif not isinstance(captured, str) or len(captured) != 10:
+    elif not isinstance(captured, str) or not _YYYY_MM_DD.fullmatch(captured):
         raise _bad("materials manifest captured must be a YYYY-MM-DD date string")
     try:
         _dt.date.fromisoformat(captured)

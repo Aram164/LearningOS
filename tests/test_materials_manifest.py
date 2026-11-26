@@ -250,6 +250,63 @@ def test_main_build_refuses_outside_initialized_repository(tmp_path, monkeypatch
     assert "refused:" in err
 
 
+def test_main_build_refuses_cross_repo_symlinks_on_manifest_or_records(
+    mini_repo, tmp_path, monkeypatch, capsys
+):
+    """Bar 4 #3: symlinks on records/ or materials-manifest.yaml cannot redirect commit to another repo."""
+    import shutil
+
+    other_repo = tmp_path / "other-repo"
+    shutil.copytree(mini_repo, other_repo, symlinks=True)
+    other_manifest = other_repo / "records" / "materials-manifest.yaml"
+    other_manifest.write_text("schema_version: 1\n", encoding="utf-8")
+
+    base = make_tree(tmp_path / "materials", {"Books/a.pdf": "alpha"})
+    target_manifest = mini_repo / "records" / "materials-manifest.yaml"
+    target_manifest.unlink(missing_ok=True)
+    target_manifest.symlink_to(other_manifest)
+
+    monkeypatch.setattr(mm, "MANIFEST", target_manifest)
+    monkeypatch.setattr(mm, "materials_root", lambda: base)
+    monkeypatch.setattr(sys, "argv", ["materials_manifest.py", "--build"])
+    assert mm.main() == 2
+    assert other_manifest.read_text(encoding="utf-8") == "schema_version: 1\n"
+    assert not list((other_repo / "operations" / "transactions").glob("transaction-*.yaml"))
+    _, err = capsys.readouterr()
+    assert "symlink" in err
+
+    shutil.rmtree(mini_repo / "records")
+    (mini_repo / "records").symlink_to(other_repo / "records")
+    assert mm.main() == 2
+    assert other_manifest.read_text(encoding="utf-8") == "schema_version: 1\n"
+    assert not list((other_repo / "operations" / "transactions").glob("transaction-*.yaml"))
+
+
+def test_manifest_sync_handler_refuses_iso_week_date(mini_repo):
+    """Bar 4 #5: YYYY-MM-DD strict check rejects 10-char ISO week strings like 2026-W01-1."""
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.materials import _validated_manifest_record
+    from learning_os.domain.failures import WriteRefused
+
+    ctx = OpContext(
+        root=mini_repo,
+        operation="materials.manifest.sync",
+        channel="operator",
+        invocation="check",
+        gateway=None,
+    )
+    with pytest.raises(WriteRefused, match="YYYY-MM-DD"):
+        _validated_manifest_record(
+            ctx,
+            {
+                "schema_version": 1,
+                "captured": "2026-W01-1",
+                "totals": {"files": 0, "bytes": 0},
+                "files": {},
+            },
+        )
+
+
 def test_normalise_material_uris_apply_is_retired_fails_closed(
     tmp_path, monkeypatch, capsys
 ):

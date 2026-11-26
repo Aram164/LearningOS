@@ -217,18 +217,24 @@ def _commit_manifest_via_gateway(base: Path, *, manifest_path: Path | None = Non
     ``materials_manifest.py`` contains no direct write primitives; persistence
     runs exclusively through ``materials.manifest.sync`` -> ``TransactionService``.
     """
-    target = (manifest_path or MANIFEST).resolve()
-    if len(target.parents) < 2 or target.parent.name != "records" or target.name != "materials-manifest.yaml":
+    raw_target = manifest_path or MANIFEST
+    raw_abs = Path(os.path.abspath(raw_target))
+    if len(raw_abs.parents) < 2 or raw_abs.parent.name != "records" or raw_abs.name != "materials-manifest.yaml":
         raise _ManifestSyncRefused(
-            f"manifest target must be <repo>/records/materials-manifest.yaml, got {target}"
+            f"manifest target must be <repo>/records/materials-manifest.yaml, got {raw_abs}"
         )
-    repo_root = target.parents[1]
-    if not (repo_root / "system" / "contracts" / "capabilities.yaml").is_file():
+    for candidate in (raw_abs, raw_abs.parent, raw_abs.parents[1]):
+        if candidate.is_symlink():
+            raise _ManifestSyncRefused(f"refusing symlink manifest target: {candidate}")
+    raw_repo_root = raw_abs.parents[1]
+    if not (raw_repo_root / "system" / "contracts" / "capabilities.yaml").is_file():
         raise _ManifestSyncRefused(
-            f"cannot commit manifest outside an initialized LearningOS repository ({repo_root})"
+            f"cannot commit manifest outside an initialized LearningOS repository ({raw_repo_root})"
         )
-    if target.is_symlink():
-        raise _ManifestSyncRefused(f"refusing symlink manifest target: {target}")
+    repo_root = raw_repo_root.resolve()
+    target = raw_abs.resolve()
+    if target != repo_root / "records" / "materials-manifest.yaml":
+        raise _ManifestSyncRefused(f"refusing symlink manifest target: {raw_abs}")
 
     try:
         import uuid

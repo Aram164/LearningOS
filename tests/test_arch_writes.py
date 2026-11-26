@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import os
 from collections import Counter
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import arch_writes_fixtures
 import pytest
@@ -39,13 +39,8 @@ _DECLARATION_KEYS = frozenset({"effect", "destinations", "reason", "contract"})
 _CANONICAL_ENGINE_MODULE = "tools/learning_os/store/transactions.py"
 
 # Non-engine writers allowed to touch specific DATA_ROOTS entries only under an
-# explicit recorded maintenance, migration, or tree-contract allocation.
+# explicit recorded migration or tree-contract allocation.
 _RECORDED_CANONICAL_EXCEPTIONS: dict[str, tuple[str, frozenset[str], str]] = {
-    "tools/move_map.py": (
-        "tooling",
-        frozenset({"knowledge/**", "curriculum/**"}),
-        "OD9",
-    ),
     "tools/migrations/curriculum_v2.py": (
         "migration",
         frozenset({"records/**", "curriculum/**"}),
@@ -73,6 +68,38 @@ _MUTATING_FS_COMMANDS = frozenset({"cp", "mv", "rm"})
 _OS_WRITE_OPEN_FLAGS = frozenset({"O_WRONLY", "O_RDWR", "O_CREAT", "O_TRUNC", "O_APPEND"})
 _OS_READONLY_FLAGS = frozenset({"O_RDONLY", "O_NOFOLLOW", "O_CLOEXEC", "O_DIRECTORY", "O_NONBLOCK"})
 _SUBPROCESS_FUNCS = frozenset({"run", "Popen", "check_call", "check_output", "call"})
+_OS_WRITE_ATTRS = frozenset({
+    "replace", "rename", "remove", "unlink", "write", "link", "symlink",
+    "mkdir", "makedirs", "rmdir", "chmod", "truncate",
+})
+_SHUTIL_WRITE_ATTRS = frozenset({"move", "copy", "copy2", "copyfile", "copytree", "rmtree"})
+_TEMPFILE_ATTRS = frozenset({"mkstemp", "mkdtemp", "NamedTemporaryFile", "TemporaryFile"})
+
+_ALLOWED_EXTERNAL_PREFIXES = (
+    "../materials/",
+    "../reading-memory/",
+    "../scratch/",
+    "~/.local/state/learningos/",
+)
+_ALLOWED_PLACEHOLDER_PREFIXES = (
+    "<PRIVATE_REPORT_DIR>/",
+    "<EXPLICIT_OUT_DIR>/",
+    "<OUT_DIR>/",
+    "<STATE>/",
+    "<EXTERNAL_PRACTICE_VAULT>/",
+    "<TMPDIR>/",
+    "<RESTORED_COPY>/",
+    "$LOS_SCRATCH_DIR/",
+)
+_ALLOWED_PLACEHOLDER_TOKENS = frozenset({
+    "<EXPLICIT_OUT_FILE>",
+    "<EXPLICIT_REPORT_OUT>",
+    "<EXPLICIT_LOCAL_OUTPUT>",
+    "<LOS_OBSERVATIONS>",
+    "<COUNTER_FILE>",
+    "<GIT_INDEX_AND_COMMIT>",
+    "<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>",
+})
 
 
 def _load_tree_roots(tree_contract_path: Path = TREE_CONTRACT_PATH) -> frozenset[str]:
@@ -81,19 +108,23 @@ def _load_tree_roots(tree_contract_path: Path = TREE_CONTRACT_PATH) -> frozenset
     for entry in data.get("directories", []):
         if isinstance(entry, dict) and isinstance(entry.get("path"), str):
             roots.add(entry["path"].split("/", 1)[0])
-    # Top-level non-canonical directories recognized by tests / build tooling.
-    roots.update({"tests", "migration", "system", "generated", "operations", "archive"})
+    # Top-level non-canonical directories/files recognized by tests / build tooling.
+    roots.update({"tests", "migration", "system", "generated", "operations", "archive", "pyproject.toml", "Makefile"})
     return frozenset(roots)
 
 
 def _is_external_or_placeholder(dest: str) -> bool:
-    return (
-        dest.startswith("<")
-        or dest.startswith("$")
-        or dest.startswith("~/")
-        or dest.startswith("../")
-        or dest.startswith("/")
-    )
+    if dest in _ALLOWED_PLACEHOLDER_TOKENS:
+        return True
+    for prefix in _ALLOWED_EXTERNAL_PREFIXES:
+        if dest.startswith(prefix) and len(dest) > len(prefix):
+            tail_parts = PurePosixPath(dest[len(prefix):]).parts
+            return ".." not in tail_parts
+    for prefix in _ALLOWED_PLACEHOLDER_PREFIXES:
+        if dest.startswith(prefix) and len(dest) > len(prefix):
+            tail_parts = PurePosixPath(dest[len(prefix):]).parts
+            return ".." not in tail_parts and not any(part in DATA_ROOTS for part in tail_parts)
+    return False
 
 
 def _dest_touches_data_root(dest: str, data_roots: tuple[str, ...]) -> str | None:
@@ -224,26 +255,52 @@ def _is_readonly_os_open(node: ast.Call, env: dict[str, ast.AST]) -> bool:
     return "O_RDONLY" in names and names <= _OS_READONLY_FLAGS | {"os", "getattr", "O_RDONLY"}
 
 
-def _subprocess_mutation_primitive(node: ast.Call) -> str | None:
+def _resolve_expr(node: ast.AST | None, env: dict[str, ast.AST], seen: set[str] | None = None) -> ast.AST | None:
+    seen = seen if seen is not None else set()
+    cur = node
+    while isinstance(cur, ast.Name) and cur.id in env and cur.id not in seen:
+        seen.add(cur.id)
+        cur = env[cur.id]
+    return cur
+
+
+def _mode_writes(mode_node: ast.AST | None, env: dict[str, ast.AST]) -> bool:
+    resolved = _resolve_expr(mode_node, env)
+    if resolved is None:
+        return False
+    return not (
+        isinstance(resolved, ast.Constant)
+        and isinstance(resolved.value, str)
+        and not any(mark in resolved.value for mark in "wax+")
+    )
+
+
+def _subprocess_mutation_primitive(node: ast.Call, env: dict[str, ast.AST]) -> str | None:
     if any(
-        kw.arg == "shell" and isinstance(kw.value, ast.Constant) and kw.value.value is True
+        kw.arg == "shell" and isinstance(_resolve_expr(kw.value, env), ast.Constant)
+        and _resolve_expr(kw.value, env).value is True  # type: ignore[union-attr]
         for kw in node.keywords
     ):
         return "subprocess.shell"
-    if not node.args or not isinstance(node.args[0], (ast.List, ast.Tuple)) or not node.args[0].elts:
+    cmd_node = node.args[0] if node.args else next(
+        (kw.value for kw in node.keywords if kw.arg == "args"), None
+    )
+    resolved_cmd = _resolve_expr(cmd_node, env)
+    if not isinstance(resolved_cmd, (ast.List, ast.Tuple)) or not resolved_cmd.elts:
         return None
-    elts = node.args[0].elts
-    head = elts[0]
+    elts = resolved_cmd.elts
+    head = _resolve_expr(elts[0], env)
     if not (isinstance(head, ast.Constant) and isinstance(head.value, str)):
         return None
-    cmd = head.value
+    cmd = PurePosixPath(head.value).name
     if cmd in _MUTATING_FS_COMMANDS:
         return f"subprocess.{cmd}"
     if cmd == "git":
         for elt in elts[1:]:
-            if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
-                if elt.value in _MUTATING_GIT_SUBCOMMANDS:
-                    return f"subprocess.git.{elt.value}"
+            resolved_elt = _resolve_expr(elt, env)
+            if isinstance(resolved_elt, ast.Constant) and isinstance(resolved_elt.value, str):
+                if resolved_elt.value in _MUTATING_GIT_SUBCOMMANDS:
+                    return f"subprocess.git.{resolved_elt.value}"
     return None
 
 
@@ -252,7 +309,8 @@ class _Visitor(ast.NodeVisitor):
         self._rel = rel
         self._funcs: list[str] = []
         self._env_stack: list[dict[str, ast.AST]] = [{}]
-        self._aliases: dict[str, str] = {}
+        self._mod_aliases: dict[str, str] = {}
+        self._from_aliases: dict[str, tuple[str, str]] = {}
         self.hits: list[tuple[str, int]] = []
         self.unmediated_lines: list[int] = []
         self.unmediated_call_lines: list[int] = []
@@ -270,10 +328,18 @@ class _Visitor(ast.NodeVisitor):
         self._env_stack.pop()
         self._funcs.pop()
 
+    def visit_Import(self, node: ast.Import) -> None:
+        for alias in node.names:
+            bound = alias.asname or alias.name.split(".", 1)[0]
+            self._mod_aliases[bound] = alias.name
+        self.generic_visit(node)
+
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+        mod = node.module or ""
         for alias in node.names:
             bound = alias.asname or alias.name
-            self._aliases[bound] = alias.name
+            self._from_aliases[bound] = (mod, alias.name)
+            self._mod_aliases[bound] = alias.name
         self.generic_visit(node)
 
     def visit_Assign(self, node: ast.Assign) -> None:
@@ -313,64 +379,88 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         func = node.func
+        env = self._env_stack[-1]
         primitive = None
         if isinstance(func, ast.Attribute):
             attr = func.attr
             mod_name = func.value.id if isinstance(func.value, ast.Name) else None
-            canonical_mod = self._aliases.get(mod_name, mod_name) if mod_name else None
+            canonical_mod = self._mod_aliases.get(mod_name, mod_name) if mod_name else None
+            if canonical_mod is None and mod_name in self._from_aliases:
+                canonical_mod = self._from_aliases[mod_name][1]
             is_os = canonical_mod == "os"
+            is_io = canonical_mod == "io"
             is_shutil = canonical_mod == "shutil"
             is_yaml = canonical_mod == "yaml"
             is_sqlite = canonical_mod == "sqlite3"
             is_subprocess = canonical_mod == "subprocess"
-            resolved_attr = self._aliases.get(attr, attr)
-            if attr in ("write_text", "write_bytes", "unlink"):
-                primitive = attr
-            elif attr == "open" and not is_os:
-                mode_node = node.args[0] if node.args else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
-                if mode_node is not None and not (
-                    isinstance(mode_node, ast.Constant)
-                    and isinstance(mode_node.value, str)
-                    and not any(mark in mode_node.value for mark in "wax+")
-                ):
-                    primitive = "Path.open"
-            elif is_os and attr in ("replace", "rename", "remove", "write", "link", "symlink"):
+            is_tempfile = canonical_mod == "tempfile"
+            resolved_attr = self._mod_aliases.get(attr, attr)
+            if is_os and attr in _OS_WRITE_ATTRS:
                 primitive = f"os.{attr}"
             elif is_os and attr == "open":
-                if not _is_readonly_os_open(node, self._env_stack[-1]):
+                if not _is_readonly_os_open(node, env):
                     primitive = "os.open"
-            elif attr == "rename" and not is_os:
-                primitive = "rename"
-            elif attr == "replace" and not is_os:
-                if len(node.args) == 1 and not node.keywords:
-                    primitive = "replace"
-            elif is_shutil and attr in ("move", "copy", "copy2", "copyfile", "rmtree"):
-                primitive = f"shutil.{attr}"
-            elif is_yaml and attr == "safe_dump":
-                if len(node.args) >= 2 or any(kw.arg == "stream" for kw in node.keywords):
-                    primitive = "yaml.safe_dump"
-            elif is_sqlite and attr == "connect":
-                primitive = "sqlite3.connect"
-            elif is_subprocess and attr in _SUBPROCESS_FUNCS:
-                primitive = _subprocess_mutation_primitive(node)
-            elif resolved_attr in _WRITE_HELPERS:
-                primitive = resolved_attr
-        elif isinstance(func, ast.Name):
-            canonical = self._aliases.get(func.id, func.id)
-            if canonical == "open":
+            elif is_io and attr == "open":
                 mode_node = node.args[1] if len(node.args) >= 2 else next(
                     (kw.value for kw in node.keywords if kw.arg == "mode"), None
                 )
-                if mode_node is not None and not (
-                    isinstance(mode_node, ast.Constant)
-                    and isinstance(mode_node.value, str)
-                    and not any(mark in mode_node.value for mark in "wax+")
-                ):
+                if _mode_writes(mode_node, env):
                     primitive = "open"
-            elif canonical in _WRITE_HELPERS:
-                primitive = canonical
+            elif attr in ("write_text", "write_bytes", "unlink", "mkdir", "rmdir", "touch", "symlink_to", "hardlink_to"):
+                primitive = attr
+            elif attr == "open":
+                mode_node = node.args[0] if node.args else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "Path.open"
+            elif attr == "rename":
+                primitive = "rename"
+            elif attr == "replace":
+                if len(node.args) == 1 and not node.keywords:
+                    primitive = "replace"
+            elif is_shutil and attr in _SHUTIL_WRITE_ATTRS:
+                primitive = f"shutil.{attr}"
+            elif is_yaml and attr in ("safe_dump", "dump"):
+                if len(node.args) >= 2 or any(kw.arg == "stream" for kw in node.keywords):
+                    primitive = f"yaml.{attr}"
+            elif is_sqlite and attr == "connect":
+                primitive = "sqlite3.connect"
+            elif is_tempfile and attr in _TEMPFILE_ATTRS:
+                primitive = f"tempfile.{attr}"
+            elif is_subprocess and attr in _SUBPROCESS_FUNCS:
+                primitive = _subprocess_mutation_primitive(node, env)
+            elif resolved_attr in _WRITE_HELPERS:
+                primitive = resolved_attr
+        elif isinstance(func, ast.Name):
+            if func.id in self._from_aliases:
+                mod_src, orig_name = self._from_aliases[func.id]
+            else:
+                mod_src, orig_name = "", self._mod_aliases.get(func.id, func.id)
+            if orig_name == "open" and mod_src == "os":
+                if not _is_readonly_os_open(node, env):
+                    primitive = "os.open"
+            elif orig_name == "open":
+                mode_node = node.args[1] if len(node.args) >= 2 else next(
+                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
+                )
+                if _mode_writes(mode_node, env):
+                    primitive = "open"
+            elif mod_src == "os" and orig_name in _OS_WRITE_ATTRS:
+                primitive = f"os.{orig_name}"
+            elif mod_src == "shutil" and orig_name in _SHUTIL_WRITE_ATTRS:
+                primitive = f"shutil.{orig_name}"
+            elif mod_src == "sqlite3" and orig_name == "connect":
+                primitive = "sqlite3.connect"
+            elif mod_src == "yaml" and orig_name in ("safe_dump", "dump"):
+                if len(node.args) >= 2 or any(kw.arg == "stream" for kw in node.keywords):
+                    primitive = f"yaml.{orig_name}"
+            elif mod_src == "tempfile" and orig_name in _TEMPFILE_ATTRS:
+                primitive = f"tempfile.{orig_name}"
+            elif mod_src == "subprocess" and orig_name in _SUBPROCESS_FUNCS:
+                primitive = _subprocess_mutation_primitive(node, env)
+            elif orig_name in _WRITE_HELPERS:
+                primitive = orig_name
         if primitive is not None:
             self._record(primitive, node)
         self.generic_visit(node)
@@ -561,6 +651,69 @@ def test_writer_census_accepts_valid_scoped_and_contract_writers(tmp_path: Path)
     }
     failures = scan_tools_census(root, valid, [], tree_roots=_load_tree_roots())
     assert failures == [], failures
+
+
+@pytest.mark.parametrize(
+    ("code", "expected"),
+    [
+        ("import os as _os\ndef f(a, b):\n    _os.replace(a, b)\n", "::f::os.replace"),
+        ("import shutil as sh\ndef f(a, b):\n    sh.move(a, b)\n", "::f::shutil.move"),
+        ("import sqlite3 as sq\ndef f(p):\n    sq.connect(p)\n", "::f::sqlite3.connect"),
+        ("import subprocess as sp\ndef f():\n    sp.run(['git', 'commit', '-m', 'x'])\n", "::f::subprocess.git.commit"),
+        ("import yaml as y\ndef f(d, s):\n    y.safe_dump(d, s)\n", "::f::yaml.safe_dump"),
+        ("from os import replace as r\ndef f(a, b):\n    r(a, b)\n", "::f::os.replace"),
+        ("import os\nfrom os import open as os_open\ndef f(p):\n    os_open(p, flags=os.O_WRONLY)\n", "::f::os.open"),
+        ("from shutil import move\ndef f(a, b):\n    move(a, b)\n", "::f::shutil.move"),
+        ("from sqlite3 import connect\ndef f(p):\n    connect(p)\n", "::f::sqlite3.connect"),
+        ("from subprocess import run\ndef f():\n    run(['/usr/bin/git', 'commit'])\n", "::f::subprocess.git.commit"),
+        ("import subprocess\ndef f():\n    subprocess.run(args=['git', 'commit'])\n", "::f::subprocess.git.commit"),
+        ("import subprocess\ndef f():\n    cmd = ['git', 'commit']\n    subprocess.run(cmd)\n", "::f::subprocess.git.commit"),
+        ("import io\ndef f(p):\n    io.open(p, 'wb')\n", "::f::open"),
+        ("from pathlib import Path\ndef f(p):\n    Path(p).mkdir()\n", "::f::mkdir"),
+        ("import tempfile\ndef f():\n    tempfile.mkstemp()\n", "::f::tempfile.mkstemp"),
+        ("import yaml\ndef f(d, s):\n    yaml.dump(d, s)\n", "::f::yaml.dump"),
+    ],
+)
+def test_writer_census_catches_aliased_from_imported_and_fs_primitives(tmp_path, code, expected):
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/probe.py").write_text(code, encoding="utf-8")
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert any(expected in msg for msg in failures), failures
+
+
+def test_writer_census_blocks_arbitrary_placeholders_and_movemap_canonical_claim(tmp_path):
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/move_map.py").write_text(
+        "from pathlib import Path\ndef f(p: Path):\n    p.write_text('x', encoding='utf-8')\n",
+        encoding="utf-8",
+    )
+    bad_movemap = {
+        **effects,
+        "tools/move_map.py": {
+            "effect": "tooling",
+            "destinations": ["knowledge/**"],
+            "reason": "Fake claim",
+            "contract": "OD9",
+        },
+    }
+    assert any("claims canonical DATA_ROOTS destination" in msg for msg in scan_tools_census(
+        root, bad_movemap, [], tree_roots=_load_tree_roots()))
+
+    for sneaky_dest in (
+        "../repository/knowledge/**",
+        "<ANYTHING>/knowledge/**",
+        "<TMPDIR>/../knowledge/**",
+        "/etc/passwd",
+        "$HOME/knowledge/**",
+    ):
+        bad_dest = {
+            "tools/writer_ok.py": {
+                **effects["tools/writer_ok.py"],
+                "destinations": [sneaky_dest],
+            }
+        }
+        failures = scan_tools_census(root, bad_dest, [], tree_roots=_load_tree_roots())
+        assert any("not in tree-contract.yaml" in msg for msg in failures), (sneaky_dest, failures)
 
 
 def _read_mode() -> str:
