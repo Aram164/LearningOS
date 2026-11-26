@@ -181,6 +181,10 @@ def _data_contract_version(core_root: Path) -> int:
     return int(data["contract_version"])
 
 
+def _data_contract_sha256(core_root: Path) -> str:
+    return _sha256_file(core_root / "system" / "contracts" / "data-contract.yaml")
+
+
 def generate(
     *,
     core_root: Path,
@@ -278,6 +282,7 @@ def generate(
         "core_branch": _current_branch(core_root),
         "ui_branch": _current_branch(ui_root),
         "data_contract_version": _data_contract_version(core_root),
+        "data_contract_sha256": _data_contract_sha256(core_root),
         "manifest_contract_version": manifest_contract_version,
         "manifest_contract_schema_sha256": manifest_contract_schema_sha256,
         "manifest_contract_closure_sha256": manifest_contract_closure_sha256,
@@ -321,6 +326,7 @@ def verify(receipt: dict, artifact_dir: Path,
             )
         try:
             declared = {
+                "data_contract_sha256": _data_contract_sha256(core_root),
                 "manifest_contract_version": declared_version(core_root),
                 "manifest_contract_schema_sha256": declared_schema_sha256(core_root),
                 "manifest_contract_closure_sha256": declared_closure_sha256(core_root),

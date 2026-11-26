@@ -114,6 +114,69 @@ def test_zero_skip_junit_refuses_missing_or_empty_xml(tmp_path):
         checker.check_zero_skip_junit(empty)
 
 
+def test_mandatory_prefix_passes_when_unrelated_tests_skip(suite):
+    checker, manifest, junit = suite
+    _results(junit, GOOD)
+    out = checker.check(
+        junit,
+        manifest,
+        require_passed_prefixes=["tests/test_example.py::test_one"],
+    )
+    assert "1/1 mandatory witnesses passed" in out
+    assert "0 allowed mandatory skips" in out
+
+
+def test_mandatory_prefix_refuses_when_mandatory_test_skips(suite):
+    checker, manifest, junit = suite
+    _results(junit, GOOD)
+    with pytest.raises(SystemExit, match="mandatory witness skipped: tests/test_example.py::TestGroup::test_two\\[x\\.y\\]"):
+        checker.check(
+            junit,
+            manifest,
+            require_passed_prefixes=["tests/test_example.py::"],
+        )
+
+
+def test_mandatory_prefix_refuses_zero_collected_matches(suite):
+    checker, manifest, junit = suite
+    _results(junit, GOOD)
+    with pytest.raises(SystemExit, match="matched zero collected tests"):
+        checker.check(
+            junit,
+            manifest,
+            require_passed_prefixes=["tests/test_nonexistent.py::"],
+        )
+
+
+def test_allow_skip_permits_only_named_mandatory_witness(suite, monkeypatch):
+    checker, manifest, junit = suite
+    _results(junit, GOOD)
+    out = checker.check(
+        junit,
+        manifest,
+        require_passed_prefixes=["tests/test_example.py::"],
+        allow_skips={"tests/test_example.py::TestGroup::test_two[x.y]": "known fixture condition"},
+    )
+    assert "1 allowed mandatory skips" in out
+    assert "1/2 mandatory witnesses passed" in out
+
+    monkeypatch.setattr(
+        checker.sys,
+        "argv",
+        [
+            "check_shard_completeness.py",
+            "--junit-dir", str(junit),
+            "--manifest", str(manifest),
+            "--require-passed-prefix", "tests/test_example.py::",
+            "--allow-skip", "tests/test_example.py::TestGroup::test_two[x.y]=known reason",
+        ],
+    )
+    assert checker.main() == 0
+
+    with pytest.raises(SystemExit, match="expected NODE_ID=REASON"):
+        checker._parse_allow_skip(["missing-equals"])
+
+
 @pytest.mark.parametrize("name", ["validate.yml", "release-pair.yml"])
 def test_both_workflows_use_the_shared_identity_and_collision_checks(name):
     root = Path(__file__).resolve().parents[1]
@@ -124,4 +187,15 @@ def test_both_workflows_use_the_shared_identity_and_collision_checks(name):
         "--zero-skip-junit ../seatbelt-in/seatbelt.xml" in run
         for run in runs
     )
+    for prefix in (
+        "tests/test_ui_phase3_live_writes.py::",
+        "tests/test_ui_gateway_recovery.py::",
+        "tests/test_operations_gate.py::",
+        "tests/test_contract_differential.py::",
+    ):
+        assert any(
+            f"--require-passed-prefix {prefix}" in run
+            and "tools/check_shard_completeness.py" in run
+            for run in runs
+        ), f"{name} missing --require-passed-prefix {prefix}"
     assert any("copy_audit_logs(parts[leg][2], audit)" in run for run in runs)

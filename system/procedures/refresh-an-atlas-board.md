@@ -24,13 +24,16 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)"
 ```
 
 ```scrut
-$ if [ -f "$LOS_REPO/../obsidian-ui/tests/test-atlas-boards.js" ]; then node "$LOS_REPO/../obsidian-ui/tests/test-atlas-boards.js"; else printf '%s\n' 'Atlas board controller proof requires the sibling UI checkout.'; fi
-Atlas board* (glob)
+$ if [ -f "$LOS_REPO/../obsidian-ui/tests/test-atlas-boards.js" ]; then node "$LOS_REPO/../obsidian-ui/tests/test-atlas-boards.js"; else printf '%s\n' 'Core-only scope: sibling ../obsidian-ui checkout absent; Atlas board controller UI test not executed.'; fi
+^(Atlas boards OK: merge preservation, refusals, controller lane, portal gate, hidden ownership records through the vault adapter\.|Core-only scope: sibling \.\./obsidian-ui checkout absent; Atlas board controller UI test not executed\.)$ (regex)
 ```
 
 In a paired checkout the driver asserts mismatched template refusal, a
 refused refresh with managed Canvas open, a stale-preview refusal, retained
 working geometry, and preservation of the accepted child target and portal
-flag. A Core-only checkout reports that the UI is required. For a host
+flag. A Core-only checkout explicitly reports Core-only scope because the UI
+board controller harness lives in `../obsidian-ui`; real paired Core/UI write
+and receipt persistence witnesses are owned by `tests/test_ui_phase3_live_writes.py`
+and `../obsidian-ui/tests/live-writes-harness.js`, not stdout globs. For a host
 failure, record the scope, editor leaves including pop-outs, both file
 digests and the refusal. Restore the working board and sidecar together.

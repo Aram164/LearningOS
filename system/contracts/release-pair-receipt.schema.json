@@ -22,6 +22,11 @@
     "core_branch": {"type": "string", "minLength": 1},
     "ui_branch": {"type": "string", "minLength": 1},
     "data_contract_version": {"type": "integer", "minimum": 1},
+    "data_contract_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 digest of Core system/contracts/data-contract.yaml. Carried by receipts generated after data-contract digest pinning was added; historical receipts without it remain valid."
+    },
     "manifest_contract_version": {"type": "integer", "minimum": 1},
     "manifest_contract_schema_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "manifest_contract_closure_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "description": "The manifest contract closure digest from Core's declared contract identity. Carried by receipts generated after the closure was added to the release identity; historical receipts without it remain valid and are verified only against the identity they contain."},

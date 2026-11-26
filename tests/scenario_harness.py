@@ -203,9 +203,24 @@ def _build_fixture(name: str, container: Path) -> Path:
     return root
 
 
+def _clean_git_env(extra: dict[str, str] | None = None) -> dict[str, str]:
+    tools_dir = str(REPO_ROOT / "tools")
+    inserted = False
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+        inserted = True
+    try:
+        from learning_os.store.fs import clean_git_env
+    finally:
+        if inserted and tools_dir in sys.path:
+            sys.path.remove(tools_dir)
+    return clean_git_env(extra=extra)
+
+
 def _git(root: Path, *args: str, env: dict | None = None) -> None:
     proc = subprocess.run(["git", *args], cwd=root, capture_output=True,
-                          text=True, timeout=120, env=env or os.environ)
+                          text=True, timeout=120,
+                          env=env if env is not None else _clean_git_env())
     if proc.returncode != 0:
         raise RuntimeError(
             f"git {' '.join(args)} failed: {proc.stderr[-1000:]}")
@@ -232,7 +247,15 @@ def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
     # those commits stay real time (git reads no seam) but no recording
     # observes .git, so they are invisible.
     _git(root, "add", "-A")
-    env = dict(os.environ, GIT_AUTHOR_DATE=now_iso, GIT_COMMITTER_DATE=now_iso)
+    env = _clean_git_env(extra={
+        "GIT_AUTHOR_NAME": name,
+        "GIT_AUTHOR_EMAIL": email,
+        "GIT_COMMITTER_NAME": name,
+        "GIT_COMMITTER_EMAIL": email,
+        "GIT_AUTHOR_DATE": now_iso,
+        "GIT_COMMITTER_DATE": now_iso,
+        "GIT_CONFIG_NOSYSTEM": "1",
+    })
     _git(root, "commit", "-qm", FIXTURE_COMMIT_MESSAGE, env=env)
     _apply_git_setup(root, git_setup)
 

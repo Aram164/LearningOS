@@ -42,6 +42,10 @@ on:
 permissions:
   contents: read
 
+env:
+  LEARNINGOS_ALLOW_FALLBACK: ""
+  LEARNINGOS_ALLOW_MISSING_CORE: ""
+
 
 jobs:
   pytest-shards:
@@ -554,7 +558,11 @@ jobs:
       - name: Prove the shards are exactly the suite, then run static gates
         run: |
           set -eu
-          .venv/bin/python tools/check_shard_completeness.py --junit-dir ../junit-in --zero-skip-junit ../seatbelt-in/seatbelt.xml
+          .venv/bin/python tools/check_shard_completeness.py --junit-dir ../junit-in --zero-skip-junit ../seatbelt-in/seatbelt.xml \
+            --require-passed-prefix tests/test_ui_phase3_live_writes.py:: \
+            --require-passed-prefix tests/test_ui_gateway_recovery.py:: \
+            --require-passed-prefix tests/test_operations_gate.py:: \
+            --require-passed-prefix tests/test_contract_differential.py::
           .venv/bin/python -m ruff check tools tests
           .venv/bin/python tools/code_reachability.py
           .venv/bin/python -m mypy

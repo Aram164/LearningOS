@@ -269,6 +269,9 @@ def test_a_valid_artifact_verifies(clean_pair, tmp_path):
 def test_generate_carries_the_full_contract_identity(clean_pair, tmp_path):
     receipt = _generate(clean_pair)
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    assert receipt["data_contract_sha256"] == _sha256(
+        (clean_pair["core"] / "system/contracts/data-contract.yaml").read_bytes()
+    )
     assert receipt["manifest_contract_closure_sha256"] == \
         receipt["manifest_contract_schema_sha256"]
     rpr.verify(receipt, artifact, core_root=clean_pair["core"])  # must not raise
@@ -276,6 +279,7 @@ def test_generate_carries_the_full_contract_identity(clean_pair, tmp_path):
 
 @pytest.mark.parametrize("field", [
     "data_contract_version",
+    "data_contract_sha256",
     "manifest_contract_version",
     "manifest_contract_schema_sha256",
     "manifest_contract_closure_sha256",
@@ -287,6 +291,23 @@ def test_mismatched_contract_identity_is_refused_against_core(
     receipt[field] = 999 if field.endswith("version") else "sha256:" + "e" * 64
     with pytest.raises(rpr.ReleasePairReceiptError, match=field):
         rpr.verify(receipt, artifact, core_root=clean_pair["core"])
+
+
+def test_verify_refuses_data_contract_drift_without_version_bump(clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    dc_path = clean_pair["core"] / "system/contracts/data-contract.yaml"
+    dc_path.write_text(dc_path.read_text(encoding="utf-8") + "# drifted\n", encoding="utf-8")
+    with pytest.raises(rpr.ReleasePairReceiptError, match="data_contract_sha256"):
+        rpr.verify(receipt, artifact, core_root=clean_pair["core"])
+
+
+def test_historical_receipt_without_data_contract_sha256_verifies_against_core(
+        clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    receipt.pop("data_contract_sha256")
+    rpr.verify(receipt, artifact, core_root=clean_pair["core"])  # must not raise
 
 
 def test_verify_cli_refuses_tampered_data_contract_version(clean_pair, tmp_path):

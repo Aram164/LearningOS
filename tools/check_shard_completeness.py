@@ -15,6 +15,7 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from collections import Counter
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 
@@ -22,7 +23,27 @@ def _fail(message: str) -> SystemExit:
     return SystemExit(f"shard completeness: {message}")
 
 
-def check(junit_dir: Path, manifest_path: Path) -> str:
+def _parse_allow_skip(entries: Sequence[str]) -> dict[str, str]:
+    allowed: dict[str, str] = {}
+    for entry in entries:
+        node_id, sep, reason = entry.partition("=")
+        if not sep or not node_id.strip() or not reason.strip():
+            raise _fail(
+                f"invalid --allow-skip entry {entry!r}: expected NODE_ID=REASON"
+            )
+        if node_id in allowed:
+            raise _fail(f"duplicate --allow-skip node ID: {node_id}")
+        allowed[node_id] = reason.strip()
+    return allowed
+
+
+def check(
+    junit_dir: Path,
+    manifest_path: Path,
+    *,
+    require_passed_prefixes: Sequence[str] = (),
+    allow_skips: Mapping[str, str] | None = None,
+) -> str:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     disk = sorted(f"tests/{p.name}" for p in Path("tests").glob("test_*.py"))
     covered = Counter(f for leg in manifest["legs"].values() for f in leg)
@@ -55,6 +76,7 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
         return None
 
     executed: Counter[str] = Counter()
+    skipped_ids: set[str] = set()
     unmapped: list[str] = []
     skipped = 0
     for path in sorted(junit_dir.glob("junit-*.xml")):
@@ -67,6 +89,8 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
                 executed[mapped] += 1
             if case.find("skipped") is not None:
                 skipped += 1
+                if mapped is not None:
+                    skipped_ids.add(mapped)
             if case.find("failure") is not None or case.find("error") is not None:
                 raise _fail(f"{path.name}: failing testcase "
                             f"{case.get('classname')}::{case.get('name')}")
@@ -77,6 +101,35 @@ def check(junit_dir: Path, manifest_path: Path) -> str:
         extra = sorted((executed - expected_ids).elements())
         raise _fail("shard test identities differ from the full collection: "
                     f"missing={missing[:10]} extra_or_duplicated={extra[:10]}")
+    allowed = dict(allow_skips or {})
+    mandatory_ids: list[str] = []
+    seen_mandatory: set[str] = set()
+    for prefix in require_passed_prefixes:
+        matched = [nid for nid in sorted(expected_ids) if nid.startswith(prefix)]
+        if not matched:
+            raise _fail(
+                f"mandatory witness prefix matched zero collected tests: {prefix}"
+            )
+        for nid in matched:
+            if nid not in seen_mandatory:
+                seen_mandatory.add(nid)
+                mandatory_ids.append(nid)
+    allowed_skips_used = 0
+    mandatory_passed = 0
+    for nid in mandatory_ids:
+        if nid in skipped_ids:
+            if nid not in allowed:
+                raise _fail(f"mandatory witness skipped: {nid}")
+            allowed_skips_used += 1
+        else:
+            mandatory_passed += 1
+    if require_passed_prefixes:
+        return (
+            f"gate: {sum(executed.values())} executed test IDs == full "
+            f"collection, each exactly once ({skipped} skipped, "
+            f"{allowed_skips_used} allowed mandatory skips, "
+            f"{mandatory_passed}/{len(mandatory_ids)} mandatory witnesses passed)"
+        )
     return (f"gate: {sum(executed.values())} executed test IDs == full "
             f"collection, each exactly once ({skipped} skipped, visible, "
             "never blocking)")
@@ -120,6 +173,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--zero-skip-junit", action="append", type=Path, default=[],
         help="JUnit XML file that must contain >= 1 testcase and 0 skips/failures",
     )
+    parser.add_argument(
+        "--require-passed-prefix", action="append", default=[],
+        help="Collected node-ID prefix that must match >= 1 test and execute without unapproved skips",
+    )
+    parser.add_argument(
+        "--allow-skip", action="append", default=[],
+        help="Allow-listed mandatory skip formatted as NODE_ID=REASON",
+    )
     return parser
 
 
@@ -128,8 +189,14 @@ def main() -> int:
     args = parser.parse_args()
     if args.junit_dir is None and not args.zero_skip_junit:
         parser.error("at least one of --junit-dir or --zero-skip-junit is required")
+    allow_skips = _parse_allow_skip(args.allow_skip)
     if args.junit_dir is not None:
-        print(check(args.junit_dir, args.manifest))
+        print(check(
+            args.junit_dir,
+            args.manifest,
+            require_passed_prefixes=args.require_passed_prefix,
+            allow_skips=allow_skips,
+        ))
     for path in args.zero_skip_junit:
         print(check_zero_skip_junit(path))
     return 0

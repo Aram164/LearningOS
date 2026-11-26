@@ -232,3 +232,85 @@ def test_the_paired_gate_requires_this_harness(repo_root: Path):
     assert "gateway-recovery-harness.js" in makefile, (
         "system-check must assert the UI recovery harness is present"
     )
+    assert "tests/test_ui_phase3_live_writes.py" in makefile, (
+        "system-check must require the Core-side live-writes driver by name"
+    )
+    assert "live-writes-harness.js" in makefile, (
+        "system-check must assert the UI live-writes harness is present"
+    )
+    assert "tests/test_operations_gate.py" in makefile, (
+        "system-check must require the Core-side operations-gate driver by name"
+    )
+    assert "operations-gate-harness.js" in makefile, (
+        "system-check must assert the UI operations-gate harness is present"
+    )
+
+
+@pytest.mark.parametrize(
+    "omitted_rel",
+    [
+        "repository/tests/test_ui_gateway_recovery.py",
+        "obsidian-ui/tests/gateway-recovery-harness.js",
+        "repository/tests/test_ui_phase3_live_writes.py",
+        "obsidian-ui/tests/live-writes-harness.js",
+        "repository/tests/test_operations_gate.py",
+        "obsidian-ui/tests/operations-gate-harness.js",
+    ],
+)
+def test_system_check_refuses_when_required_harness_is_missing(
+    repo_root: Path, tmp_path: Path, omitted_rel: str,
+):
+    """Invoke `make system-check` in a temp pair and prove missing any required harness fails."""
+    pair_root = tmp_path / "pair"
+    core = pair_root / "repository"
+    ui = pair_root / "obsidian-ui"
+    (core / "tests").mkdir(parents=True)
+    (ui / "tests").mkdir(parents=True)
+    shutil.copy(repo_root / "Makefile", core / "Makefile")
+    (ui / "package.json").write_text('{"name": "obsidian-ui"}\n', encoding="utf-8")
+
+    required_files = [
+        "repository/tests/test_ui_gateway_recovery.py",
+        "obsidian-ui/tests/gateway-recovery-harness.js",
+        "repository/tests/test_ui_phase3_live_writes.py",
+        "obsidian-ui/tests/live-writes-harness.js",
+        "repository/tests/test_operations_gate.py",
+        "obsidian-ui/tests/operations-gate-harness.js",
+    ]
+    for rel in required_files:
+        if rel != omitted_rel:
+            (pair_root / rel).write_text("// stub\n", encoding="utf-8")
+
+    stub_bin = tmp_path / "bin"
+    stub_bin.mkdir()
+    for tool_name in ("node", "npm"):
+        stub = stub_bin / tool_name
+        stub.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        stub.chmod(0o755)
+    stub_py = tmp_path / "stub_py.py"
+    stub_py.write_text("import sys\nsys.exit(0)\n", encoding="utf-8")
+    env = {**os.environ, "PATH": f"{stub_bin}{os.pathsep}{os.environ['PATH']}"}
+
+    proc = subprocess.run(
+        ["make", "--silent", "system-check", f"PY={sys.executable} {stub_py}"],
+        cwd=core,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert proc.returncode != 0
+    missing_name = Path(omitted_rel).name
+    assert missing_name in proc.stderr, proc.stderr
+
+    # Positive control: restoring the omitted file makes the guard succeed.
+    (pair_root / omitted_rel).write_text("// stub\n", encoding="utf-8")
+    ok_proc = subprocess.run(
+        ["make", "--silent", "system-check", f"PY={sys.executable} {stub_py}"],
+        cwd=core,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert ok_proc.returncode == 0, ok_proc.stdout + ok_proc.stderr

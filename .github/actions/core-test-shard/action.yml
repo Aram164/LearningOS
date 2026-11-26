@@ -114,6 +114,9 @@ runs:
       run: |
         set -eu
         mkdir -p ../junit-out
+        if printf '%s\n' "$PICKED" | grep -qx 'tests/test_contract_differential.py'; then
+          .venv/bin/python tools/generate.py
+        fi
         # shellcheck disable=SC2086  # manifest paths contain no spaces
         .venv/bin/python -m pytest -q --basetemp=../pytesttmp \
           --junitxml="../junit-out/junit-$SHARD.xml" $PICKED

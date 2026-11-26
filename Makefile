@@ -176,6 +176,10 @@ system-check:
 # the interrupted-write path was actually exercised against this Core.
 	@test -f tests/test_ui_gateway_recovery.py || { echo "system-check: tests/test_ui_gateway_recovery.py is missing — the paired Gateway recovery driver cannot run" >&2; exit 1; }
 	@test -f ../obsidian-ui/tests/gateway-recovery-harness.js || { echo "system-check: ../obsidian-ui/tests/gateway-recovery-harness.js is missing — the paired Gateway recovery test cannot run" >&2; exit 1; }
+	@test -f tests/test_ui_phase3_live_writes.py || { echo "system-check: tests/test_ui_phase3_live_writes.py is missing — the paired live-writes driver cannot run" >&2; exit 1; }
+	@test -f ../obsidian-ui/tests/live-writes-harness.js || { echo "system-check: ../obsidian-ui/tests/live-writes-harness.js is missing — the paired live-writes test cannot run" >&2; exit 1; }
+	@test -f tests/test_operations_gate.py || { echo "system-check: tests/test_operations_gate.py is missing — the paired operations gate driver cannot run" >&2; exit 1; }
+	@test -f ../obsidian-ui/tests/operations-gate-harness.js || { echo "system-check: ../obsidian-ui/tests/operations-gate-harness.js is missing — the paired operations gate test cannot run" >&2; exit 1; }
 	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
 	$(PY) -m pytest -q
 	npm --prefix ../obsidian-ui run check

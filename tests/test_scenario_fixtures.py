@@ -11,6 +11,7 @@ from pathlib import Path
 import materials_manifest
 import pypdf
 import pytest
+import scenario_harness
 import yaml
 from conftest import build_mini_repo
 from scenario_fixtures import INITIAL_WARNING_SIGNATURES, rich_world
@@ -226,3 +227,40 @@ def test_ids_name_the_world(tmp_path):
     ids = rich_world(root)
     assert ids["unit"] == "unit-demo-l01"
     assert ids["stage_pending"] == "stage-demo-pending"
+
+
+def test_commit_fixture_ignores_ambient_git_identity(tmp_path, monkeypatch):
+    first = _build(tmp_path / "first")
+    second = _build(tmp_path / "second")
+    identity_vars = (
+        "GIT_AUTHOR_NAME",
+        "GIT_AUTHOR_EMAIL",
+        "GIT_COMMITTER_NAME",
+        "GIT_COMMITTER_EMAIL",
+    )
+    for var in identity_vars:
+        monkeypatch.delenv(var, raising=False)
+    scenario_harness._commit_fixture(first, "2026-01-15T12:00:00Z", None)
+
+    monkeypatch.setenv("GIT_AUTHOR_NAME", "Rogue")
+    monkeypatch.setenv("GIT_AUTHOR_EMAIL", "rogue@example.invalid")
+    monkeypatch.setenv("GIT_COMMITTER_NAME", "Rogue Committer")
+    monkeypatch.setenv("GIT_COMMITTER_EMAIL", "committer@example.invalid")
+    scenario_harness._commit_fixture(second, "2026-01-15T12:00:00Z", None)
+
+    def head_and_identity(repo: Path) -> tuple[str, str]:
+        sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        ident = subprocess.run(
+            ["git", "show", "-s", "--format=%an<%ae>|%cn<%ce>", "HEAD"],
+            cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        return sha, ident
+
+    first_sha, first_ident = head_and_identity(first)
+    second_sha, second_ident = head_and_identity(second)
+    assert first_ident == "Fixture<fixture@local>|Fixture<fixture@local>"
+    assert second_ident == first_ident
+    assert second_sha == first_sha

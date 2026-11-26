@@ -108,6 +108,42 @@ def test_ordinary_ci_cannot_silently_omit_the_recovery_harness():
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
     assert "tests/test_ui_gateway_recovery.py" in makefile
     assert "gateway-recovery-harness.js" in makefile
+    assert "tests/test_ui_phase3_live_writes.py" in makefile
+    assert "live-writes-harness.js" in makefile
+    assert "tests/test_operations_gate.py" in makefile
+    assert "operations-gate-harness.js" in makefile
+
+
+def test_workflows_clear_fallback_and_missing_core_overrides():
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        env = _load(workflow).get("env", {})
+        assert env.get("LEARNINGOS_ALLOW_FALLBACK") == "", workflow.name
+        assert env.get("LEARNINGOS_ALLOW_MISSING_CORE") == "", workflow.name
+
+
+def test_workflows_generate_full_scale_manifest_and_require_witness_prefixes():
+    action_runs = "\n".join(
+        step.get("run", "")
+        for step in _load(ROOT / SHARD_ACTION / "action.yml")["runs"]["steps"]
+        if "run" in step
+    )
+    assert ".venv/bin/python tools/generate.py" in action_runs
+    assert "tests/test_contract_differential.py" in action_runs
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        gate_runs = "\n".join(
+            step.get("run", "")
+            for step in _load(workflow)["jobs"]["gate"]["steps"]
+            if "run" in step
+        )
+        for prefix in (
+            "tests/test_ui_phase3_live_writes.py::",
+            "tests/test_ui_gateway_recovery.py::",
+            "tests/test_operations_gate.py::",
+            "tests/test_contract_differential.py::",
+        ):
+            assert f"--require-passed-prefix {prefix}" in gate_runs, (
+                workflow.name, prefix
+            )
 
 
 def test_ordinary_ci_permissions_are_read_only():
