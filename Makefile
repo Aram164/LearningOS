@@ -185,6 +185,7 @@ system-check:
 	tmp=$$(mktemp -d); \
 	rc=0; \
 	trap 'rm -rf "$$tmp"' EXIT HUP INT TERM; \
+	unset PYTEST_ADDOPTS; \
 	$(PY) -m pytest -q --junitxml="$$tmp/junit-system-check.xml" && \
 	$(PY) tools/check_shard_completeness.py --junit-dir "$$tmp" --require-mandatory-paired || rc=$$?; \
 	rm -rf "$$tmp"; \

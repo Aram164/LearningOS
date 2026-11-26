@@ -211,6 +211,7 @@ def test_mandatory_paired_prefixes_match_workflows_and_system_check(tmp_path, mo
     makefile = (root / "Makefile").read_text(encoding="utf-8")
     section = makefile.split("system-check:", 1)[1]
     assert "tools/generate.py" in section
+    assert "unset PYTEST_ADDOPTS" in section
     assert "tools/check_shard_completeness.py" in section
     assert "--require-mandatory-paired" in section
 
@@ -251,11 +252,14 @@ def test_mandatory_paired_prefixes_match_workflows_and_system_check(tmp_path, mo
         encoding="utf-8",
     )
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(
-        checker.subprocess,
-        "run",
-        lambda *a, **kw: subprocess.CompletedProcess(a, 0, collected, ""),
-    )
+    monkeypatch.setenv("PYTEST_ADDOPTS", "-k nope")
+    seen_envs: list[dict[str, str]] = []
+
+    def _fake_collect(*a, **kw):
+        seen_envs.append(dict(kw.get("env") or {}))
+        return subprocess.CompletedProcess(a, 0, collected, "")
+
+    monkeypatch.setattr(checker.subprocess, "run", _fake_collect)
     monkeypatch.setattr(
         checker.sys,
         "argv",
@@ -282,3 +286,4 @@ def test_mandatory_paired_prefixes_match_workflows_and_system_check(tmp_path, mo
         encoding="utf-8",
     )
     assert checker.main() == 0
+    assert seen_envs and all("PYTEST_ADDOPTS" not in e for e in seen_envs)

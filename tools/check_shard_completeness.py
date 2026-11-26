@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -65,9 +66,10 @@ def check(
             f"missing={sorted(set(disk) - set(covered))} "
             f"extra={sorted(set(covered) - set(disk))}")
 
+    clean_env = {k: v for k, v in os.environ.items() if k != "PYTEST_ADDOPTS"}
     out = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-        capture_output=True, text=True, check=True, timeout=120)
+        capture_output=True, text=True, check=True, timeout=120, env=clean_env)
     collected_ids = [line.strip() for line in out.stdout.splitlines()
                      if "::" in line and not line.startswith(" ")]
     expected_ids = Counter(collected_ids)
