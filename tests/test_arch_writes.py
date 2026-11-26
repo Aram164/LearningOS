@@ -486,6 +486,52 @@ def _iter_tool_python_files(root: Path) -> list[Path]:
     return found
 
 
+def _scan_static_tree(
+    root: Path = ROOT,
+    effects: dict[str, dict] | None = None,
+) -> tuple[Counter, dict[str, tuple[str, int]], set[str], list[str]]:
+    declared = effects or {}
+    undeclared_counts: Counter = Counter()
+    first_seen: dict[str, tuple[str, int]] = {}
+    writer_modules: set[str] = set()
+    unmediated_failures: list[str] = []
+
+    for path in _iter_tool_python_files(root):
+        rel = path.relative_to(root).as_posix()
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
+        visitor = _Visitor(rel)
+        visitor.visit(tree)
+        forbidden_unmediated = (
+            visitor.unmediated_call_lines
+            if rel == _CANONICAL_ENGINE_MODULE
+            else visitor.unmediated_lines
+        )
+        for lineno in sorted(set(forbidden_unmediated)):
+            unmediated_failures.append(
+                f"A2 {rel}:{lineno}: _unmediated_test_only is forbidden anywhere under tools/ (CL-50)"
+            )
+        if visitor.hits:
+            writer_modules.add(rel)
+        if rel not in declared:
+            for signature, lineno in visitor.hits:
+                undeclared_counts[signature] += 1
+                first_seen.setdefault(signature, (rel, lineno))
+
+    return undeclared_counts, first_seen, writer_modules, unmediated_failures
+
+
+def _collect_static(
+    root: Path = ROOT,
+    effects: dict[str, dict] | None = None,
+) -> tuple[Counter, dict[str, tuple[str, int]]]:
+    """Return undeclared AST write-primitive counts and first-seen locations."""
+    if effects is None:
+        raw = yaml.safe_load(EFFECTS_PATH.read_text(encoding="utf-8"))
+        effects = raw if isinstance(raw, dict) else {}
+    undeclared_counts, first_seen, _, _ = _scan_static_tree(root, effects)
+    return undeclared_counts, first_seen
+
+
 def scan_tools_census(
     root: Path,
     effects_raw: object,
@@ -502,30 +548,10 @@ def scan_tools_census(
     for rel in sorted(set(effects) & ratchet_modules):
         failures.append(f"A2 {rel}: appears in both effects.yaml and ratchets.yaml")
 
-    undeclared_counts: Counter = Counter()
-    first_seen: dict[str, tuple[str, int]] = {}
-    writer_modules: set[str] = set()
-
-    for path in _iter_tool_python_files(root):
-        rel = path.relative_to(root).as_posix()
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
-        visitor = _Visitor(rel)
-        visitor.visit(tree)
-        forbidden_unmediated = (
-            visitor.unmediated_call_lines
-            if rel == _CANONICAL_ENGINE_MODULE
-            else visitor.unmediated_lines
-        )
-        for lineno in sorted(set(forbidden_unmediated)):
-            failures.append(
-                f"A2 {rel}:{lineno}: _unmediated_test_only is forbidden anywhere under tools/ (CL-50)"
-            )
-        if visitor.hits:
-            writer_modules.add(rel)
-        if rel not in effects:
-            for signature, lineno in visitor.hits:
-                undeclared_counts[signature] += 1
-                first_seen.setdefault(signature, (rel, lineno))
+    undeclared_counts, first_seen, writer_modules, unmediated_failures = _scan_static_tree(
+        root, effects,
+    )
+    failures.extend(unmediated_failures)
 
     for signature, count in sorted(undeclared_counts.items()):
         if recorded.get(signature, 0) < count:
