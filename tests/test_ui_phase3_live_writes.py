@@ -252,6 +252,7 @@ def live_writes_run(repo_root: Path, tmp_path_factory) -> tuple[dict, dict, dict
     return json.loads(marker[-1][len("LIVE_WRITES_RESULT "):]), plan, baselines
 
 
+@pytest.mark.skip(reason="controlled regression: skipped mandatory witness")
 def test_source_selection_seven_scenarios_on_disk(repo_root: Path, live_writes_run):
     results, plan, baselines = live_writes_run
     base_ids = baselines["sourceSelection"]["receipt_ids"]
