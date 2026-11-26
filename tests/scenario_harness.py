@@ -247,15 +247,7 @@ def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
     # those commits stay real time (git reads no seam) but no recording
     # observes .git, so they are invisible.
     _git(root, "add", "-A")
-    env = _clean_git_env(extra={
-        "GIT_AUTHOR_NAME": name,
-        "GIT_AUTHOR_EMAIL": email,
-        "GIT_COMMITTER_NAME": name,
-        "GIT_COMMITTER_EMAIL": email,
-        "GIT_AUTHOR_DATE": now_iso,
-        "GIT_COMMITTER_DATE": now_iso,
-        "GIT_CONFIG_NOSYSTEM": "1",
-    })
+    env = dict(os.environ, GIT_AUTHOR_DATE=now_iso, GIT_COMMITTER_DATE=now_iso)
     _git(root, "commit", "-qm", FIXTURE_COMMIT_MESSAGE, env=env)
     _apply_git_setup(root, git_setup)
 
