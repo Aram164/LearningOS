@@ -119,6 +119,7 @@ def test_workflows_clear_fallback_and_missing_core_overrides():
         env = _load(workflow).get("env", {})
         assert env.get("LEARNINGOS_ALLOW_FALLBACK") == "", workflow.name
         assert env.get("LEARNINGOS_ALLOW_MISSING_CORE") == "", workflow.name
+        assert env.get("PYTEST_ADDOPTS") == "", workflow.name
 
 
 def test_workflows_generate_full_scale_manifest_and_require_witness_prefixes():

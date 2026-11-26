@@ -337,6 +337,7 @@ def test_unit_map_import_seven_scenarios_on_disk(repo_root: Path, live_writes_ru
     new_valid = _new_receipts(repos["valid"], base_ids)
     assert len(new_valid) == 1
     assert new_valid[0]["id"] == results["unitMapImport"]["valid"]["transactionId"]
+    assert results["unitMapImport"]["valid"]["previewReceiptDelta"] == 0
     assert new_valid[0]["capability"] == "unit.map.import"
     assert _run_los(repo_root, repos["valid"], "validate").returncode == 0
 
@@ -395,6 +396,7 @@ def test_ai_delivery_apply_seven_scenarios_on_disk(repo_root: Path, live_writes_
     new_valid = _new_receipts(valid_repo, base_ids)
     assert len(new_valid) == 1
     assert new_valid[0]["id"] == results["deliveryApply"]["valid"]["transactionId"]
+    assert results["deliveryApply"]["valid"]["previewReceiptDelta"] == 0
     assert new_valid[0]["request"]["approval"]["kind"] == "approved-delivery"
     assert new_valid[0]["request"]["channel"] == "ui"
     assert _run_los(repo_root, valid_repo, "validate").returncode == 0

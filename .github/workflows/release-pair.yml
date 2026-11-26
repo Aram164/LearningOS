@@ -50,6 +50,7 @@ permissions:
 env:
   LEARNINGOS_ALLOW_FALLBACK: ""
   LEARNINGOS_ALLOW_MISSING_CORE: ""
+  PYTEST_ADDOPTS: ""
 
 run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
 

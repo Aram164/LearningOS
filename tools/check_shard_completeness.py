@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -21,6 +22,14 @@ from pathlib import Path
 
 def _fail(message: str) -> SystemExit:
     return SystemExit(f"shard completeness: {message}")
+
+
+MANDATORY_PAIRED_WITNESS_PREFIXES: tuple[str, ...] = (
+    "tests/test_ui_phase3_live_writes.py::",
+    "tests/test_ui_gateway_recovery.py::",
+    "tests/test_operations_gate.py::",
+    "tests/test_contract_differential.py::",
+)
 
 
 def _parse_allow_skip(entries: Sequence[str]) -> dict[str, str]:
@@ -57,9 +66,10 @@ def check(
             f"missing={sorted(set(disk) - set(covered))} "
             f"extra={sorted(set(covered) - set(disk))}")
 
+    clean_env = {k: v for k, v in os.environ.items() if k != "PYTEST_ADDOPTS"}
     out = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-        capture_output=True, text=True, check=True, timeout=120)
+        capture_output=True, text=True, check=True, timeout=120, env=clean_env)
     collected_ids = [line.strip() for line in out.stdout.splitlines()
                      if "::" in line and not line.startswith(" ")]
     expected_ids = Counter(collected_ids)
@@ -178,6 +188,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Collected node-ID prefix that must match >= 1 test and execute without unapproved skips",
     )
     parser.add_argument(
+        "--require-mandatory-paired", action="store_true",
+        help="Include every mandatory Core/UI paired witness prefix in --require-passed-prefix",
+    )
+    parser.add_argument(
         "--allow-skip", action="append", default=[],
         help="Allow-listed mandatory skip formatted as NODE_ID=REASON",
     )
@@ -190,11 +204,16 @@ def main() -> int:
     if args.junit_dir is None and not args.zero_skip_junit:
         parser.error("at least one of --junit-dir or --zero-skip-junit is required")
     allow_skips = _parse_allow_skip(args.allow_skip)
+    require_prefixes = list(args.require_passed_prefix)
+    if args.require_mandatory_paired:
+        for prefix in MANDATORY_PAIRED_WITNESS_PREFIXES:
+            if prefix not in require_prefixes:
+                require_prefixes.append(prefix)
     if args.junit_dir is not None:
         print(check(
             args.junit_dir,
             args.manifest,
-            require_passed_prefixes=args.require_passed_prefix,
+            require_passed_prefixes=require_prefixes,
             allow_skips=allow_skips,
         ))
     for path in args.zero_skip_junit:
