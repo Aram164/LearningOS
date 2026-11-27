@@ -16,6 +16,7 @@ import json
 import os
 import subprocess
 import sys
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 
 import pytest
@@ -27,6 +28,7 @@ from learning_os.store.transactions import (
     TransactionFailure,
     TransactionRecoveryConflict,
     TransactionService,
+    _preflight_v2_entry,
     reconcile_inflight_transactions,
 )
 
@@ -1254,3 +1256,27 @@ def test_unknown_journal_schema_version_is_refused(tmp_path: Path):
         "UNSUPPORTED_JOURNAL_VERSION"
     assert target.read_bytes() == b"new\n"
     assert tx_dir.is_dir()
+
+
+def test_preflight_binds_recovery_path_even_with_equal_peer_bytes(tmp_path: Path):
+    root = tmp_path / "disposable-checkout"
+    root.mkdir()
+    admitted = root / "admitted.txt"
+    peer = root / "same-bytes-peer.txt"
+    after = b"post-state"
+    admitted.write_bytes(after)
+    peer.write_bytes(after)
+    journal = _write_journal_v2(root, "transaction-test", [
+        (admitted.name, b"pre-state", after),
+    ])
+    entry = json.loads((journal / "intent.json").read_text(encoding="utf-8"))["paths"][0]
+
+    action, conflict = _preflight_v2_entry(root, journal, entry)
+
+    assert conflict is None
+    assert action is not None and action.restore and action.path == admitted
+    destination_field = "path"
+    with pytest.raises(FrozenInstanceError):
+        setattr(action, destination_field, peer)
+    assert action.path == admitted
+    assert admitted.read_bytes() == peer.read_bytes() == after

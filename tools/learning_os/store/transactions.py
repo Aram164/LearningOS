@@ -951,8 +951,18 @@ def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
     return transaction_id
 
 
+@dataclass(frozen=True)
+class _RecoveryAction:
+    """Keep the restore destination bound to the path inspected in preflight."""
+
+    path: Path
+    before: dict
+    after: dict | None
+    restore: bool
+
+
 def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
-                        ) -> tuple[dict | None, dict | None]:
+                        ) -> tuple[_RecoveryAction, None] | tuple[None, dict]:
     """Classify one version-2 journal entry without touching anything.
 
     Returns (action, None) where action restores or no-ops the path, or
@@ -992,11 +1002,9 @@ def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
                           "detail": f"backup {backup_id} disagrees with the journal"}
     kind, observed = _inspect_live_path(path)
     if _matches_journal_side(kind, observed, before):
-        return {"path": path, "before": before, "after": after,
-                "restore": False}, None
+        return _RecoveryAction(path, before, after, restore=False), None
     if after is not None and _matches_journal_side(kind, observed, after):
-        return {"path": path, "before": before, "after": after,
-                "restore": True}, None
+        return _RecoveryAction(path, before, after, restore=True), None
     if kind == "other":
         return None, {"path": rel, "reason": "UNEXPECTED_FILE_TYPE",
                       "detail": f"live path is {observed}"}
@@ -1027,13 +1035,14 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     """
     # PASS 1 — read-only preflight over every path. One conflict anywhere
     # stops the whole unwind before a single byte changes.
-    plan = []
+    plan: list[_RecoveryAction] = []
     conflicts = []
     for entry in entries:
         action, conflict = _preflight_v2_entry(root, tx_dir, entry)
         if conflict is not None:
             conflicts.append(conflict)
         else:
+            assert action is not None
             plan.append(action)
     if conflicts:
         raise TransactionRecoveryConflict(
@@ -1047,9 +1056,10 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     # clobbering it. Cooperative LearningOS writers hold the operator
     # lock across recovery, so this recheck only ever fires on
     # non-cooperative filesystem mutation mid-run.
-    restores = [action for action in plan if action["restore"]]
-    for action in restores:
-        path, before, after = action["path"], action["before"], action["after"]
+    for action in plan:
+        if not action.restore:
+            continue
+        path, before, after = action.path, action.before, action.after
         kind, observed = _inspect_live_path(path)
         if after is None or not _matches_journal_side(kind, observed, after):
             conflict = {"path": _safe_relative(root, path),
@@ -1093,9 +1103,9 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     # drops the evidence that describes it.
     drifted = []
     for action in plan:
-        kind, observed = _inspect_live_path(action["path"])
-        if not _matches_journal_side(kind, observed, action["before"]):
-            drifted.append({"path": _safe_relative(root, action["path"]),
+        kind, observed = _inspect_live_path(action.path)
+        if not _matches_journal_side(kind, observed, action.before):
+            drifted.append({"path": _safe_relative(root, action.path),
                             "reason": "DIVERGED_FROM_TRANSACTION",
                             "detail": "path changed during recovery"})
     if drifted:

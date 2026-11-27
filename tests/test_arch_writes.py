@@ -912,30 +912,18 @@ _ENGINE_RUNTIME_OPERANDS = {
 _ENGINE_DYNAMIC_ORIGINS = {
     "attribute run.staging_dir", "attribute run.inflight_dir",
     "attribute run.idempotency_path", "attribute run.receipt_path",
-    "iteration", "tuple element", "subscript",
+    "attribute action.path", "iteration", "tuple element",
 }
 _ENGINE_RUN_PATH_SOURCES = {
-    "inflight_parent": ("self.root / 'operations' / 'transactions' / '.inflight'",),
-    "staging_dir": ("run.inflight_parent / f'.preparing-{run.transaction_id}'",),
-    "inflight_dir": ("run.inflight_parent / run.transaction_id",),
-    "receipt_path": ("_next_transaction_identity(self.root, run.now)",),
-    "idempotency_path": ("None", "self._target(_idempotency_ledger_path(self.root))"),
+    "inflight_parent": (("TransactionService.commit", "self.root / 'operations' / 'transactions' / '.inflight'"),),
+    "staging_dir": (("TransactionService.commit", "run.inflight_parent / f'.preparing-{run.transaction_id}'"),),
+    "inflight_dir": (("TransactionService.commit", "run.inflight_parent / run.transaction_id"),),
+    "receipt_path": (("TransactionService._allocate_identity", "_next_transaction_identity(self.root, run.now)"),),
+    "idempotency_path": (
+        ("TransactionService._capture_prestate", "None"),
+        ("TransactionService._capture_prestate", "self._target(_idempotency_ledger_path(self.root))"),
+    ),
 }
-
-
-def _engine_run_path_sources(tree: ast.Module) -> dict[str, tuple[str, ...]]:
-    bindings: dict[str, list[str]] = {}
-    for node in ast.walk(tree):
-        if not isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)) or node.value is None:
-            continue
-        targets = node.targets if isinstance(node, ast.Assign) else [node.target]
-        for target in targets:
-            for field in ast.walk(target):
-                if isinstance(field, ast.Attribute) and isinstance(field.ctx, ast.Store) \
-                        and isinstance(field.value, ast.Name) and field.value.id == "run" \
-                        and field.attr in _ENGINE_RUN_PATH_SOURCES:
-                    bindings.setdefault(field.attr, []).append(ast.unparse(node.value))
-    return {name: tuple(sorted(values)) for name, values in bindings.items()}
 
 
 _ENGINE_LOCAL_BINDINGS = {
@@ -943,12 +931,11 @@ _ENGINE_LOCAL_BINDINGS = {
         "None", "__tuple_item__(_exclusive_temp_path(path, mode=438), 1)", "None",
     ),
     ("_update_intent_after", "intent_path"): ("inflight_dir / 'intent.json'",),
-    ("_unwind_v2_entries", "path"): ("action['path']",),
+    ("_unwind_v2_entries", "path"): ("action.path",),
     ("_unwind_v2_entries", "action"): (
-        "__iter_child__(plan)", "__iter_child__(restores)",
+        "__iter_child__(plan)", "__iter_child__(plan)",
         "__tuple_item__(_preflight_v2_entry(root, tx_dir, entry), 0)",
     ),
-    ("_unwind_v2_entries", "restores"): ("[action for action in plan if action['restore']]",),
     ("_unwind_v2_entries", "plan"): ("[]",),
     ("_unwind_v2_entries", "directory"): ("__tuple_item__(write_target(root, relative), 0)",),
     ("TransactionService._apply", "path"): (
@@ -966,7 +953,7 @@ def _is_engine_runtime_operand(scope: _Scope, primitive: str, expr: ast.AST) -> 
         return False
     names = [operand] if isinstance(expr, ast.Name) else []
     if scope.qualname == "_unwind_v2_entries" and operand == "path":
-        names.extend(("action", "restores", "plan"))
+        names.extend(("action", "plan"))
         if tuple(map(ast.unparse, scope.appends.get("plan", ()))) != ("action",):
             return False
     return all(
@@ -984,9 +971,6 @@ class _ModuleWriteSites:
     ):
         self.rel = rel
         self.tree = tree
-        self._engine_paths_bound = rel == _CANONICAL_ENGINE_MODULE and _engine_run_path_sources(tree) == dict(
-            (name, tuple(sorted(sources))) for name, sources in _ENGINE_RUN_PATH_SOURCES.items()
-        )
         self._load_module = load_module
         self.non_root_params = _NON_REPO_ROOT_PARAMS.get(rel, frozenset())
         self.from_aliases: dict[str, tuple[str, str]] = {}
@@ -1017,6 +1001,24 @@ class _ModuleWriteSites:
         }
         self._index_scope(self.module, tree.body, cls=None)
         self._index_calls()
+        self._engine_paths_bound = (
+            rel == _CANONICAL_ENGINE_MODULE and self._engine_run_path_sources() == _ENGINE_RUN_PATH_SOURCES
+        )
+
+    def _engine_run_path_sources(self) -> dict[str, tuple[tuple[str, str], ...]]:
+        assignments: dict[str, list[tuple[str, str]]] = {}
+        for scope in self.scopes.values():
+            for node in _iter_local(scope.node):
+                if not isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)) or node.value is None:
+                    continue
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    for field in ast.walk(target):
+                        if isinstance(field, ast.Attribute) and isinstance(field.ctx, ast.Store) \
+                                and isinstance(field.value, ast.Name) and field.value.id == "run" \
+                                and field.attr in _ENGINE_RUN_PATH_SOURCES:
+                            assignments.setdefault(field.attr, []).append((scope.qualname, ast.unparse(node.value)))
+        return {name: tuple(sorted(sources)) for name, sources in assignments.items()}
 
     # -- indexing ---------------------------------------------------------
     def _index_scope(self, scope: _Scope, body: list[ast.stmt], cls: str | None) -> None:
