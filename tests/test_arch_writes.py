@@ -797,17 +797,27 @@ def _checkout_state_covers(destination: str, value: _ExtRel, primitive: str) -> 
     if not parts:
         return primitive == "mkdir" and value.tag == "git directory"
     pattern = destination.removeprefix("<STATE>/").split("/")
-    for i, segment in enumerate(pattern):
+
+    @cache
+    def match(pattern_index: int, part_index: int) -> bool:
+        if pattern_index == len(pattern):
+            return part_index == len(parts)
+        segment = pattern[pattern_index]
         if segment == "**":
-            return True
-        if i >= len(parts):
+            return match(pattern_index + 1, part_index) or (
+                part_index < len(parts) and match(pattern_index, part_index + 1)
+            )
+        if part_index == len(parts):
             return False
-        part = parts[i]
-        if part == segment or (part != "**" and segment == "*"):
-            continue
-        if "*" in part or not fnmatchcase(part, segment):
+        part = parts[part_index]
+        if part == "**":
             return False
-    return len(parts) == len(pattern)
+        compatible = part == segment or segment == "*" or (
+            "*" not in part and fnmatchcase(part, segment)
+        )
+        return compatible and match(pattern_index + 1, part_index + 1)
+
+    return match(0, 0)
 
 
 def _is_destination_parent(pattern: str, parts: tuple[str, ...]) -> bool:
