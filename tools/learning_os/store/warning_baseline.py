@@ -28,6 +28,7 @@ import yaml
 
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store import observations
+from learning_os.store.fs import atomic_write_text_exclusive
 
 BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
 
@@ -173,9 +174,13 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
         "distinct_signatures": len(rows),
         "signatures": rows,
     }
-    path = Path(root) / BASELINE_RELATIVE
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    # 2D CL-17: one fixed destination under the owned operations/ directory.
+    # The shared helper refuses a symlinked leaf, a symlinked ancestor and an
+    # escaping parent, then publishes a flushed temp file by atomic replace,
+    # so a refusal or crash leaves the prior valid baseline bytes in place.
+    root = Path(root)
+    atomic_write_text_exclusive(
+        root / BASELINE_RELATIVE,
         _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
+        boundary=root,
     )

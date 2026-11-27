@@ -5,7 +5,9 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import shutil
+import stat
 from pathlib import Path, PurePosixPath
 
 from jsonschema import ValidationError
@@ -31,6 +33,7 @@ from learning_os.store.contracts.batch_notes import (
     BATCH_MIN_NOTES,
 )
 from learning_os.store.contracts.json_schema import load_standalone_validator
+from learning_os.store.fs import atomic_write_text_exclusive
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.material_analysis import (
     binding_consistent,
@@ -545,9 +548,12 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     """Resolve the staging dir, which must stay outside the repository.
 
     Prep writes no canonical data, so staging lives out-of-tree by
-    contract, like every other draft. ``bodies/`` is prep-owned and
-    rebuilt every run, so a re-prep with fewer notes leaves no stale
-    body files behind.
+    contract, like every other draft. A first prep needs a new or empty
+    directory and marks it with :data:`_STAGE_MARKER`. ``bodies/`` is
+    prep-owned and rebuilt every run in a marked directory, so a re-prep
+    with fewer notes leaves no stale body files behind. A non-empty
+    directory without a valid mark is refused before anything is
+    removed, so prep never deletes files it did not stage (2D, CL-16).
     """
     if not isinstance(value, str) or not value or value == "-":
         raise WriteRefused(
@@ -567,15 +573,52 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
         raise WriteRefused("staging dir must stay outside the repository")
     bodies = resolved / "bodies"
     try:
-        if bodies.exists():
-            if not bodies.is_dir() or bodies.is_symlink():
+        if resolved.is_dir() and any(resolved.iterdir()):
+            if not _stage_marked(resolved):
+                raise WriteRefused(
+                    f"staging dir {resolved} holds files that note-analysis-prepare "
+                    "did not stage; use a new or empty directory, or the directory "
+                    "an earlier prep created")
+            if bodies.is_symlink() or (bodies.exists() and not bodies.is_dir()):
                 raise WriteRefused(
                     f"staging bodies path is not a directory: {bodies}")
-            shutil.rmtree(bodies)
-        bodies.mkdir(parents=True)
+            if bodies.exists():
+                shutil.rmtree(bodies)
+            bodies.mkdir()
+        else:
+            bodies.mkdir(parents=True)
+            _mark_stage(resolved)
     except OSError as exc:
         raise WriteRefused(f"cannot stage into {resolved}: {exc}") from exc
     return resolved
+
+
+#: Ownership mark of a prep-created staging dir (2D, CL-16).
+_STAGE_MARKER = ".learningos-note-analysis-stage.json"
+_STAGE_MARK = {"owner": "note.analysis.prepare", "schema": 1}
+
+
+def _mark_stage(out: Path) -> None:
+    """Claim a staging dir that was just found new or empty."""
+    atomic_write_text_exclusive(
+        out / _STAGE_MARKER, json.dumps(_STAGE_MARK, sort_keys=True) + "\n",
+        durable=False)
+
+
+def _stage_marked(out: Path) -> bool:
+    """True only for a regular, unlinked mark with the exact owner record."""
+    try:
+        fd = os.open(out / _STAGE_MARKER, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError:
+        return False
+    with os.fdopen(fd, "rb") as handle:
+        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+            return False
+        raw = handle.read(4096)
+    try:
+        return json.loads(raw.decode("utf-8")) == _STAGE_MARK
+    except (UnicodeDecodeError, ValueError):
+        return False
 
 
 @register("note.analysis.prepare", kind="tool", effects=OperationEffects.DERIVED_WRITE)

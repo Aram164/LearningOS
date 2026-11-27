@@ -302,3 +302,122 @@ def test_read_refuses_tampered_durable_body(mini_repo, tmp_path, capsys):
                             mini_repo) == 2
     result = json.loads(capsys.readouterr().out)
     assert result["status"] == "refused" and "summary" not in result
+
+
+# ---- 2D CL-10: a range is published whole or not at all ------------------
+
+def _draft_file(tmp_path: Path, name: str, text: str) -> Path:
+    draft = tmp_path / name
+    draft.write_text(text * 20, encoding="utf-8")
+    return draft
+
+
+def _range_bytes(target: Path) -> dict:
+    return {p.name: p.read_bytes() for p in sorted(target.iterdir())} if target.is_dir() else {}
+
+
+def test_an_interrupted_promotion_publishes_no_partial_range(tmp_path, capsys, monkeypatch):
+    """Read-back after a crash before meta.json sees no range at all."""
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    cache, text = tmp_path / "summaries", tmp_path / "text-cache"
+    draft = _draft_file(tmp_path, "draft-2.md", "A second chapter compression. ")
+    other = cache / digest / "pages-2-3"
+
+    def crash(path, *_args, **_kwargs):
+        raise OSError(f"simulated crash before {Path(path).name}")
+
+    with monkeypatch.context() as patched:
+        patched.setattr(ms, "atomic_write_text_exclusive", crash)
+        assert _promote(ms, cache, text, draft, digest=digest, pages="2-3") == 2
+    assert "simulated crash before meta.json" in capsys.readouterr().err
+    assert not other.exists() and not other.is_symlink()
+    assert sorted(p.name for p in (cache / digest).iterdir()) == ["pages-1-3"]
+    assert ms.main([*args, "--pages", "2-3"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "missing"
+    # The retry publishes the complete pair, which the reader verifies.
+    assert _promote(ms, cache, text, draft, digest=digest, pages="2-3") == 0
+    capsys.readouterr()
+    assert ms.main([*args, "--pages", "2-3"]) == 0
+    hit = json.loads(capsys.readouterr().out)
+    assert hit["status"] == "hit" and hit["integrity"] == "verified"
+    assert hit["summary_sha256"] == hashlib.sha256(
+        (other / "summary.md").read_bytes()).hexdigest()
+
+
+def test_a_retry_reports_identity_or_conflict_and_changes_nothing(tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    cache, text = tmp_path / "summaries", tmp_path / "text-cache"
+    before = _range_bytes(target)
+    recorded = json.loads(before["meta.json"])["summary_sha256"]
+    same = tmp_path / "draft.md"
+    assert _promote(ms, cache, text, same, digest=digest) == 2
+    err = capsys.readouterr().err
+    assert "already exists and matches this draft" in err and recorded in err
+    different = _draft_file(tmp_path, "draft-other.md", "A different compression entirely. ")
+    assert _promote(ms, cache, text, different, digest=digest) == 2
+    err = capsys.readouterr().err
+    assert "a different summary for this range already exists" in err and recorded in err
+    assert _range_bytes(target) == before
+
+
+@pytest.mark.parametrize("keep", ["summary.md", "meta.json"])
+def test_a_legacy_partial_range_is_left_intact_with_a_repair_refusal(tmp_path, capsys, keep):
+    ms = _material_summarize()
+    text = _text_cache(tmp_path)
+    cache = tmp_path / "summaries"
+    target = cache / DIGEST / "pages-1-3"
+    target.mkdir(parents=True)
+    (target / keep).write_bytes(b"left by an interrupted legacy promotion\n")
+    before = _range_bytes(target)
+    draft = _draft_file(tmp_path, "draft.md", "A detailed chapter compression. ")
+    assert _promote(ms, cache, text, draft) == 2
+    err = capsys.readouterr().err
+    assert "incomplete or damaged summary" in err and "remove it deliberately" in err
+    assert _range_bytes(target) == before
+
+
+def test_unpublished_staging_dirs_are_invisible_to_readers(tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    cache = tmp_path / "summaries"
+    stage = cache / digest / ".stage-pages-2-3-1-deadbeefdeadbeef"
+    stage.mkdir()
+    for name in ("summary.md", "meta.json"):
+        (stage / name).write_bytes((target / name).read_bytes())
+    assert ms.main([*args, "--pages", "2-3"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "missing"
+    assert ms.main(["--audit", "--cache-dir", str(cache),
+                    "--materials-root", str(tmp_path / "materials")]) == 0
+    assert json.loads(capsys.readouterr().out)["checked"] == 1
+
+
+def test_a_cooperating_publisher_waits_for_the_source_lock(tmp_path):
+    """The digest-directory flock serializes publishers of one source."""
+    import fcntl
+    import os
+    import subprocess
+    import time
+
+    text = _text_cache(tmp_path)
+    cache = tmp_path / "summaries"
+    (cache / DIGEST).mkdir(parents=True)
+    draft = _draft_file(tmp_path, "draft.md", "A detailed chapter compression. ")
+    target = cache / DIGEST / "pages-1-3"
+    lock = os.open(cache / DIGEST, os.O_RDONLY)
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        child = subprocess.Popen(
+            [sys.executable, str(TOOLS / "material_summarize.py"), "--promote",
+             "--draft", str(draft), "--digest", DIGEST, "--material", "deck/ch.pdf",
+             "--pages", "1-3", "--model", "test-model 1",
+             "--text-cache", str(text), "--cache-dir", str(cache)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        time.sleep(1.5)
+        assert child.poll() is None, child.communicate()
+        assert not target.exists()
+    finally:
+        os.close(lock)
+    out, err = child.communicate(timeout=60)
+    assert child.returncode == 0, err
+    meta = json.loads((target / "meta.json").read_text(encoding="utf-8"))
+    assert meta["summary_sha256"] == hashlib.sha256(
+        (target / "summary.md").read_bytes()).hexdigest()

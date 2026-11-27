@@ -77,6 +77,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # the same gate; this file is its command line. Re-exported here because the
 # tests and any existing caller address these names through this module.
 from learning_os.app.validation_service import collect  # noqa: E402,F401
+from learning_os.domain.failures import WriteRefused  # noqa: E402
 from learning_os.store.warning_baseline import (  # noqa: E402,F401
     BASELINE_RELATIVE,
     delta,
@@ -142,12 +143,20 @@ def main() -> int:
                 print("warning-baseline: already ratcheted — the baseline "
                       "matches the current set.")
                 return 0
-            write_baseline(root, lowered, args.note)
+            try:
+                write_baseline(root, lowered, args.note)
+            except WriteRefused as exc:
+                print(f"warning-baseline: {exc}", file=sys.stderr)
+                return 2
             print(f"warning-baseline: ratcheted {sum(baseline.values())} → "
                   f"{sum(lowered.values())} warning(s) across "
                   f"{len(lowered)} signature(s) — {BASELINE_RELATIVE}")
             return 0
-        write_baseline(root, current, args.note)
+        try:
+            write_baseline(root, current, args.note)
+        except WriteRefused as exc:
+            print(f"warning-baseline: {exc}", file=sys.stderr)
+            return 2
         print(f"warning-baseline: adopted {sum(current.values())} warning(s) "
               f"across {len(current)} signature(s) — {BASELINE_RELATIVE}")
         return 0

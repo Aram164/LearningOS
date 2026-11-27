@@ -292,6 +292,29 @@ def _print_plan(materials: Path, moves: list, missing: list[str]) -> None:
         print(f"  WARN unmapped stray at root: {s}")
 
 
+def _undo_moves(done: list[tuple[Path, Path]]) -> int:
+    """Return already-moved folders so the untouched ``.flat`` aliases resolve.
+
+    An apply that cannot finish never reaches the alias rebuild, so putting
+    the moved folders back restores the prior tree and its aliases together.
+    """
+    stuck = []
+    for cur, target in reversed(done):
+        try:
+            os.rename(target, cur)
+        except OSError as exc:
+            stuck.append(f"{target} (belongs at {cur}): {exc}")
+    if stuck:
+        print("apply stopped; .flat is unchanged, but these folders could not be "
+              "moved back — move them by hand: " + "; ".join(stuck), file=sys.stderr)
+    elif done:
+        print(f"apply stopped; moved {len(done)} folder(s) back, .flat is unchanged",
+              file=sys.stderr)
+    else:
+        print("apply stopped before any move; .flat is unchanged", file=sys.stderr)
+    return 1
+
+
 def _run(materials: Path, *, apply: bool) -> int:
     if not materials.is_dir():
         print(f"materials tree not found: {materials}", file=sys.stderr)
@@ -318,9 +341,20 @@ def _run(materials: Path, *, apply: bool) -> int:
         if target.exists() or target.is_symlink():
             print(f"refusing move collision at {target} (already exists)", file=sys.stderr)
             return 1
+    done: list[tuple[Path, Path]] = []
     for _slug, cur, target in moves:
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(cur), str(target))
+        try:
+            # 2D CL-11: re-check at the move itself. os.rename refuses an
+            # occupied directory instead of nesting the source inside it the
+            # way shutil.move does, and never copies across filesystems.
+            if target.exists() or target.is_symlink():
+                raise FileExistsError(f"destination appeared after the preflight: {target}")
+            os.rename(cur, target)
+        except OSError as exc:
+            print(f"refusing move {cur} -> {target}: {exc}", file=sys.stderr)
+            return _undo_moves(done)
+        done.append((cur, target))
     # 2 — rebuild .flat compat layer
     #
     # Refresh in place rather than rmtree-then-recreate. materials/ is routinely
