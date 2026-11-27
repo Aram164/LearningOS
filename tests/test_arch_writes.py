@@ -883,6 +883,99 @@ class _Scope:
         self.assigns.setdefault(name, []).append(value)
 
 
+# The transaction engine selects these operands at runtime. The scan still
+# checks any concrete result, and refuses an unresolved operand at a new sink.
+# These entries correspond to the admitted write set, the preflighted recovery
+# plan, and the engine-owned journal and receipt namespace.
+_ENGINE_RUNTIME_OPERANDS = {
+    ("atomic_write_bytes", "exclusive_temp_path"): ("path",),
+    ("atomic_write_bytes", "os.replace"): ("tmp", "path"),
+    ("atomic_write_bytes", "unlink"): ("tmp",),
+    ("_update_intent_after", "atomic_write_bytes"): ("intent_path",),
+    ("_remove_journal", "shutil.rmtree"): ("tx_dir",),
+    ("_unwind_v2_entries", "atomic_write_bytes"): ("path",),
+    ("_unwind_v2_entries", "unlink"): ("path",),
+    ("_unwind_v2_entries", "rmdir"): ("directory",),
+    ("TransactionService._rollback", "shutil.rmtree"): ("run.staging_dir",),
+    ("TransactionService._publish_journal", "shutil.rmtree"): ("run.staging_dir",),
+    ("TransactionService._publish_journal", "mkdir"): ("run.staging_dir",),
+    ("TransactionService._publish_journal", "atomic_write_bytes"): (
+        "run.staging_dir / backup_id", "run.staging_dir / 'intent.json'",
+    ),
+    ("TransactionService._publish_journal", "os.rename"): ("run.staging_dir", "run.inflight_dir"),
+    ("TransactionService._apply", "atomic_write_bytes"): ("path",),
+    ("TransactionService._apply", "unlink"): ("path",),
+    ("TransactionService._record_idempotency", "atomic_write_bytes"): ("run.idempotency_path",),
+    ("TransactionService._write_receipt", "atomic_write_bytes"): ("run.receipt_path",),
+    ("TransactionService._finish", "shutil.rmtree"): ("run.inflight_dir",),
+}
+_ENGINE_DYNAMIC_ORIGINS = {
+    "attribute run.staging_dir", "attribute run.inflight_dir",
+    "attribute run.idempotency_path", "attribute run.receipt_path",
+    "iteration", "tuple element", "subscript",
+}
+_ENGINE_RUN_PATH_SOURCES = {
+    "inflight_parent": ("self.root / 'operations' / 'transactions' / '.inflight'",),
+    "staging_dir": ("run.inflight_parent / f'.preparing-{run.transaction_id}'",),
+    "inflight_dir": ("run.inflight_parent / run.transaction_id",),
+    "receipt_path": ("_next_transaction_identity(self.root, run.now)",),
+    "idempotency_path": ("None", "self._target(_idempotency_ledger_path(self.root))"),
+}
+
+
+def _engine_run_path_sources(tree: ast.Module) -> dict[str, tuple[str, ...]]:
+    bindings: dict[str, list[str]] = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)) or node.value is None:
+            continue
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+        for target in targets:
+            for field in ast.walk(target):
+                if isinstance(field, ast.Attribute) and isinstance(field.ctx, ast.Store) \
+                        and isinstance(field.value, ast.Name) and field.value.id == "run" \
+                        and field.attr in _ENGINE_RUN_PATH_SOURCES:
+                    bindings.setdefault(field.attr, []).append(ast.unparse(node.value))
+    return {name: tuple(sorted(values)) for name, values in bindings.items()}
+
+
+_ENGINE_LOCAL_BINDINGS = {
+    ("atomic_write_bytes", "tmp"): (
+        "None", "__tuple_item__(_exclusive_temp_path(path, mode=438), 1)", "None",
+    ),
+    ("_update_intent_after", "intent_path"): ("inflight_dir / 'intent.json'",),
+    ("_unwind_v2_entries", "path"): ("action['path']",),
+    ("_unwind_v2_entries", "action"): (
+        "__iter_child__(plan)", "__iter_child__(restores)",
+        "__tuple_item__(_preflight_v2_entry(root, tx_dir, entry), 0)",
+    ),
+    ("_unwind_v2_entries", "restores"): ("[action for action in plan if action['restore']]",),
+    ("_unwind_v2_entries", "plan"): ("[]",),
+    ("_unwind_v2_entries", "directory"): ("__tuple_item__(write_target(root, relative), 0)",),
+    ("TransactionService._apply", "path"): (
+        "__iter_child__(run.delete_paths)",
+        "__tuple_item__(__iter_child__(run.normalized_writes.items()), 0)",
+    ),
+}
+
+
+def _is_engine_runtime_operand(scope: _Scope, primitive: str, expr: ast.AST) -> bool:
+    operand = ast.unparse(expr)
+    if operand not in _ENGINE_RUNTIME_OPERANDS.get((scope.qualname, primitive), ()):
+        return False
+    if scope.assigns.get("run"):
+        return False
+    names = [operand] if isinstance(expr, ast.Name) else []
+    if scope.qualname == "_unwind_v2_entries" and operand == "path":
+        names.extend(("action", "restores", "plan"))
+        if tuple(map(ast.unparse, scope.appends.get("plan", ()))) != ("action",):
+            return False
+    return all(
+        tuple(map(ast.unparse, scope.assigns.get(name, ())))
+        == _ENGINE_LOCAL_BINDINGS.get((scope.qualname, name), ())
+        for name in names
+    )
+
+
 class _ModuleWriteSites:
     """Abstract target resolution for one declared module (P2A-01)."""
 
@@ -891,6 +984,9 @@ class _ModuleWriteSites:
     ):
         self.rel = rel
         self.tree = tree
+        self._engine_paths_bound = rel == _CANONICAL_ENGINE_MODULE and _engine_run_path_sources(tree) == dict(
+            (name, tuple(sorted(sources))) for name, sources in _ENGINE_RUN_PATH_SOURCES.items()
+        )
         self._load_module = load_module
         self.non_root_params = _NON_REPO_ROOT_PARAMS.get(rel, frozenset())
         self.from_aliases: dict[str, tuple[str, str]] = {}
@@ -1715,6 +1811,13 @@ class _ModuleWriteSites:
                 resolved = {_Unknown("no path operand")}
             else:
                 resolved.discard(_Null())
+            if self._engine_paths_bound and expr is not None and _is_engine_runtime_operand(
+                scope, primitive, expr
+            ):
+                resolved = {
+                    value for value in resolved
+                    if not isinstance(value, _Unknown) or value.why not in _ENGINE_DYNAMIC_ORIGINS
+                }
             out.extend(sorted(resolved, key=_describe))
         return out
 
@@ -1801,10 +1904,6 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 continue
         concrete = len(repo_patterns) == len(destinations)
         explicit_output = any(d.startswith(_EXPLICIT_OUT_MARKERS) for d in destinations)
-        # Proposal and recovery paths are admitted by the transaction engine.
-        # Analyze its sites too, so a statically visible target still must match
-        # the inventory. Unresolved dynamic targets require runtime witnesses.
-        runtime_transaction_paths = effects[rel].get("effect") == "canonical-engine" and rel == _CANONICAL_ENGINE_MODULE
         caller_scoped_primitive = destinations == ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
         checkout_state_only = bool(destinations) and all(d.startswith("<STATE>/") for d in destinations)
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
@@ -1836,9 +1935,7 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                     problem = "is external but the module declares only repository destinations"
                 elif caller_scoped_primitive and isinstance(value, _ExtRel) and value.tag == "absolute literal":
                     problem = "uses an absolute path outside its caller-scoped primitive"
-                elif concrete and (
-                    not runtime_transaction_paths or not isinstance(value, _Unknown)
-                ) and isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
+                elif concrete and isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
                     problem = "is unanchored in a module that declares only repository destinations"
                 elif (explicit_output or checkout_state_only) and isinstance(
                     value, (_Unknown, _Relative, _ReadOnlySQLite)
@@ -2243,3 +2340,28 @@ def test_declared_boundary_owner_still_checks_concrete_destination(
     findings = check_declared_write_sites(root, inventory)
     assert len(findings) == 1
     assert "repo:generated/outside-scope" in findings[0]
+
+
+def test_transaction_engine_rejects_unanchored_write_in_existing_owner(tmp_path):
+    root = tmp_path / "disposable-checkout"
+    rel = _CANONICAL_ENGINE_MODULE
+    writer = root / rel
+    writer.parent.mkdir(parents=True)
+    inventory = {rel: {"effect": "canonical-engine", "destinations": [
+        "records/**", "operations/transactions/**", "generated/manifest.json",
+    ]}}
+    source = (
+        "from pathlib import Path\n"
+        "def maintenance(root):\n"
+        "    (root / 'generated/manifest.json').unlink()\n"
+    )
+    writer.write_text(source, encoding="utf-8")
+    assert check_declared_write_sites(root, inventory) == []
+
+    writer.write_text(
+        source + "    (Path.cwd() / 'unowned.txt').write_text('sample')\n",
+        encoding="utf-8",
+    )
+    findings = check_declared_write_sites(root, inventory)
+    assert len(findings) == 1
+    assert "unanchored (cwd)" in findings[0]
