@@ -557,6 +557,17 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     if not isinstance(value, str) or not value or value == "-":
         raise WriteRefused(
             "--out must be a staging directory outside the repository")
+    # Prep refuses every in-repository directory, generated/ and .venv/
+    # included, so it says so before the generic guard's broader wording.
+    lexical = Path(value).expanduser()
+    if not lexical.is_absolute():
+        lexical = Path.cwd() / lexical
+    try:
+        inside = lexical.resolve().is_relative_to(root.resolve())
+    except OSError:
+        inside = False
+    if inside:
+        raise WriteRefused("staging dir must stay outside the repository")
     try:
         resolved = guard_tool_output_path(value, repo_root=root, allow_existing_dir=True)
     except WriteScopeError as exc:
