@@ -1109,8 +1109,8 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     # restored until it is gone. A directory that is not empty holds
     # something this transaction did not write, and is left alone.
     for relative in (created_directories or []):
-        directory = root / relative
         try:
+            directory, _ = write_target(root, relative)
             if not directory.is_dir() or directory.is_symlink():
                 continue
             if any(directory.iterdir()):
@@ -1118,7 +1118,7 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
             with _engine_phase("restore"):
                 directory.rmdir()
                 _sync_directory(directory.parent)
-        except OSError as exc:
+        except (OSError, WriteScopeError) as exc:
             conflict = {"path": relative,
                         "reason": "RESTORE_IO_FAILED",
                         "detail": f"created directory could not be removed: {exc}"}

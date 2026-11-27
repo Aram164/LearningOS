@@ -647,7 +647,6 @@ def _collect_static(
 # unanchored.
 # ---------------------------------------------------------------------------
 
-_SITE_EXCLUDED_MODULES = frozenset({_CANONICAL_ENGINE_MODULE, "tools/learning_os/store/fs.py"})
 _ROOT_PARAM_NAMES = frozenset({"root", "repo_root", "core_root", "repo"})
 # Parameters that share a root-like name but are documented non-repository
 # roots.  ReadingCardStore(root=...) is the external reading-memory store root.
@@ -1787,8 +1786,6 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
         return None
 
     for rel in sorted(effects):
-        if rel in _SITE_EXCLUDED_MODULES:
-            continue
         path = root / rel
         if not path.is_file():
             continue
@@ -1804,6 +1801,11 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 continue
         concrete = len(repo_patterns) == len(destinations)
         explicit_output = any(d.startswith(_EXPLICIT_OUT_MARKERS) for d in destinations)
+        # Proposal and recovery paths are admitted by the transaction engine.
+        # Analyze its sites too, so a statically visible target still must match
+        # the inventory. Unresolved dynamic targets require runtime witnesses.
+        runtime_transaction_paths = effects[rel].get("effect") == "canonical-engine" and rel == _CANONICAL_ENGINE_MODULE
+        caller_scoped_primitive = destinations == ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
         checkout_state_only = bool(destinations) and all(d.startswith("<STATE>/") for d in destinations)
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
         visitor = _SiteVisitor(rel)
@@ -1832,7 +1834,11 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                         problem = f"is outside declared destinations {repo_patterns}"
                 elif concrete and isinstance(value, _ExtRel):
                     problem = "is external but the module declares only repository destinations"
-                elif concrete and isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
+                elif caller_scoped_primitive and isinstance(value, _ExtRel) and value.tag == "absolute literal":
+                    problem = "uses an absolute path outside its caller-scoped primitive"
+                elif concrete and (
+                    not runtime_transaction_paths or not isinstance(value, _Unknown)
+                ) and isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
                     problem = "is unanchored in a module that declares only repository destinations"
                 elif (explicit_output or checkout_state_only) and isinstance(
                     value, (_Unknown, _Relative, _ReadOnlySQLite)
@@ -2203,3 +2209,37 @@ def test_state_anchor_does_not_authorize_another_state_owner(tmp_path):
     failures = check_declared_write_sites(root, effects)
     assert failures
     assert all("outside declared checkout-state destinations" in failure for failure in failures)
+
+
+@pytest.mark.parametrize("rel, effect, destinations, control", [
+    (
+        "tools/learning_os/store/transactions.py",
+        "canonical-engine",
+        ["records/**", "generated/manifest.json"],
+        "    (root / 'generated/manifest.json').unlink()\n",
+    ),
+    (
+        "tools/learning_os/store/fs.py",
+        "operational",
+        ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"],
+        "    caller_path.write_text('sample')\n",
+    ),
+])
+def test_declared_boundary_owner_still_checks_concrete_destination(
+    tmp_path, rel, effect, destinations, control,
+):
+    root = tmp_path / "disposable-checkout"
+    source = root / rel
+    source.parent.mkdir(parents=True)
+    inventory = {rel: {"effect": effect, "destinations": destinations}}
+    header = "def run(root, caller_path):\n"
+    source.write_text(header + control, encoding="utf-8")
+    assert check_declared_write_sites(root, inventory) == []
+
+    source.write_text(
+        header + control + "    (root / 'generated/outside-scope').write_text('sample')\n",
+        encoding="utf-8",
+    )
+    findings = check_declared_write_sites(root, inventory)
+    assert len(findings) == 1
+    assert "repo:generated/outside-scope" in findings[0]

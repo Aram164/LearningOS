@@ -285,8 +285,8 @@
 
 "tools/learning_os/store/transactions.py":
   effect: canonical-engine
-  destinations: ["knowledge/**", "sources/**", "records/**", "work/**", "curriculum/**", "projects/**", "operations/transactions/**", "operations/legacy/**", "operations/goal-ledger.yaml", "operations/ai-actions/**", "operations/migrations/**"]
-  reason: "Sole authorized canonical write engine committing TransactionProposals via journaled atomic writes and receipts."
+  destinations: ["knowledge/**", "sources/**", "records/**", "work/**", "curriculum/**", "projects/**", "operations/transactions/**", "operations/legacy/**", "operations/goal-ledger.yaml", "operations/ai-actions/**", "operations/migrations/**", "generated/manifest.json"]
+  reason: "Sole canonical write engine. Recovery can also invalidate the stale generated manifest marker."
 
 "tools/learning_os/store/validation_cache.py":
   effect: cache
