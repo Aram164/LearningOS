@@ -47,6 +47,7 @@ from pathlib import Path
 from typing import TypeGuard, cast
 
 from learning_os.store import observations
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.study_fence import READING_MEMORY_DIRNAME as STORE_DIRNAME
 
@@ -308,7 +309,16 @@ class ReadingStore:
 
     def __init__(self, core_root: Path, *, root: Path | None = None) -> None:
         self.core_root = Path(core_root).resolve()
-        self.root = Path(root) if root is not None else store_root(self.core_root)
+        if root is None:
+            self.root = store_root(self.core_root)
+        else:
+            # An explicit store root comes from the caller: refuse canonical
+            # data and symlinked paths before any write can use it.
+            try:
+                explicit_root = guard_tool_output_path(root, allow_existing_dir=True)
+            except WriteScopeError as exc:
+                raise ReadingStoreError(f"the reading store root is refused: {exc}") from exc
+            self.root = explicit_root
         self._locked = False
 
     # ------------------------------------------------------------------ files
@@ -327,8 +337,8 @@ class ReadingStore:
     def _ensure_dirs(self) -> None:
         self._check_root()
         try:
-            for path in (self.root, *(self.root / name for name in
-                                      ("cards", "pending", "settled", "sessions", "log", ".journal"))):
+            for path in (self.root, self.root / "cards", self.root / "pending", self.root / "settled",
+                         self.root / "sessions", self.root / "log", self.root / ".journal"):
                 with contextlib.suppress(FileExistsError):
                     os.mkdir(path, _DIR_MODE)
                 st = os.lstat(path)
@@ -494,8 +504,8 @@ class ReadingStore:
                 except (OSError, ValueError, KeyError, TypeError) as exc:
                     raise ReadingStoreError(
                         f"the reading store holds an unreadable journal {path.name}: {exc}") from exc
-        data_trees = ("cards", "pending", "settled", "sessions", "log")
-        for tree in (directory, *(self.root / name for name in data_trees)):
+        for tree in (directory, self.root / "cards", self.root / "pending", self.root / "settled",
+                     self.root / "sessions", self.root / "log"):
             if not tree.is_dir():
                 continue
             for stale in iter_non_symlink_files(tree):

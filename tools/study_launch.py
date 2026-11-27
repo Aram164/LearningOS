@@ -80,6 +80,11 @@ from types import FrameType
 
 from learning_os.adapters.process_group import terminate_process_group
 from learning_os.adapters.study_broker import GATE_SOCK_ENV, BrokerServer, StudyBroker
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    scoped_write_target,
+)
 from learning_os.store.materials.reading_cards import (
     ReadingStore,
     ReadingStoreError,
@@ -1245,9 +1250,18 @@ def prepare_runtime_home(
     the launcher writes nothing else into it, so the runtime's own state (its
     transcripts above all) carries over to the resumed launch.
     """
-    expanded = Path(os.path.abspath(home))
-    if is_within(Path(os.path.realpath(expanded.parent)), real_learningos):
-        raise ValueError(f"study home must live outside LearningOS/: {expanded}")
+    homes_root = real_home / _RUNTIME_HOMES_REL
+    absolute_home = Path(os.path.abspath(home))
+    if is_within(Path(os.path.realpath(absolute_home.parent)), real_learningos):
+        raise ValueError(f"study home must live outside LearningOS/: {absolute_home}")
+    try:
+        # Prove the home's folder is below <home>/.local/state/learningos/
+        # study-runtimes/ before anything is created or seeded there. The home
+        # itself is checked below, so a linked home keeps its own refusal.
+        home_parent = scoped_write_target(homes_root, absolute_home.parent, ("**",))
+    except WriteScopeError as exc:
+        raise ValueError(f"study home must live under {homes_root}: {home}") from exc
+    expanded = home_parent / absolute_home.name
     try:
         home_stat = os.lstat(expanded)
     except FileNotFoundError:
@@ -1834,7 +1848,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     scratch_override: Path | None = None
     if args.scratch_dir is not None:
         raw_scratch = Path(args.scratch_dir).expanduser()
-        scratch_override = raw_scratch if raw_scratch.is_absolute() else caller_cwd / raw_scratch
+        requested_scratch = raw_scratch if raw_scratch.is_absolute() else caller_cwd / raw_scratch
+        try:
+            # A caller-chosen scratch directory must never be canonical data.
+            scratch_override = guard_tool_output_path(requested_scratch, allow_existing_dir=True)
+        except WriteScopeError as exc:
+            print(f"study_launch: refusing --scratch-dir: {exc}", file=sys.stderr)
+            return 2
     try:
         command = _resolve_runtime_command(
             runtime=args.runtime,

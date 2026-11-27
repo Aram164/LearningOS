@@ -458,7 +458,10 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         func = node.func
-        env = self._env_stack[-1]
+        # Lexical lookup: the current scope's names shadow enclosing and
+        # module-level ones, so a module constant such as a read-only flag
+        # set still resolves inside the functions that use it.
+        env = {name: value for frame in self._env_stack for name, value in frame.items()}
         primitive = None
         if isinstance(func, ast.Attribute):
             attr = func.attr
@@ -647,6 +650,8 @@ def _collect_static(
 # unanchored.
 # ---------------------------------------------------------------------------
 
+_SYSTEM_TEMP_ROOTS = ("/private/tmp", "/tmp")
+_TREE_WALK_HELPERS = frozenset({"learning_os.store.fs.iter_non_symlink_files"})
 _ROOT_PARAM_NAMES = frozenset({"root", "repo_root", "core_root", "repo"})
 # Parameters that share a root-like name but are documented non-repository
 # roots.  ReadingCardStore(root=...) is the external reading-memory store root.
@@ -715,7 +720,16 @@ class _ReadOnlySQLite:
     """A percent-encoded Path URI with a fixed SQLite read-only mode."""
 
 
+@dataclass(frozen=True)
+class _GitState:
+    """A Git subcommand that changes a checkout's index, refs or commits."""
+
+    subcommand: str
+
+
 def _describe(value: object) -> str:
+    if isinstance(value, _GitState):
+        return f"git-state:{value.subcommand}"
     if isinstance(value, _RepoRel):
         return "repo:" + ("/".join(value.parts) or ".")
     if isinstance(value, _Relative):
@@ -817,6 +831,65 @@ def _checkout_state_covers(destination: str, value: _ExtRel, primitive: str) -> 
         return compatible and match(pattern_index + 1, part_index + 1)
 
     return match(0, 0)
+
+
+_GIT_STATE_TOKEN = "<GIT_INDEX_AND_COMMIT>"
+
+
+def _external_covers(prefix: str, destination: str, parts: tuple[str, ...]) -> bool:
+    if not destination.startswith(prefix):
+        return False
+    try:
+        return _pattern_covers(destination.removeprefix(prefix), parts)
+    except write_scopes.WriteScopeError:
+        return False
+
+
+def _external_destination_problem(
+    value: _ExtRel, destinations: list[str], primitive: str, repo_dir_names: frozenset[str],
+) -> str | None:
+    """Match an external value to a declared destination of its own kind (Bar 4 F1)."""
+    def checkout_state() -> bool:
+        return any(
+            d.startswith("<STATE>/") and _checkout_state_covers(d, value, primitive) for d in destinations
+        )
+
+    tag = value.tag
+    if tag == "tempdir":
+        if any(d.startswith("<TMPDIR>/") for d in destinations) or checkout_state():
+            return None
+        if any(d.startswith("<STATE>/") for d in destinations):
+            # Checkout state falls back to a temporary directory outside Git.
+            return f"is outside declared checkout-state destinations {destinations}"
+        return "writes a temporary path but the module declares no <TMPDIR> destination"
+    if tag == "guarded caller output":
+        # guard_tool_output_path refuses DATA_ROOTS, system/, operations/ and
+        # symlinks at runtime: the INV-01 proof for a path the census cannot
+        # resolve. Accepted in any module that declares a non-repository
+        # destination; repository-only modules still refuse it.
+        return None
+    if tag == "parent of guarded output":
+        if primitive == "mkdir":
+            return None
+        return "writes to a parent of a guarded path, which the guard does not cover"
+    if tag == "git directory":
+        if checkout_state():
+            return None
+        return f"is outside declared checkout-state destinations {destinations}"
+    if tag == "home":
+        if any(_external_covers("~/", d, value.parts) for d in destinations):
+            return None
+        return f"is in the home directory outside declared destinations {destinations}"
+    if tag == "repository parent":
+        parts = value.parts
+        if parts and parts[0] not in {"*", "**", *repo_dir_names} and any(
+            _external_covers("../", d, parts) for d in destinations
+        ):
+            return None
+        return f"writes beside the repository outside declared sibling destinations {destinations}"
+    if tag == "absolute literal":
+        return "uses an absolute path that no declared destination admits"
+    return f"is external ({tag}) and no declared destination admits it"
 
 
 def _is_destination_parent(pattern: str, parts: tuple[str, ...]) -> bool:
@@ -989,8 +1062,15 @@ class _ModuleWriteSites:
                 for alias in node.names:
                     self.mod_aliases[alias.asname or alias.name.split(".", 1)[0]] = alias.name
             elif isinstance(node, ast.ImportFrom):
+                module = node.module or ""
+                if node.level:
+                    # Resolve "from .config import X" against this module's
+                    # package under tools/, so imported constants are traced.
+                    package = rel.split("/")[1:-1]
+                    package = package[: len(package) - (node.level - 1)] if node.level > 1 else package
+                    module = ".".join([*package, *([module] if module else [])])
                 for alias in node.names:
-                    self.from_aliases[alias.asname or alias.name] = (node.module or "", alias.name)
+                    self.from_aliases[alias.asname or alias.name] = (module, alias.name)
         self.root_arguments = {
             argument.value[2:]
             for node in ast.walk(tree)
@@ -1204,9 +1284,22 @@ class _ModuleWriteSites:
                 text = node.value if isinstance(node.value, str) else os.fsdecode(node.value)
                 kind, parts = _parse_path_text(text)
                 if kind == "abs":
+                    # The system temporary roots are temporary storage, the same
+                    # destination tempfile.gettempdir() yields; nothing else
+                    # absolute is admitted by a declaration.
+                    for temp_root in _SYSTEM_TEMP_ROOTS:
+                        if text == temp_root or text.startswith(temp_root + "/"):
+                            temp_kind, temp_parts = _parse_path_text(text[len(temp_root) + 1:])
+                            if temp_kind == "rel":
+                                return frozenset({_ExtRel("tempdir", temp_parts)})
                     return frozenset({_ExtRel("absolute literal")})
                 if kind == "home":
-                    return frozenset({_ExtRel("home")})
+                    # Keep the segments after "~/" so a home write is matched
+                    # against the declared "~/..." destination, not waved through.
+                    home_kind, home_parts = _parse_path_text(text[2:]) if text.startswith("~/") else ("rel", ())
+                    if home_kind != "rel":
+                        return frozenset({_BadTraversal(text)})
+                    return frozenset({_ExtRel("home", home_parts)})
                 if kind == "rel":
                     return frozenset({_Relative(parts)})
                 return frozenset({_BadTraversal(text)})
@@ -1248,6 +1341,9 @@ class _ModuleWriteSites:
                 for _ in range(node.slice.value + 1):
                     base = frozenset(self._parent(v) for v in base)
                 return base
+            if self._dotted(node.value) == "os.environ" and isinstance(node.slice, ast.Constant) \
+                    and node.slice.value == "HOME":
+                return frozenset({_ExtRel("home")})
             return frozenset({_Unknown("subscript")})
         if isinstance(node, ast.Call):
             return self._eval_call(node, scope, bindings, depth, active)
@@ -1395,8 +1491,19 @@ class _ModuleWriteSites:
             if "dir" in kwargs:
                 return frozenset(self._join(v, ("*",)) for v in ev(kwargs["dir"]))
             return frozenset({_ExtRel("tempdir")})
-        if dotted == "learning_os.store.contracts.write_scopes.guard_tool_output_path":
+        if dotted in {
+            "learning_os.store.contracts.write_scopes.guard_tool_output_path",
+            "learning_os.store.contracts.write_scopes.open_guarded_directory",
+        }:
+            # A guarded path, or a descriptor opened on one.
             return frozenset({_ExtRel("guarded caller output")})
+        if dotted == "os.open" and node.args:
+            # A descriptor stands for the directory it was opened on, so a
+            # later dir_fd-relative write can be traced to that directory.
+            if "dir_fd" not in kwargs:
+                return ev(node.args[0])
+            segs = self._segments(node.args[0], scope, bindings, depth, active)
+            return frozenset(self._join(base, seg) for base in ev(kwargs["dir_fd"]) for seg in segs)
         if dotted == "learning_os.store.contracts.write_scopes.scoped_write_target" and len(node.args) == 3:
             patterns = self._scope_patterns(node.args[2], scope)
             if not patterns:
@@ -1412,6 +1519,8 @@ class _ModuleWriteSites:
             # outside the working tree for linked worktrees and gitfiles.
             return frozenset({_ExtRel("git directory"), _Null()})
         if dotted in {"os.environ.get", "os.getenv"}:
+            if node.args and isinstance(node.args[0], ast.Constant) and node.args[0].value == "HOME":
+                return frozenset({_ExtRel("home")})
             return frozenset({_Unknown("environment variable")})
         if isinstance(func, ast.Attribute):
             if func.attr in _IDENTITY_METHODS or (func.attr == "strip" and not node.args and not node.keywords):
@@ -1505,6 +1614,12 @@ class _ModuleWriteSites:
             dotted = self._dotted(expr.func) or ""
             if dotted in {"sorted", "list", "reversed", "tuple", "set"} and expr.args:
                 return self._iter_child(expr.args[0], scope, bindings, depth, active)
+            if dotted in _TREE_WALK_HELPERS and expr.args:
+                # These helpers yield only files below their first argument.
+                return frozenset(
+                    self._join(base, ("**",))
+                    for base in self.eval(expr.args[0], scope, bindings, depth, active)
+                )
             if isinstance(expr.func, ast.Attribute):
                 attr = expr.func.attr
                 if attr in {"iterdir", "glob", "rglob"}:
@@ -1778,11 +1893,29 @@ class _ModuleWriteSites:
         return out
 
     def site_values(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
-        if primitive in {"subprocess.git.mv", "subprocess.mv", "subprocess.cp", "subprocess.rm"}:
+        if primitive in {"subprocess.git.mv", "subprocess.git.rm", "subprocess.mv",
+                         "subprocess.cp", "subprocess.rm"}:
             return self._subprocess_targets(primitive, call, scope)
+        if primitive == "subprocess.shell":
+            # A shell string hides its write targets from any static check.
+            return [_Unknown("shell=True command")]
+        if primitive.startswith("subprocess.git."):
+            subcommand = primitive.removeprefix("subprocess.git.")
+            if subcommand == "reset":
+                words = self._option_words(call, scope)
+                if words is None:
+                    return [_Unknown("unresolved git reset command")]
+                if {"--hard", "--merge", "--keep"} & set(words):
+                    return [_Unknown("git reset rewrites the working tree")]
+            return [_GitState(subcommand)]
+        if primitive.startswith("subprocess."):
+            return [_Unknown(f"unclassified subprocess write {primitive}")]
         dotted = self._dotted(call.func)
         if dotted == "learning_os.store.study_fence.write_local_output_file":
             return [_ExtRel("guarded caller output")]
+        fd_relative = self._dir_fd_targets(primitive, call, scope)
+        if fd_relative is not None:
+            return fd_relative
         exprs = self.write_target_exprs(primitive, call)
         if exprs is None:
             if primitive.startswith("tempfile."):
@@ -1823,19 +1956,83 @@ class _ModuleWriteSites:
             out.extend(sorted(resolved, key=_describe))
         return out
 
-    def _subprocess_targets(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
+    def _resolved(self, values) -> set:
+        out: set = set()
+        for value in values:
+            if isinstance(value, _Param):
+                out |= self.resolve_param(value, set())
+            else:
+                out.add(value)
+        return out
+
+    def _dir_fd_targets(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object] | None:
+        """Targets of an os.* write made relative to a directory descriptor.
+
+        The destination is the descriptor's directory joined with the name
+        operand; None when the call carries no descriptor keyword.
+        """
+        if not primitive.startswith("os."):
+            return None
+        kwargs = {kw.arg: kw.value for kw in call.keywords if kw.arg}
+        if primitive in {"os.rename", "os.replace"}:
+            operands = [("src_dir_fd", 0, "src"), ("dst_dir_fd", 1, "dst")]
+        elif primitive == "os.link":
+            operands = [("dst_dir_fd", 1, "dst")]
+        elif primitive == "os.symlink":
+            operands = [("dir_fd", 1, "dst")]
+        else:
+            operands = [("dir_fd", 0, "path")]
+        if not any(keyword in kwargs for keyword, _, _ in operands):
+            return None
+        out: set = set()
+        for keyword, index, name in operands:
+            operand = call.args[index] if len(call.args) > index else kwargs.get(name)
+            if operand is None:
+                out.add(_Unknown("missing path operand"))
+            elif keyword not in kwargs:
+                out |= self._resolved(self.eval(operand, scope))
+            else:
+                segs = self._segments(operand, scope, None, 0, frozenset())
+                for base in self._resolved(self.eval(kwargs[keyword], scope)):
+                    out |= self._resolved({self._join(base, seg) for seg in segs})
+        return sorted(out, key=_describe)
+
+    def _command_list(self, call: ast.Call, scope: _Scope) -> ast.List | ast.Tuple | None:
         command = call.args[0] if call.args else next(
             (kw.value for kw in call.keywords if kw.arg == "args"), None
         )
         if isinstance(command, ast.Name):
             assignments = self._lookup_exprs(command.id, scope)
             command = assignments[0] if len(assignments) == 1 else None
-        if not isinstance(command, (ast.List, ast.Tuple)):
+        return command if isinstance(command, (ast.List, ast.Tuple)) else None
+
+    def _option_words(self, call: ast.Call, scope: _Scope) -> list[str] | None:
+        """The command's literal words before a ``--`` separator.
+
+        None when the command is not a literal list, or when a non-literal
+        element precedes ``--`` and so could itself be an option.
+        """
+        command = self._command_list(call, scope)
+        if command is None:
+            return None
+        words: list[str] = []
+        for item in command.elts:
+            if not (isinstance(item, ast.Constant) and isinstance(item.value, str)):
+                return None
+            if item.value == "--":
+                break
+            words.append(item.value)
+        return words
+
+    def _subprocess_targets(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
+        command = self._command_list(call, scope)
+        if command is None:
             return [_Unknown("unresolved filesystem command")]
         start = 1
-        if primitive == "subprocess.git.mv":
+        if primitive in {"subprocess.git.mv", "subprocess.git.rm"}:
+            subcommand = primitive.removeprefix("subprocess.git.")
             start = next((i + 1 for i, item in enumerate(command.elts)
-                          if isinstance(item, ast.Constant) and item.value == "mv"), len(command.elts))
+                          if isinstance(item, ast.Constant) and item.value == subcommand), len(command.elts))
         operands = [
             item for item in command.elts[start:]
             if not (isinstance(item, ast.Constant) and isinstance(item.value, str)
@@ -1905,9 +2102,8 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
             except write_scopes.WriteScopeError:
                 continue
         concrete = len(repo_patterns) == len(destinations)
-        explicit_output = any(d.startswith(_EXPLICIT_OUT_MARKERS) for d in destinations)
+        repo_dir_names = frozenset({"repository", root.name})
         caller_scoped_primitive = destinations == ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
-        checkout_state_only = bool(destinations) and all(d.startswith("<STATE>/") for d in destinations)
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
         visitor = _SiteVisitor(rel)
         visitor.visit(tree)
@@ -1924,6 +2120,9 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 problem: str | None = None
                 if isinstance(value, _BadTraversal):
                     problem = "joins a '..' traversal onto a repository-anchored path"
+                elif isinstance(value, _GitState):
+                    if _GIT_STATE_TOKEN not in destinations:
+                        problem = f"changes Git index or refs but the module does not declare {_GIT_STATE_TOKEN}"
                 elif isinstance(value, _RepoRel):
                     if not repo_patterns:
                         problem = "is repository-anchored but the module declares no repository destination"
@@ -1933,22 +2132,27 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                         for pattern in repo_patterns
                     ):
                         problem = f"is outside declared destinations {repo_patterns}"
-                elif concrete and isinstance(value, _ExtRel):
-                    problem = "is external but the module declares only repository destinations"
-                elif caller_scoped_primitive and isinstance(value, _ExtRel) and value.tag == "absolute literal":
-                    problem = "uses an absolute path outside its caller-scoped primitive"
-                elif concrete and isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
-                    problem = "is unanchored in a module that declares only repository destinations"
-                elif (explicit_output or checkout_state_only) and isinstance(
-                    value, (_Unknown, _Relative, _ReadOnlySQLite)
-                ):
-                    problem = "has no proved destination at this write site"
-                elif checkout_state_only and isinstance(value, _ExtRel) and not any(
-                    _checkout_state_covers(dest, value, primitive) for dest in destinations
-                ):
-                    problem = f"is outside declared checkout-state destinations {destinations}"
-                elif explicit_output and isinstance(value, _ExtRel) and value.tag == "absolute literal":
-                    problem = "uses an absolute path without a caller-output boundary"
+                elif caller_scoped_primitive:
+                    # The shared atomic-write primitives take their target from
+                    # the caller; each caller's own site is checked instead.
+                    if isinstance(value, _ExtRel) and value.tag == "absolute literal":
+                        problem = "uses an absolute path outside its caller-scoped primitive"
+                elif isinstance(value, _ExtRel):
+                    if concrete:
+                        problem = "is external but the module declares only repository destinations"
+                    else:
+                        problem = _external_destination_problem(
+                            value, destinations, primitive, repo_dir_names,
+                        )
+                elif isinstance(value, (_Unknown, _Relative, _ReadOnlySQLite)):
+                    # Fail closed in every declaration class (Bar 4 F1): a write
+                    # whose destination the census cannot prove is never accepted
+                    # because the module declares some other destination.
+                    problem = (
+                        "is unanchored in a module that declares only repository destinations"
+                        if concrete else
+                        "has no proved destination at this write site"
+                    )
                 if problem is None:
                     continue
                 key = (call.lineno, _describe(value))
@@ -2367,3 +2571,82 @@ def test_transaction_engine_rejects_unanchored_write_in_existing_owner(tmp_path)
     findings = check_declared_write_sites(root, inventory)
     assert len(findings) == 1
     assert "unanchored (cwd)" in findings[0]
+
+
+# Bar 4 (27 Nov 2026) F1/F2 counterexamples, each with its control. F1: a write
+# whose destination the census cannot prove fails in every declaration class,
+# and an external value must match a declared destination of its own kind.
+# F2: subprocess writes are destination-checked or refused.
+_GUARD_IMPORT = "from learning_os.store.contracts.write_scopes import guard_tool_output_path\n"
+
+
+@pytest.mark.parametrize("destinations, body, expected", [
+    pytest.param(["<TMPDIR>/**"], "    Path('records/x.yaml').write_text('x')\n",
+                 "has no proved destination", id="F1-relative-records-in-tmpdir-module"),
+    pytest.param(["<TMPDIR>/**"], "    Path(os.environ['PROBE']).write_text('x')\n",
+                 "has no proved destination", id="F1-environment-destination"),
+    pytest.param(["<TMPDIR>/**"], "    (Path.home() / '.zshrc').write_text('x')\n",
+                 "home directory outside declared", id="F1-home-outside-declaration"),
+    pytest.param(["../materials/**"],
+                 "    (ROOT.parent / 'repository' / 'records' / 'x').write_text('x')\n",
+                 "beside the repository outside declared", id="F1-parent-reenters-repository"),
+    pytest.param(["<TMPDIR>/**"],
+                 "    (Path(tempfile.mkdtemp()) / 'x').write_text('x')\n"
+                 "    (Path('/private/tmp') / 'x').write_text('x')\n",
+                 None, id="F1-control-temporary"),
+    pytest.param(["../materials/**"], "    (ROOT.parent / 'materials' / 'x').write_text('x')\n",
+                 None, id="F1-control-declared-sibling"),
+    pytest.param(["<EXPLICIT_OUT_DIR>/**"], "    (guard_tool_output_path(raw) / 'x').write_text('x')\n",
+                 None, id="F1-control-guarded-caller-path"),
+    pytest.param(["<EXPLICIT_OUT_DIR>/**"],
+                 "    (guard_tool_output_path(raw).parent.parent / 'records').write_text('x')\n",
+                 "parent of a guarded path", id="F5-parent-of-guarded-path"),
+    pytest.param(["generated/reports/**"], "    (guard_tool_output_path(raw) / 'x').write_text('x')\n",
+                 "declares only repository destinations", id="F1-guarded-path-in-repository-only-module"),
+    pytest.param(["generated/reports/x.md"],
+                 "    subprocess.run(['git', 'rm', '-q', 'records/x.yaml'], check=True)\n",
+                 "is unanchored", id="F2-git-rm"),
+    pytest.param(["<GIT_INDEX_AND_COMMIT>"],
+                 "    subprocess.run(['git', 'reset', '--hard', 'HEAD~1'], check=True)\n",
+                 "git reset rewrites the working tree", id="F2-git-reset-hard"),
+    pytest.param(["<GIT_INDEX_AND_COMMIT>"],
+                 "    subprocess.run(['git', 'reset', '-q', 'HEAD', '--', *raw], check=True)\n",
+                 None, id="F2-control-index-reset-with-pathspec"),
+    pytest.param(["generated/reports/x.md"],
+                 "    subprocess.run('rm -rf records', shell=True, check=True)\n",
+                 "shell=True command", id="F2-shell-true"),
+    pytest.param(["generated/reports/x.md"],
+                 "    subprocess.run(['git', 'commit', '-m', 'x'], check=True)\n",
+                 "does not declare <GIT_INDEX_AND_COMMIT>", id="F2-git-commit-undeclared"),
+    pytest.param(["<GIT_INDEX_AND_COMMIT>"],
+                 "    subprocess.run(['git', 'commit', '-m', 'x'], check=True)\n",
+                 None, id="F2-control-git-commit-declared"),
+    pytest.param(["<EXPLICIT_OUT_DIR>/**"],
+                 "    with ExitStack() as stack:\n"
+                 "        fd = open_guarded_directory(raw, stack)\n"
+                 "        os.close(os.open('x', os.O_WRONLY | os.O_CREAT, 0o600, dir_fd=fd))\n",
+                 None, id="dir-fd-control-guarded-directory"),
+    pytest.param(["<EXPLICIT_OUT_DIR>/**"],
+                 "    fd = os.open('/etc', os.O_RDONLY | os.O_DIRECTORY)\n"
+                 "    os.close(os.open('x', os.O_WRONLY | os.O_CREAT, 0o600, dir_fd=fd))\n",
+                 "absolute path", id="dir-fd-unguarded-absolute-directory"),
+])
+def test_census_fails_closed_on_unproved_destinations(tmp_path, destinations, body, expected):
+    root = tmp_path / "repository"
+    writer = root / "tools/zz_bar4_probe.py"
+    writer.parent.mkdir(parents=True)
+    writer.write_text(
+        "import os\nimport subprocess\nimport tempfile\nfrom contextlib import ExitStack\n"
+        "from pathlib import Path\n" + _GUARD_IMPORT
+        + "from learning_os.store.contracts.write_scopes import open_guarded_directory\n"
+        + "ROOT = Path(__file__).resolve().parents[1]\n\n\ndef run(raw):\n" + body,
+        encoding="utf-8",
+    )
+    findings = check_declared_write_sites(
+        root, {"tools/zz_bar4_probe.py": {"effect": "operational", "destinations": destinations}},
+    )
+    if expected is None:
+        assert findings == []
+    else:
+        assert findings, "the census accepted the counterexample"
+        assert any(expected in finding for finding in findings), findings

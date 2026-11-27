@@ -25,6 +25,7 @@ TOOLS_DIR = Path(__file__).resolve().parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path  # noqa: E402
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 from learning_os.store.fs import clean_git_env, iter_files_and_top_symlinks  # noqa: E402
 
@@ -333,12 +334,14 @@ def _resolve_revision(repo: Path, name: str) -> str | None:
 
 def _cleanup(repo: Path, work_dir: Path, worktrees: list[Path],
              copies: list[Path]) -> None:
+    # Every tree is a direct child of the work root (built as work_dir / name),
+    # so rebuilding the path from the root keeps removal inside it.
     for tree in worktrees:
         _git(repo, "worktree", "remove", "--force", str(tree))
-        _remove_tree(tree)
+        _remove_tree(work_dir / tree.name)
     _git(repo, "worktree", "prune")
     for tree in copies:
-        _remove_tree(tree)
+        _remove_tree(work_dir / tree.name)
     link = work_dir / "materials"
     if link.is_symlink():
         link.unlink()
@@ -392,10 +395,16 @@ def main(argv: list[str] | None = None) -> int:
         return _fail(f"world is not a directory: {world}")
     materials_arg = Path(args.materials).resolve() if args.materials \
         else (repo.parent / "materials").resolve()
-    work_dir = Path(args.work_dir).resolve() if args.work_dir \
+    requested_work_dir = Path(args.work_dir).resolve() if args.work_dir \
         else (repo.parent / "scratch" / "world-runs").resolve()
-    if work_dir == repo or repo in work_dir.parents:
-        return _fail(f"refusing a work directory inside the repository: {work_dir}")
+    if requested_work_dir == repo or repo in requested_work_dir.parents:
+        return _fail(f"refusing a work directory inside the repository: {requested_work_dir}")
+    try:
+        # Only the work root is guarded: the disposable worktrees under it are
+        # LearningOS checkouts whose data roots this tool overwrites on purpose.
+        work_dir = guard_tool_output_path(requested_work_dir, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        return _fail(f"refusing work directory {requested_work_dir}: {exc}")
     if not materials_arg.is_dir():
         return _fail(f"materials is not a directory: {materials_arg}")
 
@@ -453,7 +462,7 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             assert sha is not None
             _git(repo, "worktree", "remove", "--force", str(tree))
-            _remove_tree(tree)
+            _remove_tree(work_dir / tree.name)
             added = _git(repo, "worktree", "add", "--detach", str(tree), sha)
             if added.returncode != 0:
                 return _fail(f"cannot build a worktree for {sha}: "

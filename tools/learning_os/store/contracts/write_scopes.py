@@ -10,6 +10,7 @@ matcher and one path-boundary check.
 from __future__ import annotations
 
 import os
+from contextlib import ExitStack
 from functools import cache
 from pathlib import Path
 
@@ -267,3 +268,29 @@ def guard_tool_output_path(
                 )
 
     return lexical
+
+
+_DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+_OS_DIRECTORY_ALIASES = frozenset({"tmp", "var", "etc"})
+
+
+def open_guarded_directory(path: os.PathLike[str] | str, stack: ExitStack) -> int:
+    """Open a directory for descriptor-relative writes, after the output guard.
+
+    ``guard_tool_output_path`` first refuses protected repository roots and
+    symlinked components. Every component is then opened with ``O_NOFOLLOW``
+    from the filesystem root, after the approved macOS ``/tmp``, ``/var`` and
+    ``/etc`` aliases, so a link substituted after the check is never followed.
+    The returned descriptor and its ancestors close with ``stack``.
+    """
+    guarded = guard_tool_output_path(path, allow_existing_dir=True)
+    absolute = Path(os.path.abspath(guarded))
+    parts = absolute.parts[1:]
+    if parts and parts[0] in _OS_DIRECTORY_ALIASES and Path("/", parts[0]).is_symlink():
+        parts = ("private", *parts)
+    fd = os.open(absolute.anchor, _DIRECTORY_FLAGS)
+    stack.callback(os.close, fd)
+    for part in parts:
+        fd = os.open(part, _DIRECTORY_FLAGS, dir_fd=fd)
+        stack.callback(os.close, fd)
+    return fd

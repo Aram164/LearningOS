@@ -26,6 +26,11 @@ from typing import TypedDict, cast
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.practice import content_sha256
 from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    open_guarded_directory,
+)
 from learning_os.store.fingerprint import snapshot
 from learning_os.store.loading import load_repo
 from learning_os.store.practice import EffectiveItem, note_items
@@ -154,14 +159,18 @@ def init_vault(vault: Path, root: Path) -> VaultMarker:
     if vault.exists() and any(vault.iterdir()):
         raise WriteRefused("init requires an absent or empty destination")
     validate_vault(vault, root, for_init=True)
-    vault.mkdir(parents=True, exist_ok=True)
+    try:
+        vault_dir = guard_tool_output_path(vault, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        raise WriteRefused(str(exc)) from exc
+    vault_dir.mkdir(parents=True, exist_ok=True)
     marker: VaultMarker = {
         "schema_version": 1,
         "purpose": "learnkit-practice",
         "experimental": True,
         "vault_id": str(uuid.uuid4()),
     }
-    with (vault / MARKER_NAME).open("x", encoding="utf-8") as handle:
+    with (vault_dir / MARKER_NAME).open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(marker, indent=2) + "\n")
     return marker
 
@@ -371,22 +380,17 @@ def _check_plan(document: dict[str, object], entries: list[CardPlanEntry]) -> No
 
 
 def _open_vault(vault: Path, stack: ExitStack) -> int:
-    # macOS provides the approved /tmp, /var and /etc aliases. After resolving
-    # those names, open every component without following any substituted link.
-    absolute = Path(os.path.abspath(vault))
-    aliases = {"tmp", "var", "etc"}
-    parts = absolute.parts[1:]
-    if parts and parts[0] in aliases and Path("/", parts[0]).is_symlink():
-        parts = ("private", *parts)
-    fd = os.open(absolute.anchor, DIRECTORY_FLAGS)
-    stack.callback(os.close, fd)
-    for part in parts:
-        fd = os.open(part, DIRECTORY_FLAGS, dir_fd=fd)
-        stack.callback(os.close, fd)
-    return fd
+    # The shared opener guards the path, then walks it with O_NOFOLLOW after
+    # the approved macOS /tmp, /var and /etc aliases.
+    try:
+        return open_guarded_directory(vault, stack)
+    except WriteScopeError as exc:
+        raise WriteRefused(str(exc)) from exc
 
 
 def _publish(directory: int, name: str, body: str) -> bool:
+    if Path(name).name != name:
+        raise WriteRefused(f"card file name must be one path segment: {name!r}")
     staged = f".los-stage-{uuid.uuid4().hex}"
     fd = os.open(staged, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW,
                  0o600, dir_fd=directory)
@@ -396,7 +400,7 @@ def _publish(directory: int, name: str, body: str) -> bool:
             handle.flush()
             os.fsync(handle.fileno())
         try:
-            os.link(staged, name, src_dir_fd=directory, dst_dir_fd=directory,
+            os.link(staged, Path(name).name, src_dir_fd=directory, dst_dir_fd=directory,
                     follow_symlinks=False)
             return True
         except FileExistsError:
@@ -413,10 +417,9 @@ _EXPORT_LOCK_NAME = ".los-export.lock"
 
 def _acquire_export_lock(directory: int, lock_path: Path, stack: ExitStack) -> None:
     """Acquire a persistent non-blocking kernel flock on `Vault/Cards/.los-export.lock`."""
-    lock_name = lock_path.name
     flags = os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | getattr(os, "O_NONBLOCK", 0)
     try:
-        lock_fd = os.open(lock_name, flags, 0o600, dir_fd=directory)
+        lock_fd = os.open(lock_path.name, flags, 0o600, dir_fd=directory)
     except OSError as exc:
         raise WriteRefused(f"destination lock is unusable ({lock_path}): {exc}") from exc
     stack.callback(os.close, lock_fd)

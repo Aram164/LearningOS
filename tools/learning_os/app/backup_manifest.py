@@ -21,6 +21,7 @@ import yaml
 from learning_os.store import observations
 from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.contracts.manifest_contract import declared_version
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
 from learning_os.store.materials.reading_cards import ReadingStore, ReadingStoreError, store_root
 
 #: The private reading store (ADR-021): a backup root only while it exists.
@@ -896,8 +897,12 @@ def verify_restored_system(
     # Before loading: the alias layer is what makes material:// URIs resolvable,
     # and rebuilding it is not a loading concern — so its own failures are
     # reported as its own check rather than as "Core restore could not be loaded".
-    checks.append(
-        _rebuild_materials_alias_layer(manifest, restored_materials, restored_core))
+    try:
+        alias_root = guard_tool_output_path(restored_materials, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        checks.append({"id": "materials-alias-layer", "ok": False, "detail": {"error": str(exc)}})
+    else:
+        checks.append(_rebuild_materials_alias_layer(manifest, alias_root, restored_core))
 
     try:
         from learning_os.derive.projection import generate_all, write_outputs

@@ -14,6 +14,7 @@ import os
 import re
 from dataclasses import dataclass
 
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.diagnostics.conventions import (
     TRACE_DEBUG_FILE_ENV,
     TRACE_OWNERSHIP_ENV,
@@ -124,7 +125,8 @@ def record_debug(
         }
         if extra:
             record.update(extra)
-        with open(path, "a", encoding="utf-8") as handle:
+        sink = guard_tool_output_path(path)
+        with open(sink, "a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, sort_keys=True) + "\n")
     except Exception:
         return

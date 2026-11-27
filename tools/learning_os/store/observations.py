@@ -12,6 +12,8 @@ import time
 import uuid
 from pathlib import Path
 
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
+
 OVERRIDE_ENV = "LOS_OBSERVATIONS"
 RECORD_ENV = "LOS_OBSERVATIONS_RECORD"
 
@@ -71,7 +73,8 @@ def _record_fragment(fragment: dict) -> None:
             changed = True
     if not changed:
         return
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+    record_file = guard_tool_output_path(path)
+    fd = os.open(record_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
         handle.write(json.dumps(existing, sort_keys=True, indent=2) + "\n")
 
@@ -183,7 +186,7 @@ def new_hex() -> str:
     if ids is None:
         return uuid.uuid4().hex
     seed = ids["seed"]
-    counter_file = ids["counter_file"]
+    counter_file = guard_tool_output_path(ids["counter_file"])
     fd = os.open(counter_file, os.O_RDWR | os.O_CREAT, 0o644)
     with os.fdopen(fd, "r+", encoding="utf-8") as handle:
         fcntl.flock(handle.fileno(), fcntl.LOCK_EX)

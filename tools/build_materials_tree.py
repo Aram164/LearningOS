@@ -43,6 +43,7 @@ TOOLS = Path(__file__).resolve().parent
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
+from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path  # noqa: E402
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 
 MATERIALS = REPO.parent / "materials"
@@ -314,13 +315,23 @@ def _run(materials: Path, *, apply: bool) -> int:
     if flat.is_symlink():
         print(f"refusing .flat symlink: {flat}", file=sys.stderr)
         return 1
-    for _slug, _cur, target in moves:
+    for _slug, cur, target in moves:
         if target.exists() or target.is_symlink():
             print(f"refusing move collision at {target} (already exists)", file=sys.stderr)
             return 1
+        try:
+            guard_tool_output_path(cur, allow_existing_dir=True)
+            guard_tool_output_path(target)
+        except WriteScopeError as exc:
+            print(f"refusing move {cur} -> {target}: {exc}", file=sys.stderr)
+            return 1
     for _slug, cur, target in moves:
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(cur), str(target))
+        # Both ends were checked in the preflight above; re-check at the move.
+        shutil.move(
+            str(guard_tool_output_path(cur, allow_existing_dir=True)),
+            str(guard_tool_output_path(target)),
+        )
     # 2 — rebuild .flat compat layer
     #
     # Refresh in place rather than rmtree-then-recreate. materials/ is routinely
@@ -410,7 +421,13 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    return _run(args.materials_root, apply=args.apply)
+    try:
+        # A caller-chosen tree must never be canonical data or a symlink path.
+        materials_root = guard_tool_output_path(args.materials_root, allow_existing_dir=True)
+    except WriteScopeError as exc:
+        print(f"refusing --materials-root: {exc}", file=sys.stderr)
+        return 2
+    return _run(materials_root, apply=args.apply)
 
 
 if __name__ == "__main__":

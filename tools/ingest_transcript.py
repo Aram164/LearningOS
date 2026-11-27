@@ -55,6 +55,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from learning_os.store.contracts.write_scopes import scoped_write_target  # noqa: E402
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 
@@ -416,7 +417,9 @@ def ingest(source_id: str, urls: list[str], *, window: int,
                     continue
                 if out_dir.is_symlink():
                     raise IngestError(f"transcript directory is a symlink: {out_dir}")
-                out_dir.mkdir(parents=True, exist_ok=True)
+                # Prove at runtime that the folder is inside the materials tree.
+                transcript_dir = scoped_write_target(MATERIALS.resolve(), out_dir.resolve(), ("**",))
+                transcript_dir.mkdir(parents=True, exist_ok=True)
                 atomic_write_text_exclusive(
                     out_dir / f"{vid}.md",
                     text,

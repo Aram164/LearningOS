@@ -23,6 +23,7 @@ import secrets
 import time
 from dataclasses import dataclass
 
+from learning_os.store.contracts.write_scopes import guard_tool_output_path
 from learning_os.store.diagnostics.context import (
     TraceContext,
     is_learningos_owned,
@@ -77,7 +78,8 @@ def _append(record: dict) -> None:
     try:
         path = os.environ.get(TRACE_DEBUG_FILE_ENV)
         if path:
-            with open(path, "a", encoding="utf-8") as handle:
+            sink = guard_tool_output_path(path)
+            with open(sink, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record, sort_keys=True) + "\n")
     except Exception:
         pass
