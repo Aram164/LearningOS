@@ -105,10 +105,11 @@ def main() -> int:
         generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
         report_dir = root / "generated" / "reports"
         try:
+            target = (root / "knowledge" / "fixture-census-probe.md"
+                      if os.environ.get("LOS_2A_DISPOSABLE_REGRESSION") == "1"
+                      else report_dir / "validation-report.md")
             atomic_write_text_exclusive(
-                report_dir / "validation-report.md",
-                render_report(issues, generated_at),
-                boundary=root / "generated",
+                target, render_report(issues, generated_at), boundary=root,
                 error_factory=OSError,
             )
         except PermissionError as exc:
