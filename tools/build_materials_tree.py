@@ -43,7 +43,7 @@ TOOLS = Path(__file__).resolve().parent
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
+from learning_os.store.fs import atomic_write_text_exclusive, rename_noreplace  # noqa: E402
 
 MATERIALS = REPO.parent / "materials"
 
@@ -293,26 +293,89 @@ def _print_plan(materials: Path, moves: list, missing: list[str]) -> None:
 
 
 def _undo_moves(done: list[tuple[Path, Path]]) -> int:
-    """Return already-moved folders so the untouched ``.flat`` aliases resolve.
-
-    An apply that cannot finish never reaches the alias rebuild, so putting
-    the moved folders back restores the prior tree and its aliases together.
-    """
+    """Restore already-moved folders without overwriting a reoccupied source."""
     stuck = []
     for cur, target in reversed(done):
         try:
-            os.rename(target, cur)
+            rename_noreplace(target, cur)
         except OSError as exc:
             stuck.append(f"{target} (belongs at {cur}): {exc}")
     if stuck:
-        print("apply stopped; .flat is unchanged, but these folders could not be "
-              "moved back — move them by hand: " + "; ".join(stuck), file=sys.stderr)
+        print("apply stopped; these folders could not be moved back — move them "
+              "by hand: " + "; ".join(stuck), file=sys.stderr)
     elif done:
-        print(f"apply stopped; moved {len(done)} folder(s) back, .flat is unchanged",
+        print(f"apply stopped; moved {len(done)} folder(s) back",
               file=sys.stderr)
     else:
-        print("apply stopped before any move; .flat is unchanged", file=sys.stderr)
+        print("apply stopped before any move", file=sys.stderr)
     return 1
+
+
+def _refresh_aliases(materials: Path, flat: Path) -> set[str]:
+    """Stage every alias and its predecessor before publishing any replacement."""
+    if flat.is_symlink() or (flat.exists() and not flat.is_dir()):
+        raise FileExistsError(f"refusing a non-directory alias root: {flat}")
+    new_flat = not flat.is_dir()
+    stage = Path(tempfile.mkdtemp(prefix=".flat-tmp-", dir=materials if new_flat else flat))
+    wanted = set()
+    prepared: list[tuple[Path, Path, Path | None]] = []
+    published: list[tuple[Path, Path | None]] = []
+    remove_stage = True
+    try:
+        for slug, parent in PLACEMENT.items():
+            target = materials / parent / slug
+            if not target.is_dir() or target.is_symlink():
+                continue
+            link = flat / f"source-{slug}"
+            wanted.add(link.name)
+            desired = Path("..") / parent / slug
+            staged = stage / link.name
+            if new_flat:
+                staged.symlink_to(desired)
+                continue
+            previous = None
+            if link.is_symlink():
+                old_target = link.readlink()
+                if old_target == desired:
+                    continue
+                previous = stage / f"previous-{link.name}"
+                previous.symlink_to(old_target)
+            elif link.exists():
+                raise FileExistsError(f"refusing to replace a non-symlink alias: {link}")
+            staged.symlink_to(desired)
+            prepared.append((staged, link, previous))
+
+        if new_flat:
+            rename_noreplace(stage, flat)
+            remove_stage = False
+
+        for staged, link, previous in prepared:
+            if previous is None:
+                rename_noreplace(staged, link)
+            else:
+                if not link.is_symlink() or link.readlink() != previous.readlink():
+                    raise FileExistsError(f"alias changed during layout apply: {link}")
+                os.replace(staged, link)
+            published.append((link, previous))
+    except OSError as exc:
+        failed = []
+        for link, previous in reversed(published):
+            try:
+                if previous is None:
+                    link.unlink()
+                else:
+                    os.replace(previous, link)
+            except OSError as restore_error:
+                failed.append(f"{link}: {restore_error}")
+        if failed:
+            remove_stage = False
+            raise OSError(f"{exc}; could not restore aliases from {stage}: "
+                          + "; ".join(failed)) from exc
+        raise
+    finally:
+        if remove_stage:
+            shutil.rmtree(stage, ignore_errors=True)
+    return wanted
 
 
 def _run(materials: Path, *, apply: bool) -> int:
@@ -342,42 +405,15 @@ def _run(materials: Path, *, apply: bool) -> int:
             print(f"refusing move collision at {target} (already exists)", file=sys.stderr)
             return 1
     done: list[tuple[Path, Path]] = []
-    for _slug, cur, target in moves:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        try:
-            # 2D CL-11: re-check at the move itself. os.rename refuses an
-            # occupied directory instead of nesting the source inside it the
-            # way shutil.move does, and never copies across filesystems.
-            if target.exists() or target.is_symlink():
-                raise FileExistsError(f"destination appeared after the preflight: {target}")
-            os.rename(cur, target)
-        except OSError as exc:
-            print(f"refusing move {cur} -> {target}: {exc}", file=sys.stderr)
-            return _undo_moves(done)
-        done.append((cur, target))
-    # 2 — rebuild .flat compat layer
-    #
-    # Refresh in place rather than rmtree-then-recreate. materials/ is routinely
-    # reached through mounts that permit writes and renames but forbid unlink
-    # (network shares, container bind mounts, sync clients); a hard rmtree turns
-    # that into a crash *after* step 1 has already moved folders, leaving the
-    # tree re-homed but every material:// URI dangling. os.replace over an
-    # existing symlink is atomic and needs no delete permission.
-    flat.mkdir(exist_ok=True)
-    wanted = set()
-    staging_dir = Path(tempfile.mkdtemp(prefix=".flat-tmp-", dir=flat))
     try:
-        for slug, parent in PLACEMENT.items():
-            target = materials / parent / slug
-            if not target.is_dir() or target.is_symlink():
-                continue
-            link = flat / f"source-{slug}"
-            wanted.add(link.name)
-            staged = staging_dir / link.name
-            staged.symlink_to(Path("..") / parent / slug)
-            os.replace(staged, link)
-    finally:
-        shutil.rmtree(staging_dir, ignore_errors=True)
+        for _slug, cur, target in moves:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            rename_noreplace(cur, target)
+            done.append((cur, target))
+        wanted = _refresh_aliases(materials, flat)
+    except OSError as exc:
+        print(f"cannot apply materials layout: {exc}", file=sys.stderr)
+        return _undo_moves(done)
     stale = sorted(p.name for p in flat.iterdir()
                    if p.is_symlink() and p.name not in wanted)
     if stale:

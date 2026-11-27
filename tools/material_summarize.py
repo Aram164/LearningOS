@@ -60,6 +60,7 @@ from learning_os.store.fs import (  # noqa: E402
     atomic_write_bytes_exclusive,
     atomic_write_text_exclusive,
     create_ancestors_and_track,
+    rename_noreplace,
     sync_directory_and_created_ancestors,
 )
 
@@ -311,7 +312,11 @@ def _publish_range(target: Path, summary: bytes, meta_text: str) -> str | None:
             if ((stage / "summary.md").read_bytes() != summary
                     or (stage / "meta.json").read_text(encoding="utf-8") != meta_text):
                 raise OSError("the staged summary pair did not read back intact")
-            os.rename(stage, target)
+            try:
+                rename_noreplace(stage, target)
+            except FileExistsError:
+                shutil.rmtree(stage, ignore_errors=True)
+                return _occupied_reason(target, summary, meta_text)
         except BaseException:
             shutil.rmtree(stage, ignore_errors=True)
             raise

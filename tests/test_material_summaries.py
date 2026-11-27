@@ -127,6 +127,31 @@ def test_promote_refuses_an_existing_range(tmp_path: Path, capsys):
     assert "already exists" in err
 
 
+def test_promote_preserves_an_empty_range_created_at_rename(tmp_path, capsys, monkeypatch):
+    ms = _material_summarize()
+    text = _text_cache(tmp_path)
+    cache = tmp_path / "summaries"
+    draft = _draft_file(tmp_path, "draft.md", "A detailed chapter compression. ")
+    target = cache / DIGEST / "pages-1-3"
+    rename = ms.rename_noreplace
+    competitor_inode = None
+
+    def compete_at_rename(source, destination):
+        nonlocal competitor_inode
+        assert destination == target
+        destination.mkdir()
+        competitor_inode = destination.stat().st_ino
+        rename(source, destination)
+
+    monkeypatch.setattr(ms, "rename_noreplace", compete_at_rename)
+    assert _promote(ms, cache, text, draft) == 2
+    assert "incomplete or damaged summary" in capsys.readouterr().err
+    assert competitor_inode is not None
+    assert target.stat().st_ino == competitor_inode
+    assert list(target.iterdir()) == []
+    assert sorted(path.name for path in target.parent.iterdir()) == [target.name]
+
+
 def _read_fixture(tmp_path, capsys):
     ms = _material_summarize()
     base = tmp_path / "materials"

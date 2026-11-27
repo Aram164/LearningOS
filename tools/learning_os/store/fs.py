@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import contextlib
+import ctypes
+import errno
 import fcntl
 import os
 import secrets
+import sys
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 
@@ -21,6 +24,9 @@ GIT_ENV_OVERRIDE_VARS: frozenset[str] = frozenset({
 })
 
 _TEMP_ATTEMPTS = 32
+_LINUX_AT_FDCWD = -100
+_LINUX_RENAME_NOREPLACE = 1
+_DARWIN_RENAME_EXCL = 0x00000004
 
 
 def clean_git_env(
@@ -85,6 +91,35 @@ def sync_directory_and_created_ancestors(
     sync_directory(parent)
     for ancestor in created:
         sync_directory(ancestor.parent)
+
+
+def rename_noreplace(source: Path, destination: Path) -> None:
+    """Atomically move a path to a vacant name, even if a directory competes."""
+    source_arg = os.fsencode(source)
+    destination_arg = os.fsencode(destination)
+    libc = ctypes.CDLL(None, use_errno=True)
+    try:
+        if sys.platform == "darwin":
+            rename = libc.renamex_np
+            rename.argtypes = (ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint)
+            arguments = (source_arg, destination_arg, _DARWIN_RENAME_EXCL)
+        elif sys.platform == "linux":
+            rename = libc.renameat2
+            rename.argtypes = (ctypes.c_int, ctypes.c_char_p, ctypes.c_int,
+                               ctypes.c_char_p, ctypes.c_uint)
+            arguments = (_LINUX_AT_FDCWD, source_arg, _LINUX_AT_FDCWD,
+                         destination_arg, _LINUX_RENAME_NOREPLACE)
+        else:
+            raise AttributeError(sys.platform)
+    except AttributeError as exc:
+        raise OSError(errno.ENOTSUP, "atomic no-replace rename is unavailable",
+                      source, None, destination) from exc
+
+    # ctypes does not emit the standard Python filesystem audit event.
+    sys.audit("os.rename", os.fspath(source), os.fspath(destination), -1, -1)
+    if rename(*arguments) != 0:
+        error = ctypes.get_errno()
+        raise OSError(error, os.strerror(error), source, None, destination)
 
 
 def _assert_no_symlinks_under_boundary(path: Path, boundary: Path) -> None:
