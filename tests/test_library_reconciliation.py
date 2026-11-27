@@ -181,14 +181,18 @@ def test_freeze_refuses_while_findings_remain(tmp_path, capsys):
 
 
 def test_freeze_records_the_hashes_and_changes_nothing_else(tmp_path):
+    from arch_writes_fixtures import audit_window
+
     root = build(tmp_path)
     auto, worklist = tmp_path / "auto.yaml", tmp_path / "worklist.md"
     manual = _write(tmp_path / "manual.yaml", MANUAL)
     assert run(root, "suggest", "--out", str(auto), "--worklist", str(worklist)) == 0
-    assert run(root, "merge", str(auto), str(manual)) == 0
     target = root / WS / lr.DISPOSITIONS_FILE
-    before = lr.load_dispositions(target)
-    assert run(root, "freeze") == 0
+    # 2A §5.6: the runtime witness for library_reconciliation.py's recorded exception.
+    with audit_window(root, "witness", "library-reconciliation-freeze"):
+        assert run(root, "merge", str(auto), str(manual)) == 0
+        before = lr.load_dispositions(target)
+        assert run(root, "freeze") == 0
     after = lr.load_dispositions(target)
     assert after.objects == before.objects  # omitted roles stay omitted
     assert set(after.reviewed_input_hashes) == {p for _, p in declared(root).hashed_files()}

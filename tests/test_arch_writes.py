@@ -41,7 +41,40 @@ ALLOWED_EFFECTS = frozenset({
     "tooling",
 })
 
-_DECLARATION_KEYS = frozenset({"effect", "destinations", "reason", "contract"})
+_DECLARATION_KEYS = frozenset({"effect", "destinations", "reason", "contract", "witness"})
+
+# 2A §5.6 witness accounting. A writer that reaches owned territory needs a
+# runtime witness (checked over the CI population by the zz runtime gate) or a
+# named deferral; any other writer may rest on this static census plus the
+# production output guard. ``helper`` marks a mechanical delegation helper.
+_WITNESS_PACKAGES = ("2B", "2C", "2D", "Phase 3", "Phase 4", "Phase 5", "Phase 6", "Phase 7")
+
+
+def _witness_failures(rel: str, raw: dict, owned: bool) -> list[str]:
+    import arch_audit_hook
+
+    witness = raw.get("witness")
+    if witness is None:
+        if owned:
+            return [
+                f"A2 {rel}: reaches owned territory, so it needs `witness: runtime` or "
+                "`witness: \"deferred: <package>: <obligation>\"` (2A §5.6)"
+            ]
+        return []
+    if witness == "runtime":
+        return []
+    if witness == "helper":
+        if _module_identity(rel) not in arch_audit_hook.MECHANICAL_HELPERS:
+            return [f"A2 {rel}: `witness: helper` is only for a mechanical delegation helper"]
+        return []
+    if isinstance(witness, str) and witness.startswith("deferred: "):
+        package, _, obligation = witness.removeprefix("deferred: ").partition(": ")
+        if package in _WITNESS_PACKAGES and obligation.strip():
+            return []
+    return [
+        f"A2 {rel}: witness {witness!r} must be runtime, helper, or "
+        f"\"deferred: <one of {list(_WITNESS_PACKAGES)}>: <obligation>\""
+    ]
 
 _CANONICAL_ENGINE_MODULE = "tools/learning_os/store/transactions.py"
 
@@ -72,6 +105,48 @@ _RECORDED_CANONICAL_EXCEPTIONS: dict[str, tuple[str, frozenset[str], str]] = {
         frozenset({"knowledge/summaries/**"}),
         "tree-contract.yaml",
     ),
+    # Generated contract artifacts in CANONICAL_ROOTS (system/schema,
+    # system/contracts), written only on an explicit --write/--bump and
+    # checked by --check upstream (Bar 4 v3 N-1).
+    "tools/generate_capability_schemas.py": (
+        "projection",
+        frozenset({
+            "system/schema/capabilities/**",
+            "system/schema/capability-envelope.schema.json",
+            "system/schema/envelope-error-details.fragment.json",
+        }),
+        "system/DEVELOPER.md",
+    ),
+    "tools/learning_os/store/contracts/data_contract.py": (
+        "projection",
+        frozenset({"system/contracts/data-contract.yaml"}),
+        "system/developer/changing-contracts.md",
+    ),
+    "tools/learning_os/store/contracts/manifest_contract.py": (
+        "projection",
+        frozenset({"system/contracts/manifest-contract.yaml"}),
+        "system/developer/changing-contracts.md",
+    ),
+}
+
+# Bar 4 v3 N-6: each recorded exception runs only from its documented entry
+# point. A script exception may not be imported in-process at all; a library
+# exception's writing functions may be named only by its CLI. Every key of
+# _RECORDED_CANONICAL_EXCEPTIONS must appear here (checked by a test).
+_ENTRY_POINT_REFERENCES: dict[str, frozenset[str]] = {
+    "migrations.curriculum_v2": frozenset({"tools/migrations/curriculum_v2.py"}),
+    "library_reconciliation": frozenset({"tools/library_reconciliation.py"}),
+    "material_summarize": frozenset({"tools/material_summarize.py"}),
+    "generate_capability_schemas": frozenset({"tools/generate_capability_schemas.py"}),
+    "learning_os.store.contracts.data_contract.bump": frozenset({
+        "tools/learning_os/store/contracts/data_contract.py", "tools/schema_contract.py",
+    }),
+    "learning_os.store.contracts.data_contract.rebump": frozenset({
+        "tools/learning_os/store/contracts/data_contract.py", "tools/schema_contract.py",
+    }),
+    "learning_os.store.contracts.manifest_contract.bump": frozenset({
+        "tools/learning_os/store/contracts/manifest_contract.py", "tools/manifest_contract.py",
+    }),
 }
 
 _WRITE_HELPERS = frozenset({
@@ -206,6 +281,45 @@ _PINNED_PLACEHOLDER_OWNERS = {
     # Recorded exception (Bar 4 v2 NF-5): detection lands in 2A, confinement in 2B.
     "<AGENT_WORKSPACE_WRITE_LAUNCHER>": frozenset({"tools/codex_obsidian.py"}),
 }
+# Bar 4 v3 N-2: openers whose mode or flags decide whether they write. A
+# ``functools.partial`` over one is refused where it is built: a call-time
+# keyword overrides the partial's own, so no pinned mode proves read-only.
+_DEFERRED_OPENERS = frozenset({
+    "open", "builtins.open", "io.open", "codecs.open", "os.fdopen", "os.open",
+    "zipfile.ZipFile", "tarfile.open",
+})
+# Bar 4 v3 N-5: write primitives outside the supported inventory. None is used in
+# tools/; a future need moves one into the inventory with a destination rule.
+_FORBIDDEN_PRIMITIVES = frozenset({
+    "urllib.request.urlretrieve", "io.FileIO", "_io.FileIO",
+    "fileinput.input", "fileinput.FileInput", "pty.spawn",
+    "shutil.copystat", "shutil.copymode", "shutil.chown",
+    "os.setxattr", "os.removexattr", "os.chflags", "os.lchflags",
+})
+# Bar 4 v3 N-7: the only tools/ modules that may name the transaction service, a
+# gateway request context, or the context installer outside annotations.
+# Provenance and lifecycle are 2B's; this keeps new construction sites visible.
+_ADMISSION_NAME_SITES = {
+    "TransactionService": frozenset({
+        "tools/learning_os/store/transactions.py",  # defines it
+        "tools/learning_os/app/commit.py",          # the one production construction
+    }),
+    "GatewayRequestContext": frozenset({
+        "tools/learning_os/store/contracts/gateway.py",            # defines it
+        "tools/learning_os/app/gateway.py",                        # from a sealed V2 envelope
+        "tools/learning_os/app/handlers/goals.py",                 # operator goal gesture
+        "tools/learning_os/app/handlers/learner_observations.py",  # observation gesture
+        "tools/learning_os/store/diagnostics/resolver.py",         # verifies recorded rows
+        "tools/learning_os/store/evidence.py",                     # verifies recorded rows
+        "tools/seal_envelope.py",                                  # the sealing CLI's check
+    }),
+    "gateway_request_context": frozenset({
+        "tools/learning_os/store/contracts/gateway.py",            # defines it
+        "tools/learning_os/app/handlers/learner_observations.py",
+        "tools/learning_os/app/pipeline.py",
+        "tools/seal_envelope.py",
+    }),
+}
 # Runtime validators the census trusts for dynamic path operands (Bar 4 v2 NF-2).
 _PATH_SEGMENT_VALIDATOR = "learning_os.store.contracts.write_scopes.path_segment"
 _RELATIVE_PATH_VALIDATOR = "learning_os.store.contracts.write_scopes.relative_path"
@@ -278,6 +392,142 @@ def _dest_touches_data_root(dest: str, data_roots: tuple[str, ...]) -> str | Non
     return None
 
 
+OWNERS_PATH = ARCH / "operational-owners.yaml"
+# Owned territory the engine itself may not declare: UI-owned roots, and
+# operator-authored request envelopes Core never writes.
+_ENGINE_REFUSED_TERRITORY = ("bases/**", "boards/**", "operations/gateway-requests/**")
+
+
+def _segment_overlap(a: str, b: str) -> bool:
+    if a in {"*", "**"} or b in {"*", "**"}:
+        return True
+    wild_a, wild_b = any(c in a for c in "*?["), any(c in b for c in "*?[")
+    if not wild_a and not wild_b:
+        return a == b
+    if wild_a and not wild_b:
+        return fnmatchcase(b, a)
+    if wild_b and not wild_a:
+        return fnmatchcase(a, b)
+    return True  # two partial globs: conservatively overlapping
+
+
+def _patterns_overlap(a: str, b: str) -> bool:
+    """Could one repository path match both patterns? True when unsure (Bar 4 v3 N-1).
+
+    Declarations are patterns, so path matching cannot answer this. ``**`` spans
+    any number of segments; ``*`` and partial globs match one segment.
+    """
+    pa, pb = tuple(a.split("/")), tuple(b.split("/"))
+
+    @cache
+    def go(i: int, j: int) -> bool:
+        if i == len(pa) and j == len(pb):
+            return True
+        if i < len(pa) and pa[i] == "**":
+            return go(i + 1, j) or (j < len(pb) and go(i, j + 1))
+        if j < len(pb) and pb[j] == "**":
+            return go(i, j + 1) or (i < len(pa) and go(i + 1, j))
+        if i == len(pa) or j == len(pb):
+            return False
+        return _segment_overlap(pa[i], pb[j]) and go(i + 1, j + 1)
+
+    return go(0, 0)
+
+
+def _pattern_contains(outer: str, inner: str) -> bool:
+    """Does every path matching ``inner`` match ``outer``? False when unsure (Bar 4 v3 N-1)."""
+    po, pi = tuple(outer.split("/")), tuple(inner.split("/"))
+
+    @cache
+    def go(i: int, j: int) -> bool:
+        if i == len(po):
+            return j == len(pi)
+        if po[i] == "**":
+            return any(go(i + 1, k) for k in range(j, len(pi) + 1))
+        if j == len(pi) or pi[j] == "**":
+            return False
+        o, n = po[i], pi[j]
+        if o == "*":
+            covered = True
+        elif any(c in o for c in "*?["):
+            covered = o == n or (not any(c in n for c in "*?[") and fnmatchcase(n, o))
+        else:
+            covered = o == n
+        return covered and go(i + 1, j + 1)
+
+    return go(0, 0)
+
+
+def _module_identity(rel: str) -> str:
+    """``tools/learning_os/a/b.py`` → ``learning_os.a.b``; ``tools/migrations/x.py`` → ``migrations.x``."""
+    return rel.removeprefix("tools/").removesuffix(".py").removesuffix("/__init__").replace("/", ".")
+
+
+@cache
+def _operational_owner_rows() -> tuple[tuple[str, str, str | None], ...]:
+    """(glob, sink, owner) rows of the test-side operational ownership contract."""
+    data = yaml.safe_load(OWNERS_PATH.read_text(encoding="utf-8")) or {}
+    rows = [(str(row["glob"]), str(row["sink"]), row.get("owner")) for row in data.get("entries", [])]
+    rows += [(str(row["glob"]), "excluded", None) for row in data.get("excluded", [])]
+    return tuple(rows)
+
+
+def _declaration_authorities(rel: str) -> list[str]:
+    """Owned patterns a non-engine module may declare on its own authority (alternatives)."""
+    identity = _module_identity(rel)
+    found = []
+    for glob, sink, owner in _operational_owner_rows():
+        if sink == "module" and owner and (identity == owner or identity.startswith(owner + ".")):
+            found.append(glob)
+        elif sink == "excluded" and glob not in _ENGINE_REFUSED_TERRITORY:
+            found.append(glob)  # a disposable store any declared writer may keep
+    return found
+
+
+def _owned_territory_failures(
+    rel: str, dest: str, effect: object, contract: object, data_roots: tuple[str, ...],
+) -> list[str]:
+    """Bar 4 v3 N-1: a declaration cannot reach owned territory without authority.
+
+    ``DATA_ROOTS`` keeps its recorded-exception branch in the caller. Owned
+    territory comes from production contracts (``write_scopes.owned_territory``);
+    the authorities are alternatives: the engine, an ``operational-owners.yaml``
+    module row for this module, an ``excluded`` row, or a recorded exception.
+    """
+    territory = write_scopes.owned_territory()
+    owned = [pattern for pattern in territory if _patterns_overlap(dest, pattern)]
+    if rel == _CANONICAL_ENGINE_MODULE:
+        refused = [p for p in _ENGINE_REFUSED_TERRITORY if _patterns_overlap(dest, p)]
+        return [
+            f"A2 {rel}: engine declaration {dest!r} reaches {refused}, which no Core writer owns "
+            "(Bar 4 v3 N-1)"
+        ] if refused else []
+    owned = [p for p in owned if p.split("/", 1)[0] not in data_roots]
+    if not owned:
+        return []
+    authorities = _declaration_authorities(rel)
+    exception = _RECORDED_CANONICAL_EXCEPTIONS.get(rel)
+    problems: list[str] = []
+    if exception is not None and dest in exception[1]:
+        allowed_eff, _, contract_marker = exception
+        if effect != allowed_eff:
+            problems.append(f"A2 {rel}: canonical exception requires effect {allowed_eff!r}, got {effect!r}")
+        if not isinstance(contract, str) or contract_marker not in contract:
+            problems.append(f"A2 {rel}: owned destination {dest!r} must cite {contract_marker!r} in contract")
+        authorities = [*authorities, dest]
+    uncovered = [
+        p for p in owned
+        if not any(_pattern_contains(a, dest) or _pattern_contains(a, p) for a in authorities)
+    ]
+    if uncovered:
+        problems.append(
+            f"A2 {rel}: declaration {dest!r} reaches owned territory {uncovered} without "
+            "authority: a declaration grants none; only the owner, the engine or a recorded "
+            f"exception may write there (Bar 4 v3 N-1) — {FIX}"
+        )
+    return problems
+
+
 def validate_effects_declarations(
     effects: object,
     *,
@@ -329,6 +579,13 @@ def validate_effects_declarations(
             failures.append(f"A2 {rel}: migration declaration must cite its recorded maintenance contract")
 
         parsed[rel] = raw
+        territory = write_scopes.owned_territory()
+        owned = any(
+            not _is_external_or_placeholder(dest) and any(
+                _patterns_overlap(dest, pattern) for pattern in territory)
+            for dest in destinations
+        )
+        failures.extend(_witness_failures(rel, raw, owned))
 
         for dest in destinations:
             owners = _PINNED_PLACEHOLDER_OWNERS.get(dest)
@@ -352,6 +609,8 @@ def validate_effects_declarations(
                         f"A2 {rel}: destination {dest!r} must be spelled in normalized form {normalized!r}"
                     )
                     continue
+            if not _is_external_or_placeholder(dest):
+                failures.extend(_owned_territory_failures(rel, dest, effect, contract, data_roots))
             data_root = _dest_touches_data_root(dest, data_roots)
             if data_root is None or rel == _CANONICAL_ENGINE_MODULE:
                 if rel == _CANONICAL_ENGINE_MODULE and effect != "canonical-engine":
@@ -455,6 +714,28 @@ def _mode_writes(mode_node: ast.AST | None, env: dict[str, ast.AST]) -> bool:
         and isinstance(resolved.value, str)
         and not any(mark in resolved.value for mark in "wax+")
     )
+
+
+_OPAQUE_MODE = ast.Name(id="\x00opaque-mode", ctx=ast.Load())
+
+
+def _opener_mode(node: ast.Call, position: int) -> ast.AST | None:
+    """The mode operand of an opener call (Bar 4 v3 N-2).
+
+    ``*args`` reaching the mode position, or ``**kwargs`` with no explicit mode,
+    may carry a writing mode: both evaluate as opaque, which ``_mode_writes``
+    treats as writing. ``None`` means no mode at all, which is a read.
+    """
+    for kw in node.keywords:
+        if kw.arg == "mode":
+            return kw.value
+    if any(isinstance(arg, ast.Starred) for arg in node.args[: position + 1]):
+        return _OPAQUE_MODE
+    if len(node.args) > position:
+        return node.args[position]
+    if any(kw.arg is None for kw in node.keywords):
+        return _OPAQUE_MODE
+    return None
 
 
 def _str_const(node: ast.AST | None, env: dict[str, ast.AST]) -> str | None:
@@ -754,6 +1035,8 @@ class _Visitor(ast.NodeVisitor):
         self.hits: list[tuple[str, int]] = []
         self.unmediated_lines: list[int] = []
         self.unmediated_call_lines: list[int] = []
+        # Declaration-independent refusals (Bar 4 v3 N-2, N-5, N-6, N-7).
+        self.refusals: list[tuple[int, str]] = []
         self._readonly_fd_helper = False
         self._git_wrappers_by_name: dict[str, int] = {}
         self._git_wrapper_sub_calls: set[int] = set()
@@ -808,19 +1091,79 @@ class _Visitor(ast.NodeVisitor):
         self._env_stack.pop()
         self._funcs.pop()
 
+    def _refuse(self, node: ast.AST, message: str) -> None:
+        self.refusals.append((getattr(node, "lineno", 0), message))
+
+    def _refuse_entry_only_import(self, node: ast.AST, module: str) -> None:
+        """Bar 4 v3 N-6: a recorded canonical exception runs only from its entry point."""
+        for name, entry_points in _ENTRY_POINT_REFERENCES.items():
+            if self._rel not in entry_points and (module == name or module.startswith(name + ".")):
+                self._refuse(
+                    node,
+                    f"in-process use of {name} is refused: its recorded canonical exception "
+                    f"runs only from {sorted(entry_points)} (Bar 4 v3 N-6)",
+                )
+
     def visit_Import(self, node: ast.Import) -> None:
         for alias in node.names:
             bound = alias.asname or alias.name.split(".", 1)[0]
             self._mod_aliases[bound] = alias.name
+            self._refuse_entry_only_import(node, alias.name)
         self.generic_visit(node)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
         mod = node.module or ""
+        if node.level:
+            package = PurePosixPath(self._rel).parent.parts[1:]  # drop the tools/ prefix
+            if node.level > 1:
+                package = package[: len(package) - (node.level - 1)]
+            mod = ".".join((*package, *([mod] if mod else [])))
         for alias in node.names:
             bound = alias.asname or alias.name
             self._from_aliases[bound] = (mod, alias.name)
             self._mod_aliases[bound] = alias.name
+            self._refuse_entry_only_import(node, f"{mod}.{alias.name}" if mod else alias.name)
         self.generic_visit(node)
+
+    def _dotted_reference(self, node: ast.AST) -> str | None:
+        """``pkg.mod.attr`` for a Name or Attribute chain, through import aliases."""
+        attrs: list[str] = []
+        cur = node
+        while isinstance(cur, ast.Attribute):
+            attrs.append(cur.attr)
+            cur = cur.value
+        if not isinstance(cur, ast.Name):
+            return None
+        if cur.id in self._from_aliases:
+            mod, orig = self._from_aliases[cur.id]
+            base = f"{mod}.{orig}" if mod else orig
+        else:
+            base = self._mod_aliases.get(cur.id, cur.id)
+        return ".".join((base, *reversed(attrs)))
+
+    def _check_refused_reference(self, node: ast.Name | ast.Attribute) -> None:
+        """N-5 and N-7: references refused wherever they appear (calls, aliases, values)."""
+        if not isinstance(getattr(node, "ctx", None), ast.Load) or id(node) in self._non_value_ids:
+            return
+        dotted = self._dotted_reference(node)
+        if dotted is not None:
+            self._refuse_entry_only_import(node, dotted)
+        if dotted in _FORBIDDEN_PRIMITIVES:
+            self._refuse(
+                node,
+                f"{dotted} is outside the supported write-primitive inventory (Bar 4 v3 N-5); "
+                "add it to the census inventory with a destination rule before using it",
+            )
+        leaf = node.attr if isinstance(node, ast.Attribute) else (
+            self._from_aliases[node.id][1] if node.id in self._from_aliases else node.id
+        )
+        sites = _ADMISSION_NAME_SITES.get(leaf)
+        if sites is not None and self._rel not in sites:
+            self._refuse(
+                node,
+                f"{leaf} may be named only at its recorded construction sites {sorted(sites)} "
+                "(Bar 4 v3 N-7); production admission goes through the gateway",
+            )
 
     def visit_Assign(self, node: ast.Assign) -> None:
         if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
@@ -866,10 +1209,34 @@ class _Visitor(ast.NodeVisitor):
                 return self._write_callable(env[node.id], env, depth + 1)
         return None
 
+    def _deferred_opener(self, node: ast.AST, env: dict[str, ast.AST]) -> str | None:
+        """The opener ``node`` denotes when used as a value, if any (Bar 4 v3 N-2)."""
+        node = _resolve_expr(node, env) or node
+        if isinstance(node, ast.Attribute) and node.attr in {"open", "fdopen", "ZipFile"}:
+            return self._dotted_reference(node) or f"<object>.{node.attr}"
+        dotted = self._dotted_reference(node) if isinstance(node, ast.Name) else None
+        if dotted in _DEFERRED_OPENERS:
+            return dotted
+        return None
+
     def _defer_partial(self, node: ast.Call, env: dict[str, ast.AST]) -> None:
-        """``functools.partial(f, *a, **k)`` is scanned as the deferred call ``f(*a, **k)``."""
+        """``functools.partial(f, *a, **k)`` is scanned as the deferred call ``f(*a, **k)``.
+
+        A partial over an opener is refused instead (Bar 4 v3 N-2): a call-time
+        keyword overrides the partial's own mode or flags, so the deferred call
+        cannot be judged where it is built.
+        """
         func = node.func
-        is_partial = _callee_dotted(self, func) == "functools.partial"
+        is_partial = _callee_dotted(self, func) in {"functools.partial", "functools.partialmethod"}
+        if is_partial and node.args:
+            opener = self._deferred_opener(node.args[0], env)
+            if opener is not None:
+                self._refuse(
+                    node,
+                    f"functools.partial over the opener {opener} is refused (Bar 4 v3 N-2): "
+                    "call the opener directly so its mode or flags are checked at the call",
+                )
+                return
         if not is_partial or not node.args or self._write_callable(node.args[0], env) is None:
             return
         deferred = ast.Call(func=node.args[0], args=list(node.args[1:]), keywords=list(node.keywords))
@@ -963,11 +1330,13 @@ class _Visitor(ast.NodeVisitor):
         if node.id == "_unmediated_test_only":
             self.unmediated_lines.append(node.lineno)
         self._check_value_reference(node)
+        self._check_refused_reference(node)
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
         if node.attr == "_unmediated_test_only":
             self.unmediated_lines.append(node.lineno)
         self._check_value_reference(node)
+        self._check_refused_reference(node)
         self.generic_visit(node)
 
     def visit_Constant(self, node: ast.Constant) -> None:
@@ -976,6 +1345,27 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         self._call_func_ids.add(id(node.func))
+        called = self._dotted_reference(node.func)
+        literal = (
+            node.args[1].value if called == "getattr" and len(node.args) >= 2
+            and isinstance(node.args[1], ast.Constant) and isinstance(node.args[1].value, str)
+            else node.args[0].value if node.args and isinstance(node.args[0], ast.Constant)
+            and isinstance(node.args[0].value, str) else None
+        )
+        if literal is not None:
+            if called in {"importlib.import_module", "runpy.run_module"}:
+                self._refuse_entry_only_import(node, literal)
+            elif called == "runpy.run_path":
+                for name, entry_points in _ENTRY_POINT_REFERENCES.items():
+                    if any(literal.endswith(rel.removeprefix("tools/")) for rel in entry_points):
+                        self._refuse_entry_only_import(node, name)
+            elif called == "getattr" and literal in _ADMISSION_NAME_SITES \
+                    and self._rel not in _ADMISSION_NAME_SITES[literal]:
+                self._refuse(
+                    node,
+                    f"{literal} may be named only at its recorded construction sites "
+                    f"{sorted(_ADMISSION_NAME_SITES[literal])} (Bar 4 v3 N-7)",
+                )
         if id(node) in self._git_wrapper_sub_calls:
             self.generic_visit(node)
             return
@@ -1064,35 +1454,25 @@ class _Visitor(ast.NodeVisitor):
                 if not _is_readonly_os_open(node, env, readonly_fd_helper=self._readonly_fd_helper):
                     primitive = "os.open"
             elif is_os and attr == "fdopen":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "os.fdopen"
             elif is_io and attr == "open":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "open"
             elif is_codecs and attr == "open":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "codecs.open"
             elif is_asyncio and attr in _ASYNCIO_SUBPROCESS_ATTRS:
                 primitive = f"asyncio.{attr}"
             elif is_zipfile and attr == "ZipFile":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "zipfile.ZipFile"
             elif is_tarfile and attr == "open":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "tarfile.open"
             elif is_logging and attr in _LOGGING_FILE_HANDLERS:
@@ -1114,9 +1494,7 @@ class _Visitor(ast.NodeVisitor):
                 if not delegated_touch:
                     primitive = attr
             elif attr == "open":
-                mode_node = node.args[0] if node.args else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 0)
                 if _mode_writes(mode_node, env):
                     primitive = "Path.open"
             elif attr == "rename":
@@ -1148,33 +1526,23 @@ class _Visitor(ast.NodeVisitor):
                 if not _is_readonly_os_open(node, env, readonly_fd_helper=self._readonly_fd_helper):
                     primitive = "os.open"
             elif orig_name == "fdopen" and mod_src == "os":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "os.fdopen"
             elif orig_name == "open" and mod_src == "codecs":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "codecs.open"
             elif orig_name == "open" and mod_src == "tarfile":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "tarfile.open"
             elif orig_name == "open":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "open"
             elif mod_src == "zipfile" and orig_name == "ZipFile":
-                mode_node = node.args[1] if len(node.args) >= 2 else next(
-                    (kw.value for kw in node.keywords if kw.arg == "mode"), None
-                )
+                mode_node = _opener_mode(node, 1)
                 if _mode_writes(mode_node, env):
                     primitive = "zipfile.ZipFile"
             elif mod_src in {"logging", "logging.handlers"} and orig_name in _LOGGING_FILE_HANDLERS:
@@ -1251,6 +1619,41 @@ def _iter_tool_python_files(root: Path) -> list[Path]:
     return found
 
 
+def _python_scripts_without_suffix(root: Path) -> list[str]:
+    """Bar 4 v3 N-11: a Python script under tools/ must be a .py file the census scans.
+
+    ``tools/hooks/`` is the pinned non-Python inventory, checked by its own test.
+    """
+    tools_root = root / "tools"
+    failures: list[str] = []
+    if not tools_root.is_dir() or tools_root.is_symlink():
+        return failures
+    for dirpath, dirnames, filenames in os.walk(tools_root, followlinks=False):
+        current = Path(dirpath)
+        dirnames[:] = sorted(
+            name for name in dirnames
+            if name != "__pycache__" and not name.endswith(".egg-info")
+            and not (current / name).is_symlink()
+        )
+        if current == tools_root / "hooks":
+            continue
+        for name in sorted(filenames):
+            candidate = current / name
+            if name.endswith(".py") or candidate.is_symlink() or not candidate.is_file():
+                continue
+            try:
+                with candidate.open("rb") as handle:
+                    first = handle.readline(256)
+            except OSError:
+                first = b""
+            if first.startswith(b"#!") and b"python" in first:
+                failures.append(
+                    f"A2 {candidate.relative_to(root).as_posix()}: Python script without a .py "
+                    "suffix is outside the census inventory (Bar 4 v3 N-11)"
+                )
+    return failures
+
+
 def _scan_static_tree(
     root: Path = ROOT,
     effects: dict[str, dict] | None = None,
@@ -1275,6 +1678,8 @@ def _scan_static_tree(
             unmediated_failures.append(
                 f"A2 {rel}:{lineno}: _unmediated_test_only is forbidden anywhere under tools/ (CL-50)"
             )
+        for lineno, message in sorted(set(visitor.refusals)):
+            unmediated_failures.append(f"A2 {rel}:{lineno}: {message}")
         if visitor.hits:
             writer_modules.add(rel)
         if rel not in declared:
@@ -2337,14 +2742,6 @@ class _ModuleWriteSites:
             return frozenset({_ExtRel("guarded caller output")})
         if dotted == "_open_local_parent_dir_fd" and self.rel == "tools/learning_os/store/study_fence.py":
             return frozenset({_ExtRel("guarded caller output")})
-        if dotted == "call_dir_fd_op" and self.rel == "tools/learning_os/store/study_fence.py" \
-                and node.args and isinstance(part := node.args[0], ast.Call) \
-                and self._dotted(part.func) == "functools.partial" and len(part.args) >= 2 \
-                and self._dotted(part.args[0]) == "os.open":
-            part_kw = {kw.arg: kw.value for kw in part.keywords if kw.arg}
-            if "dir_fd" in part_kw:
-                segs = self._segments(part.args[1], scope, bindings, depth, active)
-                return frozenset(self._join(base, seg) for base in ev(part_kw["dir_fd"]) for seg in segs)
         if dotted == "os.open" and node.args:
             # A descriptor stands for the directory it was opened on, so a
             # later dir_fd-relative write can be traced to that directory.
@@ -3473,6 +3870,7 @@ def scan_tools_census(
         failures.append(
             f"A2 {symlink_rel}: symlinked module or directory under tools/ is forbidden (Bar 4 F9)"
         )
+    failures.extend(_python_scripts_without_suffix(root))
     if ratchet_entries:
         for entry in ratchet_entries:
             failures.append(
@@ -3610,10 +4008,16 @@ def test_writer_census_accepts_valid_scoped_and_contract_writers(tmp_path: Path)
             "destinations": ["knowledge/summaries/**"],
             "reason": "Digest-keyed promoted chapter summary cache.",
             "contract": "system/contracts/tree-contract.yaml#knowledge/summaries",
+            "witness": "runtime",  # an owned-territory writer carries a disposition (2A §5.6)
         },
     }
     failures = scan_tools_census(root, valid, [], tree_roots=_load_tree_roots())
     assert failures == [], failures
+    # Without its witness disposition the same writer fails (the negative half).
+    bare = {**valid, "tools/material_summarize.py": {
+        k: v for k, v in valid["tools/material_summarize.py"].items() if k != "witness"}}
+    assert any("needs `witness: runtime`" in f for f in scan_tools_census(
+        root, bare, [], tree_roots=_load_tree_roots()))
 
 
 @pytest.mark.parametrize(

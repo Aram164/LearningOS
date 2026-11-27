@@ -12,6 +12,7 @@ unknown destinations and missing or corrupt witnesses fail closed.
 from __future__ import annotations
 
 import fnmatch
+import functools
 import hashlib
 import json
 import os
@@ -150,14 +151,13 @@ def _owner_satisfied(entry: dict, record: dict, rel: str,
                for capability, writes in receipts)
 
 
-def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
-    """Check retained, root-bound evidence; unknown evidence fails closed."""
+def _read_population_log(log_path: Path, add) -> list[dict] | None:
+    """Parse one population log; corrupt or witness-less evidence fails closed.
+
+    Shared by A19 and the runtime writer gate (2A §5.5): one parser, one
+    fail-closed policy.
+    """
     from arch_writes_fixtures import witness_failures
-
-    violations: dict[str, list[str]] = {}
-
-    def add(signature: str, evidence: str) -> None:
-        violations.setdefault(signature, []).append(evidence)
 
     try:
         records = [json.loads(line) for line in
@@ -169,12 +169,25 @@ def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
             raise ValueError("missing case identity")
     except (OSError, ValueError) as exc:
         add(f"{log_path.name}::corrupt", f"{log_path}: {exc}")
-        return violations
+        return None
     if not any(r.get("event") == "installed" for r in records):
         add(f"{log_path.name}::missing-witness", str(log_path))
-        return violations
+        return None
     for problem in witness_failures(records, allow_isolated=True):
         add(f"{log_path.name}::bad-witness", problem)
+    return records
+
+
+def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
+    """Check retained, root-bound evidence; unknown evidence fails closed."""
+    violations: dict[str, list[str]] = {}
+
+    def add(signature: str, evidence: str) -> None:
+        violations.setdefault(signature, []).append(evidence)
+
+    records = _read_population_log(log_path, add)
+    if records is None:
+        return violations
 
     # Proof is read at child completion from newly created receipt bytes.
     # It remains available after Scrut removes its temporary fixture.
@@ -325,6 +338,232 @@ def test_operational_owners_population():
     assert not stale, (
         f"A19 recorded exceptions no longer occur, remove them: "
         f"{sorted(stale)} — {FIX}")
+
+
+# --- 2A §5.5: runtime writer conformance (Bar 4 v3 re-entry) ---
+#
+# A second, blocking consumer of the same population. For every audited write
+# inside a world it resolves the real writer, then requires a declaration in
+# tests/architecture/effects.yaml that covers the path, and authority for owned
+# territory outside A19's own domain (operations/ and <STATE>/ stay A19's).
+# Events are read by their effect, not A19's destination-only view: a rename or
+# move removes its source and creates its destination, so both are checked.
+
+#: Events whose every path is affected; the rest touch only their destination.
+_ALL_PATH_EVENTS = frozenset({
+    "open", "io.open", "os.rename", "shutil.move", "os.remove", "os.unlink",
+    "os.rmdir", "shutil.rmtree", "os.truncate", "os.write",
+})
+_DESTINATION_EVENTS = frozenset({"os.link", "os.symlink", "shutil.copyfile"})
+#: Caller-selected output: inside a world it may land only where the output
+#: guard admits it (a declared generated/ child or the .venv/ scratch).
+_CALLER_SELECTED_PREFIXES = ("<EXPLICIT_OUT_DIR>/", "<OUT_DIR>/", "<PRIVATE_REPORT_DIR>/",
+                             "<RESTORED_COPY>/")
+_CALLER_SELECTED_TOKENS = frozenset({
+    "<EXPLICIT_OUT_FILE>", "<EXPLICIT_REPORT_OUT>", "<EXPLICIT_LOCAL_OUTPUT>",
+    "<TRACE_DEBUG_FILE>", "<LOS_OBSERVATIONS>", "<COUNTER_FILE>",
+})
+
+
+def _world_relative(raw: str, binding: dict) -> str | None:
+    """``<STATE>/…`` or a repository path for one absolute audited path; None outside."""
+    return _world_relative_cached(raw, str(binding["root"]), binding.get("state_dir"),
+                                  bool(binding.get("state_anchored")))
+
+
+@functools.cache
+def _world_relative_cached(raw: str, root: str, state_dir: str | None,
+                           anchored: bool) -> str | None:
+    lexical = Path(raw).resolve()
+    if state_dir and anchored:
+        try:
+            return "<STATE>/" + lexical.relative_to(Path(state_dir).resolve()).as_posix()
+        except ValueError:
+            pass
+    try:
+        rel = lexical.relative_to(Path(root).resolve()).as_posix()
+    except ValueError:
+        return None
+    if rel in {"", "."}:
+        return None
+    head, _, name = rel.rpartition("/")
+    match = _TEMP_BASENAME.match(name)
+    if match:
+        rel = f"{head}/{match.group(1)}" if head else match.group(1)
+    return rel
+
+
+def _is_tool_process(binding: dict) -> bool:
+    """A LearningOS tool process, as opposed to test or procedure scaffolding."""
+    argv = binding.get("argv") or []
+    first = str(argv[0]).replace(os.sep, "/") if argv else ""
+    return first.startswith("tools/") or "/tools/" in first
+
+
+@functools.cache
+def _writer_key(identity: str) -> str | None:
+    """The effects.yaml key for a hook writer identity, if it names a tools/ file."""
+    if identity.startswith("tools/"):
+        return identity
+    head, _, rest = identity.partition(".")
+    if head not in {"learning_os", "migrations"} or not rest:
+        return None
+    base = ROOT / "tools" / head / Path(*rest.split("."))
+    for candidate in (base.with_suffix(".py"), base / "__init__.py"):
+        if candidate.is_file():
+            return candidate.relative_to(ROOT).as_posix()
+    return None
+
+
+@functools.cache
+def _effects() -> dict:
+    import test_arch_writes as census
+
+    return census._load_effects_yaml()
+
+
+@functools.cache
+def _declares(writer_key: str, rel: str) -> bool:
+    """True when one declared destination of the writer covers the world-relative path."""
+    from learning_os.store.contracts import write_scopes
+
+    for dest in _effects()[writer_key].get("destinations", []):
+        if dest.startswith("<STATE>/"):
+            if rel.startswith("<STATE>/") and fnmatch.fnmatchcase(rel, dest):
+                return True
+            continue
+        if rel.startswith("<STATE>/"):
+            continue
+        if dest in _CALLER_SELECTED_TOKENS or dest.startswith(_CALLER_SELECTED_PREFIXES):
+            if write_scopes.admitted_repository_output(tuple(rel.split("/"))):
+                return True
+            continue
+        if dest == "<GIT_INDEX_AND_COMMIT>":
+            if rel == ".git" or rel.startswith(".git/"):
+                return True
+            continue
+        if dest.startswith(("<", "$", "../", "~")):
+            continue  # destinations outside every world
+        try:
+            if write_scopes.scope_matches(rel, dest):
+                return True
+        except write_scopes.WriteScopeError:
+            continue
+    return False
+
+
+@functools.cache
+def _authorized(writer_key: str, rel: str) -> bool:
+    """Owned territory outside A19's domain needs the engine or a recorded exception."""
+    import test_arch_writes as census
+
+    from learning_os.store.contracts import write_scopes
+
+    if rel.startswith("<STATE>/") or rel == "operations" or rel.startswith("operations/"):
+        return True  # A19's domain: its owner check runs over the same records
+    try:
+        if not write_scopes.in_owned_territory(rel):
+            return True
+    except write_scopes.WriteScopeError:
+        return False
+    if writer_key == census._CANONICAL_ENGINE_MODULE:
+        return not any(write_scopes.scope_matches(rel, p) for p in ("bases/**", "boards/**"))
+    exception = census._RECORDED_CANONICAL_EXCEPTIONS.get(writer_key)
+    if exception is None:
+        return False
+    return any(write_scopes.scope_matches(rel, dest) for dest in exception[1])
+
+
+def _conformance_in_log(log_path: Path) -> tuple[dict[str, list[str]], set[str]]:
+    """Runtime writer conformance for one log; returns violations and witnessed writers."""
+    import arch_audit_hook
+
+    violations: dict[str, list[str]] = {}
+    witnessed: set[str] = set()
+
+    def add(signature: str, evidence: str) -> None:
+        violations.setdefault(signature, []).append(evidence)
+
+    records = _read_population_log(log_path, add)
+    if records is None:
+        return violations, witnessed
+    worlds: dict = {}
+    for record in records:
+        event = record.get("event")
+        if event == "installed":
+            worlds[record.get("pid")] = record
+            continue
+        if event not in _ALL_PATH_EVENTS and event not in _DESTINATION_EVENTS:
+            continue
+        if event in {"open", "io.open"} and record.get("mode") == "r":
+            continue
+        binding = worlds.get(record.get("pid"))
+        if binding is None or binding.get("root") is None:
+            continue  # A19 fails closed on unbound writers and worlds
+        paths = record.get("resolved_paths") or record.get("paths") or []
+        if event in _DESTINATION_EVENTS:
+            paths = paths[-1:]
+        writer = record.get("writer")
+        if writer in arch_audit_hook.MECHANICAL_HELPERS:
+            writer = record.get("caller")
+        for raw in paths:
+            if not isinstance(raw, str) or not os.path.isabs(raw):
+                add(f"{log_path.name}::unresolved", str(record))
+                continue
+            rel = _world_relative(raw, binding)
+            if rel is None:
+                continue  # outside the world: the output guard and the census
+            evidence = (f"{log_path.name}: {event} {rel} writer={record.get('writer')} "
+                        f"caller={record.get('caller')} at {record.get('writer_file')}:"
+                        f"{record.get('writer_line')}")
+            if writer is None:
+                if _is_tool_process(binding):
+                    add(f"{rel}::unknown-writer", evidence)
+                continue  # test or procedure scaffolding, not LearningOS code
+            key = _writer_key(writer)
+            if key is None or key not in _effects():
+                add(f"{rel}::undeclared-writer={writer}", evidence)
+                continue
+            witnessed.add(key)
+            if not _declares(key, rel):
+                add(f"{rel}::outside-declaration={key}", evidence)
+            if not _authorized(key, rel):
+                add(f"{rel}::unauthorized={key}", evidence)
+    return violations, witnessed
+
+
+def _conformance_population(audit_dir: Path) -> tuple[dict[str, list[str]], set[str]]:
+    merged: dict[str, list[str]] = {}
+    witnessed: set[str] = set()
+    for log_path in sorted(audit_dir.glob("*.jsonl")):
+        violations, seen = _conformance_in_log(log_path)
+        for signature, evidence in violations.items():
+            merged.setdefault(signature, []).extend(evidence)
+        witnessed |= seen
+    return merged, witnessed
+
+
+def test_runtime_writer_conformance_population():
+    """2A §5.5/§5.6: every witnessed world write has a resolved, declared, authorized writer.
+
+    Also proves witness coverage: every writer whose effects.yaml disposition
+    is ``witness: runtime`` was observed writing in this CI population.
+    """
+    audit_dir = _audit_dir()
+    logs = sorted(audit_dir.glob("*.jsonl")) if audit_dir else []
+    if not logs:
+        if os.environ.get("CI"):
+            raise AssertionError("2A runtime gate: CI requires audit witnesses, found none")
+        pytest.skip("2A runtime gate: no audit logs this run (local partial run)")
+    violations, witnessed = _conformance_population(audit_dir)
+    assert not violations, "2A runtime writer violations:\n" + "\n".join(
+        f"{sig}: {violations[sig][0]}" for sig in sorted(violations))
+    if os.environ.get("CI"):
+        expected = {rel for rel, row in _effects().items() if row.get("witness") == "runtime"}
+        missing = sorted(expected - witnessed)
+        assert not missing, (
+            f"2A witness accounting: writers declared runtime-witnessed were not observed "
+            f"in the CI population: {missing}")
 
 
 # --- synthetic controls (fabricated logs; no scenario world needed) ---

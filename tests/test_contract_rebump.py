@@ -62,12 +62,16 @@ def test_rebump_refuses_the_base_s_own_entry(contract_repo):
 
 
 def test_rebump_folds_only_the_branch_entry_above_base(contract_repo):
-    schema_dir, path, repo = contract_repo
-    branch = bump("branch shape", schema_dir=schema_dir, path=path)
-    assert branch["contract_version"] == 2
+    from arch_writes_fixtures import audit_window
 
-    folded = rebump("branch shape, folded", schema_dir=schema_dir, path=path,
-                    base=BASE_REF)
+    schema_dir, path, repo = contract_repo
+    # 2A §5.6: the runtime witness for data_contract.py's recorded exception.
+    with audit_window(repo, "witness", "data-contract-rebump"):
+        branch = bump("branch shape", schema_dir=schema_dir, path=path)
+        assert branch["contract_version"] == 2
+
+        folded = rebump("branch shape, folded", schema_dir=schema_dir, path=path,
+                        base=BASE_REF)
     assert folded["contract_version"] == 2          # no third version on this branch
     assert len(folded["history"]) == 2              # the iteration replaced, not appended
     assert folded["history"][-1]["note"] == "branch shape, folded"

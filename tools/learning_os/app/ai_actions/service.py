@@ -67,7 +67,6 @@ from learning_os.store.ai_actions.binding import (
 )
 from learning_os.store.ai_actions.registry import ActionRegistry, AdapterRegistry
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
-from learning_os.store.ai_actions.storage import atomic_text as _atomic_text
 from learning_os.store.ai_actions.support import (
     Clock,
     check_request_id,
@@ -92,7 +91,6 @@ from learning_os.store.contracts.gateway import (
 from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
-    path_segment,
     require_write_scope,
 )
 from learning_os.store.evidence import replay_for_request
@@ -652,16 +650,16 @@ class AIActionService:
             raise ContinuationRefusedError(
                 f"route {route_id} continuation refused: its slice tips the bundle "
                 f"over the {MAX_SLICE_BYTES_TOTAL}-byte ceiling")
-        record_path = (f"{SLICE_BUNDLE_PREFIX}/continuations/"
-                       f"pass-{int(record.pass_number)}-{path_segment(route_id)}.yaml")
-        record_target = bundle_dir / record_path
-        record_target.parent.mkdir(parents=True, exist_ok=True)
-        _atomic_text(record_target, _dump_yaml(continuation_record_dict(record)))
-        self.repository.write_bundle_slice(
-            str(request["id"]), index_entry["bundle_path"], body)
         index_records.append(index_entry)
-        _atomic_text(bundle_dir / SLICE_BUNDLE_PREFIX / "index.json",
-                     json.dumps(index_records, indent=2) + "\n")
+        record_path = self.repository.write_continuation(
+            str(request["id"]),
+            pass_number=int(record.pass_number),
+            route_id=route_id,
+            record_text=_dump_yaml(continuation_record_dict(record)),
+            slice_relative=index_entry["bundle_path"],
+            slice_body=body,
+            index_text=json.dumps(index_records, indent=2) + "\n",
+        )
         passes = list(request.get("reading_passes") or [])
         passes.append({"route_id": route_id, "pass": record.pass_number,
                        "bundle_path": index_entry["bundle_path"],

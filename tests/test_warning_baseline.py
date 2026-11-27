@@ -94,8 +94,12 @@ def test_an_equal_total_does_not_hide_a_trade():
 # ---- the file --------------------------------------------------------------
 
 def test_a_written_baseline_round_trips(tmp_path):
+    from arch_writes_fixtures import audit_window
+
     signatures = {("LOCATOR-VAGUE", "a.yaml"): 3, ("HYGIENE-UNFILED", ""): 1}
-    _write(tmp_path, signatures)
+    # 2A §5.6: the runtime witness for store/warning_baseline.py.
+    with audit_window(tmp_path, "witness", "warning-baseline-write"):
+        _write(tmp_path, signatures)
     loaded, meta = wb.load_baseline(tmp_path)
     assert loaded == Counter(signatures)
     assert meta["total"] == 4

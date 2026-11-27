@@ -187,8 +187,80 @@ def test_guard_tool_output_path_refuses_case_folded_protected_roots(tmp_path: Pa
         with ExitStack() as stack, pytest.raises(WriteScopeError, match="protected root knowledge/"):
             open_guarded_directory(repo / "Knowledge", stack)
     # A peer whose name merely starts like a protected root is still allowed.
-    peer = repo / "generated" / "Records-report.json"
+    peer = repo / "generated" / "reports" / "Records-report.json"
     assert guard_tool_output_path(peer, repo_root=repo) == peer
+
+
+def test_guard_admits_only_declared_generated_children_inside_a_repository(tmp_path: Path):
+    """2A N-8: caller-chosen output in a repository lands only in a declared generated/ child."""
+    from learning_os.store.contracts.write_scopes import (
+        declared_generated_children,
+        guard_tool_output_path,
+    )
+
+    repo = tmp_path / "repo"
+    (repo / "system/contracts").mkdir(parents=True)
+    (repo / "system/contracts/capabilities.yaml").write_text("schema: 1\n", encoding="utf-8")
+    refused = (
+        "archive/inbox/2026/rogue/.claude/settings.json",  # REVIEW-V3 N-8 reproduction
+        "archive/workspaces/2026/x.md",
+        "boards/atlas.canvas",
+        "bases/shelf.base",
+        "migration/reports/x.md",
+        "tools/x.py",
+        "tests/x.py",
+        "workbench/x.md",
+        "AGENTS.md",
+        "generated/manifest.json",
+        "generated/undeclared-child/x.json",
+        "Generated/reports/x.json",
+    )
+    for relative in refused:
+        with pytest.raises(WriteScopeError, match="repository|protected root"):
+            guard_tool_output_path(repo / relative, repo_root=repo)
+    with pytest.raises(WriteScopeError, match="repository root"):
+        guard_tool_output_path(repo, repo_root=repo, allow_existing_dir=True)
+    children = declared_generated_children()
+    assert {"reports", ".text-cache", "material-search", "material-outlines"} <= children
+    for child in children:
+        admitted = repo / "generated" / child / "out.json"
+        assert guard_tool_output_path(admitted, repo_root=repo) == admitted
+    # The documented repo-confined scratch (build-write-envelope.md) stays admitted.
+    scratch = repo / ".venv" / "tmp" / "review.json"
+    assert guard_tool_output_path(scratch, repo_root=repo) == scratch
+    outside = tmp_path / "scratch" / "out.json"
+    assert guard_tool_output_path(outside, repo_root=repo) == outside
+
+
+def test_owned_territory_comes_from_production_contracts_and_the_guard_refuses_it(tmp_path: Path):
+    """2A N-1/N-8: owned territory is production-derived and contained in the guard's refusal."""
+    from learning_os.store.contracts.write_scopes import (
+        capability_write_scopes,
+        guard_tool_output_path,
+        in_owned_territory,
+        owned_territory,
+    )
+    from learning_os.store.fingerprint import CANONICAL_ROOTS
+
+    territory = owned_territory()
+    assert {f"{name}/**" for name in CANONICAL_ROOTS} <= set(territory)
+    assert {"operations/**", "bases/**", "boards/**"} <= set(territory)
+    assert set(capability_write_scopes()) <= set(territory)
+    assert "archive/inbox/**" in territory
+    assert not any(pattern.startswith(("generated/", "tools/", "tests/")) for pattern in territory)
+    assert in_owned_territory("operations/transactions/transaction-20991231-000000-001.yaml")
+    assert in_owned_territory("system/contracts/capabilities.yaml")
+    assert in_owned_territory("archive/inbox/2026/drop.md")
+    assert not in_owned_territory("generated/reports/x.json")
+    assert not in_owned_territory("system/developer/CODEMAP.md")
+
+    repo = tmp_path / "repo"
+    (repo / "system/contracts").mkdir(parents=True)
+    (repo / "system/contracts/capabilities.yaml").write_text("schema: 1\n", encoding="utf-8")
+    for pattern in territory:
+        sample = "/".join("x" if part in {"*", "**"} else part for part in pattern.split("/"))
+        with pytest.raises(WriteScopeError):
+            guard_tool_output_path(repo / sample, repo_root=repo)
 
 
 def test_boundary_write_refuses_parent_traversal_through_missing_child(tmp_path: Path):

@@ -451,10 +451,14 @@ def test_prune_tool_reports_and_supports_dry_run(tmp_path: Path):
     assert dry.returncode == 0, dry.stderr
     assert "would keep" in dry.stdout
     assert traces_path(mini).read_text(encoding="utf-8") == before
-    real = subprocess.run(
-        [sys.executable, str(TOOLS / "diagnostics_prune.py"),
-         "--root", str(mini), "--keep-last", "500"],
-        capture_output=True, text=True, timeout=120)
+    from arch_writes_fixtures import audit_window
+
+    # 2A §5.6: the runtime witness for diagnostics_prune.py.
+    with audit_window(mini, "witness", "diagnostics-prune") as window:
+        real = subprocess.run(
+            [sys.executable, str(TOOLS / "diagnostics_prune.py"),
+             "--root", str(mini), "--keep-last", "500"],
+            capture_output=True, text=True, timeout=120, env=window.child_env())
     assert real.returncode == 0, real.stderr
     assert "kept" in real.stdout
 

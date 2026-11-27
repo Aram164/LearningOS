@@ -24,6 +24,8 @@ entries:
   - {glob: "operations/ai-actions/**", sink: "engine:apply", capabilities: [ai-action.delivery.apply]}
   - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
   - {glob: "operations/migrations/**", sink: module, owner: migrations}
+  # Recorded validation-warning baseline (make warnings --update): Core state with one store owner.
+  - {glob: "operations/validation-warning-baseline.yaml", sink: module, owner: learning_os.store.warning_baseline}
   - {glob: "operations/migrations/projects-to-modules-v62/**", sink: "engine:apply", capabilities: [migration.projects-to-modules-v62]}
   - {glob: "operations/migrations/python-topic-sessions-v63/**", sink: "engine:apply", capabilities: [migration.python-topic-sessions-v63]}
   - {glob: "<STATE>/learningos-*-touched.json", sink: module, owner: learning_os.store.session_ledger}

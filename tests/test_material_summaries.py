@@ -70,6 +70,27 @@ def test_promote_keeps_draft_verbatim_with_provenance(tmp_path: Path, capsys):
     assert json.loads(out)["digest"] == DIGEST
 
 
+def test_promote_into_the_repository_summary_tree_is_witnessed(tmp_path: Path, capsys,
+                                                              monkeypatch):
+    """2A §5.6: the runtime witness for material_summarize.py's knowledge/summaries exception."""
+    from arch_writes_fixtures import audit_window
+
+    ms = _material_summarize()
+    repo = tmp_path / "repo"
+    summaries = repo / "knowledge" / "summaries"
+    summaries.mkdir(parents=True)
+    monkeypatch.setattr(ms, "REPO", repo)
+    monkeypatch.setattr(ms, "SUMMARY_CACHE", summaries)
+    text = _text_cache(tmp_path)
+    draft = tmp_path / "draft.md"
+    draft.write_text("A detailed chapter compression. " * 20, encoding="utf-8")
+    with audit_window(repo, "witness", "material-summarize-promote"):
+        code = _promote(ms, summaries, text, draft)
+    out, _ = capsys.readouterr()
+    assert code == 0, out
+    assert (summaries / DIGEST / "pages-1-3" / "summary.md").is_file()
+
+
 def test_promote_refuses_without_writing(tmp_path: Path, capsys):
     ms = _material_summarize()
     text = _text_cache(tmp_path)

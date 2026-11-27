@@ -52,6 +52,7 @@
   effect: cache
   destinations: ["operations/diagnostics/**", "generated/derived-state/**", "generated/reports/validation-report.cache.json", "generated/reports/validation-report-receipts.cache.json"]
   reason: "Prunes the disposable diagnostics trace store, unreferenced derived-state blobs, and retired report cache sidecars."
+  witness: runtime
 
 "tools/evaluate_operator_questions.py":
   effect: tooling
@@ -62,6 +63,8 @@
   effect: projection
   destinations: ["system/schema/capabilities/**", "system/schema/capability-envelope.schema.json", "system/schema/envelope-error-details.fragment.json"]
   reason: "Generates capability payload schemas and the envelope error-details fragment from request schemas and the CLI parser (CONTRACT_ROOTS)."
+  contract: "system/DEVELOPER.md (capability task row: generated contract artifacts, --check in CI)"
+  witness: "deferred: 2B: witness the schema regeneration 2B runs under Checklist 0.2 #2 (it writes the code checkout itself, so no fixture test exists)"
 
 "tools/ingest_transcript.py":
   effect: operational
@@ -80,6 +83,7 @@
     - "work/active/*/outputs/applied-check.json"
   reason: "Maintains three reconciliation artifacts in an active or archived reconciliation workspace, plus guarded explicit drafts."
   contract: "tree-contract.yaml (workspace output bundles); tools/README.md (library reconciliation)"
+  witness: runtime
 
 "tools/material_outline.py":
   effect: cache
@@ -91,6 +95,7 @@
   destinations: ["knowledge/summaries/**", "<EXPLICIT_OUT_DIR>/**"]
   reason: "Publishes source-bound digest-keyed chapter summaries into knowledge/summaries/ (or a guarded test --cache-dir) only via --promote."
   contract: "system/contracts/tree-contract.yaml#knowledge/summaries (tools/material_summarize.py --promote)"
+  witness: runtime
 
 "tools/material_text.py":
   effect: cache
@@ -107,11 +112,36 @@
   destinations: ["curriculum/**", "work/active/*/CONTEXT.md", "work/active/workspace-degree-planning", "sources/collections/degree-module-anchors.yaml", "migration/curriculum-v2/**"]
   reason: "Retired idempotent v1->v2 curriculum migration preserving originals in migration/curriculum-v2/."
   contract: "tools/migrations/README.md (retired v1->v2 curriculum migration)"
+  witness: "deferred: Phase 4: the retired migration refuses --apply and writes nothing (test_migration_lifecycle); Phase 4 accounts for its recorded receipts in the migration-receipt baseline"
 
 "tools/move_map.py":
   effect: tooling
-  destinations: ["tools/**", "tests/**", "tests/architecture/moves.yaml", "system/**", "pyproject.toml", "Makefile"]
-  reason: "Mechanical module/path move tool updating imports/references across tools/, tests/, system/, pyproject.toml, Makefile via git mv (--apply only; leaves all DATA_ROOTS forbidden)."
+  destinations: ["tools/**", "tests/**", "tests/architecture/moves.yaml",
+                 "system/adr/**",
+                 "system/developer/**",
+                 "system/procedures/**",
+                 "system/skills/**",
+                 "system/templates/**",
+                 "system/ACCEPTANCE-TESTS.md",
+                 "system/AI-ACTIONS.md",
+                 "system/ARCHITECTURE.md",
+                 "system/BUILD-SPEC.md",
+                 "system/CLAUDE.md",
+                 "system/CRITIQUE-POINTS.md",
+                 "system/DEVELOPER.md",
+                 "system/MIGRATION.md",
+                 "system/OPERATOR-POLICY.md",
+                 "system/OPERATOR.md",
+                 "system/PHILOSOPHY.md",
+                 "system/PILOT-CRITERIA.md",
+                 "system/PLAN-CREATION-SOP.md",
+                 "system/SEMANTIC-CONTRACT.md",
+                 "system/SPEC-README.md",
+                 "system/VALIDATION.md",
+                 "system/WHY-REDESIGN.md",
+                 "system/WORKFLOWS.md",
+                 "pyproject.toml", "Makefile"]
+  reason: "Mechanical module/path move tool updating imports/references across tools/, tests/, system/ (never its contract roots), pyproject.toml, Makefile via git mv (--apply only; leaves all DATA_ROOTS forbidden)."
   contract: "tools/README.md (OD9 maintenance move tool; --apply only)"
 
 "tools/refresh_amls_fixture.py":
@@ -158,11 +188,6 @@
   effect: operational
   destinations: ["<PRIVATE_REPORT_DIR>/**"]
   reason: "Writes incremental full-report recovery logs in private non-canonical report dirs."
-
-"tools/learning_os/app/ai_actions/service.py":
-  effect: operational
-  destinations: ["operations/ai-actions/**"]
-  reason: "Stages slice continuation records and bundle indexes inside operational request directories."
 
 "tools/learning_os/app/backup_manifest.py":
   effect: operational
@@ -218,11 +243,14 @@
   effect: operational
   destinations: ["operations/ai-actions/**"]
   reason: "Manages non-canonical AI action requests, slice bundles, and delivery staging under operations/ai-actions/."
+  witness: runtime
 
 "tools/learning_os/store/contracts/data_contract.py":
   effect: projection
   destinations: ["system/contracts/data-contract.yaml"]
   reason: "Updates the schema fingerprint contract file on explicit --bump (CONTRACT_ROOTS, never DATA_ROOTS)."
+  contract: "system/developer/changing-contracts.md (data-contract bump)"
+  witness: runtime
 
 "tools/learning_os/store/contracts/doc_blocks.py":
   effect: projection
@@ -233,6 +261,8 @@
   effect: projection
   destinations: ["system/contracts/manifest-contract.yaml"]
   reason: "Updates the projection manifest contract file on explicit bump."
+  contract: "system/developer/changing-contracts.md (manifest-contract bump)"
+  witness: "deferred: Phase 6: witness the manifest-contract bump Phase 6 makes when it changes the manifest"
 
 "tools/learning_os/store/contracts/perimeter.py":
   effect: projection
@@ -258,6 +288,7 @@
   effect: cache
   destinations: ["operations/diagnostics/**"]
   reason: "Appends and prunes disposable diagnostics trace records."
+  witness: runtime
 
 "tools/learning_os/store/diagnostics/tracer.py":
   effect: cache
@@ -268,6 +299,7 @@
   effect: operational
   destinations: ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
   reason: "Provides low-level O_EXCL|O_NOFOLLOW temp-file and atomic-replace helpers invoked by declared callers."
+  witness: helper
 
 "tools/learning_os/store/materials/reading_cards.py":
   effect: operational
@@ -301,8 +333,9 @@
 
 "tools/learning_os/store/transactions.py":
   effect: canonical-engine
-  destinations: ["knowledge/**", "sources/**", "records/**", "work/**", "curriculum/**", "projects/**", "operations/transactions/**", "operations/legacy/**", "operations/goal-ledger.yaml", "operations/ai-actions/**", "operations/migrations/**", "generated/manifest.json"]
+  destinations: ["knowledge/**", "sources/**", "records/**", "work/**", "curriculum/**", "projects/**", "operations/transactions/**", "operations/legacy/**", "operations/goal-ledger.yaml", "operations/ai-actions/**", "operations/migrations/**", "archive/inbox/**", "generated/manifest.json"]
   reason: "Sole canonical write engine. Recovery can also invalidate the stale generated manifest marker."
+  witness: runtime
 
 "tools/learning_os/store/validation_cache.py":
   effect: cache
@@ -313,3 +346,5 @@
   effect: operational
   destinations: ["operations/validation-warning-baseline.yaml"]
   reason: "Persists the recorded validation-warning baseline file under operations/."
+
+  witness: runtime

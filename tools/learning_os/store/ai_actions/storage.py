@@ -22,12 +22,17 @@ from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, Request
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import read_yaml as _read_yaml
-from learning_os.store.contracts.write_scopes import WriteScopeError, scoped_write_target
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    path_segment,
+    scoped_write_target,
+)
 from learning_os.store.fs import (
     atomic_write_bytes_exclusive,
     atomic_write_text_exclusive,
     sync_directory,
 )
+from learning_os.store.materials.slices import SLICE_BUNDLE_PREFIX
 
 
 def atomic_text(path: Path, content: str) -> None:
@@ -303,6 +308,39 @@ class FilesystemAIActionRepository:
         atomic_write_bytes_exclusive(
             target, body, boundary=req_dir, error_factory=DeliveryValidationError
         )
+
+    def write_continuation(
+        self,
+        request_id: str,
+        *,
+        pass_number: int,
+        route_id: str,
+        record_text: str,
+        slice_relative: str,
+        slice_body: bytes,
+        index_text: str,
+    ) -> str:
+        """Persist one reading-pass continuation inside its request bundle.
+
+        Storage builds these paths and owns the writes (2A, Bar 4 v3 §5.4); the
+        service only orchestrates. Order and atomicity are unchanged: the
+        continuation record, then the slice body, then the slice index, each
+        written atomically. Returns the record's bundle-relative path.
+        """
+        req_dir = self.request_dir(request_id)
+        continuations = req_dir / SLICE_BUNDLE_PREFIX / "continuations"
+        continuations.mkdir(parents=True, exist_ok=True)
+        name = f"pass-{int(pass_number)}-{path_segment(route_id)}.yaml"
+        atomic_write_text_exclusive(
+            continuations / name, record_text, boundary=req_dir,
+            error_factory=DeliveryValidationError,
+        )
+        self.write_bundle_slice(request_id, slice_relative, slice_body)
+        atomic_write_text_exclusive(
+            req_dir / SLICE_BUNDLE_PREFIX / "index.json", index_text, boundary=req_dir,
+            error_factory=DeliveryValidationError,
+        )
+        return f"{SLICE_BUNDLE_PREFIX}/continuations/{name}"
 
     def discard_staged_delivery(self, staged: Path) -> None:
         staged_bundle = self._checked_staged_delivery(staged)

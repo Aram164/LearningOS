@@ -183,6 +183,63 @@ def scoped_write_target(
     return target
 
 
+_PACKAGE_ROOT = Path(__file__).resolve().parents[4]
+
+
+def capability_write_scopes(root: Path | None = None) -> tuple[str, ...]:
+    """Every normalized write scope the capability catalogue grants."""
+    return _capability_write_scopes((root or _PACKAGE_ROOT).resolve())
+
+
+@cache
+def _capability_write_scopes(base: Path) -> tuple[str, ...]:
+    from learning_os.store.contracts.capability_catalog import (
+        command_definitions,
+        domain_capability_definitions,
+    )
+
+    scopes: set[str] = set()
+    for definition in command_definitions(base, include_internal=True).values():
+        scopes.update(normalize_scope_pattern(scope) for scope in definition.writes)
+    for definition in domain_capability_definitions(base).values():
+        scopes.update(normalize_scope_pattern(scope) for scope in definition.writes)
+    return tuple(sorted(scopes))
+
+
+def owned_territory(root: Path | None = None) -> tuple[str, ...]:
+    """Repository scopes that belong to an owner other than a declaring tool (2A, N-1).
+
+    Built from production contracts only: the canonical fingerprint roots,
+    ``operations/``, every capability write scope, and the tree-contract roots
+    whose owner is ``interface``. A tree-contract owner marks a root as owned;
+    it never authorizes a module. The output guard is stricter than this set
+    (it admits only declared ``generated/`` children), so it refuses all of it.
+    """
+    return _owned_territory((root or _PACKAGE_ROOT).resolve())
+
+
+@cache
+def _owned_territory(base: Path) -> tuple[str, ...]:
+    from learning_os.store.contracts import tree_contract
+    from learning_os.store.fingerprint import CANONICAL_ROOTS
+
+    patterns = {f"{name}/**" for name in CANONICAL_ROOTS}
+    patterns.add("operations/**")
+    patterns.update(_capability_write_scopes(base))
+    patterns.update(
+        f"{entry.path}/**"
+        for entry in tree_contract.load(base).directories
+        if entry.path and entry.owner == "interface"
+    )
+    return tuple(sorted(normalize_scope_pattern(pattern) for pattern in patterns))
+
+
+def in_owned_territory(relative: str, root: Path | None = None) -> bool:
+    """True when a safe repository-relative path lies in owned territory."""
+    normalized = normalize_relative_path(relative)
+    return any(scope_matches(normalized, pattern) for pattern in owned_territory(root))
+
+
 _REPO_MARKER_PATHS: tuple[tuple[str, ...], ...] = (
     ("system", "contracts", "capabilities.yaml"),
     ("system", "contracts", "tree-contract.yaml"),
@@ -195,6 +252,48 @@ def _protected_repo_output_roots() -> frozenset[str]:
     from learning_os.store.fingerprint import DATA_ROOTS
 
     return frozenset((*DATA_ROOTS, "system", "operations"))
+
+
+@cache
+def declared_generated_children() -> frozenset[str]:
+    """``generated/`` children the code's own tree contract declares.
+
+    The code's contract decides the shape for every repository it guards, so a
+    fixture repository without a tree contract follows the same shape. An
+    unreadable contract admits no in-repository output at all (fail closed).
+    """
+    from learning_os.store.contracts.tree_contract import (
+        TreeContractError,
+        generated_directories,
+    )
+
+    try:
+        return generated_directories(_PACKAGE_ROOT)
+    except TreeContractError:
+        return frozenset()
+
+
+#: The checkout's gitignored ``.venv/`` is the one documented in-repository
+#: scratch home for an agent whose harness confines writes to the checkout
+#: (``system/procedures/build-write-envelope.md``; ``seal_envelope``'s
+#: ``_scratch_path_problem``). Dot-prefixed components are invisible to the
+#: canonical fingerprint and to Git, and it lies outside owned territory.
+REPOSITORY_SCRATCH = ".venv"
+
+
+def admitted_repository_output(parts: tuple[str, ...] | list[str]) -> bool:
+    """True when repository-relative ``parts`` lie in an admitted output area.
+
+    The areas are a ``generated/`` child the tree contract declares and the
+    checkout's ``.venv/`` scratch. Everything else in a repository is refused.
+    """
+    if len(parts) >= 1 and parts[0] == REPOSITORY_SCRATCH:
+        return True
+    return (
+        len(parts) >= 2
+        and parts[0] == "generated"
+        and parts[1] in declared_generated_children()
+    )
 
 
 def _is_repo_root(path: Path) -> bool:
@@ -210,12 +309,17 @@ def guard_tool_output_path(
     repo_root: Path | None = None,
     allow_existing_dir: bool = False,
 ) -> Path:
-    """Refuse caller-supplied output targets inside protected repository roots or symlinks.
+    """Refuse caller-supplied output targets inside a repository or through symlinks.
 
-    Rejects symlink components (including dangling target symlinks) and refuses
-    targets that lexically or after resolution land inside ``DATA_ROOTS``,
-    ``system/``, or ``operations/`` of any discovered or specified LearningOS
-    repository, while permitting external scratch/temp/sibling destinations.
+    Rejects symlink components (including dangling target symlinks). Inside any
+    discovered or specified LearningOS repository, a target is admitted only
+    when it lies, lexically and after resolution, inside a ``generated/`` child
+    the tree contract declares or the checkout's ``.venv/`` scratch (2A, N-8).
+    ``DATA_ROOTS``, ``system/`` and
+    ``operations/`` keep their protected-root refusal; every other repository
+    path (``archive/``, ``boards/``, ``tools/``, ``generated/manifest.json``,
+    top-level files...) is refused too. External scratch, temp and sibling
+    destinations stay permitted.
     """
     try:
         raw_os = os.fspath(raw_path)
@@ -297,6 +401,12 @@ def guard_tool_output_path(
             if hit is not None:
                 raise WriteScopeError(
                     f"refusing tool output inside protected root {hit}/: {raw_path}"
+                )
+            if not admitted_repository_output(rel.parts):
+                raise WriteScopeError(
+                    "refusing tool output inside the repository: only a declared "
+                    "generated/ child or the .venv/ scratch is admitted; write it "
+                    f"outside the repository: {raw_path}"
                 )
 
     return lexical

@@ -843,9 +843,17 @@ def write_local_output_file(
     if hasattr(os, "O_CLOEXEC"):
         file_flags |= os.O_CLOEXEC
     try:
-        fd = call_dir_fd_op(
-            functools.partial(os.open, target.name, file_flags, 0o644, dir_fd=parent_fd)
-        )
+        # A direct call, so the write census judges these flags here: a partial
+        # over an opener is refused (Bar 4 v3 N-2). Same retry as call_dir_fd_op.
+        for attempt in range(_DIR_FD_EINVAL_ATTEMPTS):
+            try:
+                fd = os.open(target.name, file_flags, 0o644, dir_fd=parent_fd)
+            except OSError as exc:
+                if exc.errno != errno.EINVAL or attempt == _DIR_FD_EINVAL_ATTEMPTS - 1:
+                    raise
+                time.sleep(0)
+            else:
+                break
     finally:
         os.close(parent_fd)
     try:

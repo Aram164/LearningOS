@@ -290,7 +290,27 @@ def _current_phase():
         return None
 
 
+_REPO_MARKER = ("system", "contracts", "tree-contract.yaml")
+_TOOLS_PREFIX_CACHE: dict[str, bool] = {}
+
+
+def _is_learningos_checkout(prefix: str) -> bool:
+    """True when ``prefix`` is a LearningOS checkout, so ``prefix/tools/`` is its code."""
+    hit = _TOOLS_PREFIX_CACHE.get(prefix)
+    if hit is None:
+        hit = os.path.isfile(os.path.join(prefix, *_REPO_MARKER))
+        _TOOLS_PREFIX_CACHE[prefix] = hit
+    return hit
+
+
 def _production_frames() -> list[tuple[str, str, int]]:
+    """Every LearningOS ``tools/`` frame on the stack, innermost first.
+
+    Package frames map to ``learning_os.*`` and migration frames to
+    ``migrations.*``. Every other ``tools/`` file maps to its exact standalone
+    identity ``tools/<path>``, its ``effects.yaml`` key (2A, Bar 4 v3 §2.4).
+    So a standalone callback is never credited to the package frame calling it.
+    """
     import traceback
 
     result = []
@@ -303,17 +323,29 @@ def _production_frames() -> list[tuple[str, str, int]]:
                 relative = filename[index + len(marker):].removesuffix(".py")
                 result.append((prefix + relative.replace("/", "."), frame.filename, frame.lineno))
                 break
+        else:
+            index = filename.rfind("/tools/")
+            if index >= 0 and _is_learningos_checkout(filename[:index]):
+                result.append((f"tools/{filename[index + len('/tools/'):]}",
+                               frame.filename, frame.lineno))
     return result
+
+
+def immediate_caller(frames: list[tuple[str, str, int]]) -> str | None:
+    """The first frame outside the innermost writer: a helper's real caller."""
+    if not frames:
+        return None
+    helper = frames[0][0]
+    return next((module for module, _, _ in frames if module != helper), None)
 
 
 def delegated_owner(frames: list[tuple[str, str, int]]) -> str | None:
     if not frames:
         return None
-    helper = frames[0][0]
-    allowed = MECHANICAL_HELPERS.get(helper)
+    allowed = MECHANICAL_HELPERS.get(frames[0][0])
     if allowed is None:
         return None
-    caller = next((module for module, _, _ in frames if module != helper), None)
+    caller = immediate_caller(frames)
     return caller if caller in allowed else None
 
 
@@ -534,7 +566,11 @@ def _hook(event: str, args) -> None:
             }
         if record is not None:
             if record.get("writer") in MECHANICAL_HELPERS:
-                record["delegated_owner"] = delegated_owner(_production_frames())
+                frames = _production_frames()
+                # A19 credits only an allowed immediate caller; the runtime writer
+                # gate checks the caller's own declaration (2A §5.5).
+                record["delegated_owner"] = delegated_owner(frames)
+                record["caller"] = immediate_caller(frames)
             if "paths" in record:
                 record["resolved_paths"] = _operational_paths(event, args, record["paths"], record.get("mode"))
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:

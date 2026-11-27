@@ -43,7 +43,20 @@ FORBIDDEN_PREFIXES = (
 )
 TEXT_ROOTS = ("tools/", "tests/", "system/")
 TEXT_FILES = ("pyproject.toml", "Makefile")
-_MAINTENANCE_TARGETS = ("tools/**", "tests/**", "system/**", *TEXT_FILES)
+#: Where text rewrites may land under system/: everything except the contract
+#: roots, spelled out because a scope cannot subtract (2A, Bar 4 v3 N-1). A new
+#: top-level system document is added here and to tests/architecture/effects.yaml.
+_SYSTEM_TEXT_TARGETS = (
+    "system/adr/**", "system/developer/**", "system/procedures/**",
+    "system/skills/**", "system/templates/**",
+    "system/ACCEPTANCE-TESTS.md", "system/AI-ACTIONS.md", "system/ARCHITECTURE.md",
+    "system/BUILD-SPEC.md", "system/CLAUDE.md", "system/CRITIQUE-POINTS.md",
+    "system/DEVELOPER.md", "system/MIGRATION.md", "system/OPERATOR-POLICY.md",
+    "system/OPERATOR.md", "system/PHILOSOPHY.md", "system/PILOT-CRITERIA.md",
+    "system/PLAN-CREATION-SOP.md", "system/SEMANTIC-CONTRACT.md", "system/SPEC-README.md",
+    "system/VALIDATION.md", "system/WHY-REDESIGN.md", "system/WORKFLOWS.md",
+)
+_MAINTENANCE_TARGETS = ("tools/**", "tests/**", *_SYSTEM_TEXT_TARGETS, *TEXT_FILES)
 #: A move whose text would change a recording is not mechanical (A12): refuse it.
 RECORDING_PREFIX = "tests/scenarios/recorded/"
 #: Contract text is part of the canonical fingerprint (``fingerprint.CONTRACT_ROOTS``)

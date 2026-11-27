@@ -6,11 +6,14 @@ hook outcome. ``test_arch_writes.py`` runs them.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import uuid
 from collections import Counter
@@ -22,6 +25,80 @@ import arch_effects
 from learning_os.store.fingerprint import CANONICAL_ROOTS
 
 _ARCH_SITE = Path(__file__).resolve().parent / "arch_site"
+
+
+class AuditWindow:
+    """One functional test's writes, witnessed for the 2A runtime writer gate (§5.6)."""
+
+    def __init__(self, root: Path, log_path: Path | None):
+        self.root = root
+        self.log_path = log_path
+
+    def child_env(self, base: dict | None = None) -> dict:
+        """Environment for a Python child in this window: its writes join the same log."""
+        env = dict(os.environ if base is None else base)
+        if self.log_path is None:
+            return env
+        tests_dir = Path(__file__).resolve().parent
+        env.update(
+            LOS_FX=str(self.root),
+            LOS_ARCH_AUDIT_LOG=str(self.log_path),
+            LOS_ARCH_LAUNCH_TOKEN=f"window-{uuid.uuid4().hex}",
+            PYTHONPATH=os.pathsep.join(
+                [str(_ARCH_SITE), str(tests_dir), env.get("PYTHONPATH", "")]),
+        )
+        return env
+
+
+@contextlib.contextmanager
+def audit_window(root: Path, operation: str, case: str):
+    """Witness the writes a functional test makes in ``root`` (2A §5.6).
+
+    The window joins the session's audit population exactly like a scenario
+    case: a header naming the case, an ``installed`` record binding this
+    process to ``root``, and a ``completed`` record. Writes by test code carry
+    no ``tools/`` writer and are scaffolding to the gate; writes by tools code
+    are attributed and checked. Python children launched with
+    ``window.child_env()`` append to the same log. Without an audit directory
+    (a run outside pytest) the window records nothing.
+    """
+    audit_dir = os.environ.get("LOS_ARCH_AUDIT_DIR")
+    root = Path(root).resolve()
+    if not audit_dir:
+        yield AuditWindow(root, None)
+        return
+    scratch = Path(tempfile.mkdtemp(prefix="los-audit-window-"))
+    log = scratch / "window.jsonl"
+    token = f"window-{uuid.uuid4().hex}"
+    git_dir = root / ".git"
+    installed = {
+        "event": "installed", "pid": os.getpid(), "ppid": os.getppid(), "token": token,
+        "argv": list(sys.argv), "root": str(root),
+        "state_dir": str(git_dir / "learningos") if git_dir.is_dir() else tempfile.gettempdir(),
+        "state_anchored": git_dir.is_dir(),
+    }
+    log.write_text(json.dumps(installed) + "\n", encoding="utf-8")
+    arch_audit_hook.install(str(log))
+    try:
+        yield AuditWindow(root, log)
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    with log.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps({
+            "event": "completed", "pid": os.getpid(), "token": token, "root": str(root),
+            "capture_ok": True, "new_receipts": [],
+        }) + "\n")
+    dest_dir = Path(audit_dir)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    name = f"{operation}__{case}"
+    header = {"event": "case", "operation": operation, "case": case, "root": str(root)}
+    with open(dest_dir / f"{name}--{uuid.uuid4().hex}.jsonl", "x", encoding="utf-8") as out:
+        out.write(json.dumps(header) + "\n")
+        out.write(log.read_text(encoding="utf-8"))
+    with open(dest_dir / "cases.txt", "a", encoding="utf-8") as cases:
+        cases.write(name + "\n")
+    shutil.rmtree(scratch, ignore_errors=True)
 
 
 def _build_root(tmp_path: Path, name: str) -> Path:

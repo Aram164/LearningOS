@@ -75,6 +75,8 @@ class Entry:
     glob: str | None = None
     rebuildable: bool | None = None
     children: list[Entry] = field(default_factory=list)
+    # An ownership category (``interface``, ``operations``...), never a module.
+    owner: str | None = None
 
 
 @dataclass(frozen=True)
@@ -106,6 +108,7 @@ def _entry(raw: dict) -> Entry:
         glob=str(glob) if glob else None,
         rebuildable=rebuildable,
         children=[_entry(child) for child in raw.get("children") or ()],
+        owner=str(raw["owner"]) if raw.get("owner") else None,
     )
 
 
