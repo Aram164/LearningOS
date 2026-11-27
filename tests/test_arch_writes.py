@@ -7,6 +7,7 @@ import os
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from functools import cache
 from pathlib import Path, PurePosixPath
 
@@ -754,7 +755,9 @@ def _parse_path_text(text: str) -> tuple[str, tuple[str, ...]]:
             return "bad", ()
         if seg == "**":
             segs.append("**")
-        elif "\x01" in seg or any(ch in seg for ch in "*?["):
+        elif "\x01" in seg:
+            segs.append(seg.replace("\x01", "*"))
+        elif any(ch in seg for ch in "*?["):
             segs.append("*")
         else:
             segs.append(seg)
@@ -780,6 +783,31 @@ def _pattern_covers(pattern: str, vparts: tuple[str, ...]) -> bool:
         return value == token and match(i + 1, j + 1)
 
     return match(0, 0)
+
+
+def _checkout_state_covers(destination: str, value: _ExtRel, primitive: str) -> bool:
+    parts = value.parts
+    if value.tag == "git directory":
+        if not parts or parts[0] != "learningos":
+            return False
+        parts = parts[1:]
+    elif value.tag != "tempdir":
+        return False
+
+    if not parts:
+        return primitive == "mkdir" and value.tag == "git directory"
+    pattern = destination.removeprefix("<STATE>/").split("/")
+    for i, segment in enumerate(pattern):
+        if segment == "**":
+            return True
+        if i >= len(parts):
+            return False
+        part = parts[i]
+        if part == segment or (part != "**" and segment == "*"):
+            continue
+        if "*" in part or not fnmatchcase(part, segment):
+            return False
+    return len(parts) == len(pattern)
 
 
 def _is_destination_parent(pattern: str, parts: tuple[str, ...]) -> bool:
@@ -1800,10 +1828,10 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                     value, (_Unknown, _Relative, _ReadOnlySQLite)
                 ):
                     problem = "has no proved destination at this write site"
-                elif checkout_state_only and isinstance(value, _ExtRel) and value.tag not in {
-                    "git directory", "tempdir",
-                }:
-                    problem = "does not use this checkout's state directory"
+                elif checkout_state_only and isinstance(value, _ExtRel) and not any(
+                    _checkout_state_covers(dest, value, primitive) for dest in destinations
+                ):
+                    problem = f"is outside declared checkout-state destinations {destinations}"
                 elif explicit_output and isinstance(value, _ExtRel) and value.tag == "absolute literal":
                     problem = "uses an absolute path without a caller-output boundary"
                 if problem is None:
@@ -2144,3 +2172,24 @@ def test_guard_proves_only_the_site_that_uses_its_result(tmp_path, extra, reason
     failures = check_declared_write_sites(root, inventory)
     assert len(failures) == 1
     assert reason in failures[0]
+
+
+def test_state_anchor_does_not_authorize_another_state_owner(tmp_path):
+    root = tmp_path / "disposable-checkout"
+    ledger = Path("tools/learning_os/store/session_ledger.py")
+    (root / ledger).parent.mkdir(parents=True)
+    (root / ledger).write_bytes((ROOT / ledger).read_bytes())
+    writer = root / "tools/lock_writer.py"
+    source = (
+        "from learning_os.store.session_ledger import process_state_dir\n"
+        "def run(root):\n"
+        "    (process_state_dir(root) / '{}').write_text('sample')\n"
+    )
+    effects = {"tools/lock_writer.py": {"destinations": ["<STATE>/operator.lock"]}}
+    writer.write_text(source.format("operator.lock"), encoding="utf-8")
+    assert check_declared_write_sites(root, effects) == []
+
+    writer.write_text(source.format("sealed-requests/fixture.json"), encoding="utf-8")
+    failures = check_declared_write_sites(root, effects)
+    assert failures
+    assert all("outside declared checkout-state destinations" in failure for failure in failures)

@@ -289,11 +289,15 @@ def current_session_id(*, channel: str | None = None,
     return identity
 
 
-def session_ledger(root: Path, session_id: str | None = None) -> Path:
+def _session_state_stem(root: Path, session_id: str | None) -> str:
     token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
     identity = current_session_id(explicit=session_id)
     slug = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
-    return process_state_dir(root) / f"learningos-{token}-{slug}-touched.json"
+    return f"{token}-{slug}"
+
+
+def session_ledger(root: Path, session_id: str | None = None) -> Path:
+    return process_state_dir(root) / f"learningos-{_session_state_stem(root, session_id)}-touched.json"
 
 
 def session_path_state(root: Path, relative: str) -> dict[str, str]:
@@ -505,9 +509,7 @@ _RECEIPT_PREFIX = "operations/transactions/transaction-"
 
 def released_receipts_path(root: Path, session_id: str | None = None) -> Path:
     """Where `session-end --close` remembers the receipts it released."""
-    ledger = session_ledger(root, session_id)
-    return ledger.with_name(
-        ledger.name[:-len("-touched.json")] + "-released.json")
+    return process_state_dir(root) / f"learningos-{_session_state_stem(root, session_id)}-released.json"
 
 
 def _load_released(path: Path) -> dict[str, str]:
