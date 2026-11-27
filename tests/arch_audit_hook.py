@@ -26,6 +26,9 @@ MECHANICAL_HELPERS: dict[str, frozenset[str]] = {
         "learning_os.store.ai_actions.storage",
         "learning_os.store.session_ledger",
         "learning_os.store.transactions",
+        # 2A+2D merge: 2D CL-17 writes the warning baseline through
+        # store.fs.atomic_write_text_exclusive; credit it to this module.
+        "learning_os.store.warning_baseline",
     }),
 }
 

@@ -84,3 +84,171 @@ def test_apply_moves_folders_rebuilds_flat_and_sources(tmp_path: Path):
     # Idempotent: a second apply is a clean no-op report, not a second move.
     again = _run("--apply", materials=materials)
     assert again.returncode == 0, f"--- stderr ---\n{again.stderr}"
+
+
+# ---- 2D CL-11: a competing destination never absorbs a source -------------
+
+def _builder():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("build_materials_tree", TOOL)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _with_prior_aliases(materials: Path) -> None:
+    """The compat layer an earlier apply left, pointing at today's locations."""
+    flat = materials / ".flat"
+    flat.mkdir()
+    for slug in MOVED:
+        (flat / f"source-{slug}").symlink_to(Path("..") / slug)
+
+
+def test_a_destination_that_appears_after_the_preflight_is_refused(
+        tmp_path: Path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    competitor = materials / MOVED["progit"] / "progit"
+    original_mkdir = Path.mkdir
+
+    def mkdir_then_compete(self, *args, **kwargs):
+        original_mkdir(self, *args, **kwargs)
+        if self == competitor.parent and not competitor.exists():
+            original_mkdir(competitor)
+            (competitor / "theirs.txt").write_text("competing\n", encoding="utf-8")
+
+    monkeypatch.setattr(Path, "mkdir", mkdir_then_compete)
+    before = {k: v for k, v in _snapshot(materials).items()
+              if not k.startswith("software")}
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    monkeypatch.undo()
+    err = capsys.readouterr().err
+    assert "cannot apply materials layout" in err and str(competitor) in err
+    # Nothing nested inside the competitor, and it kept its own bytes.
+    assert sorted(p.name for p in competitor.iterdir()) == ["theirs.txt"]
+    after = _snapshot(materials)
+    assert {k: v for k, v in after.items() if not k.startswith("software")} == before
+    for slug in MOVED:
+        assert (materials / slug / "notes.txt").is_file(), slug
+        assert (materials / ".flat" / f"source-{slug}").resolve() == (materials / slug).resolve()
+    assert not any(materials.rglob("SOURCES.md"))
+
+
+def test_a_failed_move_puts_earlier_moves_back_and_keeps_the_aliases(
+        tmp_path: Path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    before = _snapshot(materials)
+    original_rename = builder.rename_noreplace
+    calls = []
+
+    def second_move_fails(src, dst):
+        calls.append((Path(src), Path(dst)))
+        if len(calls) == 2:
+            raise OSError("simulated failure on the second move")
+        return original_rename(src, dst)
+
+    monkeypatch.setattr(builder, "rename_noreplace", second_move_fails)
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    monkeypatch.undo()
+    err = capsys.readouterr().err
+    assert "simulated failure on the second move" in err
+    assert "moved 1 folder(s) back" in err
+    assert _snapshot(materials) == before
+    for slug in MOVED:
+        assert (materials / ".flat" / f"source-{slug}").resolve() == (materials / slug).resolve()
+
+
+def test_an_empty_destination_created_at_rename_is_preserved(tmp_path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    before = _snapshot(materials)
+    competitor = materials / MOVED["progit"] / "progit"
+    original_rename = builder.rename_noreplace
+    competitor_inode = None
+
+    def compete_at_rename(source, destination):
+        nonlocal competitor_inode
+        if destination == competitor:
+            destination.mkdir()
+            competitor_inode = destination.stat().st_ino
+        original_rename(source, destination)
+
+    monkeypatch.setattr(builder, "rename_noreplace", compete_at_rename)
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    assert competitor_inode is not None
+    assert competitor.stat().st_ino == competitor_inode
+    assert list(competitor.iterdir()) == []
+    assert "moved 1 folder(s) back" in capsys.readouterr().err
+    assert _snapshot(materials) == before
+
+
+def test_a_later_parent_creation_failure_restores_the_existing_layout(tmp_path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    before = _snapshot(materials)
+    original_mkdir = Path.mkdir
+
+    def fail_later_parent(path, *args, **kwargs):
+        if path == materials / MOVED["progit"]:
+            raise PermissionError("simulated failure creating second destination parent")
+        return original_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", fail_later_parent)
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    err = capsys.readouterr().err
+    assert "simulated failure creating second destination parent" in err
+    assert "moved 1 folder(s) back" in err
+    assert _snapshot(materials) == before
+
+
+def test_alias_publication_failure_restores_moves_and_all_prior_links(tmp_path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    _with_prior_aliases(materials)
+    before = _snapshot(materials)
+    late_alias = materials / ".flat" / "source-progit"
+    replaced_alias = materials / ".flat" / "source-abbott-understanding-analysis"
+    original_replace = builder.os.replace
+
+    def fail_late_alias(source, destination):
+        if destination == late_alias:
+            assert replaced_alias.readlink() != Path("..") / "abbott-understanding-analysis"
+            raise OSError("simulated failure publishing the last alias")
+        original_replace(source, destination)
+
+    monkeypatch.setattr(builder.os, "replace", fail_late_alias)
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    err = capsys.readouterr().err
+    assert "simulated failure publishing the last alias" in err
+    assert "moved 2 folder(s) back" in err
+    assert _snapshot(materials) == before
+    for slug in MOVED:
+        link = materials / ".flat" / f"source-{slug}"
+        assert link.resolve(strict=True) == (materials / slug).resolve()
+
+
+def test_failed_first_apply_does_not_publish_an_empty_alias_root(tmp_path, monkeypatch, capsys):
+    builder = _builder()
+    materials = _fixture(tmp_path)
+    before = _snapshot(materials)
+    flat = materials / ".flat"
+    original_rename = builder.rename_noreplace
+
+    def fail_alias_root(source, destination):
+        if destination == flat:
+            assert list(source.glob("source-*"))
+            raise OSError("simulated failure publishing the first alias root")
+        return original_rename(source, destination)
+
+    monkeypatch.setattr(builder, "rename_noreplace", fail_alias_root)
+    assert builder.main(["--materials-root", str(materials), "--apply"]) == 1
+    assert "simulated failure publishing the first alias root" in capsys.readouterr().err
+    assert not flat.exists()
+    assert not list(materials.glob(".flat-tmp-*"))
+    assert _snapshot(materials) == before

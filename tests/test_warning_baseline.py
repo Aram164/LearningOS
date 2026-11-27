@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import subprocess
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -114,6 +116,70 @@ def test_a_written_baseline_satisfies_its_schema(tmp_path):
     data = yaml.safe_load(
         (tmp_path / wb.BASELINE_RELATIVE).read_text(encoding="utf-8"))
     Draft202012Validator(_SCHEMA).validate(data)
+
+
+def test_a_baseline_write_refuses_symlinked_destinations(tmp_path):
+    """2D CL-17: neither ``operations/`` nor the leaf may be a symlink."""
+    from learning_os.domain.failures import WriteRefused
+
+    signatures = Counter({("LOCATOR-VAGUE", "a.yaml"): 1})
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    linked_dir = tmp_path / "linked-dir"
+    linked_dir.mkdir()
+    (linked_dir / "operations").symlink_to(elsewhere, target_is_directory=True)
+    with pytest.raises(WriteRefused):
+        wb.write_baseline(linked_dir, signatures, "through a symlinked dir")
+    assert list(elsewhere.iterdir()) == []
+
+    victim = tmp_path / "victim.yaml"
+    victim.write_bytes(b"victim bytes\n")
+    linked_leaf = tmp_path / "linked-leaf"
+    (linked_leaf / "operations").mkdir(parents=True)
+    (linked_leaf / wb.BASELINE_RELATIVE).symlink_to(victim)
+    with pytest.raises(WriteRefused):
+        wb.write_baseline(linked_leaf, signatures, "through a symlinked leaf")
+    assert victim.read_bytes() == b"victim bytes\n"
+    assert (linked_leaf / wb.BASELINE_RELATIVE).is_symlink()
+
+
+_INTERRUPTED_WRITE = """
+import resource, signal, sys
+from collections import Counter
+from pathlib import Path
+from learning_os.store.warning_baseline import write_baseline
+signal.signal(signal.SIGXFSZ, signal.SIG_IGN)
+resource.setrlimit(resource.RLIMIT_FSIZE, (512, 512))
+grown = Counter({("LOCATOR-VAGUE", f"file-{n:04d}.yaml"): n + 1 for n in range(200)})
+try:
+    write_baseline(Path(sys.argv[1]), grown, "interrupted publication")
+except Exception as exc:  # the write must fail part-way, like a full disk
+    print(type(exc).__name__, exc)
+    raise SystemExit(3)
+raise SystemExit(0)
+"""
+
+
+def test_an_interrupted_baseline_replacement_keeps_the_prior_bytes(tmp_path):
+    """2D CL-17: a write that dies part-way never tears the recorded baseline.
+
+    The child process cannot write past 512 bytes (``RLIMIT_FSIZE``), so a
+    writer that truncates the destination first would leave a torn prefix.
+    """
+    signatures = {("LOCATOR-VAGUE", "a.yaml"): 3, ("HYGIENE-UNFILED", ""): 1}
+    _write(tmp_path, signatures)
+    path = tmp_path / wb.BASELINE_RELATIVE
+    before = path.read_bytes()
+    result = subprocess.run(
+        [sys.executable, "-c", _INTERRUPTED_WRITE, str(tmp_path)],
+        capture_output=True, text=True, timeout=120,
+        cwd=ROOT, env={**os.environ, "PYTHONPATH": str(ROOT / "tools")},
+    )
+    assert result.returncode == 3, (result.returncode, result.stdout, result.stderr)
+    assert path.read_bytes() == before
+    loaded, _meta = wb.load_baseline(tmp_path)
+    assert loaded == Counter(signatures)
+    assert sorted(p.name for p in path.parent.iterdir()) == [path.name]
 
 
 def test_a_missing_baseline_reads_as_empty_not_as_a_pass(tmp_path):

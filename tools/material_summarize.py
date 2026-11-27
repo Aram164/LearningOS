@@ -39,9 +39,12 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import fcntl
 import hashlib
 import json
 import os
+import secrets
+import shutil
 import sys
 from pathlib import Path
 
@@ -62,6 +65,9 @@ from learning_os.store.contracts.write_scopes import (  # noqa: E402
 from learning_os.store.fs import (  # noqa: E402
     atomic_write_bytes_exclusive,
     atomic_write_text_exclusive,
+    create_ancestors_and_track,
+    rename_noreplace,
+    sync_directory_and_created_ancestors,
 )
 
 REPO = Path(__file__).resolve().parents[1]
@@ -284,6 +290,75 @@ def _audit(cache_dir: Path, base: Path) -> int:
     return 1 if stale else 0
 
 
+def _publish_range(target: Path, summary: bytes, meta_text: str) -> str | None:
+    """Publish ``summary.md`` and ``meta.json`` as one directory, or nothing (2D, CL-10).
+
+    Both files are written, flushed and read back inside a private
+    dot-prefixed sibling, which no reader lists, and the whole directory is
+    renamed into the unoccupied range path; the parent is flushed after. An
+    ``flock`` on the source's digest directory serializes cooperating
+    publishers of every range of that source without leaving a lock file in
+    the canonical tree. Returns ``None`` once published, or the refusal
+    reason for an occupied range, which stays untouched.
+    """
+    parent = target.parent
+    created = create_ancestors_and_track(parent)
+    lock = os.open(parent, os.O_RDONLY)
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if target.exists() or target.is_symlink():
+            return _occupied_reason(target, summary, meta_text)
+        stage = parent / f".stage-{target.name}-{os.getpid()}-{secrets.token_hex(8)}"
+        os.mkdir(stage)
+        try:
+            atomic_write_bytes_exclusive(
+                stage / "summary.md", summary, boundary=stage, error_factory=OSError)
+            atomic_write_text_exclusive(
+                stage / "meta.json", meta_text, boundary=stage, error_factory=OSError)
+            if ((stage / "summary.md").read_bytes() != summary
+                    or (stage / "meta.json").read_text(encoding="utf-8") != meta_text):
+                raise OSError("the staged summary pair did not read back intact")
+            try:
+                rename_noreplace(stage, target)
+            except FileExistsError:
+                shutil.rmtree(stage, ignore_errors=True)
+                return _occupied_reason(target, summary, meta_text)
+        except BaseException:
+            shutil.rmtree(stage, ignore_errors=True)
+            raise
+        sync_directory_and_created_ancestors(parent, created)
+    finally:
+        os.close(lock)
+    return None
+
+
+def _occupied_reason(target: Path, summary: bytes, meta_text: str) -> str:
+    """Name what occupies a range: this exact pair, a different one, or damage."""
+    try:
+        if target.is_symlink() or not target.is_dir():
+            raise ValueError("it is not a summary directory")
+        published = _bounded_bytes(target / "summary.md", MAX_SUMMARY_BYTES)
+        meta = json.loads(_bounded_bytes(target / "meta.json", MAX_META_BYTES))
+        if (not isinstance(meta, dict)
+                or meta.get("summary_sha256") != hashlib.sha256(published).hexdigest()):
+            raise ValueError("its meta.json does not bind its summary.md")
+    except (OSError, ValueError) as exc:
+        return (f"range {target} holds an incomplete or damaged summary ({exc}); "
+                "it is left untouched: inspect it, remove it deliberately, then "
+                "promote again")
+    wanted = json.loads(meta_text)
+    same = published == summary and all(
+        meta.get(key) == wanted[key]
+        for key in ("material", "sha256", "page_range", "model", "scope"))
+    if same:
+        return (f"a summary for this range already exists and matches this draft "
+                f"(summary_sha256 {meta['summary_sha256']}) at {target}; "
+                "nothing was written")
+    return (f"a different summary for this range already exists "
+            f"(summary_sha256 {meta['summary_sha256']}) at {target}; "
+            "remove it deliberately first")
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
@@ -376,15 +451,12 @@ def main(argv: list[str] | None = None) -> int:
             target = guard_tool_output_path(requested_target, repo_root=REPO, allow_existing_dir=True)
     except WriteScopeError as exc:
         return _refuse(str(exc))
-    if (target / "summary.md").exists():
-        return _refuse("a summary for this range already exists; remove it deliberately first")
-    target.mkdir(parents=True, exist_ok=True)
+    # Occupancy is refused inside _publish_range, which names the occupant
+    # (this exact pair, a different pair, or a damaged range) instead of
+    # the blunt pre-check the in-place publisher used.
     summary = (
         "<!-- GENERATED file - do not edit; promoted by "
         "tools/material_summarize.py --promote -->\n\n" + draft).encode("utf-8")
-    atomic_write_bytes_exclusive(
-        target / "summary.md", summary, boundary=target, error_factory=OSError
-    )
     meta = {"_generated": {
                 "warning": "GENERATED file - do not edit; rebuilt by "
                            "python tools/material_summarize.py --promote",
@@ -393,12 +465,13 @@ def main(argv: list[str] | None = None) -> int:
             "page_range": [start, end], "model": args.model,
             "summary_sha256": hashlib.sha256(summary).hexdigest(),
             "built": _dt.date.today().isoformat(), "scope": "chapter"}
-    atomic_write_text_exclusive(
-        target / "meta.json",
-        json.dumps(meta, indent=2, sort_keys=True) + "\n",
-        boundary=target,
-        error_factory=OSError,
-    )
+    try:
+        occupied = _publish_range(
+            target, summary, json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    except OSError as exc:
+        return _refuse(f"cannot publish {target}: {exc}")
+    if occupied is not None:
+        return _refuse(occupied)
     print(json.dumps({"promoted": str(target / "summary.md"), "digest": args.digest,
                       "page_range": [start, end]},
                      ensure_ascii=False, separators=(",", ":")))

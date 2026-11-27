@@ -834,6 +834,71 @@ def test_prepare_reprep_cleans_and_stays_outside(mini_repo, tmp_path):
     assert not (mini_repo / "staging").exists()
 
 
+def _tree_bytes(directory):
+    return {path.relative_to(directory).as_posix(): path.read_bytes()
+            for path in sorted(directory.rglob("*")) if path.is_file()}
+
+
+def test_prepare_refuses_a_staging_dir_it_does_not_own(mini_repo, tmp_path):
+    """2D CL-16: refused staging leaves every caller-owned file in place."""
+    drafts_file = tmp_path / "drafts-own.json"
+    drafts_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-own", "own")]}), encoding="utf-8")
+    marker = ".learningos-note-analysis-stage.json"
+    cases = {
+        "bodies": {"bodies/keep.bin": b"caller bytes", "notes.txt": b"mine"},
+        "plain": {"report.md": b"caller report"},
+        "bad-mark": {marker: b'{"owner": "someone-else", "schema": 1}\n',
+                     "bodies/keep.bin": b"caller bytes"},
+        "garbled-mark": {marker: b"\xff not json",
+                         "bodies/keep.bin": b"caller bytes"},
+    }
+    for key, files in cases.items():
+        out = tmp_path / f"caller-{key}"
+        for rel, data in files.items():
+            (out / rel).parent.mkdir(parents=True, exist_ok=True)
+            (out / rel).write_bytes(data)
+        before = _tree_bytes(out)
+        result = _run_prepare(mini_repo, str(drafts_file), out)
+        assert result.returncode != 0, key
+        assert "did not stage" in result.stderr, (key, result.stderr)
+        assert _tree_bytes(out) == before, key
+        assert not (out / "envelope.json").exists(), key
+    # A mark reached through a symlink is no mark: O_NOFOLLOW refuses it.
+    real_mark = tmp_path / "real-mark.json"
+    real_mark.write_text('{"owner": "note.analysis.prepare", "schema": 1}\n',
+                         encoding="utf-8")
+    linked = tmp_path / "caller-linked-mark"
+    (linked / "bodies").mkdir(parents=True)
+    (linked / "bodies" / "keep.bin").write_bytes(b"caller bytes")
+    (linked / marker).symlink_to(real_mark)
+    refused = _run_prepare(mini_repo, str(drafts_file), linked)
+    assert refused.returncode != 0
+    assert "did not stage" in refused.stderr
+    assert (linked / "bodies" / "keep.bin").read_bytes() == b"caller bytes"
+
+
+def test_prepare_marks_new_and_empty_dirs_and_restages_only_its_own(mini_repo, tmp_path):
+    """2D CL-16: a new or empty dir is claimed; only a claimed dir restages."""
+    marker = ".learningos-note-analysis-stage.json"
+    drafts_file = tmp_path / "drafts-mark.json"
+    drafts_file.write_text(json.dumps(
+        {"notes": [_draft("note-analysis-prep-mark", "mark")]}), encoding="utf-8")
+    for out in (tmp_path / "fresh" / "nested", tmp_path / "empty"):
+        if out.name == "empty":
+            out.mkdir()
+        first = _run_prepare(mini_repo, str(drafts_file), out)
+        assert first.returncode == 0, first.stderr
+        assert json.loads((out / marker).read_text(encoding="utf-8")) == {
+            "owner": "note.analysis.prepare", "schema": 1}
+        assert [p.name for p in _staged_bodies(out)] == ["note-analysis-prep-mark.bin"]
+        (out / "bodies" / "stale.bin").write_bytes(b"left by an earlier prep")
+        again = _run_prepare(mini_repo, str(drafts_file), out)
+        assert again.returncode == 0, again.stderr
+        assert [p.name for p in _staged_bodies(out)] == ["note-analysis-prep-mark.bin"]
+        assert (out / marker).is_file()
+
+
 # --------------------------------------------------------------------------
 # Read-surface spellings: the boundary normalizes, storage stays canonical.
 # --------------------------------------------------------------------------

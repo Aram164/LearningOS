@@ -77,7 +77,11 @@ $ MAT_SHA=$(sha256sum "$(dirname "$LOS_FX")/materials/source-demo-book/book.pdf"
    derives the hashes, dry-checks each note against current state (new
    vs replay, collisions, resolved-source observability), then stages
    `bodies/<note-id>.bin` plus `envelope.json` and prints the per-note
-   report. It writes nothing canonical; `bodies/` is rebuilt every run.
+   report. It writes nothing canonical. Use a new or empty directory
+   the first time: prep marks it with `.learningos-note-analysis-stage.json`
+   and rebuilds `bodies/` on each later run into that same directory.
+   It refuses a non-empty directory without that mark before removing
+   anything, so it never deletes files it did not stage.
 3. **Review** the staged bodies and the envelope. This is the step the
    gateway cannot do for you.
 4. **Submit** the exact envelope:

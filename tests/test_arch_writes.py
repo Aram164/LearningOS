@@ -234,6 +234,9 @@ _WRITE_HELPERS = frozenset({
     "prune_empty_dirs",
     "create_ancestors_and_track",
     "_create_ancestors_and_track",
+    # 2D CL-10/CL-11: ctypes no-replace rename. Both operands are checked;
+    # the helper never calls os.rename, so the os.rename rules cannot see it.
+    "rename_noreplace",
 })
 
 _READONLY_GIT_SUBCOMMANDS = frozenset({
@@ -3339,6 +3342,11 @@ class _ModuleWriteSites:
             return [arg(0, "inbox")]
         if primitive in {"create_ancestors_and_track", "_create_ancestors_and_track"}:
             return [arg(0, "parent")]
+        if primitive == "rename_noreplace":
+            # 2D CL-10/CL-11: both rename operands are destinations, like
+            # os.rename/os.replace above. fs.rename_noreplace is ctypes, so
+            # this branch is the only check on either operand.
+            return [arg(0, "source"), arg(1, "destination")]
         if primitive in _WRITE_HELPERS:
             return [arg(0, "path")]
         return [None]
