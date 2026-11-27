@@ -453,7 +453,6 @@ def test_prune_tool_reports_and_supports_dry_run(tmp_path: Path):
     assert traces_path(mini).read_text(encoding="utf-8") == before
     from arch_writes_fixtures import audit_window
 
-    # 2A §5.6: the runtime witness for diagnostics_prune.py.
     with audit_window(mini, "witness", "diagnostics-prune") as window:
         real = subprocess.run(
             [sys.executable, str(TOOLS / "diagnostics_prune.py"),
@@ -461,6 +460,20 @@ def test_prune_tool_reports_and_supports_dry_run(tmp_path: Path):
             capture_output=True, text=True, timeout=120, env=window.child_env())
     assert real.returncode == 0, real.stderr
     assert "kept" in real.stdout
+
+    # Trace pruning writes through diagnostics/store.py. The CLI owns the
+    # direct removal of legacy sidecars in its derived-state maintenance mode.
+    sidecar = mini / "generated/reports/validation-report.cache.json"
+    sidecar.parent.mkdir(parents=True, exist_ok=True)
+    sidecar.write_text("{}\n", encoding="utf-8")
+    with audit_window(mini, "witness", "diagnostics-prune-derived-state") as window:
+        derived = subprocess.run(
+            [sys.executable, str(TOOLS / "diagnostics_prune.py"),
+             "--root", str(mini), "--derived-state"],
+            capture_output=True, text=True, timeout=120, env=window.child_env())
+    assert derived.returncode == 0, derived.stderr
+    assert "obsolete cache file" in derived.stdout
+    assert not sidecar.exists()
 
 
 def test_no_learner_payload_text_reaches_the_store(tmp_path: Path):
