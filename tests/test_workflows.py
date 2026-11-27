@@ -404,6 +404,11 @@ def test_ci_installs_core_dependencies_into_the_project_venv():
                 pip_at = script.find('.venv/bin/python -m pip install -e ".[dev]"')
                 assert pip_at > venv_at, workflow.name
             for script in _all_run_steps(doc):
+                if 'sys.path.insert(0, "tools")' in script:
+                    # An inline script that imports Core modules needs the
+                    # venv's dependencies exactly as `python tools/...` does.
+                    assert not re.search(r"(^|\s)python[\d.]*\s+-(\s|c\b)", script), (
+                        workflow.name, script.splitlines()[0])
                 for line in script.splitlines():
                     if "pip install" in line:
                         assert ".venv/bin/python -m pip install" in line, (
