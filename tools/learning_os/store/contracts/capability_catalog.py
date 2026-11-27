@@ -5,12 +5,18 @@ from __future__ import annotations
 import copy
 import re
 from dataclasses import dataclass
+from functools import cache
 from pathlib import Path
 
 import yaml
 
 from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
-from learning_os.store.contracts.write_scopes import WriteScopeError, normalize_scope_pattern
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    normalize_relative_path,
+    normalize_scope_pattern,
+    scope_matches,
+)
 
 
 class CapabilityCatalogError(Exception):
@@ -329,3 +335,57 @@ def domain_capability_definitions(root: Path) -> dict[str, DomainCapabilityDefin
         )
         for name, row in (data.get("domain_capabilities", {}) or {}).items()
     }
+
+
+# Owned territory (2A, N-1) lives beside the catalogue it reads, so the
+# write-scope primitives above stay free of a catalogue import.
+_CORE_ROOT = Path(__file__).resolve().parents[4]
+
+
+def capability_write_scopes(root: Path | None = None) -> tuple[str, ...]:
+    """Every normalized write scope the capability catalogue grants."""
+    return _capability_write_scopes((root or _CORE_ROOT).resolve())
+
+
+@cache
+def _capability_write_scopes(base: Path) -> tuple[str, ...]:
+    scopes: set[str] = set()
+    for definition in command_definitions(base, include_internal=True).values():
+        scopes.update(normalize_scope_pattern(scope) for scope in definition.writes)
+    for definition in domain_capability_definitions(base).values():
+        scopes.update(normalize_scope_pattern(scope) for scope in definition.writes)
+    return tuple(sorted(scopes))
+
+
+def owned_territory(root: Path | None = None) -> tuple[str, ...]:
+    """Repository scopes that belong to an owner other than a declaring tool (2A, N-1).
+
+    Built from production contracts only: the canonical fingerprint roots,
+    ``operations/``, every capability write scope, and the tree-contract roots
+    whose owner is ``interface``. A tree-contract owner marks a root as owned;
+    it never authorizes a module. The output guard is stricter than this set
+    (it admits only declared ``generated/`` children), so it refuses all of it.
+    """
+    return _owned_territory((root or _CORE_ROOT).resolve())
+
+
+@cache
+def _owned_territory(base: Path) -> tuple[str, ...]:
+    from learning_os.store.contracts import tree_contract
+    from learning_os.store.fingerprint import CANONICAL_ROOTS
+
+    patterns = {f"{name}/**" for name in CANONICAL_ROOTS}
+    patterns.add("operations/**")
+    patterns.update(_capability_write_scopes(base))
+    patterns.update(
+        f"{entry.path}/**"
+        for entry in tree_contract.load(base).directories
+        if entry.path and entry.owner == "interface"
+    )
+    return tuple(sorted(normalize_scope_pattern(pattern) for pattern in patterns))
+
+
+def in_owned_territory(relative: str, root: Path | None = None) -> bool:
+    """True when a safe repository-relative path lies in owned territory."""
+    normalized = normalize_relative_path(relative)
+    return any(scope_matches(normalized, pattern) for pattern in owned_territory(root))

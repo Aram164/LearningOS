@@ -234,12 +234,12 @@ def test_guard_admits_only_declared_generated_children_inside_a_repository(tmp_p
 
 def test_owned_territory_comes_from_production_contracts_and_the_guard_refuses_it(tmp_path: Path):
     """2A N-1/N-8: owned territory is production-derived and contained in the guard's refusal."""
-    from learning_os.store.contracts.write_scopes import (
+    from learning_os.store.contracts.capability_catalog import (
         capability_write_scopes,
-        guard_tool_output_path,
         in_owned_territory,
         owned_territory,
     )
+    from learning_os.store.contracts.write_scopes import guard_tool_output_path
     from learning_os.store.fingerprint import CANONICAL_ROOTS
 
     territory = owned_territory()

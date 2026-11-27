@@ -15,7 +15,7 @@ import arch_writes_fixtures
 import pytest
 import yaml
 
-from learning_os.store.contracts import write_scopes
+from learning_os.store.contracts import capability_catalog, write_scopes
 from learning_os.store.fingerprint import DATA_ROOTS
 from learning_os.store.fs import is_git_output_option
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
@@ -490,11 +490,11 @@ def _owned_territory_failures(
     """Bar 4 v3 N-1: a declaration cannot reach owned territory without authority.
 
     ``DATA_ROOTS`` keeps its recorded-exception branch in the caller. Owned
-    territory comes from production contracts (``write_scopes.owned_territory``);
+    territory comes from production contracts (``capability_catalog.owned_territory``);
     the authorities are alternatives: the engine, an ``operational-owners.yaml``
     module row for this module, an ``excluded`` row, or a recorded exception.
     """
-    territory = write_scopes.owned_territory()
+    territory = capability_catalog.owned_territory()
     owned = [pattern for pattern in territory if _patterns_overlap(dest, pattern)]
     if rel == _CANONICAL_ENGINE_MODULE:
         refused = [p for p in _ENGINE_REFUSED_TERRITORY if _patterns_overlap(dest, p)]
@@ -579,7 +579,7 @@ def validate_effects_declarations(
             failures.append(f"A2 {rel}: migration declaration must cite its recorded maintenance contract")
 
         parsed[rel] = raw
-        territory = write_scopes.owned_territory()
+        territory = capability_catalog.owned_territory()
         owned = any(
             not _is_external_or_placeholder(dest) and any(
                 _patterns_overlap(dest, pattern) for pattern in territory)

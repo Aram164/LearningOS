@@ -457,12 +457,12 @@ def _authorized(writer_key: str, rel: str) -> bool:
     """Owned territory outside A19's domain needs the engine or a recorded exception."""
     import test_arch_writes as census
 
-    from learning_os.store.contracts import write_scopes
+    from learning_os.store.contracts import capability_catalog, write_scopes
 
     if rel.startswith("<STATE>/") or rel == "operations" or rel.startswith("operations/"):
         return True  # A19's domain: its owner check runs over the same records
     try:
-        if not write_scopes.in_owned_territory(rel):
+        if not capability_catalog.in_owned_territory(rel):
             return True
     except write_scopes.WriteScopeError:
         return False
