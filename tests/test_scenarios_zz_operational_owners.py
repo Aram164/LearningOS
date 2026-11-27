@@ -82,6 +82,13 @@ def _relative_destination(raw: str, root: str | None = None,
     return None
 
 
+def _atomic_destination(rel: str) -> str:
+    """Use the final name of an atomic-write sibling when comparing scopes."""
+    head, separator, name = rel.rpartition("/")
+    match = _TEMP_BASENAME.fullmatch(name)
+    return head + separator + match.group(1) if match else rel
+
+
 def _destinations(record: dict, root: str | None = None,
                   state_dir: str | None = None, anchored: bool = False) -> list[str]:
     """Normalized destinations for one record (SPEC §3.6 rules)."""
@@ -96,11 +103,7 @@ def _destinations(record: dict, root: str | None = None,
         rel = _relative_destination(raw, root, state_dir, anchored)
         if rel is None:
             continue
-        head, _, name = rel.rpartition("/")
-        match = _TEMP_BASENAME.match(name)
-        if match:
-            rel = f"{head}/{match.group(1)}" if head else match.group(1)
-        destinations.append(rel)
+        destinations.append(_atomic_destination(rel))
     return destinations
 
 
@@ -377,20 +380,18 @@ def _world_relative_cached(raw: str, root: str, state_dir: str | None,
     lexical = Path(raw).resolve()
     if state_dir and anchored:
         try:
-            return "<STATE>/" + lexical.relative_to(Path(state_dir).resolve()).as_posix()
+            rel = lexical.relative_to(Path(state_dir).resolve()).as_posix()
         except ValueError:
             pass
+        else:
+            return _atomic_destination(f"<STATE>/{rel}")
     try:
         rel = lexical.relative_to(Path(root).resolve()).as_posix()
     except ValueError:
         return None
     if rel in {"", "."}:
         return None
-    head, _, name = rel.rpartition("/")
-    match = _TEMP_BASENAME.match(name)
-    if match:
-        rel = f"{head}/{match.group(1)}" if head else match.group(1)
-    return rel
+    return _atomic_destination(rel)
 
 
 def _is_tool_process(binding: dict) -> bool:
@@ -892,6 +893,27 @@ def _write_events(log: Path) -> list[dict]:
     return [row for row in (json.loads(line) for line in log.read_text().splitlines())
             if row.get("event") in {"open", "os.rename", "os.replace"}
             and (row.get("mode") or "w") != "r"]
+
+
+def test_runtime_gate_accepts_atomic_review_check_state(tmp_path):
+    import subprocess
+
+    from learning_os.store import session_ledger
+    from learning_os.store.fs import clean_git_env
+
+    world = tmp_path / "world"
+    subprocess.run(["git", "init", "-q", str(world)], check=True, env=clean_git_env())
+    with _private_window(tmp_path, world) as log:
+        session_ledger.remember_review_check(world, "snapshot", "digest")
+
+    assert session_ledger.has_review_check(world, "snapshot", "digest")
+    events = _write_events(log)
+    assert any(row["event"] == "open" and any(".json.tmp-" in p for p in row["paths"])
+               for row in events)
+    assert any(row["event"] == "os.rename" for row in events)
+    violations, witnessed = _conformance_in_log(log)
+    assert not violations, violations
+    assert "tools/learning_os/store/session_ledger.py" in witnessed
 
 
 def _fake_checkout(tmp_path: Path, files: dict[str, str]) -> Path:
