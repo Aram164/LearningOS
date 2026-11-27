@@ -846,3 +846,270 @@ def test_ai_storage_owner_rejects_application_or_rogue_writers(tmp_path):
         assert _signatures(tmp_path, [_write_record(path, owner)]) == set()
     for rogue in ("learning_os.app.ai_actions.service", "learning_os.rogue"):
         assert _signatures(tmp_path, [_write_record(path, rogue)]) != set()
+
+
+# ---- 2A re-entry §5.5: the runtime writer gate on real and fabricated logs ----
+#
+# Real executed writes run inside a private hook window whose log stays in
+# tmp_path: it never joins the CI population, so deliberate violations here
+# cannot reach the population gates. Fabricated records test only the consumer.
+
+
+def _private_window(tmp_path: Path, root: Path, argv=("pytest",)):
+    import contextlib
+    import tempfile
+    import uuid
+
+    import arch_audit_hook
+
+    @contextlib.contextmanager
+    def window():
+        log = tmp_path / f"private-{uuid.uuid4().hex[:8]}.jsonl"
+        git_dir = root / ".git"
+        header = {"event": "case", "operation": "private", "case": log.stem, "root": str(root)}
+        installed = {
+            "event": "installed", "pid": os.getpid(), "ppid": os.getppid(), "token": "private",
+            "argv": list(argv), "root": str(root),
+            "state_dir": str(git_dir / "learningos") if git_dir.is_dir() else tempfile.gettempdir(),
+            "state_anchored": git_dir.is_dir(),
+        }
+        log.write_text(json.dumps(header) + "\n" + json.dumps(installed) + "\n", encoding="utf-8")
+        arch_audit_hook.install(str(log))
+        try:
+            yield log
+        finally:
+            arch_audit_hook.uninstall()
+        arch_audit_hook.assert_capture_ok()
+        with log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps({
+                "event": "completed", "pid": os.getpid(), "token": "private",
+                "root": str(root), "capture_ok": True, "new_receipts": []}) + "\n")
+
+    return window()
+
+
+def _write_events(log: Path) -> list[dict]:
+    return [row for row in (json.loads(line) for line in log.read_text().splitlines())
+            if row.get("event") in {"open", "os.rename", "os.replace"}
+            and (row.get("mode") or "w") != "r"]
+
+
+def _fake_checkout(tmp_path: Path, files: dict[str, str]) -> Path:
+    """A disposable LearningOS-shaped checkout; the hook attributes its tools/ frames."""
+    fake = tmp_path / "fake-checkout"
+    (fake / "system/contracts").mkdir(parents=True, exist_ok=True)
+    (fake / "system/contracts/tree-contract.yaml").write_text("directories: []\n", encoding="utf-8")
+    for rel, source in files.items():
+        (fake / rel).parent.mkdir(parents=True, exist_ok=True)
+        (fake / rel).write_text(source, encoding="utf-8")
+    return fake
+
+
+def _load_file(path: Path):
+    import importlib.util
+    import uuid
+
+    spec = importlib.util.spec_from_file_location(f"zz_probe_{uuid.uuid4().hex[:8]}", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_runtime_gate_accepts_a_package_writer_inside_its_scope(tmp_path):
+    from collections import Counter
+
+    from learning_os.store.warning_baseline import write_baseline
+
+    world = tmp_path / "world"
+    world.mkdir()
+    with _private_window(tmp_path, world) as log:
+        write_baseline(world, Counter({("LOCATOR-VAGUE", "a.yaml"): 1}), "private window")
+    writers = {row["writer"] for row in _write_events(log)}
+    assert writers == {"learning_os.store.warning_baseline"}, writers
+    violations, witnessed = _conformance_in_log(log)
+    assert violations == {}
+    assert witnessed == {"tools/learning_os/store/warning_baseline.py"}
+
+
+def test_runtime_gate_rejects_an_executed_out_of_scope_write(tmp_path):
+    """§7: a declared package writer driven outside its declaration is caught."""
+    from collections import Counter
+
+    from learning_os.store.warning_baseline import write_baseline
+
+    world = tmp_path / "world"
+    (world / "knowledge").mkdir(parents=True)
+    with _private_window(tmp_path, world) as log:
+        write_baseline(world / "knowledge", Counter({("LOCATOR-VAGUE", "a.yaml"): 1}), "leak")
+    violations, _ = _conformance_in_log(log)
+    rel = "knowledge/operations/validation-warning-baseline.yaml"
+    key = "tools/learning_os/store/warning_baseline.py"
+    assert f"{rel}::outside-declaration={key}" in violations, violations
+    assert f"{rel}::unauthorized={key}" in violations, violations
+
+
+def test_runtime_gate_credits_the_ai_action_storage_route_through_fs(tmp_path):
+    from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
+
+    world = tmp_path / "world"
+    world.mkdir()
+    repository = FilesystemAIActionRepository(world)
+    with _private_window(tmp_path, world) as log:
+        repository.write_continuation(
+            "ai-request-20261127-abc123", pass_number=1, route_id="route-demo",
+            record_text="pass: 1\n", slice_relative="slices/pass-1.md",
+            slice_body=b"slice\n", index_text="{}\n")
+    events = _write_events(log)
+    assert events and {row["writer"] for row in events} == {"learning_os.store.fs"}
+    assert {row.get("caller") for row in events} == {"learning_os.store.ai_actions.storage"}
+    violations, witnessed = _conformance_in_log(log)
+    assert violations == {}
+    assert witnessed == {"tools/learning_os/store/ai_actions/storage.py"}
+
+
+def test_runtime_gate_credits_a_real_standalone_tool_through_fs(tmp_path, capsys, monkeypatch):
+    """The recorded exception material_summarize.py writes knowledge/summaries/**."""
+    import test_material_summaries as summaries_tests
+
+    ms = summaries_tests._material_summarize()
+    world = tmp_path / "world"
+    cache = world / "knowledge" / "summaries"
+    cache.mkdir(parents=True)
+    text = summaries_tests._text_cache(tmp_path)
+    draft = tmp_path / "draft.md"
+    draft.write_text("A detailed chapter compression. " * 20, encoding="utf-8")
+    with _private_window(tmp_path, world) as log:
+        assert summaries_tests._promote(ms, cache, text, draft) == 0
+    capsys.readouterr()
+    events = _write_events(log)
+    assert events and {row.get("caller") for row in events} == {"tools/material_summarize.py"}
+    violations, witnessed = _conformance_in_log(log)
+    assert violations == {}
+    assert witnessed == {"tools/material_summarize.py"}
+
+
+def test_runtime_gate_attributes_and_rejects_a_standalone_tool_writing_owned_state(tmp_path):
+    """§7: a standalone tool writing records/ is credited to its file and refused."""
+    fake = _fake_checkout(tmp_path, {
+        "tools/zz_rogue_standalone.py":
+            "def run(root):\n    (root / 'records' / 'x.yaml').write_text('x\\n')\n",
+    })
+    rogue = _load_file(fake / "tools/zz_rogue_standalone.py")
+    world = tmp_path / "world"
+    (world / "records").mkdir(parents=True)
+    with _private_window(tmp_path, world) as log:
+        rogue.run(world)
+    assert {row["writer"] for row in _write_events(log)} == {"tools/zz_rogue_standalone.py"}
+    violations, _ = _conformance_in_log(log)
+    assert "records/x.yaml::undeclared-writer=tools/zz_rogue_standalone.py" in violations, violations
+
+
+def test_runtime_gate_attributes_a_migration_frame(tmp_path):
+    """A tools/migrations/ frame is a migration writer; an unknown one is refused."""
+    fake = _fake_checkout(tmp_path, {
+        "tools/migrations/zz_probe_migration.py":
+            "def apply(root):\n    (root / 'curriculum' / 'x.yaml').write_text('x\\n')\n",
+    })
+    migration = _load_file(fake / "tools/migrations/zz_probe_migration.py")
+    world = tmp_path / "world"
+    (world / "curriculum").mkdir(parents=True)
+    with _private_window(tmp_path, world) as log:
+        migration.apply(world)
+    assert {row["writer"] for row in _write_events(log)} == {"migrations.zz_probe_migration"}
+    violations, _ = _conformance_in_log(log)
+    assert "curriculum/x.yaml::undeclared-writer=migrations.zz_probe_migration" in violations
+
+
+def test_runtime_gate_credits_a_standalone_callback_to_its_own_file(tmp_path):
+    """A standalone callback run by a package frame is never credited to that frame."""
+    fake = _fake_checkout(tmp_path, {
+        "tools/learning_os/zz_runner.py": "def run(callback, path):\n    callback(path)\n",
+        "tools/zz_callback.py": "def write(path):\n    path.write_text('x\\n')\n",
+    })
+    runner = _load_file(fake / "tools/learning_os/zz_runner.py")
+    callback = _load_file(fake / "tools/zz_callback.py")
+    world = tmp_path / "world"
+    (world / "generated/reports").mkdir(parents=True)
+    with _private_window(tmp_path, world) as log:
+        runner.run(callback.write, world / "generated/reports/x.md")
+    assert {row["writer"] for row in _write_events(log)} == {"tools/zz_callback.py"}
+    violations, _ = _conformance_in_log(log)
+    assert "generated/reports/x.md::undeclared-writer=tools/zz_callback.py" in violations
+
+
+def _conformance_signatures(tmp_path: Path, records: list[dict], argv=None) -> set[str]:
+    import uuid
+
+    world = tmp_path / f"world-{uuid.uuid4().hex[:8]}"
+    (world / "operations" / "transactions").mkdir(parents=True)
+    log = _write_log(tmp_path, f"conformance-{uuid.uuid4().hex[:8]}", records, world)
+    if argv is not None:
+        rows = [json.loads(line) for line in log.read_text().splitlines()]
+        for row in rows:
+            if row.get("event") == "installed":
+                row["argv"] = list(argv)
+        log.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+    violations, _ = _conformance_in_log(log)
+    return set(violations)
+
+
+_CACHE_WRITER = "learning_os.store.validation_cache"
+_CACHE_KEY = "tools/learning_os/store/validation_cache.py"
+_CACHE_FILE = "generated/reports/validation-report.cache.json"
+
+
+def test_runtime_gate_checks_the_source_of_a_rename(tmp_path):
+    """§7: a non-owner rename whose source is in owned territory is caught."""
+    sigs = _conformance_signatures(tmp_path, [{
+        "event": "os.rename", "paths": ["/w/knowledge/notes/a.md", f"/w/{_CACHE_FILE}"],
+        "mode": None, "writer": _CACHE_WRITER, "writer_file": "/repo/x.py", "writer_line": 1}])
+    assert f"knowledge/notes/a.md::outside-declaration={_CACHE_KEY}" in sigs, sigs
+    assert f"knowledge/notes/a.md::unauthorized={_CACHE_KEY}" in sigs, sigs
+    assert not any(sig.startswith(_CACHE_FILE) for sig in sigs), sigs
+
+
+def test_runtime_gate_checks_only_the_destination_of_a_copy(tmp_path):
+    assert _conformance_signatures(tmp_path, [{
+        "event": "shutil.copyfile", "paths": ["/w/knowledge/notes/a.md", f"/w/{_CACHE_FILE}"],
+        "mode": None, "writer": _CACHE_WRITER, "writer_file": "/repo/x.py", "writer_line": 1}]) == set()
+
+
+def test_runtime_gate_refuses_an_unknown_writer_only_in_a_tool_process(tmp_path):
+    record = {"event": "open", "paths": ["/w/generated/reports/x.md"], "mode": "w",
+              "writer": None, "writer_file": None, "writer_line": None}
+    assert _conformance_signatures(tmp_path, [record], argv=["tools/los.py", "status"]) == {
+        "generated/reports/x.md::unknown-writer"}
+    assert _conformance_signatures(tmp_path, [record]) == set()  # test scaffolding
+
+
+@pytest.mark.parametrize("rel, ok", [
+    ("generated/reports/out.json", True),
+    (".venv/scratch/out.json", True),
+    ("generated/undeclared-child/out.json", False),
+    ("archive/out.json", False),
+])
+def test_runtime_gate_admits_caller_selected_output_only_where_the_guard_does(tmp_path, rel, ok):
+    sigs = _conformance_signatures(tmp_path, [{
+        "event": "open", "paths": [f"/w/{rel}"], "mode": "w",
+        "writer": "learning_os.app.handlers.platform", "writer_file": "/repo/x.py",
+        "writer_line": 1}])
+    key = "tools/learning_os/app/handlers/platform.py"
+    assert (f"{rel}::outside-declaration={key}" not in sigs) is ok, sigs
+
+
+def test_runtime_gate_refuses_the_engine_on_interface_roots_and_admits_its_controls(tmp_path):
+    engine = "learning_os.store.transactions"
+    key = "tools/learning_os/store/transactions.py"
+    sigs = _conformance_signatures(tmp_path, [{
+        "event": "open", "paths": ["/w/boards/x.canvas"], "mode": "w", "phase": "apply",
+        "writer": engine, "writer_file": "/repo/x.py", "writer_line": 1}])
+    assert f"boards/x.canvas::unauthorized={key}" in sigs, sigs
+    # Controls: the engine:apply alternative row and a legitimate migration.
+    assert _conformance_signatures(tmp_path, [{
+        "event": "open", "paths": ["/w/operations/ai-actions/requests/r1/request.yaml"],
+        "mode": "w", "phase": "apply", "writer": engine,
+        "writer_file": "/repo/x.py", "writer_line": 1}]) == set()
+    assert _conformance_signatures(tmp_path, [{
+        "event": "open", "paths": ["/w/curriculum/programs/x.yaml"], "mode": "w",
+        "writer": "migrations.curriculum_v2", "writer_file": "/repo/x.py",
+        "writer_line": 1}]) == set()

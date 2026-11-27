@@ -1,4 +1,78 @@
-"""A2 one canonical writer: mandatory tools/ writer census and fixtures (SPEC §3.2, CL-06)."""
+"""A2 one canonical writer: mandatory tools/ writer census and fixtures (SPEC §3.2, CL-06).
+
+Coverage model (2A re-entry, REENTRY-CRITIQUE rev 2 §5.7; replaces FIX-V2-STATUS D1)
+=====================================================================================
+
+Four layers, each answering one question (REENTRY §4, §5.1):
+
+1. Ownership: production contracts decide what is owned. Owned territory is
+   ``capability_catalog.owned_territory()``: the canonical fingerprint roots,
+   ``operations/``, every capability write scope, and the tree-contract roots
+   whose owner is ``interface``. A declaration in ``effects.yaml`` grants
+   nothing. Inside owned territory it needs one alternative authority, covering
+   all of its owned scope (overlap is not containment): the engine, except
+   ``_ENGINE_REFUSED_TERRITORY``; an ``operational-owners.yaml`` module row for
+   the module or its package, or an ``excluded`` row; or a recorded exception in
+   ``_RECORDED_CANONICAL_EXCEPTIONS`` for exactly the destinations it names.
+   Outside owned territory the declaration is the ownership record, and blanket
+   globs are still refused.
+2. The bounded static census. For every tracked ``tools/**/*.py`` file (the
+   scanned inventory equals ``git ls-files``; symlinked files are refused, and
+   so is a Python-shebang file without ``.py``, N-11), and for every write
+   primitive in the enumerated inventory, the target must be built only from
+   declared anchors, literals, proved single segments and the runtime guards
+   or validators. Anything else fails closed. The enumerated inventory is
+   exactly the census tables: the open-family openers and their modes
+   (``_DEFERRED_OPENERS`` plus ``Path.open``), ``_PATH_WRITE_METHODS``,
+   ``_OS_WRITE_ATTRS`` and the ``os.open`` flags (``_OS_WRITE_OPEN_FLAGS``),
+   ``_SHUTIL_WRITE_ATTRS``, ``_TEMPFILE_ATTRS``, ``_LOGGING_FILE_HANDLERS``,
+   ``sqlite3`` connections, ``tarfile``/``zipfile`` write and extract modes,
+   ``_WRITE_HELPERS`` (shared ``store.fs`` and engine helpers), and process
+   launches (``_SUBPROCESS_FUNCS``, ``_OS_EXEC_ATTRS``,
+   ``_ASYNCIO_SUBPROCESS_ATTRS``), where git is default-deny outside
+   ``_READONLY_GIT_SUBCOMMANDS`` and filesystem commands accept only
+   ``_FS_COMMAND_FLAGS``. An opener is read-only only with a literal read-only
+   mode at the call: a starred or ``**`` argument or an unresolved mode counts
+   as writing, and a ``functools.partial`` over any opener is refused where it
+   is built (N-2). Refused outright, whatever the declaration:
+   ``_FORBIDDEN_PRIMITIVES`` (N-5); the admission names in
+   ``_ADMISSION_NAME_SITES`` outside their recorded sites (N-7); in-process use
+   of a recorded exception outside ``_ENTRY_POINT_REFERENCES`` (N-6); and
+   ``_unmediated_test_only`` anywhere under ``tools/``.
+3. Production guards: ``write_scopes.guard_tool_output_path`` (inside a
+   repository only a declared ``generated/`` child or the ``.venv/`` scratch),
+   ``scoped_write_target``, the ``store.fs`` boundary checks, and
+   ``TransactionService`` default-deny admission. They refuse unauthorized
+   destinations in supported operations, whether or not the census saw them.
+4. The runtime writer gate (``test_runtime_writer_conformance_population`` in
+   ``tests/test_scenarios_zz_operational_owners.py``): every world write the
+   CI population executes (scenario cases, procedure transcripts, audit
+   windows) needs a resolved writer, a covering declaration and authority. An
+   unresolved writer, destination or evidence fails closed. Every writer that
+   reaches owned territory has a witness disposition (``witness: runtime``,
+   ``helper``, or a named deferral; §5.6).
+
+What the static census does not claim, and what covers it instead:
+
+- N-3, object state: an instance attribute retargeted from outside its class,
+  or a path carried in an object's container.
+- N-4, a bad root passed to a public method from another module: method calls
+  are not resolved. This withdraws D4's claim that bad roots are reported at
+  the caller, for method calls.
+- N-10 (D2): the ``.name`` of a path value is taken as one segment.
+- Computed names: ``getattr`` with a dynamic name, ``eval``, ``exec``,
+  ``importlib``, ``ctypes``, and runtime monkeypatching.
+- Library callables that write internally but are not in the inventory, for
+  example ``xml.etree.ElementTree.ElementTree.write``, ``shelve`` or ``dbm``.
+  A future need moves one into the inventory with a destination rule.
+- ``socket.bind`` of a filesystem socket: its one use, the study broker,
+  passes ``guard_tool_output_path``.
+
+For all of these, the production guards protect every supported operation,
+and the runtime gate checks every write the CI population executes. Code that
+never runs, and whose destination cannot be resolved statically, rests on the
+guards alone (the 2A exit amendment, 27 November 2026).
+"""
 
 from __future__ import annotations
 
@@ -1106,8 +1180,10 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Import(self, node: ast.Import) -> None:
         for alias in node.names:
+            # ``import a.b`` binds ``a`` to package ``a``; only ``import a.b as x``
+            # binds a name to ``a.b`` itself.
             bound = alias.asname or alias.name.split(".", 1)[0]
-            self._mod_aliases[bound] = alias.name
+            self._mod_aliases[bound] = alias.name if alias.asname else bound
             self._refuse_entry_only_import(node, alias.name)
         self.generic_visit(node)
 
@@ -2197,7 +2273,8 @@ class _ModuleWriteSites:
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
-                    self.mod_aliases[alias.asname or alias.name.split(".", 1)[0]] = alias.name
+                    top = alias.name.split(".", 1)[0]
+                    self.mod_aliases[alias.asname or top] = alias.name if alias.asname else top
             elif isinstance(node, ast.ImportFrom):
                 module = node.module or ""
                 if node.level:
@@ -4730,3 +4807,241 @@ def test_codex_launcher_is_declared_as_agent_workspace_write():
     declaration = effects["tools/codex_obsidian.py"]
     assert "<AGENT_WORKSPACE_WRITE_LAUNCHER>" in declaration["destinations"]
     assert "2B" in declaration["contract"]
+
+
+# ---- 2A re-entry (REENTRY-CRITIQUE rev 2): census unit tests -------------
+#
+# Each case is disposable census input; the real tree stays green through
+# test_static_lint_matches_baseline. Upstream -reg branches repeat the §7
+# regressions against the real tree.
+
+
+def _probe_failures(tmp_path: Path, modules: dict[str, str], effects: dict | None = None) -> list[str]:
+    root, base = _synthetic_effects(tmp_path)
+    for rel, source in modules.items():
+        path = root / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(source, encoding="utf-8")
+    return scan_tools_census(root, {**base, **(effects or {})}, [], tree_roots=_load_tree_roots())
+
+
+@pytest.mark.parametrize("declaration, owned, expected", [
+    ("operations/transactions/**", "operations/transactions/transaction-*.yaml", True),
+    ("operations/transactions/revisions.yaml", "operations/transactions/revisions.yaml", True),
+    ("operations/**", "operations/ai-actions/**", True),
+    ("generated/reports/**", "operations/transactions/**", False),
+])
+def test_reentry_declaration_overlap_cases(declaration, owned, expected):
+    """REENTRY §5.2 table: overlap is a pattern operation in both directions."""
+    assert _patterns_overlap(declaration, owned) is expected
+    assert _patterns_overlap(owned, declaration) is expected
+
+
+def test_reentry_overlap_is_not_containment():
+    """REENTRY §4: a broad declaration must be authorized in full."""
+    assert _patterns_overlap("operations/**", "operations/ai-actions/**")
+    assert not _pattern_contains("operations/ai-actions/**", "operations/**")
+    assert _pattern_contains("operations/**", "operations/ai-actions/x.yaml")
+    assert not _pattern_contains("operations/ai-actions/*", "operations/ai-actions/a/b.yaml")
+
+
+def _declaration_failures(tmp_path: Path, rel: str, dest: str) -> list[str]:
+    root = tmp_path / "decl"
+    (root / rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / rel).write_text("def f():\n    return None\n", encoding="utf-8")
+    _, failures = validate_effects_declarations(
+        {rel: {"effect": "operational", "destinations": [dest], "reason": "r"}}, root=root)
+    assert not any("target does not exist" in f for f in failures), failures
+    return failures
+
+
+def test_reentry_pattern_outside_both_grammars_is_rejected(tmp_path):
+    for bad in ("operations/tran**/x.yaml", "operations/**x", "operations/../records/**"):
+        assert _declaration_failures(tmp_path, "tools/zz_grammar.py", bad), bad
+    assert _declaration_failures(tmp_path, "tools/zz_grammar.py", "generated/reports/**") == []
+
+
+@pytest.mark.parametrize("dest", [
+    "operations/transactions/transaction-*.yaml",
+    "operations/transactions/**",
+    "operations/migrations/projects-to-modules-v62/**",
+    "archive/inbox/**",
+    "system/contracts/**",
+])
+def test_reentry_a_new_module_cannot_declare_owned_territory(tmp_path, dest):
+    """N-1: a declaration alone never grants owned territory (REENTRY §7)."""
+    failures = _declaration_failures(tmp_path, "tools/zz_claim.py", dest)
+    assert any("owned territory" in f or "canonical DATA_ROOTS" in f for f in failures), failures
+
+
+def test_reentry_alternative_authorities_and_the_engine_refusals():
+    """N-1 controls: the module row and the engine row are alternatives."""
+    data_roots = tuple(DATA_ROOTS)
+    storage = "tools/learning_os/store/ai_actions/storage.py"
+    service = "tools/learning_os/app/ai_actions/service.py"
+    assert _owned_territory_failures(storage, "operations/ai-actions/**", "operational", None, data_roots) == []
+    assert _owned_territory_failures(service, "operations/ai-actions/**", "operational", None, data_roots)
+    engine = _CANONICAL_ENGINE_MODULE
+    assert _owned_territory_failures(engine, "operations/ai-actions/**", "canonical-engine", None, data_roots) == []
+    for refused in ("boards/**", "bases/**", "operations/gateway-requests/**"):
+        assert _owned_territory_failures(engine, refused, "canonical-engine", None, data_roots), refused
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("open-kwargs", "def f(p, kw):\n    open(p, **kw)\n"),
+    ("open-starred", "def f(p, a):\n    open(p, *a)\n"),
+    ("open-unresolved-mode", "def f(p, m):\n    open(p, mode=m)\n"),
+    ("path-open-kwargs", "from pathlib import Path\ndef f(p, kw):\n    Path(p).open(**kw)\n"),
+    ("io-open-kwargs", "import io\ndef f(p, kw):\n    io.open(p, **kw)\n"),
+    ("codecs-open-kwargs", "import codecs\ndef f(p, kw):\n    codecs.open(p, **kw)\n"),
+    ("fdopen-starred", "import os\ndef f(fd, a):\n    os.fdopen(fd, *a)\n"),
+    ("zipfile-kwargs", "import zipfile\ndef f(p, kw):\n    zipfile.ZipFile(p, **kw)\n"),
+    ("tarfile-kwargs", "import tarfile\ndef f(p, kw):\n    tarfile.open(p, **kw)\n"),
+    ("partial-open-read", "import functools\ndef f():\n    return functools.partial(open, mode='r')\n"),
+    ("partial-os-open", "import functools, os\ndef f(p):\n    return functools.partial(os.open, p, os.O_RDONLY)\n"),
+    ("dotted-import-remove", "import os.path\ndef f(p):\n    os.remove(p)\n"),
+])
+def test_reentry_opaque_modes_and_deferred_openers_fail_closed(tmp_path, probe_id, code):
+    """N-2 (REENTRY §5.3): only a literal read-only mode at the call is read-only."""
+    failures = _probe_failures(tmp_path, {"tools/zz_n2.py": code})
+    assert any("tools/zz_n2.py" in f for f in failures), (probe_id, failures)
+
+
+@pytest.mark.parametrize("code", [
+    "def f(p):\n    with open(p, 'r', encoding='utf-8') as h:\n        return h.read()\n",
+    "def f(p):\n    with open(p) as h:\n        return h.read()\n",
+    "from pathlib import Path\ndef f(p):\n    with Path(p).open('rb') as h:\n        return h.read()\n",
+])
+def test_reentry_literal_read_only_openers_stay_read_only(tmp_path, code):
+    failures = _probe_failures(tmp_path, {"tools/zz_reader.py": code})
+    assert not any("tools/zz_reader.py" in f for f in failures), failures
+
+
+def test_reentry_declared_writer_using_open_kwargs_outside_its_scope(tmp_path):
+    """§7: an already-declared writer's opaque-mode open is checked against its scope."""
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/writer_ok.py").write_text(
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parents[1]\n"
+        "def run(root: Path):\n"
+        "    (root / 'generated/reports/demo.txt').write_text('x', encoding='utf-8')\n"
+        "def leak(kw):\n"
+        "    open(ROOT / 'knowledge/notes/leak.md', **kw)\n",
+        encoding="utf-8",
+    )
+    findings = check_declared_write_sites(root, effects)
+    assert any("knowledge/notes/leak.md" in f and "outside declared destinations" in f
+               for f in findings), findings
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("urlretrieve", "import urllib.request\ndef f(u, p):\n    urllib.request.urlretrieve(u, p)\n"),
+    ("urlretrieve-from", "from urllib.request import urlretrieve\ndef f(u, p):\n    urlretrieve(u, p)\n"),
+    ("fileio", "import io\ndef f(p):\n    io.FileIO(p, 'w')\n"),
+    ("fileinput", "import fileinput\ndef f(p):\n    fileinput.input(p, inplace=True)\n"),
+    ("fileinput-class", "import fileinput\ndef f(p):\n    fileinput.FileInput(p)\n"),
+    ("pty", "import pty\ndef f():\n    pty.spawn('sh')\n"),
+    ("copystat", "import shutil\ndef f(a, b):\n    shutil.copystat(a, b)\n"),
+    ("copymode", "import shutil\ndef f(a, b):\n    shutil.copymode(a, b)\n"),
+    ("chown", "import shutil\ndef f(p):\n    shutil.chown(p, 'x')\n"),
+    ("setxattr", "import os\ndef f(p):\n    os.setxattr(p, 'user.x', b'1')\n"),
+    ("removexattr", "import os\ndef f(p):\n    os.removexattr(p, 'user.x')\n"),
+    ("chflags", "import os\ndef f(p):\n    os.chflags(p, 0)\n"),
+    ("lchflags", "import os\ndef f(p):\n    os.lchflags(p, 0)\n"),
+])
+def test_reentry_primitives_outside_the_inventory_are_refused(tmp_path, probe_id, code):
+    """N-5: the enumerated inventory is closed; these REVIEW-V3 primitives are refused."""
+    failures = _probe_failures(tmp_path, {"tools/zz_n5.py": code})
+    assert any("tools/zz_n5.py" in f and "outside the supported write-primitive inventory" in f
+               for f in failures), (probe_id, failures)
+
+
+def test_reentry_annotation_only_use_is_not_refused(tmp_path):
+    failures = _probe_failures(tmp_path, {
+        "tools/zz_annot.py": (
+            "import io\nfrom learning_os.store.transactions import TransactionService\n"
+            "def f(h: io.FileIO, s: 'TransactionService') -> None:\n    return None\n"),
+    })
+    assert not any("tools/zz_annot.py" in f for f in failures), failures
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("service", "from learning_os.store.transactions import TransactionService\n"
+                "def f(root):\n    return TransactionService(root)\n"),
+    ("context", "from learning_os.store.contracts.gateway import GatewayRequestContext\n"
+                "def f():\n    return GatewayRequestContext(channel='ui')\n"),
+    ("installer", "from learning_os.store.contracts.gateway import gateway_request_context\n"
+                  "def f(c):\n    return gateway_request_context(c)\n"),
+    ("getattr", "import learning_os.store.transactions as t\n"
+                "def f(root):\n    return getattr(t, 'TransactionService')(root)\n"),
+])
+def test_reentry_admission_names_only_at_recorded_sites(tmp_path, probe_id, code):
+    """N-7: construction sites are finite; provenance and lifecycle stay with 2B."""
+    failures = _probe_failures(tmp_path, {"tools/zz_n7.py": code})
+    assert any("tools/zz_n7.py" in f and "recorded construction sites" in f
+               for f in failures), (probe_id, failures)
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("w01-migration", "from migrations.curriculum_v2 import run\ndef f(root):\n    run(root, apply=True)\n"),
+    ("w02-summarize", "import material_summarize\ndef f():\n    material_summarize.main(['--promote'])\n"),
+    ("w03-reconcile", "import library_reconciliation\ndef f():\n    library_reconciliation.main(['--apply'])\n"),
+    ("bump-in-process", "from learning_os.store.contracts.data_contract import bump\n"
+                        "def f(root):\n    bump(root, note='x')\n"),
+])
+def test_reentry_recorded_exceptions_run_only_from_their_entry_points(tmp_path, probe_id, code):
+    """N-6: REVIEW-V3 probes w01–w03 now fail closed, as does an in-process bump."""
+    failures = _probe_failures(tmp_path, {"tools/zz_n6.py": code})
+    assert any("tools/zz_n6.py" in f and "(Bar 4 v3 N-6)" in f for f in failures), (probe_id, failures)
+
+
+def test_reentry_every_recorded_exception_has_entry_point_references():
+    """N-6: each recorded exception names its documented entry point."""
+    for rel in _RECORDED_CANONICAL_EXCEPTIONS:
+        identity = _module_identity(rel)
+        keys = [key for key in _ENTRY_POINT_REFERENCES
+                if key == identity or key.startswith(identity + ".")]
+        assert keys, f"{rel} has no _ENTRY_POINT_REFERENCES row"
+        assert all(rel in _ENTRY_POINT_REFERENCES[key] for key in keys), (rel, keys)
+
+
+def test_reentry_extensionless_python_scripts_are_outside_the_inventory(tmp_path):
+    """N-11: a Python shebang without .py is refused; other scripts are not."""
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/zz_shebang").write_text("#!/usr/bin/env python3\nprint('x')\n", encoding="utf-8")
+    (root / "tools/zz_shell").write_text("#!/bin/sh\necho x\n", encoding="utf-8")
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert any("tools/zz_shebang" in f and "(Bar 4 v3 N-11)" in f for f in failures), failures
+    assert not any("tools/zz_shell" in f for f in failures), failures
+
+
+@pytest.mark.parametrize("raw, owned, ok", [
+    ({}, True, False),
+    ({}, False, True),
+    ({"witness": "runtime"}, True, True),
+    ({"witness": "deferred: 2B: witness the schema regeneration"}, True, True),
+    ({"witness": "deferred: 2Z: nowhere"}, True, False),
+    ({"witness": "deferred: 2B: "}, True, False),
+    ({"witness": "helper"}, True, False),
+    ({"witness": "maybe"}, False, False),
+])
+def test_reentry_every_owned_writer_needs_a_witness_disposition(raw, owned, ok):
+    """§5.6: a writer reaching owned territory without a disposition fails."""
+    failures = _witness_failures("tools/zz_writer.py", raw, owned)
+    assert (failures == []) is ok, failures
+
+
+def test_reentry_recorded_exceptions_run_from_registered_commands():
+    """N-6: every recorded exception is a registered command or is driven by one."""
+    import code_reachability
+
+    commands = {f"tools/{rel}" for rel in code_reachability.ENTRYPOINTS}
+    for rel in _RECORDED_CANONICAL_EXCEPTIONS:
+        identity = _module_identity(rel)
+        refs = set().union(*(sites for key, sites in _ENTRY_POINT_REFERENCES.items()
+                             if key == identity or key.startswith(identity + ".")))
+        assert rel in commands or refs & commands, (rel, sorted(refs))
+    for sites in _ENTRY_POINT_REFERENCES.values():
+        for site in sites:
+            if not site.startswith("tools/learning_os/"):
+                assert site in commands, f"{site} is not a registered entry point"
