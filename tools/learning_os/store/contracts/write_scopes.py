@@ -56,6 +56,30 @@ def normalize_scope_pattern(pattern: str) -> str:
     return f"{normalized}/**" if trailing_prefix else normalized
 
 
+def path_segment(value: object) -> str:
+    """Return ``value`` when it is exactly one safe path segment.
+
+    ``base / path_segment(x)`` always names a direct child of ``base``: empty
+    text, ``.``, ``..``, separators and NUL are refused, so a dynamic name can
+    neither replace the base (``/abs``) nor climb out of it (``..``).
+    """
+    if isinstance(value, os.PathLike):
+        value = os.fspath(value)
+    if not isinstance(value, str) or value in {"", ".", ".."} \
+            or "/" in value or "\\" in value or "\x00" in value:
+        raise WriteScopeError(f"not a single path segment: {value!r}")
+    return value
+
+
+def relative_path(value: object) -> str:
+    """Return ``value`` when it is a normalized relative path that stays under its base."""
+    if isinstance(value, os.PathLike):
+        value = os.fspath(value)
+    if not isinstance(value, str):
+        raise WriteScopeError(f"relative path operand must be text: {value!r}")
+    return "/".join(_segments(value, label="relative path operand", allow_glob=False))
+
+
 def normalize_relative_path(relative: str) -> str:
     return "/".join(
         _segments(relative, label="transaction target", allow_glob=False)
@@ -252,6 +276,10 @@ def guard_tool_output_path(
             _add_root(probe)
 
     protected = _protected_repo_output_roots()
+    # macOS APFS is case-insensitive by default: ``Records/`` opens the real
+    # ``records/``. Compare case-folded names, and compare the directory
+    # identity whenever the first component already exists.
+    folded = {name.casefold(): name for name in protected}
     for root_cand in candidate_roots:
         for target_view in (lexical, resolved):
             try:
@@ -262,12 +290,36 @@ def guard_tool_output_path(
                 raise WriteScopeError(
                     f"refusing tool output at repository root: {raw_path}"
                 )
-            if rel.parts[0] in protected:
+            first = rel.parts[0]
+            hit = folded.get(first.casefold())
+            if hit is None:
+                hit = _same_directory_as_protected(root_cand / first, root_cand, protected)
+            if hit is not None:
                 raise WriteScopeError(
-                    f"refusing tool output inside protected root {rel.parts[0]}/: {raw_path}"
+                    f"refusing tool output inside protected root {hit}/: {raw_path}"
                 )
 
     return lexical
+
+
+def _same_directory_as_protected(
+    first: Path, root: Path, protected: frozenset[str] | set[str]
+) -> str | None:
+    """Return the protected root that ``first`` is the same directory as, if any."""
+    try:
+        if not first.is_dir():
+            return None
+        ident = first.stat()
+    except OSError:
+        return None
+    for name in sorted(protected):
+        try:
+            other = (root / name).stat()
+        except OSError:
+            continue
+        if (other.st_dev, other.st_ino) == (ident.st_dev, ident.st_ino):
+            return name
+    return None
 
 
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW

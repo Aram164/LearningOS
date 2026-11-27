@@ -64,6 +64,7 @@ from learning_os.store.contracts.gateway import (
 from learning_os.store.contracts.json_schema import transaction_receipt_errors
 from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
+    path_segment,
     require_write_scope,
     scope_matches,
     write_target,
@@ -1998,7 +1999,7 @@ class TransactionService:
                 before: dict = {"kind": "absent"}
             else:
                 backup_id = f"backup-{i}"
-                atomic_write_bytes(run.staging_dir / backup_id, old)
+                atomic_write_bytes(run.staging_dir / path_segment(backup_id), old)
                 before = {
                     "kind": "file",
                     "sha256": f"sha256:{_sha256_bytes(old)}",

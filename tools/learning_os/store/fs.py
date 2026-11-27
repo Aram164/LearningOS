@@ -23,6 +23,29 @@ GIT_ENV_OVERRIDE_VARS: frozenset[str] = frozenset({
 _TEMP_ATTEMPTS = 32
 
 
+def is_git_output_option(word: str) -> bool:
+    """True for words that make a read-only git command write a file.
+
+    Covers ``-o``/``-o<file>`` (``git archive``), ``--output`` and
+    ``--output=<file>``, and any unambiguous abbreviation such as ``--outp``.
+    """
+    name = word.split("=", 1)[0]
+    return word.startswith("-o") or name.startswith("--output") or (
+        len(name) > 3 and "--output".startswith(name)
+    )
+
+
+def readonly_git_arguments(args: tuple[str, ...] | list[str]) -> tuple[str, ...]:
+    """Return ``args`` for a read-only git command, refusing output-file options."""
+    checked = tuple(args)
+    for word in checked:
+        if not isinstance(word, str):
+            raise ValueError(f"git argument must be text: {word!r}")
+        if is_git_output_option(word):
+            raise ValueError(f"git output option {word!r} is forbidden in a read-only git command")
+    return checked
+
+
 def clean_git_env(
     base: Mapping[str, str] | None = None,
     *,
@@ -88,6 +111,10 @@ def sync_directory_and_created_ancestors(
 
 
 def _assert_no_symlinks_under_boundary(path: Path, boundary: Path) -> None:
+    # ``relative_to`` is lexical: ``boundary/missing/../../records`` is
+    # "under" boundary until ``missing`` is created. Refuse traversal first.
+    if ".." in path.parts or ".." in boundary.parts:
+        raise ValueError(f"refusing '..' in write path under boundary {boundary}: {path}")
     try:
         lexical_rel = path.relative_to(boundary)
     except ValueError as exc:

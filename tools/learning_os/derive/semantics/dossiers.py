@@ -37,6 +37,7 @@ from pathlib import Path
 
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION, dossier_fresh
 from learning_os.domain.failures import TransactionFailure
+from learning_os.store.contracts.write_scopes import path_segment
 from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
 from learning_os.store.derived.store import invalidate
@@ -274,7 +275,7 @@ def cache_path(root: Path, dossier: Dossier) -> Path:
     digest in the filename makes shadowing structurally impossible.
     """
     digest = _overall_digest(dict(dossier.hashes))
-    return root / DOSSIERS_RELATIVE / f"{dossier.unit_id}-{digest[:16]}.json"
+    return root / DOSSIERS_RELATIVE / f"{path_segment(dossier.unit_id)}-{digest[:16]}.json"
 
 
 #: Cache document tag, so a semantic dossier is never mistaken for a

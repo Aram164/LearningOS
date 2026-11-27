@@ -28,6 +28,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from learning_os.store import observations
+from learning_os.store.fs import readonly_git_arguments
 
 
 class GitHistoryError(Exception):
@@ -84,8 +85,10 @@ def read_history(root: Path | str, *args: str) -> str:
     from the override's ``git`` object; every other argument list reaches
     real Git unchanged.
     """
-    if any(arg == "--output" or arg.startswith("--output=") for arg in args):
-        raise GitHistoryError("git log --output is forbidden in read_history")
+    try:
+        args = readonly_git_arguments(args)
+    except ValueError as exc:
+        raise GitHistoryError(f"read_history: {exc}") from exc
     override = observations.git_override()
     if override is not None:
         if tuple(args) == ("-1", "--format=%H") and "head" in override:

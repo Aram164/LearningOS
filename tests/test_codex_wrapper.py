@@ -307,18 +307,37 @@ def test_inside_to_outside_rename_is_refused(monkeypatch):
     assert len(calls) == 1
 
 
-def test_inside_to_inside_rename_remains_allowed(monkeypatch):
-    """A rename that never leaves the capability's own unit scope is fine."""
+_UNIT = "curriculum/modules/module-demo/units/unit-demo-l01"
+
+
+def _receipts(monkeypatch, wrapper, *, before, after, digests):
+    """Receipt ledger before and after the Codex run, and current file bytes."""
+    states = iter([before, after])
+    monkeypatch.setattr(wrapper, "receipt_index", lambda: next(states))
+    monkeypatch.setattr(wrapper, "file_digest", lambda path: digests.get(path))
+
+
+def test_inside_to_inside_rename_remains_allowed_when_receipted(monkeypatch):
+    """A rename inside the unit scope that a new receipt records is fine.
+
+    Bar 4 v2 NF-5: this test used to pass the same rename with no receipt at
+    all, which is an unmediated canonical write; it now has to be receipted.
+    """
     wrapper = load_wrapper()
     calls = []
     monkeypatch.setattr(wrapper, "codex_binary", lambda: "/fake/codex")
     _sequenced_dirty_paths(
         monkeypatch, wrapper,
         before=set(),
-        after={
-            "curriculum/modules/module-demo/units/unit-demo-l01/old.yaml",
-            "curriculum/modules/module-demo/units/unit-demo-l01/new.yaml",
-        },
+        after={f"{_UNIT}/old.yaml", f"{_UNIT}/new.yaml"},
+    )
+    _receipts(
+        monkeypatch, wrapper,
+        before=({"transaction-a"}, {}),
+        after=({"transaction-a", "transaction-b"},
+               {f"{_UNIT}/old.yaml": (None, "transaction-b"),
+                f"{_UNIT}/new.yaml": ("ab" * 32, "transaction-b")}),
+        digests={f"{_UNIT}/new.yaml": "ab" * 32},
     )
     monkeypatch.setattr(wrapper.subprocess, "run",
                         lambda cmd, **kwargs: calls.append(cmd) or Result())
@@ -326,3 +345,39 @@ def test_inside_to_inside_rename_remains_allowed(monkeypatch):
     assert wrapper.main() == 0
     assert calls[1][-1] == "validate"
     assert calls[2][-1] == "generate"
+
+
+@pytest.mark.parametrize(("ledger_after", "digests"), [
+    pytest.param(({"transaction-a"}, {}), {f"{_UNIT}/note.md": "cd" * 32}, id="no-receipt"),
+    pytest.param(({"transaction-a"}, {f"{_UNIT}/note.md": ("cd" * 32, "transaction-a")}),
+                 {f"{_UNIT}/note.md": "cd" * 32}, id="only-an-older-receipt"),
+    pytest.param(({"transaction-a", "transaction-b"}, {f"{_UNIT}/note.md": ("ee" * 32, "transaction-b")}),
+                 {f"{_UNIT}/note.md": "cd" * 32}, id="receipt-for-other-bytes"),
+])
+def test_direct_canonical_edit_without_a_new_receipt_is_refused(monkeypatch, ledger_after, digests):
+    """Bar 4 v2 NF-5: an in-scope edit Codex made directly never reaches validate/generate."""
+    wrapper = load_wrapper()
+    calls = []
+    monkeypatch.setattr(wrapper, "codex_binary", lambda: "/fake/codex")
+    _sequenced_dirty_paths(monkeypatch, wrapper, before=set(), after={f"{_UNIT}/note.md"})
+    _receipts(monkeypatch, wrapper, before=({"transaction-a"}, {}), after=ledger_after, digests=digests)
+    monkeypatch.setattr(wrapper.subprocess, "run",
+                        lambda cmd, **kwargs: calls.append(cmd) or Result())
+    monkeypatch.setattr(sys, "argv", [str(WRAPPER), _SCOPED_PROMPT])
+    assert wrapper.main() == 1
+    assert len(calls) == 1, "validation/generation must not run after an unreceipted edit"
+
+
+def test_unchanged_preexisting_dirty_path_needs_no_receipt(monkeypatch):
+    """A path already dirty before the run, with unchanged bytes, is not Codex's edit."""
+    wrapper = load_wrapper()
+    calls = []
+    monkeypatch.setattr(wrapper, "codex_binary", lambda: "/fake/codex")
+    dirty = {f"{_UNIT}/study-map.yaml"}
+    _sequenced_dirty_paths(monkeypatch, wrapper, before=dirty, after=dirty)
+    _receipts(monkeypatch, wrapper, before=(set(), {}), after=(set(), {}),
+              digests={f"{_UNIT}/study-map.yaml": "aa" * 32})
+    monkeypatch.setattr(wrapper.subprocess, "run",
+                        lambda cmd, **kwargs: calls.append(cmd) or Result())
+    monkeypatch.setattr(sys, "argv", [str(WRAPPER), _SCOPED_PROMPT])
+    assert wrapper.main() == 0

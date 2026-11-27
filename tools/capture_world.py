@@ -29,6 +29,7 @@ if str(TOOLS_DIR) not in sys.path:
 from learning_os.store.contracts.write_scopes import (  # noqa: E402
     WriteScopeError,
     guard_tool_output_path,
+    path_segment,
 )
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 from learning_os.store.fs import (  # noqa: E402
@@ -282,7 +283,7 @@ def main(argv: list[str] | None = None) -> int:
         base = root / rel_root
         if base.is_symlink() or not base.is_dir():
             continue
-        shutil.copytree(base, data_dir / rel_root, symlinks=True,
+        shutil.copytree(base, data_dir / path_segment(rel_root), symlinks=True,
                         copy_function=shutil.copy2)
     atomic_write_text_exclusive(
         out / "data-digest.json",

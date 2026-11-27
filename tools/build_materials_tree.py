@@ -43,7 +43,12 @@ TOOLS = Path(__file__).resolve().parent
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path  # noqa: E402
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+    relative_path,
+)
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 
 MATERIALS = REPO.parent / "materials"
@@ -300,7 +305,7 @@ def _run(materials: Path, *, apply: bool) -> int:
     moves = []
     missing = []
     for slug, parent in PLACEMENT.items():
-        target = materials / parent / slug
+        target = materials / relative_path(parent) / path_segment(slug)
         cur = find_current(slug, materials)
         if cur is None:
             missing.append(slug)
@@ -345,10 +350,10 @@ def _run(materials: Path, *, apply: bool) -> int:
     staging_dir = Path(tempfile.mkdtemp(prefix=".flat-tmp-", dir=flat))
     try:
         for slug, parent in PLACEMENT.items():
-            target = materials / parent / slug
+            target = materials / relative_path(parent) / path_segment(slug)
             if not target.is_dir() or target.is_symlink():
                 continue
-            link = flat / f"source-{slug}"
+            link = flat / f"source-{path_segment(slug)}"
             wanted.add(link.name)
             staged = staging_dir / link.name
             staged.symlink_to(Path("..") / parent / slug)
@@ -374,7 +379,7 @@ def _run(materials: Path, *, apply: bool) -> int:
     for slug, parent in PLACEMENT.items():
         folders.setdefault(parent, []).append(slug)
     for parent, slugs in sorted(folders.items()):
-        fdir = materials / parent
+        fdir = materials / relative_path(parent)
         if not fdir.is_dir():
             continue
         present = [s for s in sorted(slugs) if (fdir / s).is_dir()]

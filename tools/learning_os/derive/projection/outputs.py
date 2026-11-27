@@ -35,7 +35,7 @@ from learning_os.derive.projection.study_plan import build_study_plan_view
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.snapshot import Repo
 from learning_os.store.contracts.tree_contract import generated_keep_directories
-from learning_os.store.contracts.write_scopes import scoped_write_target
+from learning_os.store.contracts.write_scopes import path_segment, scoped_write_target
 from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     build_identity,
@@ -269,7 +269,7 @@ def _checked_output_path(
         raise TransactionFailure(f"unsafe generated output path: {relative}")
     current = gen
     for part in relative.parts[:-1]:
-        current = current / part
+        current = current / path_segment(part)
         _refuse_link(current, gen)
         if current.exists() and not current.is_dir():
             raise TransactionFailure(

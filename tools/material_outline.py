@@ -43,6 +43,7 @@ from material_toc import outline_rows  # noqa: E402
 from learning_os.store.contracts.write_scopes import (  # noqa: E402
     WriteScopeError,
     guard_tool_output_path,
+    path_segment,
 )
 from learning_os.store.fs import atomic_write_text_exclusive  # noqa: E402
 from learning_os.store.materials.pdf_text import PDFTextError, pdf_reader  # noqa: E402
@@ -151,7 +152,7 @@ def run(*, text_cache: Path, outline_dir: Path, materials_root: Path,
             if payload is None:
                 bump(outcome)
                 continue
-            _write_atomic(outline_dir / f"{sha256}.json", payload)
+            _write_atomic(outline_dir / f"{path_segment(sha256)}.json", payload)
             bump(f"written-{outcome}")
             record = _load_from(outline_dir, sha256)
         if record.sections:

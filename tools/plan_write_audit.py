@@ -90,7 +90,8 @@ def receipt_added(commit: str) -> bool:
     additions = None
     for comparison in comparisons:
         changes = git("diff-tree", "--root", "--no-commit-id", "--name-status",
-                      "-r", "--find-renames", "--diff-filter=A", "-z", *comparison)
+                      "-r", "--find-renames", "--diff-filter=A", "-z", "--end-of-options",
+                      *comparison)
         fields = changes.rstrip("\0").split("\0") if changes else []
         paths = {path for status, path in zip(fields[::2], fields[1::2], strict=True)
                  if status == "A" and Path(path).parent.as_posix() == RECEIPT_PATH

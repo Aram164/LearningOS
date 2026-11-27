@@ -21,7 +21,11 @@ import yaml
 from learning_os.store import observations
 from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.contracts.manifest_contract import declared_version
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+)
 from learning_os.store.materials.reading_cards import ReadingStore, ReadingStoreError, store_root
 
 #: The private reading store (ADR-021): a backup root only while it exists.
@@ -788,7 +792,7 @@ def _rebuild_materials_alias_layer(
             if not target.is_dir() or target.is_symlink():
                 absent.append(relative)
                 continue
-            link = flat / name
+            link = flat / path_segment(name)
             if link.is_symlink() or link.exists():
                 link.unlink()          # verification must be repeatable
             link.symlink_to(Path("..") / relative, target_is_directory=True)

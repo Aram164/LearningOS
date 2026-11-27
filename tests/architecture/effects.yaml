@@ -34,8 +34,9 @@
 
 "tools/codex_obsidian.py":
   effect: operational
-  destinations: ["<DELEGATED_GATEWAY_LAUNCHER>"]
-  reason: "Fail-closed Agentic Copilot adapter delegating scoped writes to tools/los.py capability and projection refresh to tools/los.py generate."
+  destinations: ["<AGENT_WORKSPACE_WRITE_LAUNCHER>", "<DELEGATED_GATEWAY_LAUNCHER>"]
+  reason: "Agentic Copilot adapter. For a named capability prompt it launches Codex with --sandbox workspace-write over the checkout, which can edit canonical files directly; after the run it refuses to validate or publish unless every changed canonical path is covered by a transaction receipt committed during the run. It then delegates validation and projection refresh to tools/los.py."
+  contract: "Recorded 2A exception (Bar 4 v2 NF-5): 2A detects unreceipted direct edits after the fact; Package 2B (seatbelt-macos direct-write denial, broker confinement) owns preventing them."
 
 "tools/compare_world.py":
   effect: tooling
@@ -44,8 +45,8 @@
 
 "tools/contract_bundle.py":
   effect: tooling
-  destinations: ["<OUT_DIR>/**"]
-  reason: "Emits bundled JSON Schema artifacts into an explicit --out build directory."
+  destinations: ["<OUT_DIR>/**", "<TMPDIR>/**"]
+  reason: "Emits bundled JSON Schema artifacts into an explicit --out build directory; check mode emits into a temporary directory and compares."
 
 "tools/diagnostics_prune.py":
   effect: cache
@@ -195,8 +196,8 @@
 
 "tools/learning_os/app/session.py":
   effect: operational
-  destinations: ["<GIT_INDEX_AND_COMMIT>"]
-  reason: "Commits session-touched paths via an isolated temporary GIT_INDEX_FILE."
+  destinations: ["<GIT_INDEX_AND_COMMIT>", "<TMPDIR>/**"]
+  reason: "Commits session-touched paths via an isolated GIT_INDEX_FILE inside a temporary directory."
 
 "tools/learning_os/app/validation.py":
   effect: cache

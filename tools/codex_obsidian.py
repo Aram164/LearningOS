@@ -6,6 +6,12 @@ named LearningOS gateway capability carrying explicit module/unit context.
 Before and after the action the wrapper verifies that no unrelated authored
 path is dirty; shelving additionally permits the two approval-gated knowledge
 destinations. The old broad markers remain exported but fail closed.
+
+The workspace-write sandbox cannot stop Codex from editing canonical files
+directly, so after the run every changed canonical path must be covered by a
+transaction receipt committed during the run, with matching bytes; otherwise
+the wrapper refuses to validate or publish. This detects an unmediated edit;
+confining the sandbox so it cannot happen is Package 2B's (Seatbelt/broker).
 """
 
 from __future__ import annotations
@@ -19,6 +25,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+
+from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
+from learning_os.store.receipt_chain import last_writes, load_receipts, sha256_file  # noqa: E402
 
 # v1 compatibility constants: these strings no longer grant write access.
 OPERATIONAL = "[LearningOS approved operational write]"
@@ -161,6 +171,34 @@ def outside_scope(paths: set[str], prefixes: tuple[str, ...]) -> set[str]:
             and not any(path.startswith(prefix) for prefix in prefixes)}
 
 
+def file_digest(relative: str) -> str | None:
+    """sha256 of a checkout file, ``None`` when absent, a marker for a symlink."""
+    path = ROOT / relative
+    if path.is_symlink():
+        return "symlink"
+    return sha256_file(path) if path.is_file() else None
+
+
+def receipt_index() -> tuple[set[str], dict[str, tuple[str | None, str]]]:
+    """Ids of every receipt, and each path's last committed write."""
+    receipts, _malformed = load_receipts(ROOT)
+    last, _skipped = last_writes(receipts)
+    return {str(receipt.get("id", "")) for receipt in receipts}, last
+
+
+def unreceipted_changes(changed: set[str], receipts_before: set[str]) -> set[str]:
+    """Changed canonical paths no receipt committed during the run accounts for."""
+    _ids, last = receipt_index()
+    missing: set[str] = set()
+    for relative in changed:
+        if relative.split("/", 1)[0] not in DATA_ROOTS:
+            continue
+        entry = last.get(relative)
+        if entry is None or entry[1] in receipts_before or entry[0] != file_digest(relative):
+            missing.add(relative)
+    return missing
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -199,6 +237,8 @@ def main(argv: list[str] | None = None) -> int:
             print("learningos-codex: refusing scoped write while unrelated changes exist: "
                   + ", ".join(sorted(unrelated)), file=sys.stderr)
             return 2
+        before_digests = {path: file_digest(path) for path in before}
+        receipts_before, _last = receipt_index()
 
     cmd = [binary, "exec", "--ephemeral", "--color", "never",
            "--sandbox", "workspace-write" if approved_write else "read-only",
@@ -232,6 +272,15 @@ def main(argv: list[str] | None = None) -> int:
     if escaped:
         print("learningos-codex: scoped action changed files outside its capability: "
               + ", ".join(sorted(escaped)), file=sys.stderr)
+        return 1
+
+    changed = {path for path in after
+               if path not in before_digests or before_digests[path] != file_digest(path)}
+    direct = unreceipted_changes(changed, receipts_before)
+    if direct:
+        print("learningos-codex: Codex changed canonical files without a transaction "
+              "receipt (direct edits bypass the gateway); refusing to validate or "
+              "publish — review or revert: " + ", ".join(sorted(direct)), file=sys.stderr)
         return 1
 
     try:

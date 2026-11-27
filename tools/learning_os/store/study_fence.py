@@ -20,7 +20,11 @@ from pathlib import Path
 
 from learning_os.domain.failures import StudyFenceRefused
 from learning_os.domain.validation import TEXT_CACHE_TOP_DIR
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+)
 
 _DIR_FD_EINVAL_ATTEMPTS = 4
 
@@ -171,7 +175,9 @@ def open_dir_chain_nofollow(
             raise OSError(errno.ELOOP, "Refusing symlink parent target", str(base_path)) from exc
         raise
 
-    for part in dir_parts:
+    for raw_part in dir_parts:
+        # ``..`` would climb out of ``base_path`` through the descriptor walk.
+        part = path_segment(raw_part)
         try:
             next_fd = open_dir_nofollow(dir_fd, part)
         except FileNotFoundError:
@@ -721,7 +727,7 @@ class RequestInputStager:
         subdir = self.stage_dir / f"f{idx}"
         subdir.mkdir(mode=0o700)
         leaf_name = anchored.name or "input"
-        staged_file = subdir / leaf_name
+        staged_file = subdir / path_segment(leaf_name)
         fd = os.open(
             staged_file,
             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,

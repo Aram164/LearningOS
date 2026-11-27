@@ -17,6 +17,7 @@ import yaml
 
 from learning_os.store.contracts import write_scopes
 from learning_os.store.fingerprint import DATA_ROOTS
+from learning_os.store.fs import is_git_output_option
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -96,6 +97,20 @@ _INDEX_OR_REF_GIT_SUBCOMMANDS = frozenset({
     "commit", "read-tree", "add", "update-ref", "push",
 })
 _MUTATING_FS_COMMANDS = frozenset({"cp", "mv", "rm"})
+# Flags that leave every operand a plain path and the last one the destination.
+_FS_COMMAND_FLAGS = {
+    "subprocess.cp": frozenset({"-a", "-p", "-r", "-R", "-f", "-n", "-v", "--"}),
+    "subprocess.mv": frozenset({"-f", "-n", "-v", "--"}),
+    "subprocess.rm": frozenset({"-f", "-r", "-R", "-rf", "-fr", "-v", "--"}),
+    "subprocess.git.mv": frozenset({"-f", "-k", "-n", "-v", "--"}),
+    "subprocess.git.rm": frozenset({"-f", "-r", "-q", "-n", "--cached", "--quiet", "--"}),
+}
+# Write-capable callables that count as a write when used as a value
+# (``functools.partial(p.write_text, ...)``, ``getattr(p, "unlink")``), Bar 4 v2 NF-4.
+_PATH_WRITE_METHODS = frozenset({
+    "write_text", "write_bytes", "unlink", "mkdir", "rmdir", "touch",
+    "symlink_to", "hardlink_to", "chmod", "lchmod", "rename",
+})
 _OS_WRITE_OPEN_FLAGS = frozenset({"O_WRONLY", "O_RDWR", "O_CREAT", "O_TRUNC", "O_APPEND"})
 _OS_READONLY_FLAGS = frozenset({"O_RDONLY", "O_NOFOLLOW", "O_CLOEXEC", "O_DIRECTORY", "O_NONBLOCK"})
 _SUBPROCESS_FUNCS = frozenset({"run", "Popen", "check_call", "check_output", "call"})
@@ -120,7 +135,32 @@ _SHUTIL_WRITE_ATTRS = frozenset({
     "move", "copy", "copy2", "copyfile", "copytree", "rmtree",
     "unpack_archive", "make_archive",
 })
-_TEMPFILE_ATTRS = frozenset({"mkstemp", "mkdtemp", "NamedTemporaryFile", "TemporaryFile"})
+_TEMPFILE_ATTRS = frozenset({
+    "mkstemp", "mkdtemp", "NamedTemporaryFile", "TemporaryFile",
+    "TemporaryDirectory", "SpooledTemporaryFile",
+})
+# Position of ``dir`` in each tempfile signature (Bar 4 v2 NF-2).
+_TEMPFILE_DIR_POSITION = {
+    "mkstemp": 2, "mkdtemp": 2, "TemporaryDirectory": 2,
+    "NamedTemporaryFile": 6, "TemporaryFile": 6, "SpooledTemporaryFile": 7,
+}
+# Helpers whose ``boundary=`` is enforced at runtime (fs._assert_no_symlinks_under_boundary).
+_BOUNDARY_ENFORCING_HELPERS = frozenset({"atomic_write_bytes_exclusive", "atomic_write_text_exclusive"})
+
+
+def _tempfile_dir_arg(leaf: str, call: ast.Call) -> ast.AST | None:
+    """The ``dir`` operand of a tempfile call, positional or keyword."""
+    for kw in call.keywords:
+        if kw.arg == "dir":
+            return kw.value
+        if kw.arg is None:
+            return kw.value  # ``**kwargs`` may carry dir: evaluates as unknown
+    position = _TEMPFILE_DIR_POSITION.get(leaf)
+    if position is not None and len(call.args) > position:
+        return call.args[position]
+    if any(isinstance(arg, ast.Starred) for arg in call.args):
+        return call.args[-1]  # ``*args`` may reach dir: evaluates as unknown
+    return None
 _LOGGING_FILE_HANDLERS = frozenset({
     "FileHandler", "WatchedFileHandler", "RotatingFileHandler", "TimedRotatingFileHandler",
 })
@@ -151,8 +191,31 @@ _ALLOWED_PLACEHOLDER_TOKENS = frozenset({
     "<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>",
     "<TRACE_DEBUG_FILE>",
     "<DELEGATED_GATEWAY_LAUNCHER>",
+    "<AGENT_WORKSPACE_WRITE_LAUNCHER>",
 })
 _DELEGATED_LAUNCHER_TOKEN = "<DELEGATED_GATEWAY_LAUNCHER>"
+_AGENT_WORKSPACE_WRITE_TOKEN = "<AGENT_WORKSPACE_WRITE_LAUNCHER>"
+# Placeholders a declaration alone must not grant (Bar 4 v2 NF-4): each names
+# the only modules allowed to declare it.
+_PINNED_PLACEHOLDER_OWNERS = {
+    "<GIT_INDEX_AND_COMMIT>": frozenset({"tools/learning_os/app/session.py"}),
+    "<DELEGATED_GATEWAY_LAUNCHER>": frozenset({
+        "tools/agent_run.py", "tools/codex_obsidian.py", "tools/study_launch.py",
+        "tools/learning_os/adapters/study_broker.py",
+    }),
+    # Recorded exception (Bar 4 v2 NF-5): detection lands in 2A, confinement in 2B.
+    "<AGENT_WORKSPACE_WRITE_LAUNCHER>": frozenset({"tools/codex_obsidian.py"}),
+}
+# Runtime validators the census trusts for dynamic path operands (Bar 4 v2 NF-2).
+_PATH_SEGMENT_VALIDATOR = "learning_os.store.contracts.write_scopes.path_segment"
+_RELATIVE_PATH_VALIDATOR = "learning_os.store.contracts.write_scopes.relative_path"
+# Calls whose text form never contains a path separator.
+_SAFE_SEGMENT_FUNCS = frozenset({
+    "os.getpid", "os.getppid", "len", "int", "time.time_ns", "time.monotonic_ns",
+    "secrets.randbelow", "secrets.token_hex", "secrets.token_urlsafe", "uuid.uuid4",
+    "os.geteuid", "os.getuid",
+    "threading.get_ident",
+})
 
 
 def _load_effects_yaml(path: Path = EFFECTS_PATH) -> object:
@@ -268,6 +331,11 @@ def validate_effects_declarations(
         parsed[rel] = raw
 
         for dest in destinations:
+            owners = _PINNED_PLACEHOLDER_OWNERS.get(dest)
+            if owners is not None and rel not in owners:
+                failures.append(
+                    f"A2 {rel}: {dest} is reserved for {sorted(owners)}; a declaration cannot grant it"
+                )
             if not _is_external_or_placeholder(dest):
                 top = dest.lstrip("./").split("/", 1)[0]
                 if top not in allowed_roots:
@@ -400,14 +468,24 @@ def _is_readonly_git_subcommand(
     sub: str, tail: list[ast.AST], env: dict[str, ast.AST],
 ) -> bool:
     literal_strs = [_str_const(e, env) for e in tail if not isinstance(e, ast.Starred)]
-    if any(s == "-o" or (s is not None and s.startswith("--output")) for s in literal_strs):
+    if any(s is not None and is_git_output_option(s) for s in literal_strs):
         return False
+    # Bar 4 v2 NF-4: before a literal "--", no word may be able to form an
+    # option, so ``f"--output={out}"`` or ``*extra`` cannot add an output file.
+    separator = next((i for i, e in enumerate(tail)
+                      if not isinstance(e, ast.Starred)
+                      and _str_const(e, env) in {"--", "--end-of-options"}), len(tail))
+    options = tail[:separator]
+    options_literal = not any(
+        _str_const(e, env) is None and _may_be_option(e, env) for e in options
+    )
     has_star = any(isinstance(e, ast.Starred) for e in tail)
-    if sub in _READONLY_GIT_SUBCOMMANDS:
+    if sub in _READONLY_GIT_SUBCOMMANDS and sub != "archive":
+        if not options_literal:
+            return False
         if not has_star:
             return True
-        # Starred pathspecs after "--" (or read-only log/status/check-ignore) cannot inject
-        # mutating git subcommands; git archive stays read-only without -o/--output.
+        # Starred pathspecs after a literal "--" cannot add options.
         if sub in {"ls-files", "check-ignore", "status", "log", "diff", "diff-tree"}:
             return True
     if sub == "archive":
@@ -594,6 +672,78 @@ def _discover_git_star_wrappers(tree: ast.Module) -> tuple[dict[ast.FunctionDef,
     return wrappers, skipped_sub_calls
 
 
+def _callee_dotted(visitor: _Visitor, func: ast.AST) -> str | None:
+    """``module.attr`` for a call head, through import aliases."""
+    if isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name):
+        return f"{visitor._module_of(func.value)}.{func.attr}"
+    if isinstance(func, ast.Name) and func.id in visitor._from_aliases:
+        mod, orig = visitor._from_aliases[func.id]
+        return f"{mod}.{orig}"
+    return None
+
+
+def _annotation_node_ids(tree: ast.AST) -> set[int]:
+    """Ids of nodes in annotations and isinstance/issubclass class operands: not runtime values."""
+    found: set[int] = set()
+    for node in ast.walk(tree):
+        roots: list[ast.AST] = []
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            args = node.args
+            roots += [a.annotation for a in (*args.posonlyargs, *args.args, *args.kwonlyargs,
+                                              args.vararg, args.kwarg) if a is not None and a.annotation]
+            if node.returns is not None:
+                roots.append(node.returns)
+        elif isinstance(node, ast.AnnAssign):
+            roots.append(node.annotation)
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) \
+                and node.func.id in {"isinstance", "issubclass"} and len(node.args) == 2:
+            roots.append(node.args[1])
+        for root in roots:
+            found.update(id(sub) for sub in ast.walk(root))
+    return found
+
+
+_READONLY_GIT_VALIDATOR = "readonly_git_arguments"
+
+
+def _call_leaf(func: ast.AST) -> str | None:
+    return func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else None
+
+
+def _may_be_option(expr: ast.AST, env: dict[str, ast.AST], depth: int = 0) -> bool:
+    """True when a git argument could render as an option (Bar 4 v2 NF-4).
+
+    Plain data (a parameter, attribute, subscript or call result) is a value,
+    not code; text built from a literal head starting with ``-``, a starred
+    sequence, or a name bound to either could add ``--output`` or similar.
+    """
+    if depth > 6:
+        return True
+    if isinstance(expr, ast.Starred):
+        # A sequence checked by the runtime validator cannot carry an output option.
+        value = expr.value
+        for _ in range(4):
+            if isinstance(value, ast.Name) and value.id in env:
+                value = env[value.id]
+        return not (isinstance(value, ast.Call) and _call_leaf(value.func) == _READONLY_GIT_VALIDATOR)
+    if isinstance(expr, ast.Constant):
+        return isinstance(expr.value, str) and expr.value.startswith("-")
+    if isinstance(expr, ast.JoinedStr):
+        if not expr.values:
+            return False
+        first = expr.values[0]
+        if isinstance(first, ast.Constant):
+            return isinstance(first.value, str) and first.value.startswith("-")
+        return isinstance(first, ast.FormattedValue) and _may_be_option(first.value, env, depth + 1)
+    if isinstance(expr, ast.BinOp) and isinstance(expr.op, (ast.Add, ast.Mod)):
+        return _may_be_option(expr.left, env, depth + 1)
+    if isinstance(expr, ast.Call) and isinstance(expr.func, ast.Attribute) and expr.func.attr == "format":
+        return _may_be_option(expr.func.value, env, depth + 1)
+    if isinstance(expr, ast.Name) and expr.id in env:
+        return _may_be_option(env[expr.id], env, depth + 1)
+    return False
+
+
 class _Visitor(ast.NodeVisitor):
     def __init__(self, rel: str):
         self._rel = rel
@@ -607,8 +757,12 @@ class _Visitor(ast.NodeVisitor):
         self._readonly_fd_helper = False
         self._git_wrappers_by_name: dict[str, int] = {}
         self._git_wrapper_sub_calls: set[int] = set()
+        self._call_func_ids: set[int] = set()
+        self._alias_rhs_ids: set[int] = set()
+        self._non_value_ids: set[int] = set()
 
     def visit_Module(self, node: ast.Module) -> None:
+        self._non_value_ids = _annotation_node_ids(node)
         wrappers, skipped = _discover_git_star_wrappers(node)
         self._git_wrappers_by_name = {fn.name: fixed for fn, fixed in wrappers.items()}
         self._git_wrapper_sub_calls = skipped
@@ -671,7 +825,100 @@ class _Visitor(ast.NodeVisitor):
     def visit_Assign(self, node: ast.Assign) -> None:
         if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
             self._env_stack[-1][node.targets[0].id] = node.value
+            if isinstance(node.value, (ast.Name, ast.Attribute)):
+                # ``w = p.write_text``: the alias is unwrapped where it is called.
+                self._alias_rhs_ids.add(id(node.value))
         self.generic_visit(node)
+
+    def _module_of(self, node: ast.AST) -> str | None:
+        if not isinstance(node, ast.Name):
+            return None
+        if node.id in self._from_aliases:
+            return self._from_aliases[node.id][1]
+        return self._mod_aliases.get(node.id, node.id)
+
+    def _write_callable(self, node: ast.AST, env: dict[str, ast.AST], depth: int = 0) -> str | None:
+        """Name the write primitive ``node`` denotes when used as a value, if any."""
+        if isinstance(node, ast.Attribute):
+            mod = self._module_of(node.value)
+            if mod == "os" and node.attr in (_OS_WRITE_ATTRS | _OS_EXEC_ATTRS):
+                return f"os.{node.attr}"
+            if mod == "shutil" and node.attr in _SHUTIL_WRITE_ATTRS:
+                return f"shutil.{node.attr}"
+            if mod == "subprocess" and node.attr in _SUBPROCESS_FUNCS:
+                return f"subprocess.{node.attr}"
+            if node.attr in _PATH_WRITE_METHODS or node.attr in _WRITE_HELPERS:
+                return node.attr
+            return None
+        if isinstance(node, ast.Name):
+            if node.id in self._from_aliases:
+                mod, orig = self._from_aliases[node.id]
+                if mod == "os" and orig in (_OS_WRITE_ATTRS | _OS_EXEC_ATTRS):
+                    return f"os.{orig}"
+                if mod == "shutil" and orig in _SHUTIL_WRITE_ATTRS:
+                    return f"shutil.{orig}"
+                if mod == "subprocess" and orig in _SUBPROCESS_FUNCS:
+                    return f"subprocess.{orig}"
+                if orig in _WRITE_HELPERS:
+                    return orig
+                return None
+            if depth < 4 and node.id in env and node.id not in self._mod_aliases:
+                return self._write_callable(env[node.id], env, depth + 1)
+        return None
+
+    def _defer_partial(self, node: ast.Call, env: dict[str, ast.AST]) -> None:
+        """``functools.partial(f, *a, **k)`` is scanned as the deferred call ``f(*a, **k)``."""
+        func = node.func
+        is_partial = _callee_dotted(self, func) == "functools.partial"
+        if not is_partial or not node.args or self._write_callable(node.args[0], env) is None:
+            return
+        deferred = ast.Call(func=node.args[0], args=list(node.args[1:]), keywords=list(node.keywords))
+        ast.copy_location(deferred, node)
+        deferred._los_synthetic = True  # type: ignore[attr-defined]
+        self.visit_Call(deferred)
+
+    def visit_Compare(self, node: ast.Compare) -> None:
+        # ``subprocess.run is not _ORIGINAL`` compares identities; nothing is called.
+        if any(isinstance(op, (ast.Is, ast.IsNot)) for op in node.ops):
+            for operand in (node.left, *node.comparators):
+                if isinstance(operand, (ast.Name, ast.Attribute)):
+                    self._non_value_ids.add(id(operand))
+        self.generic_visit(node)
+
+    def _dynamic_write_call(self, node: ast.Call, env: dict[str, ast.AST]) -> str | None:
+        func = node.func
+        name = func.id if isinstance(func, ast.Name) else None
+        dotted_mod = self._module_of(func.value) if isinstance(func, ast.Attribute) else None
+        if name == "getattr" and len(node.args) >= 2:
+            attr = _str_const(node.args[1], env)
+            if attr is None:
+                return None  # dynamic attribute: reported by the value check when called
+            if attr in _PATH_WRITE_METHODS or attr in _WRITE_HELPERS:
+                return f"indirect.{attr}"
+            mod = self._module_of(node.args[0])
+            if mod == "os" and attr in (_OS_WRITE_ATTRS | _OS_EXEC_ATTRS):
+                return f"indirect.os.{attr}"
+            if mod == "shutil" and attr in _SHUTIL_WRITE_ATTRS:
+                return f"indirect.shutil.{attr}"
+            if mod == "subprocess" and attr in _SUBPROCESS_FUNCS:
+                return f"indirect.subprocess.{attr}"
+        if (dotted_mod == "operator" and isinstance(func, ast.Attribute) and func.attr == "methodcaller") or (
+            name is not None and self._from_aliases.get(name) == ("operator", "methodcaller")
+        ):
+            attr = _str_const(node.args[0], env) if node.args else None
+            if attr is None or attr in _PATH_WRITE_METHODS or attr in _WRITE_HELPERS:
+                return f"indirect.methodcaller.{attr or '<dynamic>'}"
+        return None
+
+    def _check_value_reference(self, node: ast.AST) -> None:
+        if id(node) in self._call_func_ids or id(node) in self._alias_rhs_ids \
+                or id(node) in self._non_value_ids \
+                or not isinstance(getattr(node, "ctx", None), ast.Load):
+            return
+        env = {name: value for frame in self._env_stack for name, value in frame.items()}
+        primitive = self._write_callable(node, env)
+        if primitive is not None:
+            self._record(f"indirect.{primitive}", node)
 
     def visit_Expr(self, node: ast.Expr) -> None:
         if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute) \
@@ -715,10 +962,12 @@ class _Visitor(ast.NodeVisitor):
     def visit_Name(self, node: ast.Name) -> None:
         if node.id == "_unmediated_test_only":
             self.unmediated_lines.append(node.lineno)
+        self._check_value_reference(node)
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
         if node.attr == "_unmediated_test_only":
             self.unmediated_lines.append(node.lineno)
+        self._check_value_reference(node)
         self.generic_visit(node)
 
     def visit_Constant(self, node: ast.Constant) -> None:
@@ -726,6 +975,7 @@ class _Visitor(ast.NodeVisitor):
             self.unmediated_lines.append(node.lineno)
 
     def visit_Call(self, node: ast.Call) -> None:
+        self._call_func_ids.add(id(node.func))
         if id(node) in self._git_wrapper_sub_calls:
             self.generic_visit(node)
             return
@@ -764,11 +1014,27 @@ class _Visitor(ast.NodeVisitor):
             self.generic_visit(node)
             return
 
-        # Bar 4 F3 (U21): unwrap bound-method aliases such as ``w = path.write_text; w('x')``.
-        if isinstance(func, ast.Name) and func.id not in self._from_aliases and func.id not in self._mod_aliases:
+        # Bar 4 F3 (U21): unwrap bound-method aliases such as ``w = path.write_text; w('x')``,
+        # and (Bar 4 v2 NF-4) name aliases such as ``from os import remove; fn = remove``.
+        for _ in range(4):
+            if not (isinstance(func, ast.Name) and func.id not in self._from_aliases
+                    and func.id not in self._mod_aliases):
+                break
             aliased = _resolve_expr(func, env)
-            if isinstance(aliased, ast.Attribute):
-                func = aliased
+            if not isinstance(aliased, (ast.Attribute, ast.Name)) or aliased is func:
+                break
+            func = aliased
+
+        # Bar 4 v2 NF-4: calls whose callee the scan cannot name statically.
+        dynamic = self._dynamic_write_call(node, env)
+        if dynamic is not None:
+            self._record(dynamic, node)
+        self._defer_partial(node, env)
+        if _callee_dotted(self, func) in {"shutil.copytree", "shutil.move"}:
+            # The copy function writes only inside the destination checked at this site.
+            for kw in node.keywords:
+                if kw.arg == "copy_function":
+                    self._non_value_ids.update(id(sub) for sub in ast.walk(kw.value))
 
         primitive = None
         if isinstance(func, ast.Attribute):
@@ -934,7 +1200,8 @@ class _Visitor(ast.NodeVisitor):
                 primitive = orig_name if orig_name in _WRITE_HELPERS else func.id
         if primitive is not None:
             self._record(primitive, node)
-        self.generic_visit(node)
+        if not getattr(node, "_los_synthetic", False):
+            self.generic_visit(node)
 
 
 def _find_tool_symlinks(root: Path) -> list[str]:
@@ -1134,9 +1401,10 @@ class _GitState:
 
 @dataclass(frozen=True)
 class _DelegatedLauncher:
-    """A pinned gateway/sandbox subprocess launcher whose child is separately governed."""
+    """A pinned subprocess launcher, and the placeholder its module must declare for it."""
 
     label: str
+    token: str = "<DELEGATED_GATEWAY_LAUNCHER>"
 
 
 def _describe(value: object) -> str:
@@ -1169,7 +1437,11 @@ def _norm_parts(parts: tuple[str, ...]) -> tuple[str, ...]:
 
 
 def _parse_path_text(text: str) -> tuple[str, tuple[str, ...]]:
-    """Return (kind, segments); kind is rel | abs | home | bad.  ``\\x01`` marks formatted values."""
+    """Return (kind, segments); kind is rel | abs | home | bad | dynamic.
+
+    ``\\x01`` marks an interpolation proved to be one path segment and
+    ``\\x02`` an unproved one (Bar 4 v2 NF-2).
+    """
     if text.startswith("/"):
         return "abs", ()
     if text.startswith("~"):
@@ -1182,6 +1454,9 @@ def _parse_path_text(text: str) -> tuple[str, tuple[str, ...]]:
             return "bad", ()
         if seg == "**":
             segs.append("**")
+        elif "\x02" in seg:
+            # An unproved interpolation can carry "/" or "..", or be absolute.
+            return "dynamic", ()
         elif "\x01" in seg:
             segs.append(seg.replace("\x01", "*"))
         elif any(ch in seg for ch in "*?["):
@@ -1340,16 +1615,21 @@ def _is_destination_parent(pattern: str, parts: tuple[str, ...]) -> bool:
     )
 
 
+_EXPR_SCOPE_NODES = (ast.Lambda, ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)
+
+
 def _iter_local(node: ast.AST):
-    """Yield nodes of one scope without descending into nested defs/lambdas/classes."""
+    """Yield nodes of one scope, stopping at nested defs, classes and expression scopes.
+
+    Lambdas and comprehensions are yielded but not entered: each is indexed as
+    its own child scope (Bar 4 v2 NF-3), so its calls, bindings and value
+    references are seen with Python's shadowing rules.
+    """
     stack = list(ast.iter_child_nodes(node))
     while stack:
         cur = stack.pop()
         yield cur
-        if isinstance(cur, (
-            ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef,
-            ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp,
-        )):
+        if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, *_EXPR_SCOPE_NODES)):
             continue
         stack.extend(ast.iter_child_nodes(cur))
 
@@ -1370,6 +1650,7 @@ class _Scope:
         self.star_params: set[str] = set()
         self.assigns: dict[str, list[ast.AST]] = {}
         self.globals: set[str] = set()
+        self.nonlocals: set[str] = set()
         self.appends: dict[str, list[ast.AST]] = {}
         self.returns: list[ast.AST] = []
         self.nested: dict[str, _Scope] = {}
@@ -1416,7 +1697,7 @@ _ENGINE_RUNTIME_OPERANDS = {
     ("TransactionService._publish_journal", "shutil.rmtree"): ("run.staging_dir",),
     ("TransactionService._publish_journal", "mkdir"): ("run.staging_dir",),
     ("TransactionService._publish_journal", "atomic_write_bytes"): (
-        "run.staging_dir / backup_id", "run.staging_dir / 'intent.json'",
+        "run.staging_dir / path_segment(backup_id)", "run.staging_dir / 'intent.json'",
     ),
     ("TransactionService._publish_journal", "os.rename"): ("run.staging_dir", "run.inflight_dir"),
     ("TransactionService._apply", "atomic_write_bytes"): ("path",),
@@ -1503,6 +1784,11 @@ class _ModuleWriteSites:
         self.class_body: dict[str, dict[str, list[ast.AST]]] = {}
         self.escaped: set[_Scope] = set()
         self.call_sites: dict[_Scope, list[tuple[ast.Call, _Scope]]] = {}
+        # Calls inside a lambda or comprehension, mapped to that scope.
+        self.expr_scope_of: dict[int, _Scope] = {}
+        # Calls into this module from other tools/ modules (Bar 4 v2 NF-3):
+        # callee scope -> [(caller module, call, caller scope)].
+        self.external_calls: dict[_Scope, list[tuple[_ModuleWriteSites, ast.Call, _Scope]]] = {}
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
@@ -1525,7 +1811,28 @@ class _ModuleWriteSites:
             for argument in node.args
             if isinstance(argument, ast.Constant) and argument.value in ("--root", "--repo")
         }
+        self.non_value_refs: set[int] = set()
+        for node in ast.walk(tree):
+            annotations: list[ast.AST] = []
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                args = node.args
+                annotations += [a.annotation for a in (*args.posonlyargs, *args.args, *args.kwonlyargs,
+                                                        args.vararg, args.kwarg) if a is not None and a.annotation]
+                if node.returns is not None:
+                    annotations.append(node.returns)
+            elif isinstance(node, ast.AnnAssign):
+                annotations.append(node.annotation)
+            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) \
+                    and node.func.id in {"isinstance", "issubclass"} and len(node.args) == 2:
+                annotations.append(node.args[1])
+            for annotation in annotations:
+                self.non_value_refs.update(id(sub) for sub in ast.walk(annotation))
+        # Mutations are attached to the container's owning scope once every
+        # binding is known, so statement order cannot hide them (Bar 4 v2 NF-3).
+        self._pending_appends: list[tuple[_Scope, str, ast.AST]] = []
         self._index_scope(self.module, tree.body, cls=None)
+        for mut_scope, name, value in self._pending_appends:
+            self._owner_scope(mut_scope, name).appends.setdefault(name, []).append(value)
         self._index_calls()
         self._engine_paths_bound = (
             rel == _CANONICAL_ENGINE_MODULE and self._engine_run_path_sources() == _ENGINE_RUN_PATH_SOURCES
@@ -1551,12 +1858,15 @@ class _ModuleWriteSites:
         holder = ast.Module(body=body, type_ignores=[])
         local = list(_iter_local(holder))
         scope.globals.update(name for node in local if isinstance(node, ast.Global) for name in node.names)
+        scope.nonlocals.update(name for node in local if isinstance(node, ast.Nonlocal) for name in node.names)
         for node in local:
             self._collect_binding(scope, node, cls)
             if isinstance(node, ast.Call):
                 scope.calls.append(node)
             if isinstance(node, ast.Return) and node.value is not None:
                 scope.returns.append(node.value)
+            if isinstance(node, _EXPR_SCOPE_NODES):
+                self._index_expr_scope(scope, node, cls)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 qual = node.name if scope is self.module else f"{scope.qualname}.{node.name}"
                 child = _Scope(node, scope, cls, qual)
@@ -1586,13 +1896,72 @@ class _ModuleWriteSites:
                     elif isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name) and stmt.value:
                         self.class_body[node.name].setdefault(stmt.target.id, []).append(stmt.value)
 
+    def _function_scope(self, scope: _Scope) -> _Scope:
+        """The nearest enclosing scope that is not a lambda or comprehension."""
+        while scope.parent is not None and isinstance(scope.node, _EXPR_SCOPE_NODES):
+            scope = scope.parent
+        return scope
+
+    def _owner_scope(self, scope: _Scope, name: str) -> _Scope:
+        """The scope whose binding of ``name`` a lookup from ``scope`` finds."""
+        cursor: _Scope | None = scope
+        while cursor is not None:
+            if name in cursor.assigns or name in cursor.all_params:
+                return cursor
+            cursor = cursor.parent
+        return self._function_scope(scope)
+
+    def _index_expr_scope(self, parent: _Scope, node: ast.AST, cls: str | None) -> None:
+        """Index a lambda or comprehension as a child scope (Bar 4 v2 NF-3)."""
+        child = _Scope(node, parent, cls, f"{parent.qualname}.<{type(node).__name__.lower()}>")
+        self.scopes[node] = child
+        roots: list[ast.AST]
+        if isinstance(node, ast.Lambda):
+            lam = node.args
+            child.params = [a.arg for a in (*lam.posonlyargs, *lam.args)]
+            child.kwonly = [a.arg for a in lam.kwonlyargs]
+            child.star_params = {a.arg for a in (lam.vararg, lam.kwarg) if a is not None}
+            child.returns.append(node.body)
+            roots = [node.body]
+            # Defaults are evaluated in the enclosing scope.
+            for default in (*lam.defaults, *[d for d in lam.kw_defaults if d is not None]):
+                for sub in (default, *_iter_local(default)):
+                    if isinstance(sub, ast.Call):
+                        parent.calls.append(sub)
+        else:
+            roots = [*node.generators]
+            roots += [node.key, node.value] if isinstance(node, ast.DictComp) else [node.elt]
+        for root in roots:
+            for sub in (root, *_iter_local(root)):
+                self._collect_binding(child, sub, cls)
+                if isinstance(sub, ast.Call):
+                    child.calls.append(sub)
+                    self.expr_scope_of[id(sub)] = child
+                if isinstance(sub, _EXPR_SCOPE_NODES) and sub is not node:
+                    self._index_expr_scope(child, sub, cls)
+
     def _collect_binding(self, scope: _Scope, node: ast.AST, cls: str | None) -> None:
         def bind_target(target: ast.AST, value: ast.AST) -> None:
             if isinstance(target, ast.Name):
                 if target.id in scope.globals and scope is not self.module:
                     self.global_assignments.setdefault(target.id, []).append((scope, value))
+                elif target.id in scope.nonlocals:
+                    # ``nonlocal x; x = ...`` rebinds an enclosing function's x. Every
+                    # enclosing function gets the binding: an over-approximation that
+                    # does not depend on the order scopes are indexed in.
+                    scope.bind(target.id, value)
+                    owner = scope.parent
+                    while owner is not None and owner is not self.module:
+                        if not isinstance(owner.node, _EXPR_SCOPE_NODES):
+                            owner.bind(target.id, value)
+                        owner = owner.parent
                 else:
                     scope.bind(target.id, value)
+            elif isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name):
+                # ``xs[i] = value`` adds a possible element to xs.
+                self._pending_appends.append((scope, target.value.id, value))
+            elif isinstance(target, ast.Starred):
+                bind_target(target.value, _synthetic_call("__unknown__"))
             elif isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name) \
                     and target.value.id == "self" and cls:
                 self.class_attrs.setdefault(cls, {}).setdefault(target.attr, []).append((value, scope))
@@ -1622,11 +1991,28 @@ class _ModuleWriteSites:
         elif isinstance(node, ast.withitem) and node.optional_vars is not None:
             bind_target(node.optional_vars, node.context_expr)
         elif isinstance(node, ast.NamedExpr):
-            bind_target(node.target, node.value)
+            if isinstance(node.target, ast.Name) and isinstance(scope.node, _EXPR_SCOPE_NODES):
+                self._function_scope(scope).bind(node.target.id, node.value)
+            else:
+                bind_target(node.target, node.value)
+        elif isinstance(node, ast.comprehension):
+            bind_target(node.target, _synthetic_call("__iter_child__", node.iter))
 
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
-                and node.func.attr == "append" and isinstance(node.func.value, ast.Name) and len(node.args) == 1:
-            scope.appends.setdefault(node.func.value.id, []).append(node.args[0])
+                and isinstance(node.func.value, ast.Name):
+            # Container mutations add possible elements (Bar 4 v2 NF-3), recorded
+            # on the scope that owns the container so closures and comprehensions count.
+            owner_name, attr = node.func.value.id, node.func.attr
+            pending = self._pending_appends
+            if attr in {"append", "add", "appendleft"} and len(node.args) == 1:
+                pending.append((scope, owner_name, node.args[0]))
+            elif attr == "insert" and len(node.args) == 2:
+                pending.append((scope, owner_name, node.args[1]))
+            elif attr in {"extend", "extendleft", "update"} and node.args:
+                for arg in node.args:
+                    pending.append((scope, owner_name, _synthetic_call("__iter_child__", arg)))
+            elif attr in {"setdefault", "__setitem__", "__iadd__"}:
+                pending.append((scope, owner_name, _synthetic_call("__unknown__")))
 
     def _callee_scope(self, func: ast.AST, scope: _Scope) -> _Scope | None:
         if isinstance(func, ast.Name):
@@ -1635,6 +2021,9 @@ class _ModuleWriteSites:
                 if func.id in cursor.nested:
                     return cursor.nested[func.id]
                 cursor = cursor.parent
+            if func.id in self.class_methods:
+                # ``Store(x)`` binds x to Store.__init__ (Bar 4 v2 NF-3).
+                return self.class_methods[func.id].get("__init__")
             return self.module_funcs.get(func.id)
         if isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name):
             owner = func.value.id
@@ -1657,7 +2046,7 @@ class _ModuleWriteSites:
         for scope in list(self.scopes.values()):
             holder = scope.node
             for node in _iter_local(holder):
-                if id(node) in call_funcs:
+                if id(node) in call_funcs or id(node) in self.non_value_refs:
                     continue
                 if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
                     target = self._callee_scope(node, scope)
@@ -1934,8 +2323,11 @@ class _ModuleWriteSites:
             return values
         if dotted.startswith("tempfile.") or (isinstance(func, ast.Name) and func.id in self.from_aliases
                                               and self.from_aliases[func.id][0] == "tempfile"):
-            if "dir" in kwargs:
-                return frozenset(self._join(v, ("*",)) for v in ev(kwargs["dir"]))
+            tmp_leaf = self.from_aliases[func.id][1] if isinstance(func, ast.Name) \
+                and func.id in self.from_aliases else leaf
+            dir_expr = _tempfile_dir_arg(tmp_leaf, node)
+            if dir_expr is not None:
+                return frozenset(self._join(v, ("*",)) for v in ev(dir_expr))
             return frozenset({_ExtRel("tempdir")})
         if dotted in {
             "learning_os.store.contracts.write_scopes.guard_tool_output_path",
@@ -2116,9 +2508,10 @@ class _ModuleWriteSites:
                 for value in self._lookup_exprs(expr.id, scope)
                 if not isinstance(value, (ast.List, ast.Tuple, ast.Set)) or value.elts
             ))
+            owner = self._owner_scope(scope, expr.id)
             values |= frozenset().union(*(
-                self.eval(value, scope, bindings, depth, inner)
-                for value in scope.appends.get(expr.id, ())
+                self.eval(value, owner, bindings if owner is scope else None, depth, inner)
+                for value in owner.appends.get(expr.id, ())
             ))
             if values:
                 return values
@@ -2158,13 +2551,16 @@ class _ModuleWriteSites:
                     for v in base
                 )
             if leaf == "mkstemp" and index in (0, 1):
-                for kw in value.keywords:
-                    if kw.arg == "dir":
-                        base = self.eval(kw.value, scope, bindings, depth, active)
-                        return frozenset(self._join(v, ("*",)) for v in base)
+                dir_expr = _tempfile_dir_arg("mkstemp", value)
+                if dir_expr is not None:
+                    base = self.eval(dir_expr, scope, bindings, depth, active)
+                    return frozenset(self._join(v, ("*",)) for v in base)
                 return frozenset({_ExtRel("tempdir")})
         if isinstance(value, ast.Name):
-            rows = scope.appends.get(value.id, ())
+            owner = self._owner_scope(scope, value.id)
+            rows = owner.appends.get(value.id, ())
+            if owner is not scope:
+                scope, bindings = owner, None
             if rows:
                 return frozenset().union(*(
                     self.eval(row.elts[index], scope, bindings, depth, active)
@@ -2194,7 +2590,7 @@ class _ModuleWriteSites:
                 patterns.extend(entries)
             else:
                 texts = self._string_values(item, scope)
-                if texts is None or any("\x01" in text for text in texts):
+                if texts is None or any("\x01" in text or "\x02" in text for text in texts):
                     return None
                 for text in texts:
                     try:
@@ -2211,14 +2607,32 @@ class _ModuleWriteSites:
             for part in expr.values:
                 if isinstance(part, ast.Constant) and isinstance(part.value, str):
                     text += part.value
-                else:
+                elif isinstance(part, ast.FormattedValue) and part.format_spec is None \
+                        and part.conversion == -1 \
+                        and (inlined := self._string_values(part.value, scope, seen)) is not None \
+                        and len(inlined) == 1 and not any(m in inlined[0] for m in "\x01\x02"):
+                    # A name bound to one constant string renders as that text.
+                    text += inlined[0]
+                elif isinstance(part, ast.FormattedValue) and self._safe_segment_value(part, scope):
                     text += "\x01"
+                else:
+                    text += "\x02"
             return [text]
         if isinstance(expr, ast.Name) and expr.id not in seen:
             exprs = self._lookup_exprs(expr.id, scope)
             if not exprs:
                 module_exprs = self.module.assigns.get(expr.id, [])
                 exprs = module_exprs
+            if not exprs and expr.id in self.from_aliases:
+                # A string constant imported from another tools/ module.
+                source, member = self.from_aliases[expr.id]
+                imported = self._imported_member(f"{source}.{member}")
+                if imported is not None:
+                    mod, name = imported
+                    values = mod.module.assigns.get(name, [])
+                    if values and all(isinstance(v, ast.Constant) and isinstance(v.value, str)
+                                      for v in values):
+                        return [v.value for v in values]
             if exprs:
                 out: list[str] = []
                 for sub in exprs:
@@ -2229,14 +2643,91 @@ class _ModuleWriteSites:
                 return out
         return None
 
+    def _safe_segment_value(self, node: ast.AST, scope: _Scope, seen: frozenset = frozenset()) -> bool:
+        """True when ``node`` provably renders as text with no "/" or "\\" (Bar 4 v2 NF-2).
+
+        Accepted: integers and integer formats, hex digests and tokens, the
+        Path ``name``/``stem``/``suffix`` attributes, ``path_segment(...)``,
+        and names whose every binding is one of these.
+        """
+        if isinstance(node, ast.FormattedValue):
+            spec = node.format_spec
+            if isinstance(spec, ast.JoinedStr) and len(spec.values) == 1 \
+                    and isinstance(spec.values[0], ast.Constant) \
+                    and isinstance(spec.values[0].value, str) \
+                    and spec.values[0].value[-1:] in {"d", "x", "X", "o", "b"} \
+                    and "/" not in spec.values[0].value:
+                return True
+            if spec is not None:
+                return False
+            return self._safe_segment_value(node.value, scope, seen)
+        if isinstance(node, ast.Constant):
+            return isinstance(node.value, int) and not isinstance(node.value, bool) or (
+                isinstance(node.value, str) and node.value not in {"", ".", ".."}
+                and "/" not in node.value and "\\" not in node.value
+            )
+        if isinstance(node, ast.Attribute):
+            if node.attr == "hex":
+                return isinstance(node.value, ast.Call) \
+                    and (self._dotted(node.value.func) or "") in {"uuid.uuid4", "uuid.uuid1"}
+            return node.attr in {"name", "stem", "suffix"} and self._is_path_receiver(node.value, scope)
+        if isinstance(node, ast.Subscript) and isinstance(node.slice, ast.Slice):
+            # A slice of separator-free text is separator-free.
+            return self._safe_segment_value(node.value, scope, seen)
+        if isinstance(node, ast.BoolOp):
+            return all(self._safe_segment_value(value, scope, seen) for value in node.values)
+        if isinstance(node, ast.Call):
+            dotted = self._dotted(node.func) or ""
+            if dotted in _SAFE_SEGMENT_FUNCS or dotted == _PATH_SEGMENT_VALIDATOR:
+                return True
+            if isinstance(node.func, ast.Attribute) and node.func.attr in {"hexdigest", "hex"} \
+                    and not node.args:
+                return True
+            callee = self._callee_scope(node.func, scope)
+            key = ("segment", id(callee))
+            if callee is not None and callee.returns and key not in seen:
+                return all(
+                    self._safe_segment_value(expr, callee, seen | {key}) for expr in callee.returns
+                )
+            return False
+        if isinstance(node, ast.JoinedStr):
+            return all(
+                (isinstance(part, ast.Constant) and isinstance(part.value, str)
+                 and "/" not in part.value and "\\" not in part.value)
+                or (isinstance(part, ast.FormattedValue) and self._safe_segment_value(part, scope, seen))
+                for part in node.values
+            )
+        if isinstance(node, ast.Name) and node.id not in seen:
+            exprs = self._lookup_exprs(node.id, scope) or self.module.assigns.get(node.id, [])
+            return bool(exprs) and all(
+                self._safe_segment_value(sub, scope, seen | {node.id}) for sub in exprs
+            )
+        return False
+
+    def _is_path_receiver(self, node: ast.AST, scope: _Scope) -> bool:
+        """``node`` evaluates only to path values, so ``.name`` holds no "/"."""
+        values = self.eval(node, scope)
+        return bool(values) and not any(isinstance(v, (_Unknown, _Null)) for v in values)
+
     def _segments(self, expr: ast.AST, scope, bindings, depth, active) -> list[object]:
+        if isinstance(expr, ast.Call):
+            dotted = self._dotted(expr.func) or ""
+            if dotted == _PATH_SEGMENT_VALIDATOR:
+                return [("*",)]
+            if dotted == _RELATIVE_PATH_VALIDATOR:
+                return [("**",)]
         texts = self._string_values(expr, scope)
         if texts is None:
-            if isinstance(expr, ast.Attribute) and expr.attr == "name":
+            if isinstance(expr, ast.Attribute) and expr.attr == "name" \
+                    and self._is_path_receiver(expr.value, scope):
+                return [("*",)]
+            if self._safe_segment_value(expr, scope):
                 return [("*",)]
             return [
                 value.parts if isinstance(value, _Relative) else
-                value if isinstance(value, (_RepoRel, _ExtRel, _BadTraversal, _Param)) else ("**",)
+                value if isinstance(value, (_RepoRel, _ExtRel, _BadTraversal, _Param)) else
+                _Unknown(f"path join operand at {self.rel}:{getattr(expr, 'lineno', '?')} "
+                         "can replace or escape its base")
                 for value in self.eval(expr, scope, bindings, depth, active)
             ]
         out: list[object] = []
@@ -2246,14 +2737,17 @@ class _ModuleWriteSites:
                 out.append(segs)
             elif kind == "bad":
                 out.append(_BadTraversal(text))
+            elif kind == "dynamic":
+                out.append(_Unknown(f"formatted path operand at {self.rel}:{getattr(expr, 'lineno', '?')} "
+                                    "can replace or escape its base"))
             else:
                 out.append(_ExtRel(f"{kind} literal"))
         return out
 
     @staticmethod
     def _join(value: object, seg: object) -> object:
-        if isinstance(seg, _BadTraversal):
-            return seg if isinstance(value, (_RepoRel, _Param, _BadTraversal)) else value
+        if isinstance(seg, (_BadTraversal, _Unknown)):
+            return seg
         if isinstance(seg, (_ExtRel, _RepoRel)):
             return seg
         if isinstance(seg, _Param):
@@ -2363,7 +2857,8 @@ class _ModuleWriteSites:
         if primitive == "sqlite3.connect":
             return [arg(0, "database")]
         if primitive.startswith("tempfile."):
-            return [kwargs.get("dir")] if "dir" in kwargs else None
+            dir_expr = _tempfile_dir_arg(primitive.removeprefix("tempfile."), call)
+            return [dir_expr] if dir_expr is not None else None
         if primitive.startswith(("yaml.", "subprocess.", "os.", "asyncio.")):
             return None
         if primitive == "prune_empty_dirs":
@@ -2417,6 +2912,35 @@ class _ModuleWriteSites:
             # Public entry points may also be called from outside the module;
             # every intra-module call site below is still resolved and checked.
             out.add(self.apply_suffix(_RepoRel(()), param.suffix))
+        leaf = callee.qualname.rsplit(".", 1)[-1]
+        if callee.cls is not None and not leaf.startswith("_") and not is_root_convention:
+            # Instance-method calls from other modules cannot be resolved, so a
+            # public method's path parameter is caller-supplied (Bar 4 v2 NF-3).
+            out.add(_Unknown(f"parameter {param.name!r} of public method {callee.qualname} "
+                             "may be supplied by any caller"))
+        for caller_mod, call, caller_scope in self.external_calls.get(callee, ()):
+            origin = f"{caller_mod.rel}:{call.lineno}"
+            bound = caller_mod._call_bindings(callee, call, caller_scope, None, 0, frozenset())
+            if bound is None:
+                out.add(_Unknown(f"starred call to {callee.qualname} at {origin}"))
+                continue
+            if param.name in bound:
+                external = set(bound[param.name])
+            elif param.name in callee.defaults:
+                external = set(self.eval(callee.defaults[param.name], callee.parent or self.module))
+            else:
+                out.add(_Unknown(f"parameter {param.name!r} of {callee.qualname} unbound at {origin}"))
+                continue
+            for value in external:
+                resolved = (
+                    caller_mod.resolve_param(value, visited)
+                    if isinstance(value, _Param) and value.func in caller_mod.scopes else {value}
+                )
+                for item in resolved:
+                    if is_root_convention and isinstance(item, (_Unknown, _Null)):
+                        # The root convention: an unproved root is a repository root.
+                        item = _RepoRel(())
+                    out.add(self.apply_suffix(item, param.suffix))
         for call, caller in sites:
             bound = self._call_bindings(callee, call, caller, None, 0, frozenset())
             if bound is None:
@@ -2437,7 +2961,37 @@ class _ModuleWriteSites:
                     out.add(shifted)
         return out
 
+    def _study_fence_chain_mkdir_bound(self) -> bool:
+        """``open_dir_chain_nofollow`` creates directories only for ``_open_local_parent_dir_fd``.
+
+        Its one creating call site passes the missing tail of the parent of an
+        output that ``write_local_output_file`` guarded (or confined to the study
+        scratch directory), so each ``os.mkdir`` makes an ancestor of a guarded
+        output. Every other call site must pass ``create_missing=False``.
+        """
+        chain = self.module_funcs.get("open_dir_chain_nofollow")
+        opener = self.module_funcs.get("_open_local_parent_dir_fd")
+        if chain is None or opener is None or chain in self.escaped or opener in self.escaped \
+                or self.external_calls.get(chain) or self.external_calls.get(opener):
+            return False
+        for call, caller in self.call_sites.get(chain, []):
+            create = next((kw.value for kw in call.keywords if kw.arg == "create_missing"), None)
+            if isinstance(create, ast.Constant) and create.value is False:
+                continue
+            if caller is not opener or [ast.unparse(a) for a in call.args] != ["base_path", "tail_parts"]:
+                return False
+        return all(
+            caller.qualname == "write_local_output_file" and ast.unparse(call.args[0]) == "target.parent"
+            for call, caller in self.call_sites.get(opener, [])
+        ) and bool(self.call_sites.get(opener))
+
     def site_values(self, primitive: str, call: ast.Call, scope: _Scope) -> list[object]:
+        if primitive.startswith("indirect."):
+            return [_Unknown(f"write callable {primitive.removeprefix('indirect.')} used as a value")]
+        if self.rel == "tools/learning_os/store/study_fence.py" and primitive == "os.mkdir" \
+                and scope.qualname == "open_dir_chain_nofollow" and getattr(call, "_los_synthetic", False) \
+                and self._study_fence_chain_mkdir_bound():
+            return [_ExtRel("parent of guarded output")]
         if primitive.startswith(("os.", "asyncio.")) and (
             primitive.removeprefix("os.") in _OS_EXEC_ATTRS
             or primitive.removeprefix("asyncio.") in _ASYNCIO_SUBPROCESS_ATTRS
@@ -2477,7 +3031,7 @@ class _ModuleWriteSites:
                 return [_ExtRel("tempdir")]
             return []
         boundary_values: frozenset | None = None
-        for kw in call.keywords:
+        for kw in call.keywords if primitive in _BOUNDARY_ENFORCING_HELPERS else ():
             if kw.arg == "boundary":
                 candidate = self.eval(kw.value, scope)
                 if candidate and all(isinstance(v, (_RepoRel, _ExtRel)) for v in candidate):
@@ -2588,11 +3142,17 @@ class _ModuleWriteSites:
             subcommand = primitive.removeprefix("subprocess.git.")
             start = next((i + 1 for i, item in enumerate(command.elts)
                           if isinstance(item, ast.Constant) and item.value == subcommand), len(command.elts))
-        operands = [
-            item for item in command.elts[start:]
-            if not (isinstance(item, ast.Constant) and isinstance(item.value, str)
-                    and item.value.startswith("-"))
-        ]
+        allowed_flags = _FS_COMMAND_FLAGS.get(primitive, frozenset())
+        operands = []
+        for item in command.elts[start:]:
+            if isinstance(item, ast.Constant) and isinstance(item.value, str) and item.value.startswith("-"):
+                if item.value not in allowed_flags:
+                    # ``-t DIR`` / ``--target-directory=DIR`` move the destination.
+                    return [_Unknown(f"unsupported option {item.value!r} on {primitive}")]
+                continue
+            if isinstance(item, ast.Starred):
+                return [_Unknown(f"starred operands on {primitive}")]
+            operands.append(item)
         if primitive == "subprocess.cp":
             operands = operands[-1:]
         if not operands:
@@ -2661,15 +3221,22 @@ class _ModuleWriteSites:
             return sorted(self._resolved(self.eval(cmd_arg.elts[-1], scope)), key=_describe)
         # 4. Pinned gateway / sandbox launcher delegations (must declare <DELEGATED_GATEWAY_LAUNCHER>)
         pinned_launchers = {
-            ("tools/agent_run.py", "_run_subprocess_bounded", "argv"),
-            ("tools/learning_os/adapters/study_broker.py", "_run_subprocess_bounded", "cmd"),
-            ("tools/study_launch.py", "launch_study", "[str(effective_sandbox), '-f', str(sb_path), *command]"),
-            ("tools/codex_obsidian.py", "main", "cmd"),
-            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'validate']"),
-            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'generate']"),
+            ("tools/agent_run.py", "_run_subprocess_bounded", "argv"): _DELEGATED_LAUNCHER_TOKEN,
+            ("tools/learning_os/adapters/study_broker.py", "_run_subprocess_bounded", "cmd"):
+                _DELEGATED_LAUNCHER_TOKEN,
+            ("tools/study_launch.py", "launch_study", "[str(effective_sandbox), '-f', str(sb_path), *command]"):
+                _DELEGATED_LAUNCHER_TOKEN,
+            # Bar 4 v2 NF-5: Codex with --sandbox workspace-write can edit the
+            # checkout directly; the gateway does not mediate it.
+            ("tools/codex_obsidian.py", "main", "cmd"): _AGENT_WORKSPACE_WRITE_TOKEN,
+            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'validate']"):
+                _DELEGATED_LAUNCHER_TOKEN,
+            ("tools/codex_obsidian.py", "main", "[python_binary(), str(ROOT / 'tools' / 'los.py'), 'generate']"):
+                _DELEGATED_LAUNCHER_TOKEN,
         }
-        if (self.rel, scope.qualname, unparsed_cmd) in pinned_launchers:
-            return [_DelegatedLauncher(f"{self.rel}::{scope.qualname}")]
+        token = pinned_launchers.get((self.rel, scope.qualname, unparsed_cmd))
+        if token is not None:
+            return [_DelegatedLauncher(f"{self.rel}::{scope.qualname}", token)]
         return [_Unknown(f"unclassified subprocess write {primitive}")]
 
 class _SiteVisitor(_Visitor):
@@ -2685,7 +3252,8 @@ class _SiteVisitor(_Visitor):
 
     def _record(self, primitive: str, node: ast.AST) -> None:
         super()._record(primitive, node)
-        assert isinstance(node, ast.Call)
+        # A write callable used as a value is recorded at the reference itself.
+        assert isinstance(node, ast.Call) or primitive.startswith("indirect.")
         self.sites.append((primitive, node, self._scope_nodes[-1] if self._scope_nodes else None))
 
 
@@ -2706,6 +3274,55 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 return _ModuleWriteSites(rel, ast.parse(path.read_text(encoding="utf-8"), filename=rel), load_module)
         return None
 
+    def module_for(rel: str) -> _ModuleWriteSites | None:
+        dotted = rel.removeprefix("tools/").removesuffix(".py").removesuffix("/__init__").replace("/", ".")
+        mod = load_module(dotted)
+        return mod if mod is not None and mod.rel == rel else None
+
+    # Bar 4 v2 NF-3: register every call from one tools/ module into a function
+    # or class of a declared module, so the callee's parameters are resolved
+    # from all callers, not only those inside its own module.
+    caller_scoped = {
+        rel for rel, decl in effects.items()
+        if decl.get("destinations") == ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
+    }
+    for caller_file in _iter_tool_python_files(root):
+        caller_rel = caller_file.relative_to(root).as_posix()
+        caller_mod = module_for(caller_rel)
+        if caller_mod is None:
+            continue
+        for caller_scope in list(caller_mod.scopes.values()):
+            call_funcs: set[int] = set()
+            for call in caller_scope.calls:
+                call_funcs.add(id(call.func))
+                imported = caller_mod._imported_member(caller_mod._dotted(call.func) or "")
+                if imported is None:
+                    continue
+                target_mod, name = imported
+                if target_mod.rel not in effects or target_mod.rel in caller_scoped \
+                        or target_mod.rel == caller_rel or name in _WRITE_HELPERS:
+                    # A recognized write helper is checked at the caller's own site.
+                    continue
+                callee = target_mod.module_funcs.get(name) or (
+                    target_mod.class_methods.get(name, {}).get("__init__")
+                )
+                if callee is not None:
+                    target_mod.external_calls.setdefault(callee, []).append((caller_mod, call, caller_scope))
+            # A declared module's function used as a value elsewhere has callers
+            # this analysis cannot see.
+            for node in _iter_local(caller_scope.node):
+                if id(node) in call_funcs or not isinstance(node, (ast.Name, ast.Attribute)) \
+                        or not isinstance(node.ctx, ast.Load):
+                    continue
+                imported = caller_mod._imported_member(caller_mod._dotted(node) or "")
+                if imported is None:
+                    continue
+                target_mod, name = imported
+                callee = target_mod.module_funcs.get(name)
+                if callee is not None and target_mod.rel in effects and target_mod.rel not in caller_scoped \
+                        and name not in _WRITE_HELPERS and id(node) not in caller_mod.non_value_refs:
+                    target_mod.escaped.add(callee)
+
     analyzed_modules: dict[str, _ModuleWriteSites] = {}
     for rel in sorted(effects):
         path = root / rel
@@ -2724,14 +3341,18 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
         concrete = len(repo_patterns) == len(destinations)
         repo_dir_names = frozenset({"repository", root.name})
         caller_scoped_primitive = destinations == ["<CALLER_SCOPED_ATOMIC_WRITE_PRIMITIVES>"]
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
+        shared = module_for(rel)
+        analysis = shared if shared is not None else _ModuleWriteSites(
+            rel, ast.parse(path.read_text(encoding="utf-8"), filename=rel), load_module,
+        )
         visitor = _SiteVisitor(rel)
-        visitor.visit(tree)
-        analysis = _ModuleWriteSites(rel, tree, load_module)
+        visitor.visit(analysis.tree)
         analyzed_modules[rel] = analysis
         reported: set[tuple[int, str]] = set()
         for primitive, call, scope_node in visitor.sites:
-            scope = analysis.scopes.get(scope_node, analysis.module) if scope_node else analysis.module
+            scope = analysis.expr_scope_of.get(id(call)) or (
+                analysis.scopes.get(scope_node, analysis.module) if scope_node else analysis.module
+            )
             for value in analysis.site_values(primitive, call, scope):
                 if isinstance(value, _ReadOnlySQLite) and primitive == "sqlite3.connect" and any(
                     kw.arg == "uri" and isinstance(kw.value, ast.Constant) and kw.value.value is True
@@ -2742,8 +3363,8 @@ def check_declared_write_sites(root: Path, effects: dict[str, dict]) -> list[str
                 if isinstance(value, _BadTraversal):
                     problem = "joins a '..' traversal onto a repository-anchored path"
                 elif isinstance(value, _DelegatedLauncher):
-                    if _DELEGATED_LAUNCHER_TOKEN not in destinations:
-                        problem = f"spawns a delegated launcher without declaring {_DELEGATED_LAUNCHER_TOKEN}"
+                    if value.token not in destinations:
+                        problem = f"spawns a pinned launcher without declaring {value.token}"
                 elif isinstance(value, _GitState):
                     if _GIT_STATE_TOKEN not in destinations:
                         problem = f"changes Git index or refs but the module does not declare {_GIT_STATE_TOKEN}"
@@ -3516,3 +4137,192 @@ def test_git_hooks_inventory_and_write_safety():
             for canonical_root in DATA_ROOTS:
                 assert f">{canonical_root}/" not in stripped.replace(" ", ""), (name, stripped)
                 assert f"rm -rf {canonical_root}" not in stripped, (name, stripped)
+
+
+# ---------------------------------------------------------------------------
+# Bar 4 v2 (REVIEW-V2-17a4c5e) counterexamples NF-2..NF-5, each with a control.
+# ---------------------------------------------------------------------------
+_V2_IMPORTS = (
+    "import functools\nimport operator\nimport os\nimport subprocess\nimport tempfile\n"
+    "from pathlib import Path\n" + _GUARD_IMPORT
+    + "from learning_os.store.contracts.write_scopes import path_segment, relative_path\n"
+    + "ROOT = Path(__file__).resolve().parents[1]\n\n\n"
+)
+
+
+@pytest.mark.parametrize("destinations, body, expected", [
+    # NF-2: '..' on external anchors, dynamic and formatted operands, tempfile dir.
+    pytest.param(["<EXPLICIT_OUT_FILE>"],
+                 "def run(raw):\n    (guard_tool_output_path(raw) / '..' / '..' / 'records/m.yaml').write_text('x')\n",
+                 "'..'", id="NF2-dotdot-on-guarded-output"),
+    pytest.param(["../materials/**"],
+                 "def run(raw):\n    (ROOT.parent / 'materials' / '..' / 'repository' / 'records/m.yaml').write_text('x')\n",
+                 "'..'", id="NF2-dotdot-on-sibling"),
+    pytest.param(["<TMPDIR>/**"],
+                 "def run(raw):\n    (Path(tempfile.gettempdir()) / os.environ['EVIL']).write_text('x')\n",
+                 "can replace or escape its base", id="NF2-environment-join-operand"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    (ROOT / 'generated/reports' / f'{raw}').write_text('x')\n",
+                 "can replace or escape its base", id="NF2-formatted-join-operand"),
+    pytest.param(["<TMPDIR>/**"],
+                 "def run(raw):\n    d = tempfile.mkdtemp('', 'pwn-', ROOT / 'records')\n    (Path(d) / 'e.yaml').write_text('x')\n",
+                 "declares no repository destination", id="NF2-mkdtemp-positional-dir"),
+    pytest.param(["<TMPDIR>/**"],
+                 "def run(raw):\n    with tempfile.TemporaryDirectory(dir=ROOT / 'records') as d:\n        pass\n",
+                 "declares no repository destination", id="NF2-TemporaryDirectory-dir"),
+    pytest.param(["generated/reports/**"],
+                 "from learning_os.store.transactions import atomic_write_bytes\n"
+                 "def run(raw):\n    atomic_write_bytes(Path(raw), b'x', boundary=ROOT / 'generated/reports')\n",
+                 "unanchored", id="NF1-boundary-only-for-enforcing-helpers"),
+    pytest.param(["generated/reports/**"],
+                 "from learning_os.store.fs import atomic_write_text_exclusive\n"
+                 "def run(raw):\n    atomic_write_text_exclusive(Path(raw), 'x', boundary=ROOT / 'generated/reports')\n",
+                 None, id="NF1-control-boundary-enforcing-helper"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    (ROOT / 'generated/reports' / path_segment(raw)).write_text('x')\n"
+                 "    (ROOT / 'generated/reports' / relative_path(raw)).write_text('x')\n"
+                 "    (ROOT / 'generated/reports' / f'r-{os.getpid()}.md').write_text('x')\n",
+                 None, id="NF2-control-validated-and-proved-segments"),
+    # NF-3: comprehensions, walrus, shadowing, nonlocal, container mutation.
+    pytest.param(["generated/reports/**"],
+                 "def write_report(path):\n    path.write_text('x')\n"
+                 "def run(raw):\n    write_report(ROOT / 'generated/reports/a.md')\n"
+                 "    [write_report(ROOT / 'records') for _ in (1,)]\n",
+                 "outside declared destinations", id="NF3-call-inside-comprehension"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    p = ROOT / 'generated/reports/a.md'\n"
+                 "    [(p := ROOT / 'records/m.yaml') for _ in (1,)]\n    p.write_text('x')\n",
+                 "outside declared destinations", id="NF3-walrus-in-comprehension"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    p = ROOT / 'generated/reports/a.md'\n"
+                 "    [p.write_text('x') for p in [ROOT / 'records/m.yaml']]\n",
+                 "outside declared destinations", id="NF3-comprehension-shadowing"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    p = ROOT / 'generated/reports/a.md'\n"
+                 "    def inner():\n        nonlocal p\n        p = ROOT / 'records/m.yaml'\n"
+                 "    inner()\n    p.write_text('x')\n",
+                 "outside declared destinations", id="NF3-nonlocal"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    xs = [ROOT / 'generated/reports/a.md']\n    xs.extend([ROOT / 'records/m.yaml'])\n"
+                 "    for x in xs:\n        x.write_text('x')\n",
+                 "outside declared destinations", id="NF3-list-extend"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    xs = [ROOT / 'generated/reports/a.md']\n    xs[0] = ROOT / 'records/m.yaml'\n"
+                 "    for x in xs:\n        x.write_text('x')\n",
+                 "outside declared destinations", id="NF3-subscript-store"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    p = ROOT / 'generated/reports/a.md'\n"
+                 "    [q.write_text('x') for q in [p]]\n",
+                 None, id="NF3-control-comprehension-in-scope"),
+    # NF-4: git options, fs flags, indirect write callables.
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    subprocess.run(['git', 'diff', f'--output={raw}'])\n",
+                 "unanchored", id="NF4-git-diff-formatted-output"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    subprocess.run(['git', 'diff', *raw])\n",
+                 "unanchored", id="NF4-git-diff-starred-options"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    subprocess.run(['cp', '--target-directory=records', str(ROOT / 'generated/reports/r.md')])\n",
+                 "unsupported option", id="NF4-cp-target-directory"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    functools.partial(Path('records/x.yaml').write_text, 'x')()\n",
+                 "cwd-relative:records/x.yaml", id="NF4-partial-write-text"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    getattr(Path('records/x.yaml'), 'write_text')('x')\n",
+                 "used as a value", id="NF4-getattr-write-text"),
+    pytest.param(["generated/reports/**"],
+                 "def run(raw):\n    subprocess.run(['git', 'diff', '--name-only', raw, '--', *raw])\n"
+                 "    subprocess.run(['git', 'diff-tree', '-r', '--end-of-options', *raw])\n",
+                 None, id="NF4-control-git-data-arguments"),
+])
+def test_census_catches_bar4_v2_declared_counterexamples(tmp_path, destinations, body, expected):
+    root = tmp_path / "repository"
+    writer = root / "tools/zz_v2_probe.py"
+    writer.parent.mkdir(parents=True)
+    writer.write_text(_V2_IMPORTS + body, encoding="utf-8")
+    findings = check_declared_write_sites(
+        root, {"tools/zz_v2_probe.py": {"effect": "operational", "destinations": destinations}},
+    )
+    if expected is None:
+        assert findings == []
+    else:
+        assert findings, "the census accepted the counterexample"
+        assert any(expected in finding for finding in findings), findings
+
+
+@pytest.mark.parametrize("probe_id, code", [
+    ("NF4-name-alias", "from os import remove\ndef f():\n    fn = remove\n    fn('records/x.yaml')\n"),
+    ("NF4-partial", "import functools\nfrom pathlib import Path\ndef f():\n"
+                    "    functools.partial(Path('records/x.yaml').write_text, 'x')()\n"),
+    ("NF4-getattr", "from pathlib import Path\ndef f():\n    getattr(Path('records/x.yaml'), 'write_text')('x')\n"),
+    ("NF4-methodcaller", "import operator\nfrom pathlib import Path\ndef f():\n"
+                         "    operator.methodcaller('write_text', 'x')(Path('records/x.yaml'))\n"),
+    ("NF4-callback-value", "import os\ndef f(xs):\n    list(map(os.remove, xs))\n"),
+    ("NF4-git-diff-output", "import subprocess\ndef f(out):\n    subprocess.run(['git', 'diff', f'--output={out}'])\n"),
+    ("NF4-git-diff-starred", "import subprocess\ndef f(extra):\n    subprocess.run(['git', 'diff', *extra])\n"),
+    ("NF4-git-log-abbreviated-output", "import subprocess\ndef f():\n    subprocess.run(['git', 'log', '--outp=x'])\n"),
+])
+def test_census_catches_bar4_v2_undeclared_indirection(tmp_path: Path, probe_id: str, code: str):
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/zz_probe.py").write_text(code, encoding="utf-8")
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert failures, f"{probe_id} was accepted by scan_tools_census"
+
+
+def test_census_bar4_v2_cross_module_callers_and_constructors(tmp_path: Path):
+    """NF-3: a declared helper's non-root parameter and class constructors from other modules."""
+    root = tmp_path / "repository"
+    (root / "tools").mkdir(parents=True)
+    (root / "tools/writer.py").write_text(
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parents[1]\n"
+        "def write_one(path: Path) -> None:\n    path.write_text('x')\n"
+        "def main() -> None:\n    write_one(ROOT / 'generated/reports/a.md')\n"
+        "class Store:\n"
+        "    def __init__(self, root: Path) -> None:\n        self.root = root\n"
+        "    def _put(self) -> None:\n        (self.root / 'generated/reports/s.md').write_text('x')\n",
+        encoding="utf-8",
+    )
+    effects = {"tools/writer.py": {"effect": "cache", "destinations": ["generated/reports/**"], "reason": "r"}}
+    assert check_declared_write_sites(root, effects) == []
+    (root / "tools/rogue.py").write_text(
+        "from pathlib import Path\nfrom writer import Store, write_one\n"
+        "ROOT = Path(__file__).resolve().parents[1]\n"
+        "def run() -> None:\n    write_one(ROOT / 'records/m.yaml')\n    Store(ROOT / 'records')\n",
+        encoding="utf-8",
+    )
+    findings = check_declared_write_sites(root, effects)
+    assert any("repo:records/m.yaml is outside declared destinations" in f for f in findings), findings
+    assert any("repo:records/generated/reports/s.md is outside declared destinations" in f
+               for f in findings), findings
+
+
+def test_census_bar4_v2_pins_placeholders_that_would_bless_new_writers(tmp_path: Path):
+    """NF-4/NF-5: reserved placeholders cannot be granted by a new declaration."""
+    root, effects = _synthetic_effects(tmp_path)
+    (root / "tools/rogue_git.py").write_text(
+        "import subprocess\ndef f():\n"
+        "    subprocess.run(['git', 'add', 'records/m.yaml'])\n"
+        "    subprocess.run(['git', 'commit', '-m', 'x'])\n",
+        encoding="utf-8",
+    )
+    effects = {**effects, "tools/rogue_git.py": {
+        "effect": "operational", "destinations": ["<GIT_INDEX_AND_COMMIT>"], "reason": "r"}}
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert any("<GIT_INDEX_AND_COMMIT> is reserved" in f for f in failures), failures
+
+    (root / "tools/rogue_agent.py").write_text(
+        "import subprocess\ndef f(cmd):\n    subprocess.run(cmd)\n", encoding="utf-8",
+    )
+    effects = {**effects, "tools/rogue_agent.py": {
+        "effect": "operational", "destinations": ["<AGENT_WORKSPACE_WRITE_LAUNCHER>"], "reason": "r"}}
+    failures = scan_tools_census(root, effects, [], tree_roots=_load_tree_roots())
+    assert any("<AGENT_WORKSPACE_WRITE_LAUNCHER> is reserved" in f for f in failures), failures
+
+
+def test_codex_launcher_is_declared_as_agent_workspace_write():
+    """NF-5: the Codex workspace-write launch is not a gateway delegate."""
+    effects = _load_effects_yaml()
+    declaration = effects["tools/codex_obsidian.py"]
+    assert "<AGENT_WORKSPACE_WRITE_LAUNCHER>" in declaration["destinations"]
+    assert "2B" in declaration["contract"]

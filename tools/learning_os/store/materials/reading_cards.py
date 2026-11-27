@@ -47,7 +47,12 @@ from pathlib import Path
 from typing import TypeGuard, cast
 
 from learning_os.store import observations
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+    relative_path,
+)
 from learning_os.store.fs import iter_non_symlink_files
 from learning_os.store.study_fence import READING_MEMORY_DIRNAME as STORE_DIRNAME
 
@@ -465,7 +470,7 @@ class ReadingStore:
 
     def _apply(self, operations: list[dict[str, object]]) -> None:
         for operation in operations:
-            path = self.root / cast(str, operation["path"])
+            path = self.root / relative_path(cast(str, operation["path"]))
             if operation["op"] == "write":
                 self._write_file(path, cast(str, operation["data"]).encode("utf-8"))
             elif operation["op"] == "delete":
@@ -976,7 +981,7 @@ class ReadingStore:
         self, session: str, name: str, digest: str, rng: dict[str, int]
     ) -> list[int]:
         """Pages of an adopted entry not yet observed in ``session`` since its latest adoption."""
-        log_path = self.root / "log" / f"{session}.jsonl"
+        log_path = self.root / "log" / f"{path_segment(session)}.jsonl"
         observed_pages: set[int] = set()
         if log_path.is_file():
             self._repair_log_tail(log_path)

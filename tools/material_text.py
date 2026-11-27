@@ -73,6 +73,7 @@ from learning_os.domain.validation import TEXT_CACHE_TOP_DIR  # noqa: E402
 from learning_os.store.contracts.write_scopes import (  # noqa: E402
     WriteScopeError,
     guard_tool_output_path,
+    path_segment,
     scoped_write_target,
 )
 from learning_os.store.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
@@ -139,7 +140,7 @@ def _stage_extracted_entry(
     source_path: Path,
 ) -> tuple[bool, str | None]:
     """Write extracted pages into an exclusive staging dir and swap atomically."""
-    legacy_staging = cache / f".{digest}.staging"
+    legacy_staging = cache / f".{path_segment(digest)}.staging"
     if legacy_staging.is_symlink() or legacy_staging.is_file():
         legacy_staging.unlink()
     elif legacy_staging.is_dir():

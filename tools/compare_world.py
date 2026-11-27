@@ -25,7 +25,12 @@ TOOLS_DIR = Path(__file__).resolve().parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path  # noqa: E402
+from learning_os.store.contracts.write_scopes import (  # noqa: E402
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+    relative_path,
+)
 from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 from learning_os.store.fs import clean_git_env, iter_files_and_top_symlinks  # noqa: E402
 
@@ -149,7 +154,7 @@ def _overlay_data(world: Path, tree: Path) -> None:
     """Replace the tree's data roots with the world's bytes (SPEC §6 step 2)."""
     data_dir = world / "data"
     for rel_root in WORLD_DATA_ROOTS:
-        target = tree / rel_root
+        target = tree / path_segment(rel_root)
         if target.is_symlink() or target.exists():
             _remove_tree(target)
         source = data_dir / rel_root
@@ -337,11 +342,11 @@ def _cleanup(repo: Path, work_dir: Path, worktrees: list[Path],
     # Every tree is a direct child of the work root (built as work_dir / name),
     # so rebuilding the path from the root keeps removal inside it.
     for tree in worktrees:
-        _git(repo, "worktree", "remove", "--force", str(work_dir / tree.name))
-        _remove_tree(work_dir / tree.name)
+        _git(repo, "worktree", "remove", "--force", str(work_dir / path_segment(tree.name)))
+        _remove_tree(work_dir / path_segment(tree.name))
     _git(repo, "worktree", "prune")
     for tree in copies:
-        _remove_tree(work_dir / tree.name)
+        _remove_tree(work_dir / path_segment(tree.name))
     link = work_dir / "materials"
     if link.is_symlink():
         link.unlink()
@@ -425,14 +430,14 @@ def main(argv: list[str] | None = None) -> int:
     assert worktree_copy or candidate_sha is not None
 
     work_dir.mkdir(parents=True, exist_ok=True)
-    baseline_tree = work_dir / f"world-{baseline_sha}"
+    baseline_tree = work_dir / f"world-{path_segment(baseline_sha)}"
     if worktree_copy:
         candidate_tree = work_dir / "world-worktree"
     elif candidate_sha == baseline_sha:
         candidate_tree = baseline_tree
     else:
         assert candidate_sha is not None
-        candidate_tree = work_dir / f"world-{candidate_sha}"
+        candidate_tree = work_dir / f"world-{path_segment(candidate_sha)}"
 
     # Step 1: one disposable worktree per distinct code revision.
     worktrees: list[Path] = []
@@ -446,7 +451,7 @@ def main(argv: list[str] | None = None) -> int:
                 return _fail("cannot list the working tree")
             for rel in listed.stdout.splitlines():
                 source = repo / rel
-                target = candidate_tree / rel
+                target = candidate_tree / relative_path(rel)
                 if source.is_symlink():
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.symlink_to(os.readlink(source))
@@ -462,7 +467,7 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             assert sha is not None
             _git(repo, "worktree", "remove", "--force", str(tree))
-            _remove_tree(work_dir / tree.name)
+            _remove_tree(work_dir / path_segment(tree.name))
             added = _git(repo, "worktree", "add", "--detach", str(tree), sha)
             if added.returncode != 0:
                 return _fail(f"cannot build a worktree for {sha}: "

@@ -152,3 +152,59 @@ def test_guard_tool_output_path_refuses_protected_roots_and_symlinks(tmp_path: P
     assert guard_tool_output_path(ext, repo_root=repo) == ext
     gen = repo / "generated/reports/eval.json"
     assert guard_tool_output_path(gen, repo_root=repo) == gen
+
+
+def _case_insensitive(path: Path) -> bool:
+    probe = path / "CaseProbe"
+    probe.mkdir()
+    try:
+        return (path / "caseprobe").exists()
+    finally:
+        probe.rmdir()
+
+
+def test_guard_tool_output_path_refuses_case_folded_protected_roots(tmp_path: Path):
+    """Bar 4 v2 NF-1a: ``Knowledge/`` is ``knowledge/`` on default macOS APFS."""
+    from contextlib import ExitStack
+
+    from learning_os.store.contracts.write_scopes import (
+        guard_tool_output_path,
+        open_guarded_directory,
+    )
+    from learning_os.store.fingerprint import DATA_ROOTS
+
+    repo = tmp_path / "repo"
+    (repo / "system/contracts").mkdir(parents=True)
+    (repo / "system/contracts/capabilities.yaml").write_text("schema: 1\n", encoding="utf-8")
+    for root_name in (*DATA_ROOTS, "system", "operations"):
+        (repo / root_name).mkdir(parents=True, exist_ok=True)
+        for spelling in (root_name.capitalize(), root_name.upper()):
+            with pytest.raises(WriteScopeError, match=f"protected root {root_name}/"):
+                guard_tool_output_path(repo / spelling / "rogue.json", repo_root=repo)
+            with pytest.raises(WriteScopeError, match=f"protected root {root_name}/"):
+                guard_tool_output_path(repo / spelling / "rogue.json")
+    if _case_insensitive(tmp_path):
+        with ExitStack() as stack, pytest.raises(WriteScopeError, match="protected root knowledge/"):
+            open_guarded_directory(repo / "Knowledge", stack)
+    # A peer whose name merely starts like a protected root is still allowed.
+    peer = repo / "generated" / "Records-report.json"
+    assert guard_tool_output_path(peer, repo_root=repo) == peer
+
+
+def test_boundary_write_refuses_parent_traversal_through_missing_child(tmp_path: Path):
+    """Bar 4 v2 NF-1b: ``boundary/missing/../../records`` must not escape."""
+    from learning_os.store.fs import WriteRefused, atomic_write_text_exclusive
+
+    repo = tmp_path / "repo"
+    (repo / "generated").mkdir(parents=True)
+    (repo / "records").mkdir()
+    manifest = repo / "records" / "materials-manifest.yaml"
+    manifest.write_text("original\n", encoding="utf-8")
+    escape = repo / "generated" / "missing_sub" / ".." / ".." / "records" / "materials-manifest.yaml"
+    with pytest.raises(WriteRefused, match=r"'\.\.'"):
+        atomic_write_text_exclusive(escape, "pwned\n", boundary=repo / "generated")
+    assert manifest.read_text(encoding="utf-8") == "original\n"
+    assert not (repo / "generated" / "missing_sub").exists()
+    inside = repo / "generated" / "new" / "ok.txt"
+    atomic_write_text_exclusive(inside, "ok\n", boundary=repo / "generated")
+    assert inside.read_text(encoding="utf-8") == "ok\n"

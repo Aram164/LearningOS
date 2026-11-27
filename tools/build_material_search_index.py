@@ -36,6 +36,7 @@ if str(TOOLS_DIR) not in sys.path:
 from material_text import EXTRACTOR, _index_valid, cache_index  # noqa: E402
 from materials_manifest import load_manifest  # noqa: E402
 
+from learning_os.store.contracts.write_scopes import path_segment  # noqa: E402
 from learning_os.store.fs import (  # noqa: E402
     exclusive_temp_path,
     iter_non_symlink_files,
@@ -354,7 +355,7 @@ def build_index_generation(
             [(ex.sha256, ex.reason) for ex in excluded_records],
         )
         f16 = fingerprint[:16]
-        target_path = base_dir / f"index-{f16}.sqlite3"
+        target_path = base_dir / f"index-{path_segment(f16)}.sqlite3"
         pdf_paths = _inventory_pdf_paths(repo_root)
 
         if not force:

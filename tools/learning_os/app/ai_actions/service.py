@@ -90,7 +90,11 @@ from learning_os.store.contracts.gateway import (
     gateway_snapshot_is_verified,
 )
 from learning_os.store.contracts.manifest_contract import declared_version
-from learning_os.store.contracts.write_scopes import WriteScopeError, require_write_scope
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    path_segment,
+    require_write_scope,
+)
 from learning_os.store.evidence import replay_for_request
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
@@ -649,7 +653,7 @@ class AIActionService:
                 f"route {route_id} continuation refused: its slice tips the bundle "
                 f"over the {MAX_SLICE_BYTES_TOTAL}-byte ceiling")
         record_path = (f"{SLICE_BUNDLE_PREFIX}/continuations/"
-                       f"pass-{record.pass_number}-{route_id}.yaml")
+                       f"pass-{int(record.pass_number)}-{path_segment(route_id)}.yaml")
         record_target = bundle_dir / record_path
         record_target.parent.mkdir(parents=True, exist_ok=True)
         _atomic_text(record_target, _dump_yaml(continuation_record_dict(record)))

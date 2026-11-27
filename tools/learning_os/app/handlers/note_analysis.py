@@ -31,7 +31,11 @@ from learning_os.store.contracts.batch_notes import (
     BATCH_MIN_NOTES,
 )
 from learning_os.store.contracts.json_schema import load_standalone_validator
-from learning_os.store.contracts.write_scopes import WriteScopeError, guard_tool_output_path
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    guard_tool_output_path,
+    path_segment,
+)
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.material_analysis import (
     binding_consistent,
@@ -606,7 +610,7 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     report = []
     try:
         for note_id, relpath, body_bytes, analysis, predicted_new in staged:
-            body_path = out / "bodies" / f"{note_id}.bin"
+            body_path = out / "bodies" / f"{path_segment(note_id)}.bin"
             body_path.write_bytes(body_bytes)
             digest = hashlib.sha256(body_bytes).hexdigest()
             bundle_notes.append({
